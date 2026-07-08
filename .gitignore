@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local runtime output
+.env
+.venv/
+venv/
+dist/
+build/
+
+# Vault Steward generated output
+out/
+reports/
+*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db

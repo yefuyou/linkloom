@@ -1,0 +1,3 @@
+display_name: Spec-Driven Agent Dev
+short_description: Guide Vault Steward SPEC-first Planner, Worker, and Reviewer workflows.
+default_prompt: Use the spec-driven-agent-dev skill to plan or review this Vault Steward task with role separation, project contracts, acceptance evidence, vault safety gates, and a learning reflection.
