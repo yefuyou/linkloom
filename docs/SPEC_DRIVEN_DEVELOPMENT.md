@@ -1,9 +1,9 @@
 # SPEC-Driven Development
 
-Vault Steward follows SPEC-driven development.
+linkloom follows SPEC-driven development.
 
 `SPEC` is the only canonical label for requirements, scope, acceptance
-criteria, and phase gates. Do not rename or mirror the process under another
+criteria, and milestone gates. Do not rename or mirror the process under another
 term.
 
 ## Why
@@ -85,6 +85,8 @@ Before a task is accepted, the Reviewer must be able to verify:
   recorded;
 - remaining risks and skipped checks are stated.
 
-## Phase Gate
+## Milestone Gate
 
-No Phase 1 implementation may begin until Phase 0 governance docs pass review.
+No Milestone 1 implementation may begin until the product roadmap, governance
+docs, and feature-level SPEC plus implementation plan pass their required human
+and independent review gates.

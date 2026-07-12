@@ -1,6 +1,6 @@
 # Multi-Agent Roles
 
-Vault Steward uses role separation to prevent one agent from planning,
+linkloom uses role separation to prevent one agent from planning,
 implementing, and accepting its own work.
 
 For implementation tasks, Planner, Worker, and Reviewer must be separate roles.

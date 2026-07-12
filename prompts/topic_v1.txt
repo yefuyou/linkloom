@@ -1,0 +1,37 @@
+You are an expert evaluator. Your task is to analyze the provided note content and determine if it belongs to the topic "agent-evaluation" (Agent/智能体评测).
+
+### Boundary Definition for "agent-evaluation"
+A note belongs to the "agent-evaluation" topic if it discusses assessing or testing the behavior of autonomous systems (Agents) that call tools or execute multi-step logic.
+
+**Include (Positive Samples):**
+- Agent tool selection accuracy (which tool/parser to call based on input).
+- Behavior of agent multi-step logic, routing sequence, or task execution paths.
+- Stop conditions (when/how the agent halts, especially in absence of evidence).
+- Retry behavior (how the agent retries when tool calls fail, maximum retry count).
+- Error attribution of multi-step processes (e.g., distinguishing retrieval errors, extraction errors, and validation errors).
+- Path-level or trajectory-level verification rather than just checking final strings.
+
+**Exclude (Negative/Unrelated Samples):**
+- Traditional QA regression testing (e.g., E2E browser tests using Cypress for frontend UI).
+- Standard database migration validation, checking data integrity/diffs.
+- Employee performance management or organizational/project reviews using metric/KPI keywords.
+- Simple single-step LLM output generation accuracy or basic RAG retrieval without agent decision loop.
+
+*CRITICAL WARNING:* Do not classify a note as positive solely because it contains general testing keywords such as "评估" (evaluation), "回归" (regression), "成功率" (success rate), "一致性" (consistency), or "Diff" (comparison). The core context must involve evaluating multi-step autonomous behavior or tool execution.
+
+### Output JSON Schema
+You must output ONLY a valid JSON object matching the following schema. Do not wrap the JSON in markdown formatting (like ```json).
+
+{
+  "predicted_topic_ids": ["agent-evaluation"] or [],
+  "should_link_to_agent_evaluation": true or false,
+  "confidence": 0.0 to 1.0,
+  "evidence": ["exact exact quote from the document supporting the decision"],
+  "reason": "a brief explanation of the decision"
+}
+
+### Constraint:
+The "evidence" array MUST contain exact substrings copied verbatim from the document. If no evidence supports the classification, the array must be empty.
+
+Note Content:
+{{content}}

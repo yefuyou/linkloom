@@ -1,0 +1,26 @@
+dataset:
+  name: relation_vault_v1
+  fixture_path: tests/eval/relation_gold.yaml
+  documents_root: tests/fixtures/relation_vault
+
+provider:
+  type: mock
+  scenario: perfect
+  model: "gpt-5.5"
+
+inference:
+  topic_enabled: true
+  relation_enabled: true
+  max_retries: 0
+  concurrency: 1
+
+budget:
+  max_requests_per_run: 0
+  max_cost_per_run_usd: 0
+  stop_on_budget_exceeded: true
+
+output:
+  root: outputs
+
+cache:
+  enabled: true

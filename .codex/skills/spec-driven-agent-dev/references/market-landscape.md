@@ -1,6 +1,6 @@
 # Market Landscape
 
-Vault Steward should learn from adjacent tools without becoming a generic chat-with-docs product.
+linkloom should learn from adjacent tools without becoming a generic chat-with-docs product.
 
 ## Obsidian and Local PKM Semantic Linking
 
@@ -18,9 +18,9 @@ AnythingLLM: https://github.com/Mintplex-Labs/anything-llm
 
 Use these as inspiration for broader document ingestion, retrieval, agents, workspace chat, and multi-source knowledge workflows.
 
-## Vault Steward Differentiation
+## linkloom Differentiation
 
-Vault Steward is not just chat-with-docs. Its center of gravity is evidence-backed organization proposals, dry-run mutation planning, and learning/project workflow support for a personal vault.
+linkloom is not just chat-with-docs. Its center of gravity is evidence-backed organization proposals, dry-run mutation planning, and learning/project workflow support for a personal vault.
 
 Design choices should emphasize:
 

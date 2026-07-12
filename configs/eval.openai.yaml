@@ -1,0 +1,38 @@
+# OpenAI-compatible provider configuration for relation evaluation.
+#
+# CREDENTIAL POLICY:
+#   api_key MUST be null in this file. The runner reads the key from
+#   the OPENAI_API_KEY environment variable at runtime. Never commit
+#   a plaintext key to version control.
+#
+#   If you previously had a key in this file, you MUST rotate it in
+#   the provider gateway console — removing the key from the file
+#   alone does NOT revoke it.
+
+dataset:
+  name: relation_vault_v1
+  fixture_path: tests/eval/relation_gold.yaml
+  documents_root: tests/fixtures/relation_vault
+
+provider:
+  type: openai
+  api_key: null
+  base_url: null
+  model: "gpt-5.5"
+
+inference:
+  topic_enabled: true
+  relation_enabled: true
+  max_retries: 0
+  concurrency: 1
+
+budget:
+  max_requests_per_run: 0
+  max_cost_per_run_usd: 0
+  stop_on_budget_exceeded: true
+
+output:
+  root: outputs
+
+cache:
+  enabled: true

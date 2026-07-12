@@ -28,8 +28,12 @@ alternate process names.
 - [ ] No real vault mutation unless explicitly approved.
 - [ ] No silent delete, rewrite, merge, or move.
 - [ ] Dry-run precedes write operations.
-- [ ] Any real-vault approval names the exact vault path and operation.
+- [ ] Any real-vault approval names the exact plan ID, vault path, and operation.
+- [ ] Target files are validated as unchanged since preview.
+- [ ] A recoverable backup is created before the first write.
 - [ ] Audit behavior is defined for write operations.
+- [ ] A rollback path is tested on a synthetic fixture before real-vault use.
+- [ ] Applied changes match the exact approved preview.
 
 ## Quality
 

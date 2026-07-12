@@ -1,11 +1,11 @@
 ---
 name: spec-driven-agent-dev
-description: Guide SPEC-first development for Vault Steward and mature AI-assisted development workflows. Use for Planner/Worker/Reviewer process, feature SPEC planning, implementation gating, acceptance review, evidence-based review, read-only vault scanner planning, dry-run vault operation design, and any task that must separate planning, implementation, and review before changing code or vault content.
+description: Guide SPEC-first development for linkloom and mature AI-assisted development workflows. Use for Planner/Worker/Reviewer process, milestone and feature SPEC planning, implementation gating, acceptance review, evidence-based review, read-only vault scanner planning, dry-run vault operation design, and any task that must separate planning, implementation, and review before changing code or vault content.
 ---
 
 # Spec-Driven Agent Development
 
-Use this skill to keep Vault Steward work evidence-backed, role-separated, and gated by approved specs.
+Use this skill to keep linkloom work evidence-backed, role-separated, and gated by approved specs.
 
 ## Required Reading
 
@@ -14,6 +14,7 @@ Before action, read the project contracts that exist in the repo:
 - `SPEC.md`
 - `DEV_SPEC.md`
 - `AGENTS.md`
+- `docs/PRODUCT_ROADMAP.md`
 - `docs/MULTI_AGENT_ROLES.md`
 - `docs/SPEC_DRIVEN_DEVELOPMENT.md`
 - `docs/ACCEPTANCE_CHECKLIST.md`
@@ -40,11 +41,21 @@ If a required contract is missing, report it as a blocker or assumption before c
 
 ## Vault Safety
 
-Never perform real vault mutation unless reviewed dry-run output already exists and the human approves the exact vault path plus exact operation.
+Never perform real vault mutation unless all of these exist:
 
-## First Feature
+1. reviewed dry-run output;
+2. exact human approval naming the plan, vault path, and operation;
+3. validation that target files have not changed since preview;
+4. a recoverable backup created before writing;
+5. an audit record;
+6. a tested rollback path.
 
-For `read-only-vault-scanner`, create these planning files first:
+If any condition is missing, stop at planning or dry-run evidence.
+
+## First Milestone Feature
+
+The Read-Only Vault Scanner is the first feature slice of Milestone 1, not the
+whole product. For `read-only-vault-scanner`, create these planning files first:
 
 - `docs/requirements/read-only-vault-scanner/SPEC.md`
 - `docs/requirements/read-only-vault-scanner/implementation_plan.md`

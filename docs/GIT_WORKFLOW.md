@@ -1,6 +1,6 @@
 # Git Workflow
 
-Vault Steward uses Git as the project safety net. Every meaningful change should
+linkloom uses Git as the project safety net. Every meaningful change should
 be recoverable, reviewable, and tied to a SPEC-backed task.
 
 ## Current Rule

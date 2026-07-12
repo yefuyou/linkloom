@@ -1,0 +1,55 @@
+You are an expert evaluator. Your task is to analyze the relationship between two notes (Source Note and Target Note) and determine if there is a valid relation between them under the "agent-evaluation" topic.
+
+### Relation Evaluation Rules
+1. **Same Topic is Not Enough**: Just because both documents discuss "agent-evaluation" or contain evaluation keywords does not mean they should be linked. There must be a specific, logical progression or semantic connection between them.
+2. **Valid Relation Types**:
+   - `concept-to-practice`: The source document describes a concept, design choice, or requirement (e.g., node order assertion, stop conditions), and the target document describes a practical implementation, bug/incident report, or developer log where that concept is applied or tested.
+   - `concept-to-interview`: The source document describes a concept, metric, or rule, and the target document describes a technical interview question or preparation where this concept was questioned or prepared.
+   - `practice-to-interview`: The source document describes a practical work item, bug fix, or logs, and the target document describes an interview where this specific practice was discussed or questioned.
+3. **No False Positives**: If two notes share superficial keywords (like "回归", "评估", "diff") but talk about completely different domains (e.g., database migration vs. agent decision routing), they MUST NOT be linked (`should_link` must be false).
+4. **Source/Target Direction Rules**:
+   - For `concept-to-practice`, the concept note is the source, and the practice note is the target.
+   - For `concept-to-interview`, the concept note is the source, and the interview note is the target.
+   - For `practice-to-interview`, the practice note is the source, and the interview note is the target.
+
+### Output JSON Schema
+You must output ONLY a valid JSON object matching the following schema. Do not wrap the JSON in markdown formatting.
+
+If `should_link` is true:
+{
+  "should_link": true,
+  "source": "relative/path/to/source.md",
+  "target": "relative/path/to/target.md",
+  "relation_type": "concept-to-practice" | "concept-to-interview" | "practice-to-interview",
+  "confidence": 0.0 to 1.0,
+  "evidence": {
+    "source": ["exact substring quote from source document"],
+    "target": ["exact substring quote from target document"]
+  },
+  "reason": "explanation of why these are linked and how direction is decided"
+}
+
+If `should_link` is false:
+{
+  "should_link": false,
+  "source": null,
+  "target": null,
+  "relation_type": null,
+  "confidence": 0.0 to 1.0,
+  "evidence": {
+    "source": [],
+    "target": []
+  },
+  "reason": "explanation of why these are NOT linked"
+}
+
+### Constraint:
+All evidence strings MUST be exact substrings from the respective documents.
+
+Note A (Left) Path: {{left_note_path}}
+Note A (Left) Content:
+{{left_content}}
+
+Note B (Right) Path: {{right_note_path}}
+Note B (Right) Content:
+{{right_content}}

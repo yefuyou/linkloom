@@ -1,129 +1,155 @@
-# Vault Steward DEV_SPEC
+# linkloom DEV_SPEC
 
-This file is the build contract. It turns the product-level [SPEC.md](SPEC.md)
-into phases, tasks, files, acceptance criteria, and checks.
+This is the implementation gate map for the product roadmap. The detailed user
+contract lives in [docs/PRODUCT_ROADMAP.md](docs/PRODUCT_ROADMAP.md).
 
-No implementation task may start unless it has a named section in this file or a
-feature-specific `docs/requirements/<feature>/SPEC.md` and
-`implementation_plan.md`.
+No implementation task may start unless it has an approved feature SPEC and
+implementation plan under `docs/requirements/<feature>/`.
 
-## Phase A: Governance And Project Contract
+## Governance Baseline
 
-Status: in progress.
+Status: Scanner implementation complete; product-direction calibration and the
+next read-only planning boundary are pending review.
 
-Goal: establish the rules that future implementation must obey.
+Existing governance artifacts:
 
-### A1: SPEC-first project skeleton
-
-Files:
-
-- `README.md`
 - `SPEC.md`
 - `DEV_SPEC.md`
 - `AGENTS.md`
-- `docs/README.md`
+- `docs/PRODUCT_ROADMAP.md`
 - `docs/MULTI_AGENT_ROLES.md`
 - `docs/SPEC_DRIVEN_DEVELOPMENT.md`
 - `docs/ACCEPTANCE_CHECKLIST.md`
 - `docs/PROJECTS_REVERSE_ENGINEERING.md`
 - `docs/MARKET_LANDSCAPE.md`
 - `docs/GIT_WORKFLOW.md`
-- `.gitignore`
 
-Implementation points:
+Current gate:
 
-- Define the project mission and non-goals.
-- Require SPEC before implementation.
-- Require Planner, Worker, Reviewer separation.
-- Forbid real-vault mutation without reviewed dry-run and exact human approval.
-- Record reference-project development patterns.
-- Record market landscape and differentiation.
-- Establish Git restore-point rules.
+- Planning documents may be revised.
+- Scanner code is complete and must not expand without a new approved SPEC.
+- The next business-code task is forbidden until the human approves its feature
+  SPEC and implementation plan.
 
-Acceptance:
+## Milestone 1: Can Read
 
-- All listed files exist.
-- No business code exists yet.
-- No obsolete alternate acronym remains.
-- Docs consistently use `SPEC`.
-- Docs define Planner/Worker/Reviewer separation.
-- Docs define objective acceptance checks.
-- Docs mention that `D:\programblog` is dogfood, not a hard-coded product assumption.
-- Market landscape is available as a project doc, not only inside a skill.
-- Git workflow defines commit boundaries and restore-point policy.
+Status: Implemented and independently reviewed on a synthetic fixture.
 
-Checks:
+Completed feature slice: Read-Only Vault Scanner.
 
-```powershell
-Get-ChildItem D:\webproject\vault-steward -Recurse
-A repository-wide text search for the obsolete alternate acronym returns no matches.
-```
+Next planning-only closure slice: Vault Profile. It may consume an existing
+Scanner index to create a human-readable, read-only vault portrait. It must not
+change Scanner parsing behavior, infer semantic classifications with a model,
+read an unapproved real vault, or modify a source note.
 
-## Phase B: Read-Only Vault Scanner
+Historical planning files for the completed Scanner:
 
-Status: not started.
-
-Goal: scan a fixture vault and optionally a user-provided real vault without
-changing files.
-
-Planned files:
-
-- `src/vault_steward/scanner.py`
-- `src/vault_steward/types.py`
-- `tests/fixtures/sample_vault/`
-- `tests/unit/test_scanner.py`
 - `docs/requirements/read-only-vault-scanner/SPEC.md`
 - `docs/requirements/read-only-vault-scanner/implementation_plan.md`
 - `docs/requirements/read-only-vault-scanner/task.md`
 
-Acceptance draft:
+Implemented file boundary:
 
-- Reads Markdown files.
-- Extracts path, title, headings, frontmatter, wikilinks, tags, size, and mtime.
-- Does not write to the input vault.
-- Works on a synthetic fixture vault.
-- Emits deterministic JSON.
+- `pyproject.toml`
+- `src/linkloom/`
+- `tests/fixtures/sample_vault/`
+- `tests/unit/test_scanner.py`
 
-No implementation may begin until the Phase B feature SPEC and implementation plan are
-approved.
+Required gate evidence:
 
-## Phase C: Integrity Auditor
+- sample-vault command and expected artifacts are explicit;
+- scan data contract is explicit;
+- Chinese path and Obsidian syntax cases are explicit;
+- deterministic-output check is explicit;
+- before-and-after vault hash check is explicit;
+- symbolic-link and malformed-input behavior are explicit;
+- no real-vault acceptance case exists.
 
-Status: not started.
+`Data contract`:
+The exact fields and rules that every generated note record must follow.
 
-Goal: detect empty pages, suspiciously short pages, duplicate titles, and
-possible migration content-loss cases.
+## Milestone 2: Can Find
 
-No implementation may begin until Phase C SPEC materials exist.
+Status: Not started.
 
-## Phase D: Taxonomy And Link Planner
+Candidate feature: Cited Note Search.
 
-Status: not started.
+Implementation may start only after Milestone 1 produces a stable note index
+and the feature SPEC defines retrieval, citations, evaluation questions,
+privacy behavior, and no-evidence handling.
 
-Goal: propose hierarchy and cross-link improvements with evidence paths.
+## Milestone 3: Can Connect
 
-No implementation may begin until Phase D SPEC materials exist.
+Status: Not started.
 
-## Phase E: Dry-Run Mutation Planner
+Candidate feature: Explainable Note Relations.
 
-Status: not started.
+Implementation may start only after Milestone 2 establishes addressable
+passages and retrieval evaluation. The feature SPEC must distinguish explicit
+links from suggested relations and forbid automatic link insertion.
 
-Goal: generate proposed diffs or move plans without applying them.
+## Milestone 4: Can Organize
 
-No implementation may begin until Phase E SPEC materials exist.
+Status: Not started.
 
-## Phase F: Permissioned Apply And Audit Log
+Candidate feature: Vault Health Diagnostics.
 
-Status: not started.
+Implementation may start only after diagnostic rules, evidence requirements,
+configurable exclusions, and false-positive evaluation are specified.
 
-Goal: apply approved plans and write audit logs.
+`False-positive evaluation`:
+A check of how often the system flags an intentional note as a problem.
 
-No implementation may begin until Phase F SPEC materials exist.
+## Milestone 5: Can Act
 
-## Phase G: Agent Harness
+Status: Not started.
 
-Status: not started.
+Candidate feature: Action Continuity Inbox.
 
-Goal: compose tools and workflows into a stateful assistant.
+The initial slice extracts explicit tasks, unresolved questions, and stated next
+actions with provenance. Its long-term product responsibility is broader: help
+users turn evidence into goals, tasks, or experiments; show knowledge
+dependencies and unresolved information; and connect outcomes, feedback, and
+reflection back to their source knowledge.
 
-No implementation may begin until Phase G SPEC materials exist.
+Implementation may start only after the feature SPEC defines task types, source
+preservation, deduplication, confidence display, the boundary between
+user-authored tasks and AI suggestions, and which planning behavior is only a
+proposal rather than a commitment.
+
+## Milestone 6: Modify Only After Confirmation
+
+Status: Not started; all real-vault writes forbidden.
+
+Candidate feature: Permissioned Vault Mutation.
+
+Implementation may start only after the feature SPEC defines:
+
+- immutable plan identity;
+- dry-run format;
+- exact approval record;
+- stale-plan rejection;
+- backup and rollback contract;
+- partial-failure behavior;
+- audit log schema;
+- synthetic mutation fixtures and destructive tests.
+
+`Stale plan`:
+A preview that is no longer safe to apply because one of its target files has
+changed since the preview was generated.
+
+## Cross-Milestone Engineering Gates
+
+Every implementation slice must:
+
+1. use a synthetic fixture before private data;
+2. preserve Planner, Worker, and Reviewer separation;
+3. list exact changed files and checks;
+4. keep read-only and write-capable modules separate;
+5. add evaluation evidence proportional to user-facing risk;
+6. create a Git restore point only after independent review passes the accepted
+   boundary.
+
+An Agent harness is not a standalone final milestone. If routing or multi-step
+execution becomes necessary, it is introduced inside the milestone whose user
+workflow needs it and tested against that milestone's acceptance criteria.

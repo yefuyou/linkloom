@@ -7,12 +7,16 @@ __pycache__/
 
 # Local runtime output
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 dist/
 build/
 
-# Vault Steward generated output
+# linkloom generated output
+.artifacts/
+outputs/
 out/
 reports/
 *.log

@@ -1,0 +1,164 @@
+notes:
+  - note_path: "tests/fixtures/relation_vault/0112-随笔.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "learning"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "最终答案碰巧蒙对的情况比想象中多"
+      - "中间跳过了校验步骤，等于是瞎猫碰上死耗子"
+    difficulty: "easy"
+    rationale: "记录了最终结果碰巧正确但中间步骤被跳过的现象，引出对过程合理性的疑问。"
+
+  - note_path: "tests/fixtures/relation_vault/指标体系梳理.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "learning"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "请求 payload 保留初始约束字段"
+      - "空字符串 vs 字段缺失：目前当作相同处理"
+    difficulty: "hard"
+    rationale: "制定了条件留存和无据拦截的具体验证规则，内容是验证生成参数准确性的工程指标设计，未直接出现评测字眼。"
+
+  - note_path: "tests/fixtures/relation_vault/灵感-关于状态丢失.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "learning"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "开头埋限定条件，结尾看请求里还有没有"
+      - "光看最终回复根本发现不了"
+    difficulty: "hard"
+    rationale: "记录了通过构造长对话陷阱来检测隐性状态丢失的想法，属于测试用例设计层面的思考。"
+
+  - note_path: "tests/fixtures/relation_vault/Q1阶段性复盘.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "project"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "异常路径下 B 先于 A 完成，拿到的画像参数为空"
+      - "CI 增加节点顺序断言——节点被跳过或顺序反转时直接阻断合并"
+    difficulty: "easy"
+    rationale: "复盘了节点执行顺序倒置导致的线上故障，并提出通过 CI 节点断言进行自动化校验。"
+
+  - note_path: "tests/fixtures/relation_vault/本周流水账-0418.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "project"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "抽取中间每一跳的节点序列，跟预设的标准序列做 diff"
+      - "之前是拿最终输出的字符串做相等比较，太脆"
+    difficulty: "medium"
+    rationale: "在混杂的一周工作记录中，记录了将结果字符串比较替换为节点序列 diff 的实际开发工作。"
+
+  - note_path: "tests/fixtures/relation_vault/周二沟通记录.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "interview"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "怎么在上线前就能验证每条路径还是对的"
+      - "运行时的日志都是无结构的，要从里面还原出实际走了哪几步"
+    difficulty: "easy"
+    rationale: "记录了被追问如何在路径级别验证系统行为，以及对从无结构日志中还原步骤的思考。"
+
+  - note_path: "tests/fixtures/relation_vault/面经-第二轮.md"
+    expected_topic_ids: ["agent-evaluation"]
+    note_type: "interview"
+    should_link_to_agent_evaluation: true
+    evidence: 
+      - "扫描件先过 OCR 再走文本流程。如果检测到结构化表格，单独走表格解析"
+      - "最多两轮，还是空就标记为缺失，不往库里写"
+    difficulty: "hard"
+    rationale: "讨论了文档处理流程中的工具路由选择、失败后的重试策略与停止条件、无依据字段的拦截，以及多环节同时出错时的归因方法。"
+
+  - note_path: "tests/fixtures/relation_vault/下半年部门会议.md"
+    expected_topic_ids: []
+    note_type: "unrelated"
+    should_link_to_agent_evaluation: false
+    evidence: 
+      - "再有因为漏测或者缺乏一致性评估出的严重事故"
+      - "当期负责人的当季任务成功率直接按零分处理"
+    difficulty: "hard"
+    rationale: "包含一致性评估和任务成功率等词汇，但全篇讨论的是人员绩效考核和传统软件发版纪律。"
+
+  - note_path: "tests/fixtures/relation_vault/0420-工作日志.md"
+    expected_topic_ids: []
+    note_type: "unrelated"
+    should_link_to_agent_evaluation: false
+    evidence: 
+      - "核心页面的回归覆盖率到 80% 了"
+      - "全量跑一遍要半小时以上，太慢"
+    difficulty: "hard"
+    rationale: "记录了回归覆盖率和执行耗时，但对象是前端 Cypress 页面自动化测试，与智能系统评测无关。"
+
+  - note_path: "tests/fixtures/relation_vault/方案草案-v3.md"
+    expected_topic_ids: []
+    note_type: "unrelated"
+    should_link_to_agent_evaluation: false
+    evidence: 
+      - "几亿条记录不可能割接当晚全量跑 diff"
+      - "必须在 v3.4 版本发版前把降级方案在预发环境演练通过"
+    difficulty: "hard"
+    rationale: "使用了 diff、版本、降级等词汇，但实际讨论的是 MySQL 至 TiDB 数据库迁移的数据校验策略。"
+
+expected_pairs:
+  - source: "tests/fixtures/relation_vault/0112-随笔.md"
+    target: "tests/fixtures/relation_vault/Q1阶段性复盘.md"
+    relation_type: "concept-to-practice"
+    evidence: 
+      source: 
+        - "中间跳过了校验步骤，等于是瞎猫碰上死耗子"
+      target: 
+        - "CI 增加节点顺序断言——节点被跳过或顺序反转时直接阻断合并"
+    rationale: "前者记录了跳过校验步骤但结果碰巧正确的现象；后者在实际故障中通过节点顺序断言将过程校验落地为工程实践。"
+
+  - source: "tests/fixtures/relation_vault/指标体系梳理.md"
+    target: "tests/fixtures/relation_vault/面经-第二轮.md"
+    relation_type: "concept-to-interview"
+    evidence:
+      source:
+        - "一条 case 多个错误怎么归因"
+      target:
+        - "检索没找到正确段落就是检索的问题，找到了但抽错就是抽取参数的问题，抽对了但定位校验没拦住就是校验规则的问题"
+    rationale: "前者在内部指标草案中提出了多错误归因和无据拦截的规则设计；后者在面试中被追问同类问题——多步骤流程出错后如何按环节逐步定位，前期指标设计经验支撑了部分回答但不足以覆盖多环节并发偏差。"
+
+  - source: "tests/fixtures/relation_vault/本周流水账-0418.md"
+    target: "tests/fixtures/relation_vault/周二沟通记录.md"
+    relation_type: "practice-to-interview"
+    evidence:
+      source:
+        - "抽取中间每一跳的节点序列，跟预设的标准序列做 diff"
+      target:
+        - "怎么在上线前就能验证每条路径还是对的"
+    rationale: "前者记录了实际开发中通过节点序列 diff 验证路径正确性的工作；后者被追问的正是同一类问题——如何证明路径级别的正确性。"
+
+  - source: "tests/fixtures/relation_vault/Q1阶段性复盘.md"
+    target: "tests/fixtures/relation_vault/下半年部门会议.md"
+    relation_type: "false-positive"
+    evidence:
+      source:
+        - "CI 增加节点顺序断言——节点被跳过或顺序反转时直接阻断合并"
+      target:
+        - "再有因为漏测或者缺乏一致性评估出的严重事故"
+    rationale: "两者都涉及流程阻断和质量问责，但前者针对的是智能系统决策节点的运行顺序校验，后者讨论的是人员考核和传统软件漏测的管理纪律。"
+
+  - source: "tests/fixtures/relation_vault/本周流水账-0418.md"
+    target: "tests/fixtures/relation_vault/0420-工作日志.md"
+    relation_type: "false-positive"
+    evidence:
+      source:
+        - "之前是拿最终输出的字符串做相等比较，太脆"
+      target:
+        - "全量跑一遍要半小时以上，太慢"
+    rationale: "两者都在抱怨测试流程的问题，但前者是在改进智能系统调用路径的验证方式，后者完全是前端 Cypress 脚本的执行耗时。"
+
+  - source: "tests/fixtures/relation_vault/指标体系梳理.md"
+    target: "tests/fixtures/relation_vault/方案草案-v3.md"
+    relation_type: "false-positive"
+    evidence:
+      source:
+        - "空字符串 vs 字段缺失：目前当作相同处理"
+      target:
+        - "几亿条记录不可能割接当晚全量跑 diff"
+    rationale: "两者都涉及字段级别的比对校验问题，但前者校验的是系统输出的结构化参数，后者讨论的是数据库迁移后历史订单的数据一致性。"
+
+dataset_version: relation_vault_v1
+

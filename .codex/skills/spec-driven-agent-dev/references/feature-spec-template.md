@@ -8,7 +8,7 @@ Use a clear feature name and status: Draft, Review, Approved, Implemented, or De
 
 ## Problem
 
-State the user problem, current pain, and why this belongs in Vault Steward.
+State the user problem, current pain, and why this belongs in linkloom.
 
 ## Goals
 

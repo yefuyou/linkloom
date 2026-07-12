@@ -1,6 +1,6 @@
 # Market Landscape
 
-Vault Steward should not compete as another generic chat-with-docs app. It
+linkloom should not compete as another generic chat-with-docs app. It
 should learn from adjacent tools, then focus on the narrower job of keeping a
 Markdown knowledge base understandable, auditable, and safe to reorganize.
 
@@ -45,9 +45,9 @@ What not to copy yet:
 - multi-user administration;
 - broad connector catalogs before the local Markdown workflow is trustworthy.
 
-## Vault Steward Differentiation
+## linkloom Differentiation
 
-Vault Steward should focus on:
+linkloom should focus on:
 
 - evidence-backed structure diagnosis;
 - duplicate, empty-page, broken-link, and suspicious migration-loss detection;
