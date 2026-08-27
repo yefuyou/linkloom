@@ -22,6 +22,7 @@ from linkloom.runtime.models import (
     RunStatus,
     RuntimeState,
     SourceContext,
+    TerminationState,
     UsageEnvelope,
     validate_state_transition,
 )
@@ -31,6 +32,7 @@ from linkloom.runtime.checkpoint import (
     SQLiteCheckpointer,
 )
 from linkloom.runtime.policy import ReadOnlyPolicy
+from linkloom.tools.ledger import ToolExecutionLedger
 from linkloom.runtime.errors import (
     BudgetExceededError,
     CheckpointError,
@@ -379,7 +381,27 @@ class RuntimeEngine:
             "status": "running",
             "current_step": "multi_agent",
             "step_seq": 1,
+            "termination": TerminationState(status="running", sequence=1).to_dict(),
         })
+        # The ledger is owned by the runtime boundary and is copied into the
+        # durable RuntimeState at the existing P4 result checkpoint.  P8.3
+        # adds only a callback boundary: the ToolRuntime remains unaware of
+        # SQLite/checkpointer implementation details, while this composition
+        # layer projects the ledger into a running RuntimeState snapshot.
+        tool_ledger = ToolExecutionLedger(state.tool_ledger)
+        tool_checkpoint_state = {"state": state}
+
+        def persist_tool_ledger(current_ledger: ToolExecutionLedger) -> None:
+            previous = tool_checkpoint_state["state"]
+            updated = RuntimeState.from_dict({
+                **previous.to_dict(),
+                "current_step": "tool_execution",
+                "step_seq": previous.step_seq + 1,
+                "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "tool_ledger": [record.to_dict() for record in current_ledger.to_list()],
+            })
+            self._save_state(updated)
+            tool_checkpoint_state["state"] = updated
 
         try:
             checkpoint_id = self._save_state(state)
@@ -426,7 +448,12 @@ class RuntimeEngine:
                 tracer=tracer,
                 max_total_steps=min(12, request.max_steps),
                 injected_memory=injected_memory,
+                tool_ledger=tool_ledger,
+                tool_checkpoint_callback=persist_tool_ledger,
             )
+            # The callback may have advanced the durable cursor several times
+            # while the coordinator was running.
+            state = tool_checkpoint_state["state"]
 
             result_dir = self.checkpoint_dir / "results" / run_id
             result_dir.mkdir(parents=True, exist_ok=True)
@@ -445,6 +472,13 @@ class RuntimeEngine:
                     "agent_tasks": list(result.get("agent_tasks", [])),
                     "evidence_refs": list(result.get("evidence", [])),
                     "memory_refs": list(result.get("memory_refs", [])),
+                    "tool_ledger": list(result.get("tool_ledger", [])),
+                    "termination": TerminationState(
+                        status="completed",
+                        reason_code="workflow_completed",
+                        reason="Coordinator completed the deterministic workflow.",
+                        sequence=state.step_seq + 1,
+                    ).to_dict(),
                     "result_ref": result_ref,
                 }
                 final_state = RuntimeState.from_dict(state_data)
@@ -473,6 +507,13 @@ class RuntimeEngine:
                 "agent_tasks": list(result.get("agent_tasks", [])),
                 "evidence_refs": list(result.get("evidence", [])),
                 "memory_refs": list(result.get("memory_refs", [])),
+                "tool_ledger": list(result.get("tool_ledger", [])),
+                "termination": TerminationState(
+                    status="failed",
+                    reason_code="agent_workflow_failed",
+                    reason="Coordinator did not complete the workflow.",
+                    sequence=state.step_seq + 1,
+                ).to_dict(),
                 "error": error_env.to_dict(),
             })
             checkpoint_id = self._save_state(final_state)
@@ -480,6 +521,7 @@ class RuntimeEngine:
             tracer.write_manifest(complete=False, source_index_sha256=index_sha, incomplete_reason="agent workflow failed")
             return self._build_status(final_state, checkpoint_id)
         except Exception as exc:
+            state = tool_checkpoint_state["state"]
             error_env = ErrorEnvelope(
                 code=getattr(exc, "code", "AGENT_RUNTIME_ERROR"),
                 category="agent",
@@ -490,6 +532,13 @@ class RuntimeEngine:
                 "status": "failed",
                 "current_step": "multi_agent",
                 "step_seq": state.step_seq + 1,
+                "tool_ledger": [record.to_dict() for record in tool_ledger.to_list()],
+                "termination": TerminationState(
+                    status="failed",
+                    reason_code="agent_runtime_error",
+                    reason="The runtime could not complete the coordinator execution.",
+                    sequence=state.step_seq + 1,
+                ).to_dict(),
                 "error": error_env.to_dict(),
             })
             checkpoint_id = self._save_state(failed_state)

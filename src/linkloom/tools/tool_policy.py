@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import Any, Iterable
 
 from linkloom.runtime.errors import ValidationError
-from linkloom.runtime.models import _assert_json_safe_primitive, _require_keys
+from linkloom.runtime.models import (
+    ToolExecutionRecord,
+    _assert_json_safe_primitive,
+    _require_keys,
+)
 
 
 P4_TOOL_POLICY_VERSION = "p4-readonly-tools-v1"
@@ -78,24 +82,139 @@ class ToolCallPolicy:
 
 
 class ToolPolicyEnforcer:
-    """Authorize typed tools and count only successful calls."""
+    """Authorize typed tools and count each authorized call."""
 
     def __init__(self, policy: ToolCallPolicy):
         self.policy = policy
         self.call_count = 0
 
-    def authorize_call(self, tool_id: str) -> None:
+    def _check_call_eligibility(self, tool_id: str) -> None:
         if not isinstance(tool_id, str) or not tool_id:
             raise ValidationError("tool_id must be a non-empty string.")
         if tool_id in DENIED_TOOL_IDS:
-            raise ValidationError(f"Tool {tool_id} violates P4 core safety limits.")
+            raise ValidationError(
+                f"Tool {tool_id} violates P4 core safety limits.",
+                details={"reason": "core_denial", "tool_id": tool_id},
+            )
         if tool_id in self.policy.denied_tool_ids:
-            raise ValidationError(f"Tool {tool_id} is explicitly denied.")
+            raise ValidationError(
+                f"Tool {tool_id} is explicitly denied.",
+                details={"reason": "explicit_denial", "tool_id": tool_id},
+            )
         if tool_id not in self.policy.allowed_tool_ids:
-            raise ValidationError(f"Tool {tool_id} is not in allowed list.")
+            raise ValidationError(
+                f"Tool {tool_id} is not in allowed list.",
+                details={"reason": "not_allowed", "tool_id": tool_id},
+            )
         if self.call_count >= self.policy.max_calls:
-            raise ValidationError(f"Exceeded max tool calls: {self.policy.max_calls}")
+            raise ValidationError(
+                f"Exceeded max tool calls: {self.policy.max_calls}",
+                details={"reason": "budget_exhausted", "tool_id": tool_id},
+            )
+
+    def check_call_eligibility(self, tool_id: str) -> None:
+        """Check permission and remaining budget without consuming a call.
+
+        ToolRuntime uses this check before it creates the durable pending
+        ledger record.  Keeping the check on the existing policy enforcer
+        preserves one permission/budget authority while allowing durability
+        to be the commitment boundary.
+        """
+        self._check_call_eligibility(tool_id)
+
+    def commit_call(self, tool_id: str) -> None:
+        """Consume exactly one eligible call after its pending boundary.
+
+        The eligibility check is repeated so a caller cannot commit a call
+        after the policy has become ineligible.  This method remains on the
+        same enforcer; it is not a second budget implementation.
+        """
+        self._check_call_eligibility(tool_id)
         self.call_count += 1
+
+    def authorize_call(self, tool_id: str) -> None:
+        """Backward-compatible authorize-and-consume entry point.
+
+        Legacy direct tool wrappers call this method.  New durable runtimes
+        must use ``check_call_eligibility`` followed by ``commit_call`` after
+        their pending checkpoint succeeds.
+        """
+        self.commit_call(tool_id)
+
+    def rehydrate_from_ledger(
+        self,
+        records: Iterable[ToolExecutionRecord],
+        *,
+        run_id: str | None = None,
+        task_id: str | None = None,
+        agent_id: str | None = None,
+    ) -> None:
+        """Restore consumed-call count from durable authorized executions.
+
+        The ledger remains the durable source of facts; this method only
+        rehydrates the policy enforcer's process-local counter.  A durable
+        pending record is already past the budget commitment boundary, so it
+        counts once just like completed and failed records.  When a runtime
+        supplies its execution scope, only records for that run, task, and
+        policy agent are counted.  Out-of-scope records remain ledger facts
+        but cannot consume this policy's budget.
+        """
+        if records is None:
+            raise ValidationError("Tool policy ledger records are required.")
+        for field_name, value in (
+            ("run_id", run_id),
+            ("task_id", task_id),
+            ("agent_id", agent_id),
+        ):
+            if value is not None and (not isinstance(value, str) or not value.strip()):
+                raise ValidationError(f"{field_name} must be a non-empty string or None.")
+        if agent_id is not None and agent_id != self.policy.agent_id:
+            raise ValidationError(
+                "Tool policy agent scope does not match the enforcer policy.",
+                details={
+                    "reason": "scope_mismatch",
+                    "policy_agent_id": self.policy.agent_id,
+                    "agent_id": agent_id,
+                },
+            )
+
+        records_list = list(records)
+        seen_call_ids: set[str] = set()
+        for record in records_list:
+            if not isinstance(record, ToolExecutionRecord):
+                raise ValidationError(
+                    "Tool policy ledger records must be ToolExecutionRecord values."
+                )
+            if record.call_id in seen_call_ids:
+                raise ValidationError(
+                    "Tool policy ledger records cannot contain duplicate call_id values.",
+                    details={"reason": "duplicate_call_id", "call_id": record.call_id},
+                )
+            seen_call_ids.add(record.call_id)
+
+        scoped_records = [
+            record
+            for record in records_list
+            if record.agent_id == self.policy.agent_id
+            and (run_id is None or record.run_id == run_id)
+            and (task_id is None or record.task_id == task_id)
+        ]
+        consumed_calls = len(scoped_records)
+        if consumed_calls > self.policy.max_calls:
+            raise ValidationError(
+                "Durable tool ledger exceeds the policy max_calls boundary.",
+                details={
+                    "reason": "budget_exhausted",
+                    "consumed_calls": consumed_calls,
+                    "max_calls": self.policy.max_calls,
+                    "scope": {
+                        "run_id": run_id,
+                        "task_id": task_id,
+                        "agent_id": self.policy.agent_id,
+                    },
+                },
+            )
+        self.call_count = consumed_calls
 
     @property
     def remaining_calls(self) -> int:

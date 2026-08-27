@@ -5,6 +5,7 @@ from linkloom.runtime.checkpoint import (
     InMemoryCheckpointer,
     SQLiteCheckpointer,
 )
+from linkloom.runtime.artifacts import ArtifactRef, ModelArtifactStore
 from linkloom.runtime.errors import (
     BudgetExceededError,
     CheckpointCorruptError,
@@ -22,6 +23,8 @@ from linkloom.runtime.errors import (
     ValidationError,
 )
 from linkloom.runtime.models import (
+    AgentTurn,
+    ModelExecutionRecord,
     AttemptRecord,
     ErrorEnvelope,
     InterruptEnvelope,
@@ -30,13 +33,22 @@ from linkloom.runtime.models import (
     RunStatus,
     RuntimeState,
     SourceContext,
+    TerminationState,
+    ToolExecutionRecord,
     UsageEnvelope,
     validate_state_transition,
 )
 from linkloom.runtime.policy import ReadOnlyPolicy
+from linkloom.runtime.recovery import (
+    MODEL_RESUME_DECISIONS,
+    ModelResumeDecision,
+    decide_model_resume,
+)
 from linkloom.runtime.graph import RuntimeEngine
 
 __all__ = [
+    "AgentTurn",
+    "ArtifactRef",
     "AttemptRecord",
     "BaseCheckpointer",
     "BudgetExceededError",
@@ -48,6 +60,10 @@ __all__ = [
     "InterruptEnvelope",
     "InterruptNotFoundError",
     "InterruptResponseInvalidError",
+    "ModelArtifactStore",
+    "ModelExecutionRecord",
+    "ModelResumeDecision",
+    "MODEL_RESUME_DECISIONS",
     "PermissionDeniedError",
     "PolicySnapshot",
     "ReadOnlyPolicy",
@@ -62,8 +78,11 @@ __all__ = [
     "StateTransitionError",
     "ThreadBusyError",
     "ThreadNotFoundError",
+    "TerminationState",
+    "ToolExecutionRecord",
     "UsageEnvelope",
     "ValidationError",
     "validate_state_transition",
+    "decide_model_resume",
     "RuntimeEngine",
 ]

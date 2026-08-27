@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import json
 import math
 from pathlib import Path, PureWindowsPath
 import re
@@ -103,7 +104,10 @@ def _assert_relative_artifact_path(value: str, field_name: str) -> None:
             details={"field": field_name, "type": type(value).__name__},
         )
     if not value:
-        return
+        raise ValidationError(
+            f"Field '{field_name}' must be a non-empty relative artifact path.",
+            details={"field": field_name},
+        )
     if Path(value).is_absolute() or PureWindowsPath(value).is_absolute():
         raise ValidationError(
             f"Field '{field_name}' must be a relative artifact path.",
@@ -455,6 +459,401 @@ class RunRequest:
         )
 
 
+AGENT_TURN_STATUSES = {"pending", "running", "completed", "failed", "terminated"}
+TERMINATION_STATUSES = {
+    "running",
+    "completed",
+    "failed",
+    "budget_exhausted",
+    "terminated",
+}
+TOOL_EXECUTION_STATUSES = {"pending", "completed", "failed"}
+_STATE_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
+
+
+def _require_state_id(value: Any, field_name: str, *, allow_none: bool = False) -> None:
+    if value is None and allow_none:
+        return
+    if not isinstance(value, str) or _STATE_ID_PATTERN.fullmatch(value) is None:
+        raise ValidationError(f"{field_name} must be a stable identifier.")
+
+
+def _require_optional_artifact_ref(value: Any, field_name: str) -> None:
+    if value is None:
+        return
+    if not isinstance(value, str):
+        raise ValidationError(f"{field_name} must be a relative artifact reference or null.")
+    _assert_relative_artifact_path(value, field_name)
+
+
+_FORBIDDEN_PERSISTED_KEYS = {
+    "api_key",
+    "api_token",
+    "access_token",
+    "authorization",
+    "chain_of_thought",
+    "credential",
+    "credentials",
+    "hidden_reasoning",
+    "password",
+    "provider_reasoning",
+    "raw_request",
+    "raw_response",
+    "raw_secret",
+    "raw_token",
+    "reasoning",
+    "secret",
+    "secret_value",
+    "stack_trace",
+    "token",
+    "token_value",
+    "traceback",
+    "raw_traceback",
+}
+
+
+def _assert_no_forbidden_persisted_keys(value: Any, field_name: str) -> None:
+    """Reject fields that would persist secrets or hidden model reasoning."""
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key.lower() in _FORBIDDEN_PERSISTED_KEYS:
+                raise ValidationError(
+                    f"Field '{field_name}' contains a forbidden persisted key.",
+                    details={"field": field_name, "key": key},
+                )
+            _assert_no_forbidden_persisted_keys(nested, f"{field_name}[{key}]")
+    elif isinstance(value, list):
+        for index, nested in enumerate(value):
+            _assert_no_forbidden_persisted_keys(nested, f"{field_name}[{index}]")
+
+
+MAX_INLINE_TOOL_RESULT_BYTES = 128 * 1024
+
+
+def _assert_inline_checkpoint_size(value: Any, field_name: str) -> None:
+    """Keep checkpoint-inline tool outcomes bounded; large values need an artifact ref."""
+    try:
+        size = len(
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+        )
+    except (TypeError, ValueError) as error:
+        raise ValidationError(f"{field_name} cannot be serialized for checkpoint storage.") from error
+    if size > MAX_INLINE_TOOL_RESULT_BYTES:
+        raise ValidationError(
+            f"{field_name} exceeds the inline checkpoint size limit.",
+            details={
+                "field": field_name,
+                "max_bytes": MAX_INLINE_TOOL_RESULT_BYTES,
+                "actual_bytes": size,
+                "reason": "inline_result_too_large",
+            },
+        )
+
+
+@dataclass(frozen=True)
+class AgentTurn:
+    """Runtime-owned cursor for one agent decision turn.
+
+    This is intentionally not a message or observation model.  It records
+    identity and lifecycle only, plus safe references to future model
+    exchange artifacts and the tool calls associated with this turn.
+    """
+
+    turn_id: str
+    run_id: str
+    task_id: str
+    agent_id: str
+    sequence: int
+    status: str = "running"
+    tool_call_ids: list[str] = field(default_factory=list)
+    model_request_ref: str | None = None
+    model_response_ref: str | None = None
+    usage: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        _assert_json_safe_primitive(asdict(self), "AgentTurn")
+        for field_name, value in (
+            ("turn_id", self.turn_id),
+            ("run_id", self.run_id),
+            ("task_id", self.task_id),
+            ("agent_id", self.agent_id),
+        ):
+            _require_state_id(value, f"AgentTurn.{field_name}")
+        if isinstance(self.sequence, bool) or not isinstance(self.sequence, int) or self.sequence < 0:
+            raise ValidationError("AgentTurn.sequence must be a non-negative integer.")
+        if self.status not in AGENT_TURN_STATUSES:
+            raise ValidationError(
+                f"AgentTurn.status must be one of {sorted(AGENT_TURN_STATUSES)}."
+            )
+        if not isinstance(self.tool_call_ids, list):
+            raise ValidationError("AgentTurn.tool_call_ids must be a list.")
+        for index, call_id in enumerate(self.tool_call_ids):
+            _require_state_id(call_id, f"AgentTurn.tool_call_ids[{index}]")
+        _require_optional_artifact_ref(self.model_request_ref, "AgentTurn.model_request_ref")
+        _require_optional_artifact_ref(self.model_response_ref, "AgentTurn.model_response_ref")
+        if not isinstance(self.usage, dict):
+            raise ValidationError("AgentTurn.usage must be a JSON object.")
+        _assert_json_safe_primitive(self.usage, "AgentTurn.usage")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "AgentTurn":
+        if not isinstance(data, dict):
+            raise ValidationError("AgentTurn must be a JSON object.")
+        _require_keys(
+            data,
+            {"turn_id", "run_id", "task_id", "agent_id", "sequence", "status"},
+            "AgentTurn",
+        )
+        return cls(
+            turn_id=data["turn_id"],
+            run_id=data["run_id"],
+            task_id=data["task_id"],
+            agent_id=data["agent_id"],
+            sequence=data["sequence"],
+            status=data.get("status", "running"),
+            tool_call_ids=list(data.get("tool_call_ids", [])),
+            model_request_ref=data.get("model_request_ref"),
+            model_response_ref=data.get("model_response_ref"),
+            usage=dict(data.get("usage", {})),
+        )
+
+
+@dataclass(frozen=True)
+class TerminationState:
+    """Runtime authority for agent-loop termination, separate from model output."""
+
+    status: str = "running"
+    reason_code: str | None = None
+    reason: str | None = None
+    sequence: int = 0
+
+    def __post_init__(self) -> None:
+        _assert_json_safe_primitive(asdict(self), "TerminationState")
+        if self.status not in TERMINATION_STATUSES:
+            raise ValidationError(
+                f"TerminationState.status must be one of {sorted(TERMINATION_STATUSES)}."
+            )
+        if self.reason_code is not None:
+            _require_state_id(self.reason_code, "TerminationState.reason_code")
+        if self.reason is not None and (not isinstance(self.reason, str) or not self.reason.strip()):
+            raise ValidationError("TerminationState.reason must be a non-empty string or null.")
+        if isinstance(self.sequence, bool) or not isinstance(self.sequence, int) or self.sequence < 0:
+            raise ValidationError("TerminationState.sequence must be a non-negative integer.")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "TerminationState":
+        if not isinstance(data, dict):
+            raise ValidationError("TerminationState must be a JSON object.")
+        return cls(
+            status=str(data.get("status", "running")),
+            reason_code=data.get("reason_code"),
+            reason=data.get("reason"),
+            sequence=int(data.get("sequence", 0)),
+        )
+
+
+@dataclass(frozen=True)
+class ToolExecutionRecord:
+    """Durable, safe summary of one authorized tool execution."""
+
+    call_id: str
+    run_id: str | None
+    task_id: str | None
+    agent_id: str | None
+    tool_id: str
+    sequence: int
+    status: str
+    arguments: dict[str, Any] = field(default_factory=dict)
+    result: dict[str, Any] | None = None
+    error: dict[str, Any] | None = None
+    idempotency_key: str | None = None
+    created_at: str = ""
+    updated_at: str = ""
+
+    def __post_init__(self) -> None:
+        _assert_json_safe_primitive(asdict(self), "ToolExecutionRecord")
+        for field_name, value in (
+            ("call_id", self.call_id),
+            ("tool_id", self.tool_id),
+        ):
+            _require_state_id(value, f"ToolExecutionRecord.{field_name}")
+        for field_name, value in (
+            ("run_id", self.run_id),
+            ("task_id", self.task_id),
+            ("agent_id", self.agent_id),
+            ("idempotency_key", self.idempotency_key),
+        ):
+            _require_state_id(value, f"ToolExecutionRecord.{field_name}", allow_none=True)
+        if isinstance(self.sequence, bool) or not isinstance(self.sequence, int) or self.sequence < 0:
+            raise ValidationError("ToolExecutionRecord.sequence must be a non-negative integer.")
+        if self.status not in TOOL_EXECUTION_STATUSES:
+            raise ValidationError(
+                f"ToolExecutionRecord.status must be one of {sorted(TOOL_EXECUTION_STATUSES)}."
+            )
+        if not isinstance(self.arguments, dict):
+            raise ValidationError("ToolExecutionRecord.arguments must be a JSON object.")
+        _assert_json_safe_primitive(self.arguments, "ToolExecutionRecord.arguments")
+        _assert_no_forbidden_persisted_keys(self.arguments, "ToolExecutionRecord.arguments")
+        for field_name, value in (("result", self.result), ("error", self.error)):
+            if value is not None and not isinstance(value, dict):
+                raise ValidationError(f"ToolExecutionRecord.{field_name} must be an object or null.")
+            if value is not None:
+                _assert_json_safe_primitive(value, f"ToolExecutionRecord.{field_name}")
+                _assert_no_forbidden_persisted_keys(value, f"ToolExecutionRecord.{field_name}")
+        if self.result is not None:
+            _assert_inline_checkpoint_size(self.result, "ToolExecutionRecord.result")
+        if self.status == "pending" and (self.result is not None or self.error is not None):
+            raise ValidationError("Pending ToolExecutionRecord cannot contain result or error.")
+        if self.status == "completed" and self.result is None:
+            raise ValidationError("Completed ToolExecutionRecord requires a result.")
+        if self.status == "failed" and self.error is None:
+            raise ValidationError("Failed ToolExecutionRecord requires an error.")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ToolExecutionRecord":
+        if not isinstance(data, dict):
+            raise ValidationError("ToolExecutionRecord must be a JSON object.")
+        _require_keys(
+            data,
+            {"call_id", "tool_id", "sequence", "status"},
+            "ToolExecutionRecord",
+        )
+        return cls(
+            call_id=data["call_id"],
+            run_id=data.get("run_id"),
+            task_id=data.get("task_id"),
+            agent_id=data.get("agent_id"),
+            tool_id=data["tool_id"],
+            sequence=data["sequence"],
+            status=data["status"],
+            arguments=dict(data.get("arguments", {})),
+            result=data.get("result"),
+            error=data.get("error"),
+            idempotency_key=data.get("idempotency_key"),
+            created_at=str(data.get("created_at", "")),
+            updated_at=str(data.get("updated_at", "")),
+        )
+
+
+MODEL_EXECUTION_STATUSES = {
+    "request_durable",
+    "request_sent",
+    "response_obtained",
+    "response_durable",
+    "tool_result_durable",
+    "completed",
+    "failed",
+    "reinvoke_allowed",
+}
+
+
+@dataclass(frozen=True)
+class ModelExecutionRecord:
+    """Durable lifecycle record for one provider-neutral model turn."""
+
+    run_id: str
+    turn_id: str
+    task_id: str
+    agent_id: str
+    sequence: int
+    status: str
+    request_ref: str | None = None
+    tool_definition_snapshot_ref: str | None = None
+    observation_ref: str | None = None
+    response_ref: str | None = None
+    normalized_action: dict[str, Any] | None = None
+    usage: dict[str, Any] = field(default_factory=dict)
+    provider_metadata: dict[str, Any] = field(default_factory=dict)
+    request_sha256: str | None = None
+    response_sha256: str | None = None
+    observation_sha256: str | None = None
+
+    def __post_init__(self) -> None:
+        _assert_json_safe_primitive(asdict(self), "ModelExecutionRecord")
+        for field_name, value in (
+            ("run_id", self.run_id),
+            ("turn_id", self.turn_id),
+            ("task_id", self.task_id),
+            ("agent_id", self.agent_id),
+        ):
+            _require_state_id(value, f"ModelExecutionRecord.{field_name}")
+        if isinstance(self.sequence, bool) or not isinstance(self.sequence, int) or self.sequence < 0:
+            raise ValidationError("ModelExecutionRecord.sequence must be a non-negative integer.")
+        if self.status not in MODEL_EXECUTION_STATUSES:
+            raise ValidationError(
+                "ModelExecutionRecord.status must be one of "
+                f"{sorted(MODEL_EXECUTION_STATUSES)}."
+            )
+        for field_name, value in (
+            ("request_ref", self.request_ref),
+            ("tool_definition_snapshot_ref", self.tool_definition_snapshot_ref),
+            ("observation_ref", self.observation_ref),
+            ("response_ref", self.response_ref),
+        ):
+            _require_optional_artifact_ref(value, f"ModelExecutionRecord.{field_name}")
+        if self.normalized_action is not None:
+            if not isinstance(self.normalized_action, dict):
+                raise ValidationError("ModelExecutionRecord.normalized_action must be an object or null.")
+            _assert_no_forbidden_persisted_keys(self.normalized_action, "ModelExecutionRecord.normalized_action")
+        for field_name, value in (("usage", self.usage), ("provider_metadata", self.provider_metadata)):
+            if not isinstance(value, dict):
+                raise ValidationError(f"ModelExecutionRecord.{field_name} must be a JSON object.")
+            _assert_no_forbidden_persisted_keys(value, f"ModelExecutionRecord.{field_name}")
+        for field_name, value in (
+            ("request_sha256", self.request_sha256),
+            ("response_sha256", self.response_sha256),
+            ("observation_sha256", self.observation_sha256),
+        ):
+            if value is not None:
+                _assert_sha256(value, f"ModelExecutionRecord.{field_name}")
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ModelExecutionRecord":
+        if not isinstance(data, dict):
+            raise ValidationError("ModelExecutionRecord must be a JSON object.")
+        _require_keys(
+            data,
+            {"run_id", "turn_id", "task_id", "agent_id", "sequence", "status"},
+            "ModelExecutionRecord",
+        )
+        return cls(
+            run_id=data["run_id"],
+            turn_id=data["turn_id"],
+            task_id=data["task_id"],
+            agent_id=data["agent_id"],
+            sequence=data["sequence"],
+            status=data["status"],
+            request_ref=data.get("request_ref"),
+            tool_definition_snapshot_ref=data.get("tool_definition_snapshot_ref"),
+            observation_ref=data.get("observation_ref"),
+            response_ref=data.get("response_ref"),
+            normalized_action=data.get("normalized_action"),
+            usage=dict(data.get("usage", {})),
+            provider_metadata=dict(data.get("provider_metadata", {})),
+            request_sha256=data.get("request_sha256"),
+            response_sha256=data.get("response_sha256"),
+            observation_sha256=data.get("observation_sha256"),
+        )
+
+
 @dataclass(frozen=True)
 class RuntimeState:
     schema_version: int
@@ -477,6 +876,10 @@ class RuntimeState:
     usage: UsageEnvelope = field(default_factory=UsageEnvelope)
     policy: PolicySnapshot = field(default_factory=PolicySnapshot)
     memory_refs: list[dict[str, Any]] = field(default_factory=list)
+    turns: list[AgentTurn] = field(default_factory=list)
+    tool_ledger: list[ToolExecutionRecord] = field(default_factory=list)
+    termination: TerminationState | None = None
+    model_executions: list[ModelExecutionRecord] = field(default_factory=list)
     created_at: str = ""
     updated_at: str = ""
 
@@ -505,6 +908,55 @@ class RuntimeState:
                 raise ValidationError(f"Unsupported memory scope: {ref['scope']}")
             if not ref["key"] or len(ref["key"]) > 128:
                 raise ValidationError("RuntimeState.memory_refs key must be a short identifier.")
+
+        if not isinstance(self.turns, list):
+            raise ValidationError("RuntimeState.turns must be a list.")
+        for index, turn in enumerate(self.turns):
+            if not isinstance(turn, AgentTurn):
+                raise ValidationError(f"RuntimeState.turns[{index}] must be an AgentTurn.")
+
+        if not isinstance(self.tool_ledger, list):
+            raise ValidationError("RuntimeState.tool_ledger must be a list.")
+        seen_call_ids: set[str] = set()
+        for index, record in enumerate(self.tool_ledger):
+            if not isinstance(record, ToolExecutionRecord):
+                raise ValidationError(
+                    f"RuntimeState.tool_ledger[{index}] must be a ToolExecutionRecord."
+                )
+            if record.call_id in seen_call_ids:
+                raise ValidationError(
+                    "RuntimeState.tool_ledger cannot contain duplicate call_id values.",
+                    details={"call_id": record.call_id, "reason": "duplicate_call_id"},
+                )
+            seen_call_ids.add(record.call_id)
+            if record.run_id is not None and record.run_id != self.run_id:
+                raise ValidationError(
+                    "RuntimeState.tool_ledger contains a record from another run.",
+                    details={"run_id": record.run_id, "state_run_id": self.run_id},
+                )
+
+        if self.termination is not None and not isinstance(self.termination, TerminationState):
+            raise ValidationError("RuntimeState.termination must be a TerminationState or None.")
+
+        if not isinstance(self.model_executions, list):
+            raise ValidationError("RuntimeState.model_executions must be a list.")
+        seen_turn_ids: set[str] = set()
+        for index, record in enumerate(self.model_executions):
+            if not isinstance(record, ModelExecutionRecord):
+                raise ValidationError(
+                    f"RuntimeState.model_executions[{index}] must be a ModelExecutionRecord."
+                )
+            if record.turn_id in seen_turn_ids:
+                raise ValidationError(
+                    "RuntimeState.model_executions cannot contain duplicate turn_id values.",
+                    details={"turn_id": record.turn_id, "reason": "duplicate_turn_id"},
+                )
+            seen_turn_ids.add(record.turn_id)
+            if record.run_id != self.run_id:
+                raise ValidationError(
+                    "RuntimeState.model_executions contains a record from another run.",
+                    details={"run_id": record.run_id, "state_run_id": self.run_id},
+                )
 
         if self.schema_version != 1:
             raise ValidationError(
@@ -577,6 +1029,10 @@ class RuntimeState:
             "usage": self.usage.to_dict(),
             "policy": self.policy.to_dict(),
             "memory_refs": self.memory_refs,
+            "turns": [turn.to_dict() for turn in self.turns],
+            "tool_ledger": [record.to_dict() for record in self.tool_ledger],
+            "termination": self.termination.to_dict() if self.termination else None,
+            "model_executions": [record.to_dict() for record in self.model_executions],
             "created_at": self.created_at,
             "updated_at": self.updated_at,
         }
@@ -636,6 +1092,31 @@ class RuntimeState:
             for a in data.get("attempts", [])
         ]
 
+        turns = [
+            turn if isinstance(turn, AgentTurn) else AgentTurn.from_dict(turn)
+            for turn in data.get("turns", [])
+        ]
+        tool_ledger = [
+            record
+            if isinstance(record, ToolExecutionRecord)
+            else ToolExecutionRecord.from_dict(record)
+            for record in data.get("tool_ledger", [])
+        ]
+        model_executions = [
+            record
+            if isinstance(record, ModelExecutionRecord)
+            else ModelExecutionRecord.from_dict(record)
+            for record in data.get("model_executions", [])
+        ]
+        termination_data = data.get("termination")
+        termination = (
+            termination_data
+            if isinstance(termination_data, TerminationState)
+            else TerminationState.from_dict(termination_data)
+            if isinstance(termination_data, dict)
+            else None
+        )
+
         if not isinstance(source_data, (dict, SourceContext)):
             raise ValidationError("RuntimeState.source must be a JSON object.")
         if not isinstance(data.get("request_ref"), str):
@@ -662,6 +1143,10 @@ class RuntimeState:
             usage=usage,
             policy=policy,
             memory_refs=list(data.get("memory_refs", [])),
+            turns=turns,
+            tool_ledger=tool_ledger,
+            termination=termination,
+            model_executions=model_executions,
             created_at=str(data.get("created_at", "")),
             updated_at=str(data.get("updated_at", "")),
         )
