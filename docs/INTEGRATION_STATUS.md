@@ -60,7 +60,35 @@ Do not stage `.tmp/`, `src/test.md`, `tasks/`, generated egg-info changes,
 credentials, host environment files, or real-vault artifacts. These pre-existing
 local files are preserved. Validation exports are disposable local artifacts.
 
-## Current verification
+## Verification on the integration branch — 2026-09-10
 
-Pending execution against the batch commits. This record is updated with
-actual results before the final publication handoff.
+Published commits:
+
+- `cdc6157` — planning and integration boundaries;
+- `0187b21` — offline M0 Runtime closeout;
+- `9b62318` — Trajectory Eval;
+- `770be3b` — Team Decision seed.
+
+The branch is currently pushed through `770be3b`. Local verification recorded:
+
+| Check | Result |
+|---|---|
+| M0.4 offline regression | 21 passed |
+| M0.3 retrieval regression | 11 passed |
+| Retrieval ToolRuntime regression | 10 passed |
+| M0.2/P8 durability regression | 106 passed |
+| handoff/multi-agent/memory compatibility | 12 passed |
+| Trajectory Eval core | 120 passed, 4 unavailable at pytest `tmp_path` setup because of Windows ACL |
+| Trajectory Eval CLI | 23 PASS, 0 FAIL, 18 NOT_IMPLEMENTED |
+| Team Decision seed validator | 30 cases, 6 workspaces, 36 notes; PASS |
+| smoke harness offline | 15 passed, 1 skipped; real Provider NOT_RUN |
+| compileall | exit 0; one inaccessible protected pytest directory warning |
+| git diff --check | exit 0; existing LF/CRLF notices only |
+
+The four Trajectory Eval errors are environment setup failures before the test
+body, not assertion failures. No production test was altered to hide them.
+The full repository suite remains a separate known red gate because legacy
+relation-eval tests use an unavailable external path and Windows protected
+temporary directories. No PR or merge has been performed; the next review
+should inspect the pushed commit range before deciding whether to merge any
+batch into `master`.
