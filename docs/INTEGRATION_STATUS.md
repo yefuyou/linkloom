@@ -67,9 +67,10 @@ Published commits:
 - `cdc6157` — planning and integration boundaries;
 - `0187b21` — offline M0 Runtime closeout;
 - `9b62318` — Trajectory Eval;
-- `770be3b` — Team Decision seed.
+- `770be3b` — Team Decision seed;
+- `5f6430f` — gated real-provider smoke harness and final verification.
 
-The branch is currently pushed through `770be3b`. Local verification recorded:
+The branch is currently pushed through `5f6430f`. Local verification recorded:
 
 | Check | Result |
 |---|---|
