@@ -10,6 +10,7 @@ from linkloom.agents.curator_agent import CuratorAgent
 from linkloom.agents.reviewer_agent import ReviewerAgent
 from linkloom.agents.registry import AgentRegistry
 from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
+from linkloom.tools.runtime import ToolRuntime, create_retrieval_tool_runtime
 
 
 class Coordinator:
@@ -19,13 +20,20 @@ class Coordinator:
         retrieval_agent: RetrievalAgent,
         curator_agent: CuratorAgent,
         reviewer_agent: ReviewerAgent,
-        tool_funcs: Dict[str, Callable]
+        tool_funcs: Dict[str, Callable],
+        tool_runtime: ToolRuntime | None = None,
     ):
         self.registry = registry
         self.retrieval_agent = retrieval_agent
         self.curator_agent = curator_agent
         self.reviewer_agent = reviewer_agent
         self.tool_funcs = tool_funcs
+        # Direct Coordinator callers remain compatible, while the adapter can
+        # inject the runtime composed from its trusted VaultReader callbacks.
+        self.tool_runtime = tool_runtime or create_retrieval_tool_runtime(
+            tool_funcs["search_notes"],
+            tool_funcs["read_verified_note"],
+        )
         
         self.max_agent_tasks = 6
         self.max_total_steps = 12
@@ -41,7 +49,9 @@ class Coordinator:
         query: str,
         source_context: Dict[str, Any],
         initial_refs: List[str],
-        event_sink: Any = None
+        event_sink: Any = None,
+        *,
+        retrieval_task_id: str | None = None,
     ) -> Dict[str, Any]:
         
         status = "running"
@@ -71,7 +81,8 @@ class Coordinator:
                 
             identity = self.registry.get_agent(agent_id)
             task = AgentTask(
-                task_id=f"task_{uuid.uuid4().hex[:8]}",
+                task_id=(retrieval_task_id if agent_id == "retrieval_agent" and retrieval_task_id is not None
+                         else f"task_{uuid.uuid4().hex[:8]}"),
                 run_id=run_id,
                 parent_task_id=parent_task_id,
                 parent_agent_id="coordinator",
@@ -127,8 +138,8 @@ class Coordinator:
                 query=query,
                 source_context=source_context,
                 policy_enforcer=ret_policy,
-                retrieval_func=self.tool_funcs["search_notes"],
-                reader_func=self.tool_funcs["read_verified_note"]
+                tool_runtime=self.tool_runtime,
+                event_sink=event_sink,
             )
             
             total_steps += ret_result.usage["steps"]
@@ -232,6 +243,7 @@ class Coordinator:
             )
             reviewer_task_dict["status"] = "completed"
             review_decision = review_dec.to_dict()
+            total_tool_calls += max(0, rev_policy.call_count)
             total_steps += 1
             emit("agent.task.completed", "reviewer_agent", "ok", attributes={"task_id": reviewer_task.task_id})
             enforce_limits()
@@ -270,6 +282,12 @@ class Coordinator:
                 "steps": total_steps,
                 "tool_calls": total_tool_calls
             },
+            # The runtime-managed retrieval ledger is an audit-safe projection
+            # of the ToolRuntime lifecycle.  Curator/reviewer legacy direct
+            # callbacks are intentionally not represented here yet.
+            "tool_ledger": [
+                record.to_dict() for record in self.tool_runtime.ledger.to_list()
+            ],
             "fallback_used": fallback_used,
             "errors": errors
         }

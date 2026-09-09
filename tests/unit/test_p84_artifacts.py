@@ -79,6 +79,79 @@ def test_model_execution_record_roundtrips_and_runtime_state_defaults_are_backwa
     assert RuntimeState.from_dict(legacy).model_executions == []
 
 
+def test_model_execution_record_roundtrips_optional_provider_response_projection():
+    record = _record(
+        status="response_durable",
+        response_ref="model/run_p84_artifact/turn_1/response.json",
+        response_sha256="b" * 64,
+        normalized_action={
+            "kind": "final",
+            "tool_call": None,
+            "final_answer": "durable answer",
+        },
+        provider_request_id="provider-request-1",
+        provider_response_id="provider-response-1",
+        finish_reason="stop",
+        provider_error=None,
+    )
+
+    restored = ModelExecutionRecord.from_dict(
+        json.loads(json.dumps(record.to_dict()))
+    )
+
+    assert restored == record
+    assert restored.provider_request_id == "provider-request-1"
+    assert restored.provider_response_id == "provider-response-1"
+    assert restored.finish_reason == "stop"
+    assert restored.provider_error is None
+
+
+def test_model_execution_record_old_payload_defaults_provider_projection_to_none():
+    payload = _record().to_dict()
+    for field_name in (
+        "provider_request_id",
+        "provider_response_id",
+        "finish_reason",
+        "provider_error",
+    ):
+        payload.pop(field_name, None)
+
+    restored = ModelExecutionRecord.from_dict(payload)
+
+    assert restored.provider_request_id is None
+    assert restored.provider_response_id is None
+    assert restored.finish_reason is None
+    assert restored.provider_error is None
+
+
+@pytest.mark.parametrize(
+    ("changes", "message"),
+    [
+        ({"provider_request_id": ""}, "provider_request_id"),
+        ({"provider_response_id": "bad\nresponse"}, "provider_response_id"),
+        ({"finish_reason": "x" * 513}, "finish_reason"),
+        ({"provider_error": "not-an-object"}, "provider_error"),
+        (
+            {"provider_error": {"code": "MODEL_TIMEOUT", "api_key": "secret"}},
+            "forbidden persisted key",
+        ),
+    ],
+)
+def test_model_execution_record_rejects_invalid_provider_projection(changes, message):
+    with pytest.raises(ValidationError, match=message):
+        _record(**changes)
+
+
+def test_model_execution_record_bounds_inline_provider_error():
+    with pytest.raises(ValidationError, match="inline checkpoint size limit"):
+        _record(
+            provider_error={
+                "code": "MODEL_RESPONSE_MALFORMED",
+                "details": {"safe_payload": "x" * (128 * 1024)},
+            }
+        )
+
+
 def test_model_execution_record_rejects_hidden_reasoning_and_unsafe_refs():
     with pytest.raises(ValidationError):
         _record(normalized_action={"hidden_reasoning": "do not persist"})

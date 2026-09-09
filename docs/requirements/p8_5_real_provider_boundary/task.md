@@ -1,17 +1,17 @@
 # P8.5 Task Record
 
-Status: Worker WP-0/WP-1/WP-2 implementation, WP-2 correction patch, WP-3
-implementation, and the minimal WP-3 P1-B correction completed; independent
-Reviewer re-review is required before any WP-4 or P8.6 work.
+Status: **WP-3 ACCEPTED — PASS_WITH_FINDINGS**. The independent Reviewer found
+no blocker. The two non-blocking findings are carried into the approved M0.2
+SPEC as mandatory implementation guards.
 
 ## Current Facts
 
 - P8.1–P8.4 are implemented in the current workspace.
 - P8.4 Reviewer result is `PASS_WITH_FINDINGS`.
-- `FakeModelAdapter` and `SingleAgentModelLoop` are provider-neutral only at
-  the one-action level; they do not yet carry normalized provider metadata or
-  provider errors. `ModelTurnRequest` also needs a backward-compatible
-  optional `previous_tool_call` for a real provider function-response turn.
+- Provider-neutral `ModelResponse`, provider-error/usage metadata, and the
+  backward-compatible `ModelTurnRequest.previous_tool_call` contract exist.
+  `SingleAgentModelLoop` does not yet consume that full provider envelope or
+  populate the previous ToolCall in a real-provider turn.
 - `ModelArtifactStore`, `ModelExecutionRecord`, `ToolExecutionLedger`,
   `ToolRuntime`, and `ToolPolicyEnforcer` already exist and must be reused.
 - The repository has an evaluation-only `AgyCliAdapter` for a Gemini CLI
@@ -88,9 +88,9 @@ The user should be able to explain:
 
 ## Candidate Next Task
 
-After independent Reviewer acceptance, implement WP-2 only: the injected
-direct Gemini API client seam and request mapping, with fake-client offline
-tests. Do not start RetrievalAgent migration or real API smoke automatically.
+Implement the separately approved M0.2 durable real-provider loop boundary,
+starting with RED tests. Do not start RetrievalAgent migration, M0.3, or real
+API smoke automatically.
 
 ## Worker WP-0/WP-1 Completion
 
@@ -156,10 +156,10 @@ exist in `model_adapter.py`. No implementation was added before this check.
   reasoning, raw traceback, and structured forbidden provider metadata fail
   closed; ordinary application text remains exact.
 
-### Remaining issues
+### Remaining issues at the WP-0/WP-1 handoff
 
-- P8.5 still needs the independent Reviewer pass; Worker must not self-accept
-  this slice.
+- This slice still required independent review at that handoff. The later WP-3
+  review and human acceptance are recorded at the end of this task record.
 - The two retrieval integration tests could not initialize pytest's `tmp_path`
   because Windows denied access to the protected temp roots; this is an
   environment check gap, not a contract failure.
@@ -326,7 +326,8 @@ with `ModuleNotFoundError: No module named 'linkloom.agents.providers'`.
   retry, `ModelResponse.error` loop handling, `previous_tool_call` population,
   RetrievalAgent migration, Memory/Evaluation change, network call, real Vault
   access, or GitHub write was performed.
-- WP-3 is ready for independent review only; it is not self-accepted.
+- This was the Worker handoff state before the independent review recorded
+  below; the Worker did not self-accept WP-3.
 
 ## Worker WP-3 Correction — P1-B Durable Commitment and Scope
 
@@ -370,6 +371,26 @@ with `ModuleNotFoundError: No module named 'linkloom.agents.providers'`.
 
 ### Correction boundary
 
-- This remains a Worker correction record only. WP-3 is not accepted here;
-  an independent Reviewer must re-check the commitment ordering, scope
-  filtering, recovery behavior, and security wording.
+- This remains the Worker correction record and is not a self-acceptance. The
+  independent result and human acceptance are recorded separately below.
+
+## Independent Review And Human Acceptance
+
+- Independent Reviewer verdict: `PASS_WITH_FINDINGS`; no blocking finding.
+- Human coordinator decision: `WP-3 ACCEPTED — PASS_WITH_FINDINGS`.
+- Accepted scope: durable state, artifact identity, ambiguous-outcome,
+  checkpoint/recovery, tool-budget commitment, and scoped rehydration
+  semantics implemented by WP-3.
+- This acceptance does **not** claim that a real Provider is integrated or
+  that RetrievalAgent has migrated to a model-driven loop.
+- Non-blocking finding carried into M0.2: a real
+  `ModelProviderAdapter.complete()` invocation must require an actual durable
+  checkpoint callback and a successfully persisted `request_sent` checkpoint;
+  artifact persistence or an in-memory publish is insufficient.
+- Non-blocking finding carried into M0.2: the legacy inline
+  `normalized_action` fallback may remain for P8.4 compatibility but must not
+  be the canonical recovery path for a full Provider `ModelResponse`, which
+  requires artifact ref, SHA-256, and identity validation.
+- Independent evidence: focused WP-3 `16 passed`; P8.4/P8.5 `99 passed`;
+  P8.1–P8.5 unit regression `159 passed`; no production edit was made by the
+  independent Reviewer.

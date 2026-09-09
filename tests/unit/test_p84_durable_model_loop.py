@@ -143,7 +143,7 @@ def test_resume_from_durable_final_response_does_not_call_model_again(artifact_r
             },
             "normalized_action": action.to_dict(),
             "usage": {},
-            "provider_metadata": {"adapter": "fake"},
+            "provider_metadata": {"adapter": "provider_neutral_fake"},
         },
     )
     record = ModelExecutionRecord(
@@ -205,7 +205,7 @@ def test_resume_uses_latest_model_record_by_sequence_not_list_position(artifact_
             },
             "normalized_action": action.to_dict(),
             "usage": {},
-            "provider_metadata": {},
+            "provider_metadata": {"adapter": "provider_neutral_fake"},
         },
     )
     latest = ModelExecutionRecord(
@@ -558,6 +558,23 @@ def test_resume_from_completed_tool_result_reuses_observation_and_does_not_execu
     ledger.record_pending(call)
     ledger.record_completed(call, tool_result)
     turn_id = "run_p84_loop:turn:1"
+    action = ModelAction.tool(call)
+    response = store.write_response(
+        "run_p84_loop",
+        turn_id,
+        {
+            "runtime_identity": {
+                "run_id": "run_p84_loop",
+                "turn_id": turn_id,
+                "task_id": "task_p84_loop",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+            },
+            "normalized_action": action.to_dict(),
+            "usage": {},
+            "provider_metadata": {"adapter": "provider_neutral_fake"},
+        },
+    )
     observation = store.write_observation(
         "run_p84_loop",
         turn_id,
@@ -572,7 +589,6 @@ def test_resume_from_completed_tool_result_reuses_observation_and_does_not_execu
             "tool_result": tool_result.to_dict(),
         },
     )
-    action = ModelAction.tool(call)
     record = ModelExecutionRecord(
         run_id="run_p84_loop",
         turn_id=turn_id,
@@ -581,10 +597,10 @@ def test_resume_from_completed_tool_result_reuses_observation_and_does_not_execu
         sequence=1,
         status="tool_result_durable",
         request_ref="model/run_p84_loop/turn_1/request.json",
-        response_ref="model/run_p84_loop/turn_1/response.json",
+        response_ref=response.ref,
         observation_ref=observation.ref,
         normalized_action=action.to_dict(),
-        response_sha256="e" * 64,
+        response_sha256=response.sha256,
     )
     state = _state(
         turns=[
@@ -723,7 +739,7 @@ def test_window_e_reuses_terminal_ledger_result_without_executor_replay(artifact
             },
             "normalized_action": ModelAction.tool(call).to_dict(),
             "usage": {},
-            "provider_metadata": {},
+            "provider_metadata": {"adapter": "provider_neutral_fake"},
         },
     )
     record = ModelExecutionRecord(

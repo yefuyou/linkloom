@@ -10,12 +10,21 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Any, Callable, Sequence
 
-from linkloom.agents.model_adapter import ModelAdapter, ModelAction, ModelTurnRequest
+from linkloom.agents.model_adapter import (
+    ModelAction,
+    ModelAdapter,
+    ModelProviderAdapter,
+    ModelProviderError,
+    ModelResponse,
+    ModelTurnRequest,
+    ModelUsage,
+)
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.models import (
     AgentTurn,
     ModelExecutionRecord,
+    MODEL_RESPONSE_ORIGINS,
     RuntimeState,
     TerminationState,
 )
@@ -75,14 +84,18 @@ class SingleAgentModelLoop:
 
     def __init__(
         self,
-        model: ModelAdapter,
+        model: ModelAdapter | ModelProviderAdapter,
         tool_runtime: ToolRuntime,
         policy_enforcer: ToolPolicyEnforcer,
         *,
         max_steps: int = 8,
     ) -> None:
-        if not hasattr(model, "decide") or not callable(model.decide):
-            raise ValidationError("SingleAgentModelLoop model must implement decide().")
+        has_decide = callable(getattr(model, "decide", None))
+        has_complete = callable(getattr(model, "complete", None))
+        if not has_decide and not has_complete:
+            raise ValidationError(
+                "SingleAgentModelLoop model must implement decide() or complete()."
+            )
         if not isinstance(tool_runtime, ToolRuntime):
             raise ValidationError("SingleAgentModelLoop tool_runtime must be ToolRuntime.")
         if not isinstance(policy_enforcer, ToolPolicyEnforcer):
@@ -92,6 +105,8 @@ class SingleAgentModelLoop:
         if isinstance(max_steps, bool) or not isinstance(max_steps, int) or max_steps <= 0:
             raise ValidationError("SingleAgentModelLoop max_steps must be a positive integer.")
         self.model = model
+        self._has_legacy_decide = has_decide
+        self._has_provider_complete = has_complete
         self.tool_runtime = tool_runtime
         self.policy_enforcer = policy_enforcer
         self.max_steps = max_steps
@@ -153,6 +168,10 @@ class SingleAgentModelLoop:
                 checkpoint_callback=checkpoint_callback,
                 artifact_store=artifact_store,
                 resume=resume,
+            )
+        if not self._has_legacy_decide:
+            raise ValidationError(
+                "ModelProviderAdapter.complete() requires the durable model loop."
             )
         if not isinstance(state, RuntimeState):
             raise ValidationError("SingleAgentModelLoop state must be RuntimeState.")
@@ -408,8 +427,9 @@ class SingleAgentModelLoop:
         observation_ref: str | None = None
         forced_turn: AgentTurn | None = None
         forced_record: ModelExecutionRecord | None = None
-        pending_action: ModelAction | None = None
+        pending_response: ModelResponse | None = None
         pending_record: ModelExecutionRecord | None = None
+        previous_tool_call: ToolCall | None = None
 
         def project() -> RuntimeState:
             return self._project_state(current_state, turns, ledger, termination, model_records)
@@ -419,6 +439,38 @@ class SingleAgentModelLoop:
             current_state = projected
             if checkpoint_callback is not None:
                 checkpoint_callback(projected)
+
+        def commit_provider_checkpoint(
+            projected: RuntimeState,
+            checkpoint_status: str,
+        ) -> ToolError | None:
+            """Commit a provider boundary before exposing it as current state."""
+            nonlocal current_state
+            if checkpoint_callback is None:
+                return self._error(
+                    "MODEL_DURABLE_CHECKPOINT_REQUIRED",
+                    "runtime",
+                    "Provider invocation requires a durable checkpoint callback.",
+                    {"checkpoint_status": checkpoint_status},
+                )
+            try:
+                checkpoint_callback(projected)
+            except Exception:
+                return self._error(
+                    "MODEL_CHECKPOINT_FAILED",
+                    "runtime",
+                    "The durable model checkpoint could not be committed.",
+                    {"checkpoint_status": checkpoint_status},
+                )
+            current_state = projected
+            return None
+
+        def publish_model_boundary(checkpoint_status: str) -> ToolError | None:
+            projected = project()
+            if self._has_provider_complete:
+                return commit_provider_checkpoint(projected, checkpoint_status)
+            publish(projected)
+            return None
 
         def upsert_record(record: ModelExecutionRecord) -> None:
             for index, existing in enumerate(model_records):
@@ -492,7 +544,7 @@ class SingleAgentModelLoop:
                 },
             )
 
-        def response_artifact(turn: AgentTurn, action: ModelAction):
+        def response_artifact(turn: AgentTurn, response: ModelResponse):
             return artifact_store.write_response(
                 state.run_id,
                 turn.turn_id,
@@ -504,9 +556,12 @@ class SingleAgentModelLoop:
                         "agent_id": agent_id,
                         "sequence": turn.sequence,
                     },
-                    "normalized_action": action.to_dict(),
-                    "usage": {},
-                    "provider_metadata": {"adapter": "provider_neutral_fake"},
+                    "model_response": response.to_dict(),
+                    "normalized_action": (
+                        response.action.to_dict() if response.action is not None else None
+                    ),
+                    "usage": response.usage.to_dict(),
+                    "provider_metadata": response.provider_metadata,
                 },
             )
 
@@ -569,26 +624,182 @@ class SingleAgentModelLoop:
                     return index
             raise ValidationError("Durable model turn is missing from runtime state.")
 
-        def load_action(record: ModelExecutionRecord) -> ModelAction:
-            if record.response_ref:
-                payload = artifact_store.read(record.response_ref, expected_sha256=record.response_sha256)
-                if payload.get("runtime_identity") != artifact_identity(record):
-                    raise ValidationError("Durable model response identity does not match its record.")
-                raw_action = payload.get("normalized_action")
-            else:
-                raw_action = record.normalized_action
-            action = ModelAction.from_dict(raw_action)
-            if record.normalized_action is not None and action.to_dict() != record.normalized_action:
-                raise ValidationError("Durable model action does not match its response artifact.")
-            return action
+        def projected_provider_request_id(response: ModelResponse) -> str | None:
+            if response.provider_request_id is not None:
+                return response.provider_request_id
+            if response.error is not None:
+                return response.error.provider_request_id
+            return None
 
-        def record_tool_call(record: ModelExecutionRecord) -> ToolCall:
-            if not isinstance(record.normalized_action, dict):
-                raise ValidationError("Durable tool observation has no normalized ToolCall.")
-            action = ModelAction.from_dict(record.normalized_action)
-            if action.kind != "tool_call" or action.tool_call is None:
-                raise ValidationError("Durable tool observation requires a ToolCall action.")
-            return action.tool_call
+        def is_legacy_p84_record(
+            record: ModelExecutionRecord,
+            payload: dict[str, Any] | None,
+        ) -> bool:
+            """Recognize only the explicitly bounded pre-origin P8.4 shape."""
+            if record.response_origin is not None:
+                return record.response_origin == "legacy"
+            if any(
+                value is not None
+                for value in (
+                    record.provider_request_id,
+                    record.provider_response_id,
+                    record.finish_reason,
+                    record.provider_error,
+                )
+            ):
+                return False
+            if record.provider_metadata != {}:
+                return False
+            if payload is None:
+                return False
+            if set(payload) != {
+                "runtime_identity",
+                "normalized_action",
+                "usage",
+                "provider_metadata",
+            }:
+                return False
+            return (
+                payload["provider_metadata"] == {"adapter": "provider_neutral_fake"}
+                and isinstance(payload["normalized_action"], dict)
+                and isinstance(payload["usage"], dict)
+            )
+
+        def durable_response_origin(
+            record: ModelExecutionRecord,
+            payload: dict[str, Any] | None,
+        ) -> str:
+            if record.response_origin in MODEL_RESPONSE_ORIGINS:
+                return record.response_origin
+            if is_legacy_p84_record(record, payload):
+                return "legacy"
+            raise ValidationError(
+                "Durable model response origin is missing or cannot be proven legacy.",
+                details={"reason": "response_origin_missing"},
+            )
+
+        def load_response(record: ModelExecutionRecord) -> ModelResponse:
+            payload: dict[str, Any] | None = None
+            if record.response_origin == "provider" and (
+                not record.response_ref or record.response_sha256 is None
+            ):
+                raise ValidationError(
+                    "Durable provider response has no verifiable response artifact.",
+                    details={"reason": "provider_response_artifact_missing"},
+                )
+            if record.response_origin == "legacy" and (
+                not record.response_ref or record.response_sha256 is None
+            ):
+                raise ValidationError(
+                    "Durable legacy response has no verifiable response artifact.",
+                    details={"reason": "legacy_response_artifact_missing"},
+                )
+            if (
+                record.response_origin is None
+                and (
+                    record.response_ref is not None
+                    or record.response_sha256 is not None
+                )
+                and (
+                    not record.response_ref or record.response_sha256 is None
+                )
+            ):
+                raise ValidationError(
+                    "Historical durable response has incomplete artifact identity.",
+                    details={"reason": "legacy_response_artifact_missing"},
+                )
+            if record.response_ref:
+                payload = artifact_store.read(
+                    record.response_ref,
+                    expected_sha256=record.response_sha256,
+                )
+                if payload.get("runtime_identity") != artifact_identity(record):
+                    raise ValidationError(
+                        "Durable model response identity does not match its record."
+                    )
+
+            origin = durable_response_origin(record, payload)
+            if origin == "provider":
+                raw_response = payload.get("model_response") if payload is not None else None
+                if not isinstance(raw_response, dict):
+                    raise ValidationError(
+                        "Durable provider response artifact has no complete ModelResponse.",
+                        details={"reason": "provider_response_envelope_missing"},
+                    )
+                response = ModelResponse.from_dict(raw_response)
+                projected_action = (
+                    response.action.to_dict() if response.action is not None else None
+                )
+                projected_error = (
+                    response.error.to_dict() if response.error is not None else None
+                )
+                expected_projection = {
+                    "normalized_action": projected_action,
+                    "usage": response.usage.to_dict(),
+                    "provider_metadata": response.provider_metadata,
+                    "provider_request_id": projected_provider_request_id(response),
+                    "provider_response_id": response.provider_response_id,
+                    "finish_reason": response.finish_reason,
+                    "provider_error": projected_error,
+                }
+                actual_projection = {
+                    "normalized_action": record.normalized_action,
+                    "usage": record.usage,
+                    "provider_metadata": record.provider_metadata,
+                    "provider_request_id": record.provider_request_id,
+                    "provider_response_id": record.provider_response_id,
+                    "finish_reason": record.finish_reason,
+                    "provider_error": record.provider_error,
+                }
+                if expected_projection != actual_projection:
+                    raise ValidationError(
+                        "Durable provider response does not match its record projection."
+                    )
+                if payload.get("normalized_action") != projected_action:
+                    raise ValidationError(
+                        "Durable model action does not match its response artifact."
+                    )
+                if payload.get("usage") != response.usage.to_dict():
+                    raise ValidationError(
+                        "Durable model usage does not match its response artifact."
+                    )
+                if payload.get("provider_metadata") != response.provider_metadata:
+                    raise ValidationError(
+                        "Durable provider metadata does not match its response artifact."
+                    )
+                return response
+
+            if payload is None:
+                raise ValidationError(
+                    "Durable legacy response has no verifiable response artifact.",
+                    details={"reason": "legacy_response_artifact_missing"},
+                )
+            raw_action = payload.get("normalized_action")
+            action = ModelAction.from_dict(raw_action)
+            if (
+                record.normalized_action is not None
+                and action.to_dict() != record.normalized_action
+            ):
+                raise ValidationError(
+                    "Durable model action does not match its response artifact."
+                )
+            artifact_usage = ModelUsage.from_dict(payload.get("usage"))
+            record_usage = ModelUsage.from_dict(record.usage)
+            if artifact_usage.to_dict() != record_usage.to_dict():
+                raise ValidationError(
+                    "Durable model usage does not match its response artifact."
+                )
+            return ModelResponse(
+                action=action,
+                usage=artifact_usage,
+                provider_metadata=dict(record.provider_metadata),
+            )
+
+        def load_action(record: ModelExecutionRecord) -> ModelAction:
+            response = load_response(record)
+            if response.action is None:
+                raise ValidationError("Durable model response has no action.")
+            return response.action
 
         def validate_ledger_identity(existing: Any, call: ToolCall) -> None:
             if existing is not None and (
@@ -611,8 +822,10 @@ class SingleAgentModelLoop:
                 "TOOL_TERMINAL_CHECKPOINT_FAILED",
             }
 
-        def load_observation(record: ModelExecutionRecord) -> ToolResult:
-            expected_call = record_tool_call(record)
+        def load_observation(
+            record: ModelExecutionRecord,
+            expected_call: ToolCall,
+        ) -> ToolResult:
             if record.observation_ref:
                 payload = artifact_store.read(
                     record.observation_ref,
@@ -647,6 +860,15 @@ class SingleAgentModelLoop:
             proposal = action.tool_call
             assert proposal is not None
             if proposal.run_id == state.run_id and proposal.task_id == task_id and proposal.agent_id == agent_id:
+                if proposal.sequence != turn.sequence:
+                    raise ValidationError(
+                        "Provider ToolCall sequence does not match the current runtime turn.",
+                        details={
+                            "reason": "tool_call_sequence_mismatch",
+                            "expected_sequence": turn.sequence,
+                            "received_sequence": proposal.sequence,
+                        },
+                    )
                 return action
             return ModelAction.tool(
                 ToolCall(
@@ -658,6 +880,41 @@ class SingleAgentModelLoop:
                     agent_id=agent_id,
                     sequence=turn.sequence,
                 )
+            )
+
+        def invoke_model(request: ModelTurnRequest, turn: AgentTurn) -> ModelResponse:
+            if self._has_provider_complete:
+                response = self.model.complete(request)  # type: ignore[union-attr]
+                if not isinstance(response, ModelResponse):
+                    raise ValidationError(
+                        "ModelProviderAdapter.complete() must return ModelResponse."
+                    )
+            else:
+                action = self.model.decide(request)  # type: ignore[union-attr]
+                if not isinstance(action, ModelAction):
+                    raise ValidationError(
+                        "ModelAdapter.decide() must return ModelAction."
+                    )
+                response = ModelResponse(
+                    action=action,
+                    usage=ModelUsage(),
+                    provider_metadata={"adapter": "provider_neutral_fake"},
+                )
+            if response.action is None:
+                return response
+            return replace(response, action=bind_action(response.action, turn))
+
+        def provider_tool_error(error: ModelProviderError) -> ToolError:
+            details: dict[str, Any] = {"outcome": error.outcome}
+            if error.provider_request_id is not None:
+                details["provider_request_id"] = error.provider_request_id
+            return ToolError(
+                code=error.code,
+                category="provider",
+                message=error.message,
+                retryable=bool(error.retryable),
+                details=details,
+                safe_to_expose=True,
             )
 
         def terminal_final(turn: AgentTurn, record: ModelExecutionRecord, action: ModelAction) -> ModelLoopResult:
@@ -683,7 +940,7 @@ class SingleAgentModelLoop:
             record: ModelExecutionRecord,
             action: ModelAction,
         ) -> ToolResult | None:
-            nonlocal observation, observation_ref
+            nonlocal observation, observation_ref, previous_tool_call
             bound = bind_action(action, turn)
             if bound.kind != "tool_call" or bound.tool_call is None:
                 return None
@@ -751,6 +1008,7 @@ class SingleAgentModelLoop:
             )
             observation = result
             observation_ref = stored_observation.ref
+            previous_tool_call = call
             upsert_record(
                 replace(
                     record,
@@ -816,7 +1074,7 @@ class SingleAgentModelLoop:
                 if decision.decision == "reuse_durable_model_response":
                     if record is None:
                         raise ValidationError("No durable model record is available for response reuse.")
-                    pending_action = load_action(record)
+                    pending_response = load_response(record)
                     pending_record = record
                     matching_turn = next((turn for turn in turns if turn.turn_id == record.turn_id), None)
                     if matching_turn is None:
@@ -833,8 +1091,20 @@ class SingleAgentModelLoop:
                 elif decision.decision == "resume_from_tool_result":
                     if record is None:
                         raise ValidationError("No durable model record is available for observation resume.")
-                    observation = load_observation(record)
+                    validated_response = load_response(record)
+                    validated_action = validated_response.action
+                    if (
+                        validated_action is None
+                        or validated_action.kind != "tool_call"
+                        or validated_action.tool_call is None
+                    ):
+                        raise ValidationError(
+                            "Durable tool observation requires a validated ToolCall action."
+                        )
+                    validated_call = validated_action.tool_call
+                    observation = load_observation(record, validated_call)
                     observation_ref = record.observation_ref
+                    previous_tool_call = validated_call
                 elif decision.decision == "requires_model_reinvoke":
                     raise ValidationError("Explicit model reinvocation requires a new request record.")
                 elif decision.decision == "safe_to_invoke_model" and record is not None:
@@ -844,15 +1114,21 @@ class SingleAgentModelLoop:
             next_sequence = max((turn.sequence for turn in turns), default=0) + 1
             model_steps = 0
             while model_steps < self.max_steps:
-                if pending_action is not None and forced_turn is not None:
+                if pending_response is not None and forced_turn is not None:
                     turn = forced_turn
                     record = pending_record
-                    action = pending_action
-                    pending_action = None
+                    response_envelope = pending_response
+                    pending_response = None
                     pending_record = None
                     forced_turn = None
                     if record is None:
-                        raise ValidationError("Durable action has no model execution record.")
+                        raise ValidationError("Durable response has no model execution record.")
+                    if response_envelope.error is not None:
+                        upsert_record(replace(record, status="failed"))
+                        return failed_result(provider_tool_error(response_envelope.error))
+                    action = response_envelope.action
+                    if action is None:
+                        raise ValidationError("Durable response has no action or provider error.")
                     if action.kind == "final":
                         return terminal_final(turn, record, action)
                     tool_result = execute_tool_action(turn, record, action)
@@ -898,6 +1174,7 @@ class SingleAgentModelLoop:
                         user_input=user_input,
                         observation=observation,
                         available_tools=list(tool_definitions),
+                        previous_tool_call=previous_tool_call,
                     )
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
                     request_ref_artifact = request_artifact(
@@ -923,14 +1200,41 @@ class SingleAgentModelLoop:
                         turn,
                         model_request_ref=request_ref_artifact.ref,
                     )
-                    publish(project())
+                    checkpoint_error = publish_model_boundary("request_durable")
+                    if checkpoint_error is not None:
+                        return blocked_result(checkpoint_error)
                 else:
                     request = load_request(record)
                 record = replace(record, status="request_sent")
                 upsert_record(record)
-                publish(project())
+                checkpoint_error = publish_model_boundary("request_sent")
+                if checkpoint_error is not None:
+                    return blocked_result(checkpoint_error)
                 try:
-                    action = self.model.decide(request)
+                    response_envelope = invoke_model(request, turn)
+                except ValidationError as error:
+                    upsert_record(replace(record, status="failed"))
+                    if error.details.get("reason") == "tool_call_sequence_mismatch":
+                        return failed_result(
+                            self._error(
+                                "MODEL_TOOL_CALL_SEQUENCE_MISMATCH",
+                                "schema",
+                                "Provider ToolCall sequence does not match the current runtime turn.",
+                                {
+                                    "turn_id": turn.turn_id,
+                                    "expected_sequence": error.details.get("expected_sequence"),
+                                    "received_sequence": error.details.get("received_sequence"),
+                                },
+                            )
+                        )
+                    return failed_result(
+                        self._error(
+                            "MODEL_ADAPTER_FAILED",
+                            "runtime",
+                            "Model adapter failed to produce a safe response.",
+                            {"turn_id": turn.turn_id},
+                        )
+                    )
                 except Exception:
                     upsert_record(replace(record, status="failed"))
                     return failed_result(
@@ -941,32 +1245,55 @@ class SingleAgentModelLoop:
                             {"turn_id": turn.turn_id},
                         )
                     )
-                if not isinstance(action, ModelAction):
-                    upsert_record(replace(record, status="failed"))
-                    return failed_result(
-                        self._error(
-                            "MODEL_ACTION_INVALID",
-                            "schema",
-                            "Model adapter returned an invalid action.",
-                            {"turn_id": turn.turn_id},
-                        )
-                    )
-
-                bound_action = bind_action(action, turn)
                 record = replace(record, status="response_obtained")
                 upsert_record(record)
-                publish(project())
-                response = response_artifact(turn, bound_action)
+                checkpoint_error = publish_model_boundary("response_obtained")
+                if checkpoint_error is not None:
+                    return blocked_result(checkpoint_error)
+                response = response_artifact(turn, response_envelope)
+                normalized_action = (
+                    response_envelope.action.to_dict()
+                    if response_envelope.action is not None
+                    else None
+                )
+                provider_error = (
+                    response_envelope.error.to_dict()
+                    if response_envelope.error is not None
+                    else None
+                )
                 record = replace(
                     record,
                     status="response_durable",
                     response_ref=response.ref,
                     response_sha256=response.sha256,
-                    normalized_action=bound_action.to_dict(),
+                    normalized_action=normalized_action,
+                    usage=response_envelope.usage.to_dict(),
+                    provider_metadata=dict(response_envelope.provider_metadata),
+                    provider_request_id=projected_provider_request_id(response_envelope),
+                    provider_response_id=response_envelope.provider_response_id,
+                    finish_reason=response_envelope.finish_reason,
+                    provider_error=provider_error,
+                    response_origin=(
+                        "provider" if self._has_provider_complete else "legacy"
+                    ),
                 )
                 upsert_record(record)
-                turns[turn_index(turn)] = replace(turn, model_response_ref=response.ref)
-                publish(project())
+                turns[turn_index(turn)] = replace(
+                    turn,
+                    model_response_ref=response.ref,
+                    usage=response_envelope.usage.to_dict(),
+                )
+                checkpoint_error = publish_model_boundary("response_durable")
+                if checkpoint_error is not None:
+                    return blocked_result(checkpoint_error)
+
+                if response_envelope.error is not None:
+                    upsert_record(replace(record, status="failed"))
+                    return failed_result(provider_tool_error(response_envelope.error))
+
+                bound_action = response_envelope.action
+                if bound_action is None:
+                    raise ValidationError("Model response has no action or provider error.")
 
                 if bound_action.kind == "final":
                     return terminal_final(turns[turn_index(turn)], record, bound_action)
@@ -992,6 +1319,43 @@ class SingleAgentModelLoop:
                     "The model loop reached its maximum step count.",
                     {"max_steps": self.max_steps},
                 ),
+            )
+        except ValidationError as error:
+            recovery_reason = error.details.get("reason")
+            if recovery_reason in {
+                "provider_response_artifact_missing",
+                "legacy_response_artifact_missing",
+                "provider_response_envelope_missing",
+                "hash_mismatch",
+                "response_origin_missing",
+            }:
+                recovery_message = (
+                    "Durable model response origin could not be verified."
+                    if recovery_reason == "response_origin_missing"
+                    else (
+                        "Durable legacy response artifact could not be verified."
+                        if recovery_reason == "legacy_response_artifact_missing"
+                        else "Durable provider response artifact could not be verified."
+                    )
+                )
+                return failed_result(
+                    self._error(
+                        "MODEL_LOOP_RUNTIME_FAILED",
+                        "runtime",
+                        recovery_message,
+                        {
+                            "run_id": state.run_id,
+                            "reason": recovery_reason,
+                        },
+                    )
+                )
+            return failed_result(
+                self._error(
+                    "MODEL_LOOP_RUNTIME_FAILED",
+                    "runtime",
+                    "The durable model loop failed safely.",
+                    {"run_id": state.run_id},
+                )
             )
         except Exception:
             return failed_result(

@@ -486,6 +486,18 @@ def _require_optional_artifact_ref(value: Any, field_name: str) -> None:
     _assert_relative_artifact_path(value, field_name)
 
 
+def _require_optional_provider_projection_text(value: Any, field_name: str) -> None:
+    """Validate bounded provider identity fields stored in a durable record."""
+    if value is None:
+        return
+    if not isinstance(value, str) or not value.strip():
+        raise ValidationError(f"{field_name} must be a non-empty string or null.")
+    if len(value) > 512:
+        raise ValidationError(f"{field_name} exceeds the safe length limit.")
+    if any(ord(character) < 32 for character in value):
+        raise ValidationError(f"{field_name} must not contain control characters.")
+
+
 _FORBIDDEN_PERSISTED_KEYS = {
     "api_key",
     "api_token",
@@ -760,6 +772,7 @@ MODEL_EXECUTION_STATUSES = {
     "failed",
     "reinvoke_allowed",
 }
+MODEL_RESPONSE_ORIGINS = {"provider", "legacy"}
 
 
 @dataclass(frozen=True)
@@ -782,6 +795,13 @@ class ModelExecutionRecord:
     request_sha256: str | None = None
     response_sha256: str | None = None
     observation_sha256: str | None = None
+    provider_request_id: str | None = None
+    provider_response_id: str | None = None
+    finish_reason: str | None = None
+    provider_error: dict[str, Any] | None = None
+    # None is retained only for pre-origin historical records. New durable
+    # response records must set this explicitly at the model boundary.
+    response_origin: str | None = None
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "ModelExecutionRecord")
@@ -814,6 +834,36 @@ class ModelExecutionRecord:
             if not isinstance(value, dict):
                 raise ValidationError(f"ModelExecutionRecord.{field_name} must be a JSON object.")
             _assert_no_forbidden_persisted_keys(value, f"ModelExecutionRecord.{field_name}")
+        for field_name, value in (
+            ("provider_request_id", self.provider_request_id),
+            ("provider_response_id", self.provider_response_id),
+            ("finish_reason", self.finish_reason),
+        ):
+            _require_optional_provider_projection_text(
+                value,
+                f"ModelExecutionRecord.{field_name}",
+            )
+        if self.provider_error is not None:
+            if not isinstance(self.provider_error, dict):
+                raise ValidationError(
+                    "ModelExecutionRecord.provider_error must be a JSON object or null."
+                )
+            _assert_no_forbidden_persisted_keys(
+                self.provider_error,
+                "ModelExecutionRecord.provider_error",
+            )
+            _assert_inline_checkpoint_size(
+                self.provider_error,
+                "ModelExecutionRecord.provider_error",
+            )
+        if self.response_origin is not None and (
+            not isinstance(self.response_origin, str)
+            or self.response_origin not in MODEL_RESPONSE_ORIGINS
+        ):
+            raise ValidationError(
+                "ModelExecutionRecord.response_origin must be 'provider', 'legacy', or null.",
+                details={"response_origin": self.response_origin},
+            )
         for field_name, value in (
             ("request_sha256", self.request_sha256),
             ("response_sha256", self.response_sha256),
@@ -851,6 +901,11 @@ class ModelExecutionRecord:
             request_sha256=data.get("request_sha256"),
             response_sha256=data.get("response_sha256"),
             observation_sha256=data.get("observation_sha256"),
+            provider_request_id=data.get("provider_request_id"),
+            provider_response_id=data.get("provider_response_id"),
+            finish_reason=data.get("finish_reason"),
+            provider_error=data.get("provider_error"),
+            response_origin=data.get("response_origin"),
         )
 
 
