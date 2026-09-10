@@ -18,7 +18,9 @@ Portfolio Gate。
 - Team Decision Eval Seed 已 `ACCEPTED AS EVAL SEED`：30 cases、6
   workspaces、36 notes；canonical Git/LF SHA-256 为
   `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`。
-  Golden 8 为 **READY TO FREEZE, NOT YET FORMALLY FROZEN**。
+  Golden 8 已在
+  [GOLDEN_8_FREEZE.md](../m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md)
+  **FORMALLY FROZEN**。
 - 当前下一产品边界为 M1 Team Decision & Action，仍需遵守其独立批准的
   implementation boundary；本 PR 不包含 M1 production business flow。
 

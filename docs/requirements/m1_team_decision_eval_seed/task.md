@@ -7,8 +7,9 @@ Status: **ACCEPTED AS EVAL SEED** after final independent semantic re-review.
 The corrected corpus contains 30 cases, six workspaces, and 36 notes; the
 canonical Git/LF SHA-256 is
 `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
-Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**. This acceptance does
-not authorize or complete M1 production implementation. The historical
+Golden 8 is **FORMALLY FROZEN** in
+[GOLDEN_8_FREEZE.md](GOLDEN_8_FREEZE.md). This acceptance does not authorize
+or complete M1 production implementation. The historical
 correction/re-review evidence below is retained unchanged.
 Governing scope: existing SPEC.md / implementation_plan.md plus the user's
 explicit Gold Semantic Correction request. Source notes are factual authority.

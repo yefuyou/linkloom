@@ -18,7 +18,8 @@ history.
 - The Team Decision Eval Seed is `ACCEPTED AS EVAL SEED`: 30 cases, six
   workspaces, and 36 notes. Its canonical Git/LF SHA-256 is
   `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
-  Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**.
+  Golden 8 is **FORMALLY FROZEN** in
+  `docs/requirements/m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md`.
 - The next product boundary is M1 Team Decision & Action, subject to its own
   approved implementation scope; no M1 production business flow is included
   in this PR.

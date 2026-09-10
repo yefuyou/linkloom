@@ -6,8 +6,9 @@ This is a synthetic DATA / SPEC / TEST-DESIGN artifact **ACCEPTED AS EVAL
 SEED** following final independent semantic re-review. The accepted corpus has
 30 cases, six workspaces, and 36 notes; its canonical Git/LF SHA-256 is
 `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
-Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**. Acceptance of this
-seed does not accept or implement M1 production behavior.
+Golden 8 is **FORMALLY FROZEN** in
+[GOLDEN_8_FREEZE.md](GOLDEN_8_FREEZE.md). Acceptance of this seed does not
+accept or implement M1 production behavior.
 
 ## Purpose
 

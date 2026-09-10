@@ -19,8 +19,9 @@ factory 或真实-Gemini resume coverage。
 approval。Team Decision Eval Seed 已 `ACCEPTED AS EVAL SEED`（30 cases、6
 workspaces、36 notes；canonical Git/LF SHA-256:
 `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`）。
-Golden 8 为 **READY TO FREEZE, NOT YET FORMALLY FROZEN**；M1 production
-implementation 尚未完成。
+Golden 8 已在
+[GOLDEN_8_FREEZE.md](../m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md)
+**FORMALLY FROZEN**；M1 production implementation 尚未完成。
 
 本目录现在包含两类规划记录：
 
@@ -79,7 +80,7 @@ acceptance 与当前 M1 边界取代。
 - 不重开或重构已冻结的 M0 Runtime，也不把 Gate A smoke transport 当作
   standalone production credential/bootstrap factory。
 - 不在独立 implementation approval 前开始 M1 production Team Decision
-  business flow，也不把 Golden 8 写成已冻结。
+  business flow，也不修改已冻结 Golden 8 的成员、顺序或 dataset 内容。
 - 不访问或修改真实 Vault，不为了提高分数修改 Gold、fixture 或隐藏
   `NOT_IMPLEMENTED` 能力。
 

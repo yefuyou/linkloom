@@ -1,0 +1,15 @@
+{
+  "schema_version": "golden8-freeze/v1",
+  "parent_dataset_schema_version": "team-decision-eval-case/v1",
+  "parent_dataset_sha256": "49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F",
+  "case_ids": [
+    "mps-001",
+    "aer-002",
+    "drm-003",
+    "inc-004",
+    "ret-005",
+    "iti-005",
+    "drm-002",
+    "aer-005"
+  ]
+}
