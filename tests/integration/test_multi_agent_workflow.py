@@ -2,16 +2,26 @@
 
 import shutil
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from linkloom.agents.coordinator import Coordinator
+from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.retrieval_agent import RetrievalAgent
 from linkloom.agents.curator_agent import CuratorAgent
 from linkloom.agents.reviewer_agent import ReviewerAgent
 from linkloom.agents.registry import create_default_registry
 from linkloom.loader import VaultReader
 from linkloom.retrieval import retrieve_evidence
+from linkloom.runtime.artifacts import ModelArtifactStore
+from linkloom.runtime.models import (
+    PolicySnapshot,
+    RuntimeState,
+    SourceContext,
+    TerminationState,
+)
 from linkloom.scanner import scan_vault
+from linkloom.tools.contracts import ToolCall
 
 
 class FakeEventSink:
@@ -45,6 +55,63 @@ def validate_schema_fake(result_type, payload):
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_ROOT = PROJECT_ROOT / "tests" / "fixtures" / "sample_vault"
+
+
+@pytest.fixture
+def m03_root(request: pytest.FixtureRequest) -> Path:
+    root = (
+        PROJECT_ROOT
+        / ".tmp"
+        / f"m03-workflow-fixture-{request.node.name}-{uuid4().hex[:8]}"
+    )
+    root.mkdir(parents=True, exist_ok=False)
+    return root
+
+
+def _model_search_then_final(query: str) -> FakeModelAdapter:
+    def search(request: ModelTurnRequest) -> ModelAction:
+        return ModelAction.tool(
+            ToolCall(
+                call_id="model_search",
+                tool_id="search_notes",
+                arguments={"query": query, "source_context": {}, "limit": 10},
+            )
+        )
+
+    def final(request: ModelTurnRequest) -> ModelAction:
+        assert request.observation is not None
+        return ModelAction.final("model final")
+
+    return FakeModelAdapter([search, final])
+
+
+def _retrieval_agent(run_id: str, root_name: str, query: str = "test query") -> RetrievalAgent:
+    root = PROJECT_ROOT / ".tmp" / f"m03-workflow-{root_name}-{uuid4().hex[:8]}"
+    root.mkdir(parents=True, exist_ok=False)
+    state = RuntimeState(
+        schema_version=1,
+        run_id=run_id,
+        thread_id=f"thread_{uuid4().hex[:10]}",
+        workflow="ask",
+        status="running",
+        step_seq=1,
+        request_ref="request.json",
+        source=SourceContext(
+            index_path="vault_index.json",
+            index_sha256="0" * 64,
+            vault_root_fingerprint="fixture-root",
+        ),
+        policy=PolicySnapshot(max_steps=12, max_provider_requests=8),
+        termination=TerminationState(status="running", sequence=1),
+        created_at="2026-08-30T00:00:00Z",
+        updated_at="2026-08-30T00:00:00Z",
+    )
+    return RetrievalAgent(
+        model=_model_search_then_final(query),
+        initial_state=state,
+        artifact_store=ModelArtifactStore(root / "models"),
+        state_checkpoint_callback=lambda current_state: None,
+    )
 
 
 def make_real_tools(tmp_path: Path):
@@ -92,7 +159,7 @@ def test_ask_workflow_synthetic():
     
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_ask_1", "ask"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs
@@ -116,6 +183,7 @@ def test_ask_workflow_synthetic():
     assert result["review"]["decision"] == "evidence_sufficient"
     assert len(result["agent_tasks"]) == 2  # Retrieval, Reviewer
     assert len(result["handoffs"]) == 0
+    assert result["usage"]["tool_calls"] == 5
 
 
 def test_connect_workflow_synthetic():
@@ -130,7 +198,7 @@ def test_connect_workflow_synthetic():
     
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_connect_1", "connect", "test connect"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs
@@ -158,6 +226,7 @@ def test_connect_workflow_synthetic():
     assert all(task["status"] == "completed" for task in result["agent_tasks"])
     assert result["agent_tasks"][1]["parent_task_id"] == result["agent_tasks"][0]["task_id"]
     assert result["agent_tasks"][2]["parent_task_id"] == result["agent_tasks"][1]["task_id"]
+    assert result["usage"]["tool_calls"] == 7
 
 
 def test_fallback_visibility():
@@ -174,7 +243,7 @@ def test_fallback_visibility():
     
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_fallback", "fallback", "timeout test"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs
@@ -205,7 +274,7 @@ def test_duplicate_input_cycle_prevention():
     
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_cycle", "cycle", "cycle query"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs
@@ -226,11 +295,11 @@ def test_duplicate_input_cycle_prevention():
     assert any("Duplicate" in e for e in result["errors"])
 
 
-def test_real_fixture_ask_returns_verified_evidence_refs(tmp_path: Path):
-    vault_root, index_path, source_context, tool_funcs = make_real_tools(tmp_path)
+def test_real_fixture_ask_returns_verified_evidence_refs(m03_root: Path):
+    vault_root, index_path, source_context, tool_funcs = make_real_tools(m03_root)
     coordinator = Coordinator(
         registry=create_default_registry(),
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_real_ask", "real-ask", "Scanner"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs,
@@ -262,7 +331,7 @@ def test_coordinator_limits_and_state_are_per_run():
     }
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent("run_limit", "limit"),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs,
@@ -273,7 +342,9 @@ def test_coordinator_limits_and_state_are_per_run():
     assert any("max_total_steps" in error for error in limited["errors"])
 
     coordinator.max_total_steps = 12
+    coordinator.retrieval_agent = _retrieval_agent("run_first", "first")
     first = coordinator.run("run_first", "ask", "q", {}, ["initial.md"])
+    coordinator.retrieval_agent = _retrieval_agent("run_second", "second")
     second = coordinator.run("run_second", "ask", "q", {}, ["initial.md"])
     assert first["status"] == "completed"
     assert second["status"] == "completed"
@@ -290,7 +361,11 @@ def test_failed_curator_does_not_emit_illegal_handoff_status():
     }
     coordinator = Coordinator(
         registry=registry,
-        retrieval_agent=RetrievalAgent(),
+        retrieval_agent=_retrieval_agent(
+            "run_curator_failure",
+            "curator-failure",
+            "q",
+        ),
         curator_agent=CuratorAgent(),
         reviewer_agent=ReviewerAgent(),
         tool_funcs=tool_funcs,

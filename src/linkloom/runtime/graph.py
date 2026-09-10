@@ -22,6 +22,7 @@ from linkloom.runtime.models import (
     RunStatus,
     RuntimeState,
     SourceContext,
+    TerminationState,
     UsageEnvelope,
     validate_state_transition,
 )
@@ -30,7 +31,10 @@ from linkloom.runtime.checkpoint import (
     InMemoryCheckpointer,
     SQLiteCheckpointer,
 )
+from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.policy import ReadOnlyPolicy
+from linkloom.runtime.recovery import decide_model_resume
+from linkloom.tools.ledger import ToolExecutionLedger
 from linkloom.runtime.errors import (
     BudgetExceededError,
     CheckpointError,
@@ -149,6 +153,7 @@ class RuntimeEngine:
         fail_once: bool = True,
         trace_dir: Path | str | None = None,
         memory_root: Path | str | None = None,
+        model: Any | None = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -183,6 +188,7 @@ class RuntimeEngine:
         self.pause_after = pause_after
         self.fail_at = fail_at
         self.fail_once = fail_once
+        self.model = model
 
         # Track failure injection occurrence
         self._injected_failed = False
@@ -329,6 +335,43 @@ class RuntimeEngine:
         tracer.emit("run.accepted", "ok")
         tracer.emit("run.started", "started")
 
+        if self.model is None:
+            error_env = ErrorEnvelope(
+                code="MODEL_NOT_CONFIGURED",
+                category="provider",
+                message="Multi-agent execution requires an injected model.",
+            )
+            tracer.emit("run.failed", "failed", error=error_env)
+            tracer.write_manifest(
+                complete=False,
+                source_index_sha256="0" * 64,
+                incomplete_reason="model not configured",
+            )
+            return RunStatus(
+                run_id=run_id,
+                thread_id=thread_id,
+                status="failed",
+                error=error_env.to_dict(),
+            )
+        if request.max_provider_requests <= 0:
+            error_env = ErrorEnvelope(
+                code="MODEL_PROVIDER_BUDGET_EXHAUSTED",
+                category="budget",
+                message="Multi-agent execution requires a positive model request budget.",
+            )
+            tracer.emit("run.failed", "failed", error=error_env)
+            tracer.write_manifest(
+                complete=False,
+                source_index_sha256="0" * 64,
+                incomplete_reason="model request budget exhausted",
+            )
+            return RunStatus(
+                run_id=run_id,
+                thread_id=thread_id,
+                status="failed",
+                error=error_env.to_dict(),
+            )
+
         try:
             index_sha = self._calculate_index_sha256()
             from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
@@ -379,11 +422,43 @@ class RuntimeEngine:
             "status": "running",
             "current_step": "multi_agent",
             "step_seq": 1,
+            "termination": TerminationState(status="running", sequence=1).to_dict(),
         })
+        # RuntimeState is the canonical cursor for the durable model loop.
+        # The legacy ledger callback below remains only as a compatibility
+        # wrapper for direct ToolRuntime callers.
+        state_cursor = {"state": state}
+
+        def persist_runtime_state(current_state: RuntimeState) -> None:
+            if not isinstance(current_state, RuntimeState):
+                raise ValidationError("Runtime checkpoint callback requires RuntimeState.")
+            if current_state.run_id != run_id or current_state.thread_id != thread_id:
+                raise ValidationError(
+                    "Runtime checkpoint identity does not match the active run.",
+                    details={"reason": "checkpoint_identity_mismatch"},
+                )
+            self._save_state(current_state)
+            state_cursor["state"] = current_state
+
+        tool_ledger = ToolExecutionLedger(state.tool_ledger)
+
+        def persist_tool_ledger(current_ledger: ToolExecutionLedger) -> None:
+            if not isinstance(current_ledger, ToolExecutionLedger):
+                raise ValidationError("Tool ledger checkpoint requires ToolExecutionLedger.")
+            previous = state_cursor["state"]
+            updated = RuntimeState.from_dict({
+                **previous.to_dict(),
+                "current_step": "tool_execution",
+                "step_seq": previous.step_seq + 1,
+                "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                "tool_ledger": [record.to_dict() for record in current_ledger.to_list()],
+            })
+            persist_runtime_state(updated)
 
         try:
             checkpoint_id = self._save_state(state)
             tracer.emit("checkpoint.saved", "ok", attributes={"checkpoint_id": checkpoint_id})
+            artifact_store = ModelArtifactStore(self.checkpoint_dir / "models")
             from linkloom.memory.store import MemoryStore
             from linkloom.memory.retriever import MemoryRetriever
             from linkloom.memory.models import MemoryScope
@@ -426,76 +501,211 @@ class RuntimeEngine:
                 tracer=tracer,
                 max_total_steps=min(12, request.max_steps),
                 injected_memory=injected_memory,
+                tool_ledger=tool_ledger,
+                tool_checkpoint_callback=persist_tool_ledger,
+                model=self.model,
+                initial_state=state_cursor["state"],
+                artifact_store=artifact_store,
+                state_checkpoint_callback=persist_runtime_state,
             )
+            # The callback may have advanced the durable cursor several times
+            # while the coordinator was running.
+            state = state_cursor["state"]
 
-            result_dir = self.checkpoint_dir / "results" / run_id
-            result_dir.mkdir(parents=True, exist_ok=True)
-            result_ref = f"results/{run_id}/result.json"
-            (result_dir / "result.json").write_text(
-                json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
-            result_status = result.get("status")
-            if result_status == "completed":
-                state_data = {
-                    **state.to_dict(),
-                    "status": "completed",
-                    "current_step": None,
-                    "step_seq": state.step_seq + 1,
-                    "agent_tasks": list(result.get("agent_tasks", [])),
-                    "evidence_refs": list(result.get("evidence", [])),
-                    "memory_refs": list(result.get("memory_refs", [])),
-                    "result_ref": result_ref,
-                }
-                final_state = RuntimeState.from_dict(state_data)
-                checkpoint_id = self._save_state(final_state)
-                tracer.emit(
-                    "artifact.written",
-                    "ok",
-                    node_name="multi_agent",
-                    output_ref={"kind": "artifact", "path": result_ref},
-                )
-                tracer.emit("run.completed", "ok", attributes={"result_ref": result_ref})
-                tracer.write_manifest(complete=True, source_index_sha256=index_sha)
-                return self._build_status(final_state, checkpoint_id)
-
-            error_env = ErrorEnvelope(
-                code="AGENT_WORKFLOW_FAILED",
-                category="agent",
-                message="Multi-agent coordinator did not complete.",
-                details={"error_count": len(result.get("errors", []))},
-            )
-            final_state = RuntimeState.from_dict({
-                **state.to_dict(),
-                "status": "failed",
-                "current_step": "multi_agent",
-                "step_seq": state.step_seq + 1,
-                "agent_tasks": list(result.get("agent_tasks", [])),
-                "evidence_refs": list(result.get("evidence", [])),
-                "memory_refs": list(result.get("memory_refs", [])),
-                "error": error_env.to_dict(),
-            })
-            checkpoint_id = self._save_state(final_state)
-            tracer.emit("run.failed", "failed", error=error_env)
-            tracer.write_manifest(complete=False, source_index_sha256=index_sha, incomplete_reason="agent workflow failed")
-            return self._build_status(final_state, checkpoint_id)
+            return self._finish_multi_agent(state, result, tracer)
         except Exception as exc:
+            state = state_cursor["state"]
             error_env = ErrorEnvelope(
                 code=getattr(exc, "code", "AGENT_RUNTIME_ERROR"),
-                category="agent",
-                message=str(exc),
+                category=getattr(exc, "category", "agent"),
+                message="The multi-agent runtime failed safely.",
             )
             failed_state = RuntimeState.from_dict({
                 **state.to_dict(),
                 "status": "failed",
                 "current_step": "multi_agent",
                 "step_seq": state.step_seq + 1,
+                "tool_ledger": [record.to_dict() for record in state.tool_ledger],
+                "termination": TerminationState(
+                    status="failed",
+                    reason_code="agent_runtime_error",
+                    reason="The runtime could not complete the coordinator execution.",
+                    sequence=state.step_seq + 1,
+                ).to_dict(),
                 "error": error_env.to_dict(),
             })
             checkpoint_id = self._save_state(failed_state)
             tracer.emit("run.failed", "failed", error=error_env)
             tracer.write_manifest(complete=False, source_index_sha256=index_sha, incomplete_reason="agent runtime error")
             return self._build_status(failed_state, checkpoint_id)
+
+    def _finish_multi_agent(self, state: RuntimeState, result: dict[str, Any], tracer: OptionalTracer) -> RunStatus:
+        """Publish the same coordinator result for fresh and resumed execution."""
+        run_id = state.run_id
+        index_sha = state.source.index_sha256
+        result_dir = self.checkpoint_dir / "results" / run_id
+        result_dir.mkdir(parents=True, exist_ok=True)
+        result_ref = f"results/{run_id}/result.json"
+        (result_dir / "result.json").write_text(
+            json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        result_status = result.get("status")
+        if result_status == "completed":
+            state_data = {
+                **state.to_dict(),
+                "status": "completed",
+                "current_step": None,
+                "step_seq": state.step_seq + 1,
+                "agent_tasks": list(result.get("agent_tasks", [])),
+                "evidence_refs": list(result.get("evidence", [])),
+                "memory_refs": list(result.get("memory_refs", [])),
+                "tool_ledger": [record.to_dict() for record in state.tool_ledger],
+                "termination": TerminationState(
+                    status="completed",
+                    reason_code="workflow_completed",
+                    reason="Coordinator completed the model-driven workflow.",
+                    sequence=state.step_seq + 1,
+                ).to_dict(),
+                "result_ref": result_ref,
+            }
+            final_state = RuntimeState.from_dict(state_data)
+            checkpoint_id = self._save_state(final_state)
+            tracer.emit(
+                "artifact.written",
+                "ok",
+                node_name="multi_agent",
+                output_ref={"kind": "artifact", "path": result_ref},
+            )
+            tracer.emit("run.completed", "ok", attributes={"result_ref": result_ref})
+            tracer.write_manifest(complete=True, source_index_sha256=index_sha)
+            return self._build_status(final_state, checkpoint_id)
+
+        error_env = ErrorEnvelope(
+            code="AGENT_WORKFLOW_FAILED",
+            category="agent",
+            message="Multi-agent coordinator did not complete.",
+            details={"error_count": len(result.get("errors", []))},
+        )
+        final_state = RuntimeState.from_dict({
+            **state.to_dict(),
+            "status": "failed",
+            "current_step": "multi_agent",
+            "step_seq": state.step_seq + 1,
+            "agent_tasks": list(result.get("agent_tasks", [])),
+            "evidence_refs": list(result.get("evidence", [])),
+            "memory_refs": list(result.get("memory_refs", [])),
+            "tool_ledger": [record.to_dict() for record in state.tool_ledger],
+            "termination": TerminationState(
+                status="failed",
+                reason_code="agent_workflow_failed",
+                reason="Coordinator did not complete the workflow.",
+                sequence=state.step_seq + 1,
+            ).to_dict(),
+            "error": error_env.to_dict(),
+        })
+        checkpoint_id = self._save_state(final_state)
+        tracer.emit("run.failed", "failed", error=error_env)
+        tracer.write_manifest(complete=False, source_index_sha256=index_sha, incomplete_reason="agent workflow failed")
+        return self._build_status(final_state, checkpoint_id)
+
+    def resume_multi_agent(self, thread_id: str) -> RunStatus:
+        """Reopen an active retrieval execution without replaying ambiguous work."""
+        from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
+
+        if not isinstance(thread_id, str) or not thread_id.strip():
+            raise ValidationError("Resume requires a non-empty thread ID.")
+        state = self.checkpointer.get_latest(thread_id)
+        if state is None:
+            raise ThreadNotFoundError("No checkpoint exists for the requested thread.")
+        if (state.thread_id != thread_id or state.status != "running"
+                or state.current_step != "model_loop" or state.agent_tasks
+                or state.termination is None or state.termination.status != "running"):
+            raise StateTransitionError("Only an active retrieval model loop can be resumed.")
+        if not callable(getattr(self.model, "decide", None)) and not callable(getattr(self.model, "complete", None)):
+            raise ValidationError("Multi-agent resume requires an injected model.")
+
+        # Resume accepts only an identity. The original request and limits come
+        # from the checkpoint store; paths supplied to this engine remain local.
+        try:
+            root = self.checkpoint_dir.resolve()
+            request_path = (root / state.request_ref).resolve()
+            if not request_path.is_relative_to(root) or Path(state.request_ref).is_absolute():
+                raise ValueError("request outside checkpoint root")
+            request = RunRequest.from_dict(json.loads(request_path.read_text(encoding="utf-8")))
+        except Exception:
+            raise ValidationError("The persisted run request is unavailable or invalid.") from None
+        if (request.workflow != state.workflow
+                or request.thread_id not in (None, thread_id)
+                or request.max_steps != state.policy.max_steps
+                or request.max_provider_requests != state.policy.max_provider_requests):
+            raise ValidationError("The persisted run request does not match the checkpoint.")
+        try:
+            if (calculate_fingerprint(self.vault_root) != state.source.vault_root_fingerprint
+                    or self._calculate_index_sha256() != state.source.index_sha256):
+                raise StaleSourceError("The source no longer matches the durable run.")
+        except (LoaderError, OSError):
+            raise StaleSourceError("The durable source is unavailable.") from None
+
+        records = state.model_executions
+        task_ids = {record.task_id for record in records}
+        if (len(task_ids) != 1 or any(record.run_id != state.run_id
+                or record.agent_id != "retrieval_agent" for record in records)):
+            raise ValidationError("Checkpoint must identify one canonical retrieval task.")
+        task_id = next(iter(task_ids))
+        if any((turn.run_id, turn.task_id, turn.agent_id) != (state.run_id, task_id, "retrieval_agent")
+               for turn in state.turns):
+            raise ValidationError("Checkpoint turns disagree with retrieval identity.")
+        ledger = ToolExecutionLedger(state.tool_ledger)
+        if any((record.run_id, record.task_id, record.agent_id) != (state.run_id, task_id, "retrieval_agent")
+               for record in ledger.to_list()):
+            raise ValidationError("Checkpoint tools disagree with retrieval identity.")
+        decision = decide_model_resume(state, ledger=ledger)
+        if decision.decision not in {"safe_to_invoke_model", "reuse_durable_model_response", "resume_from_tool_result"}:
+            # This is a rejected resume attempt, not a terminal rewrite of the
+            # durable run. An external verification workflow remains separate.
+            return RunStatus(
+                run_id=state.run_id, thread_id=thread_id, status="failed",
+                current_step=state.current_step,
+                error=ErrorEnvelope(
+                    code="MODEL_RESUME_REQUIRES_VERIFICATION", category="runtime",
+                    message="Durable state requires verification before resume.",
+                    details={"decision": decision.decision, "reason_code": decision.reason_code},
+                ).to_dict(),
+            )
+
+        try:
+            adapter = RuntimeAgentAdapter(self.vault_root, self.index_path)
+            adapter.reader.read_notes()
+        except (LoaderError, OSError):
+            raise StaleSourceError("The source no longer matches the durable run.") from None
+        tracer = OptionalTracer(self.trace_dir, state.run_id, thread_id, load_existing=True)
+        cursor = {"state": state}
+
+        def persist(current: RuntimeState) -> None:
+            if not isinstance(current, RuntimeState) or (current.run_id, current.thread_id) != (state.run_id, thread_id):
+                raise ValidationError("Resume checkpoint identity does not match the active run.")
+            self._save_state(current)
+            cursor["state"] = current
+
+        result = adapter.run(
+            run_id=state.run_id, workflow=state.workflow, query=request.query,
+            source_context=state.source.to_dict(), tracer=tracer,
+            # The model-step budget is already fully consumed by a durable
+            # terminal response in this resume path.  Coordinator still needs
+            # one projection step for Reviewer/final state publication; this
+            # does not authorize another model invocation.
+            # Coordinator's existing boundary check is strict (it rejects
+            # total_steps >= max_total_steps), so reserve one additional
+            # slot for that final check after the Reviewer projection.
+            max_total_steps=min(12, state.policy.max_steps) + 2,
+            tool_ledger=ledger, model=self.model, initial_state=state,
+            artifact_store=ModelArtifactStore(self.checkpoint_dir / "models"),
+            state_checkpoint_callback=persist, resume_model_loop=True,
+            retrieval_task_id=task_id,
+        )
+        result["memory_refs"] = list(state.memory_refs)
+        return self._finish_multi_agent(cursor["state"], result, tracer)
 
     def inspect(self, thread_id: str) -> RunStatus:
         """Inspect the latest state status summary of a thread."""
