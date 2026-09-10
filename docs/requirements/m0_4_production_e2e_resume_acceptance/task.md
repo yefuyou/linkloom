@@ -1,6 +1,6 @@
 # M0.4 Production E2E + Resume Acceptance — Task Record
 
-Status: **READY FOR INDEPENDENT REVIEW — OFFLINE** under
+Status: **ACCEPTED — Gate A and Gate B COMPLETE** under
 [SPEC.md](SPEC.md) and [implementation_plan.md](implementation_plan.md).
 
 The approved Worker boundary is offline W0-W5 only. A real-provider smoke is
@@ -630,3 +630,46 @@ Remove-Item Env:LINKLOOM_RUN_REAL_PROVIDER_SMOKE
 
 Preparation status: READY FOR USER-AUTHORIZED REAL PROVIDER SMOKE.
 No host credentials accessed; no real Vault or Provider used; no commit/push/PR.
+
+## Gate A real-provider smoke completion — 2026-09-10
+
+The human completed the separately authorized, capped production smoke exactly
+once. This record retains only the sanitized execution evidence; no credential,
+raw request/response, provider payload, or real-Vault content is recorded.
+
+| Field | Sanitized result |
+|---|---|
+| Provider / model | Gemini / `gemini-3.8-flash` |
+| Provider calls | 2 |
+| Local tool calls | 1 — `search_notes` |
+| Trajectory | provider ToolCall -> local ToolRuntime -> ToolResult -> provider Final |
+| Final agent status | `completed` |
+| Model response origin | `provider` |
+| Usage | available |
+| Credential-leak check | `PASS` |
+| Smoke pytest result | `1 passed` |
+
+The run entered the production composition through `RuntimeEngine`, not a
+direct adapter/unit-test path. It used the synthetic fixture copy, a read-only
+tool, manual provider function calling, two-call and step caps, and no
+automatic retry. The user instructed that no further real-provider runs be
+made because this single successful run is sufficient Gate A evidence.
+
+### Final gate decision
+
+```text
+M0.1 = ACCEPTED
+M0.2 = ACCEPTED
+M0.3 = ACCEPTED
+M0.4 = ACCEPTED
+
+Gate A = COMPLETE — real-provider production smoke
+Gate B = COMPLETE — production Agent Loop
+M0 = COMPLETE
+```
+
+Claim boundary: the tested production trajectory proves real Gemini
+`model -> ToolCall -> local ToolRuntime -> ToolResult -> model Final` once. It
+does not claim exactly-once execution, general multi-tool support, or a
+production retry framework. The retained automated evidence remains the M0.4
+offline/resume suite plus the sanitized one-pass smoke result.
