@@ -1,5 +1,40 @@
 # Integration and push record — 2026-09-10
 
+## Current PR and acceptance state — 2026-09-10
+
+This section is current; the integration snapshot below is retained as dated
+history.
+
+- PR #1 is open and mergeable: base `master` at `e5652b4`; head
+  `feature/p8-agent-runtime` at `7954eaf`.
+- M0.1, M0.2, M0.3, and M0.4 are `ACCEPTED`; M0 is `COMPLETE`.
+- Gate A is `COMPLETE`: one bounded real Gemini `gemini-3.8-flash` production
+  smoke used `RuntimeEngine` and `GeminiProviderAdapter` for two provider
+  turns, one local `search_notes` ToolRuntime call, and a final completed
+  AgentResult. The response origin was `provider`, usage was available, and
+  the credential-leak check passed.
+- Gate B is `COMPLETE`. No further real-provider smoke is required for this
+  acceptance; PR merge remains a separate review decision.
+- The Team Decision Eval Seed is `ACCEPTED AS EVAL SEED`: 30 cases, six
+  workspaces, and 36 notes. Its canonical Git/LF SHA-256 is
+  `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
+  Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**.
+- The next product boundary is M1 Team Decision & Action, subject to its own
+  approved implementation scope; no M1 production business flow is included
+  in this PR.
+
+### Gemini claim boundary
+
+The accepted run used production `RuntimeEngine`, production
+`GeminiProviderAdapter`, real Gemini, and local LinkLoom ToolRuntime. The
+concrete `google-genai` bootstrap and provider-native second-turn history
+reconstruction used for live validation live only in the bounded Gate A smoke
+transport. Runtime remains provider-neutral: this does not claim a standalone
+production Gemini credential/bootstrap factory or a real-Gemini
+process-restart/resume test.
+
+## Historical integration and push snapshot
+
 ## Authorization and destination
 
 The user authorized dependency-ordered commits, pushes, and supporting
@@ -18,7 +53,7 @@ Destination: `codex/integration-20260910`, based on the existing P8 commit.
 The original feature branch and master remain unchanged. Commits are stacked
 in dependency order; later batches include their ancestors.
 
-## Commit batches
+### Historical commit batches
 
 | Batch | Scope | Acceptance boundary |
 |---|---|---|
@@ -38,7 +73,7 @@ The M0.4 task record contains both offline Runtime acceptance and later smoke
 preparation history. Publishing that record in batch 2 does not mean batch 5
 files are present until batch 5 lands.
 
-## Validation and merge policy
+### Historical validation and merge policy
 
 Validate exported committed trees with their own `src` on PYTHONPATH so local
 untracked modules cannot make an incomplete batch pass. Run relevant offline
@@ -54,13 +89,13 @@ Merge remains a separate decision after reviewing the final commit range and
 its evidence. Seed re-review and Gate A real-provider evidence remain visible
 open items; neither is silently converted to acceptance by a push.
 
-## Exclusions
+### Historical exclusions
 
 Do not stage `.tmp/`, `src/test.md`, `tasks/`, generated egg-info changes,
 credentials, host environment files, or real-vault artifacts. These pre-existing
 local files are preserved. Validation exports are disposable local artifacts.
 
-## Verification on the integration branch — 2026-09-10
+### Historical verification on the integration branch — 2026-09-10
 
 Published commits:
 

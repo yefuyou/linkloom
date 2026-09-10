@@ -3,6 +3,12 @@
 Status: **ACCEPTED — independent Reviewer `PASS_WITH_FINDINGS`; human accepted
 on 2026-08-30**.
 
+## Current M0 closeout status — 2026-09-10
+
+M0.1 remains `ACCEPTED`. Later accepted M0.2–M0.4 work closed Gate A and Gate
+B; M0 is now `COMPLETE`. The Gate-incomplete statement below is the dated
+M0.1-only acceptance boundary, not current project status.
+
 ## Governing SPEC
 
 - [SPEC.md](SPEC.md)
@@ -11,8 +17,8 @@ on 2026-08-30**.
 - Primary Gate: Gate B integration readiness
 - Supporting Gate: Gate A readiness only
 
-M0.1 is closed. Gate A and Gate B remain incomplete, and no M0.2 Worker is
-authorized by this acceptance record.
+At the M0.1-only acceptance point, M0.1 was closed while Gate A and Gate B
+remained incomplete; this record did not authorize an M0.2 Worker.
 
 ## Planner Snapshot — 2026-08-29
 

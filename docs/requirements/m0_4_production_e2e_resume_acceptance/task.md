@@ -3,9 +3,19 @@
 Status: **ACCEPTED — Gate A and Gate B COMPLETE** under
 [SPEC.md](SPEC.md) and [implementation_plan.md](implementation_plan.md).
 
-The approved Worker boundary is offline W0-W5 only. A real-provider smoke is
-required for final Gate A/M0.4 acceptance but remains separately gated and is
-not authorized by this task record.
+## Current final closeout status — 2026-09-10
+
+M0.4 is accepted; M0.1–M0.4, Gate A, Gate B, and M0 are `COMPLETE`. The
+original W0–W5 authorization below was offline-only. Its separately authorized
+Gate A real-provider acceptance was completed on 2026-09-10: real Gemini
+`gemini-3.8-flash` made two provider calls, local ToolRuntime made one
+`search_notes` call, the final AgentResult was `completed`, response origin was
+`provider`, usage was available, and credential-leak check passed. No further
+real-provider smoke is required for this acceptance.
+
+Historical Worker boundary: W0-W5 was offline-only. At that point a
+real-provider smoke remained separately gated and was not authorized by this
+task record.
 
 ## Step
 

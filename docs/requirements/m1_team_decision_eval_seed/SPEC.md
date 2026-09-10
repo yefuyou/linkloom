@@ -2,9 +2,12 @@
 
 ## Status
 
-This is a synthetic DATA / SPEC / TEST-DESIGN artifact. It is ready for
-independent data review, but it is not independently accepted by the authoring
-agent.
+This is a synthetic DATA / SPEC / TEST-DESIGN artifact **ACCEPTED AS EVAL
+SEED** following final independent semantic re-review. The accepted corpus has
+30 cases, six workspaces, and 36 notes; its canonical Git/LF SHA-256 is
+`49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
+Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**. Acceptance of this
+seed does not accept or implement M1 production behavior.
 
 ## Purpose
 
@@ -85,8 +88,9 @@ expose Gold labels to the model.
 4. Each case has at least one preferred and one condition-bearing acceptable
    symbolic trajectory; no trajectory permits `final_without_evidence`.
 5. No file outside this directory is required to consume or validate the seed.
-6. An independent Reviewer must inspect note content and case semantics before
-   the corpus is called accepted. The authoring agent must not self-accept it.
+6. Independent semantic re-review accepted this corpus as an Eval Seed. Any
+   future dataset revision requires a new independent review; this historical
+   authoring constraint remains the rule for subsequent changes.
 
 ## Non-goals
 

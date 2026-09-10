@@ -1,7 +1,10 @@
 # LinkLoom Team Decision & Action Eval Seed
 
-Status: Worker-created DATA/SPEC/TEST-DESIGN seed; independent data review is
-still required.
+Status: **ACCEPTED AS EVAL SEED** following final independent semantic
+re-review: 30 cases, six workspaces, and 36 notes. Canonical Git/LF SHA-256:
+`49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
+Windows CRLF working-tree hashing is not content drift. Golden 8 is **READY TO
+FREEZE, NOT YET FORMALLY FROZEN**. This is not M1 production implementation.
 
 ## Purpose
 

@@ -7,14 +7,29 @@ Real Agent Loop、Retrieval + Memory + Context Assembly、Business Vertical
 Slice、Human-In-The-Loop、Agent Eval、Reliability & Quantification 七个
 Portfolio Gate。
 
-## 当前 Active Work Package
+## 当前状态（2026-09-10）
+
+- M0.1、M0.2、M0.3、M0.4 均已 `ACCEPTED`；Gate A、Gate B 与 M0 均为
+  `COMPLETE`。
+- Gate A 的一次受限真实 Gemini production smoke 已通过：两次 provider
+  调用、一次本地 `search_notes`、最终 AgentResult 为 `completed`，usage
+  可用且 credential-leak check 为 `PASS`。这不宣称 standalone production
+  credential factory 或真实 Gemini restart/resume coverage。
+- Team Decision Eval Seed 已 `ACCEPTED AS EVAL SEED`：30 cases、6
+  workspaces、36 notes；canonical Git/LF SHA-256 为
+  `49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`。
+  Golden 8 为 **READY TO FREEZE, NOT YET FORMALLY FROZEN**。
+- 当前下一产品边界为 M1 Team Decision & Action，仍需遵守其独立批准的
+  implementation boundary；本 PR 不包含 M1 production business flow。
+
+## 历史 Active Work Package（2026-09-10 整合校准）
 
 2026-09-10 整合校准：下文各日期条目保留历史状态。最新
 `m0_4_production_e2e_resume_acceptance/task.md` 的 2026-09-09 记录明确记载
 人类接受 M0.4、M0 Offline CLOSED、Gate B COMPLETE — OFFLINE。
 Gate A 仍为 PARTIAL，真实 Provider smoke 为 NOT_RUN。Trajectory Eval 已有
 feature-level 独立验收；Team Decision seed 修正后待 focused 独立复审。
-当前用户授权分批提交、推送和补充文档，不包含合并 master 或真实 Provider
+当时用户授权分批提交、推送和补充文档，不包含合并 master 或真实 Provider
 调用。批次与验证证据见 [整合记录](../../INTEGRATION_STATUS.md)。
 
 **Master SPEC 已按独立 Reviewer `PASS_WITH_FINDINGS`（无 blocker）完成

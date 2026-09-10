@@ -3,9 +3,13 @@
 ## 1. Status and boundary
 
 DATA Worker revision following the previous independent semantic review FAIL.
-Status: READY FOR FOCUSED INDEPENDENT DATA RE-REVIEW.
-Corrections are implemented; final validation and diagnostic spot-check results
-are recorded below. This is not acceptance and does not authorize M1.
+Status: **ACCEPTED AS EVAL SEED** after final independent semantic re-review.
+The corrected corpus contains 30 cases, six workspaces, and 36 notes; the
+canonical Git/LF SHA-256 is
+`49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`.
+Golden 8 is **READY TO FREEZE, NOT YET FORMALLY FROZEN**. This acceptance does
+not authorize or complete M1 production implementation. The historical
+correction/re-review evidence below is retained unchanged.
 Governing scope: existing SPEC.md / implementation_plan.md plus the user's
 explicit Gold Semantic Correction request. Source notes are factual authority.
 
@@ -190,7 +194,7 @@ anchors; (2) business state and permission are distinct from answer success.
 Portfolio evidence: 30 corrected records, 14-case source-backed correction table,
 validator command and negative-check evidence. No model quality score claimed.
 
-## 17. Next handoff
+## 17. Historical Worker handoff before final re-review
 
 Candidate next task only: focused independent DATA re-review, then a separate
 decision on freezing Golden 8. Do not proceed automatically to M1.

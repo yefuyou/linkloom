@@ -1,7 +1,10 @@
 # M0.2 Durable Real-Provider Loop Completion Task Record
 
-Status: **APPROVED FOR WORKER IMPLEMENTATION** within the frozen M0.2
-production/test boundary.
+Status: **ACCEPTED — final M0 closeout completed on 2026-09-10**.
+
+The original Worker-authorization status and all dated implementation/review
+evidence below are historical. M0.2 is accepted; later M0.3/M0.4 acceptance
+closed Gate A, Gate B, and M0 without altering this record's original scope.
 
 ## Governing SPEC
 
@@ -12,8 +15,8 @@ production/test boundary.
 - Supporting Gate: Gate B readiness only
 - Predecessor: M0.1 `ACCEPTED` on 2026-08-30
 
-A separate Worker is authorized after this documentation correction, but only
-within the exact boundary below. Gate A and Gate B are not complete.
+At the original Planner boundary, a separate Worker was authorized only within
+the exact boundary below and Gate A/B were not complete.
 
 ## Planner Snapshot — 2026-08-30
 

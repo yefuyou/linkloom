@@ -1,7 +1,9 @@
 # M0.3 RetrievalAgent Model-Driven Migration — Task Record
 
-Status: **READY FOR INDEPENDENT REVIEW** after Worker implementation within
-[SPEC.md](SPEC.md) and [implementation_plan.md](implementation_plan.md).
+Status: **ACCEPTED — final M0 closeout completed on 2026-09-10**.
+
+The original Worker and review state below is retained as dated evidence.
+M0.3 is accepted; later M0.4 acceptance closed Gate A, Gate B, and M0.
 
 ## Step
 

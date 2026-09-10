@@ -6,6 +6,22 @@
 [docs/PRODUCT_ROADMAP.md](../../PRODUCT_ROADMAP.md) 仍是产品边界和六个用户
 Milestone 的唯一权威来源。
 
+## 当前导航（2026-09-10）
+
+M0.1–M0.4 已 `ACCEPTED`，Gate A、Gate B 与 M0 已 `COMPLETE`。Gate A 的
+受限真实 Gemini production smoke 证明了 production `RuntimeEngine` 与
+`GeminiProviderAdapter` 的两轮 model -> local `search_notes` -> Final
+闭环；SDK bootstrap 与 provider-native history reconstruction 仍只存在于
+Gate A smoke transport，Runtime 不因此拥有 standalone production credential
+factory 或真实-Gemini resume coverage。
+
+当前下一产品边界是 M1 Team Decision & Action，须等待其独立 implementation
+approval。Team Decision Eval Seed 已 `ACCEPTED AS EVAL SEED`（30 cases、6
+workspaces、36 notes；canonical Git/LF SHA-256:
+`49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F`）。
+Golden 8 为 **READY TO FREEZE, NOT YET FORMALLY FROZEN**；M1 production
+implementation 尚未完成。
+
 本目录现在包含两类规划记录：
 
 - [MASTER_SPEC_V2.md](MASTER_SPEC_V2.md) 是面向求职完成态的
@@ -26,7 +42,7 @@ worktree evidence，不是已接受 Gate F 能力。上述基础尚未形成真�
 驱动、模型自主检索、Context Assembly、业务 Vertical Slice、业务 Outcome
 Eval 和量化 Reliability 的完整闭环。
 
-截至 2026-08-30，七个 V2 Gate 均未达到 `COMPLETE`。M0.1 已经由独立
+截至 2026-08-30 的历史 baseline 中，七个 V2 Gate 均未达到 `COMPLETE`。M0.1 已经由独立
 Reviewer 以 `PASS_WITH_FINDINGS`（无 blocker）复核，并由人类正式接受；
 这只关闭 M0.1 integration repair，不关闭 Gate A 或 Gate B。Portfolio Freeze 是
 七个 Gate 全部通过后的独立最终证据步骤，不是第八个 Gate。M1-M4 渐进组装
@@ -41,10 +57,9 @@ Reviewer 以 `PASS_WITH_FINDINGS`（无 blocker）复核，并由人类正式接
 2. [MASTER_SPEC_V2.md](MASTER_SPEC_V2.md)：确认当前求职完成态定位、七个
    Gate、M0-M5 执行顺序和 Stop Rules。
 3. [task.md](task.md)：查看当前 Planner/Reviewer 门禁和唯一获授权下一任务。
-4. [M0.2 SPEC](../m0_2_durable_real_provider_loop/SPEC.md)、
-   [implementation plan](../m0_2_durable_real_provider_loop/implementation_plan.md)
-   与 [task record](../m0_2_durable_real_provider_loop/task.md)：审阅当前
-   Planner 输出；这些文件尚未授权 Worker。
+4. [M1 Team Decision Eval Seed](../m1_team_decision_eval_seed/README.md)：
+   阅读已接受 Eval Seed、canonical Git/LF hash 与 Golden 8 freeze boundary；
+   M1 production implementation 仍须另行批准。
 5. [current_state.md](current_state.md) 与 [SPEC.md](SPEC.md)：读取 2026-07
    历史基线，不把其中的旧“下一任务”当作当前授权。
 6. [architecture.md](architecture.md)、[data_contracts.md](data_contracts.md)、
@@ -52,14 +67,23 @@ Reviewer 以 `PASS_WITH_FINDINGS`（无 blocker）复核，并由人类正式接
    [evaluation_strategy.md](evaluation_strategy.md)：按 Child SPEC 需要复用
    历史合同。
 
-## 当前实施起点
+## 历史实施起点（已由当前导航取代）
 
 Master SPEC 的独立 acceptance review 和 M0.1 的独立实现复核均已完成。
 **M0.2 Durable Real-Provider Loop Completion** 的 Child SPEC、implementation
-plan 和 task record 已完成 Planner draft。当前唯一下一门禁是人类审阅这三份
-文档并明确批准或调整；在此之前 Worker 不能修改 production 或 tests。
+plan 和 task record 当时仅完成 Planner draft。该历史门禁已由后续 M0
+acceptance 与当前 M1 边界取代。
 
 ## 当前明确不做
+
+- 不重开或重构已冻结的 M0 Runtime，也不把 Gate A smoke transport 当作
+  standalone production credential/bootstrap factory。
+- 不在独立 implementation approval 前开始 M1 production Team Decision
+  business flow，也不把 Golden 8 写成已冻结。
+- 不访问或修改真实 Vault，不为了提高分数修改 Gold、fixture 或隐藏
+  `NOT_IMPLEMENTED` 能力。
+
+## 历史明确不做（M0.2 Planner baseline）
 
 - 不继续 M0.1 代码，不在 M0.2 SPEC 获批前开始 M0.2 Worker，也不跳到
   M0.3-M5。
