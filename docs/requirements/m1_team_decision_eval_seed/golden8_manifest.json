@@ -1,0 +1,20 @@
+{
+  "schema_version": "golden8-freeze/v1",
+  "status": "FORMALLY_FROZEN",
+  "dataset_path": "docs/requirements/m1_team_decision_eval_seed/dataset.jsonl",
+  "canonical_representation": "exact UTF-8 LF bytes stored in Git",
+  "canonical_dataset_sha256": "49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F",
+  "case_ids": [
+    "mps-001",
+    "aer-002",
+    "drm-003",
+    "inc-004",
+    "ret-005",
+    "iti-005",
+    "drm-002",
+    "aer-005"
+  ],
+  "freeze_date": "2026-09-10",
+  "selection_basis": "fixed small regression subset for the first Team Decision & Action vertical slice",
+  "change_control": "Any case membership, order, or dataset-content change requires an explicit versioned freeze update and independent review."
+}
