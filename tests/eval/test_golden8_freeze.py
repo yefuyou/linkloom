@@ -16,9 +16,10 @@ MANIFEST_PATH = (
     REPOSITORY_ROOT
     / "docs/requirements/m1_team_decision_eval_seed/golden8_manifest.json"
 )
-CANONICAL_DATASET_SHA256 = (
+PARENT_DATASET_SHA256 = (
     "49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F"
 )
+PARENT_DATASET_SCHEMA_VERSION = "team-decision-eval-case/v1"
 GOLDEN8_CASE_IDS = [
     "mps-001",
     "aer-002",
@@ -48,9 +49,11 @@ def test_golden8_manifest_locks_the_canonical_dataset_and_exact_case_order() -> 
     ]
     dataset_case_ids = [case["case_id"] for case in dataset]
 
-    assert manifest["canonical_dataset_sha256"] == CANONICAL_DATASET_SHA256
+    assert manifest["schema_version"] == "golden8-freeze/v1"
+    assert manifest["parent_dataset_schema_version"] == PARENT_DATASET_SCHEMA_VERSION
+    assert manifest["parent_dataset_sha256"] == PARENT_DATASET_SHA256
     assert manifest["case_ids"] == GOLDEN8_CASE_IDS
     assert len(manifest["case_ids"]) == 8
     assert len(set(manifest["case_ids"])) == 8
-    assert all(case_id in dataset_case_ids for case_id in manifest["case_ids"])
-    assert hashlib.sha256(dataset_bytes).hexdigest().upper() == CANONICAL_DATASET_SHA256
+    assert all(dataset_case_ids.count(case_id) == 1 for case_id in manifest["case_ids"])
+    assert hashlib.sha256(dataset_bytes).hexdigest().upper() == PARENT_DATASET_SHA256
