@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="400" viewBox="0 0 1200 400"
+     role="img" aria-labelledby="hero-title hero-desc">
+  <title id="hero-title">linkloom：可检查证据的只读知识工具</title>
+  <desc id="hero-desc">深色技术编辑板展示 Markdown 笔记如何串入确定性 Vault 索引，并在未来改动前经过审核门。</desc>
+
+  <rect width="1200" height="400" rx="28" fill="#0D1821"/>
+  <rect x="1.5" y="1.5" width="1197" height="397" rx="26.5" fill="none" stroke="#28404B" stroke-width="3"/>
+
+  <!-- Structural rule: a quiet editorial grid, not decorative circuitry. -->
+  <path d="M600 34V312" fill="none" stroke="#28404B" stroke-width="2"/>
+  <path d="M56 312H1144" fill="none" stroke="#28404B" stroke-width="2"/>
+
+  <g id="title-block">
+    <text x="64" y="58" fill="#73C7B7" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="700" letter-spacing="2">本地优先知识工具</text>
+    <text x="64" y="132" fill="#F4EFE5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="68" font-weight="750" letter-spacing="-2">linkloom</text>
+    <text x="64" y="178" fill="#D8E3E1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="26" font-weight="600">把笔记变成可检查的证据。</text>
+    <text x="64" y="222" fill="#AFC1C1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20">先读取。引用来源。改动留在审核之后。</text>
+
+    <g id="metadata" transform="translate(64 252)">
+      <rect width="142" height="36" rx="18" fill="#17352F" stroke="#347F70" stroke-width="2"/>
+      <text x="18" y="24" fill="#A8E0D4" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700">PYTHON ≥ 3.11</text>
+      <rect x="154" width="174" height="36" rx="18" fill="#17352F" stroke="#347F70" stroke-width="2"/>
+      <text x="172" y="24" fill="#A8E0D4" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="700">合成测试夹具</text>
+    </g>
+  </g>
+
+  <g id="scanner-proof" transform="translate(628 36)">
+    <rect width="516" height="268" rx="22" fill="#142833" stroke="#365461" stroke-width="2"/>
+    <text x="30" y="40" fill="#73C7B7" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18" font-weight="700" letter-spacing="1">证明 / SCANNER V1</text>
+    <text x="30" y="77" fill="#F4EFE5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700">合成 sample_vault</text>
+
+    <!-- Native material: note specimens, an index artifact, and evidence threads. -->
+    <g id="note-specimens">
+      <rect x="30" y="100" width="208" height="70" rx="12" fill="#F4EFE5"/>
+      <rect x="30" y="100" width="8" height="70" rx="4" fill="#49B8A6"/>
+      <text x="52" y="130" fill="#142833" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="700">00-扫描入门.md</text>
+      <text x="52" y="153" fill="#587177" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16">标题 · 标签 · 链接</text>
+
+      <rect x="30" y="184" width="208" height="70" rx="12" fill="#F4EFE5"/>
+      <rect x="30" y="184" width="8" height="70" rx="4" fill="#49B8A6"/>
+      <text x="52" y="214" fill="#142833" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" font-weight="700">projects/设计笔记.md</text>
+      <text x="52" y="237" fill="#587177" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="16">标题层级 · sha-256</text>
+    </g>
+
+    <g id="evidence-threads" fill="none" stroke="#49B8A6" stroke-width="3">
+      <path d="M238 135C270 135 280 112 314 112"/>
+      <path d="M238 219C272 219 280 154 314 154"/>
+      <circle cx="238" cy="135" r="5" fill="#49B8A6" stroke="none"/>
+      <circle cx="238" cy="219" r="5" fill="#49B8A6" stroke="none"/>
+      <circle cx="314" cy="112" r="5" fill="#49B8A6" stroke="none"/>
+      <circle cx="314" cy="154" r="5" fill="#49B8A6" stroke="none"/>
+    </g>
+
+    <g id="index-artifact">
+      <rect x="314" y="92" width="170" height="106" rx="14" fill="#D8ECE7"/>
+      <text x="334" y="126" fill="#153832" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700">vault_index</text>
+      <path d="M334 143H462M334 157H442M334 171H452" stroke="#5B8981" stroke-width="3"/>
+      <text x="334" y="190" fill="#347065" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="16">契约 v1 · 源哈希</text>
+    </g>
+
+    <g id="proof-counts">
+      <text x="314" y="232" fill="#F4EFE5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="28" font-weight="700">05</text>
+      <text x="358" y="232" fill="#AFC1C1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">已索引笔记</text>
+      <text x="314" y="258" fill="#D9A649" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="28" font-weight="700">01</text>
+      <text x="358" y="258" fill="#AFC1C1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">已发现警告</text>
+    </g>
+  </g>
+
+  <g id="workflow-strip" transform="translate(64 332)">
+    <circle cx="0" cy="0" r="7" fill="#49B8A6"/>
+    <text x="20" y="7" fill="#F4EFE5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700">笔记</text>
+    <path d="M72 0H132" stroke="#52717A" stroke-width="2"/>
+    <path d="M125 -6L133 0L125 6" fill="none" stroke="#52717A" stroke-width="2"/>
+    <text x="150" y="7" fill="#F4EFE5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700">索引</text>
+    <path d="M220 0H280" stroke="#52717A" stroke-width="2"/>
+    <path d="M273 -6L281 0L273 6" fill="none" stroke="#52717A" stroke-width="2"/>
+    <text x="298" y="7" fill="#F4EFE5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700">证据</text>
+    <path d="M368 0H428" stroke="#52717A" stroke-width="2"/>
+    <path d="M421 -6L429 0L421 6" fill="none" stroke="#52717A" stroke-width="2"/>
+    <circle cx="448" cy="0" r="7" fill="#D9A649"/>
+    <text x="468" y="7" fill="#F4EFE5" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="700">审核门</text>
+    <text x="570" y="6" fill="#D9A649" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18">未来写入边界</text>
+  </g>
+</svg>
