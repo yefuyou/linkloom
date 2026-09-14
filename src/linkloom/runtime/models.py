@@ -12,9 +12,8 @@ from typing import Any
 from linkloom.runtime.errors import StateTransitionError, ValidationError
 
 
-# P2 deliberately exposes only the two P1 read workflows. Later phases may
-# extend this allow-list when their contracts are approved.
-VALID_WORKFLOWS = {"ask", "connect"}
+# Read workflows are extended only when their approved contract is available.
+VALID_WORKFLOWS = {"ask", "connect", "team_decision"}
 VALID_STATUSES = {
     "accepted",
     "running",

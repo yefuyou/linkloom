@@ -76,6 +76,44 @@ def test_agent_result_requirements():
     with pytest.raises(ValidationError, match="status"):
         AgentResult("t1", "a1", "unknown", "bundle", [], "bad", None, None, [], {}, {"code": "X"}, "2026")
 
+
+def test_agent_result_serializes_an_optional_structured_output_payload():
+    payload = {
+        "schema_version": "team-decision-result/v1",
+        "decision": {"value": "Aster A"},
+    }
+    result = AgentResult(
+        "t1", "a1", "completed", "team_decision", ["ev_01"], "ok", None,
+        None, [], {"steps": 1, "tool_calls": 1, "provider_requests": 2}, None,
+        "2026", payload,
+    )
+
+    assert AgentResult.from_dict(result.to_dict()).output_payload == payload
+
+
+def test_agent_result_accepts_completed_structured_output_without_refs():
+    result = AgentResult(
+        "t1",
+        "a1",
+        "completed",
+        "team_decision",
+        [],
+        "No matching decision was found",
+        None,
+        None,
+        [],
+        {"steps": 1, "tool_calls": 1, "provider_requests": 1},
+        None,
+        "2026",
+        {
+            "schema_version": "team-decision-result/v1",
+            "decision": {"value": None, "status": "not_found"},
+        },
+    )
+
+    assert result.output_refs == []
+    assert result.output_payload is not None
+
 def test_handoff_request_valid():
     handoff = HandoffRequest(
         handoff_id="h1", from_agent_id="a1", to_agent_id="a2", reason_code="reason",

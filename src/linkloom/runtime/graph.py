@@ -324,7 +324,7 @@ class RuntimeEngine:
         write path: the coordinator returns a read-only result artifact and
         the Runtime persists only refs and task metadata in its checkpoint.
         """
-        if request.workflow not in ("ask", "connect"):
+        if request.workflow not in ("ask", "connect", "team_decision"):
             raise ValidationError(f"Workflow '{request.workflow}' not supported in P4.")
 
         thread_id = request.thread_id or f"thread_p4_{uuid.uuid4().hex[:12]}"
@@ -499,7 +499,11 @@ class RuntimeEngine:
                 query=request.query,
                 source_context=source_context.to_dict(),
                 tracer=tracer,
-                max_total_steps=min(12, request.max_steps),
+                # ``max_steps`` is the model-loop budget. Coordinator's strict
+                # counter also includes post-loop review/publication work, so
+                # reserve its two non-model bookkeeping slots without granting
+                # the model another turn.
+                max_total_steps=min(12, request.max_steps) + 2,
                 injected_memory=injected_memory,
                 tool_ledger=tool_ledger,
                 tool_checkpoint_callback=persist_tool_ledger,
@@ -581,12 +585,15 @@ class RuntimeEngine:
             tracer.write_manifest(complete=True, source_index_sha256=index_sha)
             return self._build_status(final_state, checkpoint_id)
 
-        error_env = ErrorEnvelope(
-            code="AGENT_WORKFLOW_FAILED",
-            category="agent",
-            message="Multi-agent coordinator did not complete.",
-            details={"error_count": len(result.get("errors", []))},
-        )
+        if state.workflow == "team_decision" and isinstance(result.get("error"), dict):
+            error_env = ErrorEnvelope.from_dict(result["error"])
+        else:
+            error_env = ErrorEnvelope(
+                code="AGENT_WORKFLOW_FAILED",
+                category="agent",
+                message="Multi-agent coordinator did not complete.",
+                details={"error_count": len(result.get("errors", []))},
+            )
         final_state = RuntimeState.from_dict({
             **state.to_dict(),
             "status": "failed",
@@ -603,8 +610,16 @@ class RuntimeEngine:
                 sequence=state.step_seq + 1,
             ).to_dict(),
             "error": error_env.to_dict(),
+            "result_ref": result_ref if state.workflow == "team_decision" else state.result_ref,
         })
         checkpoint_id = self._save_state(final_state)
+        if state.workflow == "team_decision":
+            tracer.emit(
+                "artifact.written",
+                "ok",
+                node_name="multi_agent",
+                output_ref={"kind": "artifact", "path": result_ref},
+            )
         tracer.emit("run.failed", "failed", error=error_env)
         tracer.write_manifest(complete=False, source_index_sha256=index_sha, incomplete_reason="agent workflow failed")
         return self._build_status(final_state, checkpoint_id)

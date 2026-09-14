@@ -8,10 +8,8 @@ import re
 from typing import Any
 
 from linkloom.runtime.errors import ValidationError
-from linkloom.runtime.models import _assert_json_safe_primitive, _require_keys
+from linkloom.runtime.models import VALID_WORKFLOWS, _assert_json_safe_primitive, _require_keys
 
-
-VALID_WORKFLOWS = {"ask", "connect"}
 AGENT_TASK_STATUSES = {"queued", "running", "completed", "failed", "rejected", "timed_out"}
 AGENT_RESULT_STATUSES = {"completed", "failed", "rejected", "timed_out"}
 HANDOFF_STATUSES = {"requested", "accepted", "rejected", "completed"}
@@ -99,7 +97,7 @@ class AgentIdentity:
         _validate_string_list(self.capabilities, "capabilities")
         _validate_string_list(self.allowed_workflows, "allowed_workflows")
         if not set(self.allowed_workflows) <= VALID_WORKFLOWS:
-            raise ValidationError("allowed_workflows can only contain ask or connect.")
+            raise ValidationError("allowed_workflows contains an unsupported workflow.")
         if not isinstance(self.can_read_gold, bool) or not isinstance(self.can_write_vault, bool):
             raise ValidationError("Agent capability flags must be boolean.")
         if self.can_read_gold:
@@ -156,7 +154,7 @@ class AgentTask:
         if self.parent_task_id is not None:
             _require_id(self.parent_task_id, "parent_task_id")
         if self.workflow not in VALID_WORKFLOWS:
-            raise ValidationError("AgentTask workflow must be ask or connect.")
+            raise ValidationError("AgentTask workflow is unsupported.")
         if self.status not in AGENT_TASK_STATUSES:
             raise ValidationError(f"Invalid AgentTask status: {self.status}")
         _validate_ref_list(self.input_refs, "AgentTask input_refs")
@@ -209,6 +207,7 @@ class AgentResult:
     usage: dict[str, int]
     error: dict[str, Any] | None
     completed_at: str
+    output_payload: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "AgentResult")
@@ -220,8 +219,15 @@ class AgentResult:
         _validate_ref_list(self.output_refs, "AgentResult output_refs")
         _require_text(self.summary, "summary")
         _validate_string_list(self.warnings, "warnings")
-        if self.status == "completed" and not self.output_refs and not self.handoff:
-            raise ValidationError("Completed AgentResult must have output_refs or handoff.")
+        if (
+            self.status == "completed"
+            and not self.output_refs
+            and not self.handoff
+            and self.output_payload is None
+        ):
+            raise ValidationError(
+                "Completed AgentResult must have output_refs or handoff or output_payload."
+            )
         if self.status in {"failed", "rejected", "timed_out"} and not self.error:
             raise ValidationError("Failed/rejected AgentResult must have error; timed_out is also terminal.")
         if self.confidence is not None and (
@@ -240,6 +246,8 @@ class AgentResult:
                 raise ValidationError(f"AgentResult usage {key} must be a non-negative integer.")
         if self.handoff is not None and not isinstance(self.handoff, dict):
             raise ValidationError("AgentResult handoff must be an object or null.")
+        if self.output_payload is not None and not isinstance(self.output_payload, dict):
+            raise ValidationError("AgentResult output_payload must be an object or null.")
         _require_text(self.completed_at, "completed_at")
 
     def to_dict(self) -> dict[str, Any]:
@@ -259,7 +267,7 @@ class AgentResult:
             output_type=data["output_type"], output_refs=data["output_refs"], summary=data["summary"],
             confidence=data.get("confidence"), handoff=data.get("handoff"),
             warnings=data.get("warnings", []), usage=data["usage"], error=data.get("error"),
-            completed_at=data["completed_at"]
+            completed_at=data["completed_at"], output_payload=data.get("output_payload")
         )
 
 

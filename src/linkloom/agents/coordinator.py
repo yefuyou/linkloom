@@ -39,6 +39,10 @@ class Coordinator:
         self.max_total_steps = 12
         self.max_handoffs = 4
         self.max_tool_calls = 20
+        # Generic retrieval remains intentionally short.  Runtime composition
+        # may grant a bounded, request-derived budget to the explicit Team
+        # Decision workflow without changing ask/connect behavior.
+        self.team_decision_model_max_steps = 3
         
         self._seen_inputs = set()
 
@@ -61,16 +65,42 @@ class Coordinator:
         errors = []
         fallback_used = False
         final_result = None
+        business_payload = None
+        workflow_error = None
         review_decision = None
         
         total_steps = 0
         total_tool_calls = 0
+
+        def result_response():
+            return {
+                "run_id": run_id,
+                "workflow": workflow,
+                "status": status,
+                "result": final_result,
+                "agent_tasks": agent_tasks,
+                "handoffs": handoffs,
+                "review": review_decision,
+                "evidence": evidence,
+                "policy": "p4-readonly-tools-v1",
+                "usage": {"steps": total_steps, "tool_calls": total_tool_calls},
+                "tool_ledger": [record.to_dict() for record in self.tool_runtime.ledger.to_list()],
+                "fallback_used": fallback_used,
+                "errors": errors,
+                "error": workflow_error,
+            }
         
         def emit(event_type: str, actor: str, status_str: str, **kwargs):
             if event_sink and hasattr(event_sink, "emit"):
                 event_sink.emit(event_type=event_type, actor=actor, status=status_str, **kwargs)
         
-        def create_task(agent_id: str, input_refs: List[str], wf: str, max_steps: int = 3, parent_task_id: str = None) -> AgentTask:
+        def create_task(
+            agent_id: str,
+            input_refs: List[str],
+            wf: str,
+            max_steps: int | None = None,
+            parent_task_id: str = None,
+        ) -> AgentTask:
             input_sig = tuple(sorted(input_refs))
             if input_sig in self._seen_inputs:
                 raise ValueError("Duplicate task/input refs detected.")
@@ -80,6 +110,9 @@ class Coordinator:
                 raise ValueError("Exceeded max_agent_tasks")
                 
             identity = self.registry.get_agent(agent_id)
+            task_max_steps = 3 if max_steps is None else max_steps
+            if agent_id == "retrieval_agent" and wf == "team_decision":
+                task_max_steps = min(self.team_decision_model_max_steps, identity.max_steps)
             task = AgentTask(
                 task_id=(retrieval_task_id if agent_id == "retrieval_agent" and retrieval_task_id is not None
                          else f"task_{uuid.uuid4().hex[:8]}"),
@@ -90,7 +123,7 @@ class Coordinator:
                 workflow=wf,
                 input_refs=input_refs,
                 allowed_tool_ids=identity.capabilities,
-                max_steps=max_steps,
+                max_steps=task_max_steps,
                 deadline_ms=5000,
                 status="queued",
                 attempt=0,
@@ -149,6 +182,20 @@ class Coordinator:
             if ret_result.status == "failed":
                 retrieval_task_dict["status"] = "failed"
                 emit("agent.task.failed", "retrieval_agent", "failed", attributes={"task_id": retrieval_task.task_id}, error=ret_result.error)
+                if workflow == "team_decision":
+                    status = "failed"
+                    workflow_error = ret_result.error or {
+                        "code": "TEAM_DECISION_CONTRACT_ERROR",
+                        "category": "runtime",
+                        "message": "The Team Decision result could not be validated.",
+                        "retryable": False,
+                        "affected_refs": [],
+                        "details": {},
+                        "safe_to_expose": True,
+                    }
+                    errors.append(workflow_error["code"])
+                    emit("run.failed", "coordinator", "failed", error=workflow_error)
+                    return result_response()
                 fallback_used = True
                 evidence = []
                 emit("agent.fallback.used", "coordinator", "ok", attributes={"task_id": retrieval_task.task_id})
@@ -158,6 +205,7 @@ class Coordinator:
                 retrieval_task_dict["status"] = "completed"
                 emit("agent.task.completed", "retrieval_agent", "ok", attributes={"task_id": retrieval_task.task_id})
                 evidence = ret_result.output_refs
+                business_payload = ret_result.output_payload
             
             # 2. Connect specific: Curator
             candidate_refs = []
@@ -235,7 +283,11 @@ class Coordinator:
             review_dec = self.reviewer_agent.execute(
                 review_id=f"review_{uuid.uuid4().hex[:8]}",
                 subject_refs=candidate_refs,
-                subject_payloads=[{"ref": ref} for ref in candidate_refs],
+                subject_payloads=(
+                    [business_payload]
+                    if business_payload is not None
+                    else [{"ref": ref} for ref in candidate_refs]
+                ),
                 evidence_refs=evidence,
                 policy_enforcer=rev_policy,
                 validate_ev_func=self.tool_funcs["validate_evidence"],
@@ -247,6 +299,24 @@ class Coordinator:
             total_steps += 1
             emit("agent.task.completed", "reviewer_agent", "ok", attributes={"task_id": reviewer_task.task_id})
             enforce_limits()
+
+            if workflow == "team_decision" and (
+                business_payload is None or review_decision["decision"] != "evidence_sufficient"
+            ):
+                status = "failed"
+                workflow_error = {
+                    "code": "TEAM_DECISION_EVIDENCE_REVIEW_FAILED",
+                    "category": "runtime",
+                    "message": "The Team Decision evidence review did not pass.",
+                    "retryable": False,
+                    "affected_refs": [],
+                    "details": {"review_decision": review_decision["decision"]},
+                    "safe_to_expose": True,
+                }
+                errors.append(workflow_error["code"])
+                final_result = None
+                emit("run.failed", "coordinator", "failed", error=workflow_error)
+                return result_response()
             
             if fallback_used:
                 if review_decision["decision"] not in ("evidence_insufficient", "schema_invalid"):
@@ -259,6 +329,8 @@ class Coordinator:
                 "candidate_refs": candidate_refs,
                 "review_decision": review_decision["decision"]
             }
+            if business_payload is not None:
+                final_result["team_decision"] = business_payload
             emit("run.completed", "coordinator", "ok")
             
         except Exception as e:
@@ -268,26 +340,4 @@ class Coordinator:
         finally:
             self._seen_inputs.clear()
             
-        return {
-            "run_id": run_id,
-            "workflow": workflow,
-            "status": status,
-            "result": final_result,
-            "agent_tasks": agent_tasks,
-            "handoffs": handoffs,
-            "review": review_decision,
-            "evidence": evidence,
-            "policy": "p4-readonly-tools-v1",
-            "usage": {
-                "steps": total_steps,
-                "tool_calls": total_tool_calls
-            },
-            # The runtime-managed retrieval ledger is an audit-safe projection
-            # of the ToolRuntime lifecycle.  Curator/reviewer legacy direct
-            # callbacks are intentionally not represented here yet.
-            "tool_ledger": [
-                record.to_dict() for record in self.tool_runtime.ledger.to_list()
-            ],
-            "fallback_used": fallback_used,
-            "errors": errors
-        }
+        return result_response()

@@ -219,7 +219,9 @@ class RuntimeAgentAdapter:
                     or any(getattr(original, key) != value for key, value in identity.items())
                     or original.task_id != retrieval_task_id
                     or payload.get("user_input") != original.user_input
-                    or original.user_input != RetrievalAgent._retrieval_instruction(query, source_context)):
+                    or original.user_input != RetrievalAgent._retrieval_instruction(
+                        query, source_context, workflow
+                    )):
                 raise ValidationError("Resume input does not match the original durable request.")
 
         state_cursor = {"state": initial_state}
@@ -270,6 +272,10 @@ class RuntimeAgentAdapter:
             tool_runtime=retrieval_tool_runtime,
         )
         coordinator.max_total_steps = max_total_steps
+        # RuntimeEngine supplies the model budget plus two Coordinator-only
+        # review/publication slots.  Recover the bounded model allowance here
+        # so the task cannot exceed the persisted RunRequest policy.
+        coordinator.team_decision_model_max_steps = max(1, max_total_steps - 2)
         result = coordinator.run(
             run_id=run_id,
             workflow=workflow,

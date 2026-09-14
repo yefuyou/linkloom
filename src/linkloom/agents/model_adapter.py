@@ -28,6 +28,9 @@ from linkloom.tools.contracts import (
 
 
 MODEL_ACTION_KINDS = frozenset({"tool_call", "final"})
+MODEL_VISIBLE_EVIDENCE_TOOL_IDS = frozenset({"search_notes", "read_verified_note"})
+MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS = 8
+MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES = 24 * 1024
 
 
 MODEL_PROVIDER_ERROR_SPECS = {
@@ -108,6 +111,72 @@ def _reject_unsupported_fields(
         raise ValidationError(
             f"{model_name} contains unsupported fields.",
             details={"fields": unsupported},
+        )
+
+
+def _is_verified_evidence_value(value: Any) -> bool:
+    """Recognize the source-grounded evidence shape safe for a model context."""
+    if not isinstance(value, dict) or value.get("status") != "verified":
+        return False
+    for field_name in (
+        "evidence_id",
+        "relative_path",
+        "content_sha256",
+        "quote",
+        "quote_sha256",
+    ):
+        if not isinstance(value.get(field_name), str) or not value[field_name].strip():
+            return False
+    line_start = value.get("line_start")
+    line_end = value.get("line_end")
+    return (
+        not isinstance(line_start, bool)
+        and not isinstance(line_end, bool)
+        and isinstance(line_start, int)
+        and isinstance(line_end, int)
+        and line_start >= 1
+        and line_end >= line_start
+    )
+
+
+def is_verified_evidence_result(result: ToolResult) -> bool:
+    """Return whether a successful tool result is safe to expose as evidence."""
+    if (
+        not isinstance(result, ToolResult)
+        or result.status != "ok"
+        or result.tool_id not in MODEL_VISIBLE_EVIDENCE_TOOL_IDS
+    ):
+        return False
+    values = result.value if isinstance(result.value, list) else [result.value]
+    return bool(values) and all(_is_verified_evidence_value(value) for value in values)
+
+
+def _validate_verified_evidence_context(context: Any) -> None:
+    """Keep model-visible history bounded to successful, cited source evidence."""
+    if not isinstance(context, list):
+        raise ValidationError("ModelTurnRequest.evidence_context must be a list.")
+    if len(context) > MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS:
+        raise ValidationError(
+            "ModelTurnRequest.evidence_context exceeds the bounded result limit."
+        )
+    for result in context:
+        if not isinstance(result, ToolResult):
+            raise ValidationError(
+                "ModelTurnRequest.evidence_context must contain ToolResult values."
+            )
+        if not is_verified_evidence_result(result):
+            raise ValidationError(
+                "ModelTurnRequest.evidence_context must contain only verified evidence values."
+            )
+    encoded = json.dumps(
+        [result.to_dict() for result in context],
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    if len(encoded.encode("utf-8")) > MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES:
+        raise ValidationError(
+            "ModelTurnRequest.evidence_context exceeds the bounded byte limit."
         )
 
 
@@ -432,6 +501,7 @@ class ModelTurnRequest:
     previous_tool_call: ToolCall | None = None
     model_id: str | None = None
     generation_options: ModelGenerationOptions = field(default_factory=ModelGenerationOptions)
+    evidence_context: list[ToolResult] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         for field_name, value in (
@@ -477,10 +547,11 @@ class ModelTurnRequest:
             raise ValidationError(
                 "ModelTurnRequest.generation_options must be ModelGenerationOptions."
             )
+        _validate_verified_evidence_context(self.evidence_context)
         _assert_json_safe_primitive(self.to_dict(), "ModelTurnRequest")
 
     def to_dict(self) -> dict:
-        return {
+        payload = {
             "run_id": self.run_id,
             "turn_id": self.turn_id,
             "task_id": self.task_id,
@@ -494,7 +565,9 @@ class ModelTurnRequest:
             ),
             "model_id": self.model_id,
             "generation_options": self.generation_options.to_dict(),
+            "evidence_context": [result.to_dict() for result in self.evidence_context],
         }
+        return payload
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ModelTurnRequest":
@@ -514,6 +587,7 @@ class ModelTurnRequest:
                 "previous_tool_call",
                 "model_id",
                 "generation_options",
+                "evidence_context",
             },
             "ModelTurnRequest",
         )
@@ -533,8 +607,11 @@ class ModelTurnRequest:
         raw_observation = data.get("observation")
         raw_previous_call = data.get("previous_tool_call")
         raw_tools = data["available_tools"]
+        raw_evidence_context = data.get("evidence_context", [])
         if not isinstance(raw_tools, list):
             raise ValidationError("ModelTurnRequest.available_tools must be a list.")
+        if not isinstance(raw_evidence_context, list):
+            raise ValidationError("ModelTurnRequest.evidence_context must be a list.")
         return cls(
             run_id=data["run_id"],
             turn_id=data["turn_id"],
@@ -557,6 +634,9 @@ class ModelTurnRequest:
             generation_options=ModelGenerationOptions.from_dict(
                 data.get("generation_options", {})
             ),
+            evidence_context=[
+                ToolResult.from_dict(item) for item in raw_evidence_context
+            ],
         )
 
 
@@ -663,7 +743,10 @@ ScriptedModelAdapter = FakeModelAdapter
 
 __all__ = [
     "FakeModelAdapter",
+    "MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES",
+    "MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS",
     "MODEL_ACTION_KINDS",
+    "MODEL_VISIBLE_EVIDENCE_TOOL_IDS",
     "MODEL_PROVIDER_ERROR_OUTCOMES",
     "MODEL_PROVIDER_ERROR_SPECS",
     "ModelAction",
@@ -676,4 +759,5 @@ __all__ = [
     "ModelUsage",
     "ProviderCapability",
     "ScriptedModelAdapter",
+    "is_verified_evidence_result",
 ]

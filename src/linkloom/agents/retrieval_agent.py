@@ -7,6 +7,11 @@ import json
 from typing import Any, Callable
 
 from linkloom.agents.base import AgentResult, AgentTask
+from linkloom.agents.model_adapter import ModelTurnRequest, is_verified_evidence_result
+from linkloom.agents.team_decision import (
+    TeamDecisionResult,
+    team_decision_final_instruction,
+)
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.model_loop import ModelLoopResult, SingleAgentModelLoop
@@ -78,7 +83,11 @@ class RetrievalAgent:
         )
 
     @staticmethod
-    def _retrieval_instruction(query: str, source_context: dict[str, Any]) -> str:
+    def _retrieval_instruction(
+        query: str,
+        source_context: dict[str, Any],
+        workflow: str = "ask",
+    ) -> str:
         if not isinstance(query, str) or not query.strip():
             raise ValidationError("Retrieval query must be non-empty text.")
         if not isinstance(source_context, dict):
@@ -94,6 +103,26 @@ class RetrievalAgent:
             raise ValidationError("Retrieval request is not JSON serializable.") from error
         if len(serialized.encode("utf-8")) > 16 * 1024:
             raise ValidationError("Retrieval request exceeds the bounded instruction size.")
+        if workflow == "team_decision":
+            final_instruction = team_decision_final_instruction()
+            return (
+                "Use only the available retrieval tools to inspect verified evidence for "
+                "the request below. At each model turn, choose either one next tool call or Final. "
+                "When the observed evidence is sufficient to answer the request, stop using tools "
+                "and return Final as exactly one JSON object with schema_version "
+                "'team-decision-result/v1'. Every material decision, rationale, action, "
+                "rejected alternative, unresolved item, and stated uncertainty must cite "
+                "only evidence_refs observed in successful tool results. Do not infer an "
+                "owner or deadline: use null when the evidence does not provide one. "
+                "Answer only the user's requested decision; "
+                "optional rationale, rejected_alternatives, actions, and unresolved_items "
+                "may be empty, and do not call tools only to populate optional sections. "
+                "When observed evidence directly supports the requested decision and no "
+                "observed evidence conflicts, return Final. Final means emit that JSON object as the "
+                "normal text response and do not make a function call.\n"
+                f"{final_instruction}\n"
+                f"team_decision_request={serialized}"
+            )
         return (
             "Retrieve verified evidence for the request below. Choose only from the "
             "available retrieval tools, pass business arguments exactly as needed, "
@@ -199,6 +228,64 @@ class RetrievalAgent:
                 refs.append(ref)
         return refs
 
+    def _final_model_visible_refs(
+        self,
+        state: RuntimeState,
+        task: AgentTask,
+    ) -> list[str]:
+        """Recover only evidence that crossed the durable Final model boundary."""
+        final_records = [
+            record
+            for record in state.model_executions
+            if record.run_id == task.run_id
+            and record.task_id == task.task_id
+            and record.agent_id == self.agent_id
+            and isinstance(record.normalized_action, dict)
+            and record.normalized_action.get("kind") == "final"
+        ]
+        if not final_records:
+            raise ValidationError("Team Decision has no durable Final model request.")
+        record = max(final_records, key=lambda item: (item.sequence, item.turn_id))
+        if record.request_ref is None or record.request_sha256 is None:
+            raise ValidationError("Team Decision Final request is not verifiable.")
+        payload = self.artifact_store.read(
+            record.request_ref,
+            expected_sha256=record.request_sha256,
+        )
+        identity = {
+            "run_id": record.run_id,
+            "turn_id": record.turn_id,
+            "task_id": record.task_id,
+            "agent_id": record.agent_id,
+            "sequence": record.sequence,
+        }
+        if payload.get("runtime_identity") != identity:
+            raise ValidationError("Team Decision Final request identity does not match its record.")
+        raw_request = payload.get("model_request")
+        if not isinstance(raw_request, dict):
+            raise ValidationError("Team Decision Final request has no ModelTurnRequest.")
+        request = ModelTurnRequest.from_dict(raw_request)
+        if (
+            request.run_id != record.run_id
+            or request.turn_id != record.turn_id
+            or request.task_id != record.task_id
+            or request.agent_id != record.agent_id
+            or request.sequence != record.sequence
+        ):
+            raise ValidationError("Team Decision Final request model identity does not match its record.")
+
+        visible_refs: list[str] = []
+        visible_results = [*request.evidence_context]
+        if request.observation is not None:
+            visible_results.append(request.observation)
+        for result in visible_results:
+            if not is_verified_evidence_result(result):
+                continue
+            for ref in self._refs_from_value(result.value):
+                if ref not in visible_refs:
+                    visible_refs.append(ref)
+        return visible_refs
+
     def _project_result(
         self,
         task: AgentTask,
@@ -260,6 +347,56 @@ class RetrievalAgent:
             and state.termination is not None
             and state.termination.reason_code == "model_final"
         )
+
+        if task.workflow == "team_decision":
+            if not reached_final or failed_errors or observation_error is not None:
+                error = (
+                    failed_errors[-1]
+                    if failed_errors
+                    else observation_error
+                    or (
+                        loop_result.error.to_dict()
+                        if loop_result.error is not None
+                        else self._safe_error(
+                            "TEAM_DECISION_CONTRACT_ERROR",
+                            "runtime",
+                            "The Team Decision result was not completed.",
+                        )
+                    )
+                )
+                return self._failed_result(task, usage, error, warnings)
+            try:
+                visible_refs = self._final_model_visible_refs(state, task)
+                decision = TeamDecisionResult.from_grounded_final(
+                    loop_result.final_answer,
+                    visible_refs,
+                )
+            except ValidationError:
+                return self._failed_result(
+                    task,
+                    usage,
+                    self._safe_error(
+                        "TEAM_DECISION_CONTRACT_ERROR",
+                        "runtime",
+                        "The Team Decision result failed structured evidence validation.",
+                    ),
+                    warnings,
+                )
+            return AgentResult(
+                task_id=task.task_id,
+                agent_id=self.agent_id,
+                status="completed",
+                output_type="team_decision",
+                output_refs=decision.evidence_refs,
+                summary="Produced a claim-grounded Team Decision result",
+                confidence=None,
+                handoff=None,
+                warnings=warnings,
+                usage=usage,
+                error=None,
+                completed_at=datetime.now(timezone.utc).isoformat(),
+                output_payload=decision.to_dict(),
+            )
 
         if reached_final and read_refs:
             return AgentResult(
@@ -369,7 +506,7 @@ class RetrievalAgent:
                 raise ValidationError("Retrieval requires a RuntimeState checkpoint callback.")
 
             available_tools = self._available_tools(task, tool_runtime)
-            instruction = self._retrieval_instruction(query, source_context)
+            instruction = self._retrieval_instruction(query, source_context, task.workflow)
             consumed_provider_requests = max(
                 self.initial_state.usage.provider_requests,
                 len(self.initial_state.model_executions),
@@ -434,6 +571,9 @@ class RetrievalAgent:
                 tool_runtime,
                 policy_enforcer,
                 max_steps=max_steps,
+                # Slice B needs multi-note source synthesis.  Other workflows
+                # retain their existing last-observation-only behavior.
+                verified_evidence_context_limit=8 if task.workflow == "team_decision" else 0,
             )
             invoke_loop = loop.resume if self.resume_model_loop else loop.run
             loop_result = invoke_loop(

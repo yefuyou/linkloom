@@ -8,9 +8,12 @@ local FakeModelAdapter only.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import json
 from typing import Any, Callable, Sequence
 
 from linkloom.agents.model_adapter import (
+    MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
+    MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS,
     ModelAction,
     ModelAdapter,
     ModelProviderAdapter,
@@ -18,6 +21,7 @@ from linkloom.agents.model_adapter import (
     ModelResponse,
     ModelTurnRequest,
     ModelUsage,
+    is_verified_evidence_result,
 )
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
@@ -89,6 +93,7 @@ class SingleAgentModelLoop:
         policy_enforcer: ToolPolicyEnforcer,
         *,
         max_steps: int = 8,
+        verified_evidence_context_limit: int = 0,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -104,12 +109,22 @@ class SingleAgentModelLoop:
             )
         if isinstance(max_steps, bool) or not isinstance(max_steps, int) or max_steps <= 0:
             raise ValidationError("SingleAgentModelLoop max_steps must be a positive integer.")
+        if (
+            isinstance(verified_evidence_context_limit, bool)
+            or not isinstance(verified_evidence_context_limit, int)
+            or verified_evidence_context_limit < 0
+            or verified_evidence_context_limit > MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS
+        ):
+            raise ValidationError(
+                "SingleAgentModelLoop verified_evidence_context_limit must be between zero and the bounded result limit."
+            )
         self.model = model
         self._has_legacy_decide = has_decide
         self._has_provider_complete = has_complete
         self.tool_runtime = tool_runtime
         self.policy_enforcer = policy_enforcer
         self.max_steps = max_steps
+        self.verified_evidence_context_limit = verified_evidence_context_limit
 
     @staticmethod
     def _project_state(
@@ -142,6 +157,55 @@ class SingleAgentModelLoop:
             details=details,
             safe_to_expose=True,
         )
+
+    def _verified_evidence_context(
+        self,
+        ledger: ToolExecutionLedger,
+        *,
+        run_id: str,
+        task_id: str,
+        agent_id: str,
+        before_sequence: int,
+    ) -> list[ToolResult]:
+        """Expose a small, deterministic projection of prior verified evidence.
+
+        This is deliberately an opt-in evidence ledger view, not a general
+        conversation-memory mechanism.  Its exact payload is retained in the
+        durable ModelTurnRequest artifact before any model invocation.
+        """
+        if self.verified_evidence_context_limit == 0:
+            return []
+        context: list[ToolResult] = []
+        records = sorted(
+            (
+                record
+                for record in ledger.to_list()
+                if record.run_id == run_id
+                and record.task_id == task_id
+                and record.agent_id == agent_id
+                and record.sequence < before_sequence
+                and record.status == "completed"
+                and record.result is not None
+            ),
+            key=lambda record: (record.sequence, record.call_id),
+        )
+        for record in records:
+            result = ToolResult.from_dict(record.result)
+            if not is_verified_evidence_result(result):
+                continue
+            trial = [*context, result]
+            encoded = json.dumps(
+                [item.to_dict() for item in trial],
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            if len(encoded.encode("utf-8")) > MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES:
+                continue
+            context.append(result)
+            if len(context) == self.verified_evidence_context_limit:
+                break
+        return context
 
     def run(
         self,
@@ -253,6 +317,13 @@ class SingleAgentModelLoop:
                     user_input=user_input,
                     observation=observation,
                     available_tools=list(tool_definitions),
+                    evidence_context=self._verified_evidence_context(
+                        ledger,
+                        run_id=state.run_id,
+                        task_id=task_id,
+                        agent_id=agent_id,
+                        before_sequence=next_sequence,
+                    ),
                 )
                 try:
                     action = self.model.decide(request)
@@ -1175,6 +1246,13 @@ class SingleAgentModelLoop:
                         observation=observation,
                         available_tools=list(tool_definitions),
                         previous_tool_call=previous_tool_call,
+                        evidence_context=self._verified_evidence_context(
+                            ledger,
+                            run_id=state.run_id,
+                            task_id=task_id,
+                            agent_id=agent_id,
+                            before_sequence=turn.sequence,
+                        ),
                     )
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
                     request_ref_artifact = request_artifact(

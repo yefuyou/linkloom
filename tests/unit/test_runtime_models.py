@@ -167,6 +167,22 @@ def test_p2_contract_rejects_unapproved_workflows_and_missing_state_fields() -> 
         )
 
 
+def test_team_decision_workflow_round_trips_without_changing_existing_workflows() -> None:
+    request = RunRequest(
+        request_id="req_team_decision_01",
+        workflow="team_decision",
+        query="Which provider was approved?",
+    )
+
+    assert RunRequest.from_dict(request.to_dict()) == request
+    assert RunRequest.from_dict(
+        {"request_id": "req_ask_01", "workflow": "ask", "query": "find evidence"}
+    ).workflow == "ask"
+    assert RunRequest.from_dict(
+        {"request_id": "req_connect_01", "workflow": "connect", "query": "connect notes"}
+    ).workflow == "connect"
+
+
 def test_p2_persistence_redacts_process_path_and_rejects_absolute_source_path() -> None:
     request = RunRequest(
         request_id="req_01",
