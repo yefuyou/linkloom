@@ -2,8 +2,10 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest-*/
 .ruff_cache/
 .mypy_cache/
+.tmp/
 
 # Local runtime output
 .env
