@@ -507,6 +507,31 @@ def test_single_function_call_with_stop_maps_to_one_tool_action():
     assert response.finish_reason == "stop"
 
 
+def test_non_stop_function_call_error_preserves_safe_finish_reason_diagnostic():
+    client = SdkSurfaceGeminiClient(
+        response={
+            "function_calls": [
+                {
+                    "id": "gemini-call-max-tokens-1",
+                    "name": "search_notes",
+                    "args": {"query": "durability", "limit": 3},
+                }
+            ],
+            "finish_reason": "MAX_TOKENS",
+        }
+    )
+
+    response = GeminiProviderAdapter(client).complete(_request())
+
+    assert response.action is None
+    assert response.error is not None
+    assert response.error.code == "MODEL_RESPONSE_MALFORMED"
+    assert response.error.details == {
+        "reason": "tool_call_finish_reason_mismatch",
+        "finish_reason": "max_tokens",
+    }
+
+
 def test_undeclared_function_call_fails_closed_before_model_action_creation():
     client = SdkSurfaceGeminiClient(
         response={

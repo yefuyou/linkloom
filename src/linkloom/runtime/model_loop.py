@@ -19,8 +19,10 @@ from linkloom.agents.model_adapter import (
     ModelProviderAdapter,
     ModelProviderError,
     ModelResponse,
+    ModelToolInteraction,
     ModelTurnRequest,
     ModelUsage,
+    ProviderContinuation,
     is_verified_evidence_result,
 )
 from linkloom.runtime.artifacts import ModelArtifactStore
@@ -206,6 +208,58 @@ class SingleAgentModelLoop:
             if len(context) == self.verified_evidence_context_limit:
                 break
         return context
+
+    @staticmethod
+    def _completed_tool_history(
+        model_records: list[ModelExecutionRecord],
+        ledger: ToolExecutionLedger,
+        *,
+        run_id: str,
+        task_id: str,
+        agent_id: str,
+        before_sequence: int,
+        current_call_id: str | None,
+    ) -> list[ModelToolInteraction]:
+        """Rebuild prior completed exchanges from durable neutral records."""
+
+        history: list[ModelToolInteraction] = []
+        for record in sorted(
+            (
+                candidate
+                for candidate in model_records
+                if candidate.run_id == run_id
+                and candidate.task_id == task_id
+                and candidate.agent_id == agent_id
+                and candidate.sequence < before_sequence
+                and isinstance(candidate.normalized_action, dict)
+                and candidate.normalized_action.get("kind") == "tool_call"
+            ),
+            key=lambda candidate: (candidate.sequence, candidate.turn_id),
+        ):
+            raw_call = record.normalized_action.get("tool_call")
+            if not isinstance(raw_call, dict):
+                raise ValidationError(
+                    "Durable tool history contains an invalid normalized action."
+                )
+            call = ToolCall.from_dict(raw_call)
+            if call.call_id == current_call_id:
+                continue
+            ledger_record = ledger.get(call.call_id)
+            if (
+                ledger_record is None
+                or ledger_record.status not in {"completed", "failed"}
+                or ledger_record.result is None
+            ):
+                raise ValidationError(
+                    "Durable tool history has no completed result for a model tool call."
+                )
+            history.append(
+                ModelToolInteraction(
+                    tool_call=call,
+                    tool_result=ToolResult.from_dict(ledger_record.result),
+                )
+            )
+        return history
 
     def run(
         self,
@@ -501,6 +555,7 @@ class SingleAgentModelLoop:
         pending_response: ModelResponse | None = None
         pending_record: ModelExecutionRecord | None = None
         previous_tool_call: ToolCall | None = None
+        provider_continuation: ProviderContinuation | None = None
 
         def project() -> RuntimeState:
             return self._project_state(current_state, turns, ledger, termination, model_records)
@@ -798,6 +853,14 @@ class SingleAgentModelLoop:
                         details={"reason": "provider_response_envelope_missing"},
                     )
                 response = ModelResponse.from_dict(raw_response)
+                if (
+                    response.provider_continuation is not None
+                    and response.provider_continuation.source_turn_id
+                    != record.turn_id
+                ):
+                    raise ValidationError(
+                        "Durable provider continuation does not match its source turn."
+                    )
                 projected_action = (
                     response.action.to_dict() if response.action is not None else None
                 )
@@ -1010,12 +1073,20 @@ class SingleAgentModelLoop:
             turn: AgentTurn,
             record: ModelExecutionRecord,
             action: ModelAction,
+            continuation: ProviderContinuation | None,
         ) -> ToolResult | None:
-            nonlocal observation, observation_ref, previous_tool_call
+            nonlocal observation, observation_ref, previous_tool_call, provider_continuation
             bound = bind_action(action, turn)
             if bound.kind != "tool_call" or bound.tool_call is None:
                 return None
             call = bound.tool_call
+            if continuation is not None and (
+                continuation.source_turn_id != turn.turn_id
+                or not continuation.matches_tool_call(call)
+            ):
+                raise ValidationError(
+                    "Provider continuation identity does not match the bound tool call."
+                )
             current_turn_index = turn_index(turn)
             turns[current_turn_index] = replace(turns[current_turn_index], tool_call_ids=[call.call_id])
             if record.normalized_action != bound.to_dict():
@@ -1080,6 +1151,7 @@ class SingleAgentModelLoop:
             observation = result
             observation_ref = stored_observation.ref
             previous_tool_call = call
+            provider_continuation = continuation
             upsert_record(
                 replace(
                     record,
@@ -1176,6 +1248,7 @@ class SingleAgentModelLoop:
                     observation = load_observation(record, validated_call)
                     observation_ref = record.observation_ref
                     previous_tool_call = validated_call
+                    provider_continuation = validated_response.provider_continuation
                 elif decision.decision == "requires_model_reinvoke":
                     raise ValidationError("Explicit model reinvocation requires a new request record.")
                 elif decision.decision == "safe_to_invoke_model" and record is not None:
@@ -1202,7 +1275,12 @@ class SingleAgentModelLoop:
                         raise ValidationError("Durable response has no action or provider error.")
                     if action.kind == "final":
                         return terminal_final(turn, record, action)
-                    tool_result = execute_tool_action(turn, record, action)
+                    tool_result = execute_tool_action(
+                        turn,
+                        record,
+                        action,
+                        response_envelope.provider_continuation,
+                    )
                     if tool_result is not None and is_uncertain_checkpoint(tool_result):
                         return failed_result(tool_result.error)
                     next_sequence = max(next_sequence, turn.sequence + 1)
@@ -1246,12 +1324,26 @@ class SingleAgentModelLoop:
                         observation=observation,
                         available_tools=list(tool_definitions),
                         previous_tool_call=previous_tool_call,
+                        provider_continuation=provider_continuation,
                         evidence_context=self._verified_evidence_context(
                             ledger,
                             run_id=state.run_id,
                             task_id=task_id,
                             agent_id=agent_id,
                             before_sequence=turn.sequence,
+                        ),
+                        tool_history=self._completed_tool_history(
+                            model_records,
+                            ledger,
+                            run_id=state.run_id,
+                            task_id=task_id,
+                            agent_id=agent_id,
+                            before_sequence=turn.sequence,
+                            current_call_id=(
+                                previous_tool_call.call_id
+                                if previous_tool_call is not None
+                                else None
+                            ),
                         ),
                     )
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
@@ -1375,7 +1467,12 @@ class SingleAgentModelLoop:
 
                 if bound_action.kind == "final":
                     return terminal_final(turns[turn_index(turn)], record, bound_action)
-                tool_result = execute_tool_action(turns[turn_index(turn)], record, bound_action)
+                tool_result = execute_tool_action(
+                    turns[turn_index(turn)],
+                    record,
+                    bound_action,
+                    response_envelope.provider_continuation,
+                )
                 if tool_result is not None and is_uncertain_checkpoint(tool_result):
                     return failed_result(tool_result.error)
                 next_sequence = max(next_sequence, turn.sequence + 1)

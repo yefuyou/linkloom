@@ -9,6 +9,7 @@ importing an SDK, executing tools, or owning runtime decisions.
 
 from __future__ import annotations
 
+import base64
 from collections.abc import Mapping
 from copy import deepcopy
 import hashlib
@@ -25,6 +26,7 @@ from linkloom.agents.model_adapter import (
     ModelTurnRequest,
     ModelUsage,
     ProviderCapability,
+    ProviderContinuation,
     _validate_optional_provider_text,
     _validate_provider_metadata,
     _validate_provider_text,
@@ -74,6 +76,8 @@ _SCHEMA_TYPES = frozenset(
     {"object", "array", "string", "integer", "number", "boolean", "null"}
 )
 _ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$")
+_BASE64_PATTERN = re.compile(r"^[A-Za-z0-9+/]*={0,2}$")
+_GEMINI_CONTINUATION_FORMAT = "gemini-function-call-v1"
 _FINISH_REASON_MAP = {
     "STOP": "stop",
     "END": "stop",
@@ -261,9 +265,24 @@ def _function_response_payload(observation: ToolResult) -> dict[str, Any]:
     return payload
 
 
-def _build_contents(request: ModelTurnRequest) -> list[dict[str, Any]]:
+def _model_visible_evidence_context(request: ModelTurnRequest) -> list[dict[str, Any]]:
+    """Project only already-validated source evidence into a provider prompt."""
+    return [
+        {
+            "call_id": result.call_id,
+            "tool_id": result.tool_id,
+            "value": deepcopy(result.value),
+        }
+        for result in request.evidence_context
+    ]
+
+
+def _build_contents(
+    request: ModelTurnRequest,
+    initial_user_text: str,
+) -> list[dict[str, Any]]:
     contents: list[dict[str, Any]] = [
-        {"role": "user", "parts": [{"text": request.user_input}]}
+        {"role": "user", "parts": [{"text": initial_user_text}]}
     ]
     if request.observation is None:
         return contents
@@ -273,6 +292,43 @@ def _build_contents(request: ModelTurnRequest) -> list[dict[str, Any]]:
             details={"reason": "observation_requires_previous_tool_call"},
         )
     previous = request.previous_tool_call
+    function_call_part: dict[str, Any] = {
+        "function_call": {
+            "id": previous.call_id,
+            "name": previous.tool_id,
+            "args": deepcopy(previous.arguments),
+        }
+    }
+    if request.provider_continuation is not None:
+        continuation = request.provider_continuation
+        if continuation.provider_id != "gemini" or not continuation.matches_tool_call(
+            previous
+        ):
+            raise _AdapterFailure(
+                "MODEL_INVALID_REQUEST",
+                details={"reason": "provider_continuation_identity_mismatch"},
+            )
+        continuation_payload = continuation.payload
+        if set(continuation_payload) != {"format", "encoding", "data"} or (
+            continuation_payload.get("format") != _GEMINI_CONTINUATION_FORMAT
+            or continuation_payload.get("encoding") != "base64"
+        ):
+            raise _AdapterFailure(
+                "MODEL_INVALID_REQUEST",
+                details={"reason": "provider_continuation_payload_invalid"},
+            )
+        encoded_signature = continuation_payload.get("data")
+        if (
+            not isinstance(encoded_signature, str)
+            or not encoded_signature
+            or len(encoded_signature) % 4 != 0
+            or _BASE64_PATTERN.fullmatch(encoded_signature) is None
+        ):
+            raise _AdapterFailure(
+                "MODEL_INVALID_REQUEST",
+                details={"reason": "provider_continuation_payload_invalid"},
+            )
+        function_call_part["thought_signature"] = encoded_signature
     observation = _bounded_json(
         _function_response_payload(request.observation),
         "ModelTurnRequest.observation",
@@ -282,18 +338,10 @@ def _build_contents(request: ModelTurnRequest) -> list[dict[str, Any]]:
         [
             {
                 "role": "model",
-                "parts": [
-                    {
-                        "function_call": {
-                            "id": previous.call_id,
-                            "name": previous.tool_id,
-                            "args": deepcopy(previous.arguments),
-                        }
-                    }
-                ],
+                "parts": [function_call_part],
             },
             {
-                "role": "tool",
+                "role": "user",
                 "parts": [
                     {
                         "function_response": {
@@ -322,9 +370,22 @@ def build_gemini_request(
     if model_id is None:
         raise _AdapterFailure("MODEL_INVALID_REQUEST", details={"reason": "missing_model_id"})
     _validate_provider_text(model_id, "GeminiProviderAdapter.model_id")
+    evidence_context = _model_visible_evidence_context(request)
+    if evidence_context:
+        bounded_context = _bounded_json(
+            evidence_context,
+            "ModelTurnRequest.evidence_context",
+            _MAX_PROVIDER_INPUT_BYTES,
+        )
+        initial_user_input = (
+            f"{request.user_input}\nverified_evidence_context="
+            f"{json.dumps(bounded_context, ensure_ascii=False, sort_keys=True, separators=(',', ':'))}"
+        )
+    else:
+        initial_user_input = request.user_input
     bounded_input = _bounded_json(
-        request.user_input,
-        "ModelTurnRequest.user_input",
+        initial_user_input,
+        "ModelTurnRequest.model_visible_input",
         _MAX_PROVIDER_INPUT_BYTES,
     )
     if not isinstance(bounded_input, str):
@@ -346,7 +407,7 @@ def build_gemini_request(
 
     payload = {
         "model": model_id,
-        "contents": _build_contents(request),
+        "contents": _build_contents(request, bounded_input),
         "config": config,
     }
     _assert_json_safe_primitive(payload, "GeminiRequest")
@@ -407,7 +468,14 @@ def _extract_parts(response: Any) -> list[Any]:
     return list(parts)
 
 
-def _extract_function_calls(response: Any) -> list[Any]:
+def _extract_function_calls(response: Any) -> list[tuple[Any, Any | None]]:
+    calls_with_parts = []
+    for part in _extract_parts(response):
+        function_call = _read(part, "function_call", None)
+        if function_call is not None:
+            calls_with_parts.append((function_call, part))
+    if calls_with_parts:
+        return calls_with_parts
     raw_calls = _read(response, "function_calls", None)
     if raw_calls is not None:
         if not isinstance(raw_calls, (list, tuple)):
@@ -415,13 +483,8 @@ def _extract_function_calls(response: Any) -> list[Any]:
                 "MODEL_RESPONSE_MALFORMED",
                 details={"reason": "function_calls_not_a_list"},
             )
-        return list(raw_calls)
-    calls = []
-    for part in _extract_parts(response):
-        function_call = _read(part, "function_call", None)
-        if function_call is not None:
-            calls.append(function_call)
-    return calls
+        return [(raw_call, None) for raw_call in raw_calls]
+    return []
 
 
 def _extract_text(response: Any) -> str | None:
@@ -545,6 +608,36 @@ def _parse_function_call(
             "MODEL_TOOL_CALL_PARSE_FAILED",
             details={"reason": "invalid_normalized_tool_call"},
         ) from exc
+
+
+def _parse_provider_continuation(
+    raw_part: Any | None,
+    request: ModelTurnRequest,
+    call: ToolCall,
+) -> ProviderContinuation | None:
+    if raw_part is None:
+        return None
+    signature = _first_present(
+        raw_part,
+        ("thought_signature", "thoughtSignature"),
+    )
+    if signature is None:
+        return None
+    if not isinstance(signature, (bytes, bytearray)) or not signature:
+        raise _AdapterFailure(
+            "MODEL_RESPONSE_MALFORMED",
+            details={"reason": "invalid_provider_continuation"},
+        )
+    return ProviderContinuation.for_tool_call(
+        provider_id="gemini",
+        source_turn_id=request.turn_id,
+        call=call,
+        payload={
+            "format": _GEMINI_CONTINUATION_FORMAT,
+            "encoding": "base64",
+            "data": base64.b64encode(bytes(signature)).decode("ascii"),
+        },
+    )
 
 
 def _parse_provider_error(response: Any, model_id: str) -> ModelProviderError | None:
@@ -783,11 +876,21 @@ class GeminiProviderAdapter:
         metadata = _provider_metadata(response, model_id)
 
         if calls:
-            action = ModelAction.tool(_parse_function_call(calls[0], request))
+            raw_call, raw_part = calls[0]
+            parsed_call = _parse_function_call(raw_call, request)
+            action = ModelAction.tool(parsed_call)
+            continuation = _parse_provider_continuation(
+                raw_part,
+                request,
+                parsed_call,
+            )
             if finish_reason not in {None, "stop"}:
                 raise _AdapterFailure(
                     "MODEL_RESPONSE_MALFORMED",
-                    details={"reason": "tool_call_finish_reason_mismatch"},
+                    details={
+                        "reason": "tool_call_finish_reason_mismatch",
+                        "finish_reason": finish_reason,
+                    },
                 )
             return ModelResponse(
                 action=action,
@@ -796,6 +899,7 @@ class GeminiProviderAdapter:
                 provider_response_id=response_id,
                 finish_reason=finish_reason or "stop",
                 provider_metadata=metadata,
+                provider_continuation=continuation,
             )
 
         if not isinstance(text, str) or not text.strip():

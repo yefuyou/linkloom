@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 from dataclasses import replace
 import json
 from pathlib import Path
@@ -603,6 +604,7 @@ def test_tool_result_durable_resume_preserves_previous_call_without_reexecution(
 def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
     artifact_root,
 ):
+    thought_signature = b"synthetic-gemini-continuation-signature"
     client = SequencedGeminiClient(
         [
             {
@@ -611,6 +613,23 @@ def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
                         "id": "gemini-loop-call",
                         "name": "search_notes",
                         "args": {"query": "gemini durable"},
+                    }
+                ],
+                "candidates": [
+                    {
+                        "content": {
+                            "role": "model",
+                            "parts": [
+                                {
+                                    "function_call": {
+                                        "id": "gemini-loop-call",
+                                        "name": "search_notes",
+                                        "args": {"query": "gemini durable"},
+                                    },
+                                    "thought_signature": thought_signature,
+                                }
+                            ],
+                        }
                     }
                 ],
                 "response_id": "gemini-loop-tool-response",
@@ -643,11 +662,20 @@ def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
     assert executor_calls == [{"query": "gemini durable"}]
     assert policy.call_count == 1
     second_contents = client.requests[1]["contents"]
+    assert [content["role"] for content in second_contents] == [
+        "user",
+        "model",
+        "user",
+    ]
     assert second_contents[1]["parts"][0]["function_call"] == {
         "id": "gemini-loop-call",
         "name": "search_notes",
         "args": {"query": "gemini durable"},
     }
+    assert base64.b64decode(
+        second_contents[1]["parts"][0]["thought_signature"],
+        validate=True,
+    ) == thought_signature
     assert second_contents[2]["parts"][0]["function_response"] == {
         "id": "gemini-loop-call",
         "name": "search_notes",
@@ -658,6 +686,211 @@ def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
     }
     assert "runtime_state" not in client.requests[1]
     assert "tool_ledger" not in client.requests[1]
+
+
+def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
+    artifact_root,
+):
+    thought_signature = b"synthetic-cold-resume-continuation"
+    first_client = SequencedGeminiClient(
+        [
+            {
+                "function_calls": [
+                    {
+                        "id": "gemini-resume-call",
+                        "name": "search_notes",
+                        "args": {"query": "gemini durable"},
+                    }
+                ],
+                "candidates": [
+                    {
+                        "content": {
+                            "role": "model",
+                            "parts": [
+                                {
+                                    "function_call": {
+                                        "id": "gemini-resume-call",
+                                        "name": "search_notes",
+                                        "args": {"query": "gemini durable"},
+                                    },
+                                    "thought_signature": thought_signature,
+                                }
+                            ],
+                        }
+                    }
+                ],
+                "finish_reason": "STOP",
+            }
+        ]
+    )
+    executor_calls: list[dict] = []
+    first_loop, _ = _loop(
+        GeminiProviderAdapter(first_client, model_id="gemini-test-model"),
+        lambda arguments: executor_calls.append(arguments)
+        or [{"evidence_id": "ev_gemini_resume"}],
+    )
+    store = ModelArtifactStore(artifact_root / "models")
+
+    def stop_before_second_provider_turn(state: RuntimeState) -> None:
+        latest = state.model_executions[-1]
+        if latest.sequence == 2 and latest.status == "request_durable":
+            raise RuntimeError("synthetic checkpoint stop")
+
+    interrupted = _run(first_loop, store, stop_before_second_provider_turn)
+
+    assert interrupted.status == "failed"
+    assert interrupted.state.model_executions[-1].status == "tool_result_durable"
+    restored_state = RuntimeState.from_dict(
+        json.loads(json.dumps(interrupted.state.to_dict(), sort_keys=True))
+    )
+    second_client = SequencedGeminiClient(
+        [
+            {
+                "text": "Gemini resumed from the durable tool result.",
+                "finish_reason": "STOP",
+            }
+        ]
+    )
+    resumed_loop, resumed_policy = _loop(
+        GeminiProviderAdapter(second_client, model_id="gemini-test-model"),
+        lambda arguments: pytest.fail("cold resume must not re-execute the tool"),
+    )
+
+    resumed = resumed_loop.resume(
+        state=restored_state,
+        task_id="task_m02_provider",
+        agent_id="retrieval_agent",
+        user_input="find durable provider evidence",
+        available_tools=[_definition()],
+        artifact_store=store,
+        checkpoint_callback=lambda state: None,
+    )
+
+    assert resumed.status == "completed"
+    assert resumed.final_answer == "Gemini resumed from the durable tool result."
+    assert len(first_client.requests) == 1
+    assert len(second_client.requests) == 1
+    assert executor_calls == [{"query": "gemini durable"}]
+    assert resumed_policy.call_count == 1
+    contents = second_client.requests[0]["contents"]
+    assert [content["role"] for content in contents] == ["user", "model", "user"]
+    function_call_part = contents[1]["parts"][0]
+    assert function_call_part["function_call"] == {
+        "id": "gemini-resume-call",
+        "name": "search_notes",
+        "args": {"query": "gemini durable"},
+    }
+    assert base64.b64decode(
+        function_call_part["thought_signature"],
+        validate=True,
+    ) == thought_signature
+    function_response = contents[2]["parts"][0]["function_response"]
+    assert function_response["id"] == function_call_part["function_call"]["id"]
+    assert function_response["name"] == function_call_part["function_call"]["name"]
+    assert function_response["response"]["value"] == [
+        {"evidence_id": "ev_gemini_resume"}
+    ]
+    assert restored_state.model_executions[0].normalized_action[
+        "tool_call"
+    ]["arguments"] == {"query": "gemini durable"}
+
+
+def test_cold_resume_rejects_continuation_bound_to_a_different_source_turn(
+    artifact_root,
+):
+    first_client = SequencedGeminiClient(
+        [
+            {
+                "function_calls": [
+                    {
+                        "id": "gemini-wrong-source-call",
+                        "name": "search_notes",
+                        "args": {"query": "gemini durable"},
+                    }
+                ],
+                "candidates": [
+                    {
+                        "content": {
+                            "role": "model",
+                            "parts": [
+                                {
+                                    "function_call": {
+                                        "id": "gemini-wrong-source-call",
+                                        "name": "search_notes",
+                                        "args": {"query": "gemini durable"},
+                                    },
+                                    "thought_signature": b"synthetic-wrong-source",
+                                }
+                            ],
+                        }
+                    }
+                ],
+                "finish_reason": "STOP",
+            }
+        ]
+    )
+    first_loop, _ = _loop(
+        GeminiProviderAdapter(first_client, model_id="gemini-test-model"),
+        lambda arguments: [{"evidence_id": "ev_wrong_source"}],
+    )
+    store = ModelArtifactStore(artifact_root / "models")
+    durable_snapshots: list[RuntimeState] = []
+
+    def stop_after_tool_result_is_durable(state: RuntimeState) -> None:
+        durable_snapshots.append(_snapshot(state))
+        latest = state.model_executions[-1]
+        if latest.sequence == 1 and latest.status == "tool_result_durable":
+            raise RuntimeError("synthetic checkpoint stop")
+
+    _run(first_loop, store, stop_after_tool_result_is_durable)
+    durable_state = next(
+        snapshot
+        for snapshot in durable_snapshots
+        if snapshot.model_executions[-1].status == "tool_result_durable"
+    )
+    record = durable_state.model_executions[0]
+    response_payload = store.read(
+        record.response_ref,
+        expected_sha256=record.response_sha256,
+    )
+    response_payload["model_response"]["provider_continuation"][
+        "source_turn_id"
+    ] = "run_m02_provider:turn:999"
+    replaced_artifact = store.write(
+        "model/run_m02_provider/run_m02_provider_turn_1/response-wrong-source.json",
+        response_payload,
+        kind="response",
+    )
+    replaced_record = replace(
+        record,
+        response_ref=replaced_artifact.ref,
+        response_sha256=replaced_artifact.sha256,
+    )
+    restored_state = RuntimeState.from_dict(
+        {
+            **durable_state.to_dict(),
+            "model_executions": [replaced_record.to_dict()],
+        }
+    )
+    resumed_provider = ScriptedProvider([_provider_final_response("must not run")])
+    resumed_loop, _ = _loop(
+        resumed_provider,
+        lambda arguments: pytest.fail("resume must not re-execute the tool"),
+    )
+
+    resumed = resumed_loop.resume(
+        state=restored_state,
+        task_id="task_m02_provider",
+        agent_id="retrieval_agent",
+        user_input="find durable provider evidence",
+        available_tools=[_definition()],
+        artifact_store=store,
+        checkpoint_callback=lambda state: None,
+    )
+
+    assert resumed.status == "failed"
+    assert resumed.error.code == "MODEL_LOOP_RUNTIME_FAILED"
+    assert resumed_provider.call_count == 0
 
 
 def test_response_durable_checkpoint_failure_leaves_ambiguous_state_and_no_replay(

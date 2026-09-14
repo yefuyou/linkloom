@@ -7,7 +7,9 @@ this module.
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import asdict, dataclass, field
+import hashlib
 import json
 import math
 from typing import Any, Callable, Protocol, Sequence
@@ -31,6 +33,8 @@ MODEL_ACTION_KINDS = frozenset({"tool_call", "final"})
 MODEL_VISIBLE_EVIDENCE_TOOL_IDS = frozenset({"search_notes", "read_verified_note"})
 MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS = 8
 MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES = 24 * 1024
+MAX_MODEL_TOOL_HISTORY_RESULTS = 16
+MAX_MODEL_TOOL_HISTORY_BYTES = 128 * 1024
 
 
 MODEL_PROVIDER_ERROR_SPECS = {
@@ -65,6 +69,7 @@ _UNSAFE_PROVIDER_TEXT_MARKERS = (
 )
 _MAX_PROVIDER_TEXT_LENGTH = 512
 _MAX_PROVIDER_METADATA_BYTES = 16 * 1024
+MAX_PROVIDER_CONTINUATION_BYTES = 64 * 1024
 
 
 def _validate_provider_text(value: Any, field_name: str) -> None:
@@ -99,6 +104,17 @@ def _validate_optional_non_negative_integer(value: Any, field_name: str) -> None
         return
     if isinstance(value, bool) or not isinstance(value, int) or value < 0:
         raise ValidationError(f"{field_name} must be a non-negative integer or null.")
+
+
+def _tool_arguments_sha256(arguments: dict[str, Any]) -> str:
+    encoded = json.dumps(
+        arguments,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _reject_unsupported_fields(
@@ -405,6 +421,125 @@ class ModelProviderError:
 
 
 @dataclass(frozen=True)
+class ProviderContinuation:
+    """Bounded opaque provider state associated with one model tool call."""
+
+    provider_id: str
+    source_turn_id: str
+    source_sequence: int
+    tool_call_id: str
+    tool_id: str
+    arguments_sha256: str
+    payload: dict[str, Any]
+
+    def __post_init__(self) -> None:
+        _validate_provider_text(
+            self.provider_id,
+            "ProviderContinuation.provider_id",
+        )
+        _require_id(self.source_turn_id, "ProviderContinuation.source_turn_id")
+        if (
+            isinstance(self.source_sequence, bool)
+            or not isinstance(self.source_sequence, int)
+            or self.source_sequence < 1
+        ):
+            raise ValidationError(
+                "ProviderContinuation.source_sequence must be a positive integer."
+            )
+        _require_id(self.tool_call_id, "ProviderContinuation.tool_call_id")
+        _require_id(self.tool_id, "ProviderContinuation.tool_id")
+        if (
+            not isinstance(self.arguments_sha256, str)
+            or len(self.arguments_sha256) != 64
+            or any(character not in "0123456789abcdef" for character in self.arguments_sha256)
+        ):
+            raise ValidationError(
+                "ProviderContinuation.arguments_sha256 must be a lowercase SHA-256 digest."
+            )
+        if not isinstance(self.payload, dict):
+            raise ValidationError("ProviderContinuation.payload must be a JSON object.")
+        _assert_json_safe_primitive(self.payload, "ProviderContinuation.payload")
+        _assert_no_forbidden_persisted_keys(
+            self.payload,
+            "ProviderContinuation.payload",
+        )
+        encoded = json.dumps(
+            self.payload,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+        if len(encoded) > MAX_PROVIDER_CONTINUATION_BYTES:
+            raise ValidationError(
+                "ProviderContinuation.payload exceeds the safe size limit."
+            )
+
+    @classmethod
+    def for_tool_call(
+        cls,
+        *,
+        provider_id: str,
+        source_turn_id: str,
+        call: ToolCall,
+        payload: dict[str, Any],
+    ) -> "ProviderContinuation":
+        return cls(
+            provider_id=provider_id,
+            source_turn_id=source_turn_id,
+            source_sequence=call.sequence,
+            tool_call_id=call.call_id,
+            tool_id=call.tool_id,
+            arguments_sha256=_tool_arguments_sha256(call.arguments),
+            payload=deepcopy(payload),
+        )
+
+    def matches_tool_call(self, call: ToolCall) -> bool:
+        return (
+            self.source_sequence == call.sequence
+            and self.tool_call_id == call.call_id
+            and self.tool_id == call.tool_id
+            and self.arguments_sha256 == _tool_arguments_sha256(call.arguments)
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "provider_id": self.provider_id,
+            "source_turn_id": self.source_turn_id,
+            "source_sequence": self.source_sequence,
+            "tool_call_id": self.tool_call_id,
+            "tool_id": self.tool_id,
+            "arguments_sha256": self.arguments_sha256,
+            "payload": deepcopy(self.payload),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ProviderContinuation":
+        if not isinstance(data, dict):
+            raise ValidationError("ProviderContinuation must be a JSON object.")
+        fields = {
+            "provider_id",
+            "source_turn_id",
+            "source_sequence",
+            "tool_call_id",
+            "tool_id",
+            "arguments_sha256",
+            "payload",
+        }
+        _reject_unsupported_fields(data, fields, "ProviderContinuation")
+        _require_keys(data, fields, "ProviderContinuation")
+        return cls(
+            provider_id=data["provider_id"],
+            source_turn_id=data["source_turn_id"],
+            source_sequence=data["source_sequence"],
+            tool_call_id=data["tool_call_id"],
+            tool_id=data["tool_id"],
+            arguments_sha256=data["arguments_sha256"],
+            payload=deepcopy(data["payload"]),
+        )
+
+
+@dataclass(frozen=True)
 class ModelResponse:
     """Complete provider response envelope around one normalized ModelAction."""
 
@@ -414,6 +549,7 @@ class ModelResponse:
     provider_response_id: str | None = None
     finish_reason: str | None = None
     provider_metadata: dict[str, Any] = field(default_factory=dict)
+    provider_continuation: ProviderContinuation | None = None
     error: ModelProviderError | None = None
 
     def __post_init__(self) -> None:
@@ -429,6 +565,24 @@ class ModelResponse:
             )
         if not isinstance(self.usage, ModelUsage):
             raise ValidationError("ModelResponse.usage must be ModelUsage.")
+        if self.provider_continuation is not None and not isinstance(
+            self.provider_continuation,
+            ProviderContinuation,
+        ):
+            raise ValidationError(
+                "ModelResponse.provider_continuation must be ProviderContinuation or None."
+            )
+        if self.provider_continuation is not None and (
+            self.action is None
+            or self.action.kind != "tool_call"
+            or self.action.tool_call is None
+            or not self.provider_continuation.matches_tool_call(
+                self.action.tool_call
+            )
+        ):
+            raise ValidationError(
+                "ModelResponse.provider_continuation identity must match its tool action."
+            )
         _validate_optional_provider_text(
             self.provider_request_id,
             "ModelResponse.provider_request_id",
@@ -444,7 +598,7 @@ class ModelResponse:
         _assert_no_forbidden_persisted_keys(payload, "ModelResponse")
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "action": self.action.to_dict() if self.action is not None else None,
             "usage": self.usage.to_dict(),
             "provider_request_id": self.provider_request_id,
@@ -453,6 +607,9 @@ class ModelResponse:
             "provider_metadata": self.provider_metadata,
             "error": self.error.to_dict() if self.error is not None else None,
         }
+        if self.provider_continuation is not None:
+            payload["provider_continuation"] = self.provider_continuation.to_dict()
+        return payload
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ModelResponse":
@@ -467,12 +624,14 @@ class ModelResponse:
                 "provider_response_id",
                 "finish_reason",
                 "provider_metadata",
+                "provider_continuation",
                 "error",
             },
             "ModelResponse",
         )
         raw_action = data.get("action")
         raw_error = data.get("error")
+        raw_continuation = data.get("provider_continuation")
         action = ModelAction.from_dict(raw_action) if raw_action is not None else None
         error = ModelProviderError.from_dict(raw_error) if raw_error is not None else None
         return cls(
@@ -482,7 +641,59 @@ class ModelResponse:
             provider_response_id=data.get("provider_response_id"),
             finish_reason=data.get("finish_reason"),
             provider_metadata=data.get("provider_metadata", {}),
+            provider_continuation=(
+                ProviderContinuation.from_dict(raw_continuation)
+                if raw_continuation is not None
+                else None
+            ),
             error=error,
+        )
+
+
+@dataclass(frozen=True)
+class ModelToolInteraction:
+    """One provider-neutral, completed tool exchange retained for chat history."""
+
+    tool_call: ToolCall
+    tool_result: ToolResult
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.tool_call, ToolCall):
+            raise ValidationError("ModelToolInteraction.tool_call must be ToolCall.")
+        if not isinstance(self.tool_result, ToolResult):
+            raise ValidationError("ModelToolInteraction.tool_result must be ToolResult.")
+        if (
+            self.tool_call.call_id != self.tool_result.call_id
+            or self.tool_call.tool_id != self.tool_result.tool_id
+        ):
+            raise ValidationError(
+                "ModelToolInteraction call and result identities must match."
+            )
+        _assert_json_safe_primitive(self.to_dict(), "ModelToolInteraction")
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "tool_call": self.tool_call.to_dict(),
+            "tool_result": self.tool_result.to_dict(),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ModelToolInteraction":
+        if not isinstance(data, dict):
+            raise ValidationError("ModelToolInteraction must be a JSON object.")
+        _reject_unsupported_fields(
+            data,
+            {"tool_call", "tool_result"},
+            "ModelToolInteraction",
+        )
+        _require_keys(
+            data,
+            {"tool_call", "tool_result"},
+            "ModelToolInteraction",
+        )
+        return cls(
+            tool_call=ToolCall.from_dict(data["tool_call"]),
+            tool_result=ToolResult.from_dict(data["tool_result"]),
         )
 
 
@@ -499,9 +710,11 @@ class ModelTurnRequest:
     observation: ToolResult | None
     available_tools: list[ToolDefinition]
     previous_tool_call: ToolCall | None = None
+    provider_continuation: ProviderContinuation | None = None
     model_id: str | None = None
     generation_options: ModelGenerationOptions = field(default_factory=ModelGenerationOptions)
     evidence_context: list[ToolResult] = field(default_factory=list)
+    tool_history: list[ModelToolInteraction] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         for field_name, value in (
@@ -531,6 +744,25 @@ class ModelTurnRequest:
             raise ValidationError(
                 "ModelTurnRequest.previous_tool_call identity must match observation."
             )
+        if self.provider_continuation is not None:
+            if not isinstance(self.provider_continuation, ProviderContinuation):
+                raise ValidationError(
+                    "ModelTurnRequest.provider_continuation must be ProviderContinuation or None."
+                )
+            if self.previous_tool_call is None or self.observation is None:
+                raise ValidationError(
+                    "ModelTurnRequest.provider_continuation requires a previous tool observation."
+                )
+            if not self.provider_continuation.matches_tool_call(
+                self.previous_tool_call
+            ):
+                raise ValidationError(
+                    "ModelTurnRequest.provider_continuation identity must match the previous tool call."
+                )
+            if self.provider_continuation.source_sequence >= self.sequence:
+                raise ValidationError(
+                    "ModelTurnRequest.provider_continuation must originate from an earlier turn."
+                )
         if not isinstance(self.available_tools, list):
             raise ValidationError("ModelTurnRequest.available_tools must be a list.")
         if any(not isinstance(tool, ToolDefinition) for tool in self.available_tools):
@@ -548,6 +780,56 @@ class ModelTurnRequest:
                 "ModelTurnRequest.generation_options must be ModelGenerationOptions."
             )
         _validate_verified_evidence_context(self.evidence_context)
+        if not isinstance(self.tool_history, list):
+            raise ValidationError("ModelTurnRequest.tool_history must be a list.")
+        if len(self.tool_history) > MAX_MODEL_TOOL_HISTORY_RESULTS:
+            raise ValidationError(
+                "ModelTurnRequest.tool_history exceeds the bounded result limit."
+            )
+        seen_history_call_ids: set[str] = set()
+        previous_sequence = 0
+        for interaction in self.tool_history:
+            if not isinstance(interaction, ModelToolInteraction):
+                raise ValidationError(
+                    "ModelTurnRequest.tool_history must contain ModelToolInteraction values."
+                )
+            call = interaction.tool_call
+            if call.call_id in seen_history_call_ids:
+                raise ValidationError(
+                    "ModelTurnRequest.tool_history cannot repeat a tool call."
+                )
+            if call.sequence <= previous_sequence or call.sequence >= self.sequence:
+                raise ValidationError(
+                    "ModelTurnRequest.tool_history must be chronological and precede the current turn."
+                )
+            for expected, actual in (
+                (self.run_id, call.run_id),
+                (self.task_id, call.task_id),
+                (self.agent_id, call.agent_id),
+            ):
+                if actual is not None and actual != expected:
+                    raise ValidationError(
+                        "ModelTurnRequest.tool_history identity does not match the request."
+                    )
+            if (
+                self.previous_tool_call is not None
+                and call.call_id == self.previous_tool_call.call_id
+            ):
+                raise ValidationError(
+                    "ModelTurnRequest.tool_history must exclude the current observation pair."
+                )
+            seen_history_call_ids.add(call.call_id)
+            previous_sequence = call.sequence
+        encoded_history = json.dumps(
+            [interaction.to_dict() for interaction in self.tool_history],
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        if len(encoded_history.encode("utf-8")) > MAX_MODEL_TOOL_HISTORY_BYTES:
+            raise ValidationError(
+                "ModelTurnRequest.tool_history exceeds the bounded byte limit."
+            )
         _assert_json_safe_primitive(self.to_dict(), "ModelTurnRequest")
 
     def to_dict(self) -> dict:
@@ -567,6 +849,12 @@ class ModelTurnRequest:
             "generation_options": self.generation_options.to_dict(),
             "evidence_context": [result.to_dict() for result in self.evidence_context],
         }
+        if self.tool_history:
+            payload["tool_history"] = [
+                interaction.to_dict() for interaction in self.tool_history
+            ]
+        if self.provider_continuation is not None:
+            payload["provider_continuation"] = self.provider_continuation.to_dict()
         return payload
 
     @classmethod
@@ -585,9 +873,11 @@ class ModelTurnRequest:
                 "observation",
                 "available_tools",
                 "previous_tool_call",
+                "provider_continuation",
                 "model_id",
                 "generation_options",
                 "evidence_context",
+                "tool_history",
             },
             "ModelTurnRequest",
         )
@@ -606,12 +896,16 @@ class ModelTurnRequest:
         )
         raw_observation = data.get("observation")
         raw_previous_call = data.get("previous_tool_call")
+        raw_continuation = data.get("provider_continuation")
         raw_tools = data["available_tools"]
         raw_evidence_context = data.get("evidence_context", [])
+        raw_tool_history = data.get("tool_history", [])
         if not isinstance(raw_tools, list):
             raise ValidationError("ModelTurnRequest.available_tools must be a list.")
         if not isinstance(raw_evidence_context, list):
             raise ValidationError("ModelTurnRequest.evidence_context must be a list.")
+        if not isinstance(raw_tool_history, list):
+            raise ValidationError("ModelTurnRequest.tool_history must be a list.")
         return cls(
             run_id=data["run_id"],
             turn_id=data["turn_id"],
@@ -630,12 +924,20 @@ class ModelTurnRequest:
                 if raw_previous_call is not None
                 else None
             ),
+            provider_continuation=(
+                ProviderContinuation.from_dict(raw_continuation)
+                if raw_continuation is not None
+                else None
+            ),
             model_id=data.get("model_id"),
             generation_options=ModelGenerationOptions.from_dict(
                 data.get("generation_options", {})
             ),
             evidence_context=[
                 ToolResult.from_dict(item) for item in raw_evidence_context
+            ],
+            tool_history=[
+                ModelToolInteraction.from_dict(item) for item in raw_tool_history
             ],
         )
 
@@ -743,6 +1045,9 @@ ScriptedModelAdapter = FakeModelAdapter
 
 __all__ = [
     "FakeModelAdapter",
+    "MAX_PROVIDER_CONTINUATION_BYTES",
+    "MAX_MODEL_TOOL_HISTORY_BYTES",
+    "MAX_MODEL_TOOL_HISTORY_RESULTS",
     "MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES",
     "MAX_VERIFIED_EVIDENCE_CONTEXT_RESULTS",
     "MODEL_ACTION_KINDS",
@@ -755,9 +1060,11 @@ __all__ = [
     "ModelProviderAdapter",
     "ModelProviderError",
     "ModelResponse",
+    "ModelToolInteraction",
     "ModelTurnRequest",
     "ModelUsage",
     "ProviderCapability",
+    "ProviderContinuation",
     "ScriptedModelAdapter",
     "is_verified_evidence_result",
 ]

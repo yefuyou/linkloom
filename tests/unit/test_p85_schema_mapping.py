@@ -10,6 +10,7 @@ from linkloom.agents.providers.gemini_api import (
     map_tool_definition_to_gemini_function,
 )
 from linkloom.tools.contracts import ToolDefinition
+from linkloom.tools.runtime import create_retrieval_tool_runtime
 
 
 def _definition() -> ToolDefinition:
@@ -78,6 +79,22 @@ def test_tool_schema_mapping_returns_a_deep_copy_and_does_not_mutate_definition(
     mapped["parameters_json_schema"]["properties"]["path"]["maxLength"] = 1
 
     assert definition.input_schema == original_schema
+
+
+def test_production_read_tool_tells_model_to_replay_search_evidence_id():
+    runtime = create_retrieval_tool_runtime(
+        lambda query, source_context, limit: [],
+        lambda note_ref: {"ref": note_ref},
+    )
+    definition, _executor = runtime.registry.resolve("read_verified_note")
+
+    mapped = map_tool_definition_to_gemini_function(definition)
+
+    assert "evidence_id" in mapped["description"]
+    note_ref_schema = mapped["parameters_json_schema"]["properties"]["note_ref"]
+    assert "search_notes" in note_ref_schema["description"]
+    assert "evidence_id" in note_ref_schema["description"]
+    assert "relative_path" in note_ref_schema["description"]
 
 
 def test_adapter_request_groups_function_declarations_and_preserves_generation_options():

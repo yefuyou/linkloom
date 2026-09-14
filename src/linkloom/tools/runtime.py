@@ -644,13 +644,20 @@ def create_retrieval_tool_runtime(
         ToolDefinition(
             tool_id="read_verified_note",
             version="1",
-            description="Read one verified note reference.",
+            description=(
+                "Read one verified evidence item. Pass the exact evidence_id returned "
+                "by search_notes, not its relative_path."
+            ),
             input_schema={
                 "type": "object",
                 "required": ["note_ref"],
                 "properties": {
                     "note_ref": {
                         "type": "string",
+                        "description": (
+                            "The exact search_notes evidence_id to read; do not pass "
+                            "relative_path."
+                        ),
                         "minLength": 1,
                         # Mirrors _require_relative_note_ref without exposing
                         # filesystem details to the public tool contract.
