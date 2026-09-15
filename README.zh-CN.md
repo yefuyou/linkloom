@@ -1,143 +1,131 @@
-# linkloom
+# LinkLoom
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-<p align="center">
-  <img src="./assets/readme/linkloom-hero.zh-CN.svg" width="100%" alt="Linkloom 将合成 Markdown Vault 转为确定性、可检查的只读索引，并把未来改动留在审核之后。">
-</p>
+**恢复团队最后真正做出的决定，并说明为什么这个答案值得相信。**
 
-Linkloom 是一个本地优先工具，用于把 Markdown 和 Obsidian 笔记转为确定、
-可检查的产物——从只读扫描器开始。它面向希望从长期积累的 Vault 中找回
-知识、又不愿把重写权限交给不透明系统的人。
+LinkLoom 是一个本地优先的项目决策恢复工具，面向项目负责人、PM、PMO 和团队
+成员。它从散落的项目文档、会议记录与决策记录中自主搜索和读取，最后给出严格、
+有证据支撑的简报：最终决定、理由、被否决的方案、行动项、未决问题和明确的不确定性。
 
-> **当前状态 · Scanner v1 已在合成测试夹具上验收。** 第一个面向用户的切片
-> 可以发现 Markdown 文件、提取已有结构、输出机器可读索引和摘要，并证明源
-> 夹具保持不变。后续搜索、连接、行动和写回流程不作为已完成的产品能力呈现。
+它不是聊天机器人、文档摘要器，也不是 Agent Trace 控制台。它回答的核心问题只有
+一个：**“所以我们最后到底定了什么？”**
 
-## 第一份证明：扫描合成 Vault
+![LinkLoom 决策简报与关联的来源证据](output/playwright/success.png)
 
-最小可用运行方式是本地、确定性的，不需要 provider key 或真实 Vault：
+## 产品会返回什么
+
+- **决定优先。** 页面先展示最终记录的选择，而不是聊天记录。
+- **Claim 级证据。** 每个关键结论都能定位到已验证的来源摘录和精确行号。
+- **理由与方案分开。** 支撑决定的理由和真正被否决的替代方案不会混在一起。
+- **可执行的后续。** 行动、负责人、截止日期和未决问题保留缺失值，不擅自补全。
+- **认真处理不确定性。** 已确认、证据不足和运行失败是三种清晰不同的状态。
+- **按需查看过程。** 搜索 / 读取过程属于二级来源说明，不抢占产品主界面。
+
+## 运行确定性的产品 Demo
+
+本地预览使用冻结的合成项目记录，不需要 Provider Key，也不会修改源工作区。
 
 ```bash
 python -m pip install -e .
-python -m linkloom scan tests/fixtures/sample_vault --output .artifacts/readme-demo/scan
+python -m linkloom.ui --port 8765
 ```
 
-预期输出：
+打开 `http://127.0.0.1:8765`。内置 `mps-001` 夹具只重放两个已记录的问题：一个
+成功的 Atlas Lantern 决策恢复案例，以及一个证据不足案例。任意其他问题会明确失败，
+不会得到硬编码答案。
+
+其他已截图状态：
+
+| 初始问题 | 搜索与读取中 | 证据不足 |
+|---|---|---|
+| ![初始提问](output/playwright/initial.png) | ![运行状态](output/playwright/running.png) | ![证据不足](output/playwright/insufficient.png) |
+
+## LinkLoom 如何工作
 
 ```text
-Indexed notes: 5
-Warnings: 1
-Index: .../.artifacts/readme-demo/scan/vault_index.json
-Summary: .../.artifacts/readme-demo/scan/scan_summary.md
+决策问题
+   │
+   ▼
+持久化 Agent Loop ──► search_notes / read_verified_note
+   │                              │
+   │                              ▼
+   │                         已验证证据
+   ▼
+严格 TeamDecisionResult
+   │
+   ├── 结构契约校验
+   ├── claim ↔ 已观察证据校验
+   └── Provider 无关的 UI 投影
+                         │
+                         ▼
+                  决策简报 + 来源检查器
 ```
 
-这个夹具特意包含一个 frontmatter 损坏案例。Linkloom 会保留该笔记的可见
-性并记录警告，而不是中止扫描。
+Runtime 已支持真实多轮 Gemini 与 DeepSeek Provider Adapter。每个持久化模型轮次
+只拥有一个结构化动作——一次工具调用或 Final；只读 `ToolRuntime` 会在进入下一轮
+前校验调用、预算、结果、checkpoint 和证据。宿主程序可以通过 `RuntimeRunBackend`
+注入已配置的 `RuntimeEngine`；上面的模块入口仍是隔离的确定性 Demo。
 
-生成的 `vault_index.json` 包含每篇笔记的相对路径、标题、标题层级、已有标签、
-WikiLink 目标、字节大小和源 SHA-256。配套的 `scan_summary.md` 提供人类可读的
-清单。产物必须位于输入根目录之外。
+## 如实呈现真实 Provider 证据
 
-## 当前真实情况
+目前有三个冻结合成案例的 DeepSeek 首次结果。这是小规模工程评测，不是 Benchmark，
+也不是生产成功率。
 
-- **只读 Scanner — Accepted（已验收）。** 基于合成夹具的测试覆盖了文件发现、结构提取、确定性输出、警告、路径安全和输入不可变性。
-- **Runtime、provider 与 safety 基础 — Acceptance records exist（存在验收记录）。** M0 和 Gate A/B 记录了有边界的工程证据；这不代表完整助手已经达到生产就绪状态。
-- **Team Decision Eval Seed — Accepted as eval seed（作为评测种子已验收）。** 它包含 30 cases、6 workspaces 和 36 notes；Golden 8 已正式冻结。
-- **Search、可解释关系、诊断和行动连续性 — Planned / experimental（计划中 / 实验性）。** 存在支持性实验，但还没有完成端到端的用户承诺。
-- **Real-vault mutation — Future only（仅未来）。** 当前门槛下真实写入仍然禁止。任何后续写入都需要可见计划、精确批准、源版本检查、备份、审计和回滚。
+| Case | 要验证的产品行为 | 基础设施 | 业务结果 |
+|---|---|---:|---|
+| `mps-001` | 恢复已批准的模型 Provider | PASS | 正确恢复并锚定 Aster A；但 rejected alternative 分类过宽 |
+| `aer-002` | 跨文档恢复评测发布边界 | FAIL | 未评测：首轮响应包含多个工具调用 |
+| `iti-005` | 不编造缺失的负责人和截止日期 | FAIL | 未评测：首轮响应包含多个工具调用 |
 
-[`relation_eval/`](relation_eval/README.md) 是独立的合成评测实验室。它的模拟满分
-证明的是流水线连接，而不是模型智能或真实模型基准。
+两个受阻案例都保留了第一次终止结果，没有重采样。共同问题是 Provider–Runtime
+能力契约不匹配：根据 [DeepSeek Chat Completions 文档](https://api-docs.deepseek.com/zh-cn/api/create-chat-completion)，
+`tool_choice: auto` 可能一次返回多个工具调用，而当前持久化 Runtime 每轮只接受一个动作。因此这两次运行的 Contract、Grounding、
+Decision、Scope 和 Uncertainty 都是 **N/E（未评测）**，不能冒充语义失败。
 
-## 证据链
+完整的分层结论、token、成本、问题分类、产物位置和产品含义见
+[真实 Provider 证据矩阵](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)。
 
-Linkloom 的设计是一串逐步提高影响范围的边界：
+## 安全与可信边界
 
-```text
-已批准的 Markdown 根目录
-        │
-        ▼
-只读扫描 ──► 确定性索引 + 摘要
-                              │
-                              ▼
-                 带引用 / 可审核的未来流程
-                              │
-                              ▼
-                 独立变更计划（未来）
-                              │
-                              ▼
-             精确批准 + 备份 + 审计 + 回滚
-```
+- 当前产品路径只读；检索工具不能重写、重命名、移动、打标签或删除笔记。
+- 测试和 Demo 优先使用仓库中的合成工作区，而不是私人 Vault。
+- 关键输出只能引用成功工具结果中已观察到的证据；证据缺失或变更时会 fail closed。
+- 文档没有提供负责人或截止日期时，对应字段保持 `null`。
+- Provider 错误通过稳定安全代码投影；UI 不暴露原始本地路径或不可信错误消息。
+- 未来任何真实 Vault 写入都必须先有逐文件 dry-run、精确批准、源版本校验、备份、
+  审计和回滚。
 
-前五个产品里程碑保持只读。没有源文件和段落时，分数、建议或生成的句子都
-不会被当作已验证知识。Linkloom 会先观察现有 Vault 结构，再提出组织方式；
-它不要求一套固定的文件夹分类。
+## 当前状态与限制
 
-## 产品路径
+决策恢复 Runtime、严格结果契约、证据投影、真实 Gemini / DeepSeek 多轮基线和
+Product UI V1 已实现并完成本地验证，但它还不是已部署的多人应用。
 
-规范路线图描述的是知识生命周期，而不是自动重写循环：
+已知限制：
 
-```text
-可读取 → 可查找 → 可连接 → 可组织 → 可行动
-                                  ↘
-                      仅在确认后修改
-```
+- CLI UI 入口是确定性的本地 Demo；真实产品宿主需要注入已配置 Runtime；
+- Demo 只有一个冻结工作区和两个已记录问题；
+- DeepSeek Adapter 当前对多工具调用 fail closed；
+- `TeamDecisionResult` 还没有 claim 级 `inferred` 标记；
+- 长文分页、Auth、Workspace 管理、部署和真实 Vault 写入不在本阶段范围内。
 
-当前实现是 **Can Read** 基础。下一个产品边界是独立的规划切片；生产实现必须
-等待该切片自己的 SPEC、implementation plan 和明确的人类批准范围。这里不包含
-任何 M1 生产业务流程。
+## 验证与项目入口
 
-## 评测证据
+Product UI 里程碑记录了 48 个 focused / adjacent 测试通过，覆盖
+initial / running / success / insufficient / error 五种浏览器状态、响应式证据弹层、
+真实合成 Vault 的 Runtime 投影，以及通过 Antigravity 完成的 Gemini 视觉评审。
+冻结的 Team Decision Seed 校验覆盖 30 个 cases、6 个 workspaces 和 36 篇 notes。
 
-无需网络即可运行仓库中已提交的种子校验器：
+建议从这些文档开始：
 
-```bash
-python docs/requirements/m1_team_decision_eval_seed/validate_dataset.py
-```
-
-它会校验合成数据集的 schema、证据锚点、轨迹约束、claim 规则和指标注册表。
-已有记录如下：
-
-```text
-PASS: 30 cases, 6 workspaces, 36 notes
-PASS: paths, evidence anchors, trajectory constraints, claims, and metric registry
-```
-
-现有 Scanner 验收证据记录为 **8 passed, 1 skipped**。跳过的是需要 Windows
-创建链接权限的 symbolic-link 案例。在当前 Windows 环境中，focused pytest
-无法重现，因为 pytest 临时目录 ACL 在测试执行前就失败了。仓库级测试套件不
-声称已经全绿：历史记录包含 Windows ACL 和旧版绝对路径非通过案例。
-
-## 安全默认值
-
-- **Local-first：** Scanner 路径在用户机器上运行，不需要模型 provider。
-- **默认只读：** scanner 命令永远不会写入源笔记，读取工具也与可写工具模块分离。
-- **先合成、后私有：** 验收使用 `tests/fixtures/sample_vault/` 和其他已提交的合成资产，而不是个人或雇主 Vault。
-- **先证据、后声明：** 未来的答案、关系、诊断和行动都必须保留源引用；置信度本身不是证明。
-- **不允许静默改动：** 未经过后续的人类确认门，不得执行删除、合并、重写、重命名、移动或标签操作。
-
-## 开发地图
-
-从项目契约和当前里程碑证据开始：
-
-- [产品路线图](docs/PRODUCT_ROADMAP.md) — 规范的六里程碑用户路径。
-- [产品 SPEC](SPEC.md) — 使命、原则、边界和非目标。
-- [开发门槛](DEV_SPEC.md) — 映射到路线图的实现状态。
-- [集成状态](docs/INTEGRATION_STATUS.md) — 带日期的 M0、Gate A/B 和评测证据，包括历史限制。
-- [Scanner SPEC](docs/requirements/read-only-vault-scanner/SPEC.md) 与 [Scanner 任务账本](docs/requirements/read-only-vault-scanner/task.md) — 已验收的第一个切片。
-- [Team Decision Eval Seed](docs/requirements/m1_team_decision_eval_seed/README.md) 与 [Golden 8 冻结记录](docs/requirements/m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md) — 合成评测契约。
-- [文档索引](docs/README.md) — 架构、角色和实现笔记的导航。
-
-## 安全地贡献
-
-修改产品行为前，请阅读 [`AGENTS.md`](AGENTS.md)，找出负责的 SPEC 和
-implementation plan，并保持 Planner → Worker → Reviewer 角色分离。优先使用
-合成夹具，声明精确文件边界，并留下可运行的检查或其他客观证据。在早期开发
-中不要访问或修改真实 Vault。
+- [产品路线图](docs/PRODUCT_ROADMAP.md)
+- [Product UI 设计与交付](docs/requirements/product_ui_v1/DELIVERY.md)
+- [Product UI Design Spec](docs/requirements/product_ui_v1/DESIGN_SPEC.md)
+- [Team Decision Eval Seed](docs/requirements/m1_team_decision_eval_seed/README.md)
+- [真实 Provider 证据矩阵](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)
+- [作品集叙事与架构图内容](docs/requirements/product_evidence_portfolio_v1/PORTFOLIO_NOTES.md)
+- [集成状态](docs/INTEGRATION_STATUS.md)
 
 ## 许可证
 
-本项目使用 [MIT License](LICENSE)。它允许使用、复制、修改、合并、发布、分发、
-再许可和销售副本，但必须保留版权声明和许可声明。软件按“现状”提供，不附带
-任何保证。
+LinkLoom 使用 [MIT License](LICENSE)。

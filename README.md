@@ -1,171 +1,155 @@
-# linkloom
+# LinkLoom
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-<p align="center">
-  <img src="./assets/readme/linkloom-hero.svg" width="100%" alt="Linkloom turns a synthetic Markdown vault into a deterministic, evidence-ready read-only index and keeps future changes behind review.">
-</p>
+**Recover what the team actually decided—and show why the answer is
+trustworthy.**
 
-Linkloom is a local-first toolkit for turning Markdown and Obsidian notes into
-deterministic, inspectable artifacts—starting with a read-only scanner. It is
-being built for people who want to recover knowledge from a long-lived vault
-without handing an opaque system permission to rewrite it.
+LinkLoom is a local-first decision-recovery workspace for project leads, PMs,
+PMOs, and team members. It searches scattered project notes, meeting records,
+and decision logs, then returns a strict evidence-grounded brief: the final
+decision, rationale, rejected alternatives, actions, unresolved items, and
+explicit uncertainty.
 
-> **Current status · Scanner v1 accepted on synthetic fixtures.** The first
-> user-facing slice can discover Markdown files, extract their existing
-> structure, emit a machine-readable index and summary, and prove that the
-> source fixture stayed unchanged. Later search, connection, action and
-> write-back workflows are not presented as finished product capabilities.
+It is not a chatbot, a document summarizer, or an Agent trace console. The
+product question is simpler: **“So what did we finally decide?”**
 
-## First proof: scan a synthetic vault
+![LinkLoom decision brief with linked source evidence](output/playwright/success.png)
 
-The smallest useful run is local, deterministic, and needs no provider key or
-real vault:
+## What the product returns
+
+- **Decision first.** The final recorded choice leads the page instead of a
+  conversation transcript.
+- **Evidence at claim level.** Citations connect material claims to verified
+  source excerpts and exact line ranges.
+- **Reasons and alternatives.** Supporting rationale is separated from options
+  that were actually rejected.
+- **Actionable follow-through.** Actions, owners, due dates, and unresolved
+  questions retain missing values instead of filling them in.
+- **Honest uncertainty.** Confirmed results, insufficient evidence, and
+  operational failure are visibly different states.
+- **Provenance on demand.** Search/read activity is available as secondary
+  explainability, not the product's main interface.
+
+## Try the deterministic product demo
+
+The local preview uses frozen synthetic project records, requires no provider
+key, and never writes to the source workspace.
 
 ```bash
 python -m pip install -e .
-python -m linkloom scan tests/fixtures/sample_vault --output .artifacts/readme-demo/scan
+python -m linkloom.ui --port 8765
 ```
 
-Expected output:
+Open `http://127.0.0.1:8765`. The bundled `mps-001` fixture replays two
+documented questions: one successful Atlas Lantern decision and one
+insufficient-evidence case. Arbitrary questions fail explicitly rather than
+receiving a hard-coded answer.
+
+Additional captured states:
+
+| Initial question | Searching and reading | Insufficient evidence |
+|---|---|---|
+| ![Initial query](output/playwright/initial.png) | ![Running state](output/playwright/running.png) | ![Insufficient evidence](output/playwright/insufficient.png) |
+
+## How LinkLoom works
 
 ```text
-Indexed notes: 5
-Warnings: 1
-Index: .../.artifacts/readme-demo/scan/vault_index.json
-Summary: .../.artifacts/readme-demo/scan/scan_summary.md
+decision question
+       │
+       ▼
+durable Agent loop ──► search_notes / read_verified_note
+       │                         │
+       │                         ▼
+       │                 verified evidence
+       ▼
+strict TeamDecisionResult
+       │
+       ├── contract validation
+       ├── claim ↔ observed-evidence validation
+       └── provider-neutral UI projection
+                          │
+                          ▼
+            Decision Brief + Source Inspector
 ```
 
-The fixture intentionally includes one malformed frontmatter case. Linkloom
-keeps the note visible and records a warning instead of stopping the scan.
+The runtime supports real multi-turn Gemini and DeepSeek provider adapters.
+Each durable model turn owns one structured action—one tool call or Final—and
+the read-only `ToolRuntime` validates calls, budgets, results, checkpoints, and
+evidence before the next turn. A host application can inject a configured
+`RuntimeEngine` through `RuntimeRunBackend`; the module launcher above remains
+an isolated deterministic demo.
 
-The generated `vault_index.json` contains each note's relative path, title,
-headings, existing tags, WikiLink targets, byte size and source SHA-256. The
-companion `scan_summary.md` gives a human-readable inventory. Artifacts must
-live outside the input root.
+## Real-provider evidence, reported honestly
 
-## What is true today
+Three frozen synthetic cases have first-result DeepSeek evidence. This is a
+small engineering evaluation, not a benchmark or production success rate.
 
-- **Read-only Scanner — Accepted.** Synthetic fixture coverage proves
-  discovery, structure extraction, deterministic output, warnings, path safety
-  and input immutability.
-- **Runtime, provider and safety foundations — Acceptance records exist.** M0
-  and Gate A/B records document bounded engineering evidence; they do not mean
-  the full assistant is production-ready.
-- **Team Decision Eval Seed — Accepted as eval seed.** It contains 30 cases,
-  6 workspaces and 36 notes; Golden 8 is formally frozen.
-- **Search, explainable relations, diagnostics and action continuity — Planned /
-  experimental.** Supporting experiments exist, but not a completed
-  end-to-end user promise.
-- **Real-vault mutation — Future only.** Real writes remain forbidden at the
-  current gate. Any later write needs a visible plan, exact approval,
-  source-version check, backup, audit and rollback.
+| Case | Intended product behavior | Infrastructure | Business result |
+|---|---|---:|---|
+| `mps-001` | Recover the approved model provider | PASS | Aster A recovered and grounded; rejected-alternative classification was too broad |
+| `aer-002` | Recover a cross-document rollout boundary | FAIL | Not evaluated: the first response returned multiple tool calls |
+| `iti-005` | Refuse to invent missing owners/deadlines | FAIL | Not evaluated: the first response returned multiple tool calls |
 
-[`relation_eval/`](relation_eval/README.md) is a separate synthetic evaluation
-laboratory. Its mock perfect score demonstrates pipeline plumbing, not model
-intelligence or a real-model benchmark.
+The two blocked cases were sealed as their first terminal results and were not
+resampled. Their common failure is a Provider–Runtime capability mismatch:
+DeepSeek may return more than one tool call for `tool_choice: auto` under its
+[documented Chat Completions contract](https://api-docs.deepseek.com/api/create-chat-completion/),
+while the current durable runtime accepts exactly one action per turn. Contract,
+grounding, decision, scope, and uncertainty are therefore **not evaluated** for
+those runs—not falsely counted as semantic failures.
 
-## The evidence thread
+See the [full evidence matrix](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)
+for per-layer outcomes, tokens, costs, classifications, artifact locations,
+and product implications.
 
-Linkloom's design is a sequence of increasingly consequential boundaries:
+## Safety and trust boundaries
 
-```text
-approved Markdown root
-        │
-        ▼
-read-only scan ──► deterministic index + summary
-                              │
-                              ▼
-                 cited / reviewable future workflows
-                              │
-                              ▼
-                 separate change plan (future)
-                              │
-                              ▼
-             exact approval + backup + audit + rollback
-```
+- The current product path is read-only; retrieval tools cannot rewrite,
+  rename, move, tag, or delete notes.
+- Tests and demos use checked-in synthetic workspaces before any private vault.
+- A material output claim may cite only evidence observed in successful tool
+  results; missing or changed evidence fails closed.
+- Owners and deadlines remain `null` when records do not provide them.
+- Provider errors are projected through stable safe codes; raw local paths and
+  untrusted error messages are not exposed in the UI.
+- Any future real-vault mutation requires a visible per-file dry run, exact
+  approval, source-version validation, backup, audit, and rollback.
 
-The first five product milestones stay read-only. A score, suggestion or
-generated sentence is never treated as verified knowledge without a source
-file and passage. Existing vault structure is observed before any organization
-is proposed; Linkloom does not require one fixed folder taxonomy.
+## Project status and limitations
 
-## Product path
+The decision-recovery runtime, strict result contract, evidence projection,
+real Gemini/DeepSeek multi-turn baseline, and Product UI V1 are implemented and
+locally tested. This is not yet a deployed multi-user application.
 
-The canonical roadmap is a knowledge lifecycle, not an autonomous rewrite
-loop:
+Known limitations:
 
-```text
-Can Read → Can Find → Can Connect → Can Organize → Can Act
-                                              ↘
-                                  Modify only after confirmation
-```
+- the CLI UI launcher is a deterministic local demo; live product hosting must
+  inject a configured runtime;
+- the demo contains one frozen workspace and two documented questions;
+- the DeepSeek adapter currently fails closed on multiple tool calls;
+- `TeamDecisionResult` does not yet expose a claim-level `inferred` flag;
+- long-note pagination, auth, workspace management, deployment, and real-vault
+  writes are outside this phase.
 
-The current implementation is the **Can Read** foundation. The next product
-boundary is a separate planning slice; production implementation must wait for
-that slice's own SPEC, implementation plan and explicit human-approved scope.
-No M1 production business flow is included here.
+## Verification and project map
 
-## Evaluation evidence
+The Product UI milestone records 48 passing focused/adjacent tests, browser
+checks across initial/running/success/insufficient/error states, responsive
+evidence-dialog checks, a real synthetic-vault runtime projection, and Gemini
+visual review through Antigravity. The frozen Team Decision seed validates 30
+cases, 6 workspaces, and 36 notes.
 
-Run the checked-in seed validator without network access:
+Useful starting points:
 
-```bash
-python docs/requirements/m1_team_decision_eval_seed/validate_dataset.py
-```
-
-It validates the synthetic dataset's schema, evidence anchors, trajectory
-constraints, claim rules and metric registry. The recorded result is:
-
-```text
-PASS: 30 cases, 6 workspaces, 36 notes
-PASS: paths, evidence anchors, trajectory constraints, claims, and metric registry
-```
-
-Existing Scanner acceptance evidence records **8 passed, 1 skipped**. The
-skipped symbolic-link case needs Windows link-creation permission. In the
-current Windows environment, a focused pytest run could not be reproduced
-because pytest temporary-directory ACLs failed before test execution. The
-repository-wide suite is not claimed as green: historical records include
-Windows ACL and legacy absolute-path non-pass cases.
-
-## Safety defaults
-
-- **Local-first:** the Scanner path works on the user's machine and does not
-  require a model provider.
-- **Read-only by default:** scanner commands never write source notes, and
-  read tools are kept separate from write-capable modules.
-- **Synthetic before private:** acceptance uses
-  `tests/fixtures/sample_vault/` and other checked-in synthetic assets—not a
-  personal or employer vault.
-- **Evidence before claims:** future answers, relations, diagnoses and actions
-  must retain source references; confidence alone is not proof.
-- **No silent changes:** no delete, merge, rewrite, rename, move or tag
-  operation is allowed without the later human-confirmed mutation gates.
-
-## Development map
-
-Start with the project contracts and the current milestone evidence:
-
-- [Product roadmap](docs/PRODUCT_ROADMAP.md) — canonical six-milestone user path.
-- [Product SPEC](SPEC.md) — mission, principles, boundaries and non-goals.
-- [Development gates](DEV_SPEC.md) — implementation status mapped to the roadmap.
-- [Integration status](docs/INTEGRATION_STATUS.md) — dated M0, Gate A/B and eval evidence, including historical limitations.
-- [Scanner SPEC](docs/requirements/read-only-vault-scanner/SPEC.md) and [Scanner task ledger](docs/requirements/read-only-vault-scanner/task.md) — the accepted first slice.
-- [Team Decision Eval Seed](docs/requirements/m1_team_decision_eval_seed/README.md) and [Golden 8 freeze](docs/requirements/m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md) — synthetic evaluation contract.
-- [Documentation index](docs/README.md) — navigation for architecture, roles and implementation notes.
-
-## Contributing safely
-
-Before changing product behavior, read [`AGENTS.md`](AGENTS.md), identify the
-governing SPEC and implementation plan, and keep the Planner → Worker →
-Reviewer roles separate. Use synthetic fixtures first, state the exact file
-boundary, and leave runnable checks or other objective evidence. Do not access
-or modify a real vault as part of early development.
+- [Product roadmap](docs/PRODUCT_ROADMAP.md)
+- [Product UI design and delivery](docs/requirements/product_ui_v1/DELIVERY.md)
+- [Product UI design spec](docs/requirements/product_ui_v1/DESIGN_SPEC.md)
+- [Team Decision eval seed](docs/requirements/m1_team_decision_eval_seed/README.md)
+- [Real-provider evidence matrix](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)
+- [Portfolio notes and architecture content](docs/requirements/product_evidence_portfolio_v1/PORTFOLIO_NOTES.md)
+- [Integration status](docs/INTEGRATION_STATUS.md)
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). It permits use,
-copying, modification, merging, publishing, distribution, sublicensing and
-sale of copies, provided the copyright and permission notice are included. The
-software is provided without warranty.
+LinkLoom is available under the [MIT License](LICENSE).
