@@ -44,7 +44,8 @@ python -m linkloom.ui --port 8765
 Open `http://127.0.0.1:8765`. The bundled `mps-001` fixture replays two
 documented questions: one successful Atlas Lantern decision and one
 insufficient-evidence case. Arbitrary questions fail explicitly rather than
-receiving a hard-coded answer.
+receiving a hard-coded answer. The same interface supports English and
+Simplified Chinese; use the `English / 中文` control or open `?lang=zh`.
 
 Additional captured states:
 

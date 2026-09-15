@@ -11,7 +11,7 @@ LinkLoom 是一个本地优先的项目决策恢复工具，面向项目负责�
 它不是聊天机器人、文档摘要器，也不是 Agent Trace 控制台。它回答的核心问题只有
 一个：**“所以我们最后到底定了什么？”**
 
-![LinkLoom 决策简报与关联的来源证据](output/playwright/success.png)
+![LinkLoom 中文决策简报与关联的英文来源证据](output/playwright/zh-success.png)
 
 ## 产品会返回什么
 
@@ -33,13 +33,14 @@ python -m linkloom.ui --port 8765
 
 打开 `http://127.0.0.1:8765`。内置 `mps-001` 夹具只重放两个已记录的问题：一个
 成功的 Atlas Lantern 决策恢复案例，以及一个证据不足案例。任意其他问题会明确失败，
-不会得到硬编码答案。
+不会得到硬编码答案。页面支持 English / 中文即时切换，也可直接打开
+`http://127.0.0.1:8765/?lang=zh`；切换界面语言不会重新运行 Agent。
 
 其他已截图状态：
 
 | 初始问题 | 搜索与读取中 | 证据不足 |
 |---|---|---|
-| ![初始提问](output/playwright/initial.png) | ![运行状态](output/playwright/running.png) | ![证据不足](output/playwright/insufficient.png) |
+| ![中文初始提问](output/playwright/zh-initial.png) | ![中文运行状态](output/playwright/zh-running.png) | ![中文证据不足](output/playwright/zh-insufficient.png) |
 
 ## LinkLoom 如何工作
 

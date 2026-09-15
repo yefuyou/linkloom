@@ -30,6 +30,7 @@ class DemoCase:
     insufficient_query: str
     success_result: dict[str, Any]
     insufficient_result: dict[str, Any]
+    localized_variants: dict[str, dict[str, Any]]
     evidence: dict[str, dict[str, Any]]
     documents: list[NoteDocument]
 
@@ -96,9 +97,26 @@ class DemoCase:
             insufficient_query=raw["insufficient_query"],
             success_result=raw["success_result"],
             insufficient_result=raw["insufficient_result"],
+            localized_variants=raw.get("localized_variants", {}),
             evidence=evidence,
             documents=documents,
         )
+
+    def localized_variant(self, locale: str) -> dict[str, Any]:
+        if locale == "en-US":
+            return {
+                "default_query": self.default_query,
+                "insufficient_query": self.insufficient_query,
+                "read_only_message": (
+                    "LinkLoom searches this workspace without changing its notes."
+                ),
+                "success_result": self.success_result,
+                "insufficient_result": self.insufficient_result,
+            }
+        variant = self.localized_variants.get(locale)
+        if not isinstance(variant, dict):
+            return self.localized_variant("en-US")
+        return variant
 
 
 def _ledger_record(
@@ -137,11 +155,21 @@ class DemoRunBackend:
         self._lock = Lock()
 
     def context(self) -> dict[str, Any]:
+        localized_defaults = {
+            locale: {
+                "default_query": variant["default_query"],
+                "insufficient_query": variant["insufficient_query"],
+                "read_only_message": variant["read_only_message"],
+            }
+            for locale in ("en-US", *self.case.localized_variants)
+            for variant in (self.case.localized_variant(locale),)
+        }
         return {
             "schema_version": UI_SCHEMA_VERSION,
             "workspace": self.case.context.to_dict(),
             "default_query": self.case.default_query,
             "read_only_message": "LinkLoom searches this workspace without changing its notes.",
+            "localized_defaults": localized_defaults,
             "mode": "demo",
         }
 
@@ -259,14 +287,25 @@ class DemoRunBackend:
         if not clean_query:
             raise ValueError("A non-empty decision question is required.")
         run_id = f"demo-{uuid4().hex[:12]}"
-        if clean_query == self.case.default_query:
-            target = "success"
-        elif clean_query == self.case.insufficient_query:
-            target = "insufficient"
-        else:
-            target = "unsupported"
+        target = "unsupported"
+        locale = "en-US"
+        for candidate in ("en-US", *self.case.localized_variants):
+            variant = self.case.localized_variant(candidate)
+            if clean_query == variant["default_query"]:
+                target = "success"
+                locale = candidate
+                break
+            if clean_query == variant["insufficient_query"]:
+                target = "insufficient"
+                locale = candidate
+                break
         with self._lock:
-            self._runs[run_id] = {"query": clean_query, "target": target, "polls": 0}
+            self._runs[run_id] = {
+                "query": clean_query,
+                "target": target,
+                "locale": locale,
+                "polls": 0,
+            }
         started = self._snapshot(status="accepted", query=clean_query)
         return self._with_run_id(started, run_id)
 
@@ -279,6 +318,7 @@ class DemoRunBackend:
             polls = run["polls"]
             query = run["query"]
             target = run["target"]
+            locale = run["locale"]
 
         if polls == 1:
             snapshot = self._snapshot(
@@ -293,7 +333,12 @@ class DemoRunBackend:
                 ledger=self._checking_ledger(),
             )
         elif target == "insufficient":
-            snapshot = self.demo_snapshot("insufficient")
+            snapshot = self._snapshot(
+                status="completed",
+                query=query,
+                result=self.case.localized_variant(locale)["insufficient_result"],
+                ledger=self._all_ledger(),
+            )
         elif target == "unsupported":
             snapshot = self._snapshot(
                 status="failed",
@@ -305,7 +350,12 @@ class DemoRunBackend:
                 },
             )
         else:
-            snapshot = self.demo_snapshot("success")
+            snapshot = self._snapshot(
+                status="completed",
+                query=query,
+                result=self.case.localized_variant(locale)["success_result"],
+                ledger=self._all_ledger(),
+            )
         assert snapshot is not None
         return self._with_run_id(snapshot, run_id)
 

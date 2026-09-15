@@ -75,3 +75,35 @@ The five-axis engineering review found no remaining required correctness, access
 - The current `TeamDecisionResult` has no claim-level `inferred` flag. V1 therefore renders approved/partial decisions, unresolved items, and unknown fields explicitly, but never invents an inferred label; that taxonomy is reserved until the backend can state it truthfully.
 - There is no auth, workspace management, deployment, or public multi-user server in this milestone.
 - The UI loads cited full-note previews into the local browser; pagination and long-vault performance tuning remain outside V1.
+
+## V1.1 Simplified Chinese UI
+
+The same product renderer now supports `en-US` and `zh-CN`. URL, saved locale,
+and browser preference resolve in that order; the `English / 中文` control
+updates the page immediately without starting a new Agent run. All UI chrome,
+states, titles, statuses, ARIA labels, and live announcements are localized.
+The bundled `mps-001` fixture includes Chinese decision narratives, while
+evidence filenames, quotes, and source lines remain exact English source truth.
+
+Gemini 3.1 Pro authored the localization addendum and reviewed two real-browser
+screenshot rounds through Antigravity CLI. Its first review found CJK display
+font, paragraph-density, and mobile-header issues. All three were corrected;
+the final review returned PASS on every item, no remaining blocker, and READY
+for V1/portfolio use. See `LOCALIZATION_DESIGN_SPEC.md` for the exact content
+contract and review record.
+
+Chinese captures:
+
+- `output/playwright/zh-initial.png`
+- `output/playwright/zh-running.png`
+- `output/playwright/zh-success.png`
+- `output/playwright/zh-insufficient.png`
+- `output/playwright/zh-error.png`
+- `output/playwright/zh-mobile-success.png`
+
+Localization verification recorded 55 passing focused and adjacent tests after
+the final review fixes. Browser checks also confirmed URL → storage precedence,
+localized default-query switching, preservation of user-edited questions, zero
+POST requests during a locale change, mobile modal focus restoration, and zero
+console errors or warnings. Both localization catalogs contain the same 109
+message keys.

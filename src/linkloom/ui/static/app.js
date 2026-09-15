@@ -1,9 +1,37 @@
 "use strict";
 
+const i18n = globalThis.LinkLoomI18n;
+if (!i18n) throw new Error("LinkLoom localization failed to load.");
+
 const app = document.getElementById("app");
 const liveRegion = document.getElementById("status-live");
 
+function storedLocale() {
+  try {
+    return window.localStorage.getItem("linkloom.locale");
+  } catch (_) {
+    return null;
+  }
+}
+
+function requestedLocale() {
+  try {
+    return new URLSearchParams(window.location.search).get("lang");
+  } catch (_) {
+    return null;
+  }
+}
+
+function initialLocale() {
+  return i18n.resolveLocale({
+    urlLocale: requestedLocale(),
+    storedLocale: storedLocale(),
+    browserLanguages: navigator.languages || [navigator.language],
+  });
+}
+
 const viewState = {
+  locale: initialLocale(),
   context: null,
   snapshot: null,
   selectedEvidenceId: null,
@@ -13,6 +41,10 @@ const viewState = {
 };
 
 const finalKinds = new Set(["success", "insufficient", "error", "attention"]);
+
+function t(key, values = {}) {
+  return i18n.t(viewState.locale, key, values);
+}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -24,22 +56,30 @@ function escapeHtml(value) {
 }
 
 function displayStatus(status) {
-  const labels = {
-    completed: "Complete",
-    in_progress: "In progress",
-    blocked: "Blocked",
-    pending: "Pending",
-    unassigned: "Unassigned",
-  };
-  return labels[status] || String(status || "Unknown").replaceAll("_", " ");
+  return i18n.displayStatus(viewState.locale, status);
 }
 
 function documentCountLabel(workspace) {
   if (!workspace || workspace.document_count === null || workspace.document_count === undefined) {
     return "";
   }
-  const count = Number(workspace.document_count);
-  return `${count} project ${count === 1 ? "note" : "notes"}`;
+  return i18n.documentCountLabel(viewState.locale, workspace.document_count);
+}
+
+function localizedDefaults(context, locale = viewState.locale) {
+  return context?.localized_defaults?.[locale] || null;
+}
+
+function localizedDefaultQuery(context, locale = viewState.locale) {
+  return localizedDefaults(context, locale)?.default_query || context?.default_query || "";
+}
+
+function localizedReadOnlyMessage(context) {
+  return localizedDefaults(context)?.read_only_message || t("query.readOnly");
+}
+
+function evidenceLocation(evidence) {
+  return i18n.locationLabel(viewState.locale, evidence.line_start, evidence.line_end);
 }
 
 function announce(message) {
@@ -49,6 +89,65 @@ function announce(message) {
   }, 20);
 }
 
+function localizeStaticShell() {
+  document.documentElement.lang = viewState.locale;
+  document.title = `LinkLoom — ${t("page.loading")}`;
+  const skip = document.querySelector(".skip-link");
+  if (skip) skip.textContent = t("skip");
+  const contextBar = document.getElementById("context-bar");
+  if (contextBar) contextBar.setAttribute("aria-label", t("workspace.context"));
+  const loading = document.querySelector(".context-loading");
+  if (loading) loading.textContent = t("workspace.opening");
+  const eyebrow = document.querySelector(".loading-view .eyebrow");
+  if (eyebrow) eyebrow.textContent = t("initial.eyebrow");
+  const heading = document.querySelector(".loading-view h1");
+  if (heading) heading.textContent = t("page.loading");
+}
+
+function setLocale(locale, { persist = true, updateUrl = true } = {}) {
+  const next = i18n.normalizeLocale(locale) || i18n.DEFAULT_LOCALE;
+  const previous = viewState.locale;
+  if (next === previous) return;
+
+  const queryInput = document.getElementById("decision-query");
+  const currentQuery = queryInput?.value;
+  const queryWasDefault = Boolean(
+    queryInput && currentQuery === localizedDefaultQuery(viewState.context, previous)
+  );
+  viewState.locale = next;
+  document.documentElement.lang = next;
+
+  if (persist) {
+    try {
+      window.localStorage.setItem("linkloom.locale", next);
+    } catch (_) {
+      // Locale persistence is optional; the in-memory choice remains active.
+    }
+  }
+  if (updateUrl) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("lang", next === i18n.CHINESE_LOCALE ? "zh" : "en");
+      window.history.replaceState(null, "", url);
+    } catch (_) {
+      // URL persistence is optional in restricted browser contexts.
+    }
+  }
+
+  if (viewState.snapshot) {
+    renderSnapshot(viewState.snapshot);
+  } else if (viewState.context) {
+    const query = queryWasDefault
+      ? localizedDefaultQuery(viewState.context, next)
+      : currentQuery;
+    renderInitial(viewState.context, query);
+  } else {
+    localizeStaticShell();
+  }
+  window.requestAnimationFrame(() => document.querySelector(".locale-switch")?.focus());
+  announce(t("locale.changed"));
+}
+
 async function fetchJson(url, options = {}) {
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json", ...(options.headers || {}) },
@@ -56,7 +155,7 @@ async function fetchJson(url, options = {}) {
   });
   const payload = await response.json();
   if (!response.ok) {
-    const error = new Error(payload?.error?.message || "The request failed.");
+    const error = new Error(payload?.error?.message || t("error.request"));
     error.code = payload?.error?.code || "HTTP_ERROR";
     throw error;
   }
@@ -67,25 +166,30 @@ function topbarHtml(workspace, snapshot = null) {
   const count = documentCountLabel(workspace);
   const showProvenance = Boolean(snapshot && snapshot.provenance);
   return `
-    <header class="context-bar" id="context-bar" aria-label="Workspace context">
+    <header class="context-bar${showProvenance ? " has-provenance" : ""}" id="context-bar" aria-label="${escapeHtml(t("workspace.context"))}">
       <div class="brand-lockup" aria-label="LinkLoom">
         <span class="brand-thread" aria-hidden="true"></span>
         <span class="brand-name">LinkLoom</span>
       </div>
       <span class="context-divider" aria-hidden="true"></span>
       <div class="workspace-lockup">
-        <span class="workspace-name">${escapeHtml(workspace?.display_name || "Decision workspace")}</span>
+        <span class="workspace-name">${escapeHtml(workspace?.display_name || t("workspace.fallback"))}</span>
         ${count ? `<span class="document-count">${escapeHtml(count)}</span>` : ""}
       </div>
       <div class="context-actions">
-        <span class="read-only-chip">Read-only</span>
+        <span class="read-only-chip">${escapeHtml(t("workspace.readOnly"))}</span>
+        <button class="locale-switch" type="button" data-action="switch-locale" aria-label="${escapeHtml(t("locale.switchTo"))}" title="${escapeHtml(t("locale.switchTo"))}">
+          <span class="${viewState.locale === "en-US" ? "is-current" : ""}" lang="en">English</span>
+          <span aria-hidden="true">/</span>
+          <span class="${viewState.locale === "zh-CN" ? "is-current" : ""}" lang="zh-CN">中文</span>
+        </button>
         ${showProvenance ? `
-          <button class="provenance-button" id="provenance-toggle" type="button" aria-expanded="false" aria-controls="provenance-popover">
-            How LinkLoom found this <span class="provenance-chevron" aria-hidden="true">▾</span>
+          <button class="provenance-button" id="provenance-toggle" type="button" aria-expanded="false" aria-controls="provenance-popover" data-short-label="${escapeHtml(t("provenance.short"))}">
+            ${escapeHtml(t("provenance.trigger"))} <span class="provenance-chevron" aria-hidden="true">▾</span>
           </button>
           <section class="provenance-popover" id="provenance-popover" aria-labelledby="provenance-title" hidden>
-            <p class="popover-kicker">Provenance</p>
-            <h2 id="provenance-title">How the answer was reconstructed</h2>
+            <p class="popover-kicker">${escapeHtml(t("provenance.kicker"))}</p>
+            <h2 id="provenance-title">${escapeHtml(t("provenance.title"))}</h2>
             ${progressStepsHtml(snapshot.provenance.steps, "provenance-steps")}
           </section>
         ` : ""}
@@ -100,43 +204,44 @@ function progressStepsHtml(steps, className) {
       ${(steps || []).map((step) => `
         <li class="is-${escapeHtml(step.state)}">
           <span class="step-mark" aria-hidden="true"></span>
-          <span>${escapeHtml(step.label)}</span>
-          ${className === "running-steps" ? `<span class="step-state">${escapeHtml(step.state)}</span>` : ""}
+          <span>${escapeHtml(t(`step.${step.id}`))}</span>
+          ${className === "running-steps" ? `<span class="step-state">${escapeHtml(t(`stepState.${step.state}`))}</span>` : ""}
         </li>
       `).join("")}
     </ol>
   `;
 }
 
-function renderInitial(context) {
+function renderInitial(context, queryOverride = null) {
   viewState.snapshot = null;
   viewState.selectedEvidenceId = null;
   app.dataset.state = "initial";
   document.documentElement.dataset.state = "initial";
-  document.title = "LinkLoom — Recover a team decision";
+  document.title = `LinkLoom — ${t("page.initial")}`;
+  const query = queryOverride ?? localizedDefaultQuery(context);
   app.innerHTML = `
     ${topbarHtml(context.workspace)}
     <main class="initial-view" id="main-content">
       <section class="initial-copy" aria-labelledby="initial-title">
-        <p class="eyebrow">Decision recovery · grounded in project records</p>
-        <h1 id="initial-title">Find the decision.<br>See the proof.</h1>
-        <p class="lede">LinkLoom reconstructs what your team finally decided from project documents, then connects each claim to the record behind it.</p>
-        <div class="value-order" aria-label="Answer structure">
-          <div><span>01</span><strong>The decision</strong></div>
-          <div><span>02</span><strong>Why it won</strong></div>
-          <div><span>03</span><strong>What remains open</strong></div>
+        <p class="eyebrow">${escapeHtml(t("initial.eyebrow"))}</p>
+        <h1 id="initial-title">${escapeHtml(t("initial.titleLine1"))}<br>${escapeHtml(t("initial.titleLine2"))}</h1>
+        <p class="lede">${escapeHtml(t("initial.lede"))}</p>
+        <div class="value-order" aria-label="${escapeHtml(t("initial.structure"))}">
+          <div><span>01</span><strong>${escapeHtml(t("initial.decision"))}</strong></div>
+          <div><span>02</span><strong>${escapeHtml(t("initial.why"))}</strong></div>
+          <div><span>03</span><strong>${escapeHtml(t("initial.open"))}</strong></div>
         </div>
       </section>
       <section class="query-composer" aria-labelledby="query-title">
-        <p class="query-label">Ask this workspace</p>
-        <h2 id="query-title">What did the team decide?</h2>
-        <p class="composer-hint" id="query-hint">Ask for a final choice, rationale, owner, or unresolved gate.</p>
+        <p class="query-label">${escapeHtml(t("query.kicker"))}</p>
+        <h2 id="query-title">${escapeHtml(t("query.title"))}</h2>
+        <p class="composer-hint" id="query-hint">${escapeHtml(t("query.hint"))}</p>
         <form id="query-form">
-          <label class="sr-only" for="decision-query">Decision question</label>
-          <textarea class="query-input" id="decision-query" name="query" aria-describedby="query-hint read-only-note" required>${escapeHtml(context.default_query || "")}</textarea>
+          <label class="sr-only" for="decision-query">${escapeHtml(t("query.label"))}</label>
+          <textarea class="query-input" id="decision-query" name="query" aria-describedby="query-hint read-only-note" required>${escapeHtml(query)}</textarea>
           <div class="composer-footer">
-            <span class="read-only-note" id="read-only-note">${escapeHtml(context.read_only_message || "Source notes remain unchanged.")}</span>
-            <button class="primary-button" id="recover-button" type="submit">Recover decision</button>
+            <span class="read-only-note" id="read-only-note">${escapeHtml(localizedReadOnlyMessage(context))}</span>
+            <button class="primary-button" id="recover-button" type="submit">${escapeHtml(t("query.submit"))}</button>
           </div>
         </form>
       </section>
@@ -180,7 +285,7 @@ async function startRun(query) {
       body: JSON.stringify({ query }),
     });
     renderSnapshot(snapshot);
-    announce("LinkLoom started searching the workspace.");
+    announce(t("announce.started"));
     pollRun(snapshot.run.id);
   } catch (error) {
     renderNetworkError(error);
@@ -221,7 +326,7 @@ function renderSnapshot(snapshot) {
   } else if (snapshot.kind === "empty") {
     renderEmpty(snapshot);
   } else {
-    renderNetworkError(new Error("This product state is not supported."));
+    renderNetworkError(new Error(t("error.unsupportedState")));
   }
 }
 
@@ -229,28 +334,28 @@ function renderRunning(snapshot) {
   const evidence = snapshot.evidence?.[0];
   app.dataset.state = "running";
   document.documentElement.dataset.state = "running";
-  document.title = "LinkLoom — Recovering decision";
+  document.title = `LinkLoom — ${t("page.running")}`;
   app.innerHTML = `
     ${topbarHtml(snapshot.workspace, snapshot)}
     <main class="workspace-layout" id="main-content">
       <section class="brief-pane running-brief" aria-labelledby="running-title">
         <div class="running-copy">
-          <p class="eyebrow">Reconstructing the decision</p>
-          <h1 id="running-title">Reading the project record, not guessing the answer.</h1>
-          <p>LinkLoom is locating the authoritative decision, then checking its rationale, actions, and unresolved gates against the source notes.</p>
+          <p class="eyebrow">${escapeHtml(t("running.eyebrow"))}</p>
+          <h1 id="running-title">${escapeHtml(t("running.title"))}</h1>
+          <p>${escapeHtml(t("running.copy"))}</p>
         </div>
         <div class="running-question">
-          <p class="query-label">Your question</p>
+          <p class="query-label">${escapeHtml(t("running.question"))}</p>
           <p>${escapeHtml(snapshot.query)}</p>
         </div>
       </section>
       <aside class="source-inspector running-inspector" aria-labelledby="running-progress-title">
-        <p class="inspector-kicker">Evidence in progress</p>
-        <h2 id="running-progress-title">Finding the basis for the answer</h2>
+        <p class="inspector-kicker">${escapeHtml(t("running.evidence"))}</p>
+        <h2 id="running-progress-title">${escapeHtml(t("running.basis"))}</h2>
         ${progressStepsHtml(snapshot.provenance.steps, "running-steps")}
         ${evidence ? `
-          <section class="currently-reading" aria-label="Currently reviewed source">
-            <p class="section-label">Currently reviewing</p>
+          <section class="currently-reading" aria-label="${escapeHtml(t("running.reviewingAria"))}">
+            <p class="section-label">${escapeHtml(t("running.reviewing"))}</p>
             <p class="source-filename">${escapeHtml(evidence.relative_path)}</p>
             <blockquote>${escapeHtml(evidence.source.quote)}</blockquote>
           </section>
@@ -258,14 +363,15 @@ function renderRunning(snapshot) {
       </aside>
     </main>
   `;
-  announce(`LinkLoom is ${snapshot.run.stage.replaceAll("_", " ")}.`);
+  announce(t("announce.running", { stage: t(`stage.${snapshot.run.stage}`) }));
   markReady();
 }
 
 function citationHtml(citationId) {
   const evidence = viewState.snapshot?.evidence?.find((item) => item.id === citationId);
   if (!evidence) return "";
-  return `<button class="citation-button" type="button" data-evidence-id="${escapeHtml(evidence.id)}" title="${escapeHtml(evidence.label)}" aria-label="Open evidence ${evidence.ordinal}: ${escapeHtml(evidence.label)}">[${evidence.ordinal}]</button>`;
+  const location = `${evidence.relative_path} · ${evidenceLocation(evidence)}`;
+  return `<button class="citation-button" type="button" data-evidence-id="${escapeHtml(evidence.id)}" title="${escapeHtml(location)}" aria-label="${escapeHtml(t("inspector.open", { ordinal: evidence.ordinal, location }))}">[${evidence.ordinal}]</button>`;
 }
 
 function citationsHtml(citations) {
@@ -291,16 +397,16 @@ function renderResult(snapshot) {
   app.dataset.state = snapshot.kind;
   document.documentElement.dataset.state = snapshot.kind;
   document.title = insufficient
-    ? "LinkLoom — Not enough evidence"
-    : "LinkLoom — Recovered decision";
+    ? `LinkLoom — ${t("page.insufficient")}`
+    : `LinkLoom — ${t("page.success")}`;
 
   const decisionText = insufficient
-    ? snapshot.uncertainty?.statement || "The workspace does not contain enough evidence to answer this question."
+    ? snapshot.uncertainty?.statement || t("result.insufficientFallback")
     : snapshot.decision.value;
   const partial = !insufficient && snapshot.decision?.status === "partial";
-  let outcomeLabel = "Approved · Confirmed";
-  if (insufficient) outcomeLabel = "Not enough evidence · Unknown";
-  if (partial) outcomeLabel = "Partial decision · Confirmed record";
+  let outcomeLabel = t("outcome.approved");
+  if (insufficient) outcomeLabel = t("outcome.insufficient");
+  if (partial) outcomeLabel = t("outcome.partial");
 
   app.innerHTML = `
     ${topbarHtml(snapshot.workspace, snapshot)}
@@ -308,7 +414,7 @@ function renderResult(snapshot) {
       <article class="brief-pane" aria-labelledby="decision-title">
         <div class="brief-document">
           <header class="question-context">
-            <p class="query-label">Question</p>
+            <p class="query-label">${escapeHtml(t("question"))}</p>
             <p>${escapeHtml(snapshot.query)}</p>
           </header>
           <section class="outcome-block claim ${partial ? "is-partial" : ""}" ${claimAttributes(snapshot.decision?.citations || snapshot.uncertainty?.citations)}>
@@ -324,14 +430,14 @@ function renderResult(snapshot) {
           ${uncertaintySectionHtml(snapshot)}
         </div>
       </article>
-      <aside class="source-inspector" id="source-inspector" aria-label="Evidence source inspector"></aside>
-      <button class="inspector-scrim" type="button" tabindex="-1" aria-hidden="true" data-action="close-inspector" aria-label="Close evidence inspector"></button>
+      <aside class="source-inspector" id="source-inspector" aria-label="${escapeHtml(t("inspector.label"))}"></aside>
+      <button class="inspector-scrim" type="button" tabindex="-1" aria-hidden="true" data-action="close-inspector" aria-label="${escapeHtml(t("inspector.close"))}"></button>
     </main>
   `;
   viewState.selectedClaim = document.querySelector(".outcome-block[data-claim]");
   syncEvidenceSelection({ scrollSource: true });
   syncInspectorMode();
-  announce(insufficient ? "Answer ready. There is not enough evidence." : "Answer ready. The decision is supported by project evidence.");
+  announce(insufficient ? t("announce.insufficient") : t("announce.success"));
   markReady();
 }
 
@@ -339,7 +445,7 @@ function rationaleSectionHtml(snapshot, insufficient) {
   if (!snapshot.rationale?.length) return "";
   return `
     <section class="brief-section" aria-labelledby="rationale-title">
-      <h2 id="rationale-title">${insufficient ? "Known from the project record" : "Why this decision was made"}</h2>
+      <h2 id="rationale-title">${escapeHtml(insufficient ? t("known") : t("rationale"))}</h2>
       <ul class="rationale-list">
         ${snapshot.rationale.map((item) => `
           <li class="claim" ${claimAttributes(item.citations)}>${escapeHtml(item.point)} ${citationsHtml(item.citations)}</li>
@@ -353,7 +459,7 @@ function alternativesSectionHtml(snapshot) {
   if (!snapshot.rejected_alternatives?.length) return "";
   return `
     <section class="brief-section" aria-labelledby="alternatives-title">
-      <h2 id="alternatives-title">Alternatives the team rejected</h2>
+      <h2 id="alternatives-title">${escapeHtml(t("alternatives"))}</h2>
       <ul class="alternatives-list">
         ${snapshot.rejected_alternatives.map((item) => `
           <li class="claim" ${claimAttributes(item.citations)}>
@@ -370,16 +476,16 @@ function actionsSectionHtml(snapshot) {
   if (!snapshot.actions?.length) return "";
   return `
     <section class="brief-section" aria-labelledby="actions-title">
-      <h2 id="actions-title">What happens next</h2>
+      <h2 id="actions-title">${escapeHtml(t("actions"))}</h2>
       <table class="actions-table">
-        <thead><tr><th>Action</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+        <thead><tr><th>${escapeHtml(t("action"))}</th><th>${escapeHtml(t("owner"))}</th><th>${escapeHtml(t("due"))}</th><th>${escapeHtml(t("status"))}</th></tr></thead>
         <tbody>
           ${snapshot.actions.map((item) => `
             <tr class="claim" ${claimAttributes(item.citations)}>
-              <td data-label="Action"><span class="action-name">${escapeHtml(item.description)}</span> ${citationsHtml(item.citations)}</td>
-              <td class="action-meta" data-label="Owner">${escapeHtml(item.owner_label)}</td>
-              <td class="action-meta" data-label="Due">${escapeHtml(item.deadline_label)}</td>
-              <td data-label="Status"><span class="status-label status-${escapeHtml(item.status)}">${escapeHtml(displayStatus(item.status))}</span></td>
+              <td data-label="${escapeHtml(t("action"))}"><span class="action-name">${escapeHtml(item.description)}</span> ${citationsHtml(item.citations)}</td>
+              <td class="action-meta" data-label="${escapeHtml(t("owner"))}">${escapeHtml(item.owner ?? (item.owner_label === "Unassigned" ? t("value.unassigned") : item.owner_label || t("value.unassigned")))}</td>
+              <td class="action-meta" data-label="${escapeHtml(t("due"))}">${escapeHtml(item.deadline ?? (item.deadline_label === "Not recorded" ? t("value.notRecorded") : item.deadline_label || t("value.notRecorded")))}</td>
+              <td data-label="${escapeHtml(t("status"))}"><span class="status-label status-${escapeHtml(item.status)}">${escapeHtml(displayStatus(item.status))}</span></td>
             </tr>
           `).join("")}
         </tbody>
@@ -394,8 +500,8 @@ function uncertaintySectionHtml(snapshot) {
   if (!uncertainty && !unresolved.length) return "";
   return `
     <section class="uncertainty-section" aria-labelledby="uncertainty-title">
-      <p class="section-label">Uncertainty</p>
-      <h2 id="uncertainty-title">${snapshot.kind === "insufficient" ? "Still unresolved" : "What is not yet settled"}</h2>
+      <p class="section-label">${escapeHtml(t("uncertainty"))}</p>
+      <h2 id="uncertainty-title">${escapeHtml(snapshot.kind === "insufficient" ? t("uncertainty.insufficient") : t("uncertainty.partial"))}</h2>
       ${uncertainty?.statement && snapshot.kind !== "insufficient" ? `
         <p class="uncertainty-statement claim" ${claimAttributes(uncertainty.citations)}>
           ${escapeHtml(uncertainty.statement)} ${citationsHtml(uncertainty.citations)}
@@ -412,7 +518,7 @@ function uncertaintySectionHtml(snapshot) {
         </ul>
       ` : ""}
       ${uncertainty?.unknown_fields?.length ? `
-        <p class="unknown-fields"><strong>Not established:</strong> ${escapeHtml(uncertainty.unknown_fields.join(" · "))}</p>
+        <p class="unknown-fields"><strong>${escapeHtml(t("uncertainty.unknown"))}</strong> ${escapeHtml(uncertainty.unknown_fields.join(" · "))}</p>
       ` : ""}
     </section>
   `;
@@ -420,35 +526,34 @@ function uncertaintySectionHtml(snapshot) {
 
 function inspectorHtml(evidence) {
   if (!evidence) {
-    return `<p class="inspector-empty">Select a citation to inspect its source.</p>`;
+    return `<p class="inspector-empty">${escapeHtml(t("inspector.empty"))}</p>`;
   }
   const evidenceCount = viewState.snapshot.evidence.length;
   const supports = summarizedSupports(evidence.supports);
-  const location = evidence.line_start === evidence.line_end
-    ? `Line ${evidence.line_start}`
-    : `Lines ${evidence.line_start}–${evidence.line_end}`;
+  const location = evidenceLocation(evidence);
   return `
     <header class="inspector-header">
       <div class="inspector-title-row">
         <div>
-          <p class="inspector-kicker">Source evidence</p>
+          <p class="inspector-kicker">${escapeHtml(t("inspector.kicker"))}</p>
           <h2 class="inspector-title" id="inspector-title" tabindex="-1">${escapeHtml(evidence.relative_path)}</h2>
           <p class="source-location">${escapeHtml(location)}</p>
         </div>
         <span class="inspector-position">${evidence.ordinal} / ${evidenceCount}</span>
-        <button class="inspector-close" type="button" data-action="close-inspector" aria-label="Close evidence inspector">×</button>
+        <button class="inspector-close" type="button" data-action="close-inspector" aria-label="${escapeHtml(t("inspector.close"))}">×</button>
       </div>
-      <p class="supports-line"><strong>Supports:</strong> ${escapeHtml(supports)}</p>
+      <p class="supports-line"><strong>${escapeHtml(t("inspector.supports"))}</strong> ${escapeHtml(supports)}</p>
     </header>
-    <div class="source-scroll" id="source-scroll" tabindex="0" aria-label="${escapeHtml(evidence.label)}">
+    <div class="source-scroll" id="source-scroll" tabindex="0" aria-label="${escapeHtml(`${evidence.relative_path} · ${location}`)}">
       ${sourcePreviewHtml(evidence)}
     </div>
-    <nav class="evidence-nav" aria-label="Evidence citations">
-      <div class="evidence-nav-label"><span>Evidence in this brief</span><span>J / K to navigate</span></div>
+    <nav class="evidence-nav" aria-label="${escapeHtml(t("inspector.navigation"))}">
+      <div class="evidence-nav-label"><span>${escapeHtml(t("inspector.brief"))}</span><span>${escapeHtml(t("inspector.keys"))}</span></div>
       <div class="evidence-nav-list">
-        ${viewState.snapshot.evidence.map((item) => `
-          <button class="citation-button" type="button" data-evidence-id="${escapeHtml(item.id)}" title="${escapeHtml(item.label)}" aria-label="Evidence ${item.ordinal}: ${escapeHtml(item.label)}">[${item.ordinal}]</button>
-        `).join("")}
+        ${viewState.snapshot.evidence.map((item) => {
+          const itemLocation = `${item.relative_path} · ${evidenceLocation(item)}`;
+          return `<button class="citation-button" type="button" data-evidence-id="${escapeHtml(item.id)}" title="${escapeHtml(itemLocation)}" aria-label="${escapeHtml(t("inspector.evidence", { ordinal: item.ordinal, location: itemLocation }))}">[${item.ordinal}]</button>`;
+        }).join("")}
       </div>
     </nav>
   `;
@@ -457,28 +562,30 @@ function inspectorHtml(evidence) {
 function summarizedSupports(values) {
   const labels = (values || []).map((value) => {
     const category = String(value).split(":", 1)[0].trim();
-    return category === "Unresolved" ? "Unresolved gates" : category;
+    return i18n.supportLabel(viewState.locale, category);
   });
   const unique = [...new Set(labels.filter(Boolean))];
-  if (unique.includes("Unresolved gates")) {
-    const uncertaintyIndex = unique.indexOf("Uncertainty");
+  const unresolvedLabel = i18n.supportLabel(viewState.locale, "Unresolved");
+  const uncertaintyLabel = i18n.supportLabel(viewState.locale, "Uncertainty");
+  if (unique.includes(unresolvedLabel)) {
+    const uncertaintyIndex = unique.indexOf(uncertaintyLabel);
     if (uncertaintyIndex >= 0) unique.splice(uncertaintyIndex, 1);
   }
-  return unique.join(" · ") || "Evidence";
+  return unique.join(" · ") || i18n.supportLabel(viewState.locale, "Evidence");
 }
 
 function sourcePreviewHtml(evidence) {
   const source = evidence.source;
   if (source.preview_kind !== "document") {
     return `
-      <section class="quote-fallback" aria-label="Verified source excerpt">
+      <section class="quote-fallback" aria-label="${escapeHtml(t("inspector.quote"))}">
         <blockquote>${escapeHtml(source.quote)}</blockquote>
-        <p class="fallback-reason">${escapeHtml(source.fallback_reason || "Only the verified excerpt is available.")}</p>
+        <p class="fallback-reason">${escapeHtml(i18n.fallbackReason(viewState.locale, source.fallback_reason))}</p>
       </section>
     `;
   }
   return `
-    <div class="source-document" role="table" aria-label="Source document lines">
+    <div class="source-document" role="table" aria-label="${escapeHtml(t("inspector.lines"))}">
       ${source.lines.map((line) => {
         const highlighted = line.number >= evidence.line_start && line.number <= evidence.line_end;
         return `
@@ -580,40 +687,40 @@ function syncInspectorMode() {
 function renderError(snapshot) {
   app.dataset.state = "error";
   document.documentElement.dataset.state = "error";
-  document.title = "LinkLoom — Reconstruction failed";
+  document.title = `LinkLoom — ${t("page.error")}`;
+  const errorCode = snapshot.error?.code || "UI_RUNTIME_ERROR";
+  const networkFailure = errorCode === "NETWORK_ERROR" || errorCode === "HTTP_ERROR";
   app.innerHTML = `
     ${topbarHtml(snapshot.workspace, snapshot)}
     <main class="state-message" id="main-content">
       <span class="error-rule" aria-hidden="true"></span>
       <div role="alert" aria-atomic="true">
-        <p class="eyebrow">Operational failure · not an evidence conclusion</p>
-        <h1>${escapeHtml(snapshot.error?.title || "LinkLoom could not complete this reconstruction.")}</h1>
-        <p class="state-copy">${escapeHtml(snapshot.error?.message || "The project record was left unchanged.")}</p>
+        <p class="eyebrow">${escapeHtml(t("error.kicker"))}</p>
+        <h1>${escapeHtml(t(networkFailure ? "error.networkTitle" : "error.title"))}</h1>
+        <p class="state-copy">${escapeHtml(t(networkFailure ? "error.networkMessage" : "error.message"))}</p>
       </div>
-      <button class="primary-button" type="button" data-action="retry">Try this question again</button>
+      <button class="primary-button" type="button" data-action="retry">${escapeHtml(t("error.retry"))}</button>
       <details class="technical-details">
-        <summary>Technical details</summary>
-        <code>${escapeHtml(snapshot.error?.code || "UI_RUNTIME_ERROR")}\n${escapeHtml(snapshot.error?.technical_message || "")}</code>
+        <summary>${escapeHtml(t("error.details"))}</summary>
+        <code>${escapeHtml(errorCode)}\n${escapeHtml(snapshot.error?.technical_message || "")}</code>
       </details>
     </main>
   `;
-  announce("LinkLoom could not complete the reconstruction.");
+  announce(t("announce.error"));
   markReady();
 }
 
 function renderNetworkError(error) {
   stopPolling();
-  const workspace = viewState.context?.workspace || { display_name: "Decision workspace" };
+  const workspace = viewState.context?.workspace || { display_name: t("workspace.fallback") };
   renderError({
     kind: "error",
     workspace,
     query: viewState.snapshot?.query || "",
     provenance: viewState.snapshot?.provenance || null,
     error: {
-      title: "The decision workspace could not be reached.",
-      message: "Your notes were not changed. Check the local LinkLoom server and try again.",
       code: error.code || "NETWORK_ERROR",
-      technical_message: error.message || "Network request failed.",
+      technical_message: error.message || t("error.networkTechnical"),
     },
   });
 }
@@ -629,13 +736,14 @@ function retryFromError() {
 function renderEmpty(snapshot) {
   app.dataset.state = "empty";
   document.documentElement.dataset.state = "empty";
+  document.title = `LinkLoom — ${t("empty.kicker")}`;
   app.innerHTML = `
     ${topbarHtml(snapshot.workspace)}
     <main class="state-message" id="main-content">
-      <p class="eyebrow">Empty workspace</p>
-      <h1>There are no project records to search yet.</h1>
-      <p class="state-copy">Choose a workspace containing Markdown project notes, then ask LinkLoom what the team decided.</p>
-      <button class="secondary-button" type="button" data-action="retry">Return to the question</button>
+      <p class="eyebrow">${escapeHtml(t("empty.kicker"))}</p>
+      <h1>${escapeHtml(t("empty.title"))}</h1>
+      <p class="state-copy">${escapeHtml(t("empty.copy"))}</p>
+      <button class="secondary-button" type="button" data-action="retry">${escapeHtml(t("empty.return"))}</button>
     </main>
   `;
   markReady();
@@ -681,6 +789,10 @@ document.addEventListener("click", (event) => {
     return;
   }
   const action = event.target.closest("[data-action]")?.dataset.action;
+  if (action === "switch-locale") {
+    setLocale(viewState.locale === i18n.CHINESE_LOCALE ? i18n.DEFAULT_LOCALE : i18n.CHINESE_LOCALE);
+    return;
+  }
   if (action === "close-inspector") closeInspector();
   if (action === "retry") retryFromError();
   if (event.target.closest("#provenance-toggle")) toggleProvenance();
@@ -748,4 +860,5 @@ async function bootstrap() {
   }
 }
 
+localizeStaticShell();
 bootstrap();

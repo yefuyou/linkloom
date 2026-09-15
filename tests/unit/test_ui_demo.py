@@ -77,3 +77,37 @@ def test_demo_rejects_an_empty_question_at_its_own_boundary() -> None:
 
     with pytest.raises(ValueError, match="non-empty decision question"):
         backend.start("   ")
+
+
+def test_chinese_demo_uses_localized_claims_but_preserves_verbatim_sources() -> None:
+    backend = DemoRunBackend(DemoCase.load_mps_001())
+    localized = backend.context()["localized_defaults"]["zh-CN"]
+
+    started = backend.start(localized["default_query"])
+    backend.inspect(started["run"]["id"])
+    backend.inspect(started["run"]["id"])
+    final = backend.inspect(started["run"]["id"])
+
+    assert final["kind"] == "success"
+    assert final["query"] == "Atlas Lantern 试点最终批准了哪个模型提供商？"
+    assert final["decision"]["value"].startswith("Aster A 是 Atlas Lantern")
+    assert final["actions"][0]["description"] == "本地适配器契约检查"
+    assert final["evidence"][0]["relative_path"] == "03-final-decision.md"
+    assert final["evidence"][0]["source"]["quote"].startswith(
+        "The Atlas Lantern team selected Aster A"
+    )
+
+
+def test_chinese_demo_insufficient_question_keeps_missing_fact_explicit() -> None:
+    backend = DemoRunBackend(DemoCase.load_mps_001())
+    localized = backend.context()["localized_defaults"]["zh-CN"]
+
+    started = backend.start(localized["insufficient_query"])
+    backend.inspect(started["run"]["id"])
+    backend.inspect(started["run"]["id"])
+    final = backend.inspect(started["run"]["id"])
+
+    assert final["kind"] == "insufficient"
+    assert final["decision"]["value"] is None
+    assert final["uncertainty"]["statement"] == "工作区没有记录已确认的生产切换日期。"
+    assert final["uncertainty"]["unknown_fields"] == ["生产切换日期"]

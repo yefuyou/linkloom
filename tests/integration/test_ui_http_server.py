@@ -28,6 +28,12 @@ def test_local_server_serves_assets_and_demo_product_states() -> None:
             html = response.read().decode("utf-8")
             assert response.headers["Content-Security-Policy"].startswith("default-src 'self'")
         assert "LinkLoom" in html
+        assert html.index("/i18n.js") < html.index("/app.js")
+        with urlopen(base + "/i18n.js", timeout=2) as response:
+            localization = response.read().decode("utf-8")
+            assert response.headers["Content-Type"].startswith("text/javascript")
+        assert "zh-CN" in localization
+        assert "找到最终决定" in localization
         assert "/app.js" in html
         assert _json(base + "/api/context")["workspace"]["display_name"] == "Atlas Lantern"
         assert _json(base + "/api/demo/success")["kind"] == "success"
@@ -53,9 +59,9 @@ def test_mobile_action_rows_keep_visible_field_labels() -> None:
         with urlopen(base + "/app.css", timeout=2) as response:
             stylesheet = response.read().decode("utf-8")
 
-        assert 'data-label="Owner"' in script
-        assert 'data-label="Due"' in script
-        assert 'data-label="Status"' in script
+        assert 'data-label="${escapeHtml(t("owner"))}"' in script
+        assert 'data-label="${escapeHtml(t("due"))}"' in script
+        assert 'data-label="${escapeHtml(t("status"))}"' in script
         assert 'content: attr(data-label)' in stylesheet
     finally:
         server.shutdown()
@@ -83,6 +89,41 @@ def test_frontend_retry_and_mobile_inspector_keep_safe_state_boundaries() -> Non
         assert 'inspector.setAttribute("role", "dialog")' in script
         assert 'inspector.setAttribute("aria-modal", "true")' in script
         assert 'document.querySelector(".inspector-close")?.focus()' in script
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_frontend_uses_one_localized_renderer_and_preserves_source_truth() -> None:
+    server = create_http_server(
+        DemoRunBackend(DemoCase.load_mps_001()),
+        host="127.0.0.1",
+        port=0,
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        with urlopen(base + "/app.js", timeout=2) as response:
+            script = response.read().decode("utf-8")
+        with urlopen(base + "/app.css", timeout=2) as response:
+            stylesheet = response.read().decode("utf-8")
+
+        assert "LinkLoomI18n" in script
+        assert "function setLocale(" in script
+        assert "document.documentElement.lang" in script
+        assert "window.localStorage.setItem" in script
+        assert "window.history.replaceState" in script
+        assert 'data-action="switch-locale"' in script
+        assert "i18n.locationLabel" in script
+        assert "source.quote" in script
+        assert 'html[lang="zh-CN"]' in stylesheet
+        assert '--display: var(--sans)' in stylesheet
+        assert '.context-bar.has-provenance' in stylesheet
+        assert 'context-bar${showProvenance ? " has-provenance" : ""}' in script
+        assert ".locale-switch" in stylesheet
+        assert 'content: attr(data-short-label)' in stylesheet
     finally:
         server.shutdown()
         server.server_close()

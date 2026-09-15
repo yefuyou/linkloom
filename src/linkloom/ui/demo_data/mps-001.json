@@ -154,5 +154,139 @@
       "evidence_refs": ["mps-readiness-region-15", "mps-readiness-oncall-16"]
     },
     "evidence_refs": ["mps-decision-10", "mps-readiness-region-15", "mps-readiness-oncall-16"]
+  },
+  "localized_variants": {
+    "zh-CN": {
+      "default_query": "Atlas Lantern 试点最终批准了哪个模型提供商？",
+      "insufficient_query": "Atlas Lantern 试点何时进入生产环境？",
+      "read_only_message": "LinkLoom 会搜索此工作区，但不会修改其中的笔记。",
+      "success_result": {
+        "schema_version": "team-decision-result/v1",
+        "decision": {
+          "value": "Aster A 是 Atlas Lantern 合成试点及下一阶段集成中获批的模型提供商。",
+          "status": "approved",
+          "evidence_refs": ["mps-decision-10"]
+        },
+        "rationale": [
+          {
+            "point": "相比更快的早期原型，该决定更重视可审计的数据边界和责任明确的运维路径。",
+            "evidence_refs": ["mps-rationale-23"]
+          },
+          {
+            "point": "比较记录确认 Aster A 在合成的 eu-north 区域内处理数据，并具备明确的运维升级路径。",
+            "evidence_refs": ["mps-region-16", "mps-operations-22"]
+          }
+        ],
+        "rejected_alternatives": [
+          {
+            "alternative": "Borealis B",
+            "reason": "该方案需要数据驻留例外，并会增加当前阶段无法接受的运维负担。",
+            "evidence_refs": ["mps-borealis-16"]
+          },
+          {
+            "alternative": "Cedar C",
+            "reason": "评审未确认可审计的区域承诺，其流式行为也不符合适配器要求。",
+            "evidence_refs": ["mps-cedar-18"]
+          }
+        ],
+        "actions": [
+          {
+            "description": "本地适配器契约检查",
+            "owner": "Lin Qiao",
+            "deadline": null,
+            "status": "completed",
+            "evidence_refs": ["mps-action-lin-15"]
+          },
+          {
+            "description": "区域证据验证",
+            "owner": "Chen Rui",
+            "deadline": "2026-02-05",
+            "status": "blocked",
+            "evidence_refs": ["mps-action-chen-21"]
+          },
+          {
+            "description": "值班运行手册",
+            "owner": "Omar Wu",
+            "deadline": "2026-02-07",
+            "status": "in_progress",
+            "evidence_refs": ["mps-action-omar-26"]
+          }
+        ],
+        "unresolved_items": [
+          {
+            "description": "区域证据验证仍在等待法务确认，因此处于受阻状态。",
+            "owner": "Chen Rui",
+            "deadline": "2026-02-05",
+            "status": "blocked",
+            "evidence_refs": ["mps-readiness-region-15"]
+          },
+          {
+            "description": "值班运行手册仍在编写中。",
+            "owner": "Omar Wu",
+            "deadline": "2026-02-07",
+            "status": "in_progress",
+            "evidence_refs": ["mps-readiness-oncall-16"]
+          }
+        ],
+        "uncertainty": {
+          "status": "partial",
+          "statement": "区域就绪工作尚未完成，当前记录也无法确认整体接入已经完成。",
+          "unknown_fields": ["区域就绪完成情况", "值班运行手册完成情况"],
+          "evidence_refs": ["mps-readiness-region-15", "mps-readiness-oncall-16"]
+        },
+        "evidence_refs": [
+          "mps-decision-10",
+          "mps-rationale-23",
+          "mps-region-16",
+          "mps-operations-22",
+          "mps-borealis-16",
+          "mps-cedar-18",
+          "mps-action-lin-15",
+          "mps-action-chen-21",
+          "mps-action-omar-26",
+          "mps-readiness-region-15",
+          "mps-readiness-oncall-16"
+        ]
+      },
+      "insufficient_result": {
+        "schema_version": "team-decision-result/v1",
+        "decision": {
+          "value": null,
+          "status": "insufficient_evidence",
+          "evidence_refs": []
+        },
+        "rationale": [
+          {
+            "point": "现有记录确认 Aster A 仍是已批准的选择，但区域就绪工作尚未完成。",
+            "evidence_refs": ["mps-decision-10", "mps-readiness-region-15"]
+          }
+        ],
+        "rejected_alternatives": [],
+        "actions": [],
+        "unresolved_items": [
+          {
+            "description": "区域证据验证仍在等待法务确认，因此处于受阻状态。",
+            "owner": "Chen Rui",
+            "deadline": "2026-02-05",
+            "status": "blocked",
+            "evidence_refs": ["mps-readiness-region-15"]
+          },
+          {
+            "description": "值班运行手册仍在编写中。",
+            "owner": "Omar Wu",
+            "deadline": "2026-02-07",
+            "status": "in_progress",
+            "evidence_refs": ["mps-readiness-oncall-16"]
+          }
+        ],
+        "uncertainty": {
+          "status": "insufficient_evidence",
+          "statement": "工作区没有记录已确认的生产切换日期。",
+          "unknown_fields": ["生产切换日期"],
+          "evidence_refs": ["mps-readiness-region-15", "mps-readiness-oncall-16"]
+        },
+        "evidence_refs": ["mps-decision-10", "mps-readiness-region-15", "mps-readiness-oncall-16"]
+      }
+    }
   }
 }
