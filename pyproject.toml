@@ -16,3 +16,6 @@ smoke = ["pytest>=8.0", "google-genai==2.22.0"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"linkloom.ui" = ["static/*", "demo_data/*.json"]
+

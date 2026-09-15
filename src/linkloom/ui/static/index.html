@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>LinkLoom — Decision recovery</title>
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to decision brief</a>
+    <div id="app" class="app-shell" data-state="loading">
+      <header class="context-bar" id="context-bar" aria-label="Workspace context">
+        <div class="brand-lockup">
+          <span class="brand-thread" aria-hidden="true"></span>
+          <span class="brand-name">LinkLoom</span>
+        </div>
+        <div class="context-loading">Opening decision workspace…</div>
+      </header>
+      <main class="loading-view" id="main-content">
+        <p class="eyebrow">Decision recovery</p>
+        <h1>Opening the project record…</h1>
+      </main>
+    </div>
+    <div class="sr-only" id="status-live" aria-live="polite" aria-atomic="true"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

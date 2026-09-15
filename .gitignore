@@ -22,6 +22,12 @@ outputs/
 out/
 reports/
 *.log
+output/playwright/npm-cache/
+output/playwright/console-*.log
+output/playwright/page-*.yml
+output/playwright/*-round*.png
+/.playwright-cli/
+/mobile-actions.png
 
 # OS/editor
 .DS_Store

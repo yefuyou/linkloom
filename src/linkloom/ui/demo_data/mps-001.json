@@ -1,0 +1,158 @@
+{
+  "case_id": "mps-001",
+  "workspace": {
+    "display_name": "Atlas Lantern",
+    "document_count": 6,
+    "workspace_relative_path": "docs/requirements/m1_team_decision_eval_seed/workspaces/model_provider_selection"
+  },
+  "default_query": "Which model provider was finally approved for the Atlas Lantern pilot?",
+  "documents": [
+    "01-early-proposal.md",
+    "02-comparison-review.md",
+    "03-final-decision.md",
+    "04-action-status.md",
+    "05-office-hours-prototype.md",
+    "06-adoption-readiness.md"
+  ],
+  "evidence_locations": [
+    {"evidence_id": "mps-decision-10", "relative_path": "03-final-decision.md", "line_start": 10, "line_end": 12},
+    {"evidence_id": "mps-rationale-23", "relative_path": "03-final-decision.md", "line": 23},
+    {"evidence_id": "mps-region-16", "relative_path": "02-comparison-review.md", "line": 16},
+    {"evidence_id": "mps-operations-22", "relative_path": "02-comparison-review.md", "line": 22},
+    {"evidence_id": "mps-borealis-16", "relative_path": "03-final-decision.md", "line": 16},
+    {"evidence_id": "mps-cedar-18", "relative_path": "03-final-decision.md", "line": 18},
+    {"evidence_id": "mps-action-lin-15", "relative_path": "04-action-status.md", "line": 15},
+    {"evidence_id": "mps-action-chen-21", "relative_path": "04-action-status.md", "line": 21},
+    {"evidence_id": "mps-action-omar-26", "relative_path": "04-action-status.md", "line": 26},
+    {"evidence_id": "mps-readiness-region-15", "relative_path": "06-adoption-readiness.md", "line": 15},
+    {"evidence_id": "mps-readiness-oncall-16", "relative_path": "06-adoption-readiness.md", "line": 16}
+  ],
+  "success_result": {
+    "schema_version": "team-decision-result/v1",
+    "decision": {
+      "value": "Aster A is the approved model provider for the Atlas Lantern synthetic pilot and its next integration slice.",
+      "status": "approved",
+      "evidence_refs": ["mps-decision-10"]
+    },
+    "rationale": [
+      {
+        "point": "The decision prioritized an auditable data boundary and an owned operational path over the faster early prototype.",
+        "evidence_refs": ["mps-rationale-23"]
+      },
+      {
+        "point": "The comparison documented Aster A processing in the synthetic eu-north region and a named operational escalation path.",
+        "evidence_refs": ["mps-region-16", "mps-operations-22"]
+      }
+    ],
+    "rejected_alternatives": [
+      {
+        "alternative": "Borealis B",
+        "reason": "The residency exception and additional operational burden were not acceptable for this slice.",
+        "evidence_refs": ["mps-borealis-16"]
+      },
+      {
+        "alternative": "Cedar C",
+        "reason": "The review did not establish an auditable regional commitment, and its streaming behavior did not meet the adapter requirement.",
+        "evidence_refs": ["mps-cedar-18"]
+      }
+    ],
+    "actions": [
+      {
+        "description": "Local adapter contract check",
+        "owner": "Lin Qiao",
+        "deadline": null,
+        "status": "completed",
+        "evidence_refs": ["mps-action-lin-15"]
+      },
+      {
+        "description": "Regional evidence validation",
+        "owner": "Chen Rui",
+        "deadline": "2026-02-05",
+        "status": "blocked",
+        "evidence_refs": ["mps-action-chen-21"]
+      },
+      {
+        "description": "On-call runbook",
+        "owner": "Omar Wu",
+        "deadline": "2026-02-07",
+        "status": "in_progress",
+        "evidence_refs": ["mps-action-omar-26"]
+      }
+    ],
+    "unresolved_items": [
+      {
+        "description": "Regional evidence validation remains blocked pending legal confirmation.",
+        "owner": "Chen Rui",
+        "deadline": "2026-02-05",
+        "status": "blocked",
+        "evidence_refs": ["mps-readiness-region-15"]
+      },
+      {
+        "description": "The on-call runbook is still in progress.",
+        "owner": "Omar Wu",
+        "deadline": "2026-02-07",
+        "status": "in_progress",
+        "evidence_refs": ["mps-readiness-oncall-16"]
+      }
+    ],
+    "uncertainty": {
+      "status": "partial",
+      "statement": "Regional readiness is not closed and completed adoption is not established.",
+      "unknown_fields": ["regional readiness completion", "on-call runbook completion"],
+      "evidence_refs": ["mps-readiness-region-15", "mps-readiness-oncall-16"]
+    },
+    "evidence_refs": [
+      "mps-decision-10",
+      "mps-rationale-23",
+      "mps-region-16",
+      "mps-operations-22",
+      "mps-borealis-16",
+      "mps-cedar-18",
+      "mps-action-lin-15",
+      "mps-action-chen-21",
+      "mps-action-omar-26",
+      "mps-readiness-region-15",
+      "mps-readiness-oncall-16"
+    ]
+  },
+  "insufficient_query": "When will the Atlas Lantern pilot enter production?",
+  "insufficient_result": {
+    "schema_version": "team-decision-result/v1",
+    "decision": {
+      "value": null,
+      "status": "insufficient_evidence",
+      "evidence_refs": []
+    },
+    "rationale": [
+      {
+        "point": "The records confirm Aster A remains approved, but regional readiness is not closed.",
+        "evidence_refs": ["mps-decision-10", "mps-readiness-region-15"]
+      }
+    ],
+    "rejected_alternatives": [],
+    "actions": [],
+    "unresolved_items": [
+      {
+        "description": "Regional evidence validation remains blocked pending legal confirmation.",
+        "owner": "Chen Rui",
+        "deadline": "2026-02-05",
+        "status": "blocked",
+        "evidence_refs": ["mps-readiness-region-15"]
+      },
+      {
+        "description": "The on-call runbook is still in progress.",
+        "owner": "Omar Wu",
+        "deadline": "2026-02-07",
+        "status": "in_progress",
+        "evidence_refs": ["mps-readiness-oncall-16"]
+      }
+    ],
+    "uncertainty": {
+      "status": "insufficient_evidence",
+      "statement": "The workspace does not record a confirmed production cutover date.",
+      "unknown_fields": ["production cutover date"],
+      "evidence_refs": ["mps-readiness-region-15", "mps-readiness-oncall-16"]
+    },
+    "evidence_refs": ["mps-decision-10", "mps-readiness-region-15", "mps-readiness-oncall-16"]
+  }
+}
