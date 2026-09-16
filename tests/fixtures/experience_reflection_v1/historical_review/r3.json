@@ -1,0 +1,32 @@
+{
+  "schema_version": "historical-review-receipt/v1",
+  "source_run_id": "run_p4_b63d23ad517d",
+  "observed_summary_sha256": "9358a9ad8118d91439c0905ddb2cd505c4d9b222635d8759a89d9730af73db05",
+  "observed_seal_sha256": "cb46956508a3a497e91b40201745dc2f1f324ebe623d6a897463718ecd620f91",
+  "source_evaluator_sha256": "4659968edf56411768ca3277d9742c30b7e981107e9262ad5c67b982906d27c6",
+  "source_evaluator_schema_version": "deepseek-business-posthoc/v1",
+  "review_record_sha256": "0ad8b0ba30696c8b9052d8cfa27baaa2975c435f38672b2588bf048af1268c48",
+  "review_source": "existing_independent_review",
+  "disposition": "unresolved_semantic_cause",
+  "source_disposition": {
+    "infrastructure": "PASS",
+    "contract": "PASS",
+    "grounding": "PASS",
+    "overall": "POSTHOC_REVIEW_REQUIRED"
+  },
+  "finding": {
+    "finding_id": "finding.historical_3",
+    "dimension": "semantic",
+    "outcome": "REVIEW_REQUIRED",
+    "code": "semantic_mismatch_cause_unresolved/v1",
+    "source_evidence_refs": []
+  },
+  "task_characteristics": [
+    "team_decision",
+    "current_decision",
+    "uncertainty_present"
+  ],
+  "gold_leakage_detected": false,
+  "observation_selector": "none",
+  "receipt_created_at": "2026-09-16T12:04:10Z"
+}

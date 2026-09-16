@@ -1,0 +1,9 @@
+{
+  "schema_version": "experience-review/v1",
+  "experience_id": "05711b1e370136edb7458ba0227546cc6930f7f10e9b7f6baaa9e01394c4e920",
+  "decision": "accepted",
+  "actor": "reviewer:gate4:fixture",
+  "source": "independent_reviewer",
+  "evidence_ref": "review:gate4:fixture:approve",
+  "reviewed_at": "2026-09-16T04:00:00+00:00"
+}

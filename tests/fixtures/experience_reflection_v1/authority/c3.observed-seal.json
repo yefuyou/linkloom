@@ -1,0 +1,6 @@
+{
+  "schema_version": "deepseek-real-smoke-seal/v1",
+  "sealed": true,
+  "gold_available": false,
+  "observed_summary_sha256": "acad20429d85821dc68921aece6ea8b0033057edf39e5c6f234243128a2dfdb1"
+}

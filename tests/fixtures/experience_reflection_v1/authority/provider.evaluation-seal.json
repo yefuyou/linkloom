@@ -1,0 +1,6 @@
+{
+  "schema_version": "complete-evaluation-seal/v1",
+  "sealed": true,
+  "run_id": "run_authority_provider",
+  "evaluation_sha256": "deccffc50d9fa6150e580214fe6fe555963d965754d1eeb8ed95222fdf4a9adf"
+}

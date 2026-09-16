@@ -1,0 +1,22 @@
+{
+  "schema_version": "deepseek-real-smoke-observed/v1",
+  "run_id": "run_authority_unresolved",
+  "result": {
+    "run_id": "run_authority_unresolved",
+    "status": "completed"
+  },
+  "visible_evidence_refs": [
+    "ev_real",
+    "ev_second"
+  ],
+  "supporting_observations": [
+    {
+      "observation_id": "observation_semantic",
+      "source_evidence_refs": [
+        "run_authority_unresolved:ev_real",
+        "run_authority_unresolved:ev_second"
+      ],
+      "model_observed": true
+    }
+  ]
+}

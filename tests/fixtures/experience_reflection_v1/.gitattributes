@@ -1,0 +1,2 @@
+# Authority seals and pins bind original bytes, including newline encoding.
+*.json -text
