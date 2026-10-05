@@ -9,7 +9,13 @@ from uuid import uuid4
 
 import pytest
 
-from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelProviderError
+from linkloom.agents.model_adapter import (
+    ModelAction,
+    ModelProviderError,
+    ModelResponse,
+    ModelToolCall,
+    ModelTurnProposal,
+)
 from linkloom.agents.retrieval_agent import RetrievalAgent
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 from linkloom.observability.reader import TraceReader
@@ -85,6 +91,47 @@ class PolicyProvider:
             run_id=request.run_id, task_id=request.task_id, agent_id=request.agent_id,
             sequence=request.sequence,
         )))
+
+
+class V2BatchProvider:
+    """One real V2 proposal followed by a final response for resume coverage."""
+
+    def __init__(self, *, resumed=False):
+        self.requests = []
+        self.resumed = resumed
+
+    def complete(self, request):
+        self.requests.append(request)
+        proposal_id = f"{request.turn_id}:proposal"
+        if not self.resumed and len(self.requests) == 1:
+            calls = [
+                ModelToolCall.bind(
+                    provider_call_id=f"batch-provider-{ordinal}",
+                    proposal_id=proposal_id,
+                    ordinal=ordinal,
+                    tool_id="search_notes",
+                    arguments={
+                        "query": "shared",
+                        "source_context": {"policy": "m04-v2"},
+                        "limit": 2,
+                    },
+                    run_id=request.run_id,
+                    task_id=request.task_id,
+                    agent_id=request.agent_id,
+                    sequence=request.sequence,
+                )
+                for ordinal in range(2)
+            ]
+            return ModelResponse(
+                proposal=ModelTurnProposal.tools(proposal_id, calls)
+            )
+        assert request.tool_turns
+        return ModelResponse(
+            proposal=ModelTurnProposal.final(
+                proposal_id,
+                "Synthetic V2 final from grouped evidence.",
+            )
+        )
 
 
 @pytest.fixture
@@ -298,6 +345,38 @@ def test_durable_response_resume_executes_only_unstarted_tool(environment):
     assert_consistent(environment, restarted, ["search_notes"])
     assert len(after.requests) == len(environment[3]) == 1
     assert after.requests[0].sequence == 2
+
+
+def test_v2_grouped_proposal_cold_resume_is_admitted_by_production_graph(environment):
+    before = V2BatchProvider()
+    first = engine(environment, before, "tool_results_partial")
+    with pytest.raises(ProcessCrash):
+        start(first)
+
+    durable, _ = facts(environment, first)
+    assert durable.status == "running"
+    assert durable.current_step == "model_loop"
+    assert durable.termination.status == "running"
+    assert durable.model_executions[-1].normalized_proposal["kind"] == "tool_calls"
+    assert durable.model_executions[-1].status == "tool_results_partial"
+    assert len(durable.model_executions[-1].tool_result_refs) == 1
+    assert len(before.requests) == 1
+    assert len(environment[3]) == 1
+
+    after = V2BatchProvider(resumed=True)
+    restarted = engine(environment, after)
+    resumed = restarted.resume_multi_agent("m04-thread")
+
+    assert resumed.status == "completed"
+    assert len(after.requests) == 1
+    assert len(environment[3]) == 2
+    assert [tool for tool, _ in environment[3]] == ["search_notes", "search_notes"]
+    assert len(after.requests[0].tool_turns) == 1
+    assert len(after.requests[0].tool_turns[0].tool_results) == 2
+    state, result = assert_consistent(environment, restarted, ["search_notes", "search_notes"])
+    assert state.model_executions[0].normalized_proposal["kind"] == "tool_calls"
+    assert state.model_executions[-1].normalized_proposal["kind"] == "final"
+    assert result["fallback_used"] is False
 
 
 def test_durable_final_resume_reuses_final_with_zero_provider_budget(environment):

@@ -8,7 +8,9 @@ Scanner-v1 document only at the tool boundary.
 from __future__ import annotations
 
 import hashlib
+import os
 from pathlib import Path
+import time
 from typing import Any, Callable
 
 from linkloom.agents.coordinator import Coordinator
@@ -17,8 +19,13 @@ from linkloom.agents.registry import create_default_registry
 from linkloom.agents.retrieval_agent import RetrievalAgent
 from linkloom.agents.model_adapter import ModelTurnRequest
 from linkloom.agents.reviewer_agent import ReviewerAgent
+from linkloom.context.assembler import ContextAssembler, ContextBundle, ContextSourceType
+from linkloom.decision_memory.store import TemporalDecisionStore
+from linkloom.decision_memory.tool import DecisionMemorySearchTool
+from linkloom.indexing import EmbeddingProvider, IndexUpdateCoordinator
 from linkloom.loader import VaultReader
-from linkloom.retrieval import find_relation_candidates_with_evidence, retrieve_evidence
+from linkloom.retrieval import find_relation_candidates_with_evidence
+from linkloom.retrieval_v2 import RetrievedEvidence, RuntimeRetrievalBackend
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.models import RuntimeState
@@ -50,10 +57,49 @@ class RuntimeAgentEventSink:
 class RuntimeAgentAdapter:
     """Build one isolated Coordinator and its verified read-only tool set."""
 
-    def __init__(self, vault_root: Path | str, index_path: Path | str) -> None:
+    def __init__(
+        self,
+        vault_root: Path | str,
+        index_path: Path | str,
+        *,
+        retrieval_mode: str | None = None,
+        decision_memory_store: TemporalDecisionStore | None = None,
+        workspace_id: str | None = None,
+        embedder: EmbeddingProvider | None = None,
+        index_update_coordinator: IndexUpdateCoordinator | None = None,
+        context_assembler: ContextAssembler | None = None,
+    ) -> None:
         self.reader = VaultReader(vault_root=vault_root, index_path=index_path)
+        self.workspace_id = workspace_id or self.reader.vault_root_fingerprint
+        selected_mode = retrieval_mode or os.environ.get(
+            "LINKLOOM_RETRIEVAL_MODE",
+            "hybrid",
+        )
+        self._retrieval_backend = RuntimeRetrievalBackend(
+            workspace_id=self.workspace_id,
+            document_provider=self._read_documents,
+            mode=selected_mode,
+            embedder=embedder,
+            index_update_coordinator=index_update_coordinator,
+            index_version=2,
+        )
+        self._decision_memory_store = decision_memory_store or TemporalDecisionStore(":memory:")
+        self._decision_memory_tool = DecisionMemorySearchTool(
+            self._decision_memory_store,
+            authorized_workspace_id=self.workspace_id,
+        )
+        if context_assembler is not None and not isinstance(context_assembler, ContextAssembler):
+            raise ValueError("context_assembler must be a ContextAssembler or None")
+        self._context_assembler = context_assembler or ContextAssembler()
+        self._integration_event_sink: RuntimeAgentEventSink | None = None
         self._evidence_by_id: dict[str, dict[str, Any]] = {}
         self._candidate_docs: list[dict[str, Any]] = []
+        self._active_runtime_state: RuntimeState | None = None
+        self._latest_retrieved_evidence: tuple[RetrievedEvidence, ...] = ()
+        self._latest_decision_records = ()
+        self._latest_scope_path: str | None = None
+        self._last_context_bundle: ContextBundle | None = None
+        self._last_context_assembly_ms = 0.0
 
     def _read_documents(self):
         # Re-reading at every tool boundary preserves Scanner hash freshness.
@@ -71,16 +117,202 @@ class RuntimeAgentAdapter:
         raise ValueError("verified note reference was not found in the current index")
 
     def _search_notes(self, query: str, source_context: dict[str, Any], limit: int) -> list[dict[str, Any]]:
-        documents = self._read_documents()
-        values = [evidence.to_dict() for evidence in retrieve_evidence(query, documents, max_results=limit)]
+        scope_path = source_context.get("scope_path")
+        if scope_path is not None and not isinstance(scope_path, str):
+            raise ValueError("source_context.scope_path must be text or null")
+        result = self._retrieval_backend.search(
+            query,
+            top_k=limit,
+            scope_path=scope_path,
+        )
+        evidence_items = [
+            self._retrieved_evidence(value, rank=index + 1)
+            for index, value in enumerate(result.evidence)
+        ]
+        bundle = self._assemble_context(
+            query=query,
+            retrieved_evidence=evidence_items,
+            decision_memory=self._latest_decision_records,
+            scope_path=scope_path,
+        )
+        selected_ids = {
+            item.item_id
+            for item in bundle.selected
+            if item.source_type is ContextSourceType.EVIDENCE
+        }
+        values = [
+            value
+            for value in result.evidence
+            if value["evidence_id"] in selected_ids
+        ]
+        self._latest_retrieved_evidence = tuple(
+            item for item in evidence_items if item.evidence_id in selected_ids
+        )
+        self._latest_scope_path = scope_path
         self._evidence_by_id.update({value["evidence_id"]: value for value in values})
+        if self._integration_event_sink is not None:
+            observation = result.observation
+            self._integration_event_sink.emit(
+                "retrieval.completed",
+                "retrieval_agent",
+                "ok",
+                attributes={
+                    "retrieval_mode": observation.retrieval_mode,
+                    "scope_path": observation.scope_path,
+                    "retrieval_latency_ms": observation.retrieval_latency_ms,
+                    "candidate_count": observation.candidate_count,
+                    "top_k": observation.top_k,
+                    "index_version": observation.index_version,
+                    "retrieval_stage_timings_ms": dict(observation.stage_timings_ms),
+                },
+            )
         return values
+
+    def _search_decision_memory(
+        self,
+        query: str,
+        as_of: str | None,
+        limit: int,
+    ) -> list[dict[str, object]]:
+        result = self._decision_memory_tool.search(
+            workspace=self.workspace_id,
+            query=query,
+            as_of=as_of,
+            limit=limit,
+        )
+        records = tuple(
+            record
+            for value in result.values
+            if isinstance(value.get("decision_id"), str)
+            for record in [
+                self._decision_memory_store.get_decision(
+                    self.workspace_id,
+                    value["decision_id"],
+                )
+            ]
+            if record is not None
+        )
+        bundle = self._assemble_context(
+            query=query,
+            retrieved_evidence=self._latest_retrieved_evidence,
+            decision_memory=records,
+            scope_path=self._latest_scope_path,
+            temporal_query=as_of is not None,
+        )
+        selected_ids = {
+            item.item_id
+            for item in bundle.selected
+            if item.source_type is ContextSourceType.DECISION_MEMORY
+        }
+        values = [
+            value for value in result.values if value["decision_id"] in selected_ids
+        ]
+        self._latest_decision_records = tuple(
+            record for record in records if record.decision_id in selected_ids
+        )
+        if self._integration_event_sink is not None:
+            observation = result.observation
+            self._integration_event_sink.emit(
+                "decision_memory.completed",
+                "retrieval_agent",
+                "ok",
+                attributes={
+                    "workspace_id": observation.workspace_id,
+                    "memory_hit_count": len(values),
+                    "memory_latency_ms": observation.memory_latency_ms,
+                },
+            )
+        return values
+
+    def _assemble_context(
+        self,
+        *,
+        query: str,
+        retrieved_evidence: tuple[RetrievedEvidence, ...] | list[RetrievedEvidence],
+        decision_memory=(),
+        scope_path: str | None = None,
+        temporal_query: bool | None = None,
+    ) -> ContextBundle:
+        started = time.perf_counter()
+        bundle = self._context_assembler.assemble(
+            workspace_id=self.workspace_id,
+            query=query,
+            retrieved_evidence=retrieved_evidence,
+            decision_memory=decision_memory,
+            runtime_state=self._active_runtime_state,
+            scope_path=scope_path,
+            temporal_query=temporal_query,
+        )
+        self._last_context_assembly_ms = (time.perf_counter() - started) * 1000.0
+        self._last_context_bundle = bundle
+        if self._integration_event_sink is not None:
+            self._integration_event_sink.emit(
+                "context.assembled",
+                "retrieval_agent",
+                "ok",
+                attributes={
+                    "workspace_id": bundle.workspace_id,
+                    "selected_count": len(bundle.selected),
+                    "dropped_count": len(bundle.dropped),
+                    "estimated_tokens": bundle.estimated_tokens,
+                    "context_assembly_ms": self._last_context_assembly_ms,
+                    "selected_items": [
+                        {
+                            "item_id": item.item_id,
+                            "source_type": item.source_type.value,
+                            "estimated_tokens": item.estimated_tokens,
+                            "source_refs": list(item.source_refs),
+                        }
+                        for item in bundle.selected
+                    ],
+                    "dropped_items": [
+                        {
+                            "item_id": item.item_id,
+                            "source_type": item.source_type.value,
+                            "reason": item.reason.value,
+                            "estimated_tokens": item.estimated_tokens,
+                        }
+                        for item in bundle.dropped
+                    ],
+                },
+            )
+        return bundle
+
+    def _retrieved_evidence(
+        self,
+        value: dict[str, Any],
+        *,
+        rank: int,
+    ) -> RetrievedEvidence:
+        relative_path = value["relative_path"]
+        evidence_id = value["evidence_id"]
+        return RetrievedEvidence(
+            evidence_id=evidence_id,
+            source_ref=str(value.get("source_ref") or relative_path),
+            logical_path=value.get("logical_path") or f"/{relative_path}",
+            score=float(value.get("score", 0.0)),
+            rank=int(value.get("rank", rank)),
+            retrieval_channel=str(value.get("retrieval_channel", "current")),
+            resource_id=relative_path,
+            metadata={**value, "text": value.get("quote", ""), "workspace_id": self.workspace_id},
+        )
 
     def _read_verified_note(self, ref: str) -> dict[str, Any]:
         documents = self._read_documents()
         document = self._document_for_ref(ref, documents)
         evidence = self._evidence_by_id.get(ref)
         if evidence is not None:
+            quote = evidence.get("quote")
+            if (
+                evidence.get("content_sha256") != document.content_sha256
+                or evidence.get("relative_path") != document.relative_path
+                or not isinstance(quote, str)
+                or not quote
+                or quote not in document.content
+                or hashlib.sha256(quote.encode("utf-8")).hexdigest()
+                != evidence.get("quote_sha256")
+            ):
+                raise ValueError("verified evidence no longer matches its source version")
             # Return the verified evidence record, not raw note content.
             return dict(evidence)
         return {
@@ -225,6 +457,11 @@ class RuntimeAgentAdapter:
                 raise ValidationError("Resume input does not match the original durable request.")
 
         state_cursor = {"state": initial_state}
+        self._active_runtime_state = initial_state
+        self._latest_retrieved_evidence = ()
+        self._latest_decision_records = ()
+        self._latest_scope_path = None
+        self._last_context_bundle = None
 
         def persist_state(current_state: RuntimeState) -> None:
             if not isinstance(current_state, RuntimeState):
@@ -245,6 +482,7 @@ class RuntimeAgentAdapter:
         initial_refs = [f"note_ref_{idx}" for idx, _ in enumerate(documents[:2])]
         tool_funcs = {
             "search_notes": self._search_notes,
+            "search_decision_memory": self._search_decision_memory,
             "read_verified_note": self._read_verified_note_for_tool,
             "build_pair_signals": self._build_pair_signals,
             "validate_evidence": self._validate_evidence,
@@ -255,10 +493,12 @@ class RuntimeAgentAdapter:
             self._read_verified_note_for_tool,
             ledger=tool_ledger,
             checkpoint_callback=tool_checkpoint_callback,
+            decision_memory_executor=self._search_decision_memory,
         )
         event_sink = RuntimeAgentEventSink(tracer) if tracer is not None else None
+        self._integration_event_sink = event_sink
         coordinator = Coordinator(
-            registry=create_default_registry(),
+            registry=create_default_registry(include_decision_memory=True),
             retrieval_agent=RetrievalAgent(
                 model=model,
                 initial_state=initial_state,

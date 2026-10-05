@@ -1,10 +1,20 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from datetime import UTC, datetime
 
 import numpy as np
+import pytest
 
-from linkloom.indexing import BM25Index, DirectoryIndex, IndexDocument, VectorIndex
+from linkloom.context import ContextManifest
+from linkloom.indexing import (
+    BM25Index,
+    DirectoryIndex,
+    IndexDocument,
+    IndexUpdateCoordinator,
+    SourceDocument,
+    VectorIndex,
+)
 from linkloom.retrieval_v2 import (
     BM25Retriever,
     CurrentRetriever,
@@ -12,6 +22,7 @@ from linkloom.retrieval_v2 import (
     DirectoryAwareHybridRetriever,
     HybridRetriever,
     ProgressiveContextLoader,
+    RetrievedEvidence,
     RetrievalQuery,
 )
 from linkloom.schemas import NoteDocument
@@ -173,3 +184,72 @@ def test_current_retriever_treats_root_scope_as_the_whole_workspace() -> None:
     )
 
     assert [hit.source_ref for hit in hits] == ["decisions/final.md"]
+
+
+def test_indexed_source_versions_get_distinct_bm25_and_dense_identity() -> None:
+    coordinator = IndexUpdateCoordinator(
+        manifest=ContextManifest(),
+        lexical_index=BM25Index(),
+        vector_index=VectorIndex(TermEmbedder()),
+        directory_index=DirectoryIndex(),
+    )
+    original = SourceDocument(
+        workspace_id="alpha",
+        resource_id="decision-1",
+        document_id="decision-1",
+        logical_path="/decisions/final.md",
+        content="semantic contract approved",
+        source_timestamp=datetime(2026, 9, 24, tzinfo=UTC),
+        source_ref="fixture://alpha/decisions/final.md",
+    )
+    version_one = coordinator.index_document(original)
+    version_two = coordinator.index_document(
+        replace(original, content="semantic contract rejected")
+    )
+    assert version_one.evidence_id != version_two.evidence_id
+
+    coordinator.lexical_index.build([version_one])
+    coordinator.vector_index.build([version_one])
+    query = RetrievalQuery(workspace_id="alpha", query="semantic contract", top_k=1)
+    lexical = BM25Retriever(coordinator.lexical_index).retrieve(query)
+    dense = DenseRetriever(coordinator.vector_index).retrieve(query)
+
+    assert lexical[0].evidence_id == dense[0].evidence_id == version_one.evidence_id
+
+
+def test_rrf_only_deduplicates_the_same_immutable_evidence_identity() -> None:
+    class FixedRetriever:
+        def __init__(self, hit: RetrievedEvidence) -> None:
+            self.hit = hit
+
+        def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
+            return [self.hit]
+
+    same_lexical = RetrievedEvidence(
+        evidence_id="ev_v2_shared",
+        source_ref="decisions/final.md",
+        logical_path="/decisions/final.md",
+        score=1.0,
+        rank=1,
+        retrieval_channel="bm25",
+        resource_id="decision-1",
+        metadata={"workspace_id": "alpha", "content_sha256": "a" * 64},
+    )
+    same_dense = replace(same_lexical, retrieval_channel="dense", score=0.9)
+    fused = HybridRetriever(FixedRetriever(same_lexical), FixedRetriever(same_dense)).retrieve(
+        RetrievalQuery(workspace_id="alpha", query="decision", top_k=5)
+    )
+    assert len(fused) == 1
+    assert fused[0].evidence_id == "ev_v2_shared"
+
+    conflicting = replace(
+        same_dense,
+        source_ref="decisions/other.md",
+        logical_path="/decisions/other.md",
+        resource_id="decision-2",
+        metadata={"workspace_id": "alpha", "content_sha256": "b" * 64},
+    )
+    with pytest.raises(ValueError, match="conflicting source identities"):
+        HybridRetriever(FixedRetriever(same_lexical), FixedRetriever(conflicting)).retrieve(
+            RetrievalQuery(workspace_id="alpha", query="decision", top_k=5)
+        )

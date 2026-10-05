@@ -1,0 +1,41 @@
+{
+  "changed_fingerprint_files": [
+    "scripts/run_public_memory_clean_eval.py"
+  ],
+  "created_at_utc": "2026-10-05T07:05:48.819224+00:00",
+  "current_fingerprint_sha256": "f5c3693f65b586bda11cf920325942d89966f0dde9513e3ca44d2f67628c9e57",
+  "dataset_revision": "7ea066982b140a19337e17e60d45d4076e042faf",
+  "dataset_sha256": "24d5c3f09ce0ce15625cb9f8a98f44f0d864ca6c94d7b4ad04eb697ca3a5ff45",
+  "evaluation_plan_id": "MH_ONLY_REVISED_HELDOUT_E2_V1",
+  "evaluation_plan_sha256": "422a24aa6007d2fe385d8442d673380023457a7942adf406a1969f1deb170614",
+  "final_policy_is_an_explicit_coverage_and_guard-criticality_amendment": true,
+  "frozen_score_protocol_sha256": "67c2ce8e9c2dd9f9b5816a734ab56a58a6f9882fe50b1c442dc7e959b82650b8",
+  "generation_request_semantics_equal": true,
+  "method_case_count": 184,
+  "official_gold_reads": 0,
+  "predecessor_baseline_id": "AUTHORIZED_E2_MH_ONLY_BASELINE",
+  "predecessor_baseline_sha256": "2fdf6055bf13f4f6a7c516f4ba206e8bf773b9ce6896086dc891452171d248de",
+  "predecessor_fingerprint_sha256": "500e7ff1faf358e3ed0d8ce4b13ba9ae307a939e1077926029b230e86fd15d3d",
+  "previously_registered_score_protocol_sha256": "67c2ce8e9c2dd9f9b5816a734ab56a58a6f9882fe50b1c442dc7e959b82650b8",
+  "provider_calls": 0,
+  "question_count": 92,
+  "request_rows_compared": 184,
+  "request_rows_equal": true,
+  "schema_version": "linkloom-final-evaluation-semantic-equivalence/v1",
+  "scoring_algorithm_equal": true,
+  "semantic_invariants": {
+    "dataset_and_subset_unchanged": true,
+    "gemini_generation_request_semantics_unchanged": true,
+    "memory_retrieval_adapter_prompt_unchanged": true,
+    "scoring_algorithm_and_fixed_denominator_unchanged": true
+  },
+  "status": "PASS",
+  "subset_sha256": "71ca01835b2989a865ec048fa8b3236188de6f68c617affe393fc3dd04153089",
+  "unchanged_fingerprint_components": {
+    "adapter": true,
+    "gemini_generation_configuration": true,
+    "memory": true,
+    "retrieval_and_prompt": true,
+    "retry_policy": true
+  }
+}

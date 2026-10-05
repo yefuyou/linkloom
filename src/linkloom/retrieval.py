@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from linkloom.evidence_identity import passage_evidence_id
 from linkloom.schemas import CandidatePair, EvidenceRef, NoteDocument, ScoreBreakdown
 
 
@@ -26,6 +27,8 @@ def retrieve_evidence(
     query: str,
     documents: list[NoteDocument],
     max_results: int = 5,
+    *,
+    workspace_id: str | None = None,
 ) -> list[EvidenceRef]:
     """Perform deterministic lexical retrieval across note titles, headings, body lines, tags, and wikilinks."""
     query_tokens = set(tokenize(query))
@@ -193,8 +196,23 @@ def retrieve_evidence(
 
     results: list[EvidenceRef] = []
     for idx, (_, item) in enumerate(raw_candidates[:max_results], start=1):
+        evidence_id = (
+            f"ev_p1_{idx:04d}"
+            if workspace_id is None
+            else passage_evidence_id(
+                workspace_id=workspace_id,
+                resource_id=item.relative_path,
+                document_id=item.relative_path,
+                logical_path=f"/{item.relative_path}",
+                source_ref=item.relative_path,
+                content_hash=item.content_sha256,
+                line_start=item.line_start,
+                line_end=item.line_end,
+                quote_hash=item.quote_sha256,
+            )
+        )
         assigned_ev = EvidenceRef(
-            evidence_id=f"ev_p1_{idx:04d}",
+            evidence_id=evidence_id,
             relative_path=item.relative_path,
             content_sha256=item.content_sha256,
             line_start=item.line_start,

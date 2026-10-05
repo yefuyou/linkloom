@@ -1,0 +1,7 @@
+{
+  "identity": "h3-1-evidence-reconciliation:bc850e0cfe4745d79117660dd5a74367:20261005",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T00:59:29.455080+00:00",
+  "sha256": "7b65fc08e6800d273d47cf929aef2590d953319f137c5e36d7cdf7d932aeb707"
+}

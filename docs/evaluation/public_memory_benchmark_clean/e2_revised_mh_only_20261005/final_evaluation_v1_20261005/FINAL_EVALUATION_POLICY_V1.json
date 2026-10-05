@@ -1,0 +1,46 @@
+{
+  "below_threshold_behavior": "stop before another request once either method or paired coverage can no longer reach its frozen minimum; do not unlock Gold",
+  "case_local_block_count_hard_limit": null,
+  "case_local_block_reason_codes": [
+    "CLEAN_EVAL_BLOCK_RESPONSE_GENERATION_RESPONSE_TEXT_MALFORMED"
+  ],
+  "coverage_denominator": "all 92 preallocated revised-heldout QA per method and for pairs",
+  "criticality_levels": {
+    "COST_TELEMETRY_DEGRADED": "Usage, CountTokens, latency, or optional provider telemetry is incomplete; continue only with valid conservative cost upper bound.",
+    "EVALUATION_CRITICAL": "Gold, dataset/subset, request/model, scoring, fingerprint, evidence identity, cross-case, or hard-cap integrity failure; RUN_HARD_STOP.",
+    "OBSERVABILITY_FORMAT_ONLY": "Debug traceback, optional labels, or presentation-only metadata is missing; WARNING_ONLY.",
+    "SCOREABILITY_CRITICAL": "Accepted answer is malformed or cannot be parsed while receipt/evidence identity remains valid; CASE_NOT_EVALUATED."
+  },
+  "dataset_and_subset_unchanged": true,
+  "decision_function": "scripts.run_public_memory_clean_eval._evaluation_guard_decision",
+  "generation_request_semantics_unchanged": true,
+  "gold_unlock_requirements": [
+    "all 184 method-case lifecycles terminal",
+    "at least 95% scored coverage per method",
+    "at least 95% paired coverage",
+    "sealed outputs and valid journal/evidence/fingerprints/subset identity",
+    "cost reservation and actual upper bound stay within both hard caps"
+  ],
+  "memory_retrieval_adapter_prompt_unchanged": true,
+  "minimum_paired_coverage": 0.95,
+  "minimum_scored_coverage_per_method": 0.95,
+  "not_evaluated_categories": [
+    "provider failure",
+    "case-local malformed response"
+  ],
+  "official_gold_reads_during_policy_registration": 0,
+  "policy_id": "FINAL_MH_ONLY_CRITICALITY_V1",
+  "provider_calls_during_policy_registration": 0,
+  "provider_failure_policy": "retry at most three times under the frozen retry policy; then NOT_EVALUATED and continue while coverage remains attainable",
+  "schema_version": "linkloom-final-evaluation-criticality-policy/v1",
+  "scoring_algorithm_and_denominator_unchanged": true,
+  "status": "FROZEN_BEFORE_PROVIDER",
+  "unknown_guard_default": "EVALUATION_CRITICAL",
+  "usage_incomplete_policy": {
+    "accepted_valid_answer": "PROVIDER_COMPLETE and scoreable if request/response/evidence identity is durable and cost upper bound is valid",
+    "billing_uncertainty": true,
+    "cost_basis": "reserved conservative per-attempt upper bound",
+    "missing_output_tokens": null,
+    "usage_status": "INCOMPLETE"
+  }
+}

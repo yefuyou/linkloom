@@ -676,7 +676,17 @@ class RuntimeEngine:
                for record in ledger.to_list()):
             raise ValidationError("Checkpoint tools disagree with retrieval identity.")
         decision = decide_model_resume(state, ledger=ledger)
-        if decision.decision not in {"safe_to_invoke_model", "reuse_durable_model_response", "resume_from_tool_result"}:
+        if decision.decision not in {
+            "safe_to_invoke_model",
+            "reuse_durable_model_response",
+            "resume_from_tool_result",
+            # Runtime V2 durable proposals may resume either the remaining
+            # ordered prefix or the already-complete result set.  Keep the
+            # graph gate aligned with the pure recovery classifier and let the
+            # model loop perform the identity checks and no-replay work.
+            "resume_durable_proposal",
+            "resume_from_tool_results",
+        }:
             # This is a rejected resume attempt, not a terminal rewrite of the
             # durable run. An external verification workflow remains separate.
             return RunStatus(

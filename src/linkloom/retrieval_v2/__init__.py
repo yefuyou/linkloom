@@ -23,6 +23,12 @@ from .retrievers import (
     ProgressiveContextLoader,
     Retriever,
 )
+from .runtime_backend import (
+    RetrievalMode,
+    RetrievalObservation,
+    RuntimeRetrievalBackend,
+    RuntimeRetrievalResult,
+)
 
 __all__ = [
     "BM25Retriever",
@@ -40,6 +46,10 @@ __all__ = [
     "RetrievalEvaluationReport",
     "RetrievalQuery",
     "Retriever",
+    "RetrievalMode",
+    "RetrievalObservation",
+    "RuntimeRetrievalBackend",
+    "RuntimeRetrievalResult",
     "evaluate_retrieval",
     "retrieval_case_metrics",
     "write_benchmark_report",

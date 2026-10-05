@@ -179,10 +179,19 @@ class RetrievalAgent:
             return False
         latest = records[-1]
         action = latest.normalized_action
+        proposal = latest.normalized_proposal
         return (
             latest.status == "response_durable"
-            and isinstance(action, dict)
-            and action.get("kind") == "final"
+            and (
+                (
+                    isinstance(action, dict)
+                    and action.get("kind") == "final"
+                )
+                or (
+                    isinstance(proposal, dict)
+                    and proposal.get("kind") == "final"
+                )
+            )
         )
 
     @staticmethod
@@ -240,8 +249,17 @@ class RetrievalAgent:
             if record.run_id == task.run_id
             and record.task_id == task.task_id
             and record.agent_id == self.agent_id
-            and isinstance(record.normalized_action, dict)
-            and record.normalized_action.get("kind") == "final"
+            and record.status == "completed"
+            and (
+                (
+                    isinstance(record.normalized_action, dict)
+                    and record.normalized_action.get("kind") == "final"
+                )
+                or (
+                    isinstance(record.normalized_proposal, dict)
+                    and record.normalized_proposal.get("kind") == "final"
+                )
+            )
         ]
         if not final_records:
             raise ValidationError("Team Decision has no durable Final model request.")
@@ -276,6 +294,11 @@ class RetrievalAgent:
 
         visible_refs: list[str] = []
         visible_results = [*request.evidence_context]
+        visible_results.extend(
+            model_result.result
+            for tool_turn in request.tool_turns
+            for model_result in tool_turn.tool_results
+        )
         if request.observation is not None:
             visible_results.append(request.observation)
         for result in visible_results:
@@ -306,7 +329,25 @@ class RetrievalAgent:
             failed_errors.append(error)
             self._append_warning(warnings, record.tool_id, error["code"])
 
+        observed_errors = [
+            result.error.to_dict()
+            for result in loop_result.tool_results
+            if result.error is not None
+        ]
         last_observation = loop_result.last_observation
+        if (
+            last_observation is not None
+            and last_observation.error is not None
+            and not observed_errors
+        ):
+            observed_errors.append(last_observation.error.to_dict())
+        for result in loop_result.tool_results:
+            if result.error is not None:
+                self._append_warning(
+                    warnings,
+                    result.tool_id,
+                    result.error.code,
+                )
         if last_observation is not None and last_observation.error is not None:
             observation_error = last_observation.error.to_dict()
             self._append_warning(
@@ -315,7 +356,7 @@ class RetrievalAgent:
                 observation_error["code"],
             )
         else:
-            observation_error = None
+            observation_error = observed_errors[-1] if observed_errors else None
 
         successful_reads = [
             record

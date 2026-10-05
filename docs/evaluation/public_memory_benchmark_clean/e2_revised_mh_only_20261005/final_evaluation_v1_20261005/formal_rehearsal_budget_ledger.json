@@ -1,0 +1,81 @@
+{
+  "active_run_id": null,
+  "budget_scope": "FORMAL_EVALUATION",
+  "hard_cap_usd": 30.0,
+  "ledger_sha256": "35ab025711fe4d218938e4959451fb90284ba15400dcf260dffef13c3e86971d",
+  "runs": [
+    {
+      "cell": "sh_32k",
+      "estimated_spend_upper_bound_usd": 0.004374,
+      "hard_cost_cap_usd": 6.0,
+      "implementation_fingerprint_sha256": "6080c340e45d67c46637e37e5c23d31d9a978d658e89ce22c785689453d775bd",
+      "reserved_usd": 0.0,
+      "run_id": "96ab75da2ff945eb9d102a8f760e21a6",
+      "scored_results_sha256": null,
+      "source_artifact_manifest_sha256": "cbdff7a86844e9f08b04a1c7cf7d33c979678d437973b7f5ebdd2ed46e09fc7a",
+      "source_manifest_sha256": "c3a111290e0064a68d5083389cda3f20e8e28b532fe4a0c03583b0023029b84c",
+      "source_summary_sha256": "0ab1406db21c0157ceb0a5b25d50c3523a1d24b61eb29985ae640fa1a0e83d18",
+      "status": "PROVIDER_COMPLETION_BELOW_90_PERCENT"
+    },
+    {
+      "cell": "sh_32k",
+      "estimated_spend_upper_bound_usd": 0.080115,
+      "hard_cost_cap_usd": 6.0,
+      "implementation_fingerprint_sha256": "61de52921d20fd0803e69632ce203f3986e801722228fc757ac1f67af4487e1c",
+      "reserved_usd": 0.0,
+      "run_id": "328738863a2c42b191c50224baa03ce8",
+      "scored_results_sha256": null,
+      "source_artifact_manifest_sha256": "5608f98c7bf354413d04758834fe727d1fe715181bc906dfc02d09fbfed72c4e",
+      "source_manifest_sha256": "c57c2a1074ea22f3390ba3168f1d62b535fea6198e6a3d3eb0cd7617fe9fc3cd",
+      "source_summary_sha256": "91ce64a4a534f202dc6afde01a6533a8e9720f3ddde49d78cc1daa72af547ca6",
+      "status": "STOPPED"
+    },
+    {
+      "cell": "sh_32k",
+      "estimated_spend_upper_bound_usd": 0.184356,
+      "hard_cost_cap_usd": 6.0,
+      "implementation_fingerprint_sha256": "d9f1e59f65e12eff611d003308acc1b75f27658bda29bf0ac0a68cc811afc8be",
+      "reserved_usd": 0.0,
+      "run_id": "c3744a527b7e40148c5017c0430c3f5b",
+      "scored_results_sha256": null,
+      "source_artifact_manifest_sha256": "fa0d8fd5ea2efc331cb032efda8f818c0e757d2b74554993be1e74fcd00e2fef",
+      "source_manifest_sha256": "a3838990a127b0587a7df5011c8095e2881228fe2d60425dd7714358cde9376d",
+      "source_summary_sha256": "f06455ca1cde3fd564d3875b3fea76db37111dab4d9dbc3899a4400db8252b96",
+      "status": "STOPPED"
+    },
+    {
+      "cell": "mh_6k",
+      "estimated_spend_upper_bound_usd": 0.069117,
+      "hard_cost_cap_usd": 10.0,
+      "implementation_fingerprint_sha256": "26f71b57df4abba152bdf861b1442260f90be3027f94c2e4a7a33f4c772d4ce7",
+      "preflight_sha256": "3a457e97495a1702f0034c725dfbb3dfe721876511b2b99b006e818c4319b4e8",
+      "reserved_usd": 0.0,
+      "run_id": "3474a8eefe3e4a48b41b8b1d503399b0",
+      "scored_results_sha256": null,
+      "status": "PROVIDER_COMPLETION_BELOW_90_PERCENT"
+    },
+    {
+      "cell": "mh_6k",
+      "estimated_spend_upper_bound_usd": 0.0,
+      "hard_cost_cap_usd": 10.0,
+      "implementation_fingerprint_sha256": "500e7ff1faf358e3ed0d8ce4b13ba9ae307a939e1077926029b230e86fd15d3d",
+      "preflight_sha256": "d9f581e841460f131e6a53f32bc772724ed5b1816e56d00c8dd45d0142b5db98",
+      "reserved_usd": 0.0,
+      "run_id": "22c4ba5ca95a4890998aee1d68a69553",
+      "scored_results_sha256": null,
+      "status": "PROVIDER_COMPLETION_BELOW_90_PERCENT"
+    },
+    {
+      "cell": "mh_6k",
+      "estimated_spend_upper_bound_usd": 0.0,
+      "hard_cost_cap_usd": 10.0,
+      "implementation_fingerprint_sha256": "f5c3693f65b586bda11cf920325942d89966f0dde9513e3ca44d2f67628c9e57",
+      "preflight_sha256": "5ea061603d02b9bd7a3e29da723d340cae59b8cff241de1ccea2af9473a9d597",
+      "reserved_usd": 0.0,
+      "run_id": "1d624418f78e46e3b1ff2399293c5907",
+      "scored_results_sha256": null,
+      "status": "PROVIDER_COMPLETION_BELOW_90_PERCENT"
+    }
+  ],
+  "schema_version": "linkloom-public-memory-global-budget/v1"
+}

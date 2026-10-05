@@ -1,0 +1,76 @@
+{
+  "checks": {
+    "canonical_regression": "PASS",
+    "clash_7897_route": "PASS",
+    "cost_hard_caps": "PASS",
+    "coverage_policy": "PASS",
+    "criticality_policy": "PASS",
+    "formal_fake_provider_e2e": "PASS",
+    "formal_live_path_rehearsal": "PASS",
+    "gold_isolation": "PASS",
+    "guard_criticality_inventory": "PASS",
+    "independent_reviewer": "PASS",
+    "journal_evidence_finalizer": "PASS",
+    "ledger_reconciliation": "PASS",
+    "mh_6k_revised_unrun_subset": "PASS",
+    "pre_case_finalizer": "PASS",
+    "score_protocol": "PASS",
+    "usage_incomplete_fake_provider": "PASS"
+  },
+  "created_at_utc": "2026-10-05T07:13:55.545828+00:00",
+  "evaluation_plan_id": "MH_ONLY_REVISED_HELDOUT_E2_V1",
+  "evaluation_plan_sha256": "422a24aa6007d2fe385d8442d673380023457a7942adf406a1969f1deb170614",
+  "evidence": {
+    "artifact_seals_pass": true,
+    "available_before_reservation_usd": 29.662038,
+    "changed_fingerprint_files": [
+      "scripts/run_public_memory_clean_eval.py"
+    ],
+    "criticality_counts": {
+      "COST_TELEMETRY_DEGRADED": 2,
+      "EVALUATION_CRITICAL": 276,
+      "OBSERVABILITY_FORMAT_ONLY": 0,
+      "SCOREABILITY_CRITICAL": 1
+    },
+    "dataset_revision": "7ea066982b140a19337e17e60d45d4076e042faf",
+    "dataset_sha256": "24d5c3f09ce0ce15625cb9f8a98f44f0d864ca6c94d7b4ad04eb697ca3a5ff45",
+    "evaluation_can_run_with_safe_degradation": "YES",
+    "fake_provider_gold_unlock_failure_no_official_gold": true,
+    "fake_provider_gold_unlock_pass": true,
+    "fake_provider_one_sided_status": "NOT_EVALUATED",
+    "fake_provider_usage_incomplete_status": "PROVIDER_COMPLETE_AND_SCOREABLE",
+    "focused_tests": {
+      "errors": 0,
+      "failed": 0,
+      "passed": 150
+    },
+    "formal_budget_ledger_sha256": "05db6eef46ef773be82d80bd214eddec6e645d3af3201145de0555e5d35d0ef4",
+    "formal_global_cap_usd": 30.0,
+    "historical_committed_upper_bound_usd": 0.337962,
+    "maximum_three_attempt_preflight_cost_usd": 2.2570335,
+    "regression": {
+      "errors": 0,
+      "failed": 0,
+      "passed": 429
+    },
+    "rehearsal_formal_ledger_unchanged": true,
+    "rehearsal_run_id": "1d624418f78e46e3b1ff2399293c5907",
+    "rehearsal_status": "PASS",
+    "reviewer_verdict": "PASS",
+    "route_provider_requests": 0,
+    "semantic_equivalence_status": "PASS",
+    "single_run_cap_usd": 10.0,
+    "subset_manifest_sha256": "3273ada86bc257f8e39eab0a045668044274f0bae6bd67ba70559511b274fda8"
+  },
+  "fingerprint_sha256": "f5c3693f65b586bda11cf920325942d89966f0dde9513e3ca44d2f67628c9e57",
+  "live_run_created": false,
+  "live_run_id": null,
+  "method_case_count": 184,
+  "official_gold_reads": 0,
+  "provider_calls": 0,
+  "question_count": 92,
+  "schema_version": "linkloom-e2-offline-qualification/v1",
+  "scoring_enabled": false,
+  "status": "PASS",
+  "subset_sha256": "71ca01835b2989a865ec048fa8b3236188de6f68c617affe393fc3dd04153089"
+}

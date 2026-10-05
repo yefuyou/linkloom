@@ -1,0 +1,15 @@
+{
+  "active_run_id": null,
+  "all_184_at_three_attempts_upper_bound_usd": 2.2570335,
+  "available_before_run_reservation_usd": 29.662038,
+  "budget_scope": "FORMAL_EVALUATION",
+  "created_at_utc": "2026-10-05T07:05:52.756611+00:00",
+  "diagnostic_budget_scope_separate": true,
+  "formal_budget_ledger_sha256": "05db6eef46ef773be82d80bd214eddec6e645d3af3201145de0555e5d35d0ef4",
+  "global_hard_cap_usd": 30.0,
+  "historical_committed_upper_bound_usd": 0.337962,
+  "reservation_fits_global_cap": true,
+  "schema_version": "linkloom-final-evaluation-budget-snapshot/v1",
+  "single_run_hard_cap_usd": 10.0,
+  "status": "PASS"
+}

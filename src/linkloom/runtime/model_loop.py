@@ -7,7 +7,7 @@ local FakeModelAdapter only.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 import json
 from typing import Any, Callable, Sequence
 
@@ -19,11 +19,18 @@ from linkloom.agents.model_adapter import (
     ModelProviderAdapter,
     ModelProviderError,
     ModelResponse,
+    ModelToolCall,
     ModelToolInteraction,
+    ModelToolResult,
+    ModelToolTurn,
+    ModelTurnProposal,
     ModelTurnRequest,
     ModelUsage,
     ProviderContinuation,
+    ProviderTurnContinuation,
     is_verified_evidence_result,
+    runtime_call_id_for,
+    select_bounded_model_tool_turns,
 )
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
@@ -52,6 +59,7 @@ class ModelLoopResult:
     state: RuntimeState
     final_answer: str | None = None
     last_observation: ToolResult | None = None
+    tool_results: list[ToolResult] = field(default_factory=list)
     error: ToolError | None = None
 
     def __post_init__(self) -> None:
@@ -65,6 +73,10 @@ class ModelLoopResult:
             raise ValidationError("ModelLoopResult.final_answer must be text or None.")
         if self.last_observation is not None and not isinstance(self.last_observation, ToolResult):
             raise ValidationError("ModelLoopResult.last_observation must be ToolResult or None.")
+        if not isinstance(self.tool_results, list) or any(
+            not isinstance(result, ToolResult) for result in self.tool_results
+        ):
+            raise ValidationError("ModelLoopResult.tool_results must contain ToolResult values.")
         if self.error is not None and not isinstance(self.error, ToolError):
             raise ValidationError("ModelLoopResult.error must be ToolError or None.")
         if self.status == "completed":
@@ -81,6 +93,7 @@ class ModelLoopResult:
             "last_observation": (
                 self.last_observation.to_dict() if self.last_observation else None
             ),
+            "tool_results": [result.to_dict() for result in self.tool_results],
             "error": self.error.to_dict() if self.error else None,
         }
 
@@ -556,6 +569,8 @@ class SingleAgentModelLoop:
         pending_record: ModelExecutionRecord | None = None
         previous_tool_call: ToolCall | None = None
         provider_continuation: ProviderContinuation | None = None
+        completed_tool_turns: list[ModelToolTurn] = []
+        ordered_tool_results: list[ToolResult] = []
 
         def project() -> RuntimeState:
             return self._project_state(current_state, turns, ledger, termination, model_records)
@@ -670,7 +685,28 @@ class SingleAgentModelLoop:
                 },
             )
 
+        def compatibility_action(response: ModelResponse) -> ModelAction | None:
+            """Project the canonical response into the legacy action shape.
+
+            V2 providers retain their Provider call IDs in ``proposal`` while
+            the runtime owns the run-wide ``ToolCall.call_id``.  The legacy
+            projection must therefore use the bound runtime call ID so old
+            consumers and M0.4 artifacts continue to correlate actions with
+            the durable tool ledger.  A multi-call proposal has no lossless
+            singleton action view and remains ``None``.
+            """
+            if response.proposal is not None:
+                if response.proposal.kind == "final":
+                    return ModelAction.final(response.proposal.final_answer)
+                if len(response.proposal.tool_calls) == 1:
+                    return ModelAction.tool(
+                        response.proposal.tool_calls[0].runtime_call
+                    )
+                return None
+            return response.action
+
         def response_artifact(turn: AgentTurn, response: ModelResponse):
+            projected_action = compatibility_action(response)
             return artifact_store.write_response(
                 state.run_id,
                 turn.turn_id,
@@ -684,7 +720,14 @@ class SingleAgentModelLoop:
                     },
                     "model_response": response.to_dict(),
                     "normalized_action": (
-                        response.action.to_dict() if response.action is not None else None
+                        projected_action.to_dict()
+                        if projected_action is not None
+                        else None
+                    ),
+                    "normalized_proposal": (
+                        response.proposal.to_dict()
+                        if response.proposal is not None
+                        else None
                     ),
                     "usage": response.usage.to_dict(),
                     "provider_metadata": response.provider_metadata,
@@ -861,14 +904,42 @@ class SingleAgentModelLoop:
                     raise ValidationError(
                         "Durable provider continuation does not match its source turn."
                     )
+                if (
+                    response.provider_turn_continuation is not None
+                    and response.provider_turn_continuation.source_turn_id
+                    != record.turn_id
+                ):
+                    raise ValidationError(
+                        "Durable Provider turn continuation does not match its source turn."
+                    )
+                # ``ModelResponse`` owns the V1 compatibility projection: a
+                # terminal proposal and a singleton V2 tool proposal expose a
+                # canonical ``action`` view, while a true multi-call proposal
+                # intentionally has no lossy singleton representation.  Keep
+                # that view in the legacy record field alongside the canonical
+                # V2 proposal so existing consumers can continue reading it.
+                projected_action_value = compatibility_action(response)
                 projected_action = (
-                    response.action.to_dict() if response.action is not None else None
+                    projected_action_value.to_dict()
+                    if projected_action_value is not None
+                    else None
+                )
+                projected_proposal = (
+                    response.proposal.to_dict()
+                    if response.proposal is not None
+                    else None
                 )
                 projected_error = (
                     response.error.to_dict() if response.error is not None else None
                 )
                 expected_projection = {
                     "normalized_action": projected_action,
+                    "normalized_proposal": projected_proposal,
+                    "proposal_id": (
+                        response.proposal.proposal_id
+                        if response.proposal is not None
+                        else None
+                    ),
                     "usage": response.usage.to_dict(),
                     "provider_metadata": response.provider_metadata,
                     "provider_request_id": projected_provider_request_id(response),
@@ -878,6 +949,8 @@ class SingleAgentModelLoop:
                 }
                 actual_projection = {
                     "normalized_action": record.normalized_action,
+                    "normalized_proposal": record.normalized_proposal,
+                    "proposal_id": record.proposal_id,
                     "usage": record.usage,
                     "provider_metadata": record.provider_metadata,
                     "provider_request_id": record.provider_request_id,
@@ -892,6 +965,10 @@ class SingleAgentModelLoop:
                 if payload.get("normalized_action") != projected_action:
                     raise ValidationError(
                         "Durable model action does not match its response artifact."
+                    )
+                if payload.get("normalized_proposal") != projected_proposal:
+                    raise ValidationError(
+                        "Durable model proposal does not match its response artifact."
                     )
                 if payload.get("usage") != response.usage.to_dict():
                     raise ValidationError(
@@ -988,6 +1065,81 @@ class SingleAgentModelLoop:
                 )
             raise ValidationError("No durable ToolResult observation is available.")
 
+        def load_model_tool_result(
+            record: ModelExecutionRecord,
+            proposal: ModelTurnProposal,
+            ordinal: int,
+        ) -> ModelToolResult:
+            if ordinal >= len(record.tool_result_refs) or ordinal >= len(
+                proposal.tool_calls
+            ):
+                raise ValidationError(
+                    "Durable ModelToolResult ordinal is outside its proposal prefix."
+                )
+            ref = record.tool_result_refs[ordinal]
+            payload = artifact_store.read(
+                ref["result_ref"],
+                expected_sha256=ref["result_sha256"],
+            )
+            if payload.get("runtime_identity") != artifact_identity(record):
+                raise ValidationError(
+                    "Durable ModelToolResult identity does not match its record."
+                )
+            raw_result = payload.get("model_tool_result")
+            if not isinstance(raw_result, dict):
+                raise ValidationError(
+                    "Durable tool-result artifact has no ModelToolResult."
+                )
+            model_result = ModelToolResult.from_dict(raw_result)
+            model_call = proposal.tool_calls[ordinal]
+            runtime_call = model_call.runtime_call
+            expected_ref = {
+                "ordinal": ordinal,
+                "result_id": model_result.result_id,
+                "provider_call_id": model_result.provider_call_id,
+                "runtime_call_id": model_result.runtime_call_id,
+                "tool_id": model_result.result.tool_id,
+                "result_ref": ref["result_ref"],
+                "result_sha256": ref["result_sha256"],
+            }
+            if ref != expected_ref or (
+                model_result.run_id != record.run_id
+                or model_result.proposal_id != proposal.proposal_id
+                or model_result.ordinal != ordinal
+                or model_result.provider_call_id != model_call.provider_call_id
+                or model_result.runtime_call_id != runtime_call.call_id
+                or model_result.result.call_id != runtime_call.call_id
+                or model_result.result.tool_id != runtime_call.tool_id
+            ):
+                raise ValidationError(
+                    "Durable ModelToolResult does not match its proposal identity."
+                )
+            existing = ledger.get(runtime_call.call_id)
+            validate_ledger_identity(existing, runtime_call)
+            if existing is not None:
+                if existing.status == "pending":
+                    raise ValidationError(
+                        "A durable ModelToolResult cannot reference a pending ledger call."
+                    )
+                if existing.result is not None:
+                    ledger_result = ToolResult.from_dict(existing.result)
+                elif existing.error is not None:
+                    ledger_result = ToolResult(
+                        call_id=runtime_call.call_id,
+                        tool_id=runtime_call.tool_id,
+                        status="error",
+                        error=ToolError.from_dict(existing.error),
+                    )
+                else:
+                    raise ValidationError(
+                        "Terminal ledger record has no normalized outcome."
+                    )
+                if model_result.result.to_dict() != ledger_result.to_dict():
+                    raise ValidationError(
+                        "Durable ModelToolResult payload does not match its ledger outcome."
+                    )
+            return model_result
+
         def bind_action(action: ModelAction, turn: AgentTurn) -> ModelAction:
             if action.kind == "final":
                 return action
@@ -1016,6 +1168,43 @@ class SingleAgentModelLoop:
                 )
             )
 
+        def bind_proposal(
+            proposal: ModelTurnProposal,
+            turn: AgentTurn,
+        ) -> ModelTurnProposal:
+            expected_proposal_id = f"{turn.turn_id}:proposal"
+            if proposal.proposal_id != expected_proposal_id:
+                raise ValidationError(
+                    "Provider proposal identity does not match the current runtime turn.",
+                    details={"reason": "proposal_id_mismatch"},
+                )
+            if proposal.kind == "final":
+                return proposal
+            for ordinal, model_call in enumerate(proposal.tool_calls):
+                call = model_call.runtime_call
+                if (
+                    call.run_id != state.run_id
+                    or call.task_id != task_id
+                    or call.agent_id != agent_id
+                    or call.sequence != turn.sequence
+                ):
+                    raise ValidationError(
+                        "Provider ToolCall identity does not match the current runtime turn.",
+                        details={"reason": "tool_call_identity_mismatch"},
+                    )
+                expected_call_id = runtime_call_id_for(
+                    run_id=state.run_id,
+                    proposal_id=proposal.proposal_id,
+                    ordinal=ordinal,
+                    provider_call_id=model_call.provider_call_id,
+                )
+                if call.call_id != expected_call_id:
+                    raise ValidationError(
+                        "Provider ToolCall Runtime identity is not canonical.",
+                        details={"reason": "runtime_call_id_mismatch"},
+                    )
+            return proposal
+
         def invoke_model(request: ModelTurnRequest, turn: AgentTurn) -> ModelResponse:
             if self._has_provider_complete:
                 response = self.model.complete(request)  # type: ignore[union-attr]
@@ -1033,6 +1222,13 @@ class SingleAgentModelLoop:
                     action=action,
                     usage=ModelUsage(),
                     provider_metadata={"adapter": "provider_neutral_fake"},
+                )
+            if response.proposal is not None:
+                bound_proposal = bind_proposal(response.proposal, turn)
+                return replace(
+                    response,
+                    action=None,
+                    proposal=bound_proposal,
                 )
             if response.action is None:
                 return response
@@ -1067,7 +1263,221 @@ class SingleAgentModelLoop:
                 state=current_state,
                 final_answer=action.final_answer,
                 last_observation=observation,
+                tool_results=list(ordered_tool_results),
             )
+
+        def terminal_proposal(
+            turn: AgentTurn,
+            record: ModelExecutionRecord,
+            proposal: ModelTurnProposal,
+        ) -> ModelLoopResult:
+            nonlocal termination
+            if proposal.kind != "final" or proposal.final_answer is None:
+                raise ValidationError("Terminal proposal must contain a final answer.")
+            turns[turn_index(turn)] = replace(
+                turn,
+                status="completed",
+                model_response_ref=record.response_ref,
+            )
+            upsert_record(
+                replace(
+                    record,
+                    status="completed",
+                    # Preserve the V1 compatibility projection populated at
+                    # the durable response boundary.  Multi-call proposals
+                    # remain null because no lossless singleton action exists.
+                    normalized_action=record.normalized_action,
+                    normalized_proposal=proposal.to_dict(),
+                    proposal_id=proposal.proposal_id,
+                )
+            )
+            termination = TerminationState(
+                status="completed",
+                reason_code="model_final",
+                reason="The runtime accepted a durable model final answer.",
+                sequence=turn.sequence,
+            )
+            publish(project())
+            return ModelLoopResult(
+                status="completed",
+                state=current_state,
+                final_answer=proposal.final_answer,
+                last_observation=observation,
+                tool_results=list(ordered_tool_results),
+            )
+
+        def execute_tool_proposal(
+            turn: AgentTurn,
+            record: ModelExecutionRecord,
+            proposal: ModelTurnProposal,
+            continuation: ProviderTurnContinuation | None,
+        ) -> ToolError | None:
+            nonlocal observation, previous_tool_call, provider_continuation
+            if proposal.kind != "tool_calls":
+                return None
+            if continuation is not None and (
+                continuation.source_turn_id != turn.turn_id
+                or not continuation.matches_calls(
+                    proposal.proposal_id,
+                    proposal.tool_calls,
+                )
+            ):
+                raise ValidationError(
+                    "Provider continuation identity does not match the bound proposal."
+                )
+
+            current_turn_index = turn_index(turn)
+            runtime_call_ids = [
+                model_call.runtime_call.call_id
+                for model_call in proposal.tool_calls
+            ]
+            turns[current_turn_index] = replace(
+                turns[current_turn_index],
+                tool_call_ids=runtime_call_ids,
+            )
+            record = replace(
+                record,
+                # Preserve the V1 compatibility projection populated at the
+                # durable response boundary.  A multi-call proposal keeps
+                # this null; singleton proposals retain their action view.
+                normalized_action=record.normalized_action,
+                normalized_proposal=proposal.to_dict(),
+                proposal_id=proposal.proposal_id,
+            )
+            upsert_record(record)
+            checkpoint_error = publish_model_boundary("proposal_bound")
+            if checkpoint_error is not None:
+                return checkpoint_error
+
+            model_results: list[ModelToolResult] = []
+            result_refs = list(record.tool_result_refs)
+            if len(result_refs) > len(proposal.tool_calls):
+                raise ValidationError(
+                    "Durable result prefix exceeds the proposal call list."
+                )
+            for ordinal in range(len(result_refs)):
+                restored_result = load_model_tool_result(
+                    record,
+                    proposal,
+                    ordinal,
+                )
+                model_results.append(restored_result)
+                ordered_tool_results.append(restored_result.result)
+                observation = restored_result.result
+                previous_tool_call = proposal.tool_calls[ordinal].runtime_call
+                provider_continuation = None
+
+            for ordinal in range(len(result_refs), len(proposal.tool_calls)):
+                model_call = proposal.tool_calls[ordinal]
+                call = model_call.runtime_call
+                existing = ledger.get(call.call_id)
+                validate_ledger_identity(existing, call)
+                if existing is not None and existing.status == "pending":
+                    raise ValidationError(
+                        "A pending tool call requires recovery verification."
+                    )
+                if existing is not None and existing.status in {"completed", "failed"}:
+                    if existing.result is not None:
+                        result = ToolResult.from_dict(existing.result)
+                        validate_result_identity(result, call)
+                    elif existing.error is not None:
+                        result = ToolResult(
+                            call_id=call.call_id,
+                            tool_id=call.tool_id,
+                            status="error",
+                            error=ToolError.from_dict(existing.error),
+                        )
+                    else:
+                        raise ValidationError(
+                            "Terminal ledger record has no normalized outcome."
+                        )
+                else:
+                    result = self.tool_runtime.execute(
+                        call,
+                        self.policy_enforcer,
+                        event_sink=event_sink,
+                        ledger=ledger,
+                        checkpoint_callback=persist_ledger,
+                    )
+
+                if is_uncertain_checkpoint(result):
+                    upsert_record(replace(record, status="failed"))
+                    turns[current_turn_index] = replace(
+                        turns[current_turn_index],
+                        status="failed",
+                    )
+                    return result.error
+
+                model_result = ModelToolResult.for_call(
+                    run_id=state.run_id,
+                    proposal_id=proposal.proposal_id,
+                    ordinal=ordinal,
+                    model_call=model_call,
+                    result=result,
+                )
+                stored_result = artifact_store.write_tool_result(
+                    state.run_id,
+                    turn.turn_id,
+                    ordinal,
+                    call.call_id,
+                    {
+                        "runtime_identity": {
+                            "run_id": state.run_id,
+                            "turn_id": turn.turn_id,
+                            "task_id": task_id,
+                            "agent_id": agent_id,
+                            "sequence": turn.sequence,
+                        },
+                        "model_tool_result": model_result.to_dict(),
+                    },
+                )
+                result_refs.append(
+                    {
+                        "ordinal": ordinal,
+                        "result_id": model_result.result_id,
+                        "provider_call_id": model_call.provider_call_id,
+                        "runtime_call_id": call.call_id,
+                        "tool_id": call.tool_id,
+                        "result_ref": stored_result.ref,
+                        "result_sha256": stored_result.sha256,
+                    }
+                )
+                model_results.append(model_result)
+                ordered_tool_results.append(result)
+                observation = result
+                previous_tool_call = call
+                provider_continuation = None
+                status = (
+                    "tool_results_durable"
+                    if len(result_refs) == len(proposal.tool_calls)
+                    else "tool_results_partial"
+                )
+                if status == "tool_results_durable":
+                    turns[current_turn_index] = replace(
+                        turns[current_turn_index],
+                        status="completed",
+                    )
+                record = replace(
+                    record,
+                    status=status,
+                    tool_result_refs=list(result_refs),
+                )
+                upsert_record(record)
+                checkpoint_error = publish_model_boundary(status)
+                if checkpoint_error is not None:
+                    return checkpoint_error
+
+            completed_tool_turns.append(
+                ModelToolTurn(
+                    proposal_id=proposal.proposal_id,
+                    source_turn_id=turn.turn_id,
+                    source_sequence=turn.sequence,
+                    tool_calls=list(proposal.tool_calls),
+                    tool_results=model_results,
+                    provider_continuation=continuation,
+                )
+            )
+            return None
 
         def execute_tool_action(
             turn: AgentTurn,
@@ -1187,8 +1597,19 @@ class SingleAgentModelLoop:
                     validate_record_context(record)
                 if decision.decision == "already_terminal":
                     if termination.status == "completed" and record is not None:
-                        final_action = load_action(record)
-                        if final_action.kind == "final":
+                        terminal_response = load_response(record)
+                        if terminal_response.proposal is not None:
+                            if terminal_response.proposal.kind != "final":
+                                raise ValidationError(
+                                    "Terminal V2 model response is not a final proposal."
+                                )
+                            return ModelLoopResult(
+                                status="completed",
+                                state=current_state,
+                                final_answer=terminal_response.proposal.final_answer,
+                            )
+                        final_action = terminal_response.action
+                        if final_action is not None and final_action.kind == "final":
                             return ModelLoopResult(
                                 status="completed",
                                 state=current_state,
@@ -1218,6 +1639,11 @@ class SingleAgentModelLoop:
                     if record is None:
                         raise ValidationError("No durable model record is available for response reuse.")
                     pending_response = load_response(record)
+                    if (
+                        pending_response.proposal is not None
+                        and pending_response.proposal.kind == "tool_calls"
+                    ):
+                        completed_tool_turns = list(load_request(record).tool_turns)
                     pending_record = record
                     matching_turn = next((turn for turn in turns if turn.turn_id == record.turn_id), None)
                     if matching_turn is None:
@@ -1231,6 +1657,71 @@ class SingleAgentModelLoop:
                         )
                         turns.append(matching_turn)
                     forced_turn = matching_turn
+                elif decision.decision == "resume_durable_proposal":
+                    if record is None:
+                        raise ValidationError(
+                            "No durable model record is available for proposal resume."
+                        )
+                    pending_response = load_response(record)
+                    completed_tool_turns = list(load_request(record).tool_turns)
+                    pending_record = record
+                    matching_turn = next(
+                        (turn for turn in turns if turn.turn_id == record.turn_id),
+                        None,
+                    )
+                    if matching_turn is None:
+                        matching_turn = AgentTurn(
+                            turn_id=record.turn_id,
+                            run_id=state.run_id,
+                            task_id=task_id,
+                            agent_id=agent_id,
+                            sequence=record.sequence,
+                            status="running",
+                        )
+                        turns.append(matching_turn)
+                    forced_turn = matching_turn
+                elif decision.decision == "resume_from_tool_results":
+                    if record is None:
+                        raise ValidationError(
+                            "No durable model record is available for result resume."
+                        )
+                    restored_response = load_response(record)
+                    completed_tool_turns = list(load_request(record).tool_turns)
+                    restored_proposal = restored_response.proposal
+                    if (
+                        restored_proposal is None
+                        or restored_proposal.kind != "tool_calls"
+                    ):
+                        raise ValidationError(
+                            "Durable result resume requires a tool-call proposal."
+                        )
+                    matching_turn = next(
+                        (turn for turn in turns if turn.turn_id == record.turn_id),
+                        None,
+                    )
+                    if matching_turn is None:
+                        matching_turn = AgentTurn(
+                            turn_id=record.turn_id,
+                            run_id=state.run_id,
+                            task_id=task_id,
+                            agent_id=agent_id,
+                            sequence=record.sequence,
+                            status="completed",
+                            tool_call_ids=[
+                                call.runtime_call.call_id
+                                for call in restored_proposal.tool_calls
+                            ],
+                            model_response_ref=record.response_ref,
+                        )
+                        turns.append(matching_turn)
+                    proposal_error = execute_tool_proposal(
+                        matching_turn,
+                        record,
+                        restored_proposal,
+                        restored_response.provider_turn_continuation,
+                    )
+                    if proposal_error is not None:
+                        return blocked_result(proposal_error)
                 elif decision.decision == "resume_from_tool_result":
                     if record is None:
                         raise ValidationError("No durable model record is available for observation resume.")
@@ -1252,6 +1743,8 @@ class SingleAgentModelLoop:
                 elif decision.decision == "requires_model_reinvoke":
                     raise ValidationError("Explicit model reinvocation requires a new request record.")
                 elif decision.decision == "safe_to_invoke_model" and record is not None:
+                    if record.status == "request_durable":
+                        completed_tool_turns = list(load_request(record).tool_turns)
                     forced_record = record
                     forced_turn = next((turn for turn in turns if turn.turn_id == record.turn_id), None)
 
@@ -1270,19 +1763,34 @@ class SingleAgentModelLoop:
                     if response_envelope.error is not None:
                         upsert_record(replace(record, status="failed"))
                         return failed_result(provider_tool_error(response_envelope.error))
-                    action = response_envelope.action
-                    if action is None:
-                        raise ValidationError("Durable response has no action or provider error.")
-                    if action.kind == "final":
-                        return terminal_final(turn, record, action)
-                    tool_result = execute_tool_action(
-                        turn,
-                        record,
-                        action,
-                        response_envelope.provider_continuation,
-                    )
-                    if tool_result is not None and is_uncertain_checkpoint(tool_result):
-                        return failed_result(tool_result.error)
+                    proposal = response_envelope.proposal
+                    if proposal is not None:
+                        if proposal.kind == "final":
+                            return terminal_proposal(turn, record, proposal)
+                        proposal_error = execute_tool_proposal(
+                            turn,
+                            record,
+                            proposal,
+                            response_envelope.provider_turn_continuation,
+                        )
+                        if proposal_error is not None:
+                            return blocked_result(proposal_error)
+                    else:
+                        action = response_envelope.action
+                        if action is None:
+                            raise ValidationError(
+                                "Durable response has no proposal, action, or provider error."
+                            )
+                        if action.kind == "final":
+                            return terminal_final(turn, record, action)
+                        tool_result = execute_tool_action(
+                            turn,
+                            record,
+                            action,
+                            response_envelope.provider_continuation,
+                        )
+                        if tool_result is not None and is_uncertain_checkpoint(tool_result):
+                            return failed_result(tool_result.error)
                     next_sequence = max(next_sequence, turn.sequence + 1)
                     continue
 
@@ -1314,6 +1822,11 @@ class SingleAgentModelLoop:
                 model_steps += 1
 
                 if record is None or record.status != "request_durable":
+                    # Once a V2 proposal has completed, its whole model-turn
+                    # grouping is the canonical Provider history—even for a
+                    # singleton proposal.  Legacy observation fields are used
+                    # only by the pre-V2 ModelAction path.
+                    grouped_history = bool(completed_tool_turns)
                     request = ModelTurnRequest(
                         run_id=state.run_id,
                         turn_id=turn.turn_id,
@@ -1321,10 +1834,12 @@ class SingleAgentModelLoop:
                         agent_id=agent_id,
                         sequence=turn.sequence,
                         user_input=user_input,
-                        observation=observation,
+                        observation=None if grouped_history else observation,
                         available_tools=list(tool_definitions),
-                        previous_tool_call=previous_tool_call,
-                        provider_continuation=provider_continuation,
+                        previous_tool_call=None if grouped_history else previous_tool_call,
+                        provider_continuation=(
+                            None if grouped_history else provider_continuation
+                        ),
                         evidence_context=self._verified_evidence_context(
                             ledger,
                             run_id=state.run_id,
@@ -1332,18 +1847,27 @@ class SingleAgentModelLoop:
                             agent_id=agent_id,
                             before_sequence=turn.sequence,
                         ),
-                        tool_history=self._completed_tool_history(
-                            model_records,
-                            ledger,
-                            run_id=state.run_id,
-                            task_id=task_id,
-                            agent_id=agent_id,
-                            before_sequence=turn.sequence,
-                            current_call_id=(
-                                previous_tool_call.call_id
-                                if previous_tool_call is not None
-                                else None
-                            ),
+                        tool_history=(
+                            []
+                            if grouped_history
+                            else self._completed_tool_history(
+                                model_records,
+                                ledger,
+                                run_id=state.run_id,
+                                task_id=task_id,
+                                agent_id=agent_id,
+                                before_sequence=turn.sequence,
+                                current_call_id=(
+                                    previous_tool_call.call_id
+                                    if previous_tool_call is not None
+                                    else None
+                                ),
+                            )
+                        ),
+                        tool_turns=(
+                            select_bounded_model_tool_turns(completed_tool_turns)
+                            if grouped_history
+                            else []
                         ),
                     )
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
@@ -1351,7 +1875,7 @@ class SingleAgentModelLoop:
                         turn,
                         request,
                         tools_artifact.ref,
-                        observation_ref,
+                        None if grouped_history else observation_ref,
                     )
                     record = ModelExecutionRecord(
                         run_id=state.run_id,
@@ -1421,9 +1945,18 @@ class SingleAgentModelLoop:
                 if checkpoint_error is not None:
                     return blocked_result(checkpoint_error)
                 response = response_artifact(turn, response_envelope)
+                # ModelResponse.__post_init__ provides a V1 action projection
+                # for final/singleton proposals.  Persist it even when the
+                # canonical response is represented as a V2 proposal.
+                projected_action = compatibility_action(response_envelope)
                 normalized_action = (
-                    response_envelope.action.to_dict()
-                    if response_envelope.action is not None
+                    projected_action.to_dict()
+                    if projected_action is not None
+                    else None
+                )
+                normalized_proposal = (
+                    response_envelope.proposal.to_dict()
+                    if response_envelope.proposal is not None
                     else None
                 )
                 provider_error = (
@@ -1437,6 +1970,12 @@ class SingleAgentModelLoop:
                     response_ref=response.ref,
                     response_sha256=response.sha256,
                     normalized_action=normalized_action,
+                    normalized_proposal=normalized_proposal,
+                    proposal_id=(
+                        response_envelope.proposal.proposal_id
+                        if response_envelope.proposal is not None
+                        else None
+                    ),
                     usage=response_envelope.usage.to_dict(),
                     provider_metadata=dict(response_envelope.provider_metadata),
                     provider_request_id=projected_provider_request_id(response_envelope),
@@ -1461,20 +2000,42 @@ class SingleAgentModelLoop:
                     upsert_record(replace(record, status="failed"))
                     return failed_result(provider_tool_error(response_envelope.error))
 
-                bound_action = response_envelope.action
-                if bound_action is None:
-                    raise ValidationError("Model response has no action or provider error.")
-
-                if bound_action.kind == "final":
-                    return terminal_final(turns[turn_index(turn)], record, bound_action)
-                tool_result = execute_tool_action(
-                    turns[turn_index(turn)],
-                    record,
-                    bound_action,
-                    response_envelope.provider_continuation,
-                )
-                if tool_result is not None and is_uncertain_checkpoint(tool_result):
-                    return failed_result(tool_result.error)
+                bound_proposal = response_envelope.proposal
+                if bound_proposal is not None:
+                    if bound_proposal.kind == "final":
+                        return terminal_proposal(
+                            turns[turn_index(turn)],
+                            record,
+                            bound_proposal,
+                        )
+                    proposal_error = execute_tool_proposal(
+                        turns[turn_index(turn)],
+                        record,
+                        bound_proposal,
+                        response_envelope.provider_turn_continuation,
+                    )
+                    if proposal_error is not None:
+                        return blocked_result(proposal_error)
+                else:
+                    bound_action = response_envelope.action
+                    if bound_action is None:
+                        raise ValidationError(
+                            "Model response has no proposal, action, or provider error."
+                        )
+                    if bound_action.kind == "final":
+                        return terminal_final(
+                            turns[turn_index(turn)],
+                            record,
+                            bound_action,
+                        )
+                    tool_result = execute_tool_action(
+                        turns[turn_index(turn)],
+                        record,
+                        bound_action,
+                        response_envelope.provider_continuation,
+                    )
+                    if tool_result is not None and is_uncertain_checkpoint(tool_result):
+                        return failed_result(tool_result.error)
                 next_sequence = max(next_sequence, turn.sequence + 1)
 
             termination = TerminationState(

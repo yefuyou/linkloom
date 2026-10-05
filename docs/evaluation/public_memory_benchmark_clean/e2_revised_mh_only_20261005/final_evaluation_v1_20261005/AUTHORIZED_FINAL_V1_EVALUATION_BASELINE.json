@@ -1,0 +1,246 @@
+{
+  "authorized_run": {
+    "cell": "mh_6k",
+    "formal_global_hard_cap_usd": 30.0,
+    "generation_attempt_limit": 3,
+    "gold_unlock": "all method lifecycles terminal; at least 95% scored coverage per method and paired coverage; journal, evidence, outputs, fingerprints, subset identity, and cost pass",
+    "method_case_count": 184,
+    "method_order": [
+      "Flat Retrieval",
+      "LinkLoom Temporal Memory"
+    ],
+    "qa_count": 92,
+    "scoring_protocol": "E2_SCORE_PROTOCOL.json exact-match denominator plus FINAL_EVALUATION_POLICY_V1.json coverage and criticality amendment",
+    "single_run_hard_cap_usd": 10.0
+  },
+  "baseline_id": "AUTHORIZED_FINAL_V1_EVALUATION_BASELINE",
+  "budget": {
+    "available_before_run_reservation_usd": 29.662038,
+    "formal_budget_ledger_sha256": "05db6eef46ef773be82d80bd214eddec6e645d3af3201145de0555e5d35d0ef4",
+    "global_hard_cap_usd": 30.0,
+    "historical_formal_spend_upper_bound_usd": 0.337962,
+    "single_run_hard_cap_usd": 10.0
+  },
+  "case_local_block_count_hard_limit": null,
+  "changed_files": [
+    "scripts/run_public_memory_clean_eval.py",
+    "scripts/audit_public_memory_clean_eval_guards.py",
+    "tests/unit/test_public_memory_e2_usage_policy.py",
+    "tests/unit/test_public_memory_profile.py"
+  ],
+  "coverage_gate_is_only_case_local_scoreability_limit": true,
+  "created_at_utc": "2026-10-05T07:13:55.598563+00:00",
+  "criticality_policy_id": "FINAL_MH_ONLY_CRITICALITY_V1",
+  "criticality_policy_sha256": "01b1f01b893de0457e7c4901e2e0e17a10c391c5f1514ed5c2a95e68676f8096",
+  "current_frozen_subset": {
+    "method_case_count": 184,
+    "path": "e2_revised_mh_only_20261005/E2_SUBSET_MANIFEST.json",
+    "prior_generation_overlap": [],
+    "question_count": 92,
+    "subset_sha256": "71ca01835b2989a865ec048fa8b3236188de6f68c617affe393fc3dd04153089"
+  },
+  "evaluation_plan_id": "MH_ONLY_REVISED_HELDOUT_E2_V1",
+  "evaluation_plan_registry_sha256": "7b10a5d338e3c5830416e562c0b908456fe3a50cd1a59f7fe90645d7f1071a32",
+  "evaluation_plan_sha256": "422a24aa6007d2fe385d8442d673380023457a7942adf406a1969f1deb170614",
+  "fingerprints": {
+    "files": {
+      "benchmarks/memoryagentbench/adapter.py": "8b491e1d06b66482de55d713e39ee4cea3c6f97cf6abd1da32f28c98dd7f6ef7",
+      "benchmarks/memoryagentbench/g32_heldout.py": "74928f83dcb1254de9362032137bbb7610cbec80f4d2a1a5e1f61ddc8f22eb30",
+      "benchmarks/memoryagentbench/g3_pilot.py": "22064c6650c0cee5aa1811fc766acb297578df322f3c8e8c48170d0ecc605c6c",
+      "benchmarks/memoryagentbench/memory.py": "f8d47c9083dcc847f27f23ab5bdc1b54a569ca87cbaa956e4d8b72c5880ed815",
+      "benchmarks/memoryagentbench/public_memory_profile.py": "6aefc14ca6aecc5b1bbda70076a6cfc03dd0496371481a45b5d8de1b600a3ae9",
+      "docs/evaluation/public_memory_benchmark_clean/evaluation_plan_registry.json": "7b10a5d338e3c5830416e562c0b908456fe3a50cd1a59f7fe90645d7f1071a32",
+      "scripts/run_public_memory_clean_eval.py": "3d84ef88836bad77a0a5313edbb31d24e6442c2da6df33b9dd417c94de926b04",
+      "src/linkloom/agents/__init__.py": "65b71f620e0cbfec4f13eddfbc90cb6c6678ccae625377a10d12d64321fc803b",
+      "src/linkloom/agents/providers/gemini_api.py": "d8895976252a9d5984e99f87ebc79d0867f54c0b1fd7d385c19207ef1e50b440",
+      "src/linkloom/agents/providers/retry_policy.py": "76b53e9682e8b46cbc26b5fb88735f103cfdf160dc12b430ac3870dae7cbe3f0",
+      "src/linkloom/agents/team_decision.py": "83b2dd691fc3b6e30f46f89b4b19cfb67499c2ecc33d9d1cd0a39774be4244b8",
+      "src/linkloom/context/__init__.py": "7af18bec40b665403d6b2cd3be23a1ae72fd6e311c2954ec1916e2a8df0ce571",
+      "src/linkloom/context/assembler.py": "d4710de45227b20b3f6db2c816c87ca655ca500763aa967853c977e134778c54",
+      "src/linkloom/context/manifest.py": "173c16dce9ef61cde2fb94552e60ab3d3829f6a75b121cf2a6fe64bf99b3da5b",
+      "src/linkloom/context/models.py": "352257db7f054a67c3451ce08c94c3e8f92d66974133f73a4836a766e37a03b6",
+      "src/linkloom/decision_memory/__init__.py": "0ff767dd2436ccd465f4ebfa1d758e6dc1674d21599598360070decda9be33b0",
+      "src/linkloom/decision_memory/materialization.py": "af18360fd89086e961f25707cea353aa9703bed03a0d60fadcce3548d8531d61",
+      "src/linkloom/decision_memory/models.py": "7528a90f90ded8951ce4a3ee139de2170ac12dc5fc49224914877d73619d14de",
+      "src/linkloom/decision_memory/policy.py": "710bdaaee9c2be40091cc54d1237f8c8ebb9b91882700f2a81eb402f2275c25d",
+      "src/linkloom/decision_memory/reconciliation.py": "866fd84d88d122474b3805c319cd49e8d8ea23b90fda791d37051105d3d5875a",
+      "src/linkloom/decision_memory/sources.py": "b83d3061bc40f5efe03f4304cdd2ff56cdc5e4f77736e8114a00f7ff0e5c1afb",
+      "src/linkloom/decision_memory/store.py": "763e4541d37df3ecece5a68d9e4596bacad34d74c560dac02dfedea6a9797ebd",
+      "src/linkloom/decision_memory/tool.py": "7ed1343f9eb55024b83311f0c72d8888efc762147da64d1532b874a0b000027f",
+      "src/linkloom/experience/__init__.py": "f39e3784e42b30a265f379fe6ed07d683a91aa3eb8e70416964ac8a7a06117a9",
+      "src/linkloom/experience/context.py": "1b6d438cdadc0a66636148e2eb49f7aa5709509ed0ca951cd3fb03ed52060c85",
+      "src/linkloom/experience/models.py": "ad63f22e3d3d096e7a961eef19ebe73ad21929ed78e1e655d43a62e7e2379724",
+      "src/linkloom/indexing/__init__.py": "daca624cfe1d49f7ca3fed0adafa5b24de972bd308c2ac0ecd00aa01c3ec5140",
+      "src/linkloom/indexing/bm25.py": "3ea1ff26ff656b481725606c68d869bd17b4e204539b413fdeca9d4697253b72",
+      "src/linkloom/indexing/models.py": "d2db66c85a0a54f1ba5d5f963baa26c652a27ef78dabbf48abdb080f6993b1a5",
+      "src/linkloom/retrieval_v2/models.py": "ce0e43ac2e106db7658134aa86a88607e04cd4c8c02b2d1ff2daff2713e89c50",
+      "src/linkloom/runtime/errors.py": "530b65c6ce0239a953f088538eaa2a0596f6770b6cf57156e15950bac193ed06",
+      "src/linkloom/runtime/models.py": "f09e3581006044e2ada32f1a5d159867fbae19e374b52572d082502f4df0ee3b",
+      "tests/smoke/test_m12_real_provider_team_decision_smoke.py": "99122b599722ee880988c66f38951517e8863f0d76a4a4e366c4b52d17e5bf9a",
+      "tests/smoke/transport_observability.py": "e460f37ed4ce3a697b7472840c0a8cdf0b05b11b4c1bf699c24465a35c8ecbcc"
+    },
+    "files_sha256": "f5c3693f65b586bda11cf920325942d89966f0dde9513e3ca44d2f67628c9e57",
+    "runtime_config": {
+      "input_usd_per_million": 0.75,
+      "max_attempts_per_logical_generation": 3,
+      "methods": [
+        "Flat Retrieval",
+        "LinkLoom Temporal Memory"
+      ],
+      "model": "gemini-3.8-flash",
+      "output_token_cap": 512,
+      "output_usd_per_million": 3.75,
+      "pricing_snapshot_date": "2026-09-26",
+      "sdk_version": "2.22.0",
+      "system_instruction": "Answer the MemoryAgentBench FactConsolidation question using only the provided facts. Facts are numbered in source order; when statements conflict, a larger serial number is newer. Return only the answer, with no explanation. If the provided context does not contain the answer, say I don't know.",
+      "temperature": 0.0
+    },
+    "runtime_config_sha256": "42b3e32fe783ff2876e64a9dbfb79d68d8fc922d9aec6dde830d34c27a1558d5"
+  },
+  "historical_evidence": {
+    "e1_1_baseline_sha256": "29b9fd4ca6068fd63f6e5cac4024420b47e1e5c032b452a39b499e43a7548724",
+    "e2_r11_baseline_sha256": "2fdf6055bf13f4f6a7c516f4ba206e8bf773b9ce6896086dc891452171d248de",
+    "excluded_prior_generation_qa_ids": [
+      "factconsolidation_mh_6k_no0",
+      "factconsolidation_mh_6k_no1",
+      "factconsolidation_mh_6k_no2",
+      "factconsolidation_mh_6k_no3",
+      "factconsolidation_mh_6k_no4",
+      "factconsolidation_mh_6k_no5",
+      "factconsolidation_mh_6k_no6",
+      "factconsolidation_mh_6k_no7"
+    ],
+    "h3_1_reconciliation_sha256": "7b65fc08e6800d273d47cf929aef2590d953319f137c5e36d7cdf7d932aeb707",
+    "prior_generation_overlap": [],
+    "stopped_e1_1_run_id": "3474a8eefe3e4a48b41b8b1d503399b0",
+    "zero_provider_stopped_e2_run_id": "22c4ba5ca95a4890998aee1d68a69553"
+  },
+  "historical_plan_preserved": {
+    "legacy_sh_first_plan_retained": true,
+    "old_100_qa_selection_retained_as_history": true,
+    "plan_id": "MH_ONLY_CLEAN_V1"
+  },
+  "live_execution_authorized": true,
+  "method_case_count": 184,
+  "minimum_paired_coverage": 0.95,
+  "minimum_scored_coverage_per_method": 0.95,
+  "predecessor": {
+    "baseline_id": "AUTHORIZED_E2_MH_ONLY_BASELINE",
+    "failed_live_run_id": "22c4ba5ca95a4890998aee1d68a69553",
+    "failed_live_run_provider_requests": {
+      "count_tokens": 0,
+      "generation": 0
+    },
+    "path": "requalification_166f8bf8_r11/AUTHORIZED_E2_MH_ONLY_BASELINE.json",
+    "sha256": "2fdf6055bf13f4f6a7c516f4ba206e8bf773b9ce6896086dc891452171d248de"
+  },
+  "qualification_artifacts": {
+    "E2_SCORE_PROTOCOL.json": {
+      "identity": "e2-score-protocol",
+      "path": "E2_SCORE_PROTOCOL.json",
+      "seal_sha256": "9c13c4c5a2dcd98b6549566d2ed56ccb8d020330d29a627f974fd699ca4d2ca1",
+      "sha256": "67c2ce8e9c2dd9f9b5816a734ab56a58a6f9882fe50b1c442dc7e959b82650b8"
+    },
+    "E2_SUBSET_MANIFEST.json": {
+      "identity": "e2-revised-heldout-subset",
+      "path": "E2_SUBSET_MANIFEST.json",
+      "seal_sha256": "1db2d8e0e2af22dbb8551942db425f9d003e797b684ede17c6ce9091b47840d2",
+      "sha256": "3273ada86bc257f8e39eab0a045668044274f0bae6bd67ba70559511b274fda8"
+    },
+    "FINAL_EVALUATION_POLICY_V1.json": {
+      "identity": "final-evaluation-policy-v1",
+      "path": "FINAL_EVALUATION_POLICY_V1.json",
+      "seal_sha256": "5899def1fa87bdb409cf317d623aadd39b8e9a79f905dbaa9d321e32a9df7dd0",
+      "sha256": "01b1f01b893de0457e7c4901e2e0e17a10c391c5f1514ed5c2a95e68676f8096"
+    },
+    "budget_reconciliation_snapshot.json": {
+      "identity": "e2-budget-reconciliation",
+      "path": "budget_reconciliation_snapshot.json",
+      "seal_sha256": "471e579063b2b856928e449ac06f42233146832e392b9969238cbc5d2542b274",
+      "sha256": "ec958597a434f0d0bbd968d62ea04f77f93f12ad896cd2a0347754a652ba837d"
+    },
+    "focused_tests.xml": {
+      "identity": "e2-focused-tests",
+      "path": "focused_tests.xml",
+      "seal_sha256": "b3fb201504aa6cb483e4047578e023781e520353b67f37b4e448d5d7fe7341f1",
+      "sha256": "24539469078261e18f461c3572ad1b3e39447f5ddab29491d32e6fb30054cab7"
+    },
+    "formal_budget_ledger.json": {
+      "identity": "e2-formal-budget-ledger",
+      "path": "formal_budget_ledger.json",
+      "seal_sha256": "bc8edfbc5bf7b2853da31fbc200b5cf6b72de223f5df096269da176d799fbb2e",
+      "sha256": "433fc609a30eac72feea18b582a5e8acf9e9c370d824bd1e2daeeb44b7aa8d48"
+    },
+    "formal_fake_provider_e2e.json": {
+      "identity": "e2-formal-fake-provider-e2e",
+      "path": "formal_fake_provider_e2e.json",
+      "seal_sha256": "69afeb30ca2d4e1c2422977cb35b328b4d2091e6834e51d227385504b395d65f",
+      "sha256": "63cf5c51dd3ecd2c0e0bd86df6e2e1039c076b9e9d407ed25d37da78685751c1"
+    },
+    "formal_live_path_rehearsal.json": {
+      "identity": "final-evaluation-formal-path-rehearsal",
+      "path": "formal_live_path_rehearsal.json",
+      "seal_sha256": "7f9a4380fc575297a7d0d4791e66c2bc1dd7cddaf826a2cd9e146b1a5c961322",
+      "sha256": "3e04efe783e0e5764f8905e095b95b451ef0c273359f0dd9960c05905ecce8f2"
+    },
+    "formal_rehearsal_budget_ledger.json": {
+      "identity": "formal-rehearsal-budget-ledger",
+      "path": "formal_rehearsal_budget_ledger.json",
+      "seal_sha256": "65c99d01f727beaa4ae080e4782475067411d7bb6f801158897f82fe5ab8b8ba",
+      "sha256": "a882d54781f8c505558c459a5bc0ab17726723f67dfe06e8545c505a06386640"
+    },
+    "guard_criticality_inventory.json": {
+      "identity": "final-evaluation-guard-criticality-inventory",
+      "path": "guard_criticality_inventory.json",
+      "seal_sha256": "ac9de012ea1940002e6f217f296bd7688d128d22bc5ab7f409ad7a3ab7a6d185",
+      "sha256": "f4db32d83167c3786eada425d30da8d275d6d196d7df89af96deeffc03935e17"
+    },
+    "mh_6k_preflight.json": {
+      "identity": "offline-preflight:mh_6k",
+      "path": "mh_6k_preflight.json",
+      "seal_sha256": "567acdea17164362fad23d40a422df0b7bf392509219b7b4f63f03f941e31745",
+      "sha256": "5ea061603d02b9bd7a3e29da723d340cae59b8cff241de1ccea2af9473a9d597"
+    },
+    "offline_qualification.json": {
+      "identity": "e2-offline-qualification",
+      "path": "offline_qualification.json",
+      "seal_sha256": "9ec40ff1212f0cde29009ca8dd94f8c71f911f3565d4f1ec66258d03ec4555da",
+      "sha256": "1ef0a22ff483d445cdc7e254889ee12a43dc748f909ea8d7aa0d8e7b04b85d79"
+    },
+    "reviewer_verdict.json": {
+      "identity": "e2-independent-reviewer",
+      "path": "reviewer_verdict.json",
+      "seal_sha256": "548e43ba14484b7aeb7aaacd40ab25a6c734a113616b1f20417c4e7942acb7d2",
+      "sha256": "e087ca7b6b56ad2a3fd57e605c7b2e83533b687d02a1992825b8f2ed5f7423c0"
+    },
+    "route_preflight.json": {
+      "identity": "e2-route-preflight",
+      "path": "route_preflight.json",
+      "seal_sha256": "c2647328965851bc5e5ed89d1fb8f5385100c1d3e1e4c8b90a9efdb54150a28c",
+      "sha256": "16374c93246b5faa011fad3d45a9b9b1bdfaf26ad1985b21f66259312c4be6cc"
+    },
+    "semantic_equivalence.json": {
+      "identity": "e2-semantic-equivalence",
+      "path": "semantic_equivalence.json",
+      "seal_sha256": "4db9000edf9f8c481b2188642b5a5cb4a7366830e9dee075a1c50ad5d241b216",
+      "sha256": "e6fbeb88e830cb2af98f00940a7202216e61262d9452f67af4e70f5f62e652c9"
+    },
+    "validation_regression.xml": {
+      "identity": "e2-canonical-regression",
+      "path": "validation_regression.xml",
+      "seal_sha256": "d5d9e5b1aa078c3eca87e390b14f170c3a6a51e50b7c57e8a1b9ae30905bd91a",
+      "sha256": "b9c8584c464cdfc265ab06dd34fed5e093e511a41348747daecf77c2ecd90230"
+    }
+  },
+  "question_count": 92,
+  "revision_reason": "E2 failed before any generation or CountTokens request because its active manifest omitted the frozen subset hash. The zero-request stopped run is independently verified and consumes no QA; this final V1 baseline retains the existing 92-QA frozen subset.",
+  "schema_version": "linkloom-authorized-final-evaluation-baseline/v1",
+  "semantic_invariants": {
+    "dataset_and_subset_unchanged": true,
+    "gemini_generation_request_semantics_unchanged": true,
+    "memory_retrieval_adapter_prompt_unchanged": true,
+    "scoring_algorithm_and_fixed_denominator_unchanged": true
+  },
+  "status": "AUTHORIZED_FINAL_V1_EVALUATION_BASELINE",
+  "subset_sha256": "71ca01835b2989a865ec048fa8b3236188de6f68c617affe393fc3dd04153089"
+}

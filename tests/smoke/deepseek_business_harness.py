@@ -15,6 +15,7 @@ from uuid import uuid4
 
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.runtime.artifacts import ModelArtifactStore
+from linkloom.runtime.checkpoint import SQLiteCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
 from linkloom.scanner import scan_vault
@@ -254,6 +255,353 @@ def _run_case(
     return case_root
 
 
+def _assert_provider_failure_state(case: BusinessCase, state: Any) -> None:
+    """Require the narrow terminal shape accepted by offline failure sealing."""
+    if state.status not in _TERMINAL_RUNTIME_STATUSES or state.status != "failed":
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+    if state.termination is None or state.termination.status != "failed":
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+    records = list(state.model_executions)
+    if not records:
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+    failed_record = records[-1]
+    provider_error = failed_record.provider_error
+    if (
+        failed_record.status != "failed"
+        or not isinstance(provider_error, dict)
+        or provider_error.get("code") != "MODEL_TRANSIENT_FAILURE"
+        or provider_error.get("outcome") != "unknown_provider_outcome"
+        or failed_record.normalized_action is not None
+        or failed_record.normalized_proposal is not None
+    ):
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+    expected_tool_calls = 0
+    for record in records[:-1]:
+        proposal = record.normalized_proposal
+        calls = proposal.get("tool_calls") if isinstance(proposal, dict) else None
+        if (
+            record.status != "tool_results_durable"
+            or not isinstance(proposal, dict)
+            or proposal.get("kind") != "tool_calls"
+            or not isinstance(calls, list)
+            or not calls
+            or len(record.tool_result_refs) != len(calls)
+            or record.provider_error is not None
+            or record.run_id != state.run_id
+        ):
+            raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+        expected_tool_calls += len(calls)
+    if (
+        failed_record.run_id != state.run_id
+        or state.workflow != "team_decision"
+        or len(state.tool_ledger) != expected_tool_calls
+        or any(
+            ledger_record.status not in {"completed", "failed"}
+            for ledger_record in state.tool_ledger
+        )
+    ):
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+    if case.max_provider_requests < 1 or case.max_model_turns < 1:
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_FAILURE_STATE_INVALID")
+
+
+def _write_failure_run_manifests(
+    run_root: Path,
+    case: BusinessCase,
+    state: Any,
+    thread_id: str,
+) -> None:
+    """Persist a case manifest and a sanitized guard-counter snapshot."""
+    durable_records = list(state.model_executions[:-1])
+    infrastructure_evidence = {
+        "infrastructure_crossed": bool(durable_records),
+        "multi_call_proposal_observed": any(
+            len(record.normalized_proposal.get("tool_calls", [])) > 1
+            for record in durable_records
+        ),
+        "completed_tool_calls": sum(
+            record.status == "completed" for record in state.tool_ledger
+        ),
+        "terminal_tool_calls": len(state.tool_ledger),
+        "next_model_turn_reached": len(state.model_executions) > 1,
+    }
+    parent_manifest_path = run_root / "run_manifest.json"
+    if parent_manifest_path.is_file():
+        parent_manifest = baseline._read_json(parent_manifest_path)
+    else:
+        parent_manifest = {
+            "schema_version": "deepseek-business-run/v1",
+            "case_ids": [case.case_id],
+            "cases": [case.to_public_dict()],
+            "model": MODEL,
+            "thinking": "disabled",
+            "structured_json": True,
+            "semantic_retry_count": 0,
+            "execution_order": [case.case_id],
+        }
+    baseline._write_json(parent_manifest_path, parent_manifest)
+
+    case_root = run_root / case.case_id
+    baseline._write_json(
+        case_root / "run_manifest.json",
+        {
+            "schema_version": "deepseek-business-case-run/v1",
+            "case_id": case.case_id,
+            "workspace_id": case.workspace_id,
+            "run_id": state.run_id,
+            "thread_id": thread_id,
+            "model": MODEL,
+            "thinking": "disabled",
+            "structured_json": True,
+            "semantic_retry_count": 0,
+            "execution_mode": "semantic_retry_zero_transport_unknown",
+            "provider_requests": len(state.model_executions),
+            "model_turns": len(state.model_executions),
+            "tool_calls": len(state.tool_ledger),
+            "terminal_status": state.status,
+            "evidence_mode": "offline_finalize_after_provider_failure",
+            "gold_access_mode": "frozen_dataset_hash_only",
+            "posthoc_evaluation": "not_created",
+            "runtime_evidence": infrastructure_evidence,
+        },
+    )
+    baseline._write_json(
+        case_root / "guard_counters.json",
+        {
+            "schema_version": "deepseek-business-guard-counters/v1",
+            "source": "durable_runtime_state",
+            "case_id": case.case_id,
+            "run_id": state.run_id,
+            "logical_requests": len(state.model_executions),
+            "model_turns": len(state.model_executions),
+            "tool_calls": len(state.tool_ledger),
+            "transport_attempts": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+            "transport_retry_count": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+            "counter_status": "PARTIAL_DURABLE_EVIDENCE",
+            "unknown_reason": (
+                "The original in-process Provider guard did not persist its "
+                "transport counters before the unknown Provider outcome."
+            ),
+            "runtime_evidence": infrastructure_evidence,
+        },
+    )
+
+
+def finalize_unsealed_provider_failure(
+    *,
+    run_root: Path,
+    case_id: str,
+    thread_id: str,
+) -> Path:
+    """Seal a failed Provider-boundary run using local artifacts only.
+
+    This path is intentionally offline: it never constructs a Provider
+    client, reads a credential, semantically loads/evaluates Gold, or writes a
+    post-hoc evaluation. It hash-verifies the frozen dataset to detect drift,
+    then turns an interrupted reporter path into an auditable evidence package
+    while preserving the honest ``unknown`` transport-counter boundary.
+    """
+    if case_id not in CASES:
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_CASE_NOT_ALLOWED")
+    if not isinstance(thread_id, str) or not thread_id.strip():
+        raise SmokeBlocked("DEEPSEEK_BUSINESS_THREAD_ID_INVALID")
+    run_root = Path(run_root).resolve()
+    case = CASES[case_id]
+    case_root = run_root / case_id
+    observed_path = case_root / "observed_summary.json"
+    if observed_path.exists():
+        raise SmokeBlocked("DEEPSEEK_OBSERVED_SUMMARY_ALREADY_EXISTS")
+    source = _verify_case_inputs(case)
+    source_before = baseline._file_hashes(source)
+    vault = case_root / "vault"
+    source_after = baseline._file_hashes(source)
+    copy_after = baseline._file_hashes(vault)
+    if source_after != source_before or copy_after != source_before:
+        raise SmokeBlocked("DEEPSEEK_SYNTHETIC_WORKSPACE_MUTATED")
+    state = SQLiteCheckpointer(case_root / "checkpoints").get_latest(thread_id)
+    if state is None:
+        raise SmokeBlocked("DEEPSEEK_RUNTIME_STATE_UNAVAILABLE")
+    _assert_provider_failure_state(case, state)
+    trace_manifests = list((case_root / "traces").glob("*/manifest.json"))
+    if len(trace_manifests) != 1:
+        raise SmokeBlocked("DEEPSEEK_TRACE_MANIFEST_UNAVAILABLE")
+    trace_manifest = baseline._read_json(trace_manifests[0])
+    if (
+        trace_manifest.get("run_id") != state.run_id
+        or trace_manifest.get("complete") is not False
+        or trace_manifest.get("redaction_policy_version") != "trace-redaction-v1"
+    ):
+        raise SmokeBlocked("DEEPSEEK_TRACE_MANIFEST_INVALID")
+
+    artifact_store = ModelArtifactStore(case_root / "checkpoints" / "models")
+    result = None
+    if state.result_ref:
+        result_path = case_root / "checkpoints" / state.result_ref
+        if result_path.is_file():
+            result = baseline._read_json(result_path)
+    per_turn: list[dict[str, Any]] = []
+    reported_input_tokens = 0
+    reported_output_tokens = 0
+    reported_total_tokens = 0
+    reported_cache_hit_tokens = 0
+    reported_cache_miss_tokens = 0
+    reported_reasoning_tokens = 0
+    durable_response_count = 0
+    for record in state.model_executions:
+        if not record.request_ref or not record.request_sha256:
+            raise SmokeBlocked("DEEPSEEK_DURABLE_MODEL_REQUEST_UNAVAILABLE")
+        request_payload = artifact_store.read(
+            record.request_ref,
+            expected_sha256=record.request_sha256,
+        )
+        raw_request = request_payload.get("model_request")
+        if not isinstance(raw_request, dict):
+            raise SmokeBlocked("DEEPSEEK_DURABLE_MODEL_REQUEST_UNAVAILABLE")
+        request_sha = hashlib.sha256(
+            json.dumps(raw_request, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        usage = record.usage if isinstance(record.usage, dict) else {}
+        metadata = (
+            record.provider_metadata
+            if isinstance(record.provider_metadata, dict)
+            else {}
+        )
+        response_durable = record.provider_error is None
+        input_tokens = (usage.get("input_tokens") or 0) if response_durable else 0
+        output_tokens = (usage.get("output_tokens") or 0) if response_durable else 0
+        total_tokens = (usage.get("total_tokens") or 0) if response_durable else 0
+        cache_hit = (
+            (metadata.get("prompt_cache_hit_tokens") or 0)
+            if response_durable
+            else 0
+        )
+        cache_miss = (
+            metadata.get("prompt_cache_miss_tokens") if response_durable else 0
+        )
+        if cache_miss is None:
+            cache_miss = input_tokens - cache_hit
+        reasoning_tokens = (
+            (metadata.get("reasoning_tokens") or 0) if response_durable else 0
+        )
+        if response_durable:
+            durable_response_count += 1
+            reported_input_tokens += input_tokens
+            reported_output_tokens += output_tokens
+            reported_total_tokens += total_tokens
+            reported_cache_hit_tokens += cache_hit
+            reported_cache_miss_tokens += cache_miss
+            reported_reasoning_tokens += reasoning_tokens
+        per_turn.append(
+            {
+                "logical_request": record.sequence,
+                "reported_input_tokens": input_tokens if response_durable else None,
+                "reported_output_tokens": output_tokens if response_durable else None,
+                "reported_total_tokens": total_tokens if response_durable else None,
+                "reported_cache_hit_tokens": cache_hit if response_durable else None,
+                "reported_cache_miss_tokens": cache_miss if response_durable else None,
+                "reported_reasoning_tokens": reasoning_tokens if response_durable else None,
+                "transport_attempts": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+                "request_sha256": request_sha,
+                "status": "response_durable" if response_durable else "provider_error",
+            }
+        )
+
+    estimated_cost = (
+        Decimal(reported_cache_hit_tokens)
+        * baseline.PEAK_CACHE_HIT_USD_PER_MILLION
+        + Decimal(reported_cache_miss_tokens)
+        * baseline.PEAK_CACHE_MISS_USD_PER_MILLION
+        + Decimal(reported_output_tokens) * baseline.PEAK_OUTPUT_USD_PER_MILLION
+    ) / Decimal(1_000_000)
+    if durable_response_count and estimated_cost > baseline.BUDGET.max_cost_usd:
+        raise SmokeBlocked("DEEPSEEK_REPORTED_COST_BUDGET_EXCEEDED")
+
+    durable_records = list(state.model_executions[:-1])
+    runtime_evidence = {
+        "infrastructure_crossed": bool(durable_records),
+        "multi_call_proposal_observed": any(
+            len(record.normalized_proposal.get("tool_calls", [])) > 1
+            for record in durable_records
+        ),
+        "completed_tool_calls": sum(
+            record.status == "completed" for record in state.tool_ledger
+        ),
+        "terminal_tool_calls": len(state.tool_ledger),
+        "next_model_turn_reached": len(state.model_executions) > 1,
+    }
+
+    _write_failure_run_manifests(run_root, case, state, thread_id)
+    observed = {
+        "schema_version": "deepseek-business-observed/v1",
+        "case_id": case.case_id,
+        "workspace_id": case.workspace_id,
+        "model": MODEL,
+        "thinking": "disabled",
+        "structured_json": True,
+        "semantic_retry_count": 0,
+        "transport_retry_count": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+        "evidence_mode": "offline_finalize_after_provider_failure",
+        "trajectory": baseline._request_observation_summaries(state, artifact_store),
+        "tool_calls": [record.to_dict() for record in state.tool_ledger],
+        "visible_evidence_refs": [],
+        "team_decision_result": None,
+        "runtime_evidence": runtime_evidence,
+        "runtime": {
+            "status": state.status,
+            "termination": state.termination.to_dict() if state.termination else None,
+            "error": state.error.to_dict() if state.error else None,
+            "provider_requests": len(state.model_executions),
+            "transport_attempts": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+            "model_turns": len(state.model_executions),
+            "max_provider_requests": case.max_provider_requests,
+            "max_model_turns": case.max_model_turns,
+        },
+        "usage": {
+            "per_turn": per_turn,
+            "reported_input_tokens": reported_input_tokens,
+            "reported_output_tokens": reported_output_tokens,
+            "reported_total_tokens": reported_total_tokens,
+            "reported_cache_hit_tokens": reported_cache_hit_tokens,
+            "reported_cache_miss_tokens": reported_cache_miss_tokens,
+            "reported_reasoning_tokens": reported_reasoning_tokens,
+            "conservative_input_tokens": None,
+        },
+        "cost": {
+            "estimated_peak_usd": (
+                str(estimated_cost)
+                if durable_response_count
+                else "UNAVAILABLE_AFTER_PROVIDER_FAILURE"
+            ),
+            "hard_ceiling_usd": str(baseline.BUDGET.max_cost_usd),
+            "pricing_basis": (
+                "official peak rates; durable successful response usage only"
+                if durable_response_count
+                else "official peak rates; no successful usage to price"
+            ),
+        },
+        "guard": {
+            "state": "PROVIDER_ERROR_FROM_DURABLE_STATE",
+            "logical_requests": len(state.model_executions),
+            "transport_attempts": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+            "transport_retry_count": "UNAVAILABLE_AFTER_PROVIDER_FAILURE",
+            "counter_provenance": "durable_runtime_state",
+            "budget": {
+                **asdict(baseline.BUDGET),
+                "max_cost_usd": str(baseline.BUDGET.max_cost_usd),
+            },
+        },
+        "source_unchanged": source_before == source_after == copy_after,
+        "gold_accessed": False,
+        "gold_access_mode": "frozen_dataset_hash_only",
+        "gold_semantic_evaluation": False,
+        "posthoc_evaluation": "not_created",
+        "runtime_state": state.to_dict(),
+        "result": deepcopy(result),
+    }
+    baseline._seal_observed(case_root, observed)
+    return case_root
+
+
 def _load_gold_after_seal(case_root: Path, case_id: str) -> dict[str, Any]:
     if case_id not in CASES:
         raise SmokeBlocked("DEEPSEEK_BUSINESS_CASE_NOT_ALLOWED")
@@ -426,5 +774,6 @@ __all__ = [
     "OPT_IN_ENV",
     "SmokeBlocked",
     "evaluate_sealed_case",
+    "finalize_unsealed_provider_failure",
     "run_business_evaluation",
 ]

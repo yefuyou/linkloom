@@ -1,0 +1,63 @@
+{
+  "plans": {
+    "MH_ONLY_CLEAN_V1": {
+      "dataset_sequence": [
+        "mh_6k"
+      ],
+      "diagnostic_classification": "SH_32K:DIAGNOSTIC_STRESS_SET",
+      "historical_predecessor": {
+        "baseline_sha256": "65185ab09da0f6bdecf0a13996bb0d51ae3deab4d78baab943ddb8e0f794101f",
+        "plan_id": "SH32K_THEN_MH6K_V3"
+      },
+      "mh_prerequisites": [],
+      "plan_id": "MH_ONLY_CLEAN_V1",
+      "status": "ACTIVE"
+    },
+    "MH_ONLY_REVISED_HELDOUT_E2_V1": {
+      "dataset_sequence": [
+        "mh_6k"
+      ],
+      "diagnostic_classification": "SH_32K:DIAGNOSTIC_STRESS_SET",
+      "global_hard_cap_usd": 30.0,
+      "method_case_count": 184,
+      "mh_prerequisites": [],
+      "plan_id": "MH_ONLY_REVISED_HELDOUT_E2_V1",
+      "question_count": 92,
+      "revision_classification": "REVISED_HELDOUT_AFTER_STOPPED_E1_1",
+      "run_hard_cap_usd": 10.0,
+      "score_protocol": {
+        "path": "e2_revised_mh_only_20261005/E2_SCORE_PROTOCOL.json",
+        "sha256": "67c2ce8e9c2dd9f9b5816a734ab56a58a6f9882fe50b1c442dc7e959b82650b8"
+      },
+      "source_plan_id": "MH_ONLY_CLEAN_V1",
+      "status": "ACTIVE",
+      "subset_manifest": {
+        "path": "e2_revised_mh_only_20261005/E2_SUBSET_MANIFEST.json",
+        "sha256": "3273ada86bc257f8e39eab0a045668044274f0bae6bd67ba70559511b274fda8"
+      },
+      "subset_sha256": "71ca01835b2989a865ec048fa8b3236188de6f68c617affe393fc3dd04153089"
+    },
+    "SH32K_THEN_MH6K_V3": {
+      "dataset_sequence": [
+        "sh_32k",
+        "mh_6k"
+      ],
+      "diagnostic_classification": "SH_32K:DIAGNOSTIC_STRESS_SET",
+      "historical_baseline": {
+        "path": "authorized_execution_v3/AUTHORIZED_EXECUTION_BASELINE_V3.json",
+        "seal_identity": "authorized-execution-baseline-v3",
+        "sha256": "65185ab09da0f6bdecf0a13996bb0d51ae3deab4d78baab943ddb8e0f794101f"
+      },
+      "mh_prerequisites": [
+        {
+          "cell": "sh_32k",
+          "fingerprint_must_match": true,
+          "minimum_completed_runs": 1
+        }
+      ],
+      "plan_id": "SH32K_THEN_MH6K_V3",
+      "status": "HISTORICAL"
+    }
+  },
+  "schema_version": "linkloom-public-memory-evaluation-plan-registry/v1"
+}

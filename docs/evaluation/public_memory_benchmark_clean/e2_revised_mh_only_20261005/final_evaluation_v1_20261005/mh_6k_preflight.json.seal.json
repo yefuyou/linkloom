@@ -1,0 +1,7 @@
+{
+  "identity": "offline-preflight:mh_6k",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:00:50.777201+00:00",
+  "sha256": "5ea061603d02b9bd7a3e29da723d340cae59b8cff241de1ccea2af9473a9d597"
+}

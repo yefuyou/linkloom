@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from dataclasses import replace
+import time
 from typing import Protocol
 
 from linkloom.indexing import BM25Index, DirectoryIndex, VectorIndex
@@ -40,6 +41,7 @@ class CurrentRetriever:
             query.query,
             documents,
             max_results=max(query.top_k * 20, query.top_k),
+            workspace_id=query.workspace_id,
         )
         results: list[RetrievedEvidence] = []
         seen_paths: set[str] = set()
@@ -73,29 +75,37 @@ class CurrentRetriever:
 class BM25Retriever:
     def __init__(self, index: BM25Index) -> None:
         self.index = index
+        self.last_search_ms = 0.0
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
+        started = time.perf_counter()
         hits = self.index.search(
             query.query,
             workspace_id=query.workspace_id,
             top_k=query.top_k,
             scope_path=query.optional_scope_path,
         )
-        return _map_index_hits(hits, "bm25")
+        results = _map_index_hits(hits, "bm25")
+        self.last_search_ms = (time.perf_counter() - started) * 1000.0
+        return results
 
 
 class DenseRetriever:
     def __init__(self, index: VectorIndex) -> None:
         self.index = index
+        self.last_search_ms = 0.0
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
+        started = time.perf_counter()
         hits = self.index.search(
             query.query,
             workspace_id=query.workspace_id,
             top_k=query.top_k,
             scope_path=query.optional_scope_path,
         )
-        return _map_index_hits(hits, "dense")
+        results = _map_index_hits(hits, "dense")
+        self.last_search_ms = (time.perf_counter() - started) * 1000.0
+        return results
 
 
 class HybridRetriever:
@@ -107,13 +117,23 @@ class HybridRetriever:
     def __init__(self, lexical: Retriever, dense: Retriever) -> None:
         self.lexical = lexical
         self.dense = dense
+        self.last_stage_timings_ms: dict[str, float] = {}
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
         candidate_query = replace(query, top_k=self.candidate_k)
-        channel_hits = {
-            "bm25": self.lexical.retrieve(candidate_query),
-            "dense": self.dense.retrieve(candidate_query),
-        }
+        bm25_started = time.perf_counter()
+        bm25_hits = self.lexical.retrieve(candidate_query)
+        bm25_ms = (time.perf_counter() - bm25_started) * 1000.0
+        dense_started = time.perf_counter()
+        dense_hits = self.dense.retrieve(candidate_query)
+        dense_total_ms = (time.perf_counter() - dense_started) * 1000.0
+        vector_index = getattr(self.dense, "index", None)
+        embedding_query_ms = float(getattr(vector_index, "last_query_embedding_ms", 0.0))
+        embedding_model_load_ms = float(
+            getattr(vector_index, "last_query_model_load_ms", 0.0)
+        )
+        channel_hits = {"bm25": bm25_hits, "dense": dense_hits}
+        fusion_started = time.perf_counter()
         fused: dict[str, dict[str, object]] = {}
         for channel, hits in channel_hits.items():
             for channel_rank, hit in enumerate(hits, start=1):
@@ -122,6 +142,11 @@ class HybridRetriever:
                     identity,
                     {"hit": hit, "score": 0.0, "channel_ranks": {}, "channel_scores": {}},
                 )
+                if row["hit"] is not hit and not _same_identity(row["hit"], hit):
+                    raise ValueError(
+                        "retrieval channels returned conflicting source identities "
+                        f"for evidence_id {identity}"
+                    )
                 row["score"] = float(row["score"]) + 1.0 / (self.rrf_k + channel_rank)
                 row["channel_ranks"][channel] = channel_rank  # type: ignore[index]
                 row["channel_scores"][channel] = hit.score  # type: ignore[index]
@@ -158,6 +183,19 @@ class HybridRetriever:
                     metadata=metadata,
                 )
             )
+        fusion_ms = (time.perf_counter() - fusion_started) * 1000.0
+        self.last_stage_timings_ms = {
+            "bm25_ms": bm25_ms,
+            "embedding_query_ms": embedding_query_ms,
+            # Keep query-time loading separate from the cold document-index
+            # model load recorded by RuntimeRetrievalBackend._ensure_indexes.
+            "query_embedding_model_load_ms": embedding_model_load_ms,
+            "dense_search_ms": max(
+                0.0,
+                dense_total_ms - embedding_query_ms - embedding_model_load_ms,
+            ),
+            "fusion_ms": fusion_ms,
+        }
         return results
 
 
@@ -174,14 +212,27 @@ class DirectoryAwareHybridRetriever:
         self.hybrid = hybrid
         self.directories = directories
         self.enabled = enabled
+        self.last_stage_timings_ms: dict[str, float] = {}
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
+        directory_started = time.perf_counter()
+        scope = None
         if not self.enabled or query.optional_scope_path is not None:
-            return self.hybrid.retrieve(query)
-        scope = self._select_scope(query)
+            directory_ms = (time.perf_counter() - directory_started) * 1000.0
+            hits = self.hybrid.retrieve(query)
+        else:
+            scope = self._select_scope(query)
+            directory_ms = (time.perf_counter() - directory_started) * 1000.0
+            if scope is None:
+                hits = self.hybrid.retrieve(query)
+            else:
+                hits = self.hybrid.retrieve(replace(query, optional_scope_path=scope))
+        self.last_stage_timings_ms = {
+            **self.hybrid.last_stage_timings_ms,
+            "directory_ms": directory_ms,
+        }
         if scope is None:
-            return self.hybrid.retrieve(query)
-        hits = self.hybrid.retrieve(replace(query, optional_scope_path=scope))
+            return hits
         return [
             replace(hit, metadata={**hit.metadata, "directory_scope": scope})
             for hit in hits
@@ -241,7 +292,25 @@ def _map_index_hits(
             rank=rank,
             retrieval_channel=channel,
             resource_id=hit.resource_id,
-            metadata=dict(hit.metadata),
+            metadata={**hit.metadata, "workspace_id": hit.workspace_id},
         )
         for rank, hit in enumerate(hits, start=1)
     ]
+
+
+def _same_identity(left: RetrievedEvidence, right: RetrievedEvidence) -> bool:
+    """Whether duplicate IDs from channels refer to the same immutable item."""
+    identity_fields = (
+        "workspace_id",
+        "content_hash",
+        "content_sha256",
+        "line_start",
+        "line_end",
+        "quote_sha256",
+    )
+    return (
+        left.source_ref == right.source_ref
+        and left.logical_path == right.logical_path
+        and left.resource_id == right.resource_id
+        and all(left.metadata.get(key) == right.metadata.get(key) for key in identity_fields)
+    )

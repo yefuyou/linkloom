@@ -1,0 +1,30 @@
+{
+  "active_run_id": null,
+  "budget_scope": "DIAGNOSTIC_TASK",
+  "hard_cap_usd": 10.0,
+  "ledger_sha256": "56fd492718be195a93e5fa88b4e957fccc13266e82182ca9507859da7f705125",
+  "runs": [
+    {
+      "cell": "sh_32k",
+      "estimated_spend_upper_bound_usd": 0.3528855,
+      "hard_cost_cap_usd": 6.0,
+      "implementation_fingerprint_sha256": "f61fd710e8a691b3bac7f85fe0ea6b262a3b63f14537145f770a877b4fdff781",
+      "preflight_sha256": "3ae5f1c93f5b532684e7c569554ca2986da4866efb21fdddb1448b05515fd2ea",
+      "reserved_usd": 0.0,
+      "run_id": "9196f297751641e49517148d0ef4d7d7",
+      "scored_results_sha256": null,
+      "status": "PROVIDER_COMPLETION_BELOW_80_PERCENT"
+    },
+    {
+      "cell": "sh_32k",
+      "estimated_spend_upper_bound_usd": 0.8019,
+      "hard_cost_cap_usd": 6.0,
+      "implementation_fingerprint_sha256": "089f8bf088ffc9772bd8b042527bb49df954794e7ff7dba7de977e91f7ba5b17",
+      "preflight_sha256": "40947fa51cfce69a0cec72d49fa81f4bebb51678dcd8c5af51cee9a4eafe11c3",
+      "reserved_usd": 0.0,
+      "run_id": "bc850e0cfe4745d79117660dd5a74367",
+      "status": "HARNESS_STRESS_PASS"
+    }
+  ],
+  "schema_version": "linkloom-public-memory-global-budget/v1"
+}

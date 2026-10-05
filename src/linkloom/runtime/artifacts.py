@@ -18,7 +18,9 @@ from linkloom.runtime.models import (
 )
 
 
-ARTIFACT_KINDS = frozenset({"request", "response", "observation", "tool_definitions"})
+ARTIFACT_KINDS = frozenset(
+    {"request", "response", "observation", "tool_definitions", "tool_result"}
+)
 _SAFE_SEGMENT = re.compile(r"[^A-Za-z0-9_.-]+")
 
 
@@ -184,6 +186,27 @@ class ModelArtifactStore:
             f"model/{self.safe_segment(run_id)}/{self.safe_segment(turn_id)}/observation.json",
             payload,
             kind="observation",
+        )
+
+    def write_tool_result(
+        self,
+        run_id: str,
+        turn_id: str,
+        ordinal: int,
+        runtime_call_id: str,
+        payload: dict[str, Any],
+    ) -> ArtifactRef:
+        """Write one deterministic, explicitly typed V2 ToolResult artifact."""
+        if isinstance(ordinal, bool) or not isinstance(ordinal, int) or ordinal < 0:
+            raise ValidationError("ToolResult artifact ordinal must be non-negative.")
+        return self.write(
+            (
+                f"model/{self.safe_segment(run_id)}"
+                f"/{self.safe_segment(turn_id)}/tool-results"
+                f"/{ordinal:02d}-{self.safe_segment(runtime_call_id)}.json"
+            ),
+            payload,
+            kind="tool_result",
         )
 
 

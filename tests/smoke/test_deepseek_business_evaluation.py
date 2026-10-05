@@ -7,6 +7,7 @@ import inspect
 import json
 import os
 from pathlib import Path
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
@@ -281,6 +282,40 @@ def test_observed_bounds_reject_nonterminal_or_over_budget_results() -> None:
 
     with pytest.raises(harness.SmokeBlocked, match="NONTERMINAL_RESULT"):
         harness._assert_observed_bounds(observed, case)
+
+
+def test_provider_failure_validator_accepts_durable_multi_tool_prefix_before_final_transient() -> None:
+    case = harness.CASES["aer-002"]
+    completed = SimpleNamespace(
+        status="tool_results_durable",
+        normalized_proposal={
+            "kind": "tool_calls",
+            "tool_calls": [{"provider_call_id": "a"}, {"provider_call_id": "b"}],
+        },
+        tool_result_refs=[{"ordinal": 0}, {"ordinal": 1}],
+        provider_error=None,
+        run_id="run-crossed",
+    )
+    failed = SimpleNamespace(
+        status="failed",
+        normalized_action=None,
+        normalized_proposal=None,
+        provider_error={
+            "code": "MODEL_TRANSIENT_FAILURE",
+            "outcome": "unknown_provider_outcome",
+        },
+        run_id="run-crossed",
+    )
+    state = SimpleNamespace(
+        status="failed",
+        termination=SimpleNamespace(status="failed"),
+        model_executions=[completed, failed],
+        tool_ledger=[SimpleNamespace(status="completed") for _ in range(2)],
+        run_id="run-crossed",
+        workflow="team_decision",
+    )
+
+    harness._assert_provider_failure_state(case, state)
 
 
 @pytest.mark.skipif(

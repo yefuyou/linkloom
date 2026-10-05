@@ -1,0 +1,41 @@
+{
+  "artifact_manifest_status": "PASS",
+  "checks": {
+    "all_manifest_identity_fields_present": true,
+    "count_tokens_requests_zero": true,
+    "expected_pre_provider_stop": true,
+    "finalizer_returned": true,
+    "first_case_initialized": true,
+    "formal_ledger_unchanged": true,
+    "gold_reads_zero": true,
+    "provider_generation_requests_zero": true,
+    "run_artifact_manifest_pass": true,
+    "score_gate_stayed_locked": true,
+    "shadow_reservation_released": true
+  },
+  "classification": "OFFLINE_FORMAL_PATH_REHEARSAL_NO_PROVIDER_NO_GOLD",
+  "created_at_utc": "2026-10-05T07:06:23.497707+00:00",
+  "finalizer_status": "STOPPED",
+  "formal_budget_ledger_sha256_after": "05db6eef46ef773be82d80bd214eddec6e645d3af3201145de0555e5d35d0ef4",
+  "formal_budget_ledger_sha256_before": "05db6eef46ef773be82d80bd214eddec6e645d3af3201145de0555e5d35d0ef4",
+  "gold_values_read": false,
+  "manifest_fields": {
+    "baseline_fingerprint": true,
+    "dataset_revision": true,
+    "dataset_sha256": true,
+    "evaluation_plan_id": true,
+    "runtime_config_fingerprint": true,
+    "subset_sha256": true
+  },
+  "policy_id": "FINAL_MH_ONLY_CRITICALITY_V1",
+  "primary_stop_reason": "FORMAL_LIVE_PATH_REHEARSAL_STOP_BEFORE_PROVIDER",
+  "provider_calls": {
+    "count_tokens": 0,
+    "generation": 0
+  },
+  "run_artifact_path": "formal_live_path_rehearsal/1d624418f78e46e3b1ff2399293c5907",
+  "run_id": "1d624418f78e46e3b1ff2399293c5907",
+  "schema_version": "linkloom-formal-live-path-rehearsal/v1",
+  "shadow_budget_ledger_sha256": "35ab025711fe4d218938e4959451fb90284ba15400dcf260dffef13c3e86971d",
+  "status": "PASS"
+}

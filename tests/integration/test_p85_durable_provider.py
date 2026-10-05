@@ -387,6 +387,36 @@ def test_provider_error_is_durable_and_never_executes_tool(artifact_root):
     )
 
 
+def test_gemini_failure_diagnostics_survive_runtime_response_artifact(artifact_root):
+    class OfflineGeminiFailureClient:
+        def generate_content(self, *, model, contents, config):
+            cause = ConnectionRefusedError(10061, "connection refused")
+            exception = RuntimeError("Gemini transport failed")
+            exception.__cause__ = cause
+            raise exception
+
+    gemini = GeminiProviderAdapter(
+        OfflineGeminiFailureClient(), model_id="gemini-test-model"
+    )
+    provider = ScriptedProvider([lambda request: gemini.complete(request)])
+    loop, _ = _loop(provider)
+    store = ModelArtifactStore(artifact_root / "models")
+
+    result = _run(loop, store, lambda _state: None)
+
+    assert result.status == "failed"
+    assert provider.call_count == 1
+    record = result.state.model_executions[-1]
+    diagnostics = record.provider_error["details"]
+    assert diagnostics["provider"] == "gemini"
+    assert diagnostics["model"] == "gemini-test-model"
+    assert diagnostics["low_level_failure_class"] == "TRANSPORT_CONNECT"
+    assert diagnostics["nested_cause_chain"][0]["exception_type"] == "ConnectionRefusedError"
+    payload = store.read(record.response_ref, expected_sha256=record.response_sha256)
+    artifact_details = payload["model_response"]["error"]["details"]
+    assert artifact_details == diagnostics
+
+
 def _provider_response_durable_state(
     store: ModelArtifactStore,
 ) -> RuntimeState:
@@ -739,7 +769,7 @@ def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
     interrupted = _run(first_loop, store, stop_before_second_provider_turn)
 
     assert interrupted.status == "failed"
-    assert interrupted.state.model_executions[-1].status == "tool_result_durable"
+    assert interrupted.state.model_executions[-1].status == "tool_results_durable"
     restored_state = RuntimeState.from_dict(
         json.loads(json.dumps(interrupted.state.to_dict(), sort_keys=True))
     )
@@ -790,9 +820,9 @@ def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
     assert function_response["response"]["value"] == [
         {"evidence_id": "ev_gemini_resume"}
     ]
-    assert restored_state.model_executions[0].normalized_action[
-        "tool_call"
-    ]["arguments"] == {"query": "gemini durable"}
+    assert restored_state.model_executions[0].normalized_proposal[
+        "tool_calls"
+    ][0]["runtime_call"]["arguments"] == {"query": "gemini durable"}
 
 
 def test_cold_resume_rejects_continuation_bound_to_a_different_source_turn(
@@ -839,21 +869,21 @@ def test_cold_resume_rejects_continuation_bound_to_a_different_source_turn(
     def stop_after_tool_result_is_durable(state: RuntimeState) -> None:
         durable_snapshots.append(_snapshot(state))
         latest = state.model_executions[-1]
-        if latest.sequence == 1 and latest.status == "tool_result_durable":
+        if latest.sequence == 1 and latest.status == "tool_results_durable":
             raise RuntimeError("synthetic checkpoint stop")
 
     _run(first_loop, store, stop_after_tool_result_is_durable)
     durable_state = next(
         snapshot
         for snapshot in durable_snapshots
-        if snapshot.model_executions[-1].status == "tool_result_durable"
+        if snapshot.model_executions[-1].status == "tool_results_durable"
     )
     record = durable_state.model_executions[0]
     response_payload = store.read(
         record.response_ref,
         expected_sha256=record.response_sha256,
     )
-    response_payload["model_response"]["provider_continuation"][
+    response_payload["model_response"]["provider_turn_continuation"][
         "source_turn_id"
     ] = "run_m02_provider:turn:999"
     replaced_artifact = store.write(

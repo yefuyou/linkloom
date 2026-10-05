@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import traceback
 from typing import Any, Callable
 
 from linkloom.runtime.errors import ValidationError
@@ -502,13 +503,16 @@ class ToolRuntime:
 
         try:
             raw_result = executor(call.arguments)
-        except Exception:
+        except Exception as error:
             return _record_failed_and_persist(
                 call,
                 "TOOL_EXECUTION_FAILED",
                 "runtime",
                 "Tool execution failed.",
-                {"tool_id": call.tool_id},
+                {
+                    "tool_id": call.tool_id,
+                    "failure_diagnostic": _safe_exception_diagnostic(error),
+                },
                 active_ledger,
                 active_checkpoint_callback,
                 event_sink,
@@ -600,8 +604,9 @@ def create_retrieval_tool_runtime(
     read_executor: Callable[[str], Any],
     ledger: ToolExecutionLedger | None = None,
     checkpoint_callback: ToolCheckpointCallback | None = None,
+    decision_memory_executor: Callable[[str, str | None, int], Any] | None = None,
 ) -> ToolRuntime:
-    """Compose the two read-only retrieval tools at the runtime boundary.
+    """Compose provider-neutral, read-only retrieval tools at the runtime boundary.
 
     The public schemas contain only business arguments.  The trusted callbacks
     remain executor bindings and are never serialized into a ToolCall.
@@ -610,6 +615,8 @@ def create_retrieval_tool_runtime(
         raise ValidationError("search_executor must be callable.")
     if not callable(read_executor):
         raise ValidationError("read_executor must be callable.")
+    if decision_memory_executor is not None and not callable(decision_memory_executor):
+        raise ValidationError("decision_memory_executor must be callable or None.")
 
     registry = ToolRegistry()
     registry.register(
@@ -670,11 +677,84 @@ def create_retrieval_tool_runtime(
         ),
         lambda arguments: read_executor(arguments["note_ref"]),
     )
+    if decision_memory_executor is not None:
+        registry.register(
+            ToolDefinition(
+                tool_id="search_decision_memory",
+                version="1",
+                description=(
+                    "Search authorized temporal decision memory for navigation hints. "
+                    "Memory is not source evidence; call search_notes or read_verified_note "
+                    "before citing a material claim."
+                ),
+                input_schema={
+                    "type": "object",
+                    "required": ["query", "limit"],
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "minLength": 1,
+                            "pattern": r"(?s).*\S.*",
+                        },
+                        "as_of": {"type": "string", "minLength": 1},
+                        "limit": {"type": "integer", "minimum": 1, "maximum": 50},
+                    },
+                    "additionalProperties": False,
+                },
+                output_schema={
+                    "type": "array",
+                    "items": {"type": "object"},
+                },
+            ),
+            lambda arguments: decision_memory_executor(
+                arguments["query"],
+                arguments.get("as_of"),
+                arguments["limit"],
+            ),
+        )
     return ToolRuntime(
         registry,
         ledger=ledger,
         checkpoint_callback=checkpoint_callback,
     )
+
+
+def _safe_exception_diagnostic(error: BaseException) -> dict[str, Any]:
+    """Capture executor failure location and exception types without messages."""
+    frames = traceback.extract_tb(error.__traceback__) if error.__traceback__ else []
+    location = None
+    if frames:
+        origin = frames[-1]
+        location = {
+            "file": origin.filename.replace("\\", "/").rsplit("/", 1)[-1],
+            "function": origin.name,
+            "line": origin.lineno,
+        }
+
+    exception_chain: list[dict[str, str]] = []
+    current: BaseException | None = error
+    relationship = "raised"
+    seen: set[int] = set()
+    while current is not None and id(current) not in seen and len(exception_chain) < 8:
+        seen.add(id(current))
+        exception_chain.append(
+            {"relationship": relationship, "exception_type": type(current).__name__}
+        )
+        if current.__cause__ is not None:
+            current = current.__cause__
+            relationship = "cause"
+        elif current.__context__ is not None and not current.__suppress_context__:
+            current = current.__context__
+            relationship = "context"
+        else:
+            break
+
+    return {
+        "stage": "executor",
+        "exception_type": type(error).__name__,
+        "location": location,
+        "exception_chain": exception_chain,
+    }
 
 
 __all__ = [

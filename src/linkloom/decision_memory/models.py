@@ -2,14 +2,24 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
+from uuid import uuid4
 
 
 class DecisionStatus(StrEnum):
     CURRENT = "CURRENT"
     SUPERSEDED = "SUPERSEDED"
+
+
+class DecisionMemoryState(StrEnum):
+    CANDIDATE = "CANDIDATE"
+    ACTIVE = "ACTIVE"
+    SUPERSEDED = "SUPERSEDED"
+    STALE = "STALE"
+    INVALIDATED = "INVALIDATED"
+    NEEDS_REVALIDATION = "NEEDS_REVALIDATION"
 
 
 def _required_text(value: str, field_name: str) -> str:
@@ -45,6 +55,7 @@ class DecisionRecord:
     source_episode_id: str
     source_evidence_refs: tuple[str, ...]
     provenance_run_id: str
+    memory_state: DecisionMemoryState | None = None
 
     def __post_init__(self) -> None:
         for field_name in (
@@ -76,6 +87,16 @@ class DecisionRecord:
             "source_evidence_refs",
             _evidence_refs(self.source_evidence_refs, "source_evidence_refs"),
         )
+        if self.memory_state is None:
+            object.__setattr__(
+                self,
+                "memory_state",
+                DecisionMemoryState.SUPERSEDED
+                if self.status is DecisionStatus.SUPERSEDED
+                else DecisionMemoryState.ACTIVE,
+            )
+        elif not isinstance(self.memory_state, DecisionMemoryState):
+            object.__setattr__(self, "memory_state", DecisionMemoryState(self.memory_state))
 
 
 @dataclass(frozen=True, slots=True)
@@ -126,3 +147,38 @@ class DecisionCandidate:
     actions: tuple[ActionRecord, ...]
     team_decision_contract_pass: bool
     grounding_pass: bool
+    candidate_id: str = field(default_factory=lambda: uuid4().hex)
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    status: DecisionMemoryState = DecisionMemoryState.CANDIDATE
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "candidate_id", _required_text(self.candidate_id, "candidate_id"))
+        object.__setattr__(self, "created_at", _utc(self.created_at, "created_at"))
+        if not isinstance(self.status, DecisionMemoryState):
+            object.__setattr__(self, "status", DecisionMemoryState(self.status))
+        if self.status is not DecisionMemoryState.CANDIDATE:
+            raise ValueError("new DecisionCandidate must begin in CANDIDATE state")
+
+    @property
+    def workspace_id(self) -> str:
+        return self.decision.workspace_id
+
+    @property
+    def subject_key(self) -> str:
+        return self.decision.subject_key
+
+    @property
+    def proposed_value(self) -> str:
+        return self.decision.value
+
+    @property
+    def source_evidence_refs(self) -> tuple[str, ...]:
+        return self.decision.source_evidence_refs
+
+    @property
+    def provenance_run_id(self) -> str:
+        return self.decision.provenance_run_id
+
+    @property
+    def source_run_id(self) -> str:
+        return self.decision.provenance_run_id

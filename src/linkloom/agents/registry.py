@@ -50,8 +50,11 @@ class AgentRegistry:
                 f"Handoff from {from_agent_id} to {to_agent_id} is not allowed; only coordinator may delegate."
             )
 
-def create_default_registry() -> AgentRegistry:
+def create_default_registry(*, include_decision_memory: bool = False) -> AgentRegistry:
     registry = AgentRegistry()
+    retrieval_capabilities = ["search_notes", "read_verified_note"]
+    if include_decision_memory:
+        retrieval_capabilities.append("search_decision_memory")
     registry.register(AgentIdentity(
         agent_id="coordinator",
         role="router",
@@ -66,7 +69,7 @@ def create_default_registry() -> AgentRegistry:
         agent_id="retrieval_agent",
         role="retrieval",
         version="p4-retrieval-v1",
-        capabilities=["search_notes", "read_verified_note"],
+        capabilities=retrieval_capabilities,
         allowed_workflows=["ask", "connect", "team_decision"],
         can_read_gold=False,
         can_write_vault=False,

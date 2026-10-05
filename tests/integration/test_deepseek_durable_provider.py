@@ -307,7 +307,8 @@ def test_deepseek_tool_result_survives_cold_resume_without_tool_reexecution(
     )
 
     assert interrupted.status == "failed"
-    assert interrupted.state.model_executions[-1].status == "tool_result_durable"
+    assert interrupted.state.model_executions[-1].status == "tool_results_durable"
+    assert interrupted.state.model_executions[-1].normalized_proposal is not None
     restored = RuntimeState.from_dict(
         json.loads(json.dumps(interrupted.state.to_dict(), sort_keys=True))
     )

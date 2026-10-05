@@ -19,12 +19,18 @@ from linkloom.agents.model_adapter import (
     ModelAction,
     ModelProviderError,
     ModelResponse,
+    ModelToolCall,
+    ModelTurnProposal,
     ModelTurnRequest,
     ModelUsage,
     ProviderCapability,
     _validate_optional_provider_text,
     _validate_provider_metadata,
     _validate_provider_text,
+)
+from linkloom.agents.providers.failure_diagnostics import (
+    exception_failure_diagnostics,
+    response_failure_diagnostics,
 )
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.models import (
@@ -223,6 +229,51 @@ def _tool_exchange_messages(
     ]
 
 
+def _model_tool_turn_messages(tool_turn) -> list[dict[str, Any]]:
+    assistant_calls = []
+    tool_messages = []
+    for model_call, model_result in zip(
+        tool_turn.tool_calls,
+        tool_turn.tool_results,
+        strict=True,
+    ):
+        runtime_call = model_call.runtime_call
+        result = model_result.result
+        assistant_calls.append(
+            {
+                "id": model_call.provider_call_id,
+                "type": "function",
+                "function": {
+                    "name": runtime_call.tool_id,
+                    "arguments": _canonical_json(
+                        runtime_call.arguments,
+                        "ModelTurnRequest.tool_call.arguments",
+                        _MAX_PROVIDER_INPUT_BYTES,
+                    ),
+                },
+            }
+        )
+        tool_messages.append(
+            {
+                "role": "tool",
+                "tool_call_id": model_call.provider_call_id,
+                "content": _canonical_json(
+                    _function_response_payload(result),
+                    "ModelTurnRequest.tool_result",
+                    _MAX_PROVIDER_OBSERVATION_BYTES,
+                ),
+            }
+        )
+    return [
+        {
+            "role": "assistant",
+            "content": None,
+            "tool_calls": assistant_calls,
+        },
+        *tool_messages,
+    ]
+
+
 def _build_messages(
     request: ModelTurnRequest,
     *,
@@ -256,6 +307,8 @@ def _build_messages(
         {"role": "system", "content": system_instruction},
         {"role": "user", "content": bounded_input},
     ]
+    for tool_turn in request.tool_turns:
+        messages.extend(_model_tool_turn_messages(tool_turn))
     for interaction in request.tool_history:
         messages.extend(
             _tool_exchange_messages(
@@ -431,14 +484,14 @@ def _exception_code(exception: BaseException) -> tuple[str, str]:
     if status is not None:
         return _code_for_status(status, "MODEL_TRANSIENT_FAILURE")
     if isinstance(exception, TimeoutError):
-        return "MODEL_TIMEOUT", "unknown_provider_outcome"
+        return "MODEL_TRANSIENT_FAILURE", "unknown_provider_outcome"
     name = type(exception).__name__.lower()
     if any(marker in name for marker in ("auth", "unauthor", "permission", "credential")):
         return "MODEL_AUTH_REQUIRED", "known_failure"
     if any(marker in name for marker in ("rate", "quota", "throttle")):
         return "MODEL_RATE_LIMITED", "known_failure"
     if any(marker in name for marker in ("timeout", "deadline")):
-        return "MODEL_TIMEOUT", "unknown_provider_outcome"
+        return "MODEL_TRANSIENT_FAILURE", "unknown_provider_outcome"
     if any(marker in name for marker in ("cancel", "abort")):
         return "MODEL_CANCELLED", "known_failure"
     if any(marker in name for marker in ("invalid", "badrequest", "unprocessable")):
@@ -469,14 +522,33 @@ def _make_error(
     )
 
 
-def _provider_error_response(response: Any, model_id: str) -> ModelProviderError | None:
+def _provider_error_response(
+    response: Any,
+    model_id: str,
+    *,
+    request_payload: dict[str, Any],
+    elapsed_ms: float,
+) -> ModelProviderError | None:
     raw_error = _read(response, "error", None)
     if raw_error is None:
         return None
     status = _status_code(raw_error)
     if status is None:
         status = _status_code(response)
-    code, outcome = _code_for_status(status, "MODEL_INVALID_REQUEST")
+    native_code = _read(raw_error, "code") or _read(raw_error, "type")
+    if native_code == "aborted":
+        code, outcome = "MODEL_CANCELLED", "known_failure"
+    elif native_code == "insufficient_system_resource":
+        code, outcome = "MODEL_TRANSIENT_FAILURE", "known_failure"
+    else:
+        code, outcome = _code_for_status(status, "MODEL_INVALID_REQUEST")
+    diagnostics = response_failure_diagnostics(
+        response,
+        high_level_outcome=code,
+        request_payload=request_payload,
+        elapsed_ms=elapsed_ms,
+        provider_error=raw_error,
+    )
     metadata: dict[str, Any] = {"provider": "deepseek", "model": model_id}
     if status is not None:
         metadata["http_status"] = status
@@ -489,7 +561,7 @@ def _provider_error_response(response: Any, model_id: str) -> ModelProviderError
         outcome=outcome,
         provider_request_id=request_id,
         provider_metadata=metadata,
-        details={"reason": "provider_error_response"},
+        details={"reason": "provider_error_response", **diagnostics},
     )
 
 
@@ -526,7 +598,7 @@ class DeepSeekProviderAdapter:
         self.capability = ProviderCapability(
             supports_tool_calls=True,
             supports_final_answers=True,
-            supports_multiple_tool_calls=False,
+            supports_multiple_tool_calls=True,
             supports_streaming=False,
             provider_executes_tools=False,
         )
@@ -550,10 +622,18 @@ class DeepSeekProviderAdapter:
                 )
             )
 
+        provider_started = time.perf_counter()
         try:
             raw_response = self.client.create_chat_completion(**payload)
         except Exception as exception:
             code, outcome = _exception_code(exception)
+            elapsed_ms = (time.perf_counter() - provider_started) * 1000
+            diagnostics = exception_failure_diagnostics(
+                exception,
+                high_level_outcome=code,
+                request_payload=payload,
+                elapsed_ms=elapsed_ms,
+            )
             try:
                 request_id = _safe_provider_id(
                     _first_present(exception, ("request_id", "provider_request_id")),
@@ -574,7 +654,7 @@ class DeepSeekProviderAdapter:
                     outcome=outcome,
                     provider_request_id=request_id,
                     provider_metadata=metadata,
-                    details={"reason": "provider_exception"},
+                    details={"reason": "provider_exception", **diagnostics},
                 )
             )
 
@@ -585,6 +665,7 @@ class DeepSeekProviderAdapter:
                 request,
                 payload["model"],
                 duration_ms,
+                request_payload=payload,
             )
         except _AdapterFailure as failure:
             return self._failure_response(failure)
@@ -614,6 +695,8 @@ class DeepSeekProviderAdapter:
         request: ModelTurnRequest,
         model_id: str,
         duration_ms: float,
+        *,
+        request_payload: dict[str, Any],
     ) -> ModelResponse:
         if response is None or isinstance(
             response,
@@ -624,7 +707,12 @@ class DeepSeekProviderAdapter:
                 details={"reason": "response_root_not_object"},
             )
 
-        provider_error = _provider_error_response(response, model_id)
+        provider_error = _provider_error_response(
+            response,
+            model_id,
+            request_payload=request_payload,
+            elapsed_ms=duration_ms,
+        )
         if provider_error is not None:
             return ModelResponse(error=provider_error)
 
@@ -645,14 +733,28 @@ class DeepSeekProviderAdapter:
             _read(choice, "finish_reason", None)
         )
         if finish_reason == "aborted":
+            diagnostics = response_failure_diagnostics(
+                response,
+                high_level_outcome="MODEL_CANCELLED",
+                request_payload=request_payload,
+                elapsed_ms=duration_ms,
+                finish_reason=finish_reason,
+            )
             raise _AdapterFailure(
                 "MODEL_CANCELLED",
-                details={"reason": "provider_aborted"},
+                details={"reason": "provider_aborted", **diagnostics},
             )
         if finish_reason == "insufficient_system_resource":
+            diagnostics = response_failure_diagnostics(
+                response,
+                high_level_outcome="MODEL_TRANSIENT_FAILURE",
+                request_payload=request_payload,
+                elapsed_ms=duration_ms,
+                finish_reason=finish_reason,
+            )
             raise _AdapterFailure(
                 "MODEL_TRANSIENT_FAILURE",
-                details={"reason": "insufficient_system_resource"},
+                details={"reason": "insufficient_system_resource", **diagnostics},
             )
         reasoning_content = _read(message, "reasoning_content", None)
         if reasoning_content not in (None, ""):
@@ -671,10 +773,10 @@ class DeepSeekProviderAdapter:
                 details={"reason": "tool_calls_not_a_list"},
             )
         content = _read(message, "content", None)
-        if len(calls) > 1:
+        if len(calls) > 16:
             raise _AdapterFailure(
                 "MODEL_RESPONSE_UNSUPPORTED",
-                details={"reason": "multiple_tool_calls"},
+                details={"reason": "too_many_tool_calls"},
             )
         if calls and isinstance(content, str) and content.strip():
             raise _AdapterFailure(
@@ -722,9 +824,24 @@ class DeepSeekProviderAdapter:
                         "finish_reason": finish_reason,
                     },
                 )
-            call = self._parse_tool_call(calls[0], request)
+            proposal_id = f"{request.turn_id}:proposal"
+            parsed_calls = [
+                self._parse_tool_call(
+                    raw_call,
+                    request,
+                    proposal_id=proposal_id,
+                    ordinal=ordinal,
+                )
+                for ordinal, raw_call in enumerate(calls)
+            ]
+            provider_call_ids = [call.provider_call_id for call in parsed_calls]
+            if len(set(provider_call_ids)) != len(provider_call_ids):
+                raise _AdapterFailure(
+                    "MODEL_TOOL_CALL_PARSE_FAILED",
+                    details={"reason": "duplicate_function_call_id"},
+                )
             return ModelResponse(
-                action=ModelAction.tool(call),
+                proposal=ModelTurnProposal.tools(proposal_id, parsed_calls),
                 usage=usage,
                 provider_request_id=request_id,
                 provider_response_id=response_id,
@@ -746,7 +863,10 @@ class DeepSeekProviderAdapter:
                 },
             )
         return ModelResponse(
-            action=ModelAction.final(content),
+            proposal=ModelTurnProposal.final(
+                f"{request.turn_id}:proposal",
+                content,
+            ),
             usage=usage,
             provider_request_id=request_id,
             provider_response_id=response_id,
@@ -755,7 +875,13 @@ class DeepSeekProviderAdapter:
         )
 
     @staticmethod
-    def _parse_tool_call(raw_call: Any, request: ModelTurnRequest) -> ToolCall:
+    def _parse_tool_call(
+        raw_call: Any,
+        request: ModelTurnRequest,
+        *,
+        proposal_id: str,
+        ordinal: int,
+    ) -> ModelToolCall:
         if _read(raw_call, "type", None) != "function":
             raise _AdapterFailure(
                 "MODEL_RESPONSE_UNSUPPORTED",
@@ -803,8 +929,10 @@ class DeepSeekProviderAdapter:
             _MAX_PROVIDER_INPUT_BYTES,
         )
         try:
-            return ToolCall(
-                call_id=call_id,
+            return ModelToolCall.bind(
+                provider_call_id=call_id,
+                proposal_id=proposal_id,
+                ordinal=ordinal,
                 tool_id=name,
                 arguments=deepcopy(arguments),
                 run_id=request.run_id,

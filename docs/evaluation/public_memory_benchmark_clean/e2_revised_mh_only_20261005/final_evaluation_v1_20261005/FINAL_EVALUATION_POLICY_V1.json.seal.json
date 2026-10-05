@@ -1,0 +1,7 @@
+{
+  "identity": "final-evaluation-policy-v1",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:48.474287+00:00",
+  "sha256": "01b1f01b893de0457e7c4901e2e0e17a10c391c5f1514ed5c2a95e68676f8096"
+}

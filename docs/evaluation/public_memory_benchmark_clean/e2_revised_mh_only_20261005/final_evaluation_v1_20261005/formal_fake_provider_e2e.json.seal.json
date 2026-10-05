@@ -1,0 +1,7 @@
+{
+  "identity": "e2-formal-fake-provider-e2e",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:52.767976+00:00",
+  "sha256": "63cf5c51dd3ecd2c0e0bd86df6e2e1039c076b9e9d407ed25d37da78685751c1"
+}

@@ -767,6 +767,8 @@ MODEL_EXECUTION_STATUSES = {
     "response_obtained",
     "response_durable",
     "tool_result_durable",
+    "tool_results_partial",
+    "tool_results_durable",
     "completed",
     "failed",
     "reinvoke_allowed",
@@ -789,6 +791,9 @@ class ModelExecutionRecord:
     observation_ref: str | None = None
     response_ref: str | None = None
     normalized_action: dict[str, Any] | None = None
+    normalized_proposal: dict[str, Any] | None = None
+    proposal_id: str | None = None
+    tool_result_refs: list[dict[str, Any]] = field(default_factory=list)
     usage: dict[str, Any] = field(default_factory=dict)
     provider_metadata: dict[str, Any] = field(default_factory=dict)
     request_sha256: str | None = None
@@ -829,6 +834,78 @@ class ModelExecutionRecord:
             if not isinstance(self.normalized_action, dict):
                 raise ValidationError("ModelExecutionRecord.normalized_action must be an object or null.")
             _assert_no_forbidden_persisted_keys(self.normalized_action, "ModelExecutionRecord.normalized_action")
+        if self.normalized_proposal is not None:
+            if not isinstance(self.normalized_proposal, dict):
+                raise ValidationError(
+                    "ModelExecutionRecord.normalized_proposal must be an object or null."
+                )
+            _assert_no_forbidden_persisted_keys(
+                self.normalized_proposal,
+                "ModelExecutionRecord.normalized_proposal",
+            )
+        if self.proposal_id is not None:
+            _require_state_id(
+                self.proposal_id,
+                "ModelExecutionRecord.proposal_id",
+            )
+        if not isinstance(self.tool_result_refs, list):
+            raise ValidationError(
+                "ModelExecutionRecord.tool_result_refs must be a list."
+            )
+        previous_ordinal = -1
+        seen_result_ids: set[str] = set()
+        seen_runtime_call_ids: set[str] = set()
+        for item in self.tool_result_refs:
+            if not isinstance(item, dict) or set(item) != {
+                "ordinal",
+                "result_id",
+                "provider_call_id",
+                "runtime_call_id",
+                "tool_id",
+                "result_ref",
+                "result_sha256",
+            }:
+                raise ValidationError(
+                    "ModelExecutionRecord tool result ref is invalid."
+                )
+            ordinal = item["ordinal"]
+            if (
+                isinstance(ordinal, bool)
+                or not isinstance(ordinal, int)
+                or ordinal != previous_ordinal + 1
+            ):
+                raise ValidationError(
+                    "ModelExecutionRecord tool result refs must be a contiguous prefix."
+                )
+            for field_name in (
+                "result_id",
+                "provider_call_id",
+                "runtime_call_id",
+                "tool_id",
+            ):
+                _require_state_id(
+                    item[field_name],
+                    f"ModelExecutionRecord.tool_result_refs.{field_name}",
+                )
+            _assert_relative_artifact_path(
+                item["result_ref"],
+                "ModelExecutionRecord.tool_result_refs.result_ref",
+            )
+            _assert_sha256(
+                item["result_sha256"],
+                "ModelExecutionRecord.tool_result_refs.result_sha256",
+            )
+            if item["result_id"] in seen_result_ids:
+                raise ValidationError(
+                    "ModelExecutionRecord tool result IDs must be unique."
+                )
+            if item["runtime_call_id"] in seen_runtime_call_ids:
+                raise ValidationError(
+                    "ModelExecutionRecord Runtime call IDs must be unique."
+                )
+            seen_result_ids.add(item["result_id"])
+            seen_runtime_call_ids.add(item["runtime_call_id"])
+            previous_ordinal = ordinal
         for field_name, value in (("usage", self.usage), ("provider_metadata", self.provider_metadata)):
             if not isinstance(value, dict):
                 raise ValidationError(f"ModelExecutionRecord.{field_name} must be a JSON object.")
@@ -895,6 +972,9 @@ class ModelExecutionRecord:
             observation_ref=data.get("observation_ref"),
             response_ref=data.get("response_ref"),
             normalized_action=data.get("normalized_action"),
+            normalized_proposal=data.get("normalized_proposal"),
+            proposal_id=data.get("proposal_id"),
+            tool_result_refs=[dict(item) for item in data.get("tool_result_refs", [])],
             usage=dict(data.get("usage", {})),
             provider_metadata=dict(data.get("provider_metadata", {})),
             request_sha256=data.get("request_sha256"),

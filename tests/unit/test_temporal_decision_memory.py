@@ -160,16 +160,17 @@ def test_decision_action_owner_and_evidence_relations() -> None:
     assert store.get_action_evidence("borealis", "action-rollout") == ("notes/actions.md#L3-L7",)
 
 
-def test_store_rejects_two_current_truths_and_invalid_sources() -> None:
+def test_store_policy_supersedes_changed_value_and_rejects_invalid_sources() -> None:
     store = _store()
     first_at = datetime(2026, 5, 12, tzinfo=UTC)
     _materialize(store, _decision("decision-a", "Supplier A", first_at))
 
-    with pytest.raises(ValueError, match="must explicitly supersede"):
-        _materialize(
-            store,
-            _decision("decision-b", "Supplier B", datetime(2026, 6, 1, tzinfo=UTC))
-        )
+    updated = _materialize(
+        store,
+        _decision("decision-b", "Supplier B", datetime(2026, 6, 1, tzinfo=UTC)),
+    )
+    assert updated.supersedes_id == "decision-a"
+    assert store.get_current("borealis", "supplier") == updated
     with pytest.raises(ValueError, match="superseded decision does not exist"):
         _materialize(
             store,

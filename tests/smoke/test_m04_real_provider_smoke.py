@@ -347,8 +347,31 @@ def run_scenario(client, model, diagnostics=None):
             if ref and sha and artifacts.read(ref, expected_sha256=sha)["runtime_identity"] != identity:
                 raise SmokeBlocked("Gate A artifact identity mismatch.")
     request = artifacts.read(final.request_ref, expected_sha256=final.request_sha256)["model_request"]
-    if (request["observation"] != tool.result or request["previous_tool_call"]["call_id"] != tool.call_id
-            or first.normalized_action["tool_call"]["call_id"] != tool.call_id):
+    if first.normalized_action["tool_call"]["call_id"] != tool.call_id:
+        raise SmokeBlocked("Gate A observation identity mismatch.")
+    if request.get("tool_turns"):
+        # Runtime V2 keeps the singleton proposal as one grouped model turn;
+        # the nested Runtime call/result identities replace the old singular
+        # observation fields without losing the M0.4 correlation check.
+        grouped_turns = request["tool_turns"]
+        if len(grouped_turns) != 1:
+            raise SmokeBlocked("Gate A observation identity mismatch.")
+        grouped_turn = grouped_turns[0]
+        grouped_calls = grouped_turn.get("tool_calls")
+        grouped_results = grouped_turn.get("tool_results")
+        if (
+            not isinstance(grouped_calls, list)
+            or len(grouped_calls) != 1
+            or not isinstance(grouped_results, list)
+            or len(grouped_results) != 1
+            or grouped_calls[0].get("runtime_call", {}).get("call_id") != tool.call_id
+            or grouped_results[0].get("result") != tool.result
+        ):
+            raise SmokeBlocked("Gate A observation identity mismatch.")
+    elif (
+        request.get("observation") != tool.result
+        or request.get("previous_tool_call", {}).get("call_id") != tool.call_id
+    ):
         raise SmokeBlocked("Gate A observation identity mismatch.")
     events = TraceReader(root / "traces").read_events(state.run_id)
     types = Counter(e.event_type for e in events if e.attributes.get("call_id") == tool.call_id)

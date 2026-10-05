@@ -1,0 +1,7 @@
+{
+  "identity": "e2-formal-budget-ledger",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:52.754320+00:00",
+  "sha256": "433fc609a30eac72feea18b582a5e8acf9e9c370d824bd1e2daeeb44b7aa8d48"
+}

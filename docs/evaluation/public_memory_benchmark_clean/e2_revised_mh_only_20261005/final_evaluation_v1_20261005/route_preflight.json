@@ -1,0 +1,44 @@
+{
+  "environment_proxy": {
+    "ALL_PROXY": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    },
+    "HTTPS_PROXY": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    },
+    "HTTP_PROXY": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    }
+  },
+  "local_proxy": {
+    "hostname": "127.0.0.1",
+    "port": 7897,
+    "tcp": "PASS"
+  },
+  "model": "gemini-3.8-flash",
+  "provider_requests": 0,
+  "sdk_httpx_route": {
+    "configured_proxy_hostname": "127.0.0.1",
+    "configured_proxy_port": 7897,
+    "route_inspection": "PROXY"
+  },
+  "sdk_version": "2.22.0",
+  "status": "PASS",
+  "urllib_route": {
+    "all": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    },
+    "http": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    },
+    "https": {
+      "hostname": "127.0.0.1",
+      "port": 7897
+    }
+  }
+}

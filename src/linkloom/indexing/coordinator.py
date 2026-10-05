@@ -17,6 +17,7 @@ from linkloom.context import (
     normalize_logical_path,
     parent_logical_path,
 )
+from linkloom.evidence_identity import document_identity_id
 from linkloom.indexing.bm25 import BM25Index
 from linkloom.indexing.directory import DirectoryIndex
 from linkloom.indexing.models import IndexDocument
@@ -99,7 +100,14 @@ class IndexUpdateCoordinator:
         return IndexDocument(
             workspace_id=source.workspace_id,
             resource_id=source.resource_id,
-            evidence_id=f"ctx:{source.workspace_id}:{source.resource_id}",
+            evidence_id=document_identity_id(
+                workspace_id=source.workspace_id,
+                resource_id=source.resource_id,
+                document_id=source.document_id,
+                logical_path=source.logical_path,
+                source_ref=source.source_ref,
+                content_hash=source.content_hash,
+            ),
             logical_path=source.logical_path,
             content=source.content,
             source_ref=source.source_ref,

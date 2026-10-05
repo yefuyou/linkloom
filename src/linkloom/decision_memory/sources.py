@@ -21,6 +21,7 @@ class SourceReferenceRegistry:
         *,
         episodes: Mapping[str, Iterable[str]] | None = None,
         evidence: Mapping[str, Iterable[str]] | None = None,
+        evidence_hashes: Mapping[str, Mapping[str, str]] | None = None,
     ) -> None:
         self._episodes = {
             workspace_id: {item.strip() for item in values if item.strip()}
@@ -30,18 +31,45 @@ class SourceReferenceRegistry:
             workspace_id: {item.strip() for item in values if item.strip()}
             for workspace_id, values in (evidence or {}).items()
         }
+        self._evidence_hashes = {
+            workspace_id: {ref.strip(): digest for ref, digest in values.items()}
+            for workspace_id, values in (evidence_hashes or {}).items()
+        }
 
     def register_episode(self, workspace_id: str, episode_id: str) -> None:
         self._episodes.setdefault(workspace_id, set()).add(episode_id.strip())
 
-    def register_evidence(self, workspace_id: str, evidence_ref: str) -> None:
+    def register_evidence(
+        self,
+        workspace_id: str,
+        evidence_ref: str,
+        *,
+        content_hash: str | None = None,
+    ) -> None:
         self._evidence.setdefault(workspace_id, set()).add(evidence_ref.strip())
+        if content_hash is not None:
+            self._evidence_hashes.setdefault(workspace_id, {})[
+                evidence_ref.strip()
+            ] = content_hash
+
+    def unregister_evidence(self, workspace_id: str, evidence_ref: str) -> None:
+        self._evidence.get(workspace_id, set()).discard(evidence_ref)
+        self._evidence_hashes.get(workspace_id, {}).pop(evidence_ref, None)
+
+    def unregister_episode(self, workspace_id: str, episode_id: str) -> None:
+        self._episodes.get(workspace_id, set()).discard(episode_id)
 
     def has_episode(self, workspace_id: str, episode_id: str) -> bool:
         return episode_id in self._episodes.get(workspace_id, set())
 
+    def has_workspace(self, workspace_id: str) -> bool:
+        return workspace_id in self._episodes or workspace_id in self._evidence
+
     def has_evidence(self, workspace_id: str, evidence_ref: str) -> bool:
         return evidence_ref in self._evidence.get(workspace_id, set())
+
+    def evidence_hash(self, workspace_id: str, evidence_ref: str) -> str | None:
+        return self._evidence_hashes.get(workspace_id, {}).get(evidence_ref)
 
     def validate_decision(self, decision: DecisionRecord) -> None:
         if not self.has_episode(decision.workspace_id, decision.source_episode_id):

@@ -1,0 +1,7 @@
+{
+  "identity": "final-evaluation-guard-criticality-inventory",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:48.813245+00:00",
+  "sha256": "f4db32d83167c3786eada425d30da8d275d6d196d7df89af96deeffc03935e17"
+}

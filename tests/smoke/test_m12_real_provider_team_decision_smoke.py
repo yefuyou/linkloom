@@ -35,6 +35,7 @@ from uuid import uuid4
 import pytest
 
 from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
+from linkloom.agents.providers.retry_policy import classify_retryable_failure
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
 from linkloom.scanner import scan_vault
@@ -57,18 +58,21 @@ SDK_VERSION = "2.22.0"
 PER_REQUEST_OUTPUT_CAP = 512
 REQUEST_TIMEOUT_SECONDS = 30
 AUTOMATIC_RETRY_COUNT = 0
-MAX_TRANSPORT_RETRIES_PER_REQUEST = 1
+MAX_TRANSPORT_RETRIES_PER_REQUEST = 0
 TRANSPORT_RETRY_BASE_DELAY_SECONDS = 0.25
 TRANSPORT_ATTEMPTS_FIELD = "__linkloom_transport_attempts"
 UNAVAILABLE = "UNAVAILABLE"
 COUNT_TOKENS_COUNTER_KIND = "official_developer_api_models.count_tokens"
-COUNT_TOKENS_FAILURE_MESSAGE_LIMIT = 240
 COUNT_TOKENS_FAILURE_BODY_LIMIT = 4_096
 COUNT_TOKENS_FAILURE_GENERIC_MESSAGE = "countTokens request failed"
+STATIC_COUNT_TOKENS_STRUCTURAL_RESERVE = 512
 _REAL_AUTHORIZATION_SENTINEL = object()
 
 _COUNT_TOKENS_DIAGNOSTIC_KEYS = frozenset(
-    {"exception_class", "http_status", "provider_error_code", "message"}
+    {"exception_class", "http_status", "provider_error_code", "failure_kind", "message"}
+)
+_COUNT_TOKENS_FAILURE_KINDS = frozenset(
+    {"SYSTEM_INSTRUCTION_SHAPE_400", "UNCLASSIFIED"}
 )
 _KNOWN_GEMINI_PROVIDER_ERROR_CODES = frozenset(
     {
@@ -91,17 +95,6 @@ _KNOWN_GEMINI_PROVIDER_ERROR_CODES = frozenset(
         "DATA_LOSS",
     }
 )
-_UNTRUSTED_COUNT_TOKENS_MESSAGE = re.compile(
-    r"(?:"
-    r"\b(?:authorization|proxy-authorization|x-goog-api-key|api[_-]?key|"
-    r"access[_-]?token|id[_-]?token)\b"
-    r"|https?://"
-    r"|[?&](?:key|api[_-]?key|access[_-]?token|id[_-]?token|authorization)=[^\s&]*"
-    r"|\b(?:expected_|gold(?:\b|[_-])|evaluator|evaluation|required_claim|golden_assert)"
-    r")",
-    re.IGNORECASE,
-)
-
 # These are intentionally duplicated, immutable identity values rather than
 # values discovered from the working tree at run time.  The run must refuse
 # to proceed if the checked-in freeze or any synthetic source workspace drifts.
@@ -450,13 +443,14 @@ MPS_001_RERUN_CASE_BUDGET = CaseBudget(
     max_elapsed_preflight_seconds=90,
     per_request_input_tokens=50_000,
 )
+MAX_TOTAL_SMOKE_COST = 0.35  # USD; single frozen-case smoke, enforced by the guard.
 MPS_001_RERUN_AGGREGATE_BUDGET = AggregateBudget(
     max_provider_requests=12,
     max_model_turns=12,
     max_input_tokens=160_000,
     max_output_tokens=16_384,
     max_elapsed_provider_seconds=90,
-    max_cost_usd=0.35,
+    max_cost_usd=MAX_TOTAL_SMOKE_COST,
     max_preflight_requests=12,
     max_preflight_counted_input_tokens=160_000,
     max_elapsed_preflight_seconds=90,
@@ -489,10 +483,19 @@ def load_real_settings(environ: Mapping[str, str] | None = None) -> RealSettings
 
 @dataclass(frozen=True)
 class PreflightCount:
-    """One official Developer API ``models.count_tokens`` result."""
+    """One exact count result or conservative input reserve for one call."""
 
     tokens: int
     cost_usd: float | None = None
+
+
+@dataclass
+class CountTokensFallbackState:
+    """Share a qualified countTokens unavailability across one G3 run."""
+
+    unavailable: bool = False
+    reason: str | None = None
+    failure_class: str | None = None
 
 
 @dataclass
@@ -508,6 +511,7 @@ class AggregateUsage:
     reported_output_tokens: int = 0
     reported_thinking_tokens: int | None = None
     reported_billable_output_tokens: int = 0
+    reserved_unknown_output_tokens: int = 0
     provider_elapsed_seconds: float = 0.0
     preflight_elapsed_seconds: float = 0.0
     reported_cost_usd: float | None = None
@@ -572,44 +576,60 @@ def _safe_provider_error_code(value: Any) -> str:
     return UNAVAILABLE
 
 
-def _count_tokens_message_is_untrusted(value: Any) -> bool:
-    return isinstance(value, str) and bool(_UNTRUSTED_COUNT_TOKENS_MESSAGE.search(value))
-
-
 def _sanitize_count_tokens_message(value: Any, *, api_key: str) -> str:
-    """Keep a short diagnosis while excluding credentials, headers, and URLs."""
+    """Never persist Provider-supplied prose; retain only a fixed safe message."""
 
+    del value, api_key
+    return COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
+
+
+def _count_tokens_failure_kind(
+    *,
+    http_status: int | str,
+    provider_error_code: str,
+    message: Any,
+) -> str:
     if (
-        not isinstance(value, str)
-        or (api_key and api_key in value)
-        or _count_tokens_message_is_untrusted(value)
+        http_status == 400
+        and provider_error_code == "INVALID_ARGUMENT"
+        and isinstance(message, str)
+        and "generate_content_request.system_instruction" in message.casefold()
     ):
-        return COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
-    sanitized = value.replace(api_key, "[REDACTED]") if api_key else value
-    sanitized = re.sub(r"https?://[^\s]+", "[REDACTED_URL]", sanitized, flags=re.I)
-    sanitized = re.sub(
-        r"(?i)\b(?:authorization|proxy-authorization|x-goog-api-key|api[_-]?key|"
-        r"access[_-]?token|id[_-]?token)\b\s*[=:]\s*[\"']?"
-        r"(?:bearer\s+)?[^\s,;\"'\]\}]+",
-        "[REDACTED]",
-        sanitized,
-    )
-    sanitized = re.sub(
-        r"(?i)\bbearer\s+[^\s,;\"'\]\}]+", "[REDACTED]", sanitized
-    )
-    sanitized = "".join(
-        character if character.isprintable() else " " for character in sanitized
-    )
-    sanitized = " ".join(sanitized.split())[:COUNT_TOKENS_FAILURE_MESSAGE_LIMIT]
-    if _count_tokens_message_is_untrusted(sanitized):
-        return COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
-    return sanitized or COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
+        return "SYSTEM_INSTRUCTION_SHAPE_400"
+    return "UNCLASSIFIED"
 
 
 def _safe_exception_class(value: Any) -> str:
     if isinstance(value, str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", value):
         return value
     return "Exception"
+
+
+def count_request_metadata(request: dict[str, Any]) -> dict[str, Any]:
+    """Allowlisted shape only: no text, argument values, headers or tool names."""
+    contents = request.get("contents", [])
+    config = request.get("config", {})
+    parts = [p for c in contents if isinstance(c, dict)
+             for p in c.get("parts", []) if isinstance(p, dict)]
+    return {
+        "request_endpoint": f"https://{DEVELOPER_API_ENDPOINT}/v1beta/models/{MODEL}:countTokens",
+        "model": MODEL,
+        "sdk_version": SDK_VERSION,
+        "transport_path": "urllib.request/raw-Developer-API-generateContentRequest",
+        "request_shape": {
+            "content_count": len(contents),
+            "part_count": len(parts),
+            "roles": [c.get("role") if c.get("role") in {"user", "model"} else "other"
+                      for c in contents if isinstance(c, dict)],
+            "has_history": len(contents) > 1,
+            "has_tools": bool(config.get("tools")),
+            "has_system_instruction": bool(config.get("system_instruction")),
+            "has_function_calls": any("function_call" in p or "functionCall" in p for p in parts),
+            "has_function_responses": any("function_response" in p or "functionResponse" in p for p in parts),
+            "has_thought_metadata": any("thought" in p for p in parts),
+            "has_thought_signatures": any("thought_signature" in p or "thoughtSignature" in p for p in parts),
+        },
+    }
 
 
 def _persistable_count_tokens_failure_diagnostic(
@@ -621,22 +641,30 @@ def _persistable_count_tokens_failure_diagnostic(
         "exception_class": "Exception",
         "http_status": UNAVAILABLE,
         "provider_error_code": UNAVAILABLE,
+        "failure_kind": "UNCLASSIFIED",
         "message": COUNT_TOKENS_FAILURE_GENERIC_MESSAGE,
     }
-    if not isinstance(diagnostic, Mapping) or set(diagnostic) != _COUNT_TOKENS_DIAGNOSTIC_KEYS:
+    legacy_keys = _COUNT_TOKENS_DIAGNOSTIC_KEYS - {"failure_kind"}
+    if (
+        not isinstance(diagnostic, Mapping)
+        or frozenset(diagnostic) not in {_COUNT_TOKENS_DIAGNOSTIC_KEYS, legacy_keys}
+    ):
         return fallback
-    message = diagnostic["message"]
+    http_status = _safe_http_status(diagnostic["http_status"])
+    provider_error_code = _safe_provider_error_code(diagnostic["provider_error_code"])
+    failure_kind = diagnostic.get("failure_kind")
+    if failure_kind not in _COUNT_TOKENS_FAILURE_KINDS:
+        failure_kind = _count_tokens_failure_kind(
+            http_status=http_status,
+            provider_error_code=provider_error_code,
+            message=diagnostic.get("message"),
+        )
     return {
         "exception_class": _safe_exception_class(diagnostic["exception_class"]),
-        "http_status": _safe_http_status(diagnostic["http_status"]),
-        "provider_error_code": _safe_provider_error_code(
-            diagnostic["provider_error_code"]
-        ),
-        "message": (
-            COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
-            if _count_tokens_message_is_untrusted(message)
-            else _sanitize_count_tokens_message(message, api_key="")
-        ),
+        "http_status": http_status,
+        "provider_error_code": provider_error_code,
+        "failure_kind": failure_kind,
+        "message": COUNT_TOKENS_FAILURE_GENERIC_MESSAGE,
     }
 
 
@@ -651,24 +679,20 @@ def _safe_count_tokens_failure_diagnostic(
     http_status = _safe_http_status(getattr(error, "code", None))
     if http_status == UNAVAILABLE:
         http_status = _safe_http_status(payload.get("code"))
+    provider_error_code = _safe_provider_error_code(payload.get("status"))
     return {
         "exception_class": _safe_exception_class(type(error).__name__),
         "http_status": http_status,
-        "provider_error_code": _safe_provider_error_code(payload.get("status")),
+        "provider_error_code": provider_error_code,
+        "failure_kind": _count_tokens_failure_kind(
+            http_status=http_status,
+            provider_error_code=provider_error_code,
+            message=payload.get("message"),
+        ),
         "message": _sanitize_count_tokens_message(
             payload.get("message"), api_key=api_key
         ),
     }
-
-
-_DETERMINISTIC_TRANSPORT_PROVIDER_CODES = frozenset(
-    {
-        "INVALID_ARGUMENT",
-        "FAILED_PRECONDITION",
-        "UNAUTHENTICATED",
-        "PERMISSION_DENIED",
-    }
-)
 
 
 def _exception_http_status(error: BaseException) -> int | str:
@@ -699,27 +723,8 @@ def _is_retryable_transport_failure(
     *,
     diagnostic: Mapping[str, Any] | None = None,
 ) -> bool:
-    """Classify only explicit transient failures with no successful response."""
-
-    status = (
-        _safe_http_status(diagnostic.get("http_status"))
-        if isinstance(diagnostic, Mapping)
-        else _exception_http_status(error)
-    )
-    provider_code = (
-        _safe_provider_error_code(diagnostic.get("provider_error_code"))
-        if isinstance(diagnostic, Mapping)
-        else _exception_provider_code(error)
-    )
-    if provider_code in _DETERMINISTIC_TRANSPORT_PROVIDER_CODES:
-        return False
-    if status in {400, 401, 403}:
-        return False
-    if status in {408, 429} or (isinstance(status, int) and 500 <= status <= 599):
-        return True
-    if isinstance(error, HTTPError):
-        return False
-    return isinstance(error, (URLError, TimeoutError, ConnectionError))
+    """Compatibility wrapper around the shared provider-neutral retry policy."""
+    return classify_retryable_failure(error, diagnostic) is not None
 
 
 def _contains_vertex_billing_path(value: Any) -> bool:
@@ -1001,10 +1006,91 @@ def _map_count_config(config: Any) -> dict[str, Any]:
                 raise SmokeBlocked("COUNT_TOKENS_REQUEST_UNREPRESENTABLE")
             _merge_mapped_field(generation, nested_rest_key, _map_rest_nested(value))
         else:
-            _merge_mapped_field(mapped, rest_key, _map_rest_nested(value))
+            rest_value = value
+            if key == "system_instruction" and isinstance(value, str):
+                # GenerateContentConfig accepts a string and the installed SDK
+                # converts it to Content(parts=[Part(text=...)], role="user").
+                # A raw REST count request must preserve that same wire shape.
+                rest_value = {"parts": [{"text": value}], "role": "user"}
+            _merge_mapped_field(mapped, rest_key, _map_rest_nested(rest_value))
     if generation:
         mapped["generationConfig"] = generation
     return mapped
+
+
+def _static_conservative_input_token_upper_bound(request: dict[str, Any]) -> int:
+    """Bound the frozen G3 text-only request plus fixed structural-token reserve.
+
+    This is deliberately restricted to one user text part, one string system
+    instruction, and the frozen scalar generation config. For that geometry,
+    UTF-8 bytes upper-bound non-empty text token pieces; 512 tokens reserve
+    role/content/system boundaries and protocol framing. Unknown/multimodal/
+    tool shapes are not estimated. The result must still fit the hard input cap.
+    """
+
+    contents = request.get("contents") if isinstance(request, dict) else None
+    config = request.get("config") if isinstance(request, dict) else None
+    if (
+        not isinstance(contents, list)
+        or len(contents) != 1
+        or not isinstance(contents[0], dict)
+        or contents[0].get("role") != "user"
+        or not isinstance(contents[0].get("parts"), list)
+        or len(contents[0]["parts"]) != 1
+        or not isinstance(contents[0]["parts"][0], dict)
+        or set(contents[0]["parts"][0]) != {"text"}
+        or not isinstance(contents[0]["parts"][0].get("text"), str)
+        or not isinstance(config, dict)
+        or not isinstance(config.get("system_instruction"), str)
+        or set(config)
+        - {
+            "system_instruction",
+            "temperature",
+            "max_output_tokens",
+            "automatic_function_calling",
+        }
+    ):
+        raise SmokeBlocked("STATIC_COUNT_TOKENS_BOUND_UNSAFE")
+
+    serialized = _count_endpoint_generate_request(request)
+    encoded = json.dumps(
+        serialized,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return len(encoded) + STATIC_COUNT_TOKENS_STRUCTURAL_RESERVE
+
+
+def _matches_count_tokens_system_instruction_shape_failure(
+    diagnostic: Mapping[str, Any] | None,
+) -> bool:
+    if not isinstance(diagnostic, Mapping):
+        return False
+    return (
+        diagnostic.get("http_status") == 400
+        and diagnostic.get("provider_error_code") == "INVALID_ARGUMENT"
+        and diagnostic.get("failure_kind") == "SYSTEM_INSTRUCTION_SHAPE_400"
+    )
+
+
+def _matches_safe_count_tokens_transport_failure(
+    diagnostic: Mapping[str, Any] | None,
+) -> bool:
+    """Permit only explicit no-response transport failures to use the bound."""
+    if not isinstance(diagnostic, Mapping):
+        return False
+    if diagnostic.get("http_status") not in {None, UNAVAILABLE}:
+        return False
+    if diagnostic.get("provider_error_code") not in {None, UNAVAILABLE}:
+        return False
+    normalized = dict(diagnostic)
+    for key in ("http_status", "provider_error_code"):
+        if normalized.get(key) == UNAVAILABLE:
+            normalized[key] = None
+    classification = classify_retryable_failure(None, normalized)
+    return isinstance(classification, str) and classification.startswith("TRANSPORT_")
 
 
 def _count_endpoint_generate_request(request: dict[str, Any]) -> dict[str, Any]:
@@ -1159,6 +1245,10 @@ class BudgetedGeminiClient:
         clock: Callable[[], float] = time.monotonic,
         sleep: Callable[[float], None] = time.sleep,
         secret_detector: Callable[[str], bool] | None = None,
+        allow_static_count_tokens_fallback: bool = False,
+        count_tokens_fallback_state: CountTokensFallbackState | None = None,
+        count_tokens_transport_fallback_only: bool = False,
+        on_response_accepted: Callable[[Any], None] | None = None,
     ) -> None:
         if not callable(getattr(delegate, "generate_content", None)):
             raise SmokeBlocked("injected Gemini client surface is unavailable")
@@ -1176,6 +1266,12 @@ class BudgetedGeminiClient:
         self.clock = clock
         self.sleep = sleep
         self.secret_detector = secret_detector
+        self.allow_static_count_tokens_fallback = allow_static_count_tokens_fallback
+        self.count_tokens_transport_fallback_only = count_tokens_transport_fallback_only
+        self.on_response_accepted = on_response_accepted
+        self.count_tokens_fallback_state = (
+            count_tokens_fallback_state or CountTokensFallbackState()
+        )
         self.provider_calls = 0
         self.model_turns = 0
         self.estimated_input_tokens = 0
@@ -1187,6 +1283,7 @@ class BudgetedGeminiClient:
         self.reported_output_tokens = 0
         self.reported_thinking_tokens: int | None = None
         self.reported_billable_output_tokens = 0
+        self.reserved_unknown_output_tokens = 0
         self.provider_elapsed_seconds = 0.0
         self.preflight_elapsed_seconds = 0.0
         self.reported_cost_usd: float | None = None
@@ -1194,6 +1291,7 @@ class BudgetedGeminiClient:
         self.preflight_records: list[dict[str, Any]] = []
         self.automatic_retry_count = 0
         self.last_guard_state = "READY"
+        self.provider_response_accepted = False
         self._terminal = False
         self._pending_preflight: dict[str, Any] | None = None
         self._continuation_thinking_token_reserve = 0
@@ -1289,12 +1387,50 @@ class BudgetedGeminiClient:
         self._terminal = True
         raise SmokeBlocked(code) from None
 
+    def _static_count_tokens_fallback(
+        self,
+        request: dict[str, Any],
+        record: dict[str, Any],
+        *,
+        reason: str,
+        failure_class: str | None = None,
+    ) -> PreflightCount:
+        estimate = _static_conservative_input_token_upper_bound(request)
+        if estimate > self.case_budget.per_request_input_limit:
+            self._preflight_failure(record, "STATIC_COUNT_TOKENS_BOUND_UNSAFE")
+        record["status"] = "static_fallback"
+        record["count_tokens_status"] = "UNAVAILABLE"
+        record["token_estimation_source"] = "STATIC_CONSERVATIVE"
+        record["billing_preflight_uncertainty"] = True
+        record["estimated_input_token_upper_bound"] = estimate
+        record["fallback_reason"] = reason
+        if failure_class is not None:
+            record["failure_class"] = failure_class
+        return PreflightCount(tokens=estimate)
+
     def _preflight(
         self,
         request: dict[str, Any],
     ) -> PreflightCount:
         self._terminal_block()
         self._assert_developer_api()
+        # Do not issue even a counting request after the shared budget is spent.
+        output_tokens_reserved = (
+            self.aggregate.reported_billable_output_tokens
+            + self.aggregate.reserved_unknown_output_tokens
+        )
+        spent = max(
+            self.aggregate.reported_cost_usd or 0.0,
+            _combined_cost_usd(
+                self.aggregate.estimated_input_tokens,
+                self.aggregate.preflight_counted_input_tokens,
+                output_tokens_reserved,
+            ),
+        )
+        if spent >= self.aggregate_budget.max_cost_usd:
+            self._terminal = True
+            self.last_guard_state = "PROJECTED_COST_BUDGET_EXCEEDED"
+            raise SmokeBlocked("PROJECTED_COST_BUDGET_EXCEEDED")
         if self.preflight_count_requests >= self.case_budget.preflight_requests_limit:
             self._terminal = True
             self.last_guard_state = "PREFLIGHT_REQUEST_BUDGET_EXCEEDED"
@@ -1333,12 +1469,13 @@ class BudgetedGeminiClient:
             self._terminal = True
             self.last_guard_state = "AGGREGATE_PREFLIGHT_TIME_EXCEEDED"
             raise SmokeBlocked("AGGREGATE_PREFLIGHT_TIME_EXCEEDED")
-        if self.reported_billable_output_tokens >= self.case_budget.max_output_tokens:
+        if self.reported_billable_output_tokens + self.reserved_unknown_output_tokens >= self.case_budget.max_output_tokens:
             self._terminal = True
             self.last_guard_state = "OUTPUT_TOKEN_BUDGET_EXCEEDED"
             raise SmokeBlocked("OUTPUT_TOKEN_BUDGET_EXCEEDED")
         if (
             self.aggregate.reported_billable_output_tokens
+            + self.aggregate.reserved_unknown_output_tokens
             >= self.aggregate_budget.max_output_tokens
         ):
             self._terminal = True
@@ -1346,11 +1483,15 @@ class BudgetedGeminiClient:
             raise SmokeBlocked("AGGREGATE_OUTPUT_TOKEN_BUDGET_EXCEEDED")
 
         record: dict[str, Any] = {
-            "sequence": self.preflight_count_requests + 1,
+            "sequence": len(self.preflight_records) + 1,
+            "request_diagnostic": count_request_metadata(request),
             "model": request["model"],
             "request": copy.deepcopy(request),
             "status": "attempted",
             "counted_input_tokens": UNAVAILABLE,
+            "count_tokens_status": "PENDING",
+            "token_estimation_source": "PENDING",
+            "billing_preflight_uncertainty": False,
             "reported_input_tokens": UNAVAILABLE,
             "reported_output_tokens": UNAVAILABLE,
             "reported_thinking_tokens": UNAVAILABLE,
@@ -1362,50 +1503,118 @@ class BudgetedGeminiClient:
             "inference_transport_attempts": 0,
         }
         self._append_preflight_record(record)
-        self.preflight_count_requests += 1
-        self.aggregate.preflight_count_requests += 1
         started = self.clock()
-        try:
-            # This is the only pre-send token authority.  The delegate must
-            # implement the complete official count request surface.
-            response = self.delegate.count_tokens(
-                model=request["model"],
-                request=copy.deepcopy(request),
-            )
-            self._record_preflight_transport_attempts(
+        response: Any = None
+        static_fallback = False
+        if self.allow_static_count_tokens_fallback and self.count_tokens_fallback_state.unavailable:
+            count = self._static_count_tokens_fallback(
+                request,
                 record,
-                _mapping_or_attr(response, TRANSPORT_ATTEMPTS_FIELD, 1),
+                reason=self.count_tokens_fallback_state.reason
+                or "COUNT_TOKENS_PREVIOUSLY_MARKED_UNAVAILABLE",
+                failure_class=self.count_tokens_fallback_state.failure_class,
             )
-        except SmokeBlocked as error:
-            elapsed = max(0.0, self.clock() - started)
-            self.preflight_elapsed_seconds += elapsed
-            self.aggregate.preflight_elapsed_seconds += elapsed
-            record["elapsed_seconds"] = elapsed
-            if isinstance(error, CountTokensFailure):
+            static_fallback = True
+        else:
+            self.preflight_count_requests += 1
+            self.aggregate.preflight_count_requests += 1
+            try:
+                # Use the full GenerateContentRequest envelope; the installed
+                # Developer API CountTokensConfig converter rejects these fields.
+                response = self.delegate.count_tokens(
+                    model=request["model"],
+                    request=copy.deepcopy(request),
+                )
                 self._record_preflight_transport_attempts(
                     record,
-                    error.transport_attempts,
+                    _mapping_or_attr(response, TRANSPORT_ATTEMPTS_FIELD, 1),
                 )
-                record["failure_diagnostic"] = _persistable_count_tokens_failure_diagnostic(
-                    error.diagnostic
-                )
-            elif record["transport_attempts"] == 0:
+            except SmokeBlocked as error:
+                elapsed = max(0.0, self.clock() - started)
+                record["elapsed_seconds"] = elapsed
+                if isinstance(error, CountTokensFailure):
+                    self._record_preflight_transport_attempts(
+                        record,
+                        error.transport_attempts,
+                    )
+                    diagnostic = _persistable_count_tokens_failure_diagnostic(
+                        error.diagnostic
+                    )
+                    record["failure_diagnostic"] = diagnostic
+                else:
+                    diagnostic = None
+                    if record["transport_attempts"] == 0:
+                        self._record_preflight_transport_attempts(record, 1)
+                if (
+                    self.allow_static_count_tokens_fallback
+                    and not self.count_tokens_transport_fallback_only
+                    and (
+                    _matches_count_tokens_system_instruction_shape_failure(diagnostic)
+                    )
+                ):
+                    reason = "DETERMINISTIC_SYSTEM_INSTRUCTION_SHAPE_400"
+                    self.count_tokens_fallback_state.unavailable = True
+                    self.count_tokens_fallback_state.reason = reason
+                    self.count_tokens_fallback_state.failure_class = (
+                        "HTTP_400_SYSTEM_INSTRUCTION_SCHEMA"
+                    )
+                    count = self._static_count_tokens_fallback(
+                        request,
+                        record,
+                        reason=reason,
+                        failure_class=self.count_tokens_fallback_state.failure_class,
+                    )
+                    static_fallback = True
+                elif (
+                    self.allow_static_count_tokens_fallback
+                    and _matches_safe_count_tokens_transport_failure(diagnostic)
+                ):
+                    exception_class = str(diagnostic["exception_class"])
+                    failure_class = f"TRANSPORT_{exception_class}"
+                    reason = f"{failure_class}_COUNT_TOKENS_UNAVAILABLE"
+                    self.count_tokens_fallback_state.unavailable = True
+                    self.count_tokens_fallback_state.reason = reason
+                    self.count_tokens_fallback_state.failure_class = failure_class
+                    count = self._static_count_tokens_fallback(
+                        request,
+                        record,
+                        reason=reason,
+                        failure_class=failure_class,
+                    )
+                    static_fallback = True
+                else:
+                    if "failure_diagnostic" not in record:
+                        record["failure_diagnostic"] = {
+                            "exception_class": _safe_exception_class(type(error).__name__),
+                            "http_status": UNAVAILABLE,
+                            "provider_error_code": UNAVAILABLE,
+                            "failure_kind": "UNCLASSIFIED",
+                            "message": COUNT_TOKENS_FAILURE_GENERIC_MESSAGE,
+                        }
+                    self.aggregate.preflight_elapsed_seconds += elapsed
+                    self.preflight_elapsed_seconds += elapsed
+                    safe_count_errors = {
+                        "COUNT_TOKENS_FAILED",
+                        "COUNT_TOKENS_REQUEST_UNREPRESENTABLE",
+                        "COUNT_TOKENS_RESPONSE_MALFORMED",
+                    }
+                    error_code = str(error)
+                    code = error_code if error_code in safe_count_errors else "COUNT_TOKENS_FAILED"
+                    self._preflight_failure(record, code)
+            except Exception as error:
+                elapsed = max(0.0, self.clock() - started)
+                self.preflight_elapsed_seconds += elapsed
+                self.aggregate.preflight_elapsed_seconds += elapsed
+                record["elapsed_seconds"] = elapsed
+                record["failure_diagnostic"] = {
+                    "exception_class": _safe_exception_class(type(error).__name__),
+                    "http_status": _safe_http_status(getattr(error, "code", None)),
+                    "provider_error_code": UNAVAILABLE,
+                    "failure_kind": "UNCLASSIFIED",
+                    "message": COUNT_TOKENS_FAILURE_GENERIC_MESSAGE,
+                }
                 self._record_preflight_transport_attempts(record, 1)
-            safe_count_errors = {
-                "COUNT_TOKENS_FAILED",
-                "COUNT_TOKENS_REQUEST_UNREPRESENTABLE",
-                "COUNT_TOKENS_RESPONSE_MALFORMED",
-            }
-            error_code = str(error)
-            code = error_code if error_code in safe_count_errors else "COUNT_TOKENS_FAILED"
-            self._preflight_failure(record, code)
-        except Exception:
-            elapsed = max(0.0, self.clock() - started)
-            self.preflight_elapsed_seconds += elapsed
-            self.aggregate.preflight_elapsed_seconds += elapsed
-            record["elapsed_seconds"] = elapsed
-            self._record_preflight_transport_attempts(record, 1)
-            self._preflight_failure(record, "COUNT_TOKENS_FAILED")
+                self._preflight_failure(record, "COUNT_TOKENS_FAILED")
 
         elapsed = max(0.0, self.clock() - started)
         self.preflight_elapsed_seconds += elapsed
@@ -1420,26 +1629,41 @@ class BudgetedGeminiClient:
             > self.aggregate_budget.preflight_elapsed_limit
         ):
             self._preflight_failure(record, "AGGREGATE_PREFLIGHT_TIME_EXCEEDED")
-        try:
-            count = _parse_count_tokens_response(response)
-        except SmokeBlocked:
-            self._preflight_failure(record, "COUNT_TOKENS_RESPONSE_MALFORMED")
-        except Exception:
-            self._preflight_failure(record, "COUNT_TOKENS_RESPONSE_MALFORMED")
+        if static_fallback:
+            raw_counted_input_tokens = count.tokens
+            continuation_reserve = (
+                self._continuation_thinking_token_reserve
+                if _contains_replayed_thought_signature(request)
+                else 0
+            )
+            count = PreflightCount(tokens=raw_counted_input_tokens + continuation_reserve)
+            record["raw_counted_input_tokens"] = UNAVAILABLE
+            record["continuation_thinking_token_reserve"] = continuation_reserve
+            record["estimated_input_token_upper_bound"] = count.tokens
+        else:
+            try:
+                count = _parse_count_tokens_response(response)
+            except SmokeBlocked:
+                self._preflight_failure(record, "COUNT_TOKENS_RESPONSE_MALFORMED")
+            except Exception:
+                self._preflight_failure(record, "COUNT_TOKENS_RESPONSE_MALFORMED")
 
-        raw_counted_input_tokens = count.tokens
-        continuation_reserve = (
-            self._continuation_thinking_token_reserve
-            if _contains_replayed_thought_signature(request)
-            else 0
-        )
-        count = PreflightCount(
-            tokens=raw_counted_input_tokens + continuation_reserve,
-            cost_usd=count.cost_usd,
-        )
-        record["raw_counted_input_tokens"] = raw_counted_input_tokens
-        record["continuation_thinking_token_reserve"] = continuation_reserve
-        record["counted_input_tokens"] = count.tokens
+            raw_counted_input_tokens = count.tokens
+            continuation_reserve = (
+                self._continuation_thinking_token_reserve
+                if _contains_replayed_thought_signature(request)
+                else 0
+            )
+            count = PreflightCount(
+                tokens=raw_counted_input_tokens + continuation_reserve,
+                cost_usd=count.cost_usd,
+            )
+            record["raw_counted_input_tokens"] = raw_counted_input_tokens
+            record["continuation_thinking_token_reserve"] = continuation_reserve
+            record["counted_input_tokens"] = count.tokens
+            record["count_tokens_status"] = "PASS"
+            record["token_estimation_source"] = "PROVIDER_COUNT_TOKENS"
+            record["billing_preflight_uncertainty"] = False
         if count.cost_usd is not None:
             record["cost_usd"] = count.cost_usd
         if count.tokens > self.case_budget.per_request_input_limit:
@@ -1457,16 +1681,20 @@ class BudgetedGeminiClient:
             self._preflight_failure(record, "AGGREGATE_PREFLIGHT_INPUT_TOKEN_BUDGET_EXCEEDED")
 
         current_reported_cost = self.aggregate.reported_cost_usd or 0.0
+        aggregate_output_reserved = (
+            self.aggregate.reported_billable_output_tokens
+            + self.aggregate.reserved_unknown_output_tokens
+        )
         projected_cost = _combined_cost_usd(
             self.aggregate.estimated_input_tokens + count.tokens,
             self.aggregate.preflight_counted_input_tokens + count.tokens,
-            self.aggregate.reported_billable_output_tokens
+            aggregate_output_reserved
             + min(
                 self.case_budget.per_request_output_tokens,
                 max(
                     0,
                     self.aggregate_budget.max_output_tokens
-                    - self.aggregate.reported_billable_output_tokens,
+                    - aggregate_output_reserved,
                 ),
             ),
         )
@@ -1477,8 +1705,21 @@ class BudgetedGeminiClient:
             )
         else:
             projected_cost = max(projected_cost, current_reported_cost)
+        # A reported bill above the token estimate must still reserve the next
+        # request, rather than comparing already-spent cost alone to the cap.
+        next_output_cap = min(
+            self.case_budget.per_request_output_tokens,
+            max(0, self.aggregate_budget.max_output_tokens - aggregate_output_reserved),
+        )
+        projected_cost = max(
+            projected_cost,
+            current_reported_cost + _combined_cost_usd(
+                count.tokens, count.tokens, next_output_cap
+            ) + (count.cost_usd or 0.0),
+        )
         if projected_cost > self.aggregate_budget.max_cost_usd:
             self._preflight_failure(record, "PROJECTED_COST_BUDGET_EXCEEDED")
+        record["reserved_output_tokens_upper_bound"] = next_output_cap
 
         self.estimated_input_tokens += count.tokens
         self.preflight_counted_input_tokens += count.tokens
@@ -1498,10 +1739,19 @@ class BudgetedGeminiClient:
             self.aggregate.reported_cost_usd = (
                 self.aggregate.reported_cost_usd or 0.0
             ) + count.cost_usd
-        record["status"] = "success"
-        record["counter_kind"] = COUNT_TOKENS_COUNTER_KIND
-        self._pending_preflight = {"record": record, "count": count}
-        self.last_guard_state = "PREFLIGHT_ACCEPTED"
+        if static_fallback:
+            record["status"] = "static_fallback"
+            record["counter_kind"] = "STATIC_CONSERVATIVE"
+            self.last_guard_state = "PREFLIGHT_STATIC_FALLBACK_ACCEPTED"
+        else:
+            record["status"] = "success"
+            record["counter_kind"] = COUNT_TOKENS_COUNTER_KIND
+            self.last_guard_state = "PREFLIGHT_ACCEPTED"
+        self._pending_preflight = {
+            "record": record,
+            "count": count,
+            "output_token_reserve": next_output_cap,
+        }
         return count
 
     def _capture_available_response_usage(
@@ -1534,6 +1784,19 @@ class BudgetedGeminiClient:
             thinking_tokens if thinking_tokens is not None else UNAVAILABLE
         )
         record["reported_cost_usd"] = cost if cost is not None else UNAVAILABLE
+        record["usage_status"] = (
+            "COMPLETE"
+            if input_tokens is not None and output_tokens is not None
+            else "INCOMPLETE"
+        )
+        record["usage_missing_fields"] = [
+            name
+            for name, value in (
+                ("input_tokens", input_tokens),
+                ("output_tokens", output_tokens),
+            )
+            if value is None
+        ]
         record["usage_delta"] = (
             input_tokens - preflight.tokens
             if input_tokens is not None
@@ -1556,9 +1819,7 @@ class BudgetedGeminiClient:
                 if self.aggregate.reported_thinking_tokens is None
                 else self.aggregate.reported_thinking_tokens + thinking_tokens
             )
-        billable_output_tokens = (output_tokens or 0) + (thinking_tokens or 0)
-        self.reported_billable_output_tokens += billable_output_tokens
-        self.aggregate.reported_billable_output_tokens += billable_output_tokens
+        self._record_billable_output_usage(output_tokens, thinking_tokens)
         if cost is not None:
             self.reported_cost_usd = (
                 cost if self.reported_cost_usd is None else self.reported_cost_usd + cost
@@ -1569,6 +1830,40 @@ class BudgetedGeminiClient:
                 else self.aggregate.reported_cost_usd + cost
             )
         self._pending_preflight = None
+
+    def _record_billable_output_usage(
+        self,
+        output_tokens: int | None,
+        thinking_tokens: int | None,
+    ) -> None:
+        if output_tokens is None:
+            if thinking_tokens is not None:
+                self.reported_billable_output_tokens += thinking_tokens
+                self.aggregate.reported_billable_output_tokens += thinking_tokens
+            pending_reserve = (
+                self._pending_preflight.get("output_token_reserve")
+                if self._pending_preflight is not None
+                else None
+            )
+            output_reserve = (
+                pending_reserve
+                if isinstance(pending_reserve, int) and not isinstance(pending_reserve, bool)
+                else self.case_budget.per_request_output_tokens
+            )
+            self._reserve_unknown_output_tokens(
+                max(0, output_reserve - (thinking_tokens or 0))
+            )
+            return
+        billable_output_tokens = output_tokens + (thinking_tokens or 0)
+        self.reported_billable_output_tokens += billable_output_tokens
+        self.aggregate.reported_billable_output_tokens += billable_output_tokens
+
+    def _reserve_unknown_output_tokens(self, reserve: int | None = None) -> None:
+        if self.reserved_unknown_output_tokens:
+            return
+        reserve = self.case_budget.per_request_output_tokens if reserve is None else reserve
+        self.reserved_unknown_output_tokens = reserve
+        self.aggregate.reserved_unknown_output_tokens += reserve
 
     def generate_content(
         self,
@@ -1635,6 +1930,16 @@ class BudgetedGeminiClient:
                     self._pending_preflight["record"]["inference_status"] = "failed"
                 # Do not add exception text to any artifact or diagnostic.
                 raise
+        self.provider_response_accepted = True
+        self.last_guard_state = "RESPONSE_ACCEPTED"
+        if self.on_response_accepted is not None:
+            # This callback is deliberately outside the transport retry block:
+            # local persistence failures must not replay an already accepted response.
+            try:
+                self.on_response_accepted(response)
+            except BaseException:
+                self._terminal = True
+                raise
         elapsed = max(0.0, self.clock() - started)
         self.provider_elapsed_seconds += elapsed
         self.aggregate.provider_elapsed_seconds += elapsed
@@ -1681,125 +1986,19 @@ class BudgetedGeminiClient:
             self._terminal = True
             raise SmokeBlocked("PROVIDER_USAGE_UNAVAILABLE")
         preflight = self._pending_preflight["count"]
-        pending_record = self._pending_preflight["record"]
-        pending_record["reported_input_tokens"] = (
-            input_tokens if input_tokens is not None else UNAVAILABLE
+        response_usage_complete = input_tokens is not None and output_tokens is not None
+        self._capture_available_response_usage(
+            response,
+            status=(
+                "response_received"
+                if response_usage_complete
+                else "response_received_usage_incomplete"
+            ),
         )
-        pending_record["usage_delta"] = (
-            input_tokens - preflight.tokens
-            if input_tokens is not None
-            else UNAVAILABLE
-        )
-        pending_record["inference_status"] = "response_received"
-        pending_record["reported_output_tokens"] = (
-            output_tokens if output_tokens is not None else UNAVAILABLE
-        )
-        pending_record["reported_thinking_tokens"] = (
-            thinking_tokens if thinking_tokens is not None else UNAVAILABLE
-        )
-        pending_record["reported_cost_usd"] = (
-            cost if cost is not None else UNAVAILABLE
-        )
-        if input_tokens is None:
-            if output_tokens is not None:
-                self.reported_output_tokens += output_tokens
-                self.aggregate.reported_output_tokens += output_tokens
-            if thinking_tokens is not None:
-                self.reported_thinking_tokens = (
-                    thinking_tokens
-                    if self.reported_thinking_tokens is None
-                    else self.reported_thinking_tokens + thinking_tokens
-                )
-                self.aggregate.reported_thinking_tokens = (
-                    thinking_tokens
-                    if self.aggregate.reported_thinking_tokens is None
-                    else self.aggregate.reported_thinking_tokens + thinking_tokens
-                )
-            billable_output_tokens = (output_tokens or 0) + (thinking_tokens or 0)
-            self.reported_billable_output_tokens += billable_output_tokens
-            self.aggregate.reported_billable_output_tokens += billable_output_tokens
-            if cost is not None:
-                self.reported_cost_usd = (
-                    cost
-                    if self.reported_cost_usd is None
-                    else self.reported_cost_usd + cost
-                )
-                self.aggregate.reported_cost_usd = (
-                    cost
-                    if self.aggregate.reported_cost_usd is None
-                    else self.aggregate.reported_cost_usd + cost
-                )
-            self._pending_preflight = None
-            self.last_guard_state = "BLOCKED_PROVIDER_USAGE_UNAVAILABLE"
-            self._terminal = True
-            raise SmokeBlocked("PROVIDER_USAGE_UNAVAILABLE")
-        usage_delta = input_tokens - preflight.tokens
-        if usage_delta > 0:
-            self.reported_input_tokens += input_tokens
-            self.aggregate.reported_input_tokens += input_tokens
-            if output_tokens is not None:
-                self.reported_output_tokens += output_tokens
-                self.aggregate.reported_output_tokens += output_tokens
-            if thinking_tokens is not None:
-                self.reported_thinking_tokens = (
-                    thinking_tokens
-                    if self.reported_thinking_tokens is None
-                    else self.reported_thinking_tokens + thinking_tokens
-                )
-                self.aggregate.reported_thinking_tokens = (
-                    thinking_tokens
-                    if self.aggregate.reported_thinking_tokens is None
-                    else self.aggregate.reported_thinking_tokens + thinking_tokens
-                )
-            billable_output_tokens = (output_tokens or 0) + (thinking_tokens or 0)
-            self.reported_billable_output_tokens += billable_output_tokens
-            self.aggregate.reported_billable_output_tokens += billable_output_tokens
-            if cost is not None:
-                self.reported_cost_usd = (
-                    cost
-                    if self.reported_cost_usd is None
-                    else self.reported_cost_usd + cost
-                )
-                self.aggregate.reported_cost_usd = (
-                    cost
-                    if self.aggregate.reported_cost_usd is None
-                    else self.aggregate.reported_cost_usd + cost
-                )
-            self._pending_preflight = None
+        if input_tokens is not None and input_tokens > preflight.tokens:
             self.last_guard_state = "PREFLIGHT_UNDERCOUNT_MISMATCH"
             self._terminal = True
             raise SmokeBlocked("PREFLIGHT_UNDERCOUNT_MISMATCH")
-        self._pending_preflight = None
-        if input_tokens is not None:
-            self.reported_input_tokens += input_tokens
-            self.aggregate.reported_input_tokens += input_tokens
-        if output_tokens is not None:
-            self.reported_output_tokens += output_tokens
-            self.aggregate.reported_output_tokens += output_tokens
-        if thinking_tokens is not None:
-            self.reported_thinking_tokens = (
-                thinking_tokens
-                if self.reported_thinking_tokens is None
-                else self.reported_thinking_tokens + thinking_tokens
-            )
-        billable_output_tokens = (output_tokens or 0) + (thinking_tokens or 0)
-        self.reported_billable_output_tokens += billable_output_tokens
-        self.aggregate.reported_billable_output_tokens += billable_output_tokens
-        if thinking_tokens is not None:
-            self.aggregate.reported_thinking_tokens = (
-                thinking_tokens
-                if self.aggregate.reported_thinking_tokens is None
-                else self.aggregate.reported_thinking_tokens + thinking_tokens
-            )
-        if cost is not None:
-            self.reported_cost_usd = (
-                cost if self.reported_cost_usd is None else self.reported_cost_usd + cost
-            )
-            self.aggregate.reported_cost_usd = (
-                cost
-                if self.aggregate.reported_cost_usd is None
-                else self.aggregate.reported_cost_usd + cost
-            )
         if self.reported_input_tokens > self.case_budget.max_input_tokens:
             self.last_guard_state = "REPORTED_INPUT_TOKEN_BUDGET_EXCEEDED"
             self._terminal = True
@@ -1820,6 +2019,14 @@ class BudgetedGeminiClient:
             self.last_guard_state = "REPORTED_COST_BUDGET_EXCEEDED"
             self._terminal = True
             raise SmokeBlocked("REPORTED_COST_BUDGET_EXCEEDED")
+        if self.reported_cost_usd is not None and self.reported_cost_usd > self.aggregate_budget.max_cost_usd:
+            self.last_guard_state = "REPORTED_COST_BUDGET_EXCEEDED"
+            self._terminal = True
+            raise SmokeBlocked("REPORTED_COST_BUDGET_EXCEEDED")
+        if not response_usage_complete:
+            self.last_guard_state = "RESPONSE_ACCEPTED_USAGE_INCOMPLETE"
+            self._terminal = True
+            return response
         self._continuation_thinking_token_reserve = thinking_tokens or 0
         self.last_guard_state = "RESPONSE_ACCEPTED"
         return response
@@ -2643,8 +2850,13 @@ def execute_real_case(
         model=adapter,
     )
     request_id = f"m12-{case.case_id}-{uuid4().hex}"
-    status = runtime.start_multi_agent(
-        RunRequest(
+    from tests.smoke.m12_memory_fixture import smoke_memory_binding
+    memory_binding = (
+        smoke_memory_binding(vault, index_path, case_root / "temporal_decisions.sqlite")
+        if case.case_id == "mps-001" else nullcontext()
+    )
+    with memory_binding:
+        status = runtime.start_multi_agent(RunRequest(
             request_id=request_id,
             thread_id=request_id,
             workflow="team_decision",
@@ -2652,8 +2864,7 @@ def execute_real_case(
             max_steps=case_budget.max_model_turns,
             max_provider_requests=case_budget.max_provider_requests,
             dry_run=True,
-        )
-    )
+        ))
     state = runtime.checkpointer.get_latest(status.thread_id)
     if state is None:
         raise SmokeBlocked("Team Decision runtime did not persist state")
@@ -3550,6 +3761,29 @@ def test_offline_projected_cost_guard_blocks_before_delegate_call():
     assert delegate.calls == []
 
 
+def test_offline_exhausted_smoke_cost_blocks_count_and_generation():
+    harness = _harness()
+    delegate = harness.RecordingDelegate()
+    aggregate = harness.AggregateUsage()
+    aggregate.reported_cost_usd = harness.MAX_TOTAL_SMOKE_COST
+    guard = harness.BudgetedGeminiClient(
+        delegate,
+        case=harness.MPS_001_RERUN_CASE,
+        case_budget=harness.MPS_001_RERUN_CASE_BUDGET,
+        aggregate=aggregate,
+        aggregate_budget=harness.MPS_001_RERUN_AGGREGATE_BUDGET,
+    )
+    with patch.object(delegate, "count_tokens") as count:
+        with pytest.raises(harness.SmokeBlocked, match="PROJECTED_COST_BUDGET_EXCEEDED"):
+            guard.generate_content(
+                model=harness.MODEL,
+                contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],
+                config={"automatic_function_calling": {"disable": True}},
+            )
+        count.assert_not_called()
+    assert delegate.calls == []
+
+
 def test_offline_client_constructor_requires_developer_api_and_disables_vertex():
     harness = _harness()
     seen = {}
@@ -3663,14 +3897,16 @@ def test_offline_client_without_count_tokens_surface_blocks_before_use():
     assert len(constructed) == 1
 
 
-def test_offline_delegate_failure_stops_after_one_identical_transport_retry():
+def test_offline_delegate_failure_stops_without_transport_retry():
     harness = _harness()
     delegate = harness.RecordingDelegate(exception=TimeoutError("synthetic timeout"))
+    delays = []
     guard = harness.BudgetedGeminiClient(
         delegate,
         case=harness.PUBLIC_CASES[0],
         case_budget=harness.BUDGET_MANIFEST.case("mps-001"),
         aggregate=harness.AggregateUsage(),
+        sleep=delays.append,
     )
     with pytest.raises(TimeoutError):
         guard.generate_content(
@@ -3678,11 +3914,11 @@ def test_offline_delegate_failure_stops_after_one_identical_transport_retry():
             contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],
             config={"automatic_function_calling": {"disable": True}},
         )
-    assert len(delegate.calls) == 2
-    assert delegate.calls[0] == delegate.calls[1]
+    assert len(delegate.calls) == 1
     assert guard.provider_calls == 1
-    assert guard.inference_transport_attempts == 2
+    assert guard.inference_transport_attempts == 1
     assert guard.automatic_retry_count == 0
+    assert delays == []
 
 
 def test_offline_provider_side_tool_execution_is_rejected_before_send():
@@ -4316,19 +4552,12 @@ def test_offline_raw_count_endpoint_uses_complete_request_and_developer_header()
     assert seen["closed"] is True
 
 
-def test_offline_count_transport_retries_one_transient_with_identical_request_only():
+def test_offline_count_transport_failure_is_terminal_without_retry():
     harness = _harness()
     calls = []
     delays = []
 
-    class Response:
-        def read(self):
-            return json.dumps({"totalTokens": 19}).encode("utf-8")
-
-        def close(self):
-            return None
-
-    def transient_then_success(request, timeout):
+    def transient_failure(request, timeout):
         calls.append(
             (
                 request.full_url,
@@ -4337,28 +4566,25 @@ def test_offline_count_transport_retries_one_transient_with_identical_request_on
                 timeout,
             )
         )
-        if len(calls) == 1:
-            raise URLError("synthetic transient")
-        return Response()
+        raise URLError("synthetic transient")
 
     request = {
         "model": harness.MODEL,
         "contents": [{"role": "user", "parts": [{"text": "synthetic"}]}],
         "config": {"automatic_function_calling": {"disable": True}},
     }
-    response = harness._raw_developer_count_tokens(
-        "synthetic-key",
-        model=harness.MODEL,
-        request=request,
-        urlopen=transient_then_success,
-        sleep=delays.append,
-    )
+    with pytest.raises(harness.CountTokensFailure) as transient_failure_result:
+        harness._raw_developer_count_tokens(
+            "synthetic-key",
+            model=harness.MODEL,
+            request=request,
+            urlopen=transient_failure,
+            sleep=delays.append,
+        )
 
-    assert response["totalTokens"] == 19
-    assert response[harness.TRANSPORT_ATTEMPTS_FIELD] == 2
-    assert len(calls) == 2
-    assert calls[0] == calls[1]
-    assert delays == [harness.TRANSPORT_RETRY_BASE_DELAY_SECONDS]
+    assert transient_failure_result.value.transport_attempts == 1
+    assert len(calls) == 1
+    assert delays == []
 
     deterministic_calls = []
 
@@ -4387,7 +4613,7 @@ def test_offline_count_transport_retries_one_transient_with_identical_request_on
     assert len(deterministic_calls) == 1
 
 
-def test_offline_inference_transport_retry_is_identical_and_not_semantic_resampling():
+def test_offline_inference_transport_error_is_terminal_without_retry():
     harness = _harness()
     delays = []
 
@@ -4420,18 +4646,19 @@ def test_offline_inference_transport_retry_is_identical_and_not_semantic_resampl
         aggregate=harness.AggregateUsage(),
         sleep=delays.append,
     )
-    guard.generate_content(
-        model=harness.MODEL,
-        contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],
-        config={"automatic_function_calling": {"disable": True}},
-    )
+    with pytest.raises(URLError):
+        guard.generate_content(
+            model=harness.MODEL,
+            contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],
+            config={"automatic_function_calling": {"disable": True}},
+        )
 
-    assert delegate.inference_calls[0] == delegate.inference_calls[1]
+    assert len(delegate.inference_calls) == 1
     assert guard.provider_calls == 1
     assert guard.model_turns == 1
-    assert guard.inference_transport_attempts == 2
+    assert guard.inference_transport_attempts == 1
     assert guard.automatic_retry_count == 0
-    assert delays == [harness.TRANSPORT_RETRY_BASE_DELAY_SECONDS]
+    assert delays == []
 
 
 def test_offline_raw_http_count_failure_drops_untrusted_error_body_and_blocks_inference():
@@ -4505,12 +4732,14 @@ def test_offline_raw_http_count_failure_drops_untrusted_error_body_and_blocks_in
         "exception_class": "HTTPError",
         "http_status": 429,
         "provider_error_code": "RESOURCE_EXHAUSTED",
+        "failure_kind": "UNCLASSIFIED",
         "message": harness.COUNT_TOKENS_FAILURE_GENERIC_MESSAGE,
     }
     assert set(record["failure_diagnostic"]) == {
         "exception_class",
         "http_status",
         "provider_error_code",
+        "failure_kind",
         "message",
     }
     persisted = json.dumps(record, sort_keys=True)
@@ -4538,7 +4767,7 @@ def test_offline_raw_http_count_failure_drops_untrusted_provider_error_code():
                 "error": {
                     "code": 429,
                     "status": "expectedAnswer.GOLDRESULT",
-                    "message": "quota exhausted",
+                    "message": "private synthetic prompt/context marker",
                 }
             }
         ).encode("utf-8")
@@ -4588,9 +4817,10 @@ def test_offline_raw_http_count_failure_drops_untrusted_provider_error_code():
 
     record = guard.preflight_records[0]
     assert record["failure_diagnostic"]["provider_error_code"] == harness.UNAVAILABLE
-    assert record["failure_diagnostic"]["message"] == "quota exhausted"
+    assert record["failure_diagnostic"]["message"] == harness.COUNT_TOKENS_FAILURE_GENERIC_MESSAGE
     persisted = json.dumps(record, sort_keys=True)
     assert synthetic_key not in persisted
+    assert "private synthetic prompt/context marker" not in persisted
     assert "expectedAnswer" not in persisted
     assert "GOLDRESULT" not in persisted
     assert delegate.inference_calls == []
