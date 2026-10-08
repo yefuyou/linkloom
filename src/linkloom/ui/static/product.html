@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>LinkLoom — Team Decision Memory</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="/product.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="LinkLoom home"><span class="brand-mark" aria-hidden="true">L</span><span>LinkLoom</span></a>
+      <div class="workspace-control">
+        <label for="workspace-picker">Workspace</label>
+        <select id="workspace-picker" aria-label="Select workspace"></select>
+        <button class="button quiet" id="new-workspace" type="button">New workspace</button>
+      </div>
+      <div id="provider-state" class="provider-state" role="status">Checking provider…</div>
+    </header>
+    <nav class="primary-nav" aria-label="Primary">
+      <button type="button" data-screen="sources" aria-current="page">Sources</button>
+      <button type="button" data-screen="review">Review <span class="nav-count" id="review-count"></span></button>
+      <button type="button" data-screen="decisions">Decision Memory</button>
+      <button type="button" data-screen="ask">Ask</button>
+    </nav>
+    <main id="main-content" class="page-shell" tabindex="-1">
+      <div id="page" aria-live="polite"><section class="state-card"><p>Opening LinkLoom…</p></section></div>
+    </main>
+    <div class="sr-only" id="status-live" aria-live="polite" aria-atomic="true"></div>
+    <script src="/product.js" defer></script>
+  </body>
+</html>

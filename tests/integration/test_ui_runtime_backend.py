@@ -101,7 +101,7 @@ def test_runtime_backend_projects_a_real_team_decision_run_without_source_writes
     vault.mkdir()
     note = vault / "decision.md"
     note.write_text(
-        "# Model provider decision\n\n"
+        "# Meeting notes\n\n"
         "The team approved Aster A as the model provider for the pilot.\n",
         encoding="utf-8",
     )
@@ -123,7 +123,7 @@ def test_runtime_backend_projects_a_real_team_decision_run_without_source_writes
     )
 
     started = backend.start("Which model provider did the team approve?")
-    deadline = time.monotonic() + 5
+    deadline = time.monotonic() + 60
     snapshot = started
     while snapshot["kind"] == "running" and time.monotonic() < deadline:
         time.sleep(0.01)

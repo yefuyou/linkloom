@@ -10,12 +10,18 @@ from typing import Any
 from urllib.parse import unquote, urlsplit
 
 from linkloom.ui.backend import RunBackend
+from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
 
 
 MAX_REQUEST_BYTES = 32 * 1024
+MAX_PRODUCT_REQUEST_BYTES = MAX_SOURCE_BYTES + 16 * 1024
 STATIC_ROOT = Path(__file__).with_name("static")
 STATIC_FILES = {
-    "/": ("index.html", "text/html; charset=utf-8"),
+    "/": ("product.html", "text/html; charset=utf-8"),
+    "/product.html": ("product.html", "text/html; charset=utf-8"),
+    "/product.css": ("product.css", "text/css; charset=utf-8"),
+    "/product.js": ("product.js", "text/javascript; charset=utf-8"),
+    "/legacy-ask": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/app.css": ("app.css", "text/css; charset=utf-8"),
     "/i18n.js": ("i18n.js", "text/javascript; charset=utf-8"),
@@ -26,8 +32,14 @@ STATIC_FILES = {
 class LinkLoomHTTPServer(ThreadingHTTPServer):
     daemon_threads = True
 
-    def __init__(self, address: tuple[str, int], backend: RunBackend) -> None:
+    def __init__(
+        self,
+        address: tuple[str, int],
+        backend: RunBackend,
+        product_app: ProductApplication | None = None,
+    ) -> None:
         self.backend = backend
+        self.product_app = product_app
         super().__init__(address, LinkLoomRequestHandler)
 
 
@@ -91,6 +103,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         path = unquote(urlsplit(self.path).path)
         if path in STATIC_FILES:
             filename, content_type = STATIC_FILES[path]
+            if path == "/" and self.server.product_app is None:
+                filename = "index.html"
             try:
                 body = (STATIC_ROOT / filename).read_bytes()
             except OSError:
@@ -100,6 +114,14 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             return
         if path == "/api/context":
             self._send_json(self.server.backend.context())
+            return
+        if self.server.product_app is not None and path.startswith("/api/") and path not in {
+            "/api/runs", "/api/context"
+        } and not path.startswith("/api/runs/") and not path.startswith("/api/demo/"):
+            try:
+                self._send_json(self.server.product_app.handle_get(path))
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
             return
         if path.startswith("/api/runs/"):
             run_id = path.removeprefix("/api/runs/")
@@ -125,7 +147,18 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             return
         path = unquote(urlsplit(self.path).path)
         if path != "/api/runs":
-            self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
+            if self.server.product_app is None or not path.startswith("/api/"):
+                self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
+                return
+            payload = self._read_json_payload(MAX_PRODUCT_REQUEST_BYTES)
+            if payload is None:
+                return
+            try:
+                result, status = self.server.product_app.handle_post(path, payload)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+                return
+            self._send_json(result, status=status)
             return
         if self.headers.get_content_type() != "application/json":
             self._send_error_payload(
@@ -134,19 +167,10 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
                 "Run requests must use application/json.",
             )
             return
-        try:
-            length = int(self.headers.get("Content-Length", "0"))
-        except ValueError:
-            length = 0
-        if length <= 0 or length > MAX_REQUEST_BYTES:
-            self._send_error_payload(400, "INVALID_REQUEST", "The request body is invalid.")
+        payload = self._read_json_payload(MAX_REQUEST_BYTES)
+        if payload is None:
             return
-        try:
-            payload = json.loads(self.rfile.read(length).decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError):
-            self._send_error_payload(400, "INVALID_JSON", "The request must be valid JSON.")
-            return
-        query = payload.get("query") if isinstance(payload, dict) else None
+        query = payload.get("query")
         if not isinstance(query, str) or not query.strip():
             self._send_error_payload(400, "INVALID_QUERY", "A decision question is required.")
             return
@@ -157,10 +181,65 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_json(snapshot, status=HTTPStatus.ACCEPTED)
 
+    def do_PUT(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        if self._reject_non_local_host():
+            return
+        if self.server.product_app is None:
+            self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
+            return
+        payload = self._read_json_payload(MAX_PRODUCT_REQUEST_BYTES)
+        if payload is None:
+            return
+        try:
+            result, status = self.server.product_app.handle_put(unquote(urlsplit(self.path).path), payload)
+        except ProductApplicationError as error:
+            self._send_error_payload(error.status, error.code, str(error))
+            return
+        self._send_json(result, status=status)
+
+    def do_DELETE(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        if self._reject_non_local_host():
+            return
+        if self.server.product_app is None:
+            self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
+            return
+        try:
+            result = self.server.product_app.handle_delete(unquote(urlsplit(self.path).path))
+        except ProductApplicationError as error:
+            self._send_error_payload(error.status, error.code, str(error))
+            return
+        self._send_json(result)
+
+    def _read_json_payload(self, maximum_bytes: int) -> dict[str, Any] | None:
+        if self.headers.get_content_type() != "application/json":
+            self._send_error_payload(
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                "UNSUPPORTED_MEDIA_TYPE",
+                "This operation requires application/json.",
+            )
+            return None
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            length = 0
+        if length <= 0 or length > maximum_bytes:
+            self._send_error_payload(400, "INVALID_REQUEST", "The request body is invalid or too large.")
+            return None
+        try:
+            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            self._send_error_payload(400, "INVALID_JSON", "The request must be valid JSON.")
+            return None
+        if not isinstance(payload, dict):
+            self._send_error_payload(400, "INVALID_REQUEST", "The request body must be a JSON object.")
+            return None
+        return payload
+
 
 def create_http_server(
     backend: RunBackend,
     *,
+    product_app: ProductApplication | None = None,
     host: str = "127.0.0.1",
     port: int = 8765,
 ) -> LinkLoomHTTPServer:
@@ -168,7 +247,7 @@ def create_http_server(
         raise ValueError("Product UI V1 binds to localhost only.")
     if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
         raise ValueError("port must be between 0 and 65535.")
-    return LinkLoomHTTPServer((host, port), backend)
+    return LinkLoomHTTPServer((host, port), backend, product_app)
 
 
 __all__ = ["LinkLoomHTTPServer", "create_http_server"]
