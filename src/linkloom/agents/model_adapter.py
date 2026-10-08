@@ -41,10 +41,12 @@ MAX_MODEL_TOOL_HISTORY_BYTES = 128 * 1024
 
 MODEL_PROVIDER_ERROR_SPECS = {
     "MODEL_AUTH_REQUIRED": ("authentication", False),
+    "MODEL_BILLING_BLOCKED": ("billing_blocked", False),
     "MODEL_INVALID_REQUEST": ("invalid_request", False),
     "MODEL_RATE_LIMITED": ("rate_limit", True),
     "MODEL_TIMEOUT": ("timeout", False),
     "MODEL_TRANSIENT_FAILURE": ("transient", True),
+    "MODEL_UNKNOWN_FAILURE": ("unknown_provider_error", False),
     "MODEL_UNAVAILABLE": ("unavailable_model", False),
     "MODEL_RESPONSE_MALFORMED": ("malformed_response", False),
     "MODEL_TOOL_CALL_PARSE_FAILED": ("tool_call_parse", False),
@@ -266,6 +268,8 @@ class ModelGenerationOptions:
 
     max_output_tokens: int | None = None
     temperature: float | None = None
+    require_tool_call: bool = False
+    thinking_level: str | None = None
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "ModelGenerationOptions")
@@ -286,15 +290,38 @@ class ModelGenerationOptions:
             raise ValidationError(
                 "ModelGenerationOptions.temperature must be a finite non-negative number or null."
             )
+        if not isinstance(self.require_tool_call, bool):
+            raise ValidationError("ModelGenerationOptions.require_tool_call must be boolean.")
+        if self.thinking_level is not None and self.thinking_level not in {
+            "low",
+            "medium",
+            "high",
+        }:
+            raise ValidationError(
+                "ModelGenerationOptions.thinking_level must be low, medium, high, or null."
+            )
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        payload = asdict(self)
+        if not self.require_tool_call:
+            payload.pop("require_tool_call")
+        if self.thinking_level is None:
+            payload.pop("thinking_level")
+        return payload
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ModelGenerationOptions":
         if not isinstance(data, dict):
             raise ValidationError("ModelGenerationOptions must be a JSON object.")
-        unsupported = sorted(set(data) - {"max_output_tokens", "temperature"})
+        unsupported = sorted(
+            set(data)
+            - {
+                "max_output_tokens",
+                "temperature",
+                "require_tool_call",
+                "thinking_level",
+            }
+        )
         if unsupported:
             raise ValidationError(
                 "ModelGenerationOptions contains unsupported fields.",
@@ -303,6 +330,8 @@ class ModelGenerationOptions:
         return cls(
             max_output_tokens=data.get("max_output_tokens"),
             temperature=data.get("temperature"),
+            require_tool_call=data.get("require_tool_call", False),
+            thinking_level=data.get("thinking_level"),
         )
 
 

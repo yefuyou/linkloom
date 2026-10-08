@@ -59,14 +59,18 @@ def _request() -> ModelTurnRequest:
 
 def test_tool_definition_maps_to_one_manual_function_declaration_without_version_leak():
     definition = _definition()
+    canonical_schema = copy.deepcopy(definition.input_schema)
+    expected_projection = copy.deepcopy(canonical_schema)
+    expected_projection["properties"]["path"].pop("maxLength")
 
     mapped = map_tool_definition_to_gemini_function(definition)
 
     assert mapped == {
         "name": "read_verified_note",
         "description": "Read one verified note.",
-        "parameters_json_schema": definition.input_schema,
+        "parameters_json_schema": expected_projection,
     }
+    assert definition.input_schema == canonical_schema
     assert "version" not in mapped
     assert "output_schema" not in mapped
 

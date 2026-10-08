@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
+from datetime import UTC, datetime
 import json
 from types import SimpleNamespace
 
+import httpx
 import pytest
+from google import genai
+from google.genai import types
 
 from linkloom.agents.model_adapter import (
     ModelAction,
@@ -20,9 +25,25 @@ from linkloom.agents.model_adapter import (
 )
 from linkloom.agents.providers.gemini_api import (
     GeminiProviderAdapter,
+    build_gemini_sdk_client,
     build_gemini_request,
+    map_tool_definition_to_gemini_function,
 )
 from linkloom.runtime.errors import ValidationError
+from linkloom.semantic_ingestion.artifacts import RawArtifact
+from linkloom.semantic_ingestion.candidate_models import (
+    CandidateOutcome,
+    CandidateReasonCode,
+)
+from linkloom.semantic_ingestion.extraction import (
+    ProviderNeutralSemanticExtractor,
+    ProviderRequestAuthorization,
+    SemanticExtractionContext,
+    _provider_tool,
+)
+from linkloom.semantic_ingestion.relations import FrozenRelationResolver
+from linkloom.semantic_ingestion.timestamped_text import parse_timestamped_text
+from linkloom.semantic_ingestion.validation import CandidateValidator
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
 
 
@@ -162,6 +183,62 @@ def _request(**changes) -> ModelTurnRequest:
     return ModelTurnRequest(**values)
 
 
+def _semantic_projection_snapshot() -> tuple[ToolDefinition, dict, dict]:
+    definition = _provider_tool()
+    canonical = deepcopy(definition.input_schema)
+    expected = deepcopy(canonical)
+    claims_schema = expected["properties"]["claims"]
+    claims_schema.pop("maxItems")
+    claim_properties = claims_schema["items"]["properties"]
+    for field in ("subject", "relation", "value", "valid_from", "valid_to"):
+        claim_properties[field] = {
+            key: value
+            for key, value in claim_properties[field].items()
+            if key != "maxLength"
+        }
+    return definition, canonical, expected
+
+
+def _semantic_claim(**changes) -> dict:
+    claim = {
+        "claim_type": "DECISION",
+        "subject": "launch",
+        "relation": "uses vendor",
+        "value": "Vendor A",
+        "temporal_status": "NOT_STATED",
+        "valid_from": None,
+        "valid_to": None,
+        "confidence": {
+            "claim_type": 0.9,
+            "entity": 0.9,
+            "relation": 0.9,
+            "temporal": 0.9,
+            "overall": 0.9,
+        },
+    }
+    claim.update(changes)
+    return claim
+
+
+def _semantic_source() -> tuple[RawArtifact, object, SemanticExtractionContext]:
+    artifact = RawArtifact(
+        workspace_id="ws-p85",
+        artifact_id="p85-semantic-source",
+        source_type="timestamped_text",
+        content="[2026-10-01T10:03:00Z] Alice: We decided to use Vendor A for launch.",
+        ingestion_time=datetime(2026, 10, 7, tzinfo=UTC),
+    )
+    segment = parse_timestamped_text(artifact).segments[0]
+    context = SemanticExtractionContext(
+        expected_workspace_id="ws-p85",
+        relation_resolver=FrozenRelationResolver(
+            ("uses vendor",),
+            schema_version="p85-test-relations/v1",
+        ),
+    )
+    return artifact, segment, context
+
+
 def test_final_text_response_maps_to_normalized_model_response_without_sdk_objects():
     client = FakeGeminiClient(
         response={
@@ -227,6 +304,43 @@ def test_single_function_call_maps_to_runtime_tool_call_and_is_not_executed():
     assert response.finish_reason == "stop"
     assert client.requests
     assert not hasattr(client, "executed_tools")
+
+
+def test_required_tool_call_mode_constrains_gemini_to_function_call():
+    payload = build_gemini_request(
+        _request(
+            generation_options=ModelGenerationOptions(
+                max_output_tokens=2048,
+                temperature=0.0,
+                require_tool_call=True,
+            )
+        )
+    )
+
+    assert payload["config"]["tool_config"] == {
+        "function_calling_config": {"mode": "ANY"}
+    }
+    assert payload["config"]["max_output_tokens"] == 2048
+
+
+def test_thinking_level_maps_to_gemini_thinking_config():
+    payload = build_gemini_request(
+        _request(
+            generation_options=ModelGenerationOptions(
+                max_output_tokens=2048,
+                require_tool_call=True,
+                thinking_level="low",
+            )
+        )
+    )
+
+    assert payload["config"]["thinking_config"] == {"thinking_level": "LOW"}
+
+
+def test_default_gemini_tool_mode_remains_auto():
+    payload = build_gemini_request(_request())
+
+    assert "tool_config" not in payload["config"]
 
 
 def test_multiple_function_calls_preserve_order_ids_and_turn_signatures():
@@ -528,7 +642,7 @@ def test_observation_without_previous_call_fails_before_provider_invocation():
         (FakeGeminiError(status_code=401), "MODEL_AUTH_REQUIRED", "known_failure"),
         (FakeGeminiError(status_code=400), "MODEL_INVALID_REQUEST", "known_failure"),
         (FakeGeminiError(status_code=429), "MODEL_RATE_LIMITED", "known_failure"),
-        (TimeoutError("provider call timed out"), "MODEL_TIMEOUT", "unknown_provider_outcome"),
+        (TimeoutError("provider call timed out"), "MODEL_TIMEOUT", "known_failure"),
         (FakeGeminiError(status_code=503), "MODEL_UNAVAILABLE", "known_failure"),
     ],
 )
@@ -683,6 +797,135 @@ def test_unsupported_schema_fails_before_provider_invocation():
     assert response.error is not None
     assert response.error.code == "MODEL_TOOL_SCHEMA_UNSUPPORTED"
     assert client.requests == []
+
+
+def test_gemini_semantic_schema_projection_is_exact_and_keeps_canonical_input_unchanged():
+    definition, canonical, expected_projection = _semantic_projection_snapshot()
+
+    mapped = map_tool_definition_to_gemini_function(definition)
+
+    assert mapped["parameters_json_schema"] == expected_projection
+    assert mapped["parameters_json_schema"] is not definition.input_schema
+    assert definition.input_schema == canonical
+    assert canonical["properties"]["claims"]["maxItems"] == 20
+    canonical_claims = canonical["properties"]["claims"]["items"]["properties"]
+    assert [
+        canonical_claims[field]["maxLength"]
+        for field in ("subject", "relation", "value", "valid_from", "valid_to")
+    ] == [512, 512, 512, 40, 40]
+
+    projected_claims = expected_projection["properties"]["claims"]["items"]["properties"]
+    assert projected_claims["subject"]["type"] == ["string", "null"]
+    assert projected_claims["claim_type"]["enum"]
+    assert projected_claims["confidence"]["properties"]["overall"] == {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+    }
+
+
+def test_gemini_mock_transport_sends_exact_projected_semantic_schema_with_any_mode():
+    definition, canonical, expected_projection = _semantic_projection_snapshot()
+    declaration = map_tool_definition_to_gemini_function(definition)
+    captured: dict[str, object] = {}
+
+    def capture(request: httpx.Request) -> httpx.Response:
+        captured["body"] = json.loads(request.content.decode("utf-8"))
+        return httpx.Response(
+            200,
+            json={
+                "candidates": [
+                    {
+                        "content": {
+                            "parts": [
+                                {
+                                    "functionCall": {
+                                        "name": "emit_semantic_candidates",
+                                        "args": {"claims": []},
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+        )
+
+    sdk = build_gemini_sdk_client(
+        api_key="synthetic-no-network",
+        genai_module=genai,
+        types_module=types,
+        http_options_kwargs={
+            "client_args": {"transport": httpx.MockTransport(capture)}
+        },
+    )
+    try:
+        sdk.models.generate_content(
+            model="gemini-3.8-flash",
+            contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],
+            config={
+                "tools": [{"function_declarations": [declaration]}],
+                "tool_config": {"function_calling_config": {"mode": "ANY"}},
+            },
+        )
+    finally:
+        sdk.close()
+
+    body = captured["body"]
+    assert isinstance(body, dict)
+    wire_declaration = body["tools"][0]["functionDeclarations"][0]
+    assert wire_declaration["parametersJsonSchema"] == expected_projection
+    assert body["toolConfig"]["functionCallingConfig"]["mode"] == "ANY"
+    assert definition.input_schema == canonical
+
+
+@pytest.mark.parametrize(
+    "claims",
+    [
+        pytest.param([_semantic_claim(subject="s" * 513)], id="max-length"),
+        pytest.param([_semantic_claim() for _ in range(21)], id="max-items"),
+    ],
+)
+def test_projected_provider_limits_are_still_enforced_locally(claims: list[dict]) -> None:
+    artifact, segment, context = _semantic_source()
+    client = FakeGeminiClient(
+        response={
+            "function_calls": [
+                {
+                    "id": "gemini-call-p85-semantic",
+                    "name": "emit_semantic_candidates",
+                    "args": {"claims": claims},
+                }
+            ],
+            "finish_reason": "STOP",
+        }
+    )
+
+    def authorize(request: ModelTurnRequest) -> ProviderRequestAuthorization:
+        return ProviderRequestAuthorization.approve(
+            request,
+            guard_id="p85-semantic-test-guard/v1",
+            reservation_id="p85-semantic-test-reservation",
+            estimated_cost_upper_bound_usd=0,
+        )
+
+    extractor = ProviderNeutralSemanticExtractor(
+        GeminiProviderAdapter(client),
+        provider_id="gemini",
+        model_id="gemini-test-model",
+        request_guard=authorize,
+        request_guard_id="p85-semantic-test-guard/v1",
+        max_attempts=1,
+    )
+    extraction = extractor.extract(segment, context)
+    validation = CandidateValidator().validate(extraction, segment, artifact, context)
+
+    assert extraction.failure_code is CandidateReasonCode.MALFORMED_EXTRACTION
+    assert validation[0].outcome is CandidateOutcome.REJECTED
+    assert validation[0].candidate is None
+    assert validation[0].reason_codes == (CandidateReasonCode.MALFORMED_EXTRACTION,)
+    assert extraction.receipt.attempt_count == 1
+    assert len(client.requests) == 1
 
 
 def test_client_request_is_json_safe_and_does_not_include_credentials_or_raw_state():
@@ -989,6 +1232,10 @@ def test_gemini_provider_error_response_and_safety_block_are_observable():
     assert provider_error.error.details["low_level_failure_class"] == "PROVIDER_OVERLOADED"
     assert provider_error.error.details["request_id"] == "gemini-request-503"
     assert provider_error.error.details["provider_error_message_safe"] == "provider overloaded"
+    assert provider_error.error.details["failure_category"] == "PROVIDER_SERVER_ERROR"
+    assert provider_error.error.details["retry_classification"] == "HTTP_503"
+    assert provider_error.error.retryable is True
+    assert provider_error.error.details["response_accepted"] is True
 
     safety = GeminiProviderAdapter(
         FakeGeminiClient(response={"finish_reason": "SAFETY", "response_status": "blocked"})
@@ -1007,6 +1254,10 @@ def test_gemini_malformed_and_incomplete_responses_keep_provider_classification(
     assert malformed.error is not None
     assert malformed.error.details["low_level_failure_class"] == "RESPONSE_PARSE_ERROR"
     assert malformed.error.details["connection_phase"] == "SDK_PARSE"
+    assert malformed.error.details["failure_stage"] == "RESPONSE_VALIDATION"
+    assert malformed.error.details["failure_category"] == "RESPONSE_VALIDATION_ERROR"
+    assert malformed.error.details["response_accepted"] is True
+    assert malformed.error.retryable is False
 
     incomplete = GeminiProviderAdapter(
         FakeGeminiClient(response={"finish_reason": "MAX_TOKENS"})
@@ -1020,7 +1271,7 @@ def test_gemini_diagnostics_redact_prompt_and_proxy_credentials():
     exception = FakeGeminiError(
         f"proxy https://proxy-user:proxy-secret@127.0.0.1:7897 failed for {prompt_fragment}; "
         "api_key=AIzaSyDUMMYKeyIsNotReal1234567890 "
-        "Authorization: Bearer oauth-token-secret-123456789"
+        "Authorization: Bearer oauth-token-secret-123456789; Cookie: session-id=private-cookie-value"
     )
     response = GeminiProviderAdapter(FakeGeminiClient(exception=exception)).complete(
         _request(user_input=f"request contains {prompt_fragment}")
@@ -1033,6 +1284,7 @@ def test_gemini_diagnostics_redact_prompt_and_proxy_credentials():
     assert "proxy-secret" not in serialized
     assert "AIzaSyDUMMYKeyIsNotReal1234567890" not in serialized
     assert "oauth-token-secret-123456789" not in serialized
+    assert "private-cookie-value" not in serialized
     assert "127.0.0.1" in serialized
 
 
@@ -1141,3 +1393,184 @@ def test_gemini_route_diagnostics_keep_only_host_and_port():
     serialized = json.dumps(diagnostics)
     assert "must-not-persist" not in serialized
     assert "proxy-password" not in serialized
+
+
+@pytest.mark.parametrize(
+    ("exception", "failure_category", "retryable", "retry_classification"),
+    [
+        pytest.param(
+            __import__("httpx").ConnectError("connection reset"),
+            "TRANSPORT_ERROR",
+            True,
+            "TRANSPORT_CONNECT",
+            id="connection-reset",
+        ),
+        pytest.param(
+            TimeoutError("provider request timed out"),
+            "TIMEOUT",
+            True,
+            "TRANSPORT_TIMEOUT",
+            id="timeout",
+        ),
+        pytest.param(
+            FakeGeminiError("rate limited", status_code=429),
+            "RATE_LIMITED",
+            True,
+            "HTTP_429",
+            id="http-429",
+        ),
+        pytest.param(
+            FakeGeminiError("invalid request", status_code=400),
+            "INVALID_REQUEST",
+            False,
+            None,
+            id="http-400",
+        ),
+        pytest.param(
+            FakeGeminiError("server error", status_code=503),
+            "PROVIDER_SERVER_ERROR",
+            True,
+            "HTTP_503",
+            id="http-503",
+        ),
+        pytest.param(
+            FakeGeminiError("model missing", status_code=404),
+            "MODEL_NOT_FOUND",
+            False,
+            None,
+            id="http-404",
+        ),
+        pytest.param(
+            FakeGeminiError("permission denied", status_code=403),
+            "AUTHENTICATION_ERROR",
+            False,
+            None,
+            id="http-403",
+        ),
+        pytest.param(
+            type("MysterySdkFailure", (Exception,), {"__module__": "google.genai.errors"})(
+                "unclassified SDK failure"
+            ),
+            "UNKNOWN_PROVIDER_ERROR",
+            False,
+            None,
+            id="missing-http-metadata",
+        ),
+    ],
+)
+def test_generation_exception_has_stable_failure_and_retry_diagnostics(
+    exception, failure_category, retryable, retry_classification
+):
+    response = GeminiProviderAdapter(FakeGeminiClient(exception=exception)).complete(
+        _request()
+    )
+
+    assert response.error is not None
+    details = response.error.details
+    assert details["failure_stage"] == "GENERATION"
+    assert details["failure_category"] == failure_category
+    assert details["retryable"] is retryable
+    assert details["retry_classification"] == retry_classification
+    assert details["response_accepted"] is False
+    assert details["attempt_number"] == 1
+    assert len(details["request_fingerprint"]) == 64
+    assert details["api_endpoint_hostname"] is None
+    assert details["api_endpoint_port"] is None
+
+
+def test_generation_exception_diagnostics_are_sanitized_and_keep_request_id():
+    exception = FakeGeminiError(
+        "api_key=AIzaSyDUMMYKeyIsNotReal1234567890; bearer oauth-token-secret-123456789",
+        status_code=503,
+    )
+    exception.response = SimpleNamespace(
+        status_code=503,
+        headers={"x-request-id": "gemini-request-503"},
+        request=SimpleNamespace(url="https://generativelanguage.googleapis.com/v1beta"),
+    )
+    response = GeminiProviderAdapter(FakeGeminiClient(exception=exception)).complete(
+        _request(user_input="PRIVATE_PROMPT_FRAGMENT_2026")
+    )
+
+    assert response.error is not None
+    details = response.error.details
+    serialized = json.dumps(response.to_dict())
+    assert details["request_id"] == "gemini-request-503"
+    assert details["http_status"] == 503
+    assert details["provider"] == "gemini"
+    assert details["model"] == "gemini-test-model"
+    assert details["api_endpoint_hostname"] == "generativelanguage.googleapis.com"
+    assert details["api_endpoint_port"] == 443
+    assert "AIzaSyDUMMYKeyIsNotReal1234567890" not in serialized
+    assert "oauth-token-secret-123456789" not in serialized
+    assert "PRIVATE_PROMPT_FRAGMENT_2026" not in serialized
+
+
+def test_google_genai_response_json_fields_are_extracted_without_copying_body():
+    exception = FakeGeminiError("SDK API error", status_code=503)
+    exception.code = 503
+    exception.response_json = {
+        "error": {
+            "code": 503,
+            "status": "UNAVAILABLE",
+            "message": "temporarily unavailable api_key=AIzaSyDUMMYKeyIsNotReal1234567890",
+        }
+    }
+
+    response = GeminiProviderAdapter(FakeGeminiClient(exception=exception)).complete(
+        _request()
+    )
+
+    assert response.error is not None
+    details = response.error.details
+    assert details["provider_error_code"] == "UNAVAILABLE"
+    assert details["provider_error_status"] == "UNAVAILABLE"
+    assert details["provider_error_message_safe"] == "temporarily unavailable [REDACTED]"
+    assert "response_json" not in json.dumps(details)
+    assert "AIzaSyDUMMYKeyIsNotReal1234567890" not in json.dumps(details)
+
+
+def test_unknown_generation_exception_is_not_normalized_as_transient():
+    exception_type = type(
+        "MysterySdkFailure",
+        (Exception,),
+        {"__module__": "google.genai.errors"},
+    )
+    response = GeminiProviderAdapter(
+        FakeGeminiClient(exception=exception_type("opaque SDK failure"))
+    ).complete(_request())
+
+    assert response.error is not None
+    assert response.error.code == "MODEL_UNKNOWN_FAILURE"
+    assert response.error.outcome == "unknown_provider_outcome"
+    assert response.error.retryable is False
+
+
+def test_http_402_prepayment_exhaustion_is_terminal_billing_failure():
+    exception = FakeGeminiError(
+        "402 RESOURCE_EXHAUSTED: Your prepayment credits are depleted.",
+        status_code=402,
+    )
+    exception.code = 402
+    exception.status = "RESOURCE_EXHAUSTED"
+    exception.response_json = {
+        "error": {
+            "code": 402,
+            "status": "RESOURCE_EXHAUSTED",
+            "message": "Your prepayment credits are depleted.",
+        }
+    }
+
+    response = GeminiProviderAdapter(FakeGeminiClient(exception=exception)).complete(
+        _request()
+    )
+
+    assert response.error is not None
+    assert response.error.code == "MODEL_BILLING_BLOCKED"
+    assert response.error.retryable is False
+    assert response.error.outcome == "known_failure"
+    assert response.error.details["failure_category"] == "BILLING_BLOCKED"
+    assert response.error.details["retryable"] is False
+    assert response.error.details["retry_classification"] is None
+    assert response.error.details["http_status"] == 402
+    assert response.error.details["provider_error_code"] == "RESOURCE_EXHAUSTED"

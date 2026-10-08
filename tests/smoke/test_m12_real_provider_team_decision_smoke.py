@@ -32,10 +32,19 @@ from urllib.request import urlopen as default_urlopen
 from unittest.mock import patch
 from uuid import uuid4
 
+import httpx
 import pytest
 
-from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
+from linkloom.agents.providers.gemini_api import (
+    GeminiProviderAdapter,
+    _gemini_json_schema_wire_compatibility,
+    build_gemini_sdk_client,
+)
 from linkloom.agents.providers.retry_policy import classify_retryable_failure
+from linkloom.agents.providers.failure_diagnostics import (
+    safe_diagnostic_structure,
+    safe_diagnostic_text,
+)
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
 from linkloom.scanner import scan_vault
@@ -879,6 +888,222 @@ def _reported_usage(
     )
 
 
+_REPLAY_MAX_ARGUMENT_BYTES = 16 * 1024
+
+
+def _response_field(value: Any, *names: str, default: Any = None) -> Any:
+    for name in names:
+        item = _mapping_or_attr(value, name, None)
+        if item is not None:
+            return item
+    return default
+
+
+def _response_enum_text(value: Any) -> str | None:
+    if value is None:
+        return None
+    value = getattr(value, "value", value)
+    if not isinstance(value, str):
+        return type(value).__name__
+    return safe_diagnostic_text(value)
+
+
+def _safe_replay_arguments(value: Any) -> tuple[Any, bool]:
+    if value is None:
+        return None, False
+    dump = getattr(value, "model_dump", None)
+    if callable(dump):
+        try:
+            value = dump(mode="json", exclude_none=True, by_alias=True)
+        except TypeError:
+            value = dump(exclude_none=True, by_alias=True)
+    safe, clipped = safe_diagnostic_structure(value)
+    try:
+        size = len(
+            json.dumps(
+                safe,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                allow_nan=False,
+            ).encode("utf-8")
+        )
+    except (TypeError, ValueError):
+        return None, False
+    if size > _REPLAY_MAX_ARGUMENT_BYTES:
+        return {"__omitted__": "arguments_exceed_replay_limit"}, False
+    return safe, not clipped
+
+
+def _response_safety_ratings(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, (list, tuple)):
+        return []
+    return [
+        {
+            "category": _response_enum_text(_response_field(rating, "category")),
+            "probability": _response_enum_text(_response_field(rating, "probability")),
+            "blocked": (
+                _response_field(rating, "blocked")
+                if isinstance(_response_field(rating, "blocked"), bool)
+                else None
+            ),
+        }
+        for rating in value[:32]
+    ]
+
+
+def _semantic_response_replay_snapshot(
+    response: Any,
+    *,
+    model: str,
+) -> dict[str, Any]:
+    """Create a bounded SDK-response slice for offline semantic replay.
+
+    Text parts are represented only by byte length and digest. Function-call
+    arguments are retained only after recursive redaction.
+    """
+
+    candidates_value = _response_field(response, "candidates", default=[])
+    candidates = (
+        list(candidates_value)
+        if isinstance(candidates_value, (list, tuple))
+        else []
+    )
+    snapshot: dict[str, Any] = {
+        "provider": "gemini",
+        "model": model,
+        "sdk_response_type": type(response).__name__,
+        "finish_reason": _response_enum_text(
+            _response_field(response, "finish_reason")
+        ),
+        "response_sha256": None,
+        "candidate_count": (
+            len(candidates) if isinstance(candidates_value, (list, tuple)) else None
+        ),
+        "candidates": [],
+        "replayable": True,
+    }
+    prompt_feedback = _response_field(
+        response,
+        "prompt_feedback",
+        "promptFeedback",
+    )
+    if prompt_feedback is not None:
+        prompt_ratings = _response_field(
+            prompt_feedback,
+            "safety_ratings",
+            "safetyRatings",
+            default=[],
+        )
+        snapshot["prompt_filter"] = {
+            "block_reason": _response_enum_text(
+                _response_field(prompt_feedback, "block_reason", "blockReason")
+            ),
+            "safety_ratings": _response_safety_ratings(prompt_ratings),
+        }
+    dump = getattr(response, "model_dump", None)
+    try:
+        if callable(dump):
+            try:
+                digest_input = dump(mode="json", exclude_none=True, by_alias=True)
+            except TypeError:
+                digest_input = dump(exclude_none=True, by_alias=True)
+        elif isinstance(response, Mapping):
+            digest_input = dict(response)
+        else:
+            digest_input = None
+        if digest_input is not None:
+            digest_bytes = json.dumps(
+                digest_input,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+                default=str,
+            ).encode("utf-8")
+            snapshot["response_sha256"] = hashlib.sha256(digest_bytes).hexdigest()
+    except Exception:
+        snapshot["replayable"] = False
+
+    if len(candidates) > 4:
+        candidates = candidates[:4]
+        snapshot["replayable"] = False
+    for candidate in candidates:
+        content = _response_field(candidate, "content", default={})
+        parts_value = _response_field(content, "parts", default=[])
+        parts = list(parts_value) if isinstance(parts_value, (list, tuple)) else []
+        candidate_snapshot: dict[str, Any] = {
+            "sdk_candidate_type": type(candidate).__name__,
+            "finish_reason": _response_enum_text(
+                _response_field(candidate, "finish_reason")
+            ),
+            "part_types": [],
+            "sdk_part_types": [],
+            "text_parts": [],
+            "function_calls": [],
+            "safety_ratings": _response_safety_ratings(
+                _response_field(candidate, "safety_ratings", "safetyRatings", default=[])
+            ),
+        }
+        if len(parts) > 32:
+            parts = parts[:32]
+            snapshot["replayable"] = False
+        for part in parts:
+            function_call = _response_field(part, "function_call", "functionCall")
+            if function_call is not None:
+                candidate_snapshot["part_types"].append("function_call")
+                candidate_snapshot["sdk_part_types"].append(type(part).__name__)
+                arguments = _response_field(function_call, "args", "arguments")
+                safe_arguments, arguments_replayable = _safe_replay_arguments(arguments)
+                candidate_snapshot["function_calls"].append(
+                    {
+                        "name": _response_enum_text(
+                            _response_field(function_call, "name", "tool_name")
+                        ),
+                        "sdk_function_call_type": type(function_call).__name__,
+                        "arguments_representation": (
+                            type(arguments).__name__ if arguments is not None else "missing"
+                        ),
+                        "arguments": safe_arguments,
+                        "arguments_replayable": arguments_replayable,
+                    }
+                )
+                snapshot["replayable"] = snapshot["replayable"] and arguments_replayable
+                continue
+            text_value = _response_field(part, "text")
+            if isinstance(text_value, str):
+                encoded_text = text_value.encode("utf-8")
+                candidate_snapshot["part_types"].append("text")
+                candidate_snapshot["sdk_part_types"].append(type(part).__name__)
+                candidate_snapshot["text_parts"].append(
+                    {
+                        "utf8_bytes": len(encoded_text),
+                        "sha256": hashlib.sha256(encoded_text).hexdigest(),
+                    }
+                )
+            else:
+                candidate_snapshot["part_types"].append(type(part).__name__)
+                candidate_snapshot["sdk_part_types"].append(type(part).__name__)
+        snapshot["candidates"].append(candidate_snapshot)
+
+    serialized = json.dumps(
+        snapshot,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    if len(serialized) > _REPLAY_MAX_ARGUMENT_BYTES * 2:
+        return {
+            "provider": "gemini",
+            "model": model,
+            "response_sha256": snapshot["response_sha256"],
+            "candidate_count": snapshot["candidate_count"],
+            "capture_status": "REPLAY_SNAPSHOT_SIZE_LIMIT",
+            "replayable": False,
+        }
+    return snapshot
+
+
 def _cost_usd(input_tokens: int, output_tokens: int) -> float:
     return float(
         Decimal(input_tokens) * Decimal("0.75") / Decimal(1_000_000)
@@ -961,19 +1186,44 @@ _REST_NESTED_FIELDS = {
     "thinking_budget": "thinkingBudget",
     "thinkingBudget": "thinkingBudget",
 }
+_OPENAPI_SCHEMA_TYPE_VALUES = {
+    "string": "STRING",
+    "number": "NUMBER",
+    "integer": "INTEGER",
+    "boolean": "BOOLEAN",
+    "array": "ARRAY",
+    "object": "OBJECT",
+    "null": "NULL",
+}
 
 
-def _map_rest_nested(value: Any) -> Any:
+def _map_rest_nested(value: Any, *, openapi_schema: bool = False) -> Any:
     if isinstance(value, dict):
         mapped: dict[str, Any] = {}
         for key, nested in value.items():
             if not isinstance(key, str):
                 raise SmokeBlocked("COUNT_TOKENS_REQUEST_UNREPRESENTABLE")
             rest_key = _REST_NESTED_FIELDS.get(key, key)
-            _merge_mapped_field(mapped, rest_key, _map_rest_nested(nested))
+            nested_is_openapi_schema = openapi_schema or key == "parameters"
+            if openapi_schema and key == "type":
+                if not isinstance(nested, str):
+                    raise SmokeBlocked("COUNT_TOKENS_REQUEST_UNREPRESENTABLE")
+                normalized_type = _OPENAPI_SCHEMA_TYPE_VALUES.get(nested.casefold())
+                if normalized_type is None:
+                    raise SmokeBlocked("COUNT_TOKENS_REQUEST_UNREPRESENTABLE")
+                mapped_value = normalized_type
+            else:
+                mapped_value = _map_rest_nested(
+                    nested,
+                    openapi_schema=nested_is_openapi_schema,
+                )
+            _merge_mapped_field(mapped, rest_key, mapped_value)
         return mapped
     if isinstance(value, list):
-        return [_map_rest_nested(item) for item in value]
+        return [
+            _map_rest_nested(item, openapi_schema=openapi_schema)
+            for item in value
+        ]
     return copy.deepcopy(value)
 
 
@@ -1932,6 +2182,28 @@ class BudgetedGeminiClient:
                 raise
         self.provider_response_accepted = True
         self.last_guard_state = "RESPONSE_ACCEPTED"
+        elapsed = max(0.0, self.clock() - started)
+        self.provider_elapsed_seconds += elapsed
+        self.aggregate.provider_elapsed_seconds += elapsed
+        if self._pending_preflight is not None:
+            record = self._pending_preflight["record"]
+            record["response_latency_ms"] = round(elapsed * 1000, 3)
+            record["latency_budget_exceeded"] = (
+                elapsed > self.case_budget.request_timeout_seconds
+            )
+            try:
+                record["response_replay_observation"] = (
+                    _semantic_response_replay_snapshot(response, model=request["model"])
+                )
+            except Exception:
+                # A diagnostic collector must never change whether an accepted
+                # Provider response is processed by the existing pipeline.
+                record["response_replay_observation"] = {
+                    "provider": "gemini",
+                    "model": request["model"],
+                    "capture_status": "REPLAY_SNAPSHOT_UNAVAILABLE",
+                    "replayable": False,
+                }
         if self.on_response_accepted is not None:
             # This callback is deliberately outside the transport retry block:
             # local persistence failures must not replay an already accepted response.
@@ -1940,17 +2212,6 @@ class BudgetedGeminiClient:
             except BaseException:
                 self._terminal = True
                 raise
-        elapsed = max(0.0, self.clock() - started)
-        self.provider_elapsed_seconds += elapsed
-        self.aggregate.provider_elapsed_seconds += elapsed
-        if elapsed > self.case_budget.request_timeout_seconds:
-            self._capture_available_response_usage(
-                response,
-                status="response_received_timeout",
-            )
-            self.last_guard_state = "REQUEST_TIMEOUT_EXCEEDED"
-            self._terminal = True
-            raise SmokeBlocked("REQUEST_TIMEOUT_EXCEEDED")
         if self.provider_elapsed_seconds > self.case_budget.max_elapsed_provider_seconds:
             self._capture_available_response_usage(
                 response,
@@ -2226,6 +2487,7 @@ def build_official_client(
     types_module: Any | None = None,
     ambient_fallback_patch: Any = "__default__",
     count_tokens_transport: Callable[..., Any] | None = None,
+    wire_payload_observer: Callable[[Mapping[str, str | None]], Any] | None = None,
     urlopen: Callable[..., Any] = default_urlopen,
     _authorization_sentinel: Any = None,
 ) -> Any:
@@ -2252,20 +2514,21 @@ def build_official_client(
             raise SmokeBlocked("Gemini Developer API SDK is unavailable") from None
     try:
         retry_options = types_module.HttpRetryOptions(attempts=1)
-        http_options = types_module.HttpOptions(
-            timeout=REQUEST_TIMEOUT_SECONDS * 1000,
-            retry_options=retry_options,
-        )
         factory_context = (
             _disable_ambient_credential_fallback()
             if ambient_fallback_patch == "__default__"
             else (ambient_fallback_patch or nullcontext())
         )
         with _quiet_sdk(), factory_context:
-            client = genai_module.Client(
-                api_key=api_key,
-                vertexai=False,
-                http_options=http_options,
+            client = build_gemini_sdk_client(
+                api_key,
+                genai_module=genai_module,
+                types_module=types_module,
+                http_options_kwargs={
+                    "timeout": REQUEST_TIMEOUT_SECONDS * 1000,
+                    "retry_options": retry_options,
+                },
+                wire_payload_observer=wire_payload_observer,
             )
             return DeveloperApiModelsSurface(
                 client,
@@ -3848,6 +4111,9 @@ def test_offline_client_constructor_requires_developer_api_and_disables_vertex()
     assert seen["client"]["vertexai"] is False
     assert seen["http_options"]["timeout"] == 30000
     assert seen["http_options"]["retry_options"].attempts == 1
+    assert seen["http_options"]["client_args"]["event_hooks"]["request"] == [
+        harness._gemini_json_schema_wire_compatibility
+    ]
     client.generate_content(
         model=harness.MODEL,
         contents=[{"role": "user", "parts": [{"text": "synthetic"}]}],

@@ -16,7 +16,7 @@ import hashlib
 import json
 import re
 import time
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 
 from linkloom.agents.model_adapter import (
     MODEL_PROVIDER_ERROR_SPECS,
@@ -38,6 +38,7 @@ from linkloom.agents.providers.gemini_diagnostics import (
     gemini_exception_diagnostics,
     gemini_response_diagnostics,
 )
+from linkloom.agents.providers.retry_policy import classify_retryable_failure
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.models import (
     _assert_json_safe_primitive,
@@ -79,6 +80,7 @@ _SUPPORTED_SCHEMA_KEYS = frozenset(
         "maxItems",
     }
 )
+_GEMINI_SCHEMA_CONSTRAINTS_NOT_PROJECTED = frozenset({"maxItems", "maxLength"})
 _SCHEMA_TYPES = frozenset(
     {"object", "array", "string", "integer", "number", "boolean", "null"}
 )
@@ -98,10 +100,12 @@ _FINISH_REASON_MAP = {
 }
 _ERROR_MESSAGES = {
     "MODEL_AUTH_REQUIRED": "Gemini authentication was not available.",
+    "MODEL_BILLING_BLOCKED": "Gemini billing or prepayment is unavailable.",
     "MODEL_INVALID_REQUEST": "The Gemini request was invalid.",
     "MODEL_RATE_LIMITED": "The Gemini provider rate limit was reached.",
     "MODEL_TIMEOUT": "The Gemini provider request timed out.",
     "MODEL_TRANSIENT_FAILURE": "The Gemini provider failed transiently.",
+    "MODEL_UNKNOWN_FAILURE": "The Gemini provider failed with an unclassified error.",
     "MODEL_UNAVAILABLE": "The requested Gemini model was unavailable.",
     "MODEL_RESPONSE_MALFORMED": "The Gemini provider response was malformed.",
     "MODEL_TOOL_CALL_PARSE_FAILED": "The Gemini function call could not be parsed safely.",
@@ -158,6 +162,18 @@ def _safe_provider_id(value: Any, field_name: str) -> str | None:
     return value
 
 
+def _request_fingerprint(request: ModelTurnRequest) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            request.to_dict(),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+
+
 def _bounded_json(value: Any, field_name: str, maximum_bytes: int) -> Any:
     _assert_json_safe_primitive(value, field_name)
     _assert_no_forbidden_persisted_keys(value, field_name)
@@ -177,6 +193,190 @@ def _schema_failure(path: str, keywords: list[str] | None = None) -> None:
     raise _AdapterFailure("MODEL_TOOL_SCHEMA_UNSUPPORTED", details=details)
 
 
+def _gemini_json_schema_wire_compatibility(request: Any) -> None:
+    """Write the SDK's JSON Schema parameter under Gemini's wire field name.
+
+    google-genai 2.22.0 serializes ``parameters_json_schema`` as a snake-case
+    JSON key, although the Developer API expects ``parametersJsonSchema``.
+    Keep the workaround at the HTTP boundary so the canonical JSON Schema is
+    passed through unchanged.
+    """
+
+    url = getattr(request, "url", None)
+    if (
+        getattr(url, "host", "").casefold() != "generativelanguage.googleapis.com"
+        or not getattr(url, "path", "").endswith(":generateContent")
+    ):
+        return
+    try:
+        body = json.loads(request.content.decode("utf-8"))
+    except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+        return
+    if not isinstance(body, dict):
+        return
+
+    changed = False
+    tools = body.get("tools")
+    if not isinstance(tools, list):
+        return
+    for tool in tools:
+        if not isinstance(tool, dict):
+            continue
+        declarations = tool.get("functionDeclarations")
+        if not isinstance(declarations, list):
+            continue
+        for declaration in declarations:
+            if not isinstance(declaration, dict):
+                continue
+            if "parameters_json_schema" not in declaration:
+                continue
+            if "parametersJsonSchema" in declaration:
+                raise ValueError("conflicting Gemini JSON Schema wire fields")
+            declaration["parametersJsonSchema"] = declaration.pop(
+                "parameters_json_schema"
+            )
+            changed = True
+
+    if not changed:
+        return
+    import httpx
+
+    content = json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    request._content = content
+    request.stream = httpx.ByteStream(content)
+    request.headers["content-length"] = str(len(content))
+
+
+def _wire_json_sha256(value: Any) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _gemini_wire_payload_fingerprints(request: Any) -> dict[str, str | None] | None:
+    """Fingerprint the exact GenerateContent bytes after all request hooks."""
+
+    url = getattr(request, "url", None)
+    if (
+        getattr(url, "host", "").casefold() != "generativelanguage.googleapis.com"
+        or not getattr(url, "path", "").endswith(":generateContent")
+    ):
+        return None
+    try:
+        wire_bytes = request.content
+        body = json.loads(wire_bytes.decode("utf-8"))
+    except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    if not isinstance(body, dict):
+        return None
+
+    schemas: list[Any] = []
+    tools = body.get("tools")
+    if isinstance(tools, list):
+        for tool in tools:
+            if not isinstance(tool, Mapping):
+                continue
+            declarations = tool.get("functionDeclarations")
+            if not isinstance(declarations, list):
+                continue
+            for declaration in declarations:
+                if isinstance(declaration, Mapping):
+                    schema = declaration.get("parametersJsonSchema")
+                    if schema is not None:
+                        schemas.append(schema)
+    schema_subtree: Any = schemas[0] if len(schemas) == 1 else schemas
+    tool_config = body.get("toolConfig")
+    return {
+        "wire_payload_sha256": hashlib.sha256(wire_bytes).hexdigest(),
+        "wire_schema_subtree_sha256": (
+            _wire_json_sha256(schema_subtree) if schemas else None
+        ),
+        "wire_tool_config_sha256": (
+            _wire_json_sha256(tool_config) if tool_config is not None else None
+        ),
+    }
+
+
+def _gemini_wire_observer_hook(
+    observer: Callable[[Mapping[str, str | None]], Any],
+) -> Callable[[Any], None]:
+    def observe(request: Any) -> None:
+        fingerprints = _gemini_wire_payload_fingerprints(request)
+        if fingerprints is None:
+            return
+        request.extensions["linkloom_gemini_wire_fingerprints"] = fingerprints
+        # The callback receives hashes only; it never receives request bytes.
+        observer(dict(fingerprints))
+
+    return observe
+
+
+def build_gemini_sdk_client(
+    api_key: str,
+    *,
+    genai_module: Any | None = None,
+    types_module: Any | None = None,
+    http_options_kwargs: Mapping[str, Any] | None = None,
+    wire_payload_observer: Callable[[Mapping[str, str | None]], Any] | None = None,
+) -> Any:
+    """Construct an official Developer API client with the wire fix installed.
+
+    Importing the SDK stays lazy so the provider adapter remains usable without
+    the optional ``google-genai`` dependency. Existing HTTP client arguments
+    and hooks are preserved.
+    """
+
+    if not isinstance(api_key, str) or not api_key.strip():
+        raise ValueError("Gemini API key must be a non-empty string")
+    if genai_module is None or types_module is None:
+        from google import genai as sdk_genai
+        from google.genai import types as sdk_types
+
+        genai_module = genai_module or sdk_genai
+        types_module = types_module or sdk_types
+
+    options = dict(http_options_kwargs or {})
+    client_args = options.get("client_args") or {}
+    if not isinstance(client_args, Mapping):
+        raise TypeError("Gemini client_args must be a mapping")
+    client_args = dict(client_args)
+    event_hooks = client_args.get("event_hooks") or {}
+    if not isinstance(event_hooks, Mapping):
+        raise TypeError("Gemini event_hooks must be a mapping")
+    event_hooks = dict(event_hooks)
+    request_hooks = event_hooks.get("request") or []
+    if not isinstance(request_hooks, (list, tuple)):
+        raise TypeError("Gemini request hooks must be a list or tuple")
+    request_hooks = list(request_hooks)
+    if _gemini_json_schema_wire_compatibility not in request_hooks:
+        request_hooks.append(_gemini_json_schema_wire_compatibility)
+    if wire_payload_observer is not None:
+        observer_hook = _gemini_wire_observer_hook(wire_payload_observer)
+        if not any(
+            getattr(hook, "_linkloom_wire_observer", False)
+            for hook in request_hooks
+        ):
+            setattr(observer_hook, "_linkloom_wire_observer", True)
+            request_hooks.append(observer_hook)
+    event_hooks["request"] = request_hooks
+    client_args["event_hooks"] = event_hooks
+    options["client_args"] = client_args
+
+    http_options = types_module.HttpOptions(**options)
+    return genai_module.Client(
+        api_key=api_key,
+        vertexai=False,
+        http_options=http_options,
+    )
+
+
 def _validate_schema_for_gemini(schema: Any, path: str = "input_schema") -> None:
     if not isinstance(schema, dict):
         _schema_failure(path)
@@ -186,8 +386,20 @@ def _validate_schema_for_gemini(schema: Any, path: str = "input_schema") -> None
         _schema_failure(path, unsupported)
 
     schema_type = schema.get("type")
-    if schema_type is not None and schema_type not in _SCHEMA_TYPES:
-        _schema_failure(path)
+    if schema_type is not None:
+        if isinstance(schema_type, list):
+            if (
+                len(schema_type) != 2
+                or schema_type.count("null") != 1
+                or sum(item != "null" for item in schema_type) != 1
+                or any(
+                    not isinstance(item, str) or item not in _SCHEMA_TYPES
+                    for item in schema_type
+                )
+            ):
+                _schema_failure(path)
+        elif not isinstance(schema_type, str) or schema_type not in _SCHEMA_TYPES:
+            _schema_failure(path)
 
     if "enum" in schema:
         if not isinstance(schema["enum"], list):
@@ -242,6 +454,29 @@ def _validate_schema_for_gemini(schema: Any, path: str = "input_schema") -> None
         _validate_schema_for_gemini(schema["items"], f"{path}.items")
 
 
+def _project_schema_for_gemini(schema: dict[str, Any]) -> dict[str, Any]:
+    """Project only the live-confirmed unsupported constraints from Gemini schema.
+
+    This projection is transport-specific. The canonical schema stays intact,
+    and Semantic Ingestion still enforces these limits on accepted output.
+    """
+
+    projected: dict[str, Any] = {}
+    for key, value in schema.items():
+        if key in _GEMINI_SCHEMA_CONSTRAINTS_NOT_PROJECTED:
+            continue
+        if key == "properties":
+            projected[key] = {
+                name: _project_schema_for_gemini(child)
+                for name, child in value.items()
+            }
+        elif key == "items":
+            projected[key] = _project_schema_for_gemini(value)
+        else:
+            projected[key] = deepcopy(value)
+    return projected
+
+
 def map_tool_definition_to_gemini_function(
     definition: ToolDefinition,
 ) -> dict[str, Any]:
@@ -253,7 +488,7 @@ def map_tool_definition_to_gemini_function(
     return {
         "name": definition.tool_id,
         "description": definition.description,
-        "parameters_json_schema": deepcopy(definition.input_schema),
+        "parameters_json_schema": _project_schema_for_gemini(definition.input_schema),
     }
 
 
@@ -498,15 +733,28 @@ def build_gemini_request(
         map_tool_definition_to_gemini_function(tool)
         for tool in request.available_tools
     ]
+    options = request.generation_options
+    if options.require_tool_call and not declarations:
+        raise _AdapterFailure(
+            "MODEL_INVALID_REQUEST",
+            details={"reason": "required_tool_call_without_tools"},
+        )
     config: dict[str, Any] = {
         "tools": [{"function_declarations": declarations}] if declarations else [],
         "automatic_function_calling": {"disable": True},
     }
-    options = request.generation_options
+    if options.require_tool_call:
+        config["tool_config"] = {
+            "function_calling_config": {"mode": "ANY"}
+        }
     if options.max_output_tokens is not None:
         config["max_output_tokens"] = options.max_output_tokens
     if options.temperature is not None:
         config["temperature"] = options.temperature
+    if options.thinking_level is not None:
+        config["thinking_config"] = {
+            "thinking_level": options.thinking_level.upper()
+        }
 
     payload = {
         "model": model_id,
@@ -824,6 +1072,7 @@ def _parse_provider_turn_continuation(
 
 def _parse_provider_error(
     response: Any,
+    request: ModelTurnRequest,
     model_id: str,
     *,
     client: Any,
@@ -833,13 +1082,12 @@ def _parse_provider_error(
     raw_error = _read(response, "error", None)
     if raw_error is None:
         return None
-    status_code = _first_present(raw_error, ("status_code", "status", "http_status"))
+    status_code = _first_present(raw_error, ("status_code", "http_status"))
     if status_code is None:
         status_code = _read(response, "status_code", None)
-    code, outcome = _code_for_status(status_code, "MODEL_INVALID_REQUEST")
     diagnostics = gemini_response_diagnostics(
         response,
-        high_level_outcome=code,
+        high_level_outcome="MODEL_UNKNOWN_FAILURE",
         model=model_id,
         client=client,
         payload=payload,
@@ -847,11 +1095,28 @@ def _parse_provider_error(
         provider_error=raw_error,
         finish_reason=_extract_finish_reason(response),
     )
-    request_id = _extract_response_id(
-        response,
-        ("request_id", "provider_request_id"),
-        "GeminiResponse.provider_request_id",
+    code, outcome = _code_for_provider_diagnostics(diagnostics)
+    retry_classification = classify_retryable_failure(None, diagnostics)
+    retryable = retry_classification is not None
+    if retryable:
+        outcome = "known_failure"
+    diagnostics = _annotate_generation_failure(
+        code,
+        diagnostics,
+        request,
+        retry_classification=retry_classification,
+        response_accepted=True,
     )
+    raw_request_id = _first_present(response, ("request_id", "provider_request_id"))
+    if raw_request_id is None:
+        raw_request_id = diagnostics.get("request_id")
+    try:
+        request_id = _safe_provider_id(
+            raw_request_id,
+            "GeminiResponse.provider_request_id",
+        )
+    except ValidationError:
+        request_id = None
     metadata = {"provider": "gemini", "model": model_id}
     if isinstance(status_code, int) and not isinstance(status_code, bool):
         metadata["http_status"] = status_code
@@ -861,6 +1126,7 @@ def _parse_provider_error(
         provider_request_id=request_id,
         provider_metadata=metadata,
         details={"reason": "provider_error_response", **diagnostics},
+        retryable=retryable,
     )
 
 
@@ -869,8 +1135,12 @@ def _code_for_status(status_code: Any, default: str) -> tuple[str, str]:
         return default, "known_failure"
     if status_code in {401, 403}:
         return "MODEL_AUTH_REQUIRED", "known_failure"
-    if status_code in {400, 404, 422}:
+    if status_code == 402:
+        return "MODEL_BILLING_BLOCKED", "known_failure"
+    if status_code in {400, 422}:
         return "MODEL_INVALID_REQUEST", "known_failure"
+    if status_code == 404:
+        return "MODEL_UNAVAILABLE", "known_failure"
     if status_code == 429:
         return "MODEL_RATE_LIMITED", "known_failure"
     if status_code in {408, 504}:
@@ -888,7 +1158,7 @@ def _exception_code(exception: BaseException) -> tuple[str, str]:
     # wrappers without depending on provider exception classes here.
     status_code = _first_present(exception, ("code", "status_code"))
     if status_code is not None:
-        return _code_for_status(status_code, "MODEL_TRANSIENT_FAILURE")
+        return _code_for_status(status_code, "MODEL_UNKNOWN_FAILURE")
     name = type(exception).__name__.lower()
     if any(marker in name for marker in ("auth", "unauthor", "permission", "credential")):
         return "MODEL_AUTH_REQUIRED", "known_failure"
@@ -902,7 +1172,108 @@ def _exception_code(exception: BaseException) -> tuple[str, str]:
         return "MODEL_INVALID_REQUEST", "known_failure"
     if any(marker in name for marker in ("unavailable", "notfound")):
         return "MODEL_UNAVAILABLE", "known_failure"
-    return "MODEL_TRANSIENT_FAILURE", "unknown_provider_outcome"
+    return "MODEL_UNKNOWN_FAILURE", "unknown_provider_outcome"
+
+
+def _generation_failure_category(
+    code: str,
+    diagnostics: dict[str, Any],
+) -> str:
+    status = diagnostics.get("http_status")
+    provider_code = diagnostics.get("provider_error_code")
+    normalized_provider_code = (
+        provider_code.strip().upper()
+        if isinstance(provider_code, str)
+        else None
+    )
+    low_level = diagnostics.get("low_level_failure_class")
+    exception_type = diagnostics.get("exception_type")
+    exception_name = exception_type.casefold() if isinstance(exception_type, str) else ""
+
+    if (
+        status == 404
+        or normalized_provider_code in {"NOT_FOUND", "MODEL_NOT_FOUND"}
+        or "notfound" in exception_name
+    ):
+        return "MODEL_NOT_FOUND"
+    if code == "MODEL_AUTH_REQUIRED" or status in {401, 403} or normalized_provider_code in {
+        "UNAUTHENTICATED",
+        "PERMISSION_DENIED",
+    }:
+        return "AUTHENTICATION_ERROR"
+    if code == "MODEL_BILLING_BLOCKED" or status == 402:
+        return "BILLING_BLOCKED"
+    if code == "MODEL_INVALID_REQUEST" or status in {400, 422} or normalized_provider_code in {
+        "INVALID_ARGUMENT",
+        "FAILED_PRECONDITION",
+    }:
+        return "INVALID_REQUEST"
+    if code == "MODEL_RATE_LIMITED" or status == 429 or normalized_provider_code in {
+        "RESOURCE_EXHAUSTED",
+        "RATE_LIMIT_EXCEEDED",
+    }:
+        return "RATE_LIMITED"
+    if code == "MODEL_TIMEOUT" or status in {408, 504} or low_level == "TRANSPORT_TIMEOUT":
+        return "TIMEOUT"
+    if (
+        (isinstance(status, int) and 500 <= status <= 599)
+        or low_level in {"HTTP_5XX", "PROVIDER_OVERLOADED", "PROVIDER_ABORTED"}
+        or normalized_provider_code in {"UNAVAILABLE", "OVERLOADED", "INTERNAL", "ABORTED"}
+    ):
+        return "PROVIDER_SERVER_ERROR"
+    if isinstance(low_level, str) and low_level.startswith("TRANSPORT_"):
+        return "TRANSPORT_ERROR"
+    return "UNKNOWN_PROVIDER_ERROR"
+
+
+def _annotate_generation_failure(
+    code: str,
+    diagnostics: dict[str, Any],
+    request: ModelTurnRequest,
+    *,
+    retry_classification: str | None,
+    response_accepted: bool,
+    failure_stage: str = "GENERATION",
+    failure_category: str | None = None,
+) -> dict[str, Any]:
+    return {
+        **diagnostics,
+        "failure_stage": failure_stage,
+        "failure_category": failure_category or _generation_failure_category(code, diagnostics),
+        "retry_classification": retry_classification,
+        "retryable": retry_classification is not None,
+        "attempt_number": request.sequence,
+        "request_fingerprint": _request_fingerprint(request),
+        "response_accepted": response_accepted,
+        "api_endpoint_hostname": diagnostics.get("target_hostname"),
+        "api_endpoint_port": diagnostics.get("target_port"),
+    }
+
+
+def _code_for_provider_diagnostics(diagnostics: dict[str, Any]) -> tuple[str, str]:
+    status = diagnostics.get("http_status")
+    if isinstance(status, int) and not isinstance(status, bool):
+        return _code_for_status(status, "MODEL_UNKNOWN_FAILURE")
+    provider_code = diagnostics.get("provider_error_code")
+    provider_code = provider_code.strip().upper() if isinstance(provider_code, str) else None
+    if provider_code in {"UNAUTHENTICATED", "PERMISSION_DENIED"}:
+        return "MODEL_AUTH_REQUIRED", "known_failure"
+    if provider_code in {"INVALID_ARGUMENT", "FAILED_PRECONDITION"}:
+        return "MODEL_INVALID_REQUEST", "known_failure"
+    if provider_code in {"RESOURCE_EXHAUSTED", "RATE_LIMIT_EXCEEDED"}:
+        return "MODEL_RATE_LIMITED", "known_failure"
+    if provider_code == "DEADLINE_EXCEEDED":
+        return "MODEL_TIMEOUT", "known_failure"
+    if provider_code in {
+        "UNAVAILABLE",
+        "OVERLOADED",
+        "INTERNAL",
+        "ABORTED",
+        "NOT_FOUND",
+        "MODEL_NOT_FOUND",
+    }:
+        return "MODEL_UNAVAILABLE", "known_failure"
+    return "MODEL_UNKNOWN_FAILURE", "unknown_provider_outcome"
 
 
 def _make_error(
@@ -912,15 +1283,16 @@ def _make_error(
     provider_request_id: str | None = None,
     provider_metadata: dict[str, Any] | None = None,
     details: dict[str, Any] | None = None,
+    retryable: bool | None = None,
 ) -> ModelProviderError:
     if code not in MODEL_PROVIDER_ERROR_SPECS:
-        code = "MODEL_TRANSIENT_FAILURE"
-    category, retryable = MODEL_PROVIDER_ERROR_SPECS[code]
+        code = "MODEL_UNKNOWN_FAILURE"
+    category, default_retryable = MODEL_PROVIDER_ERROR_SPECS[code]
     return ModelProviderError(
         code=code,
         category=category,
         message=_ERROR_MESSAGES[code],
-        retryable=retryable,
+        retryable=default_retryable if retryable is None else retryable,
         outcome=outcome or "known_failure",
         provider_request_id=provider_request_id,
         provider_metadata=provider_metadata or {},
@@ -980,15 +1352,39 @@ class GeminiProviderAdapter:
                 payload=payload,
                 elapsed_ms=elapsed_ms,
             )
+            retry_classification = classify_retryable_failure(None, diagnostics)
+            retryable = retry_classification is not None
+            if retryable:
+                # A narrowly classified transport/status failure is eligible for
+                # the caller's bounded retry policy. Unknown SDK failures remain
+                # terminal even when their message sounds transient.
+                outcome = "known_failure"
+                if code == "MODEL_UNKNOWN_FAILURE":
+                    code = (
+                        "MODEL_TIMEOUT"
+                        if retry_classification == "TRANSPORT_TIMEOUT"
+                        else "MODEL_TRANSIENT_FAILURE"
+                    )
+                    diagnostics["high_level_outcome"] = code
+            diagnostics = _annotate_generation_failure(
+                code,
+                diagnostics,
+                request,
+                retry_classification=retry_classification,
+                response_accepted=False,
+            )
+            raw_request_id = _first_present(exception, ("request_id", "provider_request_id"))
+            if raw_request_id is None:
+                raw_request_id = diagnostics.get("request_id")
             try:
                 request_id = _safe_provider_id(
-                    _first_present(exception, ("request_id", "provider_request_id")),
+                    raw_request_id,
                     "GeminiProviderError.provider_request_id",
                 )
             except ValidationError:
                 request_id = None
             metadata = {"provider": "gemini", "model": payload["model"]}
-            status_code = _first_present(exception, ("code", "status_code"))
+            status_code = diagnostics.get("http_status")
             if isinstance(status_code, int) and not isinstance(status_code, bool):
                 metadata["http_status"] = status_code
             return ModelResponse(
@@ -998,6 +1394,7 @@ class GeminiProviderAdapter:
                     provider_request_id=request_id,
                     provider_metadata=metadata,
                     details={"reason": "provider_exception", **diagnostics},
+                    retryable=retryable,
                 )
             )
 
@@ -1021,13 +1418,22 @@ class GeminiProviderAdapter:
                 finish_reason=_extract_finish_reason(raw_response),
                 parse_error=True,
             )
+            failure_details = _annotate_generation_failure(
+                failure.code,
+                {**failure.details, **diagnostics},
+                request,
+                retry_classification=None,
+                response_accepted=True,
+                failure_stage="RESPONSE_VALIDATION",
+                failure_category="RESPONSE_VALIDATION_ERROR",
+            )
             return self._failure_response(
                 _AdapterFailure(
                     failure.code,
                     outcome=failure.outcome,
                     provider_request_id=failure.provider_request_id,
                     provider_metadata=failure.provider_metadata,
-                    details={**failure.details, **diagnostics},
+                    details=failure_details,
                 )
             )
         except (ValidationError, TypeError, ValueError) as exception:
@@ -1042,10 +1448,20 @@ class GeminiProviderAdapter:
                 parse_error=True,
                 exception=exception,
             )
+            failure_details = _annotate_generation_failure(
+                "MODEL_RESPONSE_MALFORMED",
+                diagnostics,
+                request,
+                retry_classification=None,
+                response_accepted=True,
+                failure_stage="RESPONSE_VALIDATION",
+                failure_category="RESPONSE_VALIDATION_ERROR",
+            )
             return ModelResponse(
                 error=_make_error(
                     "MODEL_RESPONSE_MALFORMED",
-                    details={"reason": "response_normalization_failed", **diagnostics},
+                    details={"reason": "response_normalization_failed", **failure_details},
+                    retryable=False,
                 )
             )
 
@@ -1057,6 +1473,11 @@ class GeminiProviderAdapter:
                 provider_request_id=failure.provider_request_id,
                 provider_metadata=failure.provider_metadata,
                 details=failure.details,
+                retryable=(
+                    failure.details.get("retryable")
+                    if isinstance(failure.details.get("retryable"), bool)
+                    else None
+                ),
             )
         )
 
@@ -1082,6 +1503,7 @@ class GeminiProviderAdapter:
 
         provider_error = _parse_provider_error(
             response,
+            request,
             model_id,
             client=self.client,
             payload=payload,
@@ -1186,6 +1608,7 @@ class GeminiProviderAdapter:
 __all__ = [
     "GeminiClient",
     "GeminiProviderAdapter",
+    "build_gemini_sdk_client",
     "build_gemini_request",
     "map_tool_definition_to_gemini_function",
 ]

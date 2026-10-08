@@ -12,7 +12,7 @@ from urllib.error import HTTPError, URLError
 
 MAX_NESTED_CAUSE_DEPTH = 8
 RETRYABLE_HTTP_STATUSES = frozenset({408, 429, 500, 502, 503, 504})
-NON_RETRYABLE_HTTP_STATUSES = frozenset({400, 401, 403})
+NON_RETRYABLE_HTTP_STATUSES = frozenset({400, 401, 402, 403})
 NON_RETRYABLE_PROVIDER_CODES = frozenset(
     {
         "INVALID_ARGUMENT",
@@ -239,7 +239,14 @@ def _transport_from_diagnostic(diagnostic: Mapping[str, Any] | None) -> str | No
         frozenset({"gaierror", "herror"}),
         _TRANSIENT_TLS_EXCEPTION_NAMES,
         _TIMEOUT_EXCEPTION_NAMES,
-        frozenset({"ConnectError", "ConnectionError", "ConnectionRefusedError", "ConnectionResetError", "URLError"}),
+        frozenset({
+            "ConnectError",
+            "ConnectionError",
+            "ConnectionRefusedError",
+            "ConnectionResetError",
+            "RemoteDisconnected",
+            "URLError",
+        }),
     ):
         for name, module in classes:
             if name not in target:
@@ -260,7 +267,14 @@ def _transport_from_diagnostic(diagnostic: Mapping[str, Any] | None) -> str | No
                 return "TRANSPORT_TLS"
             if name in _TIMEOUT_EXCEPTION_NAMES:
                 return "TRANSPORT_TIMEOUT"
-            if name in {"ConnectError", "ConnectionError", "ConnectionRefusedError", "ConnectionResetError", "URLError"}:
+            if name in {
+                "ConnectError",
+                "ConnectionError",
+                "ConnectionRefusedError",
+                "ConnectionResetError",
+                "RemoteDisconnected",
+                "URLError",
+            }:
                 return "TRANSPORT_CONNECT"
     return None
 

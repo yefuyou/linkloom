@@ -9,6 +9,7 @@ from .deepseek_api import (
 from .gemini_api import (
     GeminiClient,
     GeminiProviderAdapter,
+    build_gemini_sdk_client,
     build_gemini_request,
     map_tool_definition_to_gemini_function,
 )
@@ -20,6 +21,7 @@ __all__ = [
     "map_tool_definition_to_deepseek_tool",
     "GeminiClient",
     "GeminiProviderAdapter",
+    "build_gemini_sdk_client",
     "build_gemini_request",
     "map_tool_definition_to_gemini_function",
 ]

@@ -8,6 +8,10 @@ from types import SimpleNamespace
 
 import pytest
 
+from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest
+from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
+from linkloom.semantic_ingestion.extraction import _provider_tool
+
 
 HARNESS_MODULE = "tests.smoke.test_m12_real_provider_team_decision_smoke"
 
@@ -108,6 +112,149 @@ def test_count_tokens_request_has_complete_generation_content_shape(
         }
     else:
         assert "generationConfig" not in serialized
+
+
+def test_count_tokens_request_preserves_required_function_call_mode():
+    harness = _harness()
+    request = {
+        "model": harness.MODEL,
+        "contents": _contents("synthetic planner prompt"),
+        "config": {
+            "tools": [_tool()],
+            "tool_config": {"function_calling_config": {"mode": "ANY"}},
+            "automatic_function_calling": {"disable": True},
+        },
+    }
+
+    serialized = harness._count_endpoint_generate_request(request)
+
+    assert serialized["toolConfig"] == {
+        "functionCallingConfig": {"mode": "ANY"}
+    }
+
+
+def test_count_tokens_nullable_parameters_match_sdk_schema_enum_serialization() -> None:
+    pytest.importorskip("google.genai")
+    from google.genai import _common, models, types
+
+    harness = _harness()
+    request = {
+        "model": harness.MODEL,
+        "contents": _contents("synthetic semantic extraction prompt"),
+        "config": {
+            "tools": [
+                {
+                    "function_declarations": [
+                        {
+                            "name": "emit_semantic_candidates",
+                            "description": "Return structured synthetic claims.",
+                            "parameters": {
+                                "type": "object",
+                                "properties": {
+                                    "subject": {
+                                        "type": "string",
+                                        "nullable": True,
+                                        "maxLength": 512,
+                                    }
+                                },
+                                "required": ["subject"],
+                                "additionalProperties": False,
+                            },
+                        }
+                    ]
+                }
+            ],
+            "automatic_function_calling": {"disable": True},
+        },
+    }
+
+    generation = types._GenerateContentParameters.model_validate(request)
+    sdk_shape = models._GenerateContentParameters_to_mldev(
+        SimpleNamespace(vertexai=False),
+        generation.model_dump(exclude_none=True),
+    )
+    sdk_shape = _common.convert_to_dict(sdk_shape)
+    sdk_shape = json.loads(
+        json.dumps(
+            sdk_shape,
+            default=lambda value: value.model_dump(
+                mode="json",
+                by_alias=True,
+                exclude_none=True,
+            ),
+        )
+    )
+    count_shape = harness._count_endpoint_generate_request(request)
+
+    count_schema = count_shape["tools"][0]["functionDeclarations"][0]["parameters"]
+    sdk_schema = sdk_shape["tools"][0]["functionDeclarations"][0]["parameters"]
+    assert count_schema["type"] == sdk_schema["type"]
+    assert (
+        count_schema["properties"]["subject"]["type"]
+        == sdk_schema["properties"]["subject"]["type"]
+    )
+    assert count_schema["properties"]["subject"]["nullable"] is True
+
+
+def test_count_tokens_nullable_json_schema_matches_sdk_wire_payload() -> None:
+    pytest.importorskip("google.genai")
+    from google.genai import _common, models, types
+
+    harness = _harness()
+    nullable_schema = {
+        "type": "object",
+        "properties": {
+            "subject": {
+                "anyOf": [
+                    {"type": "string", "maxLength": 512},
+                    {"type": "null"},
+                ]
+            }
+        },
+        "required": ["subject"],
+        "additionalProperties": False,
+    }
+    request = {
+        "model": harness.MODEL,
+        "contents": _contents("synthetic semantic extraction prompt"),
+        "config": {
+            "tools": [
+                {
+                    "function_declarations": [
+                        {
+                            "name": "emit_semantic_candidates",
+                            "description": "Return structured synthetic claims.",
+                            "parameters_json_schema": nullable_schema,
+                        }
+                    ]
+                }
+            ],
+            "automatic_function_calling": {"disable": True},
+        },
+    }
+
+    generation = types._GenerateContentParameters.model_validate(request)
+    sdk_shape = models._GenerateContentParameters_to_mldev(
+        SimpleNamespace(vertexai=False),
+        generation.model_dump(exclude_none=True),
+    )
+    sdk_shape = _common.convert_to_dict(sdk_shape)
+    sdk_shape = json.loads(
+        json.dumps(
+            sdk_shape,
+            default=lambda value: value.model_dump(
+                mode="json",
+                by_alias=True,
+                exclude_none=True,
+            ),
+        )
+    )
+    count_shape = harness._count_endpoint_generate_request(request)
+
+    assert (
+        count_shape["tools"][0]["functionDeclarations"][0]["parametersJsonSchema"]
+        == sdk_shape["tools"][0]["functionDeclarations"][0]["parameters_json_schema"]
+    )
 
 
 def test_count_tokens_and_generation_use_equivalent_system_instruction_shape() -> None:
@@ -453,6 +600,258 @@ def test_response_acceptance_persistence_failure_stops_before_downstream_guards(
     assert len(delegate.count_calls) == 1
 
 
+def _synthetic_semantic_function_response():
+    return {
+        "candidates": [
+            {
+                "finish_reason": "STOP",
+                "content": {
+                    "parts": [
+                        {"text": "do not persist this provider text"},
+                        {
+                            "function_call": {
+                                "name": "emit_semantic_candidates",
+                                "args": {
+                                    "claims": [
+                                        {
+                                            "subject": "Mira",
+                                            "relation": "vendor",
+                                            "value": "Birchline",
+                                        }
+                                    ],
+                                    "api_key": "synthetic-placeholder-only",
+                                },
+                            }
+                        },
+                    ]
+                },
+                "safety_ratings": [
+                    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "probability": "NEGLIGIBLE"}
+                ],
+            }
+        ],
+        "usage_metadata": {
+            "prompt_token_count": 5,
+            "candidates_token_count": 12,
+            "total_token_count": 17,
+        },
+    }
+
+
+def test_semantic_response_replay_snapshot_keeps_only_sanitized_tool_payload() -> None:
+    harness = _harness()
+
+    snapshot = harness._semantic_response_replay_snapshot(
+        _synthetic_semantic_function_response(),
+        model=harness.MODEL,
+    )
+
+    assert snapshot["provider"] == "gemini"
+    assert snapshot["model"] == harness.MODEL
+    assert snapshot["candidate_count"] == 1
+    assert snapshot["candidates"][0]["finish_reason"] == "STOP"
+    assert snapshot["candidates"][0]["part_types"] == ["text", "function_call"]
+    call = snapshot["candidates"][0]["function_calls"][0]
+    assert call["name"] == "emit_semantic_candidates"
+    assert call["arguments_representation"] == "dict"
+    assert call["arguments"]["claims"][0]["value"] == "Birchline"
+    assert "api_key" not in call["arguments"]
+    assert snapshot["candidates"][0]["text_parts"][0]["utf8_bytes"] > 0
+
+    serialized = json.dumps(snapshot, ensure_ascii=False)
+    assert "do not persist this provider text" not in serialized
+    assert "synthetic-placeholder-only" not in serialized
+    assert len(snapshot["response_sha256"]) == 64
+
+
+def _semantic_model_turn_request(harness):
+    return ModelTurnRequest(
+        run_id="synthetic-semantic-run",
+        turn_id="synthetic-semantic-run:turn:1",
+        task_id="synthetic-semantic-task",
+        agent_id="synthetic-semantic-extractor",
+        sequence=1,
+        user_input="Extract the synthetic decision.",
+        observation=None,
+        available_tools=[_provider_tool()],
+        model_id=harness.MODEL,
+        generation_options=ModelGenerationOptions(
+            max_output_tokens=512,
+            temperature=0.0,
+            require_tool_call=True,
+        ),
+    )
+
+
+def _synthetic_function_call_response(arguments):
+    return {
+        "candidates": [
+            {
+                "finish_reason": "STOP",
+                "content": {
+                    "parts": [
+                        {
+                            "function_call": {
+                                "name": "emit_semantic_candidates",
+                                "args": arguments,
+                            }
+                        }
+                    ]
+                },
+            }
+        ],
+        "usage_metadata": {
+            "prompt_token_count": 5,
+            "candidates_token_count": 12,
+            "total_token_count": 17,
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    ("elapsed_seconds", "latency_budget_exceeded"),
+    [(29.0, False), (31.868, True)],
+    ids=("within-time-budget", "accepted-response-after-time-budget"),
+)
+def test_accepted_response_is_parsed_and_latency_is_recorded_separately(
+    elapsed_seconds: float,
+    latency_budget_exceeded: bool,
+) -> None:
+    harness = _harness()
+    aggregate = harness.AggregateUsage()
+    response = _synthetic_function_call_response(
+        {
+            "claims": [
+                {
+                    "claim_type": "DECISION",
+                    "subject": "Juniper receipts pilot",
+                    "relation": "uses vendor",
+                    "value": "Birchline",
+                    "temporal_status": "NOT_STATED",
+                    "valid_from": None,
+                    "valid_to": None,
+                    "confidence": {
+                        "claim_type": 0.95,
+                        "entity": 0.95,
+                        "relation": 0.95,
+                        "temporal": 0.9,
+                        "overall": 0.95,
+                    },
+                }
+            ]
+        }
+    )
+    delegate = harness.RecordingDelegate(response=response)
+    case_budget = replace(
+        harness.MPS_001_RERUN_CASE_BUDGET,
+        request_timeout_seconds=30,
+    )
+    clock_values = iter((0.0, 0.0, 0.0, elapsed_seconds))
+    accepted_record_states = []
+
+    def persist_accepted(_response):
+        record = aggregate.preflight_records[0]
+        accepted_record_states.append(
+            (
+                "response_replay_observation" in record,
+                record.get("response_latency_ms"),
+                record.get("latency_budget_exceeded"),
+            )
+        )
+
+    guard = harness.BudgetedGeminiClient(
+        delegate,
+        case=harness.MPS_001_RERUN_CASE,
+        case_budget=case_budget,
+        aggregate=aggregate,
+        aggregate_budget=harness.MPS_001_RERUN_AGGREGATE_BUDGET,
+        allow_static_count_tokens_fallback=True,
+        clock=lambda: next(clock_values),
+        on_response_accepted=persist_accepted,
+    )
+
+    parsed = GeminiProviderAdapter(guard, model_id=harness.MODEL).complete(
+        _semantic_model_turn_request(harness)
+    )
+
+    observation = aggregate.preflight_records[0]["response_replay_observation"]
+    assert observation["candidate_count"] == 1
+    assert observation["candidates"][0]["function_calls"][0]["arguments"]["claims"][0]["subject"] == "Juniper receipts pilot"
+    assert accepted_record_states == [
+        (
+            True,
+            round(elapsed_seconds * 1000, 3),
+            latency_budget_exceeded,
+        )
+    ]
+    assert parsed.error is None
+    assert parsed.action is not None
+    assert parsed.action.kind == "tool_call"
+    assert parsed.action.tool_call.arguments["claims"][0]["value"] == "Birchline"
+    assert guard.provider_response_accepted is True
+    assert guard.last_guard_state == "RESPONSE_ACCEPTED"
+
+
+def test_transport_timeout_before_response_remains_a_timeout(monkeypatch) -> None:
+    harness = _harness()
+    monkeypatch.setattr(harness, "MAX_TRANSPORT_RETRIES_PER_REQUEST", 0)
+    aggregate = harness.AggregateUsage()
+    delegate = harness.RecordingDelegate(exception=TimeoutError("synthetic transport timeout"))
+    clock_values = iter((0.0, 0.0, 0.0, 0.0))
+    guard = harness.BudgetedGeminiClient(
+        delegate,
+        case=harness.MPS_001_RERUN_CASE,
+        case_budget=harness.MPS_001_RERUN_CASE_BUDGET,
+        aggregate=aggregate,
+        aggregate_budget=harness.MPS_001_RERUN_AGGREGATE_BUDGET,
+        allow_static_count_tokens_fallback=True,
+        clock=lambda: next(clock_values),
+    )
+
+    response = GeminiProviderAdapter(guard, model_id=harness.MODEL).complete(
+        _semantic_model_turn_request(harness)
+    )
+
+    assert response.error is not None
+    assert response.error.code == "MODEL_TIMEOUT"
+    assert guard.provider_response_accepted is False
+    assert len(delegate.calls) == 1
+    assert aggregate.preflight_records[0]["inference_status"] == "failed"
+    assert "response_replay_observation" not in aggregate.preflight_records[0]
+
+
+def test_malformed_accepted_response_after_latency_budget_is_not_a_timeout() -> None:
+    harness = _harness()
+    aggregate = harness.AggregateUsage()
+    delegate = harness.RecordingDelegate(
+        response=_synthetic_function_call_response(["malformed arguments"])
+    )
+    case_budget = replace(
+        harness.MPS_001_RERUN_CASE_BUDGET,
+        request_timeout_seconds=30,
+    )
+    clock_values = iter((0.0, 0.0, 0.0, 31.868))
+    guard = harness.BudgetedGeminiClient(
+        delegate,
+        case=harness.MPS_001_RERUN_CASE,
+        case_budget=case_budget,
+        aggregate=aggregate,
+        aggregate_budget=harness.MPS_001_RERUN_AGGREGATE_BUDGET,
+        allow_static_count_tokens_fallback=True,
+        clock=lambda: next(clock_values),
+    )
+
+    response = GeminiProviderAdapter(guard, model_id=harness.MODEL).complete(
+        _semantic_model_turn_request(harness)
+    )
+
+    assert response.error is not None
+    assert response.error.code == "MODEL_TOOL_CALL_PARSE_FAILED"
+    assert guard.provider_response_accepted is True
+    assert aggregate.preflight_records[0]["latency_budget_exceeded"] is True
+    assert guard.last_guard_state == "RESPONSE_ACCEPTED"
+
+
 def test_missing_output_usage_blocks_without_zero_fill_and_reserves_output_cap() -> None:
     harness = _harness()
     aggregate = harness.AggregateUsage()
@@ -646,6 +1045,7 @@ def test_transport_only_fallback_rejects_deterministic_400_before_generation() -
         "gaierror",
         "ConnectionRefusedError",
         "ConnectionResetError",
+        "RemoteDisconnected",
         "TimeoutError",
         "ConnectTimeout",
         "ReadTimeout",

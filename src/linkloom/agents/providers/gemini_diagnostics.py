@@ -15,6 +15,7 @@ from linkloom.agents.providers.failure_diagnostics import (
     exception_failure_diagnostics,
     response_failure_diagnostics,
     safe_diagnostic_text,
+    safe_diagnostic_structure,
 )
 
 
@@ -77,6 +78,12 @@ def _provider_status_code(value: Any) -> str | None:
         body = _read(current, "body")
         if isinstance(body, Mapping):
             pending.append(body.get("error", body))
+        response_json = _read(current, "response_json")
+        if isinstance(response_json, Mapping):
+            pending.append(response_json.get("error", response_json))
+        details = _read(current, "details")
+        if isinstance(details, Mapping):
+            pending.append(details.get("error", details))
         elif isinstance(current, Mapping):
             pending.append(current.get("error"))
     return None
@@ -98,6 +105,12 @@ def _provider_error_code(value: Any) -> str | None:
         body = _read(current, "body")
         if isinstance(body, Mapping):
             pending.append(body.get("error", body))
+        response_json = _read(current, "response_json")
+        if isinstance(response_json, Mapping):
+            pending.append(response_json.get("error", response_json))
+        details = _read(current, "details")
+        if isinstance(details, Mapping):
+            pending.append(details.get("error", details))
         elif isinstance(current, Mapping):
             pending.append(current.get("error"))
     return None
@@ -425,10 +438,24 @@ def _assemble(
         "exception_message_safe": base.get("exception_message"),
         "exception_repr_safe": base.get("exception_repr"),
         "nested_cause_chain": base.get("nested_cause", []),
+        "exception_fqcn": base.get("exception_fqcn"),
+        "sdk_exception_fqcn": base.get("sdk_exception_fqcn"),
+        "exception_cause_chain": base.get("exception_cause_chain", []),
         "http_status": base.get("http_status"),
         "provider_error_code": base.get("provider_error_code"),
+        "provider_error_status": base.get("provider_error_status"),
         "provider_error_message_safe": base.get("provider_error_message"),
+        "provider_error_details": base.get("provider_error_details"),
+        "provider_error_details_truncated": base.get(
+            "provider_error_details_truncated", False
+        ),
+        "field_violations": base.get("field_violations", []),
+        "unknown_field_paths": base.get("unknown_field_paths", []),
         "request_id": base.get("request_id"),
+        "trace_id": base.get("trace_id"),
+        "wire_payload_sha256": base.get("wire_payload_sha256"),
+        "wire_schema_subtree_sha256": base.get("wire_schema_subtree_sha256"),
+        "wire_tool_config_sha256": base.get("wire_tool_config_sha256"),
         "response_status": base.get("response_status"),
         "finish_reason": base.get("finish_reason"),
         "timeout_type": base.get("timeout_type"),
@@ -476,6 +503,103 @@ def gemini_exception_diagnostics(
         payload=payload,
         exception=exception,
     )
+
+
+def generation_failure_record(
+    details: Mapping[str, Any] | None,
+    *,
+    attempt_number: int | None,
+    request_fingerprint: str | None,
+    response_accepted: bool,
+) -> dict[str, Any]:
+    """Project safe adapter diagnostics into a bounded journal receipt.
+
+    The response body, request payload, headers, and exception repr are never
+    copied into this receipt. Error text has already passed the shared
+    provider-diagnostic sanitizer at the adapter boundary.
+    """
+    source = details if isinstance(details, Mapping) else {}
+    safe_message = source.get("provider_error_message_safe")
+    if not isinstance(safe_message, str):
+        safe_message = source.get("exception_message_safe")
+    if not isinstance(safe_message, str):
+        safe_message = None
+
+    status = source.get("http_status")
+    if isinstance(status, bool) or not isinstance(status, int) or not 100 <= status <= 599:
+        status = None
+    attempt = (
+        attempt_number
+        if isinstance(attempt_number, int) and not isinstance(attempt_number, bool) and attempt_number > 0
+        else None
+    )
+    fingerprint = (
+        request_fingerprint
+        if isinstance(request_fingerprint, str)
+        and len(request_fingerprint) == 64
+        and all(character in "0123456789abcdef" for character in request_fingerprint)
+        else None
+    )
+    retryable = source.get("retryable") if isinstance(source.get("retryable"), bool) else None
+    retryability = source.get("retry_classification")
+    if not isinstance(retryability, str):
+        retryability = "NON_RETRYABLE" if retryable is False else None
+    error_details, details_projection_truncated = safe_diagnostic_structure(
+        source.get("provider_error_details")
+    )
+    field_violations, _ = safe_diagnostic_structure(
+        source.get("field_violations", [])
+    )
+    unknown_paths, _ = safe_diagnostic_structure(source.get("unknown_field_paths", []))
+
+    def fingerprint_field(name: str) -> str | None:
+        value = source.get(name)
+        return (
+            value
+            if isinstance(value, str)
+            and len(value) == 64
+            and all(character in "0123456789abcdef" for character in value)
+            else None
+        )
+
+    cause_chain, _ = safe_diagnostic_structure(
+        source.get("exception_cause_chain", [])
+    )
+
+    return {
+        "provider": source.get("provider") if isinstance(source.get("provider"), str) else None,
+        "model": source.get("model") if isinstance(source.get("model"), str) else None,
+        "failure_stage": source.get("failure_stage") if isinstance(source.get("failure_stage"), str) else None,
+        "failure_category": source.get("failure_category") if isinstance(source.get("failure_category"), str) else None,
+        "exception_class": source.get("exception_type") if isinstance(source.get("exception_type"), str) else None,
+        "sdk_exception_fqcn": source.get("sdk_exception_fqcn") if isinstance(source.get("sdk_exception_fqcn"), str) else None,
+        "sdk_exception_cause_chain": cause_chain if isinstance(cause_chain, list) else [],
+        "http_status": status,
+        "provider_error_code": source.get("provider_error_code") if isinstance(source.get("provider_error_code"), str) else None,
+        "provider_error_status": source.get("provider_error_status") if isinstance(source.get("provider_error_status"), str) else None,
+        "sanitized_error_message": safe_message,
+        "provider_error_details": error_details,
+        "provider_error_details_truncated": bool(
+            source.get("provider_error_details_truncated")
+            or details_projection_truncated
+        ),
+        "field_violations": field_violations if isinstance(field_violations, list) else [],
+        "unknown_field_paths": unknown_paths if isinstance(unknown_paths, list) else [],
+        "provider_request_id": source.get("request_id") if isinstance(source.get("request_id"), str) else None,
+        "provider_trace_id": source.get("trace_id") if isinstance(source.get("trace_id"), str) else None,
+        "retryability_classification": retryability,
+        "retryable": retryable,
+        "wire_payload_sha256": fingerprint_field("wire_payload_sha256"),
+        "wire_schema_subtree_sha256": fingerprint_field("wire_schema_subtree_sha256"),
+        "wire_tool_config_sha256": fingerprint_field("wire_tool_config_sha256"),
+        "attempt_number": attempt,
+        "request_fingerprint": fingerprint,
+        "response_accepted": bool(response_accepted),
+        "api_endpoint_hostname": source.get("api_endpoint_hostname") if isinstance(source.get("api_endpoint_hostname"), str) else None,
+        "api_endpoint_port": source.get("api_endpoint_port") if isinstance(source.get("api_endpoint_port"), int) and not isinstance(source.get("api_endpoint_port"), bool) else None,
+        "low_level_failure_class": source.get("low_level_failure_class") if isinstance(source.get("low_level_failure_class"), str) else None,
+        "failure_layer": source.get("failure_layer") if isinstance(source.get("failure_layer"), str) else None,
+    }
 
 
 def gemini_response_diagnostics(
@@ -544,4 +668,8 @@ def gemini_response_diagnostics(
     )
 
 
-__all__ = ["gemini_exception_diagnostics", "gemini_response_diagnostics"]
+__all__ = [
+    "gemini_exception_diagnostics",
+    "gemini_response_diagnostics",
+    "generation_failure_record",
+]

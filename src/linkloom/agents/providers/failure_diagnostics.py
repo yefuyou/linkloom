@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import errno
+import json
 import re
 import socket
 import ssl
@@ -17,14 +18,53 @@ from typing import Any
 _MAX_TEXT = 512
 _MAX_CAUSES = 8
 _MAX_SENSITIVE_VALUES = 4096
+_MAX_ERROR_DETAILS_BYTES = 4 * 1024
+_WIRE_FINGERPRINT_EXTENSION = "linkloom_gemini_wire_fingerprints"
 _SENSITIVE_REQUEST_KEYS = frozenset(
     {"content", "prompt", "input", "arguments"}
 )
+_SENSITIVE_DIAGNOSTIC_KEYS = frozenset(
+    {
+        "api_key",
+        "apikey",
+        "authorization",
+        "cookie",
+        "set-cookie",
+        "prompt",
+        "content",
+        "contents",
+        "input",
+        "arguments",
+        "access_token",
+        "oauth_token",
+        "token",
+        "secret",
+        "password",
+        "credential",
+        "request",
+        "request_body",
+        "body",
+        "payload",
+        "parts",
+        "source_text",
+        "user_text",
+    }
+)
 _SECRET_PATTERNS = (
     re.compile(r"(?i)authorization\s*[:=]\s*(?:bearer\s+)?[^\s,;]+"),
+    re.compile(r"(?i)\b(cookie|set-cookie)\s*[:=]\s*[^\r\n]+"),
+    re.compile(
+        r"(?i)([?&](?:api[_-]?key|key|signature|sig|credential|access[_-]?token|"
+        r"oauth[_-]?token|token|x-goog-signature)=)[^&\s#\"']+"
+    ),
     re.compile(
         r"(?i)\b(?:api[\s_-]?key|key|access[_-]?token|oauth[_-]?token|token|secret|password)\b\s*[:=]\s*"
         r"(?:\"[^\"]*\"|'[^']*'|[^\s,;&]+)"
+    ),
+    re.compile(
+        r"(?i)([\"']?(?:api[\s_-]?key|authorization|cookie|set-cookie|"
+        r"access[_-]?token|oauth[_-]?token|token|secret|password)[\"']?\s*:\s*)"
+        r"(?:\"[^\"]*\"|'[^']*'|[^\s,;&}]+)"
     ),
     re.compile(
         r"(?i)(\b[a-z][a-z0-9+.-]*://)[^\s/@:]+(?::[^\s/@]*)?(?=@)"
@@ -96,6 +136,160 @@ def safe_diagnostic_text(
     return _safe_text(value, _sensitive_request_values(request_payload))
 
 
+def safe_diagnostic_structure(
+    value: Any,
+    request_payload: Mapping[str, Any] | None = None,
+) -> tuple[Any, bool]:
+    """Return bounded JSON diagnostics with secret and request text redacted.
+
+    The returned boolean is true when fields, depth, strings, or bytes were
+    clipped. This helper is intentionally limited to provider diagnostics; it
+    must never be used to persist request or response bodies wholesale.
+    """
+
+    if value is None:
+        return None, False
+    sensitive = _sensitive_request_values(request_payload)
+    clipped = False
+    remaining = [256]
+
+    def sanitize(item: Any, *, depth: int = 0) -> Any:
+        nonlocal clipped
+        if remaining[0] <= 0:
+            clipped = True
+            return "[TRUNCATED]"
+        remaining[0] -= 1
+        if depth >= 8:
+            clipped = True
+            return "[TRUNCATED]"
+        if isinstance(item, Mapping):
+            output: dict[str, Any] = {}
+            for index, (raw_key, nested) in enumerate(item.items()):
+                if index >= 64 or remaining[0] <= 0:
+                    clipped = True
+                    break
+                key = str(raw_key)[:128]
+                if len(str(raw_key)) > 128:
+                    clipped = True
+                normalized = key.casefold().replace("-", "_")
+                if normalized in _SENSITIVE_DIAGNOSTIC_KEYS or any(
+                    marker in normalized
+                    for marker in (
+                        "prompt",
+                        "content",
+                        "argument",
+                        "authorization",
+                        "cookie",
+                        "secret",
+                        "password",
+                        "credential",
+                        "token",
+                    )
+                ):
+                    clipped = True
+                    continue
+                output[key] = sanitize(nested, depth=depth + 1)
+            return output
+        if isinstance(item, (list, tuple)):
+            output_list = []
+            for index, nested in enumerate(item):
+                if index >= 64 or remaining[0] <= 0:
+                    clipped = True
+                    break
+                output_list.append(sanitize(nested, depth=depth + 1))
+            return output_list
+        if item is None or isinstance(item, (bool, int, float)):
+            if isinstance(item, float) and (item != item or item in (float("inf"), float("-inf"))):
+                clipped = True
+                return None
+            return item
+        safe = _safe_text(item, sensitive) or ""
+        if len(safe) > _MAX_TEXT:
+            clipped = True
+            safe = safe[:_MAX_TEXT] + "…"
+        return safe
+
+    result = sanitize(value)
+    try:
+        serialized = json.dumps(
+            result,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError):
+        return None, True
+    if len(serialized) <= _MAX_ERROR_DETAILS_BYTES:
+        return result, clipped
+
+    # Re-sanitize with strict limits so the result remains structured JSON.
+    clipped = True
+    remaining[0] = 24
+
+    def compact(item: Any, *, depth: int = 0) -> Any:
+        nonlocal clipped
+        if remaining[0] <= 0 or depth >= 5:
+            clipped = True
+            return "[TRUNCATED]"
+        remaining[0] -= 1
+        if isinstance(item, Mapping):
+            output: dict[str, Any] = {}
+            for raw_key, nested in list(item.items())[:12]:
+                key = str(raw_key)[:64]
+                normalized = key.casefold().replace("-", "_")
+                if normalized in _SENSITIVE_DIAGNOSTIC_KEYS or any(
+                    marker in normalized
+                    for marker in (
+                        "prompt",
+                        "content",
+                        "argument",
+                        "authorization",
+                        "cookie",
+                        "secret",
+                        "password",
+                        "credential",
+                        "token",
+                    )
+                ):
+                    clipped = True
+                    continue
+                else:
+                    output[key] = compact(nested, depth=depth + 1)
+                if remaining[0] <= 0:
+                    clipped = True
+                    break
+            if len(item) > 12:
+                clipped = True
+            return output
+        if isinstance(item, (list, tuple)):
+            output_list = []
+            for nested in list(item)[:12]:
+                output_list.append(compact(nested, depth=depth + 1))
+                if remaining[0] <= 0:
+                    clipped = True
+                    break
+            if len(item) > 12:
+                clipped = True
+            return output_list
+        if item is None or isinstance(item, (bool, int, float)):
+            return item if not isinstance(item, float) or item == item else None
+        safe = _safe_text(item, sensitive) or ""
+        if len(safe) > 128:
+            clipped = True
+            safe = safe[:128] + "…"
+        return safe
+
+    result = compact(result)
+    serialized = json.dumps(
+        result, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    if len(serialized) > _MAX_ERROR_DETAILS_BYTES:
+        # The strict node and string bounds make this a final defensive cap.
+        return {"truncated": True}, True
+    return result, clipped
+
+
 def _safe_exception_repr(exception: BaseException, sensitive: list[str]) -> str:
     # Sanitize the ordinary message before applying repr escaping. Sanitizing
     # repr(exception) directly can miss prompts containing quotes/newlines.
@@ -121,7 +315,24 @@ def _headers_request_id(value: Any) -> Any:
     headers = _read(value, "headers")
     if isinstance(headers, Mapping):
         for name, item in headers.items():
-            if str(name).lower() in {"x-request-id", "request-id"}:
+            if str(name).lower() in {
+                "x-goog-request-id",
+                "x-request-id",
+                "request-id",
+            }:
+                return item
+    return None
+
+
+def _headers_trace_id(value: Any) -> Any:
+    headers = _read(value, "headers")
+    if isinstance(headers, Mapping):
+        for name, item in headers.items():
+            if str(name).lower() in {
+                "x-cloud-trace-context",
+                "x-goog-trace-id",
+                "traceparent",
+            }:
                 return item
     return None
 
@@ -160,6 +371,121 @@ def _exception_nodes(exception: BaseException) -> list[tuple[str, Any]]:
 
 def _node_type(node: Any) -> str | None:
     return type(node).__name__ if isinstance(node, BaseException) else None
+
+
+def _fully_qualified_type(node: Any) -> str | None:
+    if not isinstance(node, BaseException):
+        return None
+    exception_type = type(node)
+    module = getattr(exception_type, "__module__", None)
+    qualname = getattr(exception_type, "__qualname__", exception_type.__name__)
+    return f"{module}.{qualname}" if isinstance(module, str) else qualname
+
+
+def _sdk_exception_fqcn(nodes: list[tuple[str, Any]]) -> str | None:
+    for _, node in nodes:
+        if not isinstance(node, BaseException):
+            continue
+        module = type(node).__module__
+        if isinstance(module, str) and module.startswith("google.genai"):
+            return _fully_qualified_type(node)
+    return None
+
+
+def _provider_details(value: Any) -> Any:
+    error = _error_payload(value)
+    if isinstance(error, Mapping):
+        return error.get("details")
+    if isinstance(error, (list, tuple)):
+        return error
+    return None
+
+
+def _field_diagnostics(
+    details: Any,
+    sensitive: list[str],
+) -> tuple[list[dict[str, str | None]], list[str], bool]:
+    violations: list[dict[str, str | None]] = []
+    unknown_paths: list[str] = []
+    pending = [details]
+    visited = 0
+    clipped = False
+    while pending and visited < 256:
+        current = pending.pop(0)
+        visited += 1
+        if isinstance(current, Mapping):
+            for key, nested in current.items():
+                key_normalized = str(key).casefold().replace("_", "")
+                if key_normalized in {"fieldviolations", "fieldviolation"}:
+                    values = nested if isinstance(nested, (list, tuple)) else [nested]
+                    for violation in values[:64]:
+                        if not isinstance(violation, Mapping):
+                            continue
+                        if len(violations) >= 8:
+                            clipped = True
+                            break
+                        field = _safe_text(
+                            _read(violation, "field") or _read(violation, "path"),
+                            sensitive,
+                        )
+                        description = _safe_text(
+                            _read(violation, "description") or _read(violation, "reason"),
+                            sensitive,
+                        )
+                        if field is not None and len(field) > 256:
+                            field = field[:256] + "…"
+                            clipped = True
+                        if description is not None and len(description) > 256:
+                            description = description[:256] + "…"
+                            clipped = True
+                        violations.append({"field": field, "description": description})
+                        if field and description and any(
+                            marker in description.casefold()
+                            for marker in ("unknown field", "unrecognized field", "not recognized")
+                        ):
+                            unknown_paths.append(field)
+                elif isinstance(nested, (Mapping, list, tuple)):
+                    pending.append(nested)
+        elif isinstance(current, (list, tuple)):
+            pending.extend(current[:64])
+    if pending:
+        clipped = True
+    return violations, list(dict.fromkeys(unknown_paths))[:8], clipped
+
+
+def _wire_fingerprints(
+    nodes: list[tuple[str, Any]],
+) -> dict[str, str | None] | None:
+    for _, node in nodes:
+        response = _read(node, "response")
+        request = _read(response, "request") if response is not None else None
+        request = request or _read(node, "request")
+        extensions = _read(request, "extensions") if request is not None else None
+        if not isinstance(extensions, Mapping):
+            continue
+        fingerprints = extensions.get(_WIRE_FINGERPRINT_EXTENSION)
+        if not isinstance(fingerprints, Mapping):
+            continue
+        expected = (
+            "wire_payload_sha256",
+            "wire_schema_subtree_sha256",
+            "wire_tool_config_sha256",
+        )
+        payload_fingerprint = fingerprints.get(expected[0])
+        if not isinstance(payload_fingerprint, str) or re.fullmatch(
+            r"[0-9a-f]{64}", payload_fingerprint
+        ) is None:
+            continue
+        if all(
+            fingerprints.get(name) is None
+            or (
+                isinstance(fingerprints.get(name), str)
+                and re.fullmatch(r"[0-9a-f]{64}", fingerprints[name]) is not None
+            )
+            for name in expected[1:]
+        ):
+            return {name: fingerprints.get(name) for name in expected}
+    return None
 
 
 def _classify_transport(
@@ -240,6 +566,10 @@ def _classify_transport(
 def _error_payload(value: Any) -> Any:
     body = _read(value, "body")
     if body is None:
+        body = _read(value, "response_json")
+    if body is None:
+        body = _read(value, "details")
+    if body is None:
         body = _read(value, "error")
     if isinstance(body, Mapping) and "error" in body:
         return body.get("error")
@@ -249,13 +579,18 @@ def _error_payload(value: Any) -> Any:
 def _provider_error_fields(
     value: Any,
     sensitive: list[str],
-) -> tuple[str | None, str | None]:
+) -> tuple[str | None, str | None, str | None]:
     error = _error_payload(value)
+    status = _read(error, "status") or _read(error, "reason") or _read(value, "status")
+    if not isinstance(status, str):
+        status = None
     code = _read(error, "code") or _read(error, "type") or _read(value, "code")
     if isinstance(code, int) and not isinstance(code, bool) and 100 <= code <= 599:
         code = None
+    if code is None:
+        code = status
     message = _read(error, "message") or _read(value, "message")
-    return _safe_text(code, sensitive), _safe_text(message, sensitive)
+    return _safe_text(code, sensitive), _safe_text(status, sensitive), _safe_text(message, sensitive)
 
 
 def exception_failure_diagnostics(
@@ -268,8 +603,11 @@ def exception_failure_diagnostics(
     """Build a JSON-safe diagnostic record without persisting request content."""
 
     sensitive = _sensitive_request_values(request_payload)
-    status = _http_status(exception)
     nodes = _exception_nodes(exception)
+    status = next(
+        (candidate for _, node in nodes if (candidate := _http_status(node)) is not None),
+        None,
+    )
     low_level = (
         "HTTP_429"
         if status == 429
@@ -301,18 +639,42 @@ def exception_failure_diagnostics(
         }
         for relation, node in nodes[1:]
     ]
-    response = _read(exception, "response")
-    code, message = _provider_error_fields(exception, sensitive)
-    if code is None and response is not None:
-        code, message = _provider_error_fields(response, sensitive)
-    request_id = (
-        _read(exception, "request_id")
-        or _read(exception, "provider_request_id")
-        or _headers_request_id(response)
-        or _headers_request_id(exception)
-    )
+    code: str | None = None
+    provider_status: str | None = None
+    message: str | None = None
+    raw_details: Any = None
+    request_id: Any = None
+    trace_id: Any = None
+    for _, node in nodes:
+        response = _read(node, "response")
+        for candidate in (node, response):
+            if candidate is None:
+                continue
+            candidate_code, candidate_status, candidate_message = _provider_error_fields(
+                candidate, sensitive
+            )
+            code = code or candidate_code
+            provider_status = provider_status or candidate_status
+            message = message or candidate_message
+            raw_details = raw_details if raw_details is not None else _provider_details(candidate)
+            request_id = (
+                request_id
+                or _read(candidate, "request_id")
+                or _read(candidate, "provider_request_id")
+                or _headers_request_id(candidate)
+            )
+            trace_id = trace_id or _headers_trace_id(candidate)
     if not isinstance(request_id, str):
         request_id = None
+    if not isinstance(trace_id, str):
+        trace_id = None
+    safe_details, details_truncated = safe_diagnostic_structure(
+        raw_details, request_payload
+    )
+    field_violations, unknown_field_paths, field_diagnostics_truncated = _field_diagnostics(
+        raw_details, sensitive
+    )
+    wire_fingerprints = _wire_fingerprints(nodes) or {}
     errno_value = getattr(exception, "errno", None)
     winerror_value = getattr(exception, "winerror", None)
     return {
@@ -322,13 +684,29 @@ def exception_failure_diagnostics(
             )
         ),
         "exception_type": type(exception).__name__,
+        "exception_fqcn": _fully_qualified_type(exception),
+        "sdk_exception_fqcn": _sdk_exception_fqcn(nodes),
         "exception_message": _safe_text(str(exception), sensitive),
         "exception_repr": _safe_exception_repr(exception, sensitive),
         "nested_cause": nested,
+        "exception_cause_chain": [
+            {
+                "relation": relation,
+                "exception_fqcn": _fully_qualified_type(node),
+            }
+            for relation, node in nodes[1:]
+        ],
         "http_status": status,
         "provider_error_code": code,
+        "provider_error_status": provider_status,
         "provider_error_message": message,
+        "provider_error_details": safe_details,
+        "provider_error_details_truncated": details_truncated or field_diagnostics_truncated,
+        "field_violations": field_violations,
+        "unknown_field_paths": unknown_field_paths,
         "request_id": _safe_text(request_id, sensitive),
+        "trace_id": _safe_text(trace_id, sensitive),
+        **wire_fingerprints,
         "finish_reason": None,
         "response_status": None,
         "timeout_type": next(
@@ -357,7 +735,14 @@ def response_failure_diagnostics(
     sensitive = _sensitive_request_values(request_payload)
     error = provider_error if provider_error is not None else _read(response, "error")
     status = _http_status(error) or _http_status(response)
-    error_code, error_message = _provider_error_fields({"error": error}, sensitive)
+    error_code, error_status, error_message = _provider_error_fields({"error": error}, sensitive)
+    raw_details = _provider_details({"error": error})
+    safe_details, details_truncated = safe_diagnostic_structure(
+        raw_details, request_payload
+    )
+    field_violations, unknown_field_paths, field_diagnostics_truncated = _field_diagnostics(
+        raw_details, sensitive
+    )
     if error_code is None and finish_reason == "insufficient_system_resource":
         error_code = finish_reason
     request_id = (
@@ -367,6 +752,9 @@ def response_failure_diagnostics(
     )
     if not isinstance(request_id, str):
         request_id = None
+    trace_id = _headers_trace_id(response)
+    if not isinstance(trace_id, str):
+        trace_id = None
     response_status = _read(response, "status")
     if response_status is None:
         response_status = _read(response, "response_status")
@@ -394,10 +782,18 @@ def response_failure_diagnostics(
         "exception_message": None,
         "exception_repr": None,
         "nested_cause": [],
+        "exception_fqcn": None,
+        "exception_cause_chain": [],
         "http_status": status,
         "provider_error_code": error_code,
+        "provider_error_status": error_status,
         "provider_error_message": error_message,
+        "provider_error_details": safe_details,
+        "provider_error_details_truncated": details_truncated or field_diagnostics_truncated,
+        "field_violations": field_violations,
+        "unknown_field_paths": unknown_field_paths,
         "request_id": _safe_text(request_id, sensitive),
+        "trace_id": _safe_text(trace_id, sensitive),
         "finish_reason": _safe_text(finish_reason, sensitive),
         "response_status": _safe_text(response_status, sensitive),
         "timeout_type": None,
@@ -413,4 +809,5 @@ __all__ = [
     "exception_failure_diagnostics",
     "response_failure_diagnostics",
     "safe_diagnostic_text",
+    "safe_diagnostic_structure",
 ]
