@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "linkloom"
 version = "0.1.0"
-description = "Local-first Markdown knowledge assistant"
+description = "Workspace-scoped team decision recovery and temporal evidence management"
 requires-python = ">=3.11"
 dependencies = ["PyYAML>=6.0", "rank-bm25==0.2.2"]
 
@@ -18,5 +18,5 @@ retrieval = ["sentence-transformers>=5.0,<7.0"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"linkloom.ui" = ["static/*", "demo_data/*.json"]
+"linkloom.ui" = ["static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
 

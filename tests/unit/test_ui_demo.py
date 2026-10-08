@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 import pytest
 
+import linkloom.ui.demo as demo_module
 from linkloom.ui.demo import DemoCase, DemoRunBackend
 
 
@@ -18,6 +22,26 @@ def test_mps_demo_builds_evidence_from_the_frozen_source_lines() -> None:
     assert case.evidence["mps-decision-10"]["line_end"] == 12
     assert case.evidence["mps-readiness-region-15"]["relative_path"] == (
         "06-adoption-readiness.md"
+    )
+
+
+def test_mps_demo_loads_from_package_data_without_repository_docs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    installed_ui = tmp_path / "site-packages" / "linkloom" / "ui"
+    installed_ui.mkdir(parents=True)
+    shutil.copytree(
+        Path(demo_module.__file__).with_name("demo_data"),
+        installed_ui / "demo_data",
+    )
+    monkeypatch.setattr(demo_module, "__file__", str(installed_ui / "demo.py"))
+
+    case = DemoCase.load_mps_001()
+
+    assert len(case.documents) == 6
+    assert case.evidence["mps-decision-10"]["quote"].startswith(
+        "The Atlas Lantern team selected Aster A"
     )
 
 

@@ -38,14 +38,13 @@ class DemoCase:
     def load_mps_001(cls) -> "DemoCase":
         fixture_path = Path(__file__).with_name("demo_data") / "mps-001.json"
         raw = json.loads(fixture_path.read_text(encoding="utf-8"))
-        repository_root = Path(__file__).resolve().parents[3]
+        fixture_sources = fixture_path.parent / "mps-001"
         workspace_data = raw["workspace"]
-        workspace_root = repository_root / workspace_data["workspace_relative_path"]
 
         documents: list[NoteDocument] = []
         by_path: dict[str, NoteDocument] = {}
         for relative_path in raw["documents"]:
-            path = workspace_root / relative_path
+            path = fixture_sources / relative_path
             raw_bytes = path.read_bytes()
             content = raw_bytes.decode("utf-8")
             lines = content.splitlines()
