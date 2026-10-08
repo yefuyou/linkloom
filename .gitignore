@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .pytest-*/
+pytest-*/
+test-tmp-*/
+.test-tmp-*/
 .ruff_cache/
 .mypy_cache/
 .tmp/
@@ -15,6 +18,15 @@ __pycache__/
 venv/
 dist/
 build/
+*.egg-info/
+
+# Local SQLite databases and journal sidecars
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-*
+*.sqlite3-*
+*.db-*
 
 # linkloom generated output
 .artifacts/
