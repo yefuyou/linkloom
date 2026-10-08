@@ -2,107 +2,158 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-**Recover the decision that is current now, what it replaced, and the evidence.**
+**Team Decision Recovery / Temporal Decision Intelligence**
 
-LinkLoom is a local-first decision-recovery workspace for project leads, PMs,
-PMOs, and team members. It helps answer a practical question from scattered,
-changing project records: **“What did we decide, what changed, and what
-evidence supports the current answer?”**
+LinkLoom helps project teams recover the decision that is valid now, what it
+replaced, and which source passage supports it. It turns changing meeting
+artifacts into an auditable temporal Decision Memory.
 
-## 1. Problem
+The user journey is:
 
-Project knowledge is spread across meeting notes, requirements, and decision
-logs. As decisions evolve, teams need to recover the current choice, its source
-evidence, what changed historically, and what is still uncertain—without
-turning a plausible summary into false certainty.
+**Sources → Review → Decision Memory → Ask**
 
-## 2. Product: Sources → Review → Temporal Decision Memory → Ask
+For example: **Birchline → replaced by Wrenwell → source evidence changes →
+Wrenwell becomes STALE → Review Attention**.
 
-LinkLoom V1 turns timestamped team artifacts into reviewable, source-bound
-decisions. Users import a meeting artifact, review extracted decisions and
-supporting proposals, approve the decisions they trust, inspect current and
-historical values with effective dates and supersession links, then ask what is
-true now or what was true at a chosen date. Proposals remain non-authoritative
-unless a user explicitly resolves them through review.
+## V1 product screens
 
-This is different from generic RAG: the answer depends on valid time,
-supersession, authorization, provenance, and source lifecycle, not only on which
-text passages rank highest.
+These are real LinkLoom product screens captured in a browser with a synthetic
+meeting and a deterministic fake provider. They illustrate the UI; the separate
+release acceptance used real Gemini.
 
-The core V1 journey was validated in the product browser UI with real Gemini on
-one synthetic three-segment meeting artifact. That run verified decision
-review, temporal lookup, and a source update that moved the affected record to
-STALE and Review Attention. It does not establish general extraction accuracy,
-provider quality, or production readiness.
+<table>
+  <tr>
+    <th>1. Sources</th>
+    <th>2. Review</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/01-sources.png"><img src="docs/assets/v1/01-sources.png" alt="Imported meeting source with completed ingestion and exact evidence spans" width="560"></a></td>
+    <td><a href="docs/assets/v1/02-review.png"><img src="docs/assets/v1/02-review.png" alt="Birchline decision candidate with dated evidence and review controls" width="560"></a></td>
+  </tr>
+  <tr>
+    <th>3. Temporal Decision Memory</th>
+    <th>4. Ask</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/03-decision-memory.png"><img src="docs/assets/v1/03-decision-memory.png" alt="Wrenwell current decision with Birchline predecessor and evidence timeline" width="560"></a></td>
+    <td><a href="docs/assets/v1/04-ask.png"><img src="docs/assets/v1/04-ask.png" alt="Ask returns Wrenwell with effective date, replaced value, and source evidence" width="560"></a></td>
+  </tr>
+  <tr>
+    <th>5. Source update → Review Attention</th>
+    <th>Proposal stays supporting-only</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="Review Attention shows Wrenwell as STALE after the source changes" width="560"></a></td>
+    <td><a href="docs/assets/v1/02-proposal-safety.png"><img src="docs/assets/v1/02-proposal-safety.png" alt="Kestrel Ledger is visible as a proposal and is not authoritative" width="560"></a></td>
+  </tr>
+</table>
 
-### Run the product UI locally
+A [replacement review](docs/assets/v1/02-review-replacement.png) shows
+Wrenwell's dated evidence and approval controls. The [historical Ask
+screen](docs/assets/v1/04-ask-as-of.png) returns Birchline for October 7, 2026.
 
-```bash
+## Why decision recovery needs more than text ranking
+
+Generic retrieval finds passages that look relevant. Recovering a team decision
+also requires the system to preserve and expose:
+
+- when the decision became valid;
+- which decision it superseded;
+- who authorized a candidate to become authoritative;
+- the exact source and evidence passage;
+- whether a source change made the evidence stale and requires review.
+
+LinkLoom combines retrieval with temporal state and a review lifecycle so an
+answer can be traced to a current or historical decision.
+
+## Four product surfaces
+
+- **Sources** imports timestamped artifacts as immutable versions and shows
+  exact evidence spans. A user-triggered source update runs reconciliation.
+- **Review** presents extracted decisions for human approval. A proposal such
+  as Kestrel Ledger remains supporting evidence and does not become authoritative.
+- **Decision Memory** shows current and historical records, effective dates,
+  supersession, and provenance.
+- **Ask** answers current or as-of questions from approved Decision Memory and
+  displays the source evidence when available.
+
+## Validation and limits
+
+The V1 release acceptance is bounded to a synthetic meeting workflow:
+
+- the core journey was completed through the real product browser UI;
+- a separate acceptance run used real Gemini and made six GenerateContent
+  requests, all accepted on the first attempt;
+- the deterministic release gate passed 408 tests and an installed-wheel
+  no-provider HTTP smoke passed.
+
+These results validate one release workflow, not general extraction accuracy,
+universal provider quality, held-out performance, or production readiness.
+LinkLoom is not a deployed multi-user service.
+
+## Quickstart
+
+From a LinkLoom checkout:
+
+~~~bash
 python -m pip install -e .
-python -m linkloom.ui --database work/linkloom.sqlite --port 8765
-```
+python -m linkloom.ui --port 8765
+~~~
 
-Open `http://127.0.0.1:8765/` for Sources, Review, Decision Memory, and Ask.
-Semantic extraction is disabled by default. To send selected source text to
-Gemini, set `GEMINI_API_KEY` in the process environment and add
-`--allow-external-provider` to the launch command.
+Open http://127.0.0.1:8765/. The local database defaults to
+~/.linkloom/product.sqlite. The UI starts without a provider, but semantic
+source extraction cannot complete until the explicit provider path is enabled.
 
-### Deterministic legacy fixture demo
+To enable the existing Gemini path, install the repository's smoke extra if
+the Google GenAI SDK is not already installed, set GEMINI_API_KEY using your
+shell's secret manager, and launch with the explicit opt-in:
 
-The older `mps-001` decision-brief demo remains available at
-`http://127.0.0.1:8765/legacy-ask`. It replays synthetic Atlas Lantern records,
-requires no provider key, and does not write to a source workspace. The existing
-screenshots below depict this legacy demo, not the V1 Sources/Review workspace.
+~~~bash
+python -m pip install -e ".[smoke]"
+python -m linkloom.ui --port 8765 --allow-external-provider
+~~~
 
-| Initial question | Searching and reading | Insufficient evidence |
-|---|---|---|
-| ![Initial query](output/playwright/initial.png) | ![Running state](output/playwright/running.png) | ![Insufficient evidence](output/playwright/insufficient.png) |
+When enabled, imported source text is sent to Gemini for extraction. Provider
+configuration is launch-time; the app has no in-product provider settings.
 
-## 3. Context Architecture
+For a key-free deterministic preview, open
+http://127.0.0.1:8765/legacy-ask. This replays the older synthetic decision
+brief and does not exercise the V1 Sources, Review, Decision Memory, or Ask
+workflow.
 
-The retrieval layer uses a logical Context Filesystem organized by workspace
-and path. It does not rewrite the user's real disk layout. The design is
-**OpenViking-inspired** in its filesystem-style organization and progressive
-context layers; LinkLoom does not claim to implement or integrate OpenViking,
-TrieHI, or VikingRAG.
+## Product data flow
 
-```mermaid
-flowchart TD
-    A[Raw team artifacts] --> SI[Semantic Ingestion<br/>artifact + exact provenance]
-    SI --> C[Candidate decision / fact]
-    C --> P[Validation + policy / review]
-    P --> W[Authorized materialization]
-    W --> M[Temporal Decision Memory]
-    RA[Runtime Agent] --> TD[Grounded TeamDecisionResult]
-    TD --> REV[Reviewer]
-    REV --> MC[AgentMemoryCandidate]
-    MC --> AUTH[Shared review / authorization lifecycle]
-    AUTH --> MAT[DecisionMaterializer]
-    MAT --> M
-    GC[User / project context] --> GM[Generic Agent Memory]
-    Q[User query] --> D[Schema-constrained decomposition]
-    D --> R[Structured retrieval<br/>bounded to <=3 hops]
-    M --> R
-    R --> CA[ContextAssembler]
-    CA --> RE[Reader / structured result]
-    A --> FS[Context Filesystem / indexes]
-    FS --> CA
-```
+~~~text
+Raw artifact
+  → immutable source version + exact evidence spans
+  → semantic candidate
+  → human review and authorization
+  → Temporal Decision Memory
 
-The authority boundary is `raw source -> evidence -> candidate -> validation
--> policy/review -> materialization -> Temporal Decision Memory`. Extraction
-output alone is never authoritative. A grounded TeamDecisionResult must pass
-the Reviewer before it is captured as an AgentMemoryCandidate; the shared
-review/authorization lifecycle gates the DecisionMaterializer. Generic Agent
-Memory (`src/linkloom/memory/`) remains separate for approved preferences,
-terminology, and user/project context. Scanner and indexing remain source
-infrastructure, not the product endpoint.
+Ask
+  → temporal lookup and bounded retrieval
+  → evidence assembly
+  → grounded answer
 
-L0 helps decide whether a directory is worth opening; L1 lists its contents
-and deterministic metadata summary; L2 remains the original source used for
-evidence. Summary generation does not call a paid or live model provider.
+Source update
+  → evidence inventory
+  → reconciliation
+  → STALE record in Review Attention
 
-## 4. Indexing
+Runtime Agent result
+  → Reviewer PASS
+  → AgentMemoryCandidate
+  → separate review and authorization
+  → DecisionMaterializer
+  → Temporal Decision Memory
+~~~
+
+Generic Agent Memory remains separate from Temporal Decision Memory. The
+[60–90 second demo guide](docs/V1_DEMO.md), [release notes
+draft](docs/V1_RELEASE_NOTES_DRAFT.md), [V1.1 backlog](docs/V1_1_BACKLOG.md),
+and [product roadmap](docs/PRODUCT_ROADMAP.md) provide the next level of detail.
+
+## Indexing
 
 The indexing layer makes three retrieval indexes explicit, alongside the
 separate business-state index:
@@ -121,7 +172,7 @@ Directory-aware scope selection is configurable. The frozen evaluation seed
 has flat note directories, so it cannot establish a benefit for deep directory
 navigation.
 
-## 5. Incremental Update
+## Incremental Update
 
 `ContextManifest`, `FileChangeEvent`, and `IndexUpdateCoordinator` model
 CREATE, MODIFY, DELETE, and MOVE. Hash-identical modifications are no-ops;
@@ -144,7 +195,7 @@ records in Review Attention. This is a user-triggered product flow; arbitrary
 external filesystem edits/deletions are not watched automatically, and there
 is no OS-level filesystem watcher.
 
-## 6. Development Evaluation
+## Development Evaluation
 
 These bounded development results describe specific frozen runs; they are not
 held-out proof, generalization claims, or production success rates:
@@ -158,7 +209,7 @@ Historical V2 run protocols and caveats are preserved in local evaluation
 evidence. These figures do not establish clean held-out performance or
 universal retrieval improvement.
 
-## 7. Temporal Decision Memory
+## Temporal Decision Memory
 
 SQLite separates evolving business state from document organization. A decision
 can point to source evidence, supersede a previous decision, and create an
@@ -166,16 +217,14 @@ action with an owner. Temporal lookups support current, historical, and
 `as_of` questions. A partial unique index prevents two current truths for the
 same workspace and subject.
 
-The demo materializes **Supplier A → Supplier B**: the current answer is B,
-the historical answer before the change is A, and the evolution query returns
-the change date and source evidence. Candidate writes require the TeamDecision
-contract, grounding, and explicit approval. The Agent's memory search is
-read-only and returns a navigation hint, not final grounding evidence.
+The V1 acceptance example materializes **Birchline → Wrenwell**. Ask returns
+Wrenwell for the current decision and Birchline for a date before October 8,
+2026; the timeline retains both source passages and the supersession boundary.
+A later source edit changes the Wrenwell evidence identity and surfaces that
+record as STALE. Candidate writes still require validation, review, and
+explicit authorization.
 
-See the [temporal demo output](docs/evaluation/temporal_decision_memory_demo.json)
-and [verification report](docs/evaluation/temporal_decision_memory_ag3_report.md).
-
-## 8. Runtime V2
+## Runtime V2
 
 The provider-neutral Runtime V2 implementation accepts a host-injected
 `RuntimeEngine`. A grounded successful team result can be captured as a durable
@@ -196,7 +245,7 @@ evidence visibility boundaries. Retrieval mode is configurable and defaults
 to Hybrid. The read-only `search_decision_memory` tool is workspace-authorized
 and records memory hit count and latency.
 
-## 9. Grounding and Security
+## Grounding and Security
 
 Material claims may cite only source evidence the Agent actually observed from
 successful retrieval/read tools. Evidence validation checks source identity,
@@ -210,7 +259,7 @@ lookup. LinkLoom stores imported artifacts and decision state in its local
 product database; it does not rewrite, rename, move, tag, or delete the original
 source files. Real-vault writeback remains outside V1.
 
-## 10. Evaluation and Provider Status
+## Evaluation and Provider Status
 
 Archived evaluator reports preserve their protocols and historical results.
 They are development evidence, not held-out proof or current provider success
@@ -218,7 +267,7 @@ rates. The 2026-10-08 V1 browser acceptance recorded six real Gemini
 GenerateContent calls, all accepted on the first attempt. This is one synthetic
 workflow run, not a general provider-quality or production-readiness claim.
 
-## 11. Governed Learning
+## Governed Learning
 
 LinkLoom's existing Experience/Reflection and governed Strategy mechanisms are
 separate from retrieval and decision truth. Experience can inform governed
@@ -227,7 +276,7 @@ effectiveness experiment and later strategy/runtime expansions are frozen or
 out of scope here, so this README does not claim measured business
 effectiveness. See [portfolio notes](docs/requirements/product_evidence_portfolio_v1/PORTFOLIO_NOTES.md).
 
-## 12. LangGraph Reference
+## LangGraph Reference
 
 [`examples/langgraph_decision_agent/`](examples/langgraph_decision_agent/)
 contains an executable deterministic reference using a typed `StateGraph`, a
@@ -250,8 +299,8 @@ Attention. The decision-recovery runtime, retrieval/index lifecycle, SQLite
 temporal memory, strict result contract, evidence projection, and provider
 adapters are implemented in the current source tree. Provider contract tests
 and the bounded live Gemini acceptance evidence are reported separately.
-This describes the current source tree and linked local evidence; it is not a
-claim that every Sprint artifact has been committed, CI-verified, or deployed.
+The recorded local release checks are bounded evidence; they do not imply CI acceptance
+or deployment.
 This is not a deployed multi-user application. The benchmark corpus is small
 and synthetic, the retrieval fixtures do not test deep directory topology, and
 the deterministic demo does not call a live model.
