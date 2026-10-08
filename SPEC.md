@@ -2,56 +2,72 @@
 
 ## Status
 
-Active product contract. Milestone 1's Read-Only Vault Scanner is implemented
-and independently reviewed on synthetic fixtures. The next feature remains
-planning-only until separately approved.
+Active product contract: Team Decision Recovery / Temporal Decision
+Intelligence. The Scanner was an earlier accepted infrastructure milestone;
+it is not the current product endpoint. Semantic Ingestion Steps 1–3 are
+implemented in the current source tree. The bounded V1 browser journey was
+validated with real Gemini on 2026-10-08; release evidence and limits are in
+[the V1.1 backlog](docs/V1_1_BACKLOG.md).
 
 `SPEC` is the canonical term for project requirements, scope, acceptance
 criteria, and implementation gates.
 
 ## Mission
 
-Build a local-first personal knowledge assistant that helps users understand,
-retrieve, connect, organize, and act on long-lived Markdown notes, then safely
-apply only the changes they explicitly approve.
+Help project teams recover the currently valid decision, its historical
+changes, the supporting source evidence, temporal validity, and why the
+conclusion is believed to be valid. The current product direction builds from
+the existing Temporal Decision Memory and retrieval stack toward a governed
+raw-artifact-to-authoritative-memory path.
 
-The project must be useful beyond one private vault and credible as an
-open-source portfolio project. It prioritizes adapting to an existing vault,
-but also supports people gradually building a knowledge base from ongoing
-materials, learning, projects, and reflection. Personal vaults may be later
-dogfood and case studies, but never hard-coded product assumptions.
+Earlier milestones established deterministic scanning, indexing, and
+provenance foundations. The current product direction builds on those
+foundations toward Team Decision Recovery. Markdown and Obsidian remain
+possible source formats, not the product boundary.
 
 ## User Outcomes
 
-linkloom must eventually let a user:
+LinkLoom should let a team member:
 
-1. search and answer questions from notes with inspectable sources;
-2. discover possible relationships between notes with evidence and reasons;
-3. diagnose duplicate, isolated, weakly tagged, and structurally confusing notes;
-4. extract tasks, unresolved questions, and next actions with provenance;
-5. preview, confirm, audit, and roll back any approved vault change.
-6. support a visible lifecycle from material intake through understanding,
-   action, feedback, and reviewed knowledge return.
+1. ingest timestamped team artifacts into exact, version-bound evidence spans;
+2. review source-grounded decision and fact candidates before they become
+   authoritative memory;
+3. recover current and historical decisions using valid-time semantics;
+4. inspect explicit supersession links and the provenance for each record;
+5. distinguish source changes and extraction corrections from business
+   decisions.
 
 `Provenance`:
 The source trail showing which file and passage produced a result.
 
-## Canonical Roadmap
+## Current Architecture Direction
 
-The product roadmap is [docs/PRODUCT_ROADMAP.md](docs/PRODUCT_ROADMAP.md):
+The current product roadmap is [docs/PRODUCT_ROADMAP.md](docs/PRODUCT_ROADMAP.md):
 
 ```text
-Milestone 1: Can Read
-Milestone 2: Can Find
-Milestone 3: Can Connect
-Milestone 4: Can Organize
-Milestone 5: Can Act
-Milestone 6: Modify Only After Confirmation
+Raw team artifacts
+  -> Semantic Ingestion
+  -> candidate decision/fact layer
+  -> policy / review / materialization
+  -> Temporal Decision Memory
+  -> schema-constrained query decomposition
+  -> structured bounded retrieval
+  -> ContextAssembler
+  -> Reader / structured result
 ```
 
-The roadmap owns user value, visible results, minimum capabilities, planned
-files, acceptance, risks, and non-goals for every milestone. This SPEC does not
-duplicate those details.
+The Semantic Ingestion boundary is `raw source -> evidence -> candidate ->
+validation -> policy/review -> materialization -> Temporal Decision Memory`.
+An extraction result alone is never authoritative. The feature SPEC owns the
+Step 3 authorization, persistence, and lifecycle contract; this root SPEC
+records the product direction and architecture boundary.
+
+## Historical Product Roadmap
+
+The original personal Markdown/Obsidian assistant milestones remain preserved
+in `docs/PRODUCT_ROADMAP.md` as historical planning. The completed Read-Only
+Vault Scanner remains an accepted deterministic scanning foundation. It does
+not define the current product endpoint or authorize real-vault writes.
 
 ## Product Principles
 
@@ -153,7 +169,7 @@ capability through a separate permission boundary.
 - Do not silently rewrite, delete, merge, rename, move, or tag user notes.
 - Do not mutate a real vault before Milestone 6 acceptance.
 - Do not use a real vault as an early development fixture.
-- Do not hard-code `D:\programblog` or any personal folder layout.
+- Do not hard-code machine-specific absolute paths or any personal folder layout.
 - Do not make chat the entire product.
 - Do not add multi-agent runtime complexity for presentation value alone.
 - Do not require a live Obsidian plugin for the core workflow.

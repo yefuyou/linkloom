@@ -1,27 +1,106 @@
 # linkloom Product Roadmap
 
-Status: Active product roadmap. Milestone 1's Scanner is implemented and
-independently reviewed on synthetic fixtures; the next feature remains
-planning-only until separately approved.
+Status: Active product roadmap for Team Decision Recovery / Temporal Decision
+Intelligence. The Scanner was an earlier accepted infrastructure milestone.
+Semantic Ingestion Steps 1–3 are implemented in the current source tree and
+have offline coverage. On 2026-10-08, the V1 Sources → Review → Decision Memory
+→ Ask → source-update/reconciliation journey was validated through the product
+browser UI with real Gemini on a synthetic fixture. This is bounded acceptance
+evidence, not a general provider-quality or production-readiness claim. V1
+feature work is frozen; follow-on features are in `docs/V1_1_BACKLOG.md`.
 
-This is the single user-facing roadmap for linkloom. `SPEC.md` defines the
-product contract, while `DEV_SPEC.md` maps this roadmap to implementation
-work. The detailed synthetic relation-evaluation implementation spine lives in
-`docs/requirements/linkloom-master/`; it uses work-package labels rather than
-redefining these user-facing milestones. If product milestone descriptions
-drift elsewhere, this file wins.
+This is the single user-facing roadmap for LinkLoom. `SPEC.md` defines the
+current product contract, while `DEV_SPEC.md` maps it to implementation work.
+The original personal-vault roadmap is retained below as historical planning;
+it is no longer the active product direction.
 
 ## Product Goal
 
-linkloom is a local-first personal knowledge assistant intended to become a
-real, open-source portfolio project. It helps people turn materials,
-understanding, actions, and reflection into a trustworthy long-lived loop. It
-supports existing Markdown/Obsidian vaults first, while also serving people who
-are gradually building a new knowledge base through ongoing input and review.
+LinkLoom helps project teams recover the currently valid decision, its history,
+supporting evidence, temporal validity, and why the conclusion is believed to
+be valid. Meeting notes, timestamped conversations, project documents, and
+decision logs are source artifacts; the product outcome is an auditable
+temporal decision record and a trustworthy answer.
 
-It helps users search notes with sources, discover hidden relationships,
-diagnose knowledge-base disorder, recover unfinished work, and safely apply
-approved improvements.
+Earlier milestones established deterministic scanning and provenance
+foundations. The current product direction builds on those foundations toward
+Team Decision Recovery. Markdown and Obsidian are supported source formats,
+not the product boundary.
+
+## Current Product Architecture
+
+```text
+Raw Team Artifacts
+        -> Semantic Ingestion
+        -> Candidate Decision / Fact Layer
+        -> Policy / Review / Materialization
+        -> Temporal Decision Memory
+Runtime Agent
+        -> Grounded TeamDecisionResult
+        -> Reviewer
+        -> AgentMemoryCandidate
+        -> Shared review / authorization lifecycle
+        -> DecisionMaterializer
+        -> Temporal Decision Memory
+User / project preferences and terminology
+        -> Generic Agent Memory (`src/linkloom/memory/`)
+User Query
+        -> Schema-constrained query decomposition
+        -> Bounded temporal retrieval
+        -> ContextAssembler
+        -> Reader / Structured Result
+```
+
+The authoritative boundary is:
+
+```text
+Raw source -> Evidence -> Candidate -> Validation -> Policy / Review
+           -> Materialization -> Temporal Decision Memory
+```
+
+An extraction result alone never becomes authoritative memory. Agent Memory
+capture stores a reviewable candidate; a successful Runtime answer or Reviewer
+PASS does not authorize materialization. Semantic Ingestion and Agent Memory
+share candidate lifecycle infrastructure while preserving their separate
+contracts. The semantic-ingestion authorization and lifecycle contract is in
+`docs/requirements/semantic-ingestion/SPEC.md`.
+
+Generic Agent Memory (`src/linkloom/memory/`) remains distinct from Temporal
+Decision Memory (`src/linkloom/decision_memory/`): it holds approved user and
+project context such as preferences and terminology, while Temporal Decision
+Memory represents temporal business decisions. A grounded TeamDecisionResult
+must pass the Reviewer before it becomes an AgentMemoryCandidate; the shared
+review/authorization lifecycle gates the DecisionMaterializer.
+
+The V1 Sources UI supports explicit artifact updates. It creates a new
+immutable version, resolves affected decisions through exact evidence identity,
+runs reconciliation, and surfaces STALE records in Review Attention. This is
+not an OS-level file watcher: arbitrary external file edits/deletions are not
+automatically reconciled.
+
+## Development Evidence (Not Held-out Evaluation)
+
+The following results are preserved as development evidence only:
+
+- V1 Temporal: 2/92.
+- V1 Flat BM25 Top-5: 5/92.
+- V2 semantic-plan Temporal: 39/92.
+- Fixed planner pilot: lexical 4/16; schema-constrained semantic planner
+  12/16.
+- In the same V2 development setup, Reader context was about 68% smaller than
+  Flat.
+
+These results do not establish clean held-out performance or generalization.
+The underlying sealed benchmark packets are retained locally and are not part
+of the V1 release claims.
+
+## Historical Personal-Vault Roadmap (Preserved)
+
+The Can Read / Can Find / Can Connect / Can Organize / Can Act / Permissioned
+Vault Mutation sequence below documents the earlier personal-vault direction.
+The completed Scanner remains a useful infrastructure capability. The other
+old milestones are not the current LinkLoom product roadmap or implementation
+gate.
 
 `Local-first`:
 The user's notes stay on their own computer by default. A cloud model may only
@@ -45,7 +124,7 @@ provider path.
 A small fake Obsidian library created for repeatable tests, with no private user
 content.
 
-## Milestone Map
+## Historical Milestone Map
 
 ```text
 1. Can Read
@@ -56,10 +135,10 @@ content.
       -> 6. Modify Only After Confirmation
 ```
 
-Each milestone builds on the evidence produced by the previous one. Later
-milestones may not bypass earlier safety or quality gates.
+This sequence is preserved as historical planning and does not gate the
+current Semantic Ingestion implementation.
 
-## Knowledge Lifecycle Alignment
+## Historical Knowledge Lifecycle Alignment
 
 The six technical milestones serve a human knowledge lifecycle rather than a
 mandatory folder tree:
@@ -86,7 +165,7 @@ materials enter
 connections, action feedback, and editable personal context improve over time.
 It never permits silent restructuring or opaque long-term memory.
 
-## Milestone 1: Can Read
+## Historical Milestone 1: Can Read
 
 Status: Scanner implementation complete. Vault Profile remains optional backlog;
 the current synthetic relation-evaluation planning spine does not make it a
@@ -201,7 +280,7 @@ parsing contract, never calls a model, and never modifies a source note.
 Non-goals: no duplicate judgement, relation recommendation, tag suggestion,
 topic inference, or automatic restructuring.
 
-## Milestone 2: Can Find
+## Historical Milestone 2: Can Find
 
 ### 1. User Problem
 
@@ -282,7 +361,7 @@ words.
 - No automatic edits based on answers.
 - No promise that the first retrieval version handles every language equally.
 
-## Milestone 3: Can Connect
+## Historical Milestone 3: Can Connect
 
 ### 1. User Problem
 
@@ -343,7 +422,7 @@ Two notes the system proposes for human review as a possible connection.
 - No full graph visualization application in the first version.
 - No claim that similarity proves a factual or causal relationship.
 
-## Milestone 4: Can Organize
+## Historical Milestone 4: Can Organize
 
 ### 1. User Problem
 
@@ -408,7 +487,7 @@ way.
 - No automatic rewrite of user prose.
 - No universal claim about the one correct knowledge taxonomy.
 
-## Milestone 5: Can Act
+## Historical Milestone 5: Can Act
 
 ### 1. User Problem
 
@@ -494,7 +573,7 @@ The trace showing exactly which file and passage an extracted item came from.
 - No external business-tool actions.
 - No autonomous long-running agent that changes the vault.
 
-## Milestone 6: Modify Only After Confirmation
+## Historical Milestone 6: Modify Only After Confirmation
 
 ### 1. User Problem
 

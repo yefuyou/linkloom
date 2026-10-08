@@ -2,47 +2,57 @@
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-**Recover what the team actually decided—and show why the answer is trustworthy.**
+**Recover the decision that is current now, what it replaced, and the evidence.**
 
 LinkLoom is a local-first decision-recovery workspace for project leads, PMs,
 PMOs, and team members. It helps answer a practical question from scattered,
-changing project records: **“So what did we finally decide, why, and what
-happens next?”**
+changing project records: **“What did we decide, what changed, and what
+evidence supports the current answer?”**
 
 ## 1. Problem
 
-Project knowledge is spread across meeting notes, requirements, decision logs,
-and action records. As decisions evolve, teams need to recover the current
-choice, its source evidence, what changed historically, the next actions, and
-what is still unknown—without turning a plausible summary into false certainty.
+Project knowledge is spread across meeting notes, requirements, and decision
+logs. As decisions evolve, teams need to recover the current choice, its source
+evidence, what changed historically, and what is still uncertain—without
+turning a plausible summary into false certainty.
 
-## 2. Product: Decision Brief
+## 2. Product: Sources → Review → Temporal Decision Memory → Ask
 
-LinkLoom returns a decision-first brief rather than a chat transcript:
+LinkLoom V1 turns timestamped team artifacts into reviewable, source-bound
+decisions. Users import a meeting artifact, review extracted decisions and
+supporting proposals, approve the decisions they trust, inspect current and
+historical values with effective dates and supersession links, then ask what is
+true now or what was true at a chosen date. Proposals remain non-authoritative
+unless a user explicitly resolves them through review.
 
-- final decision, rationale, and genuinely rejected alternatives;
-- actions, owners, deadlines, unresolved questions, and explicit uncertainty;
-- material claims linked to verified source excerpts and exact line ranges;
-- separate states for confirmed results, insufficient evidence, and operational
-  failure.
+This is different from generic RAG: the answer depends on valid time,
+supersession, authorization, provenance, and source lifecycle, not only on which
+text passages rank highest.
 
-The product UI keeps provenance available without making the Agent trace the
-main experience.
+The core V1 journey was validated in the product browser UI with real Gemini on
+one synthetic three-segment meeting artifact. That run verified decision
+review, temporal lookup, and a source update that moved the affected record to
+STALE and Review Attention. It does not establish general extraction accuracy,
+provider quality, or production readiness.
 
-![LinkLoom decision brief with linked source evidence](output/playwright/success.png)
-
-The deterministic local demo uses frozen synthetic records, requires no
-provider key, and does not write to a source workspace:
+### Run the product UI locally
 
 ```bash
 python -m pip install -e .
-python -m linkloom.ui --port 8765
+python -m linkloom.ui --database work/linkloom.sqlite --port 8765
 ```
 
-Open `http://127.0.0.1:8765`. The bundled `mps-001` fixture replays a grounded
-Atlas Lantern decision and an insufficient-evidence case. Arbitrary questions
-fail explicitly instead of receiving a hard-coded answer. The UI supports
-English and Simplified Chinese (`?lang=zh`).
+Open `http://127.0.0.1:8765/` for Sources, Review, Decision Memory, and Ask.
+Semantic extraction is disabled by default. To send selected source text to
+Gemini, set `GEMINI_API_KEY` in the process environment and add
+`--allow-external-provider` to the launch command.
+
+### Deterministic legacy fixture demo
+
+The older `mps-001` decision-brief demo remains available at
+`http://127.0.0.1:8765/legacy-ask`. It replays synthetic Atlas Lantern records,
+requires no provider key, and does not write to a source workspace. The existing
+screenshots below depict this legacy demo, not the V1 Sources/Review workspace.
 
 | Initial question | Searching and reading | Insufficient evidence |
 |---|---|---|
@@ -58,25 +68,35 @@ TrieHI, or VikingRAG.
 
 ```mermaid
 flowchart TD
-    S[Source documents] --> FS[Context Filesystem<br/>workspace / project / topic / path]
-    FS --> L0[L0: short directory abstract]
-    FS --> L1[L1: deterministic directory overview]
-    FS --> L2[L2: original documents and evidence]
-    L0 --> IDX[Indexing pipeline]
-    L1 --> IDX
-    L2 --> IDX
-    IDX --> B[BM25 inverted index]
-    IDX --> V[Dense vector index]
-    IDX --> D[Directory / path index]
-    B --> H[Hybrid retrieval: BM25 + Dense + scope + RRF]
-    V --> H
-    D --> H
-    H --> M[Temporal Decision Memory]
-    M --> R[Runtime V2]
-    R --> T[TeamDecisionResult]
-    T --> G[Claim-level source grounding]
-    G --> E[Retrieval, semantic, and grounding evaluation]
+    A[Raw team artifacts] --> SI[Semantic Ingestion<br/>artifact + exact provenance]
+    SI --> C[Candidate decision / fact]
+    C --> P[Validation + policy / review]
+    P --> W[Authorized materialization]
+    W --> M[Temporal Decision Memory]
+    RA[Runtime Agent] --> TD[Grounded TeamDecisionResult]
+    TD --> REV[Reviewer]
+    REV --> MC[AgentMemoryCandidate]
+    MC --> AUTH[Shared review / authorization lifecycle]
+    AUTH --> MAT[DecisionMaterializer]
+    MAT --> M
+    GC[User / project context] --> GM[Generic Agent Memory]
+    Q[User query] --> D[Schema-constrained decomposition]
+    D --> R[Structured retrieval<br/>bounded to <=3 hops]
+    M --> R
+    R --> CA[ContextAssembler]
+    CA --> RE[Reader / structured result]
+    A --> FS[Context Filesystem / indexes]
+    FS --> CA
 ```
+
+The authority boundary is `raw source -> evidence -> candidate -> validation
+-> policy/review -> materialization -> Temporal Decision Memory`. Extraction
+output alone is never authoritative. A grounded TeamDecisionResult must pass
+the Reviewer before it is captured as an AgentMemoryCandidate; the shared
+review/authorization lifecycle gates the DecisionMaterializer. Generic Agent
+Memory (`src/linkloom/memory/`) remains separate for approved preferences,
+terminology, and user/project context. Scanner and indexing remain source
+infrastructure, not the product endpoint.
 
 L0 helps decide whether a directory is worth opening; L1 lists its contents
 and deterministic metadata summary; L2 remains the original source used for
@@ -116,32 +136,27 @@ Periodic reconciliation → compare source inventory, manifest, and indexes
                         → detect missing/stale/orphan/hash drift → repair
 ```
 
-Reconciliation is a callable deterministic job, not a deployed scheduler. This
-Sprint defines the event interface and tests but does not install an OS-level
-filesystem watcher; production scheduling and watcher integration remain
-future work.
+Index reconciliation is a callable deterministic job, not a deployed
+scheduler. In the V1 product UI, an explicit Sources update creates a new
+immutable artifact version, resolves affected records through exact evidence
+identity, runs Decision Memory reconciliation, and surfaces affected STALE
+records in Review Attention. This is a user-triggered product flow; arbitrary
+external filesystem edits/deletions are not watched automatically, and there
+is no OS-level filesystem watcher.
 
-## 6. Retrieval Benchmark
+## 6. Development Evaluation
 
-The frozen offline benchmark uses 30 queries across 6 workspaces and 36
-synthetic notes. Gold is evaluator-side and remained unchanged. Embeddings use
-the local `paraphrase-multilingual-MiniLM-L12-v2` model; no paid provider or
-network call is part of this benchmark.
+These bounded development results describe specific frozen runs; they are not
+held-out proof, generalization claims, or production success rates:
 
-| Mode | Recall@1 | Recall@3 | Recall@5 | MRR | nDCG@5 | Failure rate | Evidence availability@5 | Mean latency (ms) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Current | 0.3105 | 0.6750 | 0.9283 | 0.8278 | 0.8245 | 0.0000 | 1.0000 | 3.9559 |
-| BM25 | 0.3300 | 0.7233 | 0.9239 | 0.8694 | 0.8537 | 0.0000 | 1.0000 | 0.6118 |
-| Dense | 0.3967 | 0.7039 | 0.9378 | 0.9500 | 0.8851 | 0.0000 | 1.0000 | 32.0448 |
-| Hybrid | 0.3633 | 0.7456 | 0.9361 | 0.9333 | 0.8895 | 0.0000 | 1.0000 | 31.8911 |
-| Directory-aware Hybrid | 0.3633 | 0.7456 | 0.9361 | 0.9333 | 0.8895 | 0.0000 | 1.0000 | 32.3351 |
+- V1 Flat BM25 Top-5: 5/92 (5.43%); V1 Temporal: 2/92 (2.17%).
+- Fixed lexical multi-hop pilot: 4/16; schema-constrained planner pilot: 12/16.
+- V2 development run: 39/92 (42.39%).
+- In that V2 setup, Reader context was about 68% smaller than Flat.
 
-Directory-aware and plain Hybrid ranked identically because the seed has no
-nested note directories. The small frozen corpus is useful for regression and
-channel comparison, not enterprise-scale latency claims. See the [full
-benchmark report](docs/evaluation/retrieval_v2_ag2_report.md), [ranked result
-artifact](docs/evaluation/retrieval_v2_ag2_results.json), and [Current vs.
-Hybrid downstream probe](docs/evaluation/retrieval_v2_downstream_comparison.md).
+Historical V2 run protocols and caveats are preserved in local evaluation
+evidence. These figures do not establish clean held-out performance or
+universal retrieval improvement.
 
 ## 7. Temporal Decision Memory
 
@@ -162,9 +177,10 @@ and [verification report](docs/evaluation/temporal_decision_memory_ag3_report.md
 
 ## 8. Runtime V2
 
-Production orchestration remains on LinkLoom's existing provider-neutral
-Runtime V2; this Sprint does not rewrite it. A host injects a configured
-`RuntimeEngine`. The deterministic UI launcher remains a fixture demo.
+The provider-neutral Runtime V2 implementation accepts a host-injected
+`RuntimeEngine`. A grounded successful team result can be captured as a durable
+AgentMemoryCandidate for later review. Reviewer approval does not by itself
+authorize materialization, and candidate capture does not make it authoritative.
 
 ```text
 Decision question → durable Agent loop → read-only retrieval tools
@@ -190,44 +206,17 @@ grounded fact without reading and citing source evidence.
 
 Workspace-specific adapters scope document retrieval to their configured
 workspace, and decision-memory access checks the authorized workspace before
-lookup. The current product path is read-only: retrieval cannot rewrite, rename,
-move, tag, or delete notes. Real-vault writes remain outside this Sprint.
+lookup. LinkLoom stores imported artifacts and decision state in its local
+product database; it does not rewrite, rename, move, tag, or delete the original
+source files. Real-vault writeback remains outside V1.
 
-## 10. Evaluation
+## 10. Evaluation and Provider Status
 
-Retrieval metrics above measure frozen evaluator-side relevance. The separate
-offline downstream comparison checks evidence availability and deterministic
-contract/grounding boundaries; it does **not** measure answer quality:
-
-| Mode | Evidence availability@5 | Contract probe | Grounding probe | Mean context (bytes) | Mean latency (ms) | Semantic result |
-|---|---:|---:|---:|---:|---:|---|
-| Current | 1.000 | 1.000 | 1.000 | 3312.0 | 2.39 | N/E |
-| Hybrid | 1.000 | 1.000 | 1.000 | 3360.2 | 609.20 | N/E |
-
-The probes use a synthetic non-business result; context is serialized evidence
-bytes, not provider token usage. Latency includes cold index initialization.
-The two latency tables come from separate runners and are not directly
-comparable. No real provider was run, so this report makes no semantic-accuracy
-or real-model-improvement claim. Details are in the [comparison report](docs/evaluation/retrieval_v2_downstream_comparison.md)
-and its [case-level JSON artifact](docs/evaluation/retrieval_v2_downstream_comparison.json).
-
-Three frozen synthetic cases have historical first-result DeepSeek evidence.
-This is a small engineering evaluation, not a current adapter regression
-matrix, benchmark, or production success rate:
-
-| Case | Intended behavior | Infrastructure | Business result |
-|---|---|---:|---|
-| `mps-001` | Recover approved model provider | PASS | Aster A recovered and grounded; rejected-alternative classification was too broad. |
-| `aer-002` | Recover cross-document rollout boundary | FAIL | Not evaluated: first response returned multiple tool calls. |
-| `iti-005` | Refuse to invent missing owners/deadlines | FAIL | Not evaluated: first response returned multiple tool calls. |
-
-The blocked cases were sealed as first terminal results and not resampled. At
-that evaluation point, the provider/runtime boundary did not accept DeepSeek's
-multiple-tool-call response shape; the current Runtime V2 now supports
-normalized ordered multi-action proposals. The old outcomes remain historical
-evidence, not a claim about current real-provider behavior. Infrastructure
-failures are not mislabeled as semantic failures. See the [full real-provider
-evidence matrix](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md).
+Archived evaluator reports preserve their protocols and historical results.
+They are development evidence, not held-out proof or current provider success
+rates. The 2026-10-08 V1 browser acceptance recorded six real Gemini
+GenerateContent calls, all accepted on the first attempt. This is one synthetic
+workflow run, not a general provider-quality or production-readiness claim.
 
 ## 11. Governed Learning
 
@@ -255,9 +244,12 @@ decision contracts out of the application layer.
 
 ## Project Status and Verification
 
-The decision-recovery runtime, retrieval/index lifecycle, SQLite temporal
-memory, strict result contract, evidence projection, real Gemini/DeepSeek
-multi-turn baseline, and Product UI V1 are implemented and locally tested.
+The V1 product UI provides Sources, Review, Temporal Decision Memory, and Ask;
+explicit source updates trigger exact-evidence reconciliation and Review
+Attention. The decision-recovery runtime, retrieval/index lifecycle, SQLite
+temporal memory, strict result contract, evidence projection, and provider
+adapters are implemented in the current source tree. Provider contract tests
+and the bounded live Gemini acceptance evidence are reported separately.
 This describes the current source tree and linked local evidence; it is not a
 claim that every Sprint artifact has been committed, CI-verified, or deployed.
 This is not a deployed multi-user application. The benchmark corpus is small
