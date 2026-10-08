@@ -7,7 +7,7 @@ import json
 import time
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from linkloom.loader import VaultReader, LoaderError, calculate_fingerprint
 from linkloom.retrieval import retrieve_evidence, find_relation_candidates_with_evidence
@@ -50,6 +50,9 @@ from linkloom.runtime.errors import (
     ThreadNotFoundError,
     ValidationError,
 )
+
+if TYPE_CHECKING:
+    from linkloom.decision_memory.store import TemporalDecisionStore
 
 # Dual-Track Explanation for Interview Readiness:
 # 大白话 (Plain-Language Analogy):
@@ -154,6 +157,7 @@ class RuntimeEngine:
         trace_dir: Path | str | None = None,
         memory_root: Path | str | None = None,
         model: Any | None = None,
+        decision_memory_store: TemporalDecisionStore | None = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -189,10 +193,39 @@ class RuntimeEngine:
         self.fail_at = fail_at
         self.fail_once = fail_once
         self.model = model
+        self._decision_memory_store = decision_memory_store
 
         # Track failure injection occurrence
         self._injected_failed = False
         self.policy = ReadOnlyPolicy()
+
+    def _get_decision_memory_store(self) -> TemporalDecisionStore:
+        """Return the file-backed memory store shared by fresh and resumed runs."""
+        if self._decision_memory_store is None:
+            from linkloom.decision_memory.store import TemporalDecisionStore
+
+            self._decision_memory_store = TemporalDecisionStore(
+                self.checkpoint_dir / "decision-memory.sqlite"
+            )
+        return self._decision_memory_store
+
+    def _build_runtime_agent_adapter(self) -> Any:
+        """Build the runtime adapter even when optional persistent memory is unavailable."""
+        from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
+
+        try:
+            decision_memory_store = self._get_decision_memory_store()
+        except Exception:
+            decision_memory_store = None
+            decision_memory_store_unavailable = True
+        else:
+            decision_memory_store_unavailable = False
+        return RuntimeAgentAdapter(
+            self.vault_root,
+            self.index_path,
+            decision_memory_store=decision_memory_store,
+            decision_memory_store_unavailable=decision_memory_store_unavailable,
+        )
 
     def _save_state(self, state: RuntimeState) -> str:
         """Helper to save state to checkpointer. Wraps write errors appropriately."""
@@ -374,9 +407,7 @@ class RuntimeEngine:
 
         try:
             index_sha = self._calculate_index_sha256()
-            from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
-
-            adapter = RuntimeAgentAdapter(self.vault_root, self.index_path)
+            adapter = self._build_runtime_agent_adapter()
             documents = adapter.reader.read_notes()
         except Exception as exc:
             error_env = ErrorEnvelope(
@@ -626,8 +657,6 @@ class RuntimeEngine:
 
     def resume_multi_agent(self, thread_id: str) -> RunStatus:
         """Reopen an active retrieval execution without replaying ambiguous work."""
-        from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
-
         if not isinstance(thread_id, str) or not thread_id.strip():
             raise ValidationError("Resume requires a non-empty thread ID.")
         state = self.checkpointer.get_latest(thread_id)
@@ -700,7 +729,7 @@ class RuntimeEngine:
             )
 
         try:
-            adapter = RuntimeAgentAdapter(self.vault_root, self.index_path)
+            adapter = self._build_runtime_agent_adapter()
             adapter.reader.read_notes()
         except (LoaderError, OSError):
             raise StaleSourceError("The source no longer matches the durable run.") from None

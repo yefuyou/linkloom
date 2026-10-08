@@ -6,6 +6,7 @@ import json
 from collections import Counter
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime
 
 from linkloom.decision_memory.models import DecisionMemoryState, DecisionStatus
 from linkloom.decision_memory.store import TemporalDecisionStore
@@ -142,6 +143,12 @@ class DecisionReconciler:
                     )
                     desired = DecisionMemoryState.INVALIDATED
                 current_state = DecisionMemoryState(str(row["memory_state"]))
+                # Extraction corrections are terminal invalidations. Source
+                # inventory reconciliation may restore STALE records, but it
+                # must not resurrect a decision explicitly invalidated as a
+                # bad extraction.
+                if current_state is DecisionMemoryState.INVALIDATED:
+                    desired = DecisionMemoryState.INVALIDATED
                 if desired is not current_state:
                     self.store._set_decision_memory_state(str(row["decision_id"]), desired)
                     transitions.append(
@@ -156,6 +163,79 @@ class DecisionReconciler:
                         "UPDATE decision_candidate SET status = ?, outcome = ? "
                         "WHERE decision_id = ?",
                         (desired.value, desired.value, row["decision_id"]),
+                    )
+                semantic_rows = connection.execute(
+                    """
+                    SELECT candidate.candidate_id, candidate.workflow_state,
+                           candidate.candidate_fingerprint, receipt.result_state
+                    FROM semantic_materialization_receipt AS receipt
+                    JOIN semantic_candidate AS candidate
+                      ON candidate.workspace_id = receipt.workspace_id
+                     AND candidate.candidate_id = receipt.candidate_id
+                    WHERE receipt.workspace_id = ? AND receipt.decision_id = ?
+                    """,
+                    (str(row["workspace_id"]), str(row["decision_id"])),
+                ).fetchall()
+                for semantic_row in semantic_rows:
+                    current_workflow = str(semantic_row["workflow_state"])
+                    if desired in {
+                        DecisionMemoryState.STALE,
+                        DecisionMemoryState.NEEDS_REVALIDATION,
+                    }:
+                        next_workflow = "STALE"
+                    elif desired is DecisionMemoryState.INVALIDATED:
+                        next_workflow = "INVALIDATED"
+                    elif current_workflow == "STALE":
+                        next_workflow = (
+                            "DUPLICATE"
+                            if str(semantic_row["result_state"]) == "DUPLICATE"
+                            else "MATERIALIZED"
+                        )
+                    else:
+                        next_workflow = current_workflow
+                    if next_workflow == current_workflow:
+                        continue
+                    reconciled_at = datetime.now(UTC)
+                    connection.execute(
+                        """
+                        UPDATE semantic_candidate
+                        SET workflow_state = ?, updated_at = ?
+                        WHERE workspace_id = ? AND candidate_id = ?
+                        """,
+                        (
+                            next_workflow,
+                            reconciled_at.isoformat(timespec="microseconds"),
+                            str(row["workspace_id"]),
+                            str(semantic_row["candidate_id"]),
+                        ),
+                    )
+                    self.store._append_semantic_event_locked(
+                        workspace_id=str(row["workspace_id"]),
+                        candidate_id=str(semantic_row["candidate_id"]),
+                        event_type="RECONCILIATION_STATE_CHANGED",
+                        actor_type="SYSTEM",
+                        actor_id="decision-reconciler",
+                        event_at=reconciled_at,
+                        candidate_fingerprint=str(semantic_row["candidate_fingerprint"]),
+                        reason_code=(
+                            "SOURCE_EVIDENCE_REVALIDATED"
+                            if next_workflow in {"MATERIALIZED", "DUPLICATE"}
+                            else f"DECISION_{desired.value}"
+                        ),
+                        reason="semantic candidate workflow synchronized with source reconciliation",
+                        metadata={
+                            "decision_id": str(row["decision_id"]),
+                            "decision_state": desired.value,
+                            "workflow_state": next_workflow,
+                        },
+                    )
+                    transitions.append(
+                        DecisionStateTransition(
+                            entity_type="semantic_candidate",
+                            entity_id=str(semantic_row["candidate_id"]),
+                            from_state=current_workflow,
+                            to_state=next_workflow,
+                        )
                     )
 
             for row in candidate_rows:

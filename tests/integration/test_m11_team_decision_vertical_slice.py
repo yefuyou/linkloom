@@ -201,6 +201,42 @@ def _assert_no_gold_in_model_requests(model: FakeModelAdapter) -> None:
         assert "expected_" not in json.dumps(request.to_dict(), ensure_ascii=False)
 
 
+def _string_values_for_key(value: object, key: str) -> set[str]:
+    found: set[str] = set()
+    if isinstance(value, dict):
+        for name, child in value.items():
+            if name == key:
+                if isinstance(child, str):
+                    found.add(child)
+                elif isinstance(child, list):
+                    found.update(item for item in child if isinstance(item, str))
+            found.update(_string_values_for_key(child, key))
+    elif isinstance(value, list):
+        for child in value:
+            found.update(_string_values_for_key(child, key))
+    return found
+
+
+def _without_evidence_refs(value: object) -> object:
+    if isinstance(value, dict):
+        return {
+            key: _without_evidence_refs(child)
+            for key, child in value.items()
+            if key != "evidence_refs"
+        }
+    if isinstance(value, list):
+        return [_without_evidence_refs(child) for child in value]
+    return value
+
+
+def _tool_ledger_evidence_ids(state) -> set[str]:
+    return {
+        evidence_id
+        for record in state.tool_ledger
+        for evidence_id in _string_values_for_key(record.to_dict().get("result"), "evidence_id")
+    }
+
+
 def test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace(m11_root):
     environment = _environment(m11_root)
     model = _mps_model()
@@ -271,6 +307,8 @@ def test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_
     fresh_model = _mps_model()
     fresh = _engine(fresh_environment, fresh_model, checkpointer=InMemoryCheckpointer())
     fresh_status = _start(fresh, fresh_environment, "m11-fresh")
+    fresh_state = fresh.checkpointer.get_latest(fresh_status.thread_id)
+    assert fresh_state is not None
     fresh_result = _result(fresh_environment["root"], fresh_status.run_id)["result"]["team_decision"]
 
     environment = _environment(m11_root / "resume")
@@ -302,8 +340,15 @@ def test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_
     assert not after.requests
     assert after.call_count == 0
     assert [record.to_dict() for record in state.tool_ledger] == old_ledger
-    assert result["result"]["team_decision"] == fresh_result
-    assert result["result"]["team_decision"]["evidence_refs"]
+    resumed_result = result["result"]["team_decision"]
+    assert _without_evidence_refs(resumed_result) == _without_evidence_refs(fresh_result)
+
+    fresh_refs = _string_values_for_key(fresh_result, "evidence_refs")
+    resumed_refs = _string_values_for_key(resumed_result, "evidence_refs")
+    assert fresh_refs and resumed_refs
+    assert fresh_refs <= _tool_ledger_evidence_ids(fresh_state)
+    assert resumed_refs <= _tool_ledger_evidence_ids(state)
+    assert fresh_refs.isdisjoint(resumed_refs)
     _assert_no_gold_in_model_requests(before)
     _assert_source_unchanged(environment)
 

@@ -27,7 +27,7 @@ def _engine(root: Path, model: FakeModelAdapter) -> RuntimeEngine:
     vault = root / "vault"
     vault.mkdir()
     (vault / "decision.md").write_text(
-        "# Archive search decision\n\n"
+        "# Meeting notes\n\n"
         "The team approved Quartz Index as the archive search engine.\n",
         encoding="utf-8",
     )
@@ -59,11 +59,23 @@ def _search(request: ModelTurnRequest) -> ModelAction:
     )
 
 
-def _final_from_search(request: ModelTurnRequest, *, omit_unknown_fields: bool) -> ModelAction:
+def _read(request: ModelTurnRequest) -> ModelAction:
     assert request.observation is not None and request.observation.status == "ok"
     evidence = next(
         item for item in request.observation.value if " approved " in item["quote"]
     )
+    return ModelAction.tool(
+        ToolCall(
+            call_id="contract-read",
+            tool_id="read_verified_note",
+            arguments={"note_ref": evidence["evidence_id"]},
+        )
+    )
+
+
+def _final_from_read(request: ModelTurnRequest, *, omit_unknown_fields: bool) -> ModelAction:
+    assert request.observation is not None and request.observation.status == "ok"
+    evidence = request.observation.value
     match = re.search(r"approved (?P<decision>.+?) as the archive", evidence["quote"])
     assert match is not None
     uncertainty = {
@@ -99,7 +111,8 @@ def _run(root: Path, *, omit_unknown_fields: bool):
     model = FakeModelAdapter(
         [
             _search,
-            lambda request: _final_from_search(
+            _read,
+            lambda request: _final_from_read(
                 request,
                 omit_unknown_fields=omit_unknown_fields,
             ),
@@ -112,8 +125,8 @@ def _run(root: Path, *, omit_unknown_fields: bool):
             thread_id="offline-final-contract-thread",
             workflow="team_decision",
             query="Which archive search engine did the team approve?",
-            max_steps=2,
-            max_provider_requests=2,
+            max_steps=3,
+            max_provider_requests=3,
             dry_run=True,
         )
     )
@@ -133,16 +146,13 @@ def test_search_tool_result_complete_final_is_accepted_and_grounded(
     status, state, model, result = _run(offline_root, omit_unknown_fields=False)
 
     assert status.status == state.status == "completed"
-    assert [record.tool_id for record in state.tool_ledger] == ["search_notes"]
-    assert model.call_count == 2
+    assert [record.tool_id for record in state.tool_ledger] == ["search_notes", "read_verified_note"]
+    assert model.call_count == 3
     assert result["result"] is not None
     payload = result["result"]["team_decision"]
     assert payload["decision"]["value"] == "Quartz Index"
     assert payload["uncertainty"]["unknown_fields"] == []
-    observed_refs = {
-        item["evidence_id"]
-        for item in state.tool_ledger[0].result["value"]
-    }
+    observed_refs = {state.tool_ledger[1].result["value"]["evidence_id"]}
     assert set(payload["evidence_refs"]) <= observed_refs
 
 
@@ -155,5 +165,5 @@ def test_search_tool_result_final_missing_required_nested_field_fails_closed(
     assert state.error is not None
     assert state.error.code == "TEAM_DECISION_CONTRACT_ERROR"
     assert result["result"] is None
-    assert [record.tool_id for record in state.tool_ledger] == ["search_notes"]
-    assert model.call_count == 2
+    assert [record.tool_id for record in state.tool_ledger] == ["search_notes", "read_verified_note"]
+    assert model.call_count == 3

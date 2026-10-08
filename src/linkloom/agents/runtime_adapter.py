@@ -19,6 +19,14 @@ from linkloom.agents.registry import create_default_registry
 from linkloom.agents.retrieval_agent import RetrievalAgent
 from linkloom.agents.model_adapter import ModelTurnRequest
 from linkloom.agents.reviewer_agent import ReviewerAgent
+from linkloom.agents.memory_candidate import (
+    AgentMemoryBuildStatus,
+    AgentMemoryResolutionContext,
+    MemoryCandidateBuilder,
+    WorkspaceSubjectRegistry,
+)
+from linkloom.agents.runtime_evidence import RuntimeEvidenceCatalogAdapter
+from linkloom.agents.team_decision import TeamDecisionResult
 from linkloom.context.assembler import ContextAssembler, ContextBundle, ContextSourceType
 from linkloom.decision_memory.store import TemporalDecisionStore
 from linkloom.decision_memory.tool import DecisionMemorySearchTool
@@ -29,6 +37,8 @@ from linkloom.retrieval_v2 import RetrievedEvidence, RuntimeRetrievalBackend
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.models import RuntimeState
+from linkloom.semantic_ingestion.materialization import SemanticDecisionMaterializer
+from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.tools.read_tools import _require_relative_note_ref
 from linkloom.tools.ledger import ToolExecutionLedger
 from linkloom.tools.contracts import ToolResult
@@ -64,6 +74,7 @@ class RuntimeAgentAdapter:
         *,
         retrieval_mode: str | None = None,
         decision_memory_store: TemporalDecisionStore | None = None,
+        decision_memory_store_unavailable: bool = False,
         workspace_id: str | None = None,
         embedder: EmbeddingProvider | None = None,
         index_update_coordinator: IndexUpdateCoordinator | None = None,
@@ -83,7 +94,12 @@ class RuntimeAgentAdapter:
             index_update_coordinator=index_update_coordinator,
             index_version=2,
         )
-        self._decision_memory_store = decision_memory_store or TemporalDecisionStore(":memory:")
+        self._decision_memory_store = (
+            decision_memory_store
+            if decision_memory_store is not None
+            else TemporalDecisionStore(":memory:")
+        )
+        self._decision_memory_store_unavailable = decision_memory_store_unavailable
         self._decision_memory_tool = DecisionMemorySearchTool(
             self._decision_memory_store,
             authorized_workspace_id=self.workspace_id,
@@ -402,6 +418,101 @@ class RuntimeAgentAdapter:
                     raise ValidationError("Durable evidence no longer matches its verified source.")
                 self._evidence_by_id[value["evidence_id"]] = dict(value)
 
+    def _capture_agent_memory_candidate(
+        self,
+        result: dict[str, Any],
+        *,
+        run_id: str,
+    ) -> dict[str, Any]:
+        """Persist only a grounded, reviewer-passed Team Decision candidate."""
+
+        def response(
+            status: str,
+            reason: str,
+            *,
+            candidate_id: str | None = None,
+            review_required: bool = False,
+        ) -> dict[str, Any]:
+            return {
+                "status": status,
+                "candidate_id": candidate_id,
+                "review_required": review_required,
+                "reason": reason,
+            }
+
+        if result.get("status") != "completed":
+            return response("BLOCKED", "ANSWER_NOT_COMPLETED")
+        review = result.get("review")
+        payload = result.get("result")
+        if (
+            not isinstance(review, dict)
+            or review.get("decision") != "evidence_sufficient"
+            or not isinstance(payload, dict)
+            or payload.get("review_decision") != "evidence_sufficient"
+        ):
+            return response("BLOCKED", "REVIEW_NOT_PASSED")
+        if self._decision_memory_store_unavailable:
+            return response("CAPTURE_FAILED", "PERSISTENT_STORE_UNAVAILABLE")
+        if self._decision_memory_store.db_path == ":memory:":
+            return response("BLOCKED", "PERSISTENT_STORE_REQUIRED")
+
+        try:
+            team_decision = TeamDecisionResult.from_dict(payload.get("team_decision"))
+            documents = self._read_documents()
+            passages = tuple(
+                self._evidence_by_id[evidence_ref]
+                for evidence_ref in team_decision.evidence_refs
+                if evidence_ref in self._evidence_by_id
+            )
+            catalog_result = RuntimeEvidenceCatalogAdapter().build(
+                run_id=run_id,
+                workspace_id=self.workspace_id,
+                passages=passages,
+                documents=documents,
+                source_registry=self._decision_memory_store.source_registry,
+            )
+            built = MemoryCandidateBuilder().build(
+                team_decision,
+                workspace_id=self.workspace_id,
+                run_id=run_id,
+                evidence_catalog=catalog_result.catalog,
+                source_registry=self._decision_memory_store.source_registry,
+                relation_resolver=FrozenRelationResolver(()),
+                resolution_context=AgentMemoryResolutionContext(
+                    self.workspace_id,
+                    WorkspaceSubjectRegistry(self.workspace_id),
+                ),
+            )
+            if built.status is AgentMemoryBuildStatus.BLOCKED or built.candidate is None:
+                reason = (
+                    built.reason_codes[0].value
+                    if built.reason_codes
+                    else "CANDIDATE_BUILD_BLOCKED"
+                )
+                return response("BLOCKED", reason)
+            if any("UNGROUNDED" in reason.value for reason in built.candidate.review_reasons):
+                return response("BLOCKED", "CANDIDATE_NOT_GROUNDED")
+
+            assessment = SemanticDecisionMaterializer(self._decision_memory_store).capture(
+                built.candidate,
+                expected_workspace_id=self.workspace_id,
+            )
+            reason = (
+                built.candidate.review_reasons[0].value
+                if built.candidate.review_reasons
+                else assessment.workflow_state.value
+            )
+            return response(
+                "CAPTURED",
+                reason,
+                candidate_id=built.candidate.candidate_id,
+                review_required=True,
+            )
+        except Exception:
+            # Candidate persistence is post-answer and must never rewrite the
+            # successful Team Decision outcome or leak exception details.
+            return response("CAPTURE_FAILED", "CANDIDATE_CAPTURE_FAILED")
+
     def run(
         self,
         run_id: str,
@@ -525,6 +636,11 @@ class RuntimeAgentAdapter:
             event_sink=event_sink,
             retrieval_task_id=retrieval_task_id,
         )
+        if workflow == "team_decision":
+            result["memory_candidate"] = self._capture_agent_memory_candidate(
+                result,
+                run_id=run_id,
+            )
         result["source"] = source_context
         if injected_memory:
             result["memory_refs"] = [

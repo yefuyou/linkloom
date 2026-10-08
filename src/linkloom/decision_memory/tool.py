@@ -5,9 +5,12 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Protocol
+from typing import Protocol, cast
 
-from linkloom.decision_memory.models import DecisionRecord
+from linkloom.decision_memory.models import (
+    DecisionRecord,
+    TemporalLookupResult,
+)
 
 
 class DecisionMemoryReader(Protocol):
@@ -19,6 +22,17 @@ class DecisionMemoryReader(Protocol):
         as_of: datetime | None = None,
         limit: int = 5,
     ) -> tuple[DecisionRecord, ...]: ...
+
+
+class DecisionMemoryStructuredReader(Protocol):
+    def lookup(
+        self,
+        workspace_id: str,
+        subject: str,
+        relation: str,
+        *,
+        as_of: datetime | None = None,
+    ) -> TemporalLookupResult: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,6 +92,28 @@ class DecisionMemorySearchTool:
                 memory_hit_count=len(values),
                 memory_latency_ms=(time.perf_counter() - started) * 1000.0,
             ),
+        )
+
+    def lookup(
+        self,
+        *,
+        workspace: str,
+        subject: str,
+        relation: str,
+        as_of: str | None = None,
+    ) -> TemporalLookupResult:
+        """Use exact structured lookup without changing legacy lexical search."""
+        if workspace != self.authorized_workspace_id:
+            raise PermissionError("workspace is not authorized for decision-memory lookup")
+        parsed_as_of = _parse_as_of(as_of)
+        if not callable(getattr(self.store, "lookup", None)):
+            raise TypeError("decision-memory store does not support structured lookup")
+        reader = cast(DecisionMemoryStructuredReader, self.store)
+        return reader.lookup(
+            self.authorized_workspace_id,
+            subject,
+            relation,
+            as_of=parsed_as_of,
         )
 
 

@@ -8,6 +8,8 @@ from .models import (
     DecisionMemoryState,
     DecisionRecord,
     DecisionStatus,
+    TemporalLookupResult,
+    TemporalLookupStatus,
 )
 from .policy import (
     DecisionMemoryWritePolicy,
@@ -36,6 +38,8 @@ __all__ = [
     "DecisionReconciler",
     "DecisionRecord",
     "DecisionStatus",
+    "TemporalLookupResult",
+    "TemporalLookupStatus",
     "DecisionWriteAction",
     "DecisionWriteAssessment",
     "DecisionWriteResult",

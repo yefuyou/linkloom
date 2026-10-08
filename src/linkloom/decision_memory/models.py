@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+import hashlib
+import json
 from enum import StrEnum
 from uuid import uuid4
 
@@ -20,6 +22,37 @@ class DecisionMemoryState(StrEnum):
     STALE = "STALE"
     INVALIDATED = "INVALIDATED"
     NEEDS_REVALIDATION = "NEEDS_REVALIDATION"
+
+
+class TemporalLookupStatus(StrEnum):
+    FOUND = "FOUND"
+    SUBJECT_NOT_FOUND = "SUBJECT_NOT_FOUND"
+    RELATION_NOT_FOUND = "RELATION_NOT_FOUND"
+    NO_VALID_RECORD_AT_TIME = "NO_VALID_RECORD_AT_TIME"
+
+
+def normalize_temporal_component(value: str) -> str:
+    """Normalize one subject or relation component without semantic aliases."""
+    return " ".join(value.casefold().split()).strip(" .!?\t\r\n")
+
+
+def decision_slot_key_for(subject: str | None, relation: str | None) -> str | None:
+    """Return a stable relation-scoped slot key for a structured decision."""
+    if not isinstance(subject, str) or not subject.strip():
+        return None
+    if not isinstance(relation, str) or not relation.strip():
+        return None
+    normalized_subject = normalize_temporal_component(subject)
+    normalized_relation = normalize_temporal_component(relation)
+    if not normalized_subject or not normalized_relation:
+        return None
+    encoded = json.dumps(
+        [normalized_subject, normalized_relation],
+        ensure_ascii=False,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return f"semantic_slot_v1_{hashlib.sha256(encoded).hexdigest()}"
 
 
 def _required_text(value: str, field_name: str) -> str:
@@ -56,6 +89,8 @@ class DecisionRecord:
     source_evidence_refs: tuple[str, ...]
     provenance_run_id: str
     memory_state: DecisionMemoryState | None = None
+    subject: str | None = None
+    relation: str | None = None
 
     def __post_init__(self) -> None:
         for field_name in (
@@ -67,11 +102,17 @@ class DecisionRecord:
             "provenance_run_id",
         ):
             object.__setattr__(self, field_name, _required_text(getattr(self, field_name), field_name))
+        for field_name in ("subject", "relation"):
+            value = getattr(self, field_name)
+            if value is not None:
+                object.__setattr__(self, field_name, _required_text(value, field_name))
+                if not normalize_temporal_component(value):
+                    raise ValueError(f"{field_name} must not be empty after normalization")
+        if (self.subject is None) != (self.relation is None):
+            raise ValueError("subject and relation must be provided together")
         object.__setattr__(self, "valid_from", _utc(self.valid_from, "valid_from"))
         if self.valid_to is not None:
             object.__setattr__(self, "valid_to", _utc(self.valid_to, "valid_to"))
-        if self.status is DecisionStatus.CURRENT and self.valid_to is not None:
-            raise ValueError("a current decision cannot have valid_to")
         if self.status is DecisionStatus.SUPERSEDED and self.valid_to is None:
             raise ValueError("a superseded decision requires valid_to")
         if self.valid_to is not None and self.valid_to <= self.valid_from:
@@ -97,6 +138,12 @@ class DecisionRecord:
             )
         elif not isinstance(self.memory_state, DecisionMemoryState):
             object.__setattr__(self, "memory_state", DecisionMemoryState(self.memory_state))
+
+
+@dataclass(frozen=True, slots=True)
+class TemporalLookupResult:
+    status: TemporalLookupStatus
+    records: tuple[DecisionRecord, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
