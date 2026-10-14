@@ -24,6 +24,7 @@ class _InvestigationJob:
     temporary_root: TemporaryDirectory[str]
     backend: RuntimeRunBackend
     source_names: dict[str, str]
+    source_versions: dict[str, dict[str, str]]
     workspace_id: str
     temporal_scope: tuple[str, str, str] | None = None
     temporal_view_holder: dict[str, Any] | None = None
@@ -39,17 +40,20 @@ class ProductInvestigationService:
         model_factory: Callable[[str], Any] | None = None,
         run_mode: str = "MODEL_NOT_CONFIGURED",
         max_steps: int = 8,
+        external_provider: bool = True,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.run_mode = run_mode
         self.max_steps = max_steps
+        self.external_provider = external_provider
         self._jobs: dict[str, _InvestigationJob] = {}
         self._lock = Lock()
 
     def config(self) -> dict[str, Any]:
         return {
             "available": self.model_factory is not None,
+            "external_provider": self.external_provider,
             "run_mode": self.run_mode,
             "message": (
                 "Agent model is not configured. Start the explicit offline demo to inspect a synthetic run."
@@ -127,6 +131,7 @@ class ProductInvestigationService:
             vault = root / "vault"
             vault.mkdir()
             source_names: dict[str, str] = {}
+            source_versions: dict[str, dict[str, str]] = {}
             for source in sources:
                 # The repository issued source ID is the path identity. The user name is display only.
                 source_id = str(source["source_id"])
@@ -135,6 +140,7 @@ class ProductInvestigationService:
                 relative_path = f"{source_id}.md"
                 (vault / relative_path).write_text(str(source["content"]), encoding="utf-8")
                 source_names[relative_path] = str(source["name"])
+                source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
             engine = RuntimeEngine(
                 vault_root=vault,
@@ -167,7 +173,7 @@ class ProductInvestigationService:
             raise
         with self._lock:
             self._jobs[snapshot["run"]["id"]] = _InvestigationJob(
-                temporary_root, backend, source_names, workspace_id,
+                temporary_root, backend, source_names, source_versions, workspace_id,
                 temporal_scope, temporal_view_holder,
             )
         return self._decorate(snapshot, None)
@@ -186,7 +192,7 @@ class ProductInvestigationService:
             if snapshot["kind"] != "running":
                 raise
             state = None  # The worker may not have created its first checkpoint yet.
-        return self._decorate(snapshot, state, source_names=job.source_names,
+        return self._decorate(snapshot, state, source_names=job.source_names, source_versions=job.source_versions,
                               temporal_scope=job.temporal_scope,
                               temporal_view_holder=job.temporal_view_holder)
 
@@ -207,7 +213,7 @@ class ProductInvestigationService:
         )
         return self.start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]))
 
-    def _decorate(self, snapshot, state, *, source_names=None, temporal_scope=None,
+    def _decorate(self, snapshot, state, *, source_names=None, source_versions=None, temporal_scope=None,
                   temporal_view_holder=None):
         snapshot["run_mode"] = self.run_mode
         snapshot["read_only"] = True
@@ -248,6 +254,7 @@ class ProductInvestigationService:
             ]
         for evidence in snapshot["evidence"]:
             evidence["source_name"] = (source_names or {}).get(evidence["relative_path"], evidence["relative_path"])
+            evidence.update((source_versions or {}).get(evidence["relative_path"], {}))
         for finding in snapshot.get("partial_findings", []):
             finding["source_name"] = (source_names or {}).get(finding["source"], finding["source"])
         if temporal_scope is not None and snapshot["kind"] in {"success", "insufficient"}:

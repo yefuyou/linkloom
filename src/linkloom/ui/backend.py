@@ -22,6 +22,15 @@ from linkloom.ui.projection import (
 )
 
 
+def project_reviewer(artifact: dict[str, Any] | None) -> dict[str, Any]:
+    """Expose the Runtime's actual review record, including rejected finals."""
+    review = (artifact or {}).get("review")
+    if not isinstance(review, dict):
+        return {"performed": False, "decision": None}
+    allowed = ("review_id", "reviewer_agent_id", "decision", "checks", "reason", "created_at")
+    return {"performed": True, **{key: review.get(key) for key in allowed}}
+
+
 class RunBackend(Protocol):
     def context(self) -> dict[str, Any]: ...
 
@@ -176,12 +185,13 @@ class RuntimeRunBackend:
                 raise
             state = None  # No checkpoint exists before the background worker starts.
         ledger = state.tool_ledger if state is not None else []
+        artifact = self._safe_result_artifact(status)
         try:
             snapshot = project_run_snapshot(
                 query=job.query,
                 workspace=self.workspace,
                 status=status,
-                result_artifact=self._safe_result_artifact(status),
+                result_artifact=artifact,
                 tool_ledger=ledger,
                 source_documents=self._documents,
             )
@@ -202,6 +212,7 @@ class RuntimeRunBackend:
                 status=failed,
                 tool_ledger=ledger,
             )
+        snapshot["reviewer"] = project_reviewer(artifact)
         snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
         snapshot["run"]["id"] = job.ui_run_id
         return snapshot

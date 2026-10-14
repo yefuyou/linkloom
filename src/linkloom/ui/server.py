@@ -7,11 +7,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 from typing import Any
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 from linkloom.ui.backend import RunBackend
 from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.unified_ask import UnifiedAskService
 
 
 MAX_REQUEST_BYTES = 32 * 1024
@@ -43,6 +44,8 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         self.backend = backend
         self.product_app = product_app
         self.investigation_service = investigation_service
+        self.unified_ask = (UnifiedAskService(product_app, lambda: self.investigation_service)
+                            if product_app is not None else None)
         super().__init__(address, LinkLoomRequestHandler)
 
 
@@ -115,6 +118,20 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
                 return
             self._send_bytes(body, status=200, content_type=content_type)
             return
+        if self.server.unified_ask is not None and path == "/api/product/ask/config":
+            try:
+                self._send_json(self.server.unified_ask.config())
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
+        if self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/"):
+            try:
+                workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
+                result, status = self.server.unified_ask.inspect(path.rsplit("/", 1)[-1], workspace_id)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path == "/api/context":
             self._send_json(self.server.backend.context())
             return
@@ -168,6 +185,16 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if self._reject_non_local_host():
             return
         path = unquote(urlsplit(self.path).path)
+        if path == "/api/product/ask" and self.server.unified_ask is not None:
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            try:
+                result, status = self.server.unified_ask.ask(payload)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path == "/api/agent/decisions/ask":
             service = self.server.investigation_service
             if service is None:

@@ -8,6 +8,8 @@
     candidateId: null,
     decisionId: null,
     agentViewToken: 0,
+    askScopes: [],
+    askScope: null,
     language: document.documentElement.lang || "en",
   };
   const page = document.getElementById("page");
@@ -104,7 +106,7 @@
   }
 
   async function loadScreen(screen = state.screen) {
-    state.agentViewToken += 1;
+    const viewToken = ++state.agentViewToken;
     setNavigation(screen);
     state.sourceId = null;
     state.candidateId = null;
@@ -117,7 +119,7 @@
       else if (screen === "decisions") await loadDecisions();
       else await showAsk();
     } catch (error) {
-      renderError(error, `<p><button class="button quiet" data-action="reload">Try again</button></p>`);
+      if (viewToken === state.agentViewToken) renderError(error, `<p><button class="button quiet" data-action="reload">Try again</button></p>`);
     }
   }
 
@@ -251,78 +253,131 @@
       <section class="panel"><h2>Decision timeline</h2><div class="timeline">${timeline || "No reviewed decision was effective by this date."}</div>
         <h3>Formal replacements</h3>${transitions || "No verified replacement by this date."}
         <h3>Unapproved proposals</h3>${proposals || "No unapproved proposal recorded by this date."}</section>
-      <section class="panel"><h2>Agent investigation</h2><p class="hint">This read-only investigation cannot approve or change the reviewed timeline above.</p>
-        <form id="timeline-agent" class="form-stack" data-subject="${escapeHtml(decision.subject)}"
-          data-relation="${escapeHtml(decision.relation)}" data-as-of="${escapeHtml(recovery.as_of)}">
-          <div class="field"><label for="timeline-agent-query">Question</label>
-            <textarea id="timeline-agent-query" name="query" required maxlength="4000">What was the reviewed ${escapeHtml(decision.relation)} for ${escapeHtml(decision.subject)} on this date, and which sources support it?</textarea></div>
-          <button class="button" type="submit">Investigate with Agent</button></form>
-        <div id="timeline-agent-result" aria-live="polite"></div></section>
+      <section class="panel"><h2>Ask about this decision</h2><p class="hint">Ask for reviewed state or investigate its sources from the same Ask form.</p>
+        <button class="button" data-action="ask-decision" data-subject="${escapeHtml(decision.subject)}"
+          data-relation="${escapeHtml(decision.relation)}" data-as-of="${escapeHtml(asOf)}">Open Ask with this scope</button></section>
       <p><button class="button quiet" data-action="back-decisions">Back to Decision Memory</button></p>`;
   }
 
-  function renderTemporalAgent(snapshot, viewToken) {
-    if (viewToken !== state.agentViewToken) return;
-    const target = document.getElementById("timeline-agent-result");
-    if (!target) return;
-    if (snapshot.kind === "running") {
-      target.innerHTML = `<p class="loading">Investigating reviewed records and source evidence…</p>`;
-      return;
-    }
-    const sources = (snapshot.evidence || []).map((item) => `<div class="metadata">${escapeHtml(item.label)}</div>
-      <blockquote class="quote">${escapeHtml(item.source?.quote || "Verified excerpt unavailable")}</blockquote>`).join("");
-    if (snapshot.kind === "error") {
-      target.innerHTML = `<div class="error-box" role="alert"><p>${escapeHtml(snapshot.error?.message || "The investigation stopped before final verification.")}</p>
-        <p>Final Reviewer did not accept a conclusion. ${escapeHtml(snapshot.error?.code || "RUNTIME_ERROR")}</p></div>
-        ${sources ? `<h3>Sources read before interruption (not a verified final answer)</h3>${sources}` : ""}`;
-      return;
-    }
-    if (snapshot.kind === "success" || snapshot.kind === "insufficient") {
-      target.innerHTML = `<p><strong>${escapeHtml(snapshot.kind === "success" ? "Verified Agent conclusion" : "Evidence is insufficient")}</strong></p>
-        <p>${escapeHtml(snapshot.decision?.value || snapshot.uncertainty?.statement || "No supported final fact could be confirmed.")}</p>
-        ${sources ? `<h3>Sources</h3>${sources}` : ""}`;
-      return;
-    }
-    target.innerHTML = `<div class="error-box" role="alert">The Agent returned an unsupported run state.</div>`;
+  async function showAsk() {
+    const viewToken = state.agentViewToken;
+    const workspaceId = state.workspace.workspace_id;
+    const config = await request("/api/product/ask/config");
+    if (viewToken !== state.agentViewToken || config.workspace_id !== workspaceId) return;
+    state.askScopes = config.scopes || [];
+    let selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
+    if (selected < 0 && state.askScopes.length === 1) selected = 0;
+    page.innerHTML = `${heading("Ask", "Ask about a decision", "Reviewed state is queried directly. Explanations and source comparisons use a bounded investigation when available.")}
+      <section class="panel"><p class="metadata">Workspace: <strong>${escapeHtml(state.workspace.name)}</strong></p>
+      <form id="ask-form" class="form-stack">
+        <div class="field"><label for="ask-slot">Decision scope</label><select id="ask-slot" required>
+          <option value="">Select a decision</option>${state.askScopes.map((slot, index) => `<option value="${index}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}</option>`).join("")}</select>
+          <span class="hint">${state.askScopes.length ? "The workspace and selected decision bound every lookup and investigation." : "Import and review a decision before asking about it."}</span></div>
+        <div class="field"><label for="ask-query">Question</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="What supplier are we currently using? Why did it change?"></textarea></div>
+        <div class="field"><label for="ask-date">Optional: decision valid on this date</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml(state.askScope?.as_of || "")}"><span class="hint">Leave blank for now. Historical validity uses currently recorded review receipts; dates start at 00:00 UTC.</span></div>
+        ${config.agent?.available && config.agent?.external_provider ? `<label><input id="ask-external" type="checkbox"> Allow this external investigation to send workspace sources to the configured model and incur bounded model costs.</label>` : `<p class="hint">${config.agent?.available ? "Offline Agent investigation is available." : "Agent investigation is not configured. Direct reviewed queries remain available."}</p>`}
+        <button class="button" type="submit">Ask</button></form></section><div id="ask-result" aria-live="polite"></div>`;
   }
 
-  async function pollTemporalAgent(runId, viewToken) {
+  function invalidateAsk() {
+    state.agentViewToken += 1;
+    const target = document.getElementById("ask-result");
+    if (target) target.innerHTML = "";
+  }
+
+  async function askRequest(path, options = {}) {
+    let response;
+    try { response = await fetch(path, { ...options, headers: { "Content-Type": "application/json" } }); }
+    catch { throw new Error("Ask could not reach its local service."); }
+    const payload = await response.json();
+    if (payload.result) return payload.result;
+    const error = new Error(payload.error?.message || "Ask status is unavailable.");
+    error.code = payload.error?.code;
+    throw error;
+  }
+
+  function renderAskResult(result, viewToken) {
+    if (viewToken !== state.agentViewToken) return;
+    const target = document.getElementById("ask-result");
+    if (!target) return;
+    const source = result.path === "AGENT" ? "Agent investigation" : result.path === "DETERMINISTIC" ? "Direct lookup" : "Scope clarification";
+    const context = `<p class="eyebrow">${source} · ${escapeHtml(result.status)}</p>
+      <p class="metadata">${escapeHtml(state.workspace.name)} · ${escapeHtml(result.scope?.subject)} · ${escapeHtml(result.scope?.relation)} · ${escapeHtml(result.scope?.as_of || "Now")}</p>
+      <p class="hint">${escapeHtml(result.route?.reason)}</p>`;
+    const reviewerDetails = result.reviewer?.performed ? `<details><summary>Runtime Reviewer · ${escapeHtml(result.reviewer.decision)}</summary>
+      <p>${escapeHtml(result.reviewer.reviewer_agent_id)} · ${escapeHtml(result.reviewer.review_id)} · ${escapeHtml(result.reviewer.created_at)}</p>
+      <p>${escapeHtml(result.reviewer.reason)}</p></details>` : "";
+    if (result.status === "INVESTIGATING") {
+      target.innerHTML = `<section class="panel">${context}<p class="loading">Reading reviewed records and verifying source evidence…</p>
+        <p class="metadata">Run ${escapeHtml(result.agent_run_id)} · ${escapeHtml(result.metrics?.model_turns || 0)} model turns</p></section>`;
+      return;
+    }
+    if (result.status !== "COMPLETED") {
+      target.innerHTML = `<section class="panel">${context}<div class="error-box" role="alert">
+        <strong>${result.status === "PROVIDER_UNCERTAIN" ? "Provider UNCERTAIN: investigation interrupted, conclusion not verified" : escapeHtml(result.error?.message || "Additional scope is required.")}</strong>
+        <p>${escapeHtml(result.error?.code || result.status)}</p></div>
+        <p class="hint">${escapeHtml(result.uncertainty?.statement || "")}</p>${reviewerDetails}</section>`;
+      return;
+    }
+    const evidence = (result.evidence || []).map((item) => `<article class="card"><h3>Evidence · ${escapeHtml(item.source_name)}</h3>
+      <p class="metadata">Lines ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)} · Version ${escapeHtml(item.source_version)}</p>
+      <blockquote class="quote">${escapeHtml(item.quote)}</blockquote>
+      ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">Inspect source</button>` : ""}
+      <details><summary>Evidence reference</summary><p>${escapeHtml(item.evidence_ref)}</p></details></article>`).join("");
+    const receipts = (result.receipts || []).map((receipt) => `<details><summary>Review receipt · ${escapeHtml(receipt.receipt_id)}</summary>
+      <p>Authorization: ${escapeHtml(receipt.authorization_type)} · ${escapeHtml(receipt.authorized_at)}</p>
+      <p>Materialized: ${escapeHtml(receipt.materialized_at)} · Effective: ${escapeHtml(receipt.effective_at)}</p></details>`).join("");
+    const effective = result.timeline?.effective;
+    const unknownLabels = {
+      replacement_reason: "Replacement reason is unknown; verified sources do not establish it.",
+      effective_decision: "The effective decision could not be verified.",
+      investigation_conclusion: "The investigation conclusion has not been verified.",
+    };
+    const unknownText = (result.uncertainty?.unknown_fields || []).map((field) => unknownLabels[field] || "Some requested information remains unverified.").join(" ");
+    target.innerHTML = `<section class="panel">${context}
+      ${(result.conclusions || []).map((claim) => `<h2>${escapeHtml(claim.value)}</h2><p class="metadata">Effective ${escapeHtml(claim.effective_at || "")}</p>`).join("") || `<h2>No verified effective decision</h2>`}
+      ${(result.timeline?.transitions || []).map((transition) => `<p>Formal replacement: ${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)} on ${escapeHtml(transition.effective_at)}</p>`).join("")}
+      ${(result.rationale || []).map((item) => `<p>${escapeHtml(item.statement || item.value || item.text || "")}</p>`).join("")}
+      <p class="hint">${escapeHtml(result.uncertainty?.statement || "")}${unknownText ? ` ${escapeHtml(unknownText)}` : ""}</p>
+      ${(result.timeline?.proposals || []).map((proposal) => `<p>Unapproved proposal: ${escapeHtml(proposal.value)} · ${escapeHtml(proposal.status)}</p>`).join("")}
+      <p class="metadata">${result.reviewer?.performed ? (result.reviewer.accepted ? "Validator and Reviewer accepted this Agent final." : "Reviewer did not accept a final.") : "Direct receipt and source verification; no LLM Reviewer."}${result.agent_run_id ? ` Run ${escapeHtml(result.agent_run_id)}` : ""}</p>
+      ${reviewerDetails}${receipts}${evidence}${effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(state.askScope?.as_of || "")}">Open Decision Timeline</button>` : ""}</section>`;
+  }
+
+  async function pollAsk(runId, workspaceId, viewToken) {
     if (viewToken !== state.agentViewToken) return;
     try {
-      const response = await fetch(`/api/agent/decisions/runs/${encodeURIComponent(runId)}`);
-      const snapshot = await response.json();
+      const result = await askRequest(`/api/product/ask/runs/${encodeURIComponent(runId)}?workspace_id=${encodeURIComponent(workspaceId)}`);
       if (viewToken !== state.agentViewToken) return;
-      if (!response.ok && snapshot.kind !== "error") throw new Error("Agent run status is unavailable.");
-      renderTemporalAgent(snapshot, viewToken);
-      if (snapshot.kind === "running") {
-        window.setTimeout(() => pollTemporalAgent(runId, viewToken), 800);
-      }
-    } catch {
-      if (viewToken === state.agentViewToken) {
-        const target = document.getElementById("timeline-agent-result");
-        if (target) target.innerHTML = `<div class="error-box" role="alert">Agent run status is unavailable. The reviewed timeline above is unchanged.</div>`;
-      }
-    }
+      renderAskResult(result, viewToken);
+      if (result.status === "INVESTIGATING") window.setTimeout(() => pollAsk(runId, workspaceId, viewToken), 500);
+    } catch (error) { showAskError(error, viewToken); }
   }
 
-  async function showAsk() {
-    page.innerHTML = `${heading("Ask", "Recover a decision with its evidence", "Search approved Team Decision Memory. LinkLoom shows the effective date, prior value, and source passage when those records exist.")}
-      <section class="panel"><form id="ask-form" class="form-stack"><div class="field"><label for="ask-query">Question</label><textarea id="ask-query" name="query" required placeholder="What supplier are we currently using?"></textarea></div>
-      <div class="field"><label for="ask-date">Optional: decision valid on this date</label><input type="date" id="ask-date" name="as_of"><span class="hint">Leave blank for the current decision.</span></div><button class="button" type="submit">Search Decision Memory</button></form></section><div id="ask-result"></div>`;
-  }
-
-  function renderAskResult(result) {
+  function showAskError(error, viewToken) {
+    if (viewToken !== state.agentViewToken) return;
     const target = document.getElementById("ask-result");
-    if (result.status !== "FOUND" || !result.answer) {
-      target.innerHTML = `<section class="empty"><h2>No matching decision found</h2><p>${escapeHtml(result.message || "Import and approve a source-grounded decision before asking about it.")}</p></section>`;
-      return;
-    }
-    const answer = result.answer;
-    target.innerHTML = `<section class="panel"><p class="eyebrow">${result.as_of ? `Historical decision · ${escapeHtml(result.as_of.slice(0, 10))}` : "Current decision"}</p><h2>${escapeHtml(answer.value)}</h2>
-      <p>${escapeHtml(answer.subject)} · ${escapeHtml(answer.relation)}</p><p class="metadata">Effective ${escapeHtml(answer.valid_from)}${answer.valid_to ? ` through ${escapeHtml(answer.valid_to)}` : ""} ${badge(answer.memory_state)}</p>
-      ${answer.replaced ? `<p><strong>Replaced:</strong> ${escapeHtml(answer.replaced.value)}</p>` : ""}
-      ${(answer.evidence || []).map((item) => `<h3>Evidence · ${escapeHtml(item.source_name)}</h3><p class="metadata">${item.line_start ? `Lines ${item.line_start}–${item.line_end}` : "Source location unavailable"}</p><blockquote class="quote">${escapeHtml(item.quote || "Verified quote unavailable")}</blockquote>`).join("")}
-      <button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(answer.decision_id)}">View decision history</button></section>`;
+    if (target) target.innerHTML = `<div class="error-box" role="alert">${escapeHtml(error.message)} ${escapeHtml(error.code || "")}</div>`;
+  }
+
+  async function submitAsk(form) {
+    const viewToken = ++state.agentViewToken;
+    const workspaceId = state.workspace.workspace_id;
+    const data = Object.fromEntries(new FormData(form));
+    const slotValue = document.getElementById("ask-slot").value;
+    const slot = slotValue === "" ? null : state.askScopes[Number(slotValue)];
+    state.askScope = slot ? { ...slot, as_of: data.as_of || "" } : null;
+    const target = document.getElementById("ask-result");
+    target.innerHTML = `<p class="loading">Selecting the appropriate capability…</p>`;
+    try {
+      const result = await askRequest("/api/product/ask", { method: "POST", body: JSON.stringify({
+        ...data, workspace_id: workspaceId, subject: slot?.subject, relation: slot?.relation,
+        allow_external_provider: document.getElementById("ask-external")?.checked === true,
+      }) });
+      if (viewToken !== state.agentViewToken) return;
+      renderAskResult(result, viewToken);
+      if (result.status === "INVESTIGATING") pollAsk(result.agent_run_id, workspaceId, viewToken);
+    } catch (error) { showAskError(error, viewToken); }
   }
 
   async function createWorkspace(name) {
@@ -337,20 +392,33 @@
 
   workspacePicker.addEventListener("change", async () => {
     if (!workspacePicker.value) return;
+    const viewToken = ++state.agentViewToken;
+    state.askScope = null;
+    const target = document.getElementById("ask-result");
+    if (target) target.innerHTML = "";
+    const nextScreen = state.screen;
+    page.innerHTML = `<p class="loading">Switching workspace…</p>`;
     try {
       const result = await send("POST", "/api/workspaces/current", { workspace_id: workspacePicker.value });
+      if (viewToken !== state.agentViewToken) return;
       state.workspace = result.workspace;
       await refreshWorkspaceState();
-      await loadScreen("sources");
-    } catch (error) { renderError(error); }
+      if (viewToken === state.agentViewToken) await loadScreen(nextScreen);
+    } catch (error) { if (viewToken === state.agentViewToken) renderError(error); }
   });
 
   document.getElementById("new-workspace").addEventListener("click", () => {
+    invalidateAsk();
     page.innerHTML = `${heading("Workspace", "Create a workspace", "Each workspace has its own source artifacts, review queue, and temporal decisions.")}
       <form id="workspace-create" class="panel form-stack"><div class="field"><label for="workspace-name">Workspace name</label><input id="workspace-name" name="name" required maxlength="120"></div><button class="button" type="submit">Create workspace</button><button class="button quiet" type="button" data-action="back-sources">Cancel</button></form>`;
   });
 
+  page.addEventListener("input", (event) => {
+    if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) invalidateAsk();
+  });
+
   page.addEventListener("change", async (event) => {
+    if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) { invalidateAsk(); return; }
     if (event.target?.id !== "source-file") return;
     const file = event.target.files?.[0];
     if (!file) return;
@@ -400,28 +468,9 @@
         await loadReview();
         if (action === "approve" && result.decision_id) await inspectDecision(result.decision_id);
       } else if (form.id === "ask-form") {
-        const resultTarget = document.getElementById("ask-result");
-        resultTarget.innerHTML = `<section class="state-card"><p class="loading">Searching approved decisions…</p></section>`;
-        renderAskResult((await send("POST", "/api/ask", Object.fromEntries(new FormData(form)))).answer);
+        await submitAsk(form);
       } else if (form.id === "timeline-as-of") {
         await inspectDecision(form.dataset.id, String(new FormData(form).get("as_of") || ""));
-      } else if (form.id === "timeline-agent") {
-        const viewToken = state.agentViewToken;
-        const target = document.getElementById("timeline-agent-result");
-        target.innerHTML = `<p class="loading">Starting read-only investigation…</p>`;
-        try {
-          const started = await send("POST", "/api/agent/decisions/ask", {
-            query: String(new FormData(form).get("query") || ""),
-            workspace_id: state.workspace.workspace_id,
-            subject: form.dataset.subject, relation: form.dataset.relation,
-            as_of: form.dataset.asOf,
-          });
-          if (viewToken === state.agentViewToken) pollTemporalAgent(started.run.id, viewToken);
-        } catch (error) {
-          if (viewToken === state.agentViewToken) {
-            target.innerHTML = `<div class="error-box" role="alert">${escapeHtml(error.message || "The Agent could not start.")}</div>`;
-          }
-        }
       }
     } catch (error) { renderError(error, `<p><button class="button quiet" data-action="reload">Refresh</button></p>`); }
   });
@@ -434,6 +483,11 @@
       if (action === "inspect-source") await inspectSource(id);
       else if (action === "inspect-candidate") await inspectCandidate(id);
       else if (action === "inspect-decision") await inspectDecision(id);
+      else if (action === "ask-timeline") await inspectDecision(id, button.dataset.asOf || "");
+      else if (action === "ask-decision") {
+        state.askScope = { subject: button.dataset.subject, relation: button.dataset.relation, as_of: button.dataset.asOf || "" };
+        await loadScreen("ask");
+      }
       else if (action === "back-sources") await loadScreen("sources");
       else if (action === "back-review") await loadScreen("review");
       else if (action === "back-decisions") await loadScreen("decisions");

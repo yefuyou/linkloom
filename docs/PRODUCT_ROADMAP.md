@@ -14,6 +14,20 @@ current product contract, while `DEV_SPEC.md` maps it to implementation work.
 The original personal-vault roadmap is retained below as historical planning;
 it is no longer the active product direction.
 
+## Unified Ask Product Experience — 2026-10-14
+
+The user-authorized follow-up adds one Product Ask form with bounded local task
+routing to reviewed Decision Memory or the existing temporal Agent. It preserves
+both legacy APIs, pins workspace/decision/date, discloses the execution source,
+and requires explicit external-provider permission for automatic routing.
+
+The implementation boundary and local offline/browser evidence are in
+[the Unified Ask SPEC](requirements/unified-ask-experience/SPEC.md) and
+[delivery report](requirements/unified-ask-experience/DELIVERY.md). This follow-up
+supersedes the earlier V1 feature freeze only for this approved scope; it does
+not authorize real Gemini runs, real-vault mutation, deployment or unrelated
+benchmark changes.
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,
