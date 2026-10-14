@@ -7,6 +7,7 @@
     sourceId: null,
     candidateId: null,
     decisionId: null,
+    agentViewToken: 0,
     language: document.documentElement.lang || "en",
   };
   const page = document.getElementById("page");
@@ -103,6 +104,7 @@
   }
 
   async function loadScreen(screen = state.screen) {
+    state.agentViewToken += 1;
     setNavigation(screen);
     state.sourceId = null;
     state.candidateId = null;
@@ -217,21 +219,90 @@
       <div class="section-title"><h2>Current records</h2><span class="muted">${decisions.length}</span></div><div class="grid">${cards}</div>`;
   }
 
-  async function inspectDecision(decisionId) {
-    const [detail, history] = await Promise.all([
-      request(`/api/decisions/${encodeURIComponent(decisionId)}`),
-      request(`/api/decisions/${encodeURIComponent(decisionId)}/history`),
-    ]);
+  async function inspectDecision(decisionId, asOf = "") {
+    const viewToken = ++state.agentViewToken;
+    const detail = await request(`/api/decisions/${encodeURIComponent(decisionId)}`);
     const decision = detail.decision;
+    const { recovery } = await send("POST", "/api/decisions/recover", {
+      subject: decision.subject, relation: decision.relation, as_of: asOf || null,
+    });
+    if (viewToken !== state.agentViewToken) return;
     state.decisionId = decisionId;
-    const timeline = history.history.map((item) => `<article class="timeline-item"><div class="card-head"><strong>${escapeHtml(item.value)}</strong>${badge(item.memory_state)}</div>
-      <p class="metadata">${escapeHtml(item.valid_from)}${item.valid_to ? ` → ${escapeHtml(item.valid_to)}` : " → Current"}${item.supersedes_id ? ` · supersedes predecessor` : ""}</p>
-      ${(item.evidence || []).map((evidence) => `<p class="muted">${escapeHtml(evidence.source_name)} · lines ${evidence.line_start || "?"}–${evidence.line_end || "?"}</p><blockquote class="quote">${escapeHtml(evidence.quote || "Verified quote unavailable")}</blockquote>`).join("")}</article>`).join("");
-    page.innerHTML = `${heading("Decision Memory", `${decision.subject} · ${decision.relation}`, decision.value)}
-      <div class="detail-layout"><section class="panel"><div class="card-head"><h2>Current record</h2>${badge(decision.memory_state)}</div><p>${escapeHtml(decision.value)}</p><p class="metadata">Effective from ${escapeHtml(decision.valid_from)}${decision.valid_to ? ` · through ${escapeHtml(decision.valid_to)}` : ""}</p>
-        ${decision.supersedes_id ? `<p class="hint">Replaces a prior decision. The predecessor is shown in the timeline.</p>` : ""}
-        ${(decision.evidence || []).map((evidence) => `<h3>Evidence · ${escapeHtml(evidence.source_name)}</h3><p class="metadata">${evidence.line_start ? `Lines ${evidence.line_start}–${evidence.line_end}` : "Source location unavailable"}</p><blockquote class="quote">${escapeHtml(evidence.quote || "Verified quote unavailable")}</blockquote>`).join("")}</section>
-      <section class="panel"><h2>Decision timeline</h2><div class="timeline">${timeline}</div></section></div><p><button class="button quiet" data-action="back-decisions">Back to Decision Memory</button></p>`;
+    const evidenceRows = (evidence) => (evidence || []).map((item) => `<div class="metadata">
+      Source: ${escapeHtml(item.source_name || "Unknown")} · lines ${escapeHtml(item.line_start || "?")}–${escapeHtml(item.line_end || "?")}
+      · Version ${escapeHtml(item.source_version || "Unavailable")}
+      · Evidence ${escapeHtml(item.evidence_ref || "Unavailable")}</div>
+      <blockquote class="quote">${escapeHtml(item.quote || "Verified quote unavailable")}</blockquote>
+      ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">Inspect source</button>` : ""}`).join("");
+    const timeline = recovery.history.map((item) => `<article class="timeline-item"><div class="card-head"><strong>${escapeHtml(item.value)}</strong>${badge(item.status)}${badge(item.memory_state)}</div>
+      <p class="metadata">Decision ${escapeHtml(item.decision_id)} · ${escapeHtml(item.valid_from)}${item.valid_to ? ` → ${escapeHtml(item.valid_to)}` : " → open-ended"}</p>
+      <p class="metadata">Review receipt: ${escapeHtml(item.authorization?.receipt_id || "Unavailable")}
+      · Authorized ${escapeHtml(item.authorization?.authorized_at || "Unknown")}</p>${evidenceRows(item.evidence)}</article>`).join("");
+    const transitions = recovery.transitions.map((item) => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} on ${escapeHtml(item.effective_at)}.
+      Replacement reason: ${item.reason_status === "NOT_SOURCE_VERIFIED" ? "Cannot confirm from verified sources" : escapeHtml(item.reason_status)}.</p>`).join("");
+    const proposals = recovery.proposals.map((item) => `<article class="timeline-item"><strong>${escapeHtml(item.value)}</strong> ${badge(item.status)}
+      <p class="hint">Proposal only; no formal review receipt.</p>${evidenceRows([item.evidence])}</article>`).join("");
+    page.innerHTML = `${heading("Decision Memory", `${decision.subject} · ${decision.relation}`, "Reviewed decision timeline and source evidence")}
+      <section class="panel"><form id="timeline-as-of" class="form-stack" data-id="${escapeHtml(decisionId)}"><div class="field"><label for="timeline-date">Decision valid on</label>
+        <input type="date" id="timeline-date" name="as_of" value="${escapeHtml(asOf)}"></div><button class="button" type="submit">Show reviewed state</button></form>
+        <p class="hint">Historical validity uses currently recorded review decisions; this is not a snapshot of what was known at that time.</p>
+        <p>Selected date: ${escapeHtml(recovery.as_of.slice(0, 10))} · ${escapeHtml(recovery.status)}</p>
+        <h2>${recovery.effective ? escapeHtml(recovery.effective.value) : "No verified effective decision for this date"}</h2></section>
+      <section class="panel"><h2>Decision timeline</h2><div class="timeline">${timeline || "No reviewed decision was effective by this date."}</div>
+        <h3>Formal replacements</h3>${transitions || "No verified replacement by this date."}
+        <h3>Unapproved proposals</h3>${proposals || "No unapproved proposal recorded by this date."}</section>
+      <section class="panel"><h2>Agent investigation</h2><p class="hint">This read-only investigation cannot approve or change the reviewed timeline above.</p>
+        <form id="timeline-agent" class="form-stack" data-subject="${escapeHtml(decision.subject)}"
+          data-relation="${escapeHtml(decision.relation)}" data-as-of="${escapeHtml(recovery.as_of)}">
+          <div class="field"><label for="timeline-agent-query">Question</label>
+            <textarea id="timeline-agent-query" name="query" required maxlength="4000">What was the reviewed ${escapeHtml(decision.relation)} for ${escapeHtml(decision.subject)} on this date, and which sources support it?</textarea></div>
+          <button class="button" type="submit">Investigate with Agent</button></form>
+        <div id="timeline-agent-result" aria-live="polite"></div></section>
+      <p><button class="button quiet" data-action="back-decisions">Back to Decision Memory</button></p>`;
+  }
+
+  function renderTemporalAgent(snapshot, viewToken) {
+    if (viewToken !== state.agentViewToken) return;
+    const target = document.getElementById("timeline-agent-result");
+    if (!target) return;
+    if (snapshot.kind === "running") {
+      target.innerHTML = `<p class="loading">Investigating reviewed records and source evidence…</p>`;
+      return;
+    }
+    const sources = (snapshot.evidence || []).map((item) => `<div class="metadata">${escapeHtml(item.label)}</div>
+      <blockquote class="quote">${escapeHtml(item.source?.quote || "Verified excerpt unavailable")}</blockquote>`).join("");
+    if (snapshot.kind === "error") {
+      target.innerHTML = `<div class="error-box" role="alert"><p>${escapeHtml(snapshot.error?.message || "The investigation stopped before final verification.")}</p>
+        <p>Final Reviewer did not accept a conclusion. ${escapeHtml(snapshot.error?.code || "RUNTIME_ERROR")}</p></div>
+        ${sources ? `<h3>Sources read before interruption (not a verified final answer)</h3>${sources}` : ""}`;
+      return;
+    }
+    if (snapshot.kind === "success" || snapshot.kind === "insufficient") {
+      target.innerHTML = `<p><strong>${escapeHtml(snapshot.kind === "success" ? "Verified Agent conclusion" : "Evidence is insufficient")}</strong></p>
+        <p>${escapeHtml(snapshot.decision?.value || snapshot.uncertainty?.statement || "No supported final fact could be confirmed.")}</p>
+        ${sources ? `<h3>Sources</h3>${sources}` : ""}`;
+      return;
+    }
+    target.innerHTML = `<div class="error-box" role="alert">The Agent returned an unsupported run state.</div>`;
+  }
+
+  async function pollTemporalAgent(runId, viewToken) {
+    if (viewToken !== state.agentViewToken) return;
+    try {
+      const response = await fetch(`/api/agent/decisions/runs/${encodeURIComponent(runId)}`);
+      const snapshot = await response.json();
+      if (viewToken !== state.agentViewToken) return;
+      if (!response.ok && snapshot.kind !== "error") throw new Error("Agent run status is unavailable.");
+      renderTemporalAgent(snapshot, viewToken);
+      if (snapshot.kind === "running") {
+        window.setTimeout(() => pollTemporalAgent(runId, viewToken), 800);
+      }
+    } catch {
+      if (viewToken === state.agentViewToken) {
+        const target = document.getElementById("timeline-agent-result");
+        if (target) target.innerHTML = `<div class="error-box" role="alert">Agent run status is unavailable. The reviewed timeline above is unchanged.</div>`;
+      }
+    }
   }
 
   async function showAsk() {
@@ -332,6 +403,25 @@
         const resultTarget = document.getElementById("ask-result");
         resultTarget.innerHTML = `<section class="state-card"><p class="loading">Searching approved decisions…</p></section>`;
         renderAskResult((await send("POST", "/api/ask", Object.fromEntries(new FormData(form)))).answer);
+      } else if (form.id === "timeline-as-of") {
+        await inspectDecision(form.dataset.id, String(new FormData(form).get("as_of") || ""));
+      } else if (form.id === "timeline-agent") {
+        const viewToken = state.agentViewToken;
+        const target = document.getElementById("timeline-agent-result");
+        target.innerHTML = `<p class="loading">Starting read-only investigation…</p>`;
+        try {
+          const started = await send("POST", "/api/agent/decisions/ask", {
+            query: String(new FormData(form).get("query") || ""),
+            workspace_id: state.workspace.workspace_id,
+            subject: form.dataset.subject, relation: form.dataset.relation,
+            as_of: form.dataset.asOf,
+          });
+          if (viewToken === state.agentViewToken) pollTemporalAgent(started.run.id, viewToken);
+        } catch (error) {
+          if (viewToken === state.agentViewToken) {
+            target.innerHTML = `<div class="error-box" role="alert">${escapeHtml(error.message || "The Agent could not start.")}</div>`;
+          }
+        }
       }
     } catch (error) { renderError(error, `<p><button class="button quiet" data-action="reload">Refresh</button></p>`); }
   });

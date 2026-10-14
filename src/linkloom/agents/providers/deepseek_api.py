@@ -292,6 +292,8 @@ def _build_messages(
         )
     else:
         user_input = request.user_input
+    if request.recovery_guidance is not None:
+        user_input = f"{user_input}\nruntime_recovery_guidance={request.recovery_guidance}"
     bounded_input = _bounded_json(
         user_input,
         "ModelTurnRequest.model_visible_input",

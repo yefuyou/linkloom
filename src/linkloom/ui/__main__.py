@@ -8,7 +8,11 @@ import os
 from pathlib import Path
 from uuid import uuid4
 
-from linkloom.agents.providers import GeminiProviderAdapter, build_gemini_sdk_client
+from linkloom.agents.providers import (
+    GEMINI_38_FLASH_MODEL_ID,
+    GeminiProviderAdapter,
+    build_gemini_sdk_client,
+)
 from linkloom.semantic_ingestion.extraction import (
     ProviderNeutralSemanticExtractor,
     ProviderRequestAuthorization,
@@ -16,6 +20,7 @@ from linkloom.semantic_ingestion.extraction import (
 from linkloom.runtime.errors import ValidationError
 from linkloom.ui.demo import DemoCase, DemoRunBackend
 from linkloom.ui.product import ProductApplication
+from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.server import create_http_server
 
 
@@ -56,9 +61,14 @@ def main() -> int:
         help="Explicitly allow source text to be sent to the configured Gemini provider.",
     )
     parser.add_argument(
+        "--allow-temporal-agent",
+        action="store_true",
+        help="Explicitly enable bounded read-only temporal Agent runs using the configured Gemini model.",
+    )
+    parser.add_argument(
         "--model",
-        default=os.environ.get("LINKLOOM_SEMANTIC_MODEL", "gemini-3.8-flash"),
-        help="Semantic extraction model used only with --allow-external-provider.",
+        default=os.environ.get("LINKLOOM_SEMANTIC_MODEL", GEMINI_38_FLASH_MODEL_ID),
+        help="Gemini model for explicitly enabled semantic extraction and temporal Agent runs.",
     )
     parser.add_argument(
         "--estimated-cost-per-request",
@@ -69,6 +79,12 @@ def main() -> int:
     args = parser.parse_args()
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
+    if args.model != GEMINI_38_FLASH_MODEL_ID:
+        parser.error(
+            f"Gemini product runs are pinned to {GEMINI_38_FLASH_MODEL_ID}; no model fallback is allowed."
+        )
+    if args.allow_temporal_agent and not args.allow_external_provider:
+        parser.error("--allow-temporal-agent requires --allow-external-provider")
 
     extractor = None
     sdk_client = None
@@ -108,7 +124,21 @@ def main() -> int:
 
     product_app = ProductApplication(database_path=args.database, extractor=extractor)
     backend = DemoRunBackend(DemoCase.load_mps_001())
-    server = create_http_server(backend, product_app=product_app, host=args.host, port=args.port)
+    investigation_service = (
+        ProductInvestigationService(
+            product_app,
+            model_factory=lambda _query: GeminiProviderAdapter(
+                GeminiSDKClientBridge(sdk_client), model_id=args.model,
+            ),
+            run_mode="GEMINI_38_FLASH_EXPLICIT",
+            max_steps=8,
+        )
+        if args.allow_temporal_agent else None
+    )
+    server = create_http_server(
+        backend, product_app=product_app, investigation_service=investigation_service,
+        host=args.host, port=args.port,
+    )
     print(f"LinkLoom Product UI: http://{args.host}:{server.server_port}")
     print(f"Local product database: {Path(args.database).expanduser()}")
     if extractor is None:

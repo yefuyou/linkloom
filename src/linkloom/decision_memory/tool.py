@@ -76,7 +76,7 @@ class DecisionMemorySearchTool:
             raise ValueError("decision-memory query must not be empty")
         if limit <= 0 or limit > 50:
             raise ValueError("decision-memory limit must be between 1 and 50")
-        parsed_as_of = _parse_as_of(as_of)
+        parsed_as_of = parse_decision_memory_as_of(as_of)
         started = time.perf_counter()
         records = self.store.search(
             self.authorized_workspace_id,
@@ -105,7 +105,7 @@ class DecisionMemorySearchTool:
         """Use exact structured lookup without changing legacy lexical search."""
         if workspace != self.authorized_workspace_id:
             raise PermissionError("workspace is not authorized for decision-memory lookup")
-        parsed_as_of = _parse_as_of(as_of)
+        parsed_as_of = parse_decision_memory_as_of(as_of)
         if not callable(getattr(self.store, "lookup", None)):
             raise TypeError("decision-memory store does not support structured lookup")
         reader = cast(DecisionMemoryStructuredReader, self.store)
@@ -117,7 +117,8 @@ class DecisionMemorySearchTool:
         )
 
 
-def _parse_as_of(value: str | None) -> datetime | None:
+def parse_decision_memory_as_of(value: str | None) -> datetime | None:
+    """Validate the temporal lookup input shared by ToolRuntime and the reader."""
     if value is None:
         return None
     try:

@@ -8,6 +8,7 @@ local FakeModelAdapter only.
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
+import hashlib
 import json
 from typing import Any, Callable, Sequence
 
@@ -42,6 +43,9 @@ from linkloom.runtime.models import (
     TerminationState,
 )
 from linkloom.runtime.recovery import decide_model_resume
+from linkloom.runtime.progress import assess_progress, repeated_search_observation
+from linkloom.runtime.recovery_policy import decide_recovery
+from linkloom.runtime.task_plan import TaskPlan
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
 from linkloom.tools.runtime import ToolRuntime
@@ -49,6 +53,95 @@ from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 
 MODEL_LOOP_STATUSES = frozenset({"completed", "failed", "budget_exhausted"})
+MAX_MODEL_REQUEST_CONTEXT_BYTES = 96 * 1024
+MAX_PROVIDER_USER_INPUT_BYTES = 32 * 1024
+
+
+def _bounded_model_request(request: ModelTurnRequest) -> tuple[ModelTurnRequest, dict[str, Any]]:
+    """Keep verified context and the current observation ahead of old tool turns."""
+    dropped_turns = 0
+    dropped_history = 0
+    before_bytes: int | None = None
+    before_history_results = len(request.tool_history) + sum(
+        len(turn.tool_results) for turn in request.tool_turns
+    )
+    while True:
+        encoded = json.dumps(
+            request.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")
+        if before_bytes is None:
+            before_bytes = len(encoded)
+        if len(encoded) <= MAX_MODEL_REQUEST_CONTEXT_BYTES:
+            return request, {
+                "budget_bytes": MAX_MODEL_REQUEST_CONTEXT_BYTES,
+                "before_bytes": before_bytes,
+                "actual_bytes": len(encoded),
+                "before_history_results": before_history_results,
+                "after_history_results": len(request.tool_history) + sum(
+                    len(turn.tool_results) for turn in request.tool_turns
+                ),
+                "estimated_tokens": (len(encoded) + 3) // 4,
+                "token_count_kind": "ESTIMATED_UTF8_BYTES_DIV_4",
+                "dropped_old_tool_turns": dropped_turns,
+                "dropped_old_tool_history": dropped_history,
+            }
+        if request.tool_turns:
+            request = replace(request, tool_turns=request.tool_turns[1:])
+            dropped_turns += 1
+        elif request.tool_history:
+            request = replace(request, tool_history=request.tool_history[1:])
+            dropped_history += 1
+        else:
+            raise ValidationError("Model request exceeds the bounded context budget.")
+
+
+def project_model_request_for_audit(request: ModelTurnRequest, context_audit: dict[str, Any]) -> dict[str, Any]:
+    """Redacted, provider-neutral projection of exactly one durable model request."""
+    def size(value: Any) -> dict[str, int | str]:
+        encoded = json.dumps(value, ensure_ascii=False, sort_keys=True,
+                             separators=(",", ":")).encode("utf-8")
+        return {"bytes": len(encoded), "tokens": (len(encoded) + 3) // 4,
+                "token_count_kind": "ESTIMATED_UTF8_BYTES_DIV_4"}
+
+    static_prefix = (
+        "Use only the available retrieval tools to inspect verified evidence for the request below."
+        if request.user_input.startswith("Use only the available retrieval tools")
+        else "Retrieve verified evidence for the request below."
+        if request.user_input.startswith("Retrieve verified evidence")
+        else "[redacted arbitrary user input]"
+    )
+    roles_deepseek = ["system", "user"]
+    roles_gemini = ["user"]
+    for turn in request.tool_turns:
+        roles_deepseek.extend(["assistant", *(["tool"] * len(turn.tool_results))])
+        roles_gemini.extend(["model", "user"])
+    for _interaction in request.tool_history:
+        roles_deepseek.extend(["assistant", "tool"])
+        roles_gemini.extend(["model", "user"])
+    if request.observation is not None:
+        roles_deepseek.extend(["assistant", "tool"])
+        roles_gemini.extend(["model", "user"])
+    return {
+        "roles_deepseek": roles_deepseek,
+        "roles_gemini": roles_gemini,
+        "prompt_prefix": static_prefix,
+        "prompt_profile": "few-v1" if "prompt_profile=few-v1" in request.user_input else "zero-v1",
+        "user_input_sha256": hashlib.sha256(request.user_input.encode("utf-8")).hexdigest(),
+        "segments": {
+            "user_input": size(request.user_input),
+            "verified_evidence": size([item.to_dict() for item in request.evidence_context]),
+            "tool_history": size([item.to_dict() for item in request.tool_history]),
+            "tool_turns": size([item.to_dict() for item in request.tool_turns]),
+            "latest_observation": size(request.observation.to_dict() if request.observation else None),
+            "tool_declarations": size([tool.to_dict() for tool in request.available_tools]),
+        },
+        "tool_declarations": [
+            {"name": tool.tool_id, "description": tool.description,
+             "parameters": tool.input_schema}
+            for tool in request.available_tools
+        ],
+        "context_selection": context_audit,
+    }
 
 
 @dataclass(frozen=True)
@@ -109,6 +202,7 @@ class SingleAgentModelLoop:
         *,
         max_steps: int = 8,
         verified_evidence_context_limit: int = 0,
+        task_plan: TaskPlan | None = None,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -140,6 +234,7 @@ class SingleAgentModelLoop:
         self.policy_enforcer = policy_enforcer
         self.max_steps = max_steps
         self.verified_evidence_context_limit = verified_evidence_context_limit
+        self.task_plan = task_plan
 
     @staticmethod
     def _project_state(
@@ -181,16 +276,24 @@ class SingleAgentModelLoop:
         task_id: str,
         agent_id: str,
         before_sequence: int,
+        workspace_id: str | None = None,
+        max_bytes: int = MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
+        audit: dict[str, Any] | None = None,
     ) -> list[ToolResult]:
         """Expose a small, deterministic projection of prior verified evidence.
 
         This is deliberately an opt-in evidence ledger view, not a general
         conversation-memory mechanism.  Its exact payload is retained in the
         durable ModelTurnRequest artifact before any model invocation.
+
+        Read results are the strongest continuation signal: they preserve the
+        passage the model explicitly verified even when later searches fill the
+        bounded context.  Search results fill remaining slots from newest to
+        oldest, while the returned order remains stable within each class.
         """
         if self.verified_evidence_context_limit == 0:
             return []
-        context: list[ToolResult] = []
+        max_bytes = max(0, min(max_bytes, MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES))
         records = sorted(
             (
                 record
@@ -204,10 +307,195 @@ class SingleAgentModelLoop:
             ),
             key=lambda record: (record.sequence, record.call_id),
         )
+
+        # The runtime source identity is authoritative when supplied by the
+        # caller.  The fallback keeps direct/private callers and historical
+        # tests deterministic by deriving it from the first scoped search
+        # request.  Evidence values carrying a workspace marker are never
+        # accepted from another source identity.
+        expected_workspace = workspace_id.strip() if isinstance(workspace_id, str) else None
+        if expected_workspace == "":
+            expected_workspace = None
+        if expected_workspace is None:
+            for record in records:
+                if record.tool_id != "search_notes" or not isinstance(record.arguments, dict):
+                    continue
+                source_context = record.arguments.get("source_context")
+                if not isinstance(source_context, dict):
+                    continue
+                for key in ("workspace_id", "vault_root_fingerprint"):
+                    candidate = source_context.get(key)
+                    if isinstance(candidate, str) and candidate.strip():
+                        expected_workspace = candidate.strip()
+                        break
+                if expected_workspace is not None:
+                    break
+
+        verified: list[tuple[Any, ToolResult, list[dict[str, Any]]]] = []
         for record in records:
             result = ToolResult.from_dict(record.result)
-            if not is_verified_evidence_result(result):
+            # A checkpoint result is only eligible when it is the exact
+            # result recorded for this ledger call.  This prevents a durable
+            # context rebuild from smuggling a result across call identity.
+            if (
+                result.call_id != record.call_id
+                or result.tool_id != record.tool_id
+                or not is_verified_evidence_result(result)
+            ):
                 continue
+            record_workspace = None
+            source_context = record.arguments.get("source_context") if isinstance(record.arguments, dict) else None
+            if isinstance(source_context, dict):
+                for key in ("workspace_id", "vault_root_fingerprint"):
+                    candidate = source_context.get(key)
+                    if isinstance(candidate, str) and candidate.strip():
+                        record_workspace = candidate.strip()
+                        break
+            if expected_workspace is not None and record_workspace not in (None, expected_workspace):
+                continue
+            values = result.value if isinstance(result.value, list) else [result.value]
+            scoped_values: list[dict[str, Any]] = []
+            for value in values:
+                value_workspace = value.get("workspace_id")
+                if (
+                    expected_workspace is not None
+                    and value_workspace is not None
+                    and value_workspace != expected_workspace
+                ):
+                    continue
+                scoped_values.append(value)
+            if not scoped_values:
+                continue
+            verified.append((record, result, scoped_values))
+
+        # Reads are selected first.  Search records are considered newest
+        # first so a late search can displace stale pressure, but the final
+        # list is normalized by class/sequence for deterministic provider
+        # input and compatibility with the historical context order.
+        read_candidates = [item for item in verified if item[0].tool_id == "read_verified_note"]
+        search_candidates = [item for item in verified if item[0].tool_id == "search_notes"]
+        read_candidates.sort(key=lambda item: (item[0].sequence, item[0].call_id))
+        search_candidates.sort(key=lambda item: (item[0].sequence, item[0].call_id))
+        # Reserve one verified read per observed plan subgoal before filling
+        # remaining slots. A long first hop cannot crowd out later hop reads.
+        evidence_subgoals: dict[str, str] = {}
+        for record, _result, values in search_candidates:
+            source = record.arguments.get("source_context", {})
+            subgoal = source.get("subgoal_id") if isinstance(source, dict) else None
+            if isinstance(subgoal, str) and subgoal:
+                for value in values:
+                    evidence_subgoals.setdefault(value["evidence_id"], subgoal)
+        if evidence_subgoals:
+            representatives = []
+            covered = set()
+            remainder = []
+            for item in read_candidates:
+                _record, _result, values = item
+                subgoals = {
+                    evidence_subgoals[value["evidence_id"]]
+                    for value in values if value["evidence_id"] in evidence_subgoals
+                }
+                if subgoals - covered:
+                    representatives.append(item)
+                    covered.update(subgoals)
+                else:
+                    remainder.append(item)
+            read_candidates = [*representatives, *remainder]
+
+        def project_unique(
+            candidates: list[tuple[Any, ToolResult, list[dict[str, Any]]]],
+            reserved: set[tuple[Any, ...]] | None = None,
+        ) -> tuple[list[tuple[Any, ToolResult, list[tuple[Any, ...]]]], set[tuple[Any, ...]]]:
+            seen = set(reserved or ())
+            projected_records: list[tuple[Any, ToolResult, list[tuple[Any, ...]]]] = []
+            for record, result, values in candidates:
+                fresh_values: list[dict[str, Any]] = []
+                fresh_keys: list[tuple[Any, ...]] = []
+                for value in values:
+                    # Retrieval ranking may change across queries while the
+                    # underlying verified passage remains the same.
+                    evidence_key = (
+                        value["evidence_id"],
+                        value["content_sha256"],
+                        value["line_start"],
+                        value["line_end"],
+                        value["quote_sha256"],
+                    )
+                    if evidence_key not in seen and evidence_key not in fresh_keys:
+                        fresh_values.append(value)
+                        fresh_keys.append(evidence_key)
+                if not fresh_values:
+                    continue
+                projected = (
+                    result
+                    if len(fresh_values) == len(values)
+                    else replace(
+                        result,
+                        value=fresh_values if isinstance(result.value, list) else fresh_values[0],
+                    )
+                )
+                projected_records.append((record, projected, fresh_keys))
+                seen.update(fresh_keys)
+            return projected_records, seen
+
+        read_records, read_evidence = project_unique(read_candidates)
+        # Build search projections in chronological order so the first
+        # occurrence remains the canonical ToolResult identity.  Selection
+        # below still visits these projected records newest first, which gives
+        # recent searches priority without changing historical dedup behavior.
+        search_records, _ = project_unique(search_candidates, read_evidence)
+        search_records.reverse()
+
+        selected: list[tuple[Any, ToolResult, list[tuple[Any, ...]]]] = []
+        seen_evidence: set[tuple[Any, ...]] = set()
+        for record, result, _projected_keys in [*read_records, *search_records]:
+            projected = (
+                result
+            )
+            values = projected.value if isinstance(projected.value, list) else [projected.value]
+            fresh_values = []
+            fresh_keys = []
+            for value in values:
+                evidence_key = (
+                    value["evidence_id"],
+                    value["content_sha256"],
+                    value["line_start"],
+                    value["line_end"],
+                    value["quote_sha256"],
+                )
+                if evidence_key not in seen_evidence and evidence_key not in fresh_keys:
+                    fresh_values.append(value)
+                    fresh_keys.append(evidence_key)
+            if not fresh_values:
+                continue
+            if len(fresh_values) != len(values):
+                projected = replace(
+                    projected,
+                    value=fresh_values if isinstance(projected.value, list) else fresh_values[0],
+                )
+            trial = [item[1] for item in selected] + [projected]
+            encoded = json.dumps(
+                [item.to_dict() for item in trial],
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            if len(encoded.encode("utf-8")) > max_bytes:
+                continue
+            selected.append((record, projected, fresh_keys))
+            seen_evidence.update(fresh_keys)
+            if len(selected) == self.verified_evidence_context_limit:
+                break
+
+        selected.sort(
+            key=lambda item: (
+                0 if item[0].tool_id == "read_verified_note" else 1,
+                item[0].sequence,
+                item[0].call_id,
+            )
+        )
+        context: list[ToolResult] = []
+        for _record, result, _keys in selected:
             trial = [*context, result]
             encoded = json.dumps(
                 [item.to_dict() for item in trial],
@@ -215,18 +503,39 @@ class SingleAgentModelLoop:
                 sort_keys=True,
                 separators=(",", ":"),
             )
-            if len(encoded.encode("utf-8")) > MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES:
-                continue
-            context.append(result)
-            if len(context) == self.verified_evidence_context_limit:
-                break
+            if len(encoded.encode("utf-8")) <= max_bytes:
+                context.append(result)
+        if audit is not None:
+            selected_calls = {item.call_id for item in context}
+            selected_evidence_ids = {
+                value["evidence_id"]
+                for item in context
+                for value in (item.value if isinstance(item.value, list) else [item.value])
+            }
+            audit["evidence_context_budget_bytes"] = max_bytes
+            audit["selected_verified_calls"] = [item.call_id for item in context]
+            audit["selected_evidence_ids"] = sorted(selected_evidence_ids)
+            audit["dropped_verified_calls"] = [
+                {
+                    "call_id": record.call_id,
+                    "evidence_ids": [value["evidence_id"] for value in values],
+                    "reason": (
+                        "duplicate" if all(value["evidence_id"] in selected_evidence_ids for value in values)
+                        else "budget_or_limit"
+                    ),
+                }
+                for record, _result, values in verified
+                if record.call_id not in selected_calls
+            ]
+        if read_candidates and not any(item.tool_id == "read_verified_note" for item in context):
+            raise ValidationError("No verified read fits the model evidence budget.")
         return context
 
     @staticmethod
     def _completed_tool_history(
         model_records: list[ModelExecutionRecord],
-        ledger: ToolExecutionLedger,
         *,
+        observation_loader: Callable[[ModelExecutionRecord, ToolCall], ToolResult],
         run_id: str,
         task_id: str,
         agent_id: str,
@@ -257,19 +566,10 @@ class SingleAgentModelLoop:
             call = ToolCall.from_dict(raw_call)
             if call.call_id == current_call_id:
                 continue
-            ledger_record = ledger.get(call.call_id)
-            if (
-                ledger_record is None
-                or ledger_record.status not in {"completed", "failed"}
-                or ledger_record.result is None
-            ):
-                raise ValidationError(
-                    "Durable tool history has no completed result for a model tool call."
-                )
             history.append(
                 ModelToolInteraction(
                     tool_call=call,
-                    tool_result=ToolResult.from_dict(ledger_record.result),
+                    tool_result=observation_loader(record, call),
                 )
             )
         return history
@@ -390,8 +690,14 @@ class SingleAgentModelLoop:
                         task_id=task_id,
                         agent_id=agent_id,
                         before_sequence=next_sequence,
+                        workspace_id=state.source.vault_root_fingerprint,
+                        max_bytes=min(
+                            MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
+                            MAX_PROVIDER_USER_INPUT_BYTES - len(user_input.encode("utf-8")) - 2048,
+                        ),
                     ),
                 )
+                request, _context_audit = _bounded_model_request(request)
                 try:
                     action = self.model.decide(request)
                 except Exception:
@@ -653,6 +959,15 @@ class SingleAgentModelLoop:
                 error=error,
             )
 
+        def proposal_failure(error: ToolError) -> ModelLoopResult:
+            if error.code in {
+                "MODEL_PROGRESS_STALLED",
+                "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+                "MODEL_UNRECOVERABLE_TOOL_ERROR",
+            }:
+                return failed_result(error)
+            return blocked_result(error)
+
         def tool_definitions_artifact(turn_id: str):
             return artifact_store.write(
                 f"model/{artifact_store.safe_segment(state.run_id)}"
@@ -666,6 +981,7 @@ class SingleAgentModelLoop:
             request: ModelTurnRequest,
             tools_ref: str,
             input_observation_ref: str | None,
+            context_audit: dict[str, Any],
         ):
             return artifact_store.write_request(
                 state.run_id,
@@ -682,6 +998,8 @@ class SingleAgentModelLoop:
                     "tool_definition_snapshot_ref": tools_ref,
                     "observation_ref": input_observation_ref,
                     "model_request": request.to_dict(),
+                    "context_audit": context_audit,
+                    "request_audit": project_model_request_for_audit(request, context_audit),
                 },
             )
 
@@ -1140,6 +1458,96 @@ class SingleAgentModelLoop:
                     )
             return model_result
 
+        def durable_progress_observations() -> list[tuple[ToolCall, ToolResult]]:
+            """Recover pre-ledger outcomes from checked model artifacts."""
+            observations: list[tuple[ToolCall, ToolResult]] = []
+            for record in sorted(model_records, key=lambda item: (item.sequence, item.turn_id)):
+                if (
+                    record.run_id != state.run_id
+                    or record.task_id != task_id
+                    or record.agent_id != agent_id
+                ):
+                    continue
+                if isinstance(record.normalized_proposal, dict):
+                    proposal = ModelTurnProposal.from_dict(record.normalized_proposal)
+                    if proposal.kind == "tool_calls":
+                        for ordinal in range(len(record.tool_result_refs)):
+                            model_result = load_model_tool_result(record, proposal, ordinal)
+                            observations.append((
+                                proposal.tool_calls[ordinal].runtime_call,
+                                model_result.result,
+                            ))
+                    continue
+                action = record.normalized_action
+                if (
+                    isinstance(action, dict)
+                    and action.get("kind") == "tool_call"
+                    and record.status in {"tool_result_durable", "completed"}
+                    and record.observation_ref is not None
+                ):
+                    raw_call = action.get("tool_call")
+                    if not isinstance(raw_call, dict):
+                        raise ValidationError("Durable progress action has no tool call.")
+                    call = ToolCall.from_dict(raw_call)
+                    observations.append((call, load_observation(record, call)))
+            return observations
+
+        def current_progress_assessment(*, before_sequence: int | None = None):
+            return assess_progress(
+                project(), task_id=task_id, agent_id=agent_id,
+                before_sequence=before_sequence,
+                observations=durable_progress_observations(),
+                task_plan=self.task_plan,
+            )
+
+        def current_recovery_decision(*, before_sequence: int | None = None):
+            return decide_recovery(
+                current_progress_assessment(before_sequence=before_sequence),
+            )
+
+        def terminal_recovery_error() -> ToolError | None:
+            decision = current_recovery_decision()
+            if decision.action != "TERMINATE":
+                return None
+            code = (
+                "MODEL_SCHEMA_CORRECTION_EXHAUSTED"
+                if decision.reason_code == "SCHEMA_CORRECTION_EXHAUSTED"
+                else "MODEL_UNRECOVERABLE_TOOL_ERROR"
+            )
+            return self._error(
+                code, "input" if code == "MODEL_SCHEMA_CORRECTION_EXHAUSTED" else "runtime",
+                "The existing recovery boundary ended this run safely.",
+                {"reason_code": decision.reason_code},
+            )
+
+        def search_strategy_stalled(call: ToolCall) -> bool:
+            if call.tool_id != "search_notes" or not self.tool_runtime.accepts_input(call):
+                return False
+            try:
+                self.policy_enforcer.check_call_eligibility(call.tool_id)
+            except ValidationError:
+                return False
+            if not self.tool_runtime.source_allows_reuse():
+                return False
+            progress = current_progress_assessment(before_sequence=call.sequence)
+            if decide_recovery(progress).action != "STOP_SEARCH_STRATEGY":
+                return False
+            # An unseen query/scope gets one bounded escape after the second
+            # no-new-evidence result. It may discover new evidence and reset
+            # progress; another empty result closes the search strategy.
+            if progress.consecutive_no_progress == 2 and not any(
+                record.run_id == call.run_id
+                and record.task_id == call.task_id
+                and record.agent_id == call.agent_id
+                and record.tool_id == call.tool_id
+                and record.sequence < call.sequence
+                and record.arguments == call.arguments
+                and record.status == "completed"
+                for record in ledger.to_list()
+            ):
+                return False
+            return True
+
         def bind_action(action: ModelAction, turn: AgentTurn) -> ModelAction:
             if action.kind == "final":
                 return action
@@ -1306,6 +1714,20 @@ class SingleAgentModelLoop:
                 tool_results=list(ordered_tool_results),
             )
 
+        def reusable_search_observation(call: ToolCall) -> ToolResult | None:
+            if not self.tool_runtime.accepts_input(call):
+                return None
+            try:
+                # A cached observation cannot bypass today's authorization
+                # or exhausted tool budget on either model-action path.
+                self.policy_enforcer.check_call_eligibility(call.tool_id)
+            except ValidationError:
+                return None
+            repeated = repeated_search_observation(call, ledger)
+            if repeated is not None and self.tool_runtime.source_allows_reuse():
+                return repeated
+            return None
+
         def execute_tool_proposal(
             turn: AgentTurn,
             record: ModelExecutionRecord,
@@ -1370,6 +1792,12 @@ class SingleAgentModelLoop:
             for ordinal in range(len(result_refs), len(proposal.tool_calls)):
                 model_call = proposal.tool_calls[ordinal]
                 call = model_call.runtime_call
+                if search_strategy_stalled(call):
+                    return self._error(
+                        "MODEL_PROGRESS_STALLED", "runtime",
+                        "Further search was stopped after confirmed lack of progress.",
+                        {"tool_id": call.tool_id},
+                    )
                 existing = ledger.get(call.call_id)
                 validate_ledger_identity(existing, call)
                 if existing is not None and existing.status == "pending":
@@ -1392,13 +1820,15 @@ class SingleAgentModelLoop:
                             "Terminal ledger record has no normalized outcome."
                         )
                 else:
-                    result = self.tool_runtime.execute(
-                        call,
-                        self.policy_enforcer,
-                        event_sink=event_sink,
-                        ledger=ledger,
-                        checkpoint_callback=persist_ledger,
-                    )
+                    result = reusable_search_observation(call)
+                    if result is None:
+                        result = self.tool_runtime.execute(
+                            call,
+                            self.policy_enforcer,
+                            event_sink=event_sink,
+                            ledger=ledger,
+                            checkpoint_callback=persist_ledger,
+                        )
 
                 if is_uncertain_checkpoint(result):
                     upsert_record(replace(record, status="failed"))
@@ -1466,6 +1896,9 @@ class SingleAgentModelLoop:
                 checkpoint_error = publish_model_boundary(status)
                 if checkpoint_error is not None:
                     return checkpoint_error
+                recovery_error = terminal_recovery_error()
+                if recovery_error is not None:
+                    return recovery_error
 
             completed_tool_turns.append(
                 ModelToolTurn(
@@ -1477,7 +1910,7 @@ class SingleAgentModelLoop:
                     provider_continuation=continuation,
                 )
             )
-            return None
+            return terminal_recovery_error()
 
         def execute_tool_action(
             turn: AgentTurn,
@@ -1490,6 +1923,15 @@ class SingleAgentModelLoop:
             if bound.kind != "tool_call" or bound.tool_call is None:
                 return None
             call = bound.tool_call
+            if search_strategy_stalled(call):
+                return ToolResult(
+                    call.call_id, call.tool_id, "error",
+                    error=self._error(
+                        "MODEL_PROGRESS_STALLED", "runtime",
+                        "Further search was stopped after confirmed lack of progress.",
+                        {"tool_id": call.tool_id},
+                    ),
+                )
             if continuation is not None and (
                 continuation.source_turn_id != turn.turn_id
                 or not continuation.matches_tool_call(call)
@@ -1522,13 +1964,15 @@ class SingleAgentModelLoop:
                 else:
                     raise ValidationError("Terminal ledger record has no normalized outcome.")
             else:
-                result = self.tool_runtime.execute(
-                    call,
-                    self.policy_enforcer,
-                    event_sink=event_sink,
-                    ledger=ledger,
-                    checkpoint_callback=persist_ledger,
-                )
+                result = reusable_search_observation(call)
+                if result is None:
+                    result = self.tool_runtime.execute(
+                        call,
+                        self.policy_enforcer,
+                        event_sink=event_sink,
+                        ledger=ledger,
+                        checkpoint_callback=persist_ledger,
+                    )
 
             if is_uncertain_checkpoint(result):
                 upsert_record(
@@ -1721,7 +2165,7 @@ class SingleAgentModelLoop:
                         restored_response.provider_turn_continuation,
                     )
                     if proposal_error is not None:
-                        return blocked_result(proposal_error)
+                        return proposal_failure(proposal_error)
                 elif decision.decision == "resume_from_tool_result":
                     if record is None:
                         raise ValidationError("No durable model record is available for observation resume.")
@@ -1749,6 +2193,9 @@ class SingleAgentModelLoop:
                     forced_turn = next((turn for turn in turns if turn.turn_id == record.turn_id), None)
 
             next_sequence = max((turn.sequence for turn in turns), default=0) + 1
+            recovery_error = terminal_recovery_error()
+            if recovery_error is not None:
+                return failed_result(recovery_error)
             model_steps = 0
             while model_steps < self.max_steps:
                 if pending_response is not None and forced_turn is not None:
@@ -1774,7 +2221,7 @@ class SingleAgentModelLoop:
                             response_envelope.provider_turn_continuation,
                         )
                         if proposal_error is not None:
-                            return blocked_result(proposal_error)
+                            return proposal_failure(proposal_error)
                     else:
                         action = response_envelope.action
                         if action is None:
@@ -1791,6 +2238,11 @@ class SingleAgentModelLoop:
                         )
                         if tool_result is not None and is_uncertain_checkpoint(tool_result):
                             return failed_result(tool_result.error)
+                        if tool_result is not None and tool_result.error is not None and tool_result.error.code == "MODEL_PROGRESS_STALLED":
+                            return failed_result(tool_result.error)
+                        recovery_error = terminal_recovery_error()
+                        if recovery_error is not None:
+                            return failed_result(recovery_error)
                     next_sequence = max(next_sequence, turn.sequence + 1)
                     continue
 
@@ -1827,6 +2279,15 @@ class SingleAgentModelLoop:
                     # singleton proposal.  Legacy observation fields are used
                     # only by the pre-V2 ModelAction path.
                     grouped_history = bool(completed_tool_turns)
+                    recovery_decision = current_recovery_decision()
+                    context_audit: dict[str, Any] = {}
+                    evidence_budget = min(
+                        MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
+                        MAX_PROVIDER_USER_INPUT_BYTES
+                        - len(user_input.encode("utf-8"))
+                        - len((recovery_decision.hint or "").encode("utf-8"))
+                        - 2048,
+                    )
                     request = ModelTurnRequest(
                         run_id=state.run_id,
                         turn_id=turn.turn_id,
@@ -1834,8 +2295,12 @@ class SingleAgentModelLoop:
                         agent_id=agent_id,
                         sequence=turn.sequence,
                         user_input=user_input,
+                        recovery_guidance=recovery_decision.hint,
                         observation=None if grouped_history else observation,
-                        available_tools=list(tool_definitions),
+                        available_tools=(
+                            [] if recovery_decision.action == "FINAL_CONFLICT"
+                            else list(tool_definitions)
+                        ),
                         previous_tool_call=None if grouped_history else previous_tool_call,
                         provider_continuation=(
                             None if grouped_history else provider_continuation
@@ -1846,13 +2311,16 @@ class SingleAgentModelLoop:
                             task_id=task_id,
                             agent_id=agent_id,
                             before_sequence=turn.sequence,
+                            workspace_id=state.source.vault_root_fingerprint,
+                            max_bytes=evidence_budget,
+                            audit=context_audit,
                         ),
                         tool_history=(
                             []
                             if grouped_history
                             else self._completed_tool_history(
                                 model_records,
-                                ledger,
+                                observation_loader=load_observation,
                                 run_id=state.run_id,
                                 task_id=task_id,
                                 agent_id=agent_id,
@@ -1870,12 +2338,15 @@ class SingleAgentModelLoop:
                             else []
                         ),
                     )
+                    request, request_budget_audit = _bounded_model_request(request)
+                    context_audit.update(request_budget_audit)
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
                     request_ref_artifact = request_artifact(
                         turn,
                         request,
                         tools_artifact.ref,
                         None if grouped_history else observation_ref,
+                        context_audit,
                     )
                     record = ModelExecutionRecord(
                         run_id=state.run_id,
@@ -2015,7 +2486,7 @@ class SingleAgentModelLoop:
                         response_envelope.provider_turn_continuation,
                     )
                     if proposal_error is not None:
-                        return blocked_result(proposal_error)
+                        return proposal_failure(proposal_error)
                 else:
                     bound_action = response_envelope.action
                     if bound_action is None:
@@ -2036,6 +2507,11 @@ class SingleAgentModelLoop:
                     )
                     if tool_result is not None and is_uncertain_checkpoint(tool_result):
                         return failed_result(tool_result.error)
+                    if tool_result is not None and tool_result.error is not None and tool_result.error.code == "MODEL_PROGRESS_STALLED":
+                        return failed_result(tool_result.error)
+                    recovery_error = terminal_recovery_error()
+                    if recovery_error is not None:
+                        return failed_result(recovery_error)
                 next_sequence = max(next_sequence, turn.sequence + 1)
 
             termination = TerminationState(
@@ -2058,6 +2534,14 @@ class SingleAgentModelLoop:
             )
         except ValidationError as error:
             recovery_reason = error.details.get("reason")
+            if recovery_reason == "artifact_write_failed":
+                return failed_result(
+                    self._error(
+                        "MODEL_ARTIFACT_WRITE_FAILED", "runtime",
+                        "The durable model artifact could not be written.",
+                        {"run_id": state.run_id, "reason": recovery_reason},
+                    )
+                )
             if recovery_reason in {
                 "provider_response_artifact_missing",
                 "legacy_response_artifact_missing",

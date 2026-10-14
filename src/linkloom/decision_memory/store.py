@@ -856,6 +856,20 @@ class TemporalDecisionStore:
         ).fetchone()
         return dict(row) if row is not None else None
 
+    def get_decision_receipt_rows(
+        self, workspace_id: str, decision_id: str
+    ) -> tuple[dict[str, object], ...]:
+        """Read durable authorizations for a decision within one workspace."""
+        rows = self._connection.execute(
+            """
+            SELECT * FROM semantic_materialization_receipt
+            WHERE workspace_id = ? AND decision_id = ?
+            ORDER BY materialized_at, receipt_id
+            """,
+            (workspace_id, decision_id),
+        ).fetchall()
+        return tuple(dict(row) for row in rows)
+
     def transition_semantic_candidate(
         self,
         *,

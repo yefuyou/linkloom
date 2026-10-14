@@ -135,6 +135,18 @@ def _parse_event_time(value: str) -> datetime:
     return parsed.astimezone(UTC)
 
 
+def timestamped_message_body(line: str) -> str | None:
+    """Return the body of one valid source message, without changing its evidence span."""
+    match = _HEADER_PATTERN.fullmatch(line)
+    if match is None or not match.group("speaker").strip() or not match.group("body").strip():
+        return None
+    try:
+        _parse_event_time(match.group("timestamp"))
+    except ValueError:
+        return None
+    return match.group("body").strip()
+
+
 def _issue(line_start: int, line_end: int, detail: str) -> SourceParseIssue:
     return SourceParseIssue(
         reason_code="SOURCE_PARSE_FAILED",

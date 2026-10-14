@@ -399,6 +399,9 @@ class RunRequest:
     dry_run: bool = True
     caller: str = "cli"
     received_at: str = ""
+    task_plan: dict[str, Any] | None = None
+    planning_mode: str = "template"
+    final_protocol: str = "team-decision-result/v1"
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "RunRequest")
@@ -428,12 +431,35 @@ class RunRequest:
             raise ValidationError("RunRequest limits must be max_steps >= 1 and provider requests >= 0.")
         if self.interrupt_policy != "clarify_only":
             raise ValidationError("P2 interrupt_policy must be 'clarify_only'.")
+        if self.planning_mode not in {"template", "model"}:
+            raise ValidationError("RunRequest planning_mode must be template or model.")
+        if self.planning_mode == "model" and self.workflow != "team_decision":
+            raise ValidationError("Model planning is only available for team_decision.")
+        if self.final_protocol not in {
+            "team-decision-result/v1",
+            "claim-proposal/v1",
+        }:
+            raise ValidationError("RunRequest final_protocol is unsupported.")
+        if self.final_protocol == "claim-proposal/v1" and self.workflow != "team_decision":
+            raise ValidationError("Typed claims Final is only available for team_decision.")
+        if self.task_plan is not None:
+            if self.workflow != "team_decision":
+                raise ValidationError("TaskPlan is only available for team_decision.")
+            from linkloom.runtime.task_plan import TaskPlan
+            if TaskPlan.from_dict(self.task_plan).goal != self.query.strip():
+                raise ValidationError("TaskPlan goal must match the user query.")
 
     def to_dict(self, *, include_process_fields: bool = False) -> dict[str, Any]:
         """Return a safe request envelope; vault_root is process-only by default."""
         data = asdict(self)
         if not include_process_fields:
             data.pop("vault_root", None)
+        if self.task_plan is None:
+            data.pop("task_plan", None)
+        if self.planning_mode == "template":
+            data.pop("planning_mode", None)
+        if self.final_protocol == "team-decision-result/v1":
+            data.pop("final_protocol", None)
         return data
 
     @classmethod
@@ -455,6 +481,9 @@ class RunRequest:
             dry_run=bool(data.get("dry_run", True)),
             caller=str(data.get("caller", "cli")),
             received_at=str(data.get("received_at", "")),
+            task_plan=data.get("task_plan"),
+            planning_mode=str(data.get("planning_mode", "template")),
+            final_protocol=str(data.get("final_protocol", "team-decision-result/v1")),
         )
 
 

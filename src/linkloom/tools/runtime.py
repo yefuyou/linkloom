@@ -6,7 +6,8 @@ import re
 import traceback
 from typing import Any, Callable
 
-from linkloom.runtime.errors import ValidationError
+from linkloom.decision_memory.tool import parse_decision_memory_as_of
+from linkloom.runtime.errors import ValidationError, ToolArgumentValidationError
 from linkloom.runtime.models import _assert_json_safe_primitive
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
@@ -16,6 +17,7 @@ from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 _SCHEMA_TYPES = {"object", "array", "string", "integer", "number", "boolean", "null"}
 ToolCheckpointCallback = Callable[[ToolExecutionLedger], None]
+ToolArgumentValidator = Callable[[dict[str, Any]], None]
 
 
 def _json_enum_contains(value: Any, enum: list[Any]) -> bool:
@@ -61,6 +63,22 @@ def _validate_json_schema(value: Any, schema: Any, path: str) -> None:
     schema_type = schema.get("type")
     if schema_type is None:
         return
+    if isinstance(schema_type, list):
+        # JSON Schema also permits unions such as array|object for tool
+        # observations. Preserve the nullable Provider contracts while
+        # validating every member against the ordinary single-type rules.
+        if (not schema_type
+                or any(not isinstance(item, str) or item not in _SCHEMA_TYPES
+                       for item in schema_type)
+                or len(set(schema_type)) != len(schema_type)):
+            _schema_failure(path)
+        for allowed_type in schema_type:
+            try:
+                _validate_json_schema(value, {**schema, "type": allowed_type}, path)
+            except ValidationError:
+                continue
+            return
+        _schema_failure(path)
     if not isinstance(schema_type, str) or schema_type not in _SCHEMA_TYPES:
         _schema_failure(path)
 
@@ -326,6 +344,22 @@ def _record_failed_and_persist(
     )
 
 
+class EvidenceReferenceError(ValueError):
+    """A read attempted an evidence ID absent from this run's search results."""
+
+    def __init__(
+        self, message: str, *, available_evidence_ids: tuple[str, ...] = (),
+        candidates_truncated: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.available_evidence_ids = available_evidence_ids
+        self.candidates_truncated = candidates_truncated
+
+
+class ToolPreconditionError(ValueError):
+    """A dependent search was proposed before its parent evidence was read."""
+
+
 class ToolRuntime:
     """Execute exactly one ToolCall through a registry and policy enforcer."""
 
@@ -334,6 +368,8 @@ class ToolRuntime:
         registry: ToolRegistry,
         ledger: ToolExecutionLedger | None = None,
         checkpoint_callback: ToolCheckpointCallback | None = None,
+        argument_validators: dict[str, ToolArgumentValidator] | None = None,
+        reuse_preflight: Callable[[], Any] | None = None,
     ) -> None:
         if not isinstance(registry, ToolRegistry):
             raise ValidationError("ToolRuntime registry must be a ToolRegistry.")
@@ -341,9 +377,48 @@ class ToolRuntime:
             raise ValidationError("ToolRuntime ledger must be a ToolExecutionLedger or None.")
         if checkpoint_callback is not None and not callable(checkpoint_callback):
             raise ValidationError("ToolRuntime checkpoint_callback must be callable or None.")
+        if argument_validators is not None and (
+            not isinstance(argument_validators, dict)
+            or any(
+                not isinstance(tool_id, str) or not callable(validator)
+                for tool_id, validator in argument_validators.items()
+            )
+        ):
+            raise ValidationError("ToolRuntime argument_validators must map tool IDs to callables.")
+        if reuse_preflight is not None and not callable(reuse_preflight):
+            raise ValidationError("ToolRuntime reuse_preflight must be callable or None.")
         self.registry = registry
         self.ledger = ledger or ToolExecutionLedger()
         self.checkpoint_callback = checkpoint_callback
+        self.argument_validators = dict(argument_validators or {})
+        self.reuse_preflight = reuse_preflight
+
+    def source_allows_reuse(self) -> bool:
+        """Check source freshness before a cached search skips its executor."""
+        if self.reuse_preflight is None:
+            return True
+        try:
+            self.reuse_preflight()
+        except Exception:
+            # The ordinary tool path reports the source error using its
+            # existing ledger and normalized error contract.
+            return False
+        return True
+
+    def _validate_registered_arguments(self, call: ToolCall, definition: ToolDefinition) -> None:
+        _validate_json_schema(call.arguments, definition.input_schema, "$")
+        validator = self.argument_validators.get(call.tool_id)
+        if validator is not None:
+            validator(call.arguments)
+
+    def accepts_input(self, call: ToolCall) -> bool:
+        """Check current registration and arguments without authorizing or executing."""
+        try:
+            definition, _ = self.registry.resolve(call.tool_id)
+            self._validate_registered_arguments(call, definition)
+        except (ValidationError, ValueError):
+            return False
+        return True
 
     def execute(
         self,
@@ -391,12 +466,16 @@ class ToolRuntime:
             )
 
         try:
-            _validate_json_schema(call.arguments, definition.input_schema, "$")
-        except ValidationError as error:
+            self._validate_registered_arguments(call, definition)
+        except (ValidationError, ValueError) as error:
             details = {"tool_id": call.tool_id}
-            path = error.details.get("path")
+            path = error.details.get("path") if isinstance(error, ValidationError) else None
             if isinstance(path, str):
                 details["path"] = path
+            details["reason"] = (
+                error.details.get("reason", "schema_violation")
+                if isinstance(error, ValidationError) else "semantic_mismatch"
+            )
             return _error_result(
                 call,
                 "TOOL_INVALID_ARGUMENTS",
@@ -503,6 +582,38 @@ class ToolRuntime:
 
         try:
             raw_result = executor(call.arguments)
+        except ToolArgumentValidationError as error:
+            return _record_failed_and_persist(
+                call, "TOOL_INVALID_ARGUMENTS", "input",
+                "Tool arguments do not match the verified TaskPlan boundary.",
+                {
+                    "tool_id": call.tool_id,
+                    "reason": error.details.get("reason", "task_plan_semantic_mismatch"),
+                    "path": error.details.get("path", "$.source_context"),
+                },
+                active_ledger, active_checkpoint_callback, event_sink,
+                executor_status="failed", external_execution_may_have_happened=False,
+            )
+        except ToolPreconditionError:
+            return _record_failed_and_persist(
+                call, "TOOL_PRECONDITION_FAILED", "input",
+                "Read a returned parent evidence_id before the dependent search.",
+                {"tool_id": call.tool_id, "reason": "missing_verified_parent_read"},
+                active_ledger, active_checkpoint_callback, event_sink,
+                executor_status="failed", external_execution_may_have_happened=False,
+            )
+        except EvidenceReferenceError as error:
+            return _record_failed_and_persist(
+                call, "TOOL_EVIDENCE_NOT_FOUND", "input",
+                "Evidence ID was not returned by this run's search.",
+                {
+                    "tool_id": call.tool_id, "reason": "missing_evidence",
+                    "available_evidence_ids": list(error.available_evidence_ids),
+                    "candidates_truncated": error.candidates_truncated,
+                },
+                active_ledger, active_checkpoint_callback, event_sink,
+                executor_status="failed", external_execution_may_have_happened=False,
+            )
         except Exception as error:
             return _record_failed_and_persist(
                 call,
@@ -604,7 +715,9 @@ def create_retrieval_tool_runtime(
     read_executor: Callable[[str], Any],
     ledger: ToolExecutionLedger | None = None,
     checkpoint_callback: ToolCheckpointCallback | None = None,
-    decision_memory_executor: Callable[[str, str | None, int], Any] | None = None,
+    decision_memory_executor: Callable[..., Any] | None = None,
+    reuse_preflight: Callable[[], Any] | None = None,
+    expected_source_context: dict[str, Any] | None = None,
 ) -> ToolRuntime:
     """Compose provider-neutral, read-only retrieval tools at the runtime boundary.
 
@@ -617,13 +730,25 @@ def create_retrieval_tool_runtime(
         raise ValidationError("read_executor must be callable.")
     if decision_memory_executor is not None and not callable(decision_memory_executor):
         raise ValidationError("decision_memory_executor must be callable or None.")
+    if expected_source_context is not None and not isinstance(expected_source_context, dict):
+        raise ValidationError("expected_source_context must be an object or None.")
 
     registry = ToolRegistry()
     registry.register(
         ToolDefinition(
             tool_id="search_notes",
             version="1",
-            description="Search verified notes using a query and source context.",
+            description=(
+                "Search the authorized notes for source evidence. Use this before "
+                "read_verified_note; results contain evidence_id values that can be "
+                "read and cited. Copy every Runtime source_context identity field from "
+                "retrieval_request exactly; only scope_path or task_plan subgoal fields may be added. "
+                "For an independent subgoal use dependency_entities={} (never null). "
+                "After search_notes returns an evidence_id, call read_verified_note on "
+                "that ID before any search for a subgoal depending on it. "
+                "If business_status is REPEATED_NO_PROGRESS, revise the query or "
+                "return Final instead of repeating it."
+            ),
             input_schema={
                 "type": "object",
                 "required": ["query", "source_context", "limit"],
@@ -633,8 +758,34 @@ def create_retrieval_tool_runtime(
                         "minLength": 1,
                         "pattern": r"(?s).*\S.*",
                     },
-                    "source_context": {"type": "object"},
-                    "limit": {"type": "integer", "minimum": 1, "maximum": 50},
+                    "source_context": {
+                        "type": "object",
+                        "description": "Copy the full Runtime source_context identity from retrieval_request; do not omit or alter workspace/index fields. Only scope_path and task_plan subgoal fields may be added.",
+                        "properties": {
+                            "scope_path": {
+                                "type": ["string", "null"],
+                                "description": "Optional logical directory within the selected source; null searches the whole source.",
+                            },
+                            "subgoal_id": {
+                                "type": "string", "minLength": 1,
+                                "description": "For a TaskPlan only: exact current subgoal ID from the plan.",
+                            },
+                            "dependency_entities": {
+                                "type": "object",
+                                "description": "For a TaskPlan only: each required parent subgoal ID mapped to one literal entity from its verified read.",
+                            },
+                            "query_variant": {
+                                "type": "string", "enum": ["primary", "alternate"],
+                                "description": "For a TaskPlan only: primary query or its one bounded alternate.",
+                            },
+                        },
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50,
+                        "description": "Maximum number of search results to return.",
+                    },
                 },
                 "additionalProperties": False,
             },
@@ -653,7 +804,7 @@ def create_retrieval_tool_runtime(
             version="1",
             description=(
                 "Read one verified evidence item. Pass the exact evidence_id returned "
-                "by search_notes, not its relative_path."
+                "by an earlier successful search_notes call in this run, never its relative_path or an invented ID."
             ),
             input_schema={
                 "type": "object",
@@ -663,7 +814,7 @@ def create_retrieval_tool_runtime(
                         "type": "string",
                         "description": (
                             "The exact search_notes evidence_id to read; do not pass "
-                            "relative_path."
+                            "relative_path, filename, or unobserved ID."
                         ),
                         "minLength": 1,
                         # Mirrors _require_relative_note_ref without exposing
@@ -685,7 +836,14 @@ def create_retrieval_tool_runtime(
                 description=(
                     "Search authorized temporal decision memory for navigation hints. "
                     "Memory is not source evidence; call search_notes or read_verified_note "
-                    "before citing a material claim."
+                    "before citing a material claim. In a run with a selected reviewed "
+                    "decision scope, a query-only call returns only that selected state; "
+                    "an explicit subject and relation must both match that scope. "
+                    "In that scoped run, omit as_of or use exactly the selected "
+                    "run as_of; a source event date never changes the allowed "
+                    "lookup date. An out-of-scope as_of is rejected. "
+                    "Its receipt and valid-time status "
+                    "must still be checked against source reads in Final."
                 ),
                 input_schema={
                     "type": "object",
@@ -696,7 +854,18 @@ def create_retrieval_tool_runtime(
                             "minLength": 1,
                             "pattern": r"(?s).*\S.*",
                         },
-                        "as_of": {"type": "string", "minLength": 1},
+                        "as_of": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": (
+                                "Optional timezone-aware ISO-8601 timestamp for historical lookup. "
+                                "When this run has a selected decision scope, use only its exact "
+                                "as_of or omit this field; source event dates do not authorize "
+                                "another lookup date."
+                            ),
+                        },
+                        "subject": {"type": "string", "minLength": 1, "maxLength": 512},
+                        "relation": {"type": "string", "minLength": 1, "maxLength": 512},
                         "limit": {"type": "integer", "minimum": 1, "maximum": 50},
                     },
                     "additionalProperties": False,
@@ -706,16 +875,109 @@ def create_retrieval_tool_runtime(
                     "items": {"type": "object"},
                 },
             ),
-            lambda arguments: decision_memory_executor(
-                arguments["query"],
-                arguments.get("as_of"),
-                arguments["limit"],
+            lambda arguments: (
+                decision_memory_executor(
+                    arguments["query"], arguments.get("as_of"), arguments["limit"],
+                    arguments["subject"], arguments["relation"],
+                ) if "subject" in arguments else decision_memory_executor(
+                    arguments["query"], arguments.get("as_of"), arguments["limit"],
+                )
             ),
         )
+
+    def validate_search_arguments(arguments: dict[str, Any]) -> None:
+        source = arguments["source_context"]
+        if expected_source_context is not None:
+            for key, value in expected_source_context.items():
+                if key in source and source[key] != value:
+                    raise ValidationError(
+                        "source_context does not match the active Runtime source.",
+                        details={"path": f"$.source_context.{key}", "reason": "semantic_mismatch"},
+                    )
+            allowed = set(expected_source_context) | {
+                "scope_path", "subgoal_id", "dependency_entities", "query_variant",
+            }
+            if set(source) - allowed:
+                raise ValidationError(
+                    "source_context contains unsupported fields.",
+                    details={"path": "$.source_context", "reason": "semantic_mismatch"},
+                )
+        subgoal = source.get("subgoal_id")
+        if subgoal is not None and (not isinstance(subgoal, str) or not subgoal.strip()):
+            raise ValidationError(
+                "subgoal_id must be a non-empty plan identifier.",
+                details={"path": "$.source_context.subgoal_id", "reason": "semantic_mismatch"},
+            )
+        dependencies = source.get("dependency_entities")
+        if dependencies is not None and (
+            not isinstance(dependencies, dict)
+            or any(
+                not isinstance(key, str) or not key.strip()
+                or not isinstance(value, str) or not value.strip()
+                for key, value in dependencies.items()
+            )
+        ):
+            raise ValidationError(
+                "dependency_entities must map subgoal IDs to verified entity literals.",
+                details={"path": "$.source_context.dependency_entities", "reason": "semantic_mismatch"},
+            )
+        if source.get("query_variant") not in (None, "primary", "alternate"):
+            raise ValidationError(
+                "query_variant must be primary or alternate.",
+                details={"path": "$.source_context.query_variant", "reason": "semantic_mismatch"},
+            )
+        scope_path = source.get("scope_path")
+        if scope_path is None:
+            return
+        if (
+            "\\" in scope_path
+            or "\r" in scope_path
+            or "\n" in scope_path
+            or scope_path.startswith("//")
+            or re.match(r"^[A-Za-z]:", scope_path)
+            or ".." in scope_path.split("/")
+        ):
+            raise ValidationError(
+                "scope_path must be a logical path within the selected source.",
+                details={"path": "$.source_context.scope_path"},
+            )
+
+    def validate_read_arguments(arguments: dict[str, Any]) -> None:
+        ref = arguments["note_ref"]
+        if "/" in ref or "\\" in ref or ref.lower().endswith(".md"):
+            raise ValidationError(
+                "note_ref must be an observed evidence ID, not a path.",
+                details={"path": "$.note_ref", "reason": "semantic_mismatch"},
+            )
+
+    def validate_decision_memory_arguments(arguments: dict[str, Any]) -> None:
+        if ("subject" in arguments) != ("relation" in arguments):
+            raise ValidationError(
+                "Reviewed decision lookup requires both subject and relation.",
+                details={"path": "$.subject", "reason": "semantic_mismatch"},
+            )
+        try:
+            parse_decision_memory_as_of(arguments.get("as_of"))
+        except ValueError as error:
+            raise ValidationError(
+                "Decision-memory as_of must be a timezone-aware ISO-8601 datetime.",
+                details={"path": "$.as_of"},
+            ) from error
+
     return ToolRuntime(
         registry,
         ledger=ledger,
         checkpoint_callback=checkpoint_callback,
+        argument_validators={
+            "search_notes": validate_search_arguments,
+            "read_verified_note": validate_read_arguments,
+            **(
+                {"search_decision_memory": validate_decision_memory_arguments}
+                if decision_memory_executor is not None
+                else {}
+            ),
+        },
+        reuse_preflight=reuse_preflight,
     )
 
 

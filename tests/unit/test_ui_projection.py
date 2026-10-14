@@ -307,6 +307,28 @@ def test_runtime_failure_is_not_presented_as_insufficient_evidence() -> None:
     assert payload["error"]["code"] == "TEAM_DECISION_CONTRACT_ERROR"
 
 
+def test_provider_unknown_keeps_read_evidence_without_claiming_a_final() -> None:
+    status = RunStatus(
+        run_id="run-1", thread_id="thread-1", status="failed",
+        error={
+            "code": "MODEL_UNKNOWN_FAILURE", "category": "provider",
+            "message": "untrusted transport details",
+            "details": {"outcome": "unknown_provider_outcome"},
+        },
+    )
+    payload = project_run_snapshot(
+        query="Which decision is effective?", workspace=_workspace(),
+        status=status,
+        tool_ledger=_ledger(_evidence("ev-read"), tool_id="read_verified_note"),
+    )
+    assert payload["kind"] == "error"
+    assert payload["error"]["classification"] == "provider_outcome_uncertain"
+    assert payload["decision"] is None
+    assert payload["evidence"][0]["ref"] == "ev-read"
+    assert payload["evidence"][0]["supports"] == ["Read during incomplete investigation"]
+    assert "untrusted transport details" not in str(payload)
+
+
 def test_runtime_failure_redacts_untrusted_technical_details() -> None:
     status = RunStatus(
         run_id="run-1",

@@ -37,12 +37,15 @@ def _tool(request: ModelTurnRequest, tool_id: str, arguments: dict[str, object])
 
 def _model() -> FakeModelAdapter:
     def search(request: ModelTurnRequest) -> ModelAction:
+        source_context = json.loads(
+            request.user_input.rsplit("team_decision_request=", 1)[1]
+        )["source_context"]
         return _tool(
             request,
             "search_notes",
             {
                 "query": "approved model provider",
-                "source_context": {"intent": "recorded decision"},
+                "source_context": source_context,
                 "limit": 5,
             },
         )
@@ -146,3 +149,48 @@ def test_runtime_backend_projects_a_real_team_decision_run_without_source_writes
         result_ref=r"C:\Windows\system32\config.json",
     )
     assert backend._safe_result_artifact(unsafe_status) is None
+
+
+def test_runtime_backend_routes_unfamiliar_goal_to_bounded_model_plan(
+    ui_runtime_root: Path,
+) -> None:
+    vault = ui_runtime_root / "vault"
+    vault.mkdir()
+    (vault / "handoff.md").write_text(
+        "Cobalt B replaced Meridian A.\n", encoding="utf-8",
+    )
+    index = scan_vault(vault, ui_runtime_root / "scan").index_path
+    goal = "After the Meridian A handoff, trace the replacement and identify its accountable person."
+
+    class InvalidProposalModel(FakeModelAdapter):
+        def __init__(self):
+            super().__init__([ModelAction.final("unused")])
+            self.proposals: list[str] = []
+
+        def propose_task_plan(self, query: str) -> dict[str, object]:
+            self.proposals.append(query)
+            return {"goal": query, "subgoals": []}
+
+    model = InvalidProposalModel()
+    engine = RuntimeEngine(
+        vault_root=vault, index_path=index,
+        checkpoint_dir=ui_runtime_root / "runtime",
+        trace_dir=ui_runtime_root / "traces",
+        checkpointer=InMemoryCheckpointer(), model=model,
+    )
+    backend = RuntimeRunBackend(
+        engine=engine,
+        workspace=WorkspacePresentationContext(display_name="Test project", document_count=1),
+        max_steps=8, max_provider_requests=8,
+    )
+
+    started = backend.start(goal)
+    deadline = time.monotonic() + 30
+    snapshot = started
+    while snapshot["kind"] == "running" and time.monotonic() < deadline:
+        time.sleep(0.01)
+        snapshot = backend.inspect(started["run"]["id"])
+
+    assert snapshot["kind"] != "running"
+    assert model.proposals == [goal]
+    assert model.requests == []

@@ -12,7 +12,9 @@ from threading import Lock, RLock, Thread
 from typing import Any
 from uuid import uuid4
 
-from linkloom.decision_memory.models import DecisionMemoryState, DecisionRecord
+from linkloom.decision_memory.models import (
+    DecisionMemoryState, DecisionRecord, normalize_temporal_component,
+)
 from linkloom.decision_memory.sources import SourceReferenceRegistry
 from linkloom.decision_memory.store import TemporalDecisionStore
 from linkloom.semantic_ingestion.artifacts import (
@@ -764,6 +766,31 @@ class ProductApplication:
             self.store.close()
             self.repository.close()
 
+    def snapshot_investigation_sources(
+        self, workspace_id: str
+    ) -> tuple[dict[str, Any], tuple[dict[str, Any], ...]]:
+        """Freeze current source versions for one read-only Agent run."""
+        with self._store_lock:
+            workspace = self.repository.current_workspace()
+            if workspace is None or workspace["workspace_id"] != workspace_id:
+                raise ProductApplicationError(
+                    "WORKSPACE_MISMATCH", "Select the requested workspace before investigating.", status=409
+                )
+            sources = tuple(
+                self.repository.get_source(workspace_id, source["source_id"], include_content=True)
+                for source in self.repository.list_sources(workspace_id)
+            )
+            if any(
+                source is None
+                or hashlib.sha256(source["content"].encode("utf-8")).hexdigest()
+                != source["content_sha256"]
+                for source in sources
+            ):
+                raise ProductApplicationError(
+                    "SOURCE_VERSION_MISMATCH", "A source version changed during investigation setup.", status=409
+                )
+            return workspace, sources  # type: ignore[return-value]
+
     def handle_get(self, path: str) -> dict[str, Any]:
         with self._store_lock:
             return self._handle_get(path)
@@ -855,6 +882,12 @@ class ProductApplication:
             return {"workspace": self.repository.select_workspace(workspace_id)}, 200
         if path == "/api/ask":
             return {"answer": self.ask(_required_payload_text(payload, "query", 4000), payload.get("as_of"))}, 200
+        if path == "/api/decisions/recover":
+            return {"recovery": self.recover_decision(
+                _required_payload_text(payload, "subject", 512),
+                _required_payload_text(payload, "relation", 512),
+                payload.get("as_of"),
+            )}, 200
         candidate_match = re.fullmatch(r"/api/review/candidates/([^/]+)/(approve|reject)", path)
         if candidate_match:
             candidate_id, action = candidate_match.groups()
@@ -949,6 +982,10 @@ class ProductApplication:
             if previous is not None
             else None
         )
+        if ranked[0][0].subject and ranked[0][0].relation:
+            answer["timeline"] = self.recover_decision(
+                ranked[0][0].subject, ranked[0][0].relation, as_of
+            )
         return {
             "status": "FOUND",
             "query": query,
@@ -956,6 +993,248 @@ class ProductApplication:
             "answer": answer,
             "results": [self._decision_payload(record) for record, _ in ranked],
         }
+
+    def recover_decision(
+        self, subject: str, relation: str, as_of: object = None,
+        *, _workspace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Recover reviewed valid-time state and source-backed events for one slot."""
+        # The trusted Agent bridge pins its workspace for the whole run. The
+        # public HTTP route never accepts this private override.
+        workspace_id = _workspace_id if _workspace_id is not None else self._workspace_id()
+        timestamp = _parse_as_of(as_of) or datetime.now(UTC)
+        lookup = self.store.lookup(workspace_id, subject, relation, as_of=timestamp)
+        history = tuple(
+            record for record in self.store.list_decisions(workspace_id)
+            if record.subject is not None and record.relation is not None
+            and normalize_temporal_component(record.subject) == normalize_temporal_component(subject)
+            and normalize_temporal_component(record.relation) == normalize_temporal_component(relation)
+            and record.valid_from <= timestamp
+            and record.memory_state in {DecisionMemoryState.ACTIVE, DecisionMemoryState.SUPERSEDED}
+        )
+
+        def reviewed(record: DecisionRecord) -> dict[str, Any] | None:
+            receipts = self.store.get_decision_receipt_rows(workspace_id, record.decision_id)
+            if not receipts:
+                return None
+            payload = self._decision_payload(record)
+            if not payload["evidence"] or not all(item["verified"] for item in payload["evidence"]):
+                return None
+            receipt = receipts[0]
+            candidate = self.materializer.get_candidate(workspace_id, str(receipt["candidate_id"]))
+            if (not isinstance(candidate, CandidateDecisionFact)
+                    or str(receipt["workspace_id"]) != workspace_id
+                    or str(receipt["decision_id"]) != record.decision_id
+                    or (receipt["supersedes_id"] or None) != record.supersedes_id
+                    or candidate.workspace_id != workspace_id
+                    or candidate.value != record.value
+                    or candidate.source_episode_id != record.source_episode_id
+                    or candidate.evidence_ref not in {
+                        item["evidence_ref"] for item in payload["evidence"]
+                    }):
+                return None
+            payload["authorization"] = {
+                "receipt_id": receipt["receipt_id"],
+                "authorization_type": receipt["authorization_type"],
+                "authorized_at": receipt["authorized_at"],
+                "materialized_at": receipt["materialized_at"],
+                "effective_at": receipt["effective_at"],
+            }
+            payload["source_event_at"] = candidate.event_time.isoformat()
+            payload["source_ingested_at"] = candidate.ingestion_time.isoformat()
+            return payload
+
+        reviewed_history = [item for record in history if (item := reviewed(record)) is not None]
+        effective = [item for record in lookup.records if (item := reviewed(record)) is not None]
+        proposals: list[dict[str, Any]] = []
+        for row in self.store.list_semantic_candidate_rows(
+            workspace_id, workflow_state=CandidateWorkflowState.SUPPORTING_ONLY.value,
+            candidate_source_kind="SOURCE_INGESTION",
+        ):
+            candidate = self.materializer.get_candidate(workspace_id, str(row["candidate_id"]))
+            if not isinstance(candidate, CandidateDecisionFact) or candidate.claim_type.value != "PROPOSAL":
+                continue
+            if (candidate.subject is None or candidate.relation is None
+                or normalize_temporal_component(candidate.subject) != normalize_temporal_component(subject)
+                or normalize_temporal_component(candidate.relation) != normalize_temporal_component(relation)
+                or candidate.event_time > timestamp):
+                continue
+            detail = self._candidate_detail(candidate.candidate_id)
+            if not detail["source"]["active"] or detail["source"]["source_version"] != candidate.artifact_version_id:
+                continue
+            proposals.append({
+                "candidate_id": candidate.candidate_id,
+                "value": candidate.value,
+                "event_time": candidate.event_time.isoformat(),
+                "ingestion_time": candidate.ingestion_time.isoformat(),
+                "status": "PROPOSED_NOT_APPROVED",
+                "evidence": {**detail["evidence"], "verified": True,
+                             "source_name": detail["source"]["name"]},
+            })
+        source_claims: list[dict[str, Any]] = []
+        for row in self.store.list_semantic_candidate_rows(
+            workspace_id, candidate_source_kind="SOURCE_INGESTION"
+        ):
+            if str(row["workflow_state"]) not in {
+                CandidateWorkflowState.PENDING_REVIEW.value,
+                CandidateWorkflowState.CONFLICT.value,
+            }:
+                continue
+            candidate = self.materializer.get_candidate(workspace_id, str(row["candidate_id"]))
+            if (not isinstance(candidate, CandidateDecisionFact)
+                or candidate.claim_type.value != "DECISION"
+                or candidate.subject is None or candidate.relation is None
+                or normalize_temporal_component(candidate.subject) != normalize_temporal_component(subject)
+                or normalize_temporal_component(candidate.relation) != normalize_temporal_component(relation)
+                or candidate.event_time > timestamp or candidate.valid_from is None):
+                continue
+            valid_from = candidate.valid_from
+            effective_from = (valid_from.astimezone(UTC) if isinstance(valid_from, datetime)
+                              else datetime(valid_from.year, valid_from.month, valid_from.day, tzinfo=UTC))
+            if effective_from > timestamp:
+                continue
+            detail = self._candidate_detail(candidate.candidate_id)
+            if not detail["source"]["active"] or detail["source"]["source_version"] != candidate.artifact_version_id:
+                continue
+            source_claims.append({
+                "candidate_id": candidate.candidate_id,
+                "value": candidate.value,
+                "effective_from": effective_from.isoformat(),
+                "event_time": candidate.event_time.isoformat(),
+                "authority": "NON_AUTHORITATIVE",
+                "evidence": {**detail["evidence"], "verified": True,
+                             "source_name": detail["source"]["name"]},
+                "source_id": candidate.artifact_id,
+            })
+        conflict_times = {
+            item["effective_from"] for item in source_claims
+            if len({other["value"] for other in source_claims
+                    if other["effective_from"] == item["effective_from"]}) > 1
+        }
+        source_conflicts = [item for item in source_claims
+                            if item["effective_from"] in conflict_times]
+        transitions = []
+        by_id = {item["decision_id"]: item for item in reviewed_history}
+        for item in reviewed_history:
+            previous = by_id.get(item["supersedes_id"])
+            if previous is None:
+                continue
+            transitions.append({
+                "from_decision_id": previous["decision_id"],
+                "to_decision_id": item["decision_id"],
+                "from_value": previous["value"],
+                "to_value": item["value"],
+                "effective_at": item["valid_from"],
+                "source_event_at": item["source_event_at"],
+                "source_ingested_at": item["source_ingested_at"],
+                "authorization": item["authorization"],
+                "evidence": item["evidence"],
+                "reason_status": "NOT_SOURCE_VERIFIED",
+            })
+        distinct_values = {item["value"] for item in effective}
+        if len(distinct_values) > 1:
+            status = "CONFLICT"
+        elif lookup.records and not effective:
+            status = "AUTHORIZATION_OR_SOURCE_UNVERIFIED"
+        elif effective:
+            status = "FOUND"
+        elif source_conflicts:
+            status = "SOURCE_CONFLICT_UNREVIEWED"
+        else:
+            status = lookup.status.value
+        return {
+            "status": status,
+            "workspace_id": workspace_id,
+            "subject": subject,
+            "relation": relation,
+            "as_of": timestamp.isoformat(),
+            "as_of_semantics": "valid_time_using_currently_recorded_authorizations",
+            "effective": effective[0] if status == "FOUND" else None,
+            "conflicting": effective if status == "CONFLICT" else [],
+            "history": reviewed_history,
+            "transitions": transitions,
+            "proposals": proposals,
+            "source_conflicts": source_conflicts,
+        }
+
+    def verify_temporal_claim(
+        self, workspace_id: str, claim: dict[str, Any],
+        observed_evidence: dict[str, dict[str, Any]], read_evidence_ids: set[str],
+    ) -> dict[str, Any]:
+        """Recheck a model proposal against receipts, valid time and read sources."""
+        from linkloom.runtime.errors import ValidationError
+
+        def reject(code: str) -> None:
+            raise ValidationError(
+                "Temporal decision claim is not supported by reviewed state and read sources.",
+                details={"reason": code},
+            )
+
+        if not isinstance(workspace_id, str) or not workspace_id:
+            reject("workspace_invalid")
+        recovery = self.recover_decision(
+            claim["subject"], claim["relation"], claim["as_of"],
+            _workspace_id=workspace_id,
+        )
+        effective = recovery["effective"]
+        if recovery["status"] != "FOUND" or effective is None:
+            reject("temporal_state_not_found")
+        if (recovery["workspace_id"] != workspace_id
+                or effective["workspace_id"] != workspace_id
+                or effective["decision_id"] != claim["decision_id"]
+                or effective["value"] != claim["value"]
+                or effective["supersedes_id"] != claim["supersedes_id"]
+                or effective["authorization"]["receipt_id"] != claim["receipt_id"]):
+            reject("temporal_identity_mismatch")
+
+        def check_sources(source_rows: list[dict[str, Any]], cited_ids: list[str]) -> None:
+            if not source_rows or len(cited_ids) != len(source_rows):
+                reject("source_citation_mismatch")
+            unmatched = set(cited_ids)
+            if len(unmatched) != len(cited_ids):
+                reject("source_citation_mismatch")
+            for source_row in source_rows:
+                if not source_row.get("verified"):
+                    reject("source_unverified")
+                source = self.repository.get_source(workspace_id, source_row["source_id"])
+                if (source is None
+                        or source["source_version"] != source_row["source_version"]):
+                    reject("source_version_mismatch")
+                matching = [
+                    evidence_id for evidence_id in unmatched
+                    if evidence_id in read_evidence_ids
+                    and (item := observed_evidence.get(evidence_id)) is not None
+                    and item.get("workspace_id") == workspace_id
+                    and item.get("status") == "verified"
+                    and item.get("relative_path") == f"{source_row['source_id']}.md"
+                    and item.get("content_sha256") == source["content_sha256"]
+                    and isinstance(item.get("quote"), str)
+                    and source_row["quote"] in item["quote"]
+                ]
+                if len(matching) != 1:
+                    reject("source_citation_mismatch")
+                unmatched.remove(matching[0])
+            if unmatched:
+                reject("source_citation_mismatch")
+
+        check_sources(effective["evidence"], claim["evidence_ids"])
+        predecessor = None
+        if claim["supersedes_id"] is not None:
+            predecessor = next(
+                (item for item in recovery["history"]
+                 if item["decision_id"] == claim["supersedes_id"]), None,
+            )
+            transition = next(
+                (item for item in recovery["transitions"]
+                 if item["to_decision_id"] == effective["decision_id"]
+                 and item["from_decision_id"] == claim["supersedes_id"]), None,
+            )
+            if predecessor is None or transition is None:
+                reject("replacement_unverified")
+            check_sources(predecessor["evidence"], claim["prior_evidence_ids"])
+        elif claim["prior_evidence_ids"]:
+            reject("unexpected_prior_citation")
+        return recovery
 
     def _start_ingestion(self, workspace_id: str, source_id: str, artifact: RawArtifact) -> None:
         worker = Thread(
@@ -1565,6 +1844,11 @@ def _parse_as_of(value: object) -> datetime | None:
     if not isinstance(value, str):
         raise ProductApplicationError("INVALID_AS_OF", "Choose a valid historical date.")
     try:
+        if "T" in value:
+            timestamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+                raise ValueError("timezone required")
+            return timestamp.astimezone(UTC)
         parsed_date = date.fromisoformat(value)
     except ValueError as error:
         raise ProductApplicationError("INVALID_AS_OF", "Choose a valid historical date.") from error

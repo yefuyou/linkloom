@@ -237,10 +237,29 @@ def _safe_runtime_error(status: Mapping[str, Any]) -> dict[str, Any]:
         if isinstance(raw_code, str) and re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", raw_code)
         else "UI_RUNTIME_ERROR"
     )
+    details = error.get("details")
+    outcome = details.get("outcome") if isinstance(details, Mapping) else None
+    category = error.get("category")
+    if category == "provider" and outcome == "unknown_provider_outcome":
+        classification = "provider_outcome_uncertain"
+        message = (
+            "The model service connection ended before its result could be confirmed. "
+            "This investigation has no verified final answer. You can start a new investigation later."
+        )
+    elif category == "provider":
+        classification = "provider_failure"
+        message = "The model service could not complete this investigation. No final answer was verified."
+    elif category == "permission":
+        classification = "tool_policy_denied"
+        message = "A requested action was not permitted. No final answer was verified."
+    else:
+        classification = "runtime_failure"
+        message = "The investigation stopped before a final answer could be verified."
     return {
         "title": "LinkLoom could not complete this reconstruction.",
-        "message": "The workspace was left unchanged. You can safely try the question again.",
+        "message": message,
         "code": code,
+        "classification": classification,
         "technical_message": "No additional safe details are available.",
     }
 
@@ -317,6 +336,8 @@ def _documents_by_path(source_documents: Iterable[NoteDocument]) -> dict[str, No
 def _project_running_evidence(
     observed: Mapping[str, Mapping[str, Any]],
     documents: Mapping[str, NoteDocument],
+    *,
+    support_label: str = "Currently reviewing",
 ) -> list[dict[str, Any]]:
     return [
         {
@@ -327,7 +348,7 @@ def _project_running_evidence(
             "relative_path": evidence["relative_path"],
             "line_start": evidence["line_start"],
             "line_end": evidence["line_end"],
-            "supports": ["Currently reviewing"],
+            "supports": [support_label],
             "source": _source_preview(evidence, documents),
         }
         for index, (ref, evidence) in enumerate(observed.items(), start=1)
@@ -412,6 +433,14 @@ def project_run_snapshot(
     if run_status in {"failed", "rejected", "stale", "expired"}:
         payload["kind"] = "error"
         payload["error"] = _safe_runtime_error(status_data)
+        # A failed run may expose verified passages it actually read, but they
+        # are investigation history, never support for an accepted conclusion.
+        read_records = [record for record in ledger_records
+                        if _ledger_dict(record).get("tool_id") == "read_verified_note"]
+        payload["evidence"] = _project_running_evidence(
+            collect_observed_evidence(read_records), documents,
+            support_label="Read during incomplete investigation",
+        )
         return payload
     if run_status != "completed":
         raise UIProjectionError("UI_RUN_STATUS_ERROR", "Run status is not supported by the UI.")

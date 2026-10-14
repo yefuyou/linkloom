@@ -7,6 +7,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 from linkloom.loader import LoaderError
 from linkloom.scanner import ScannerError, scan_vault
@@ -19,6 +20,7 @@ from linkloom.runtime import (
     SQLiteCheckpointer,
     RuntimeModelError,
     RunStatus,
+    ValidationError,
 )
 from linkloom.observability.reader import TraceReader, TraceReadError
 from linkloom.observability.redaction import safe_ref
@@ -141,6 +143,61 @@ def print_agent_trace(root: Path, run_id: str) -> None:
         print(f"{event.seq:02d} {event.event_type:24} {event.status:8} {event.actor:7} {node}{suffix}")
 
 
+def _load_task_plan(path: Path) -> dict[str, Any]:
+    """Load and strictly validate a local JSON TaskPlan for team_decision."""
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ValidationError(
+            "Task plan file must be readable UTF-8 JSON.",
+        ) from error
+    if not isinstance(payload, dict):
+        raise ValidationError("Task plan file must contain a JSON object.")
+
+    from linkloom.runtime.task_plan import TaskPlan
+
+    return TaskPlan.from_dict(payload).to_dict()
+
+
+def _add_agent_run_arguments(
+    parser: argparse.ArgumentParser,
+    *,
+    include_task_plan: bool = False,
+    include_final_protocol: bool = False,
+) -> None:
+    """Add the shared read-only multi-agent runtime arguments."""
+    parser.add_argument("vault", type=Path, help="Markdown vault root.")
+    parser.add_argument("--index", type=Path, required=True, help="Path to index file.")
+    parser.add_argument("--query", type=str, required=True, help="Query.")
+    if include_task_plan:
+        parser.add_argument(
+            "--task-plan",
+            type=Path,
+            required=False,
+            help="Optional local JSON TaskPlan; supported multi-hop query forms are planned automatically.",
+        )
+    if include_final_protocol:
+        parser.add_argument(
+            "--final-protocol",
+            choices=["team-decision-result/v1", "claim-proposal/v1"],
+            default="team-decision-result/v1",
+            help="Explicit Team Decision Final contract; defaults to the legacy v1 contract.",
+        )
+    parser.add_argument(
+        "--checkpoint", type=Path,
+        default=Path(".artifacts") / "p4" / "runtime",
+        help="Path to P4 checkpoint directory.",
+    )
+    parser.add_argument(
+        "--trace", type=Path,
+        default=Path(".artifacts") / "p4" / "traces",
+        help="Path to P4 trace directory.",
+    )
+    parser.add_argument("--max-steps", type=int, default=12, help="Maximum total agent steps.")
+    parser.add_argument("--max-provider-requests", type=int, default=0)
+    parser.add_argument("--memory-root", type=Path, default=None, help="Path to memory storage.")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="linkloom")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -235,22 +292,15 @@ def build_parser() -> argparse.ArgumentParser:
     agent_subparsers = agent_parser.add_subparsers(dest="agent_command", required=True)
     for workflow in ("ask", "connect"):
         agent_run_parser = agent_subparsers.add_parser(workflow, help=f"Run the P4 {workflow} workflow.")
-        agent_run_parser.add_argument("vault", type=Path, help="Markdown vault root.")
-        agent_run_parser.add_argument("--index", type=Path, required=True, help="Path to index file.")
-        agent_run_parser.add_argument("--query", type=str, required=True, help="Query.")
-        agent_run_parser.add_argument(
-            "--checkpoint", type=Path,
-            default=Path(".artifacts") / "p4" / "runtime",
-            help="Path to P4 checkpoint directory.",
-        )
-        agent_run_parser.add_argument(
-            "--trace", type=Path,
-            default=Path(".artifacts") / "p4" / "traces",
-            help="Path to P4 trace directory.",
-        )
-        agent_run_parser.add_argument("--max-steps", type=int, default=12, help="Maximum total agent steps.")
-        agent_run_parser.add_argument("--max-provider-requests", type=int, default=0)
-        agent_run_parser.add_argument("--memory-root", type=Path, default=None, help="Path to memory storage.")
+        _add_agent_run_arguments(agent_run_parser)
+
+    agent_decision_parser = agent_subparsers.add_parser(
+        "team_decision",
+        help="Run a read-only Team Decision workflow with bounded automatic multi-hop planning.",
+    )
+    _add_agent_run_arguments(
+        agent_decision_parser, include_task_plan=True, include_final_protocol=True,
+    )
 
     agent_trace_parser = agent_subparsers.add_parser("trace", help="Show P4 agent trace metadata.")
     agent_trace_parser.add_argument("--run-id", type=str, required=True, help="Run ID to show.")
@@ -289,6 +339,13 @@ def build_parser() -> argparse.ArgumentParser:
     eval_parser.add_argument("--scenario", type=str, required=True, choices=["perfect", "noisy", "malformed", "real"], help="Scenario.")
     eval_parser.add_argument("--output", type=Path, required=True, help="Output directory.")
     eval_parser.add_argument("--repo-root", type=Path, default=Path.cwd(), help="Repository root.")
+    eval_parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["offline", "dry-run", "real"],
+        default="offline",
+        help="Evaluation mode. Offline is default; real mode is currently fail-closed.",
+    )
 
     writeback_parser = subparsers.add_parser("writeback", help="Writeback operations.")
     writeback_subparsers = writeback_parser.add_subparsers(dest="writeback_command", required=True)
@@ -422,7 +479,12 @@ def main(argv: list[str] | None = None) -> int:
                 return 0 if status.status in {"completed", "rejected"} else 1
 
         if args.command == "agent":
-            if args.agent_command in ("ask", "connect"):
+            if args.agent_command in ("ask", "connect", "team_decision"):
+                task_plan = (
+                    _load_task_plan(args.task_plan)
+                    if args.agent_command == "team_decision" and args.task_plan is not None
+                    else None
+                )
                 request = RunRequest(
                     request_id=f"req_cli_p4_{uuid.uuid4().hex[:12]}",
                     workflow=args.agent_command,
@@ -432,6 +494,10 @@ def main(argv: list[str] | None = None) -> int:
                     dry_run=True,
                     max_steps=args.max_steps,
                     max_provider_requests=args.max_provider_requests,
+                    task_plan=task_plan,
+                    final_protocol=getattr(
+                        args, "final_protocol", "team-decision-result/v1",
+                    ),
                 )
                 engine = RuntimeEngine(
                     vault_root=args.vault,
@@ -528,6 +594,33 @@ def main(argv: list[str] | None = None) -> int:
                 return 1
 
         if args.command == "eval":
+            if args.mode == "dry-run":
+                print("Mode: dry-run")
+                print(f"Dataset: {args.dataset}")
+                print(f"Provider: {args.provider}")
+                print(f"Scenario: {args.scenario}")
+                print("Provider Invocation: not run")
+                return 0
+            if args.mode == "real":
+                print(
+                    "Error: real evaluation is disabled because this runner does not "
+                    "enforce per-run request, token, and cost limits; no provider was invoked.",
+                    file=sys.stderr,
+                )
+                return 1
+            if args.provider != "mock":
+                print(
+                    "Error: offline mode only allows provider=mock; use --mode dry-run "
+                    "to inspect a real-provider configuration.",
+                    file=sys.stderr,
+                )
+                return 1
+            if args.scenario == "real":
+                print(
+                    "Error: offline mode does not allow scenario=real; no provider was invoked.",
+                    file=sys.stderr,
+                )
+                return 1
             if args.dataset != "relation_vault_v1":
                 print("Error: unsupported dataset")
                 return 1

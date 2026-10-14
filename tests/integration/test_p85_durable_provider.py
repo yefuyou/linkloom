@@ -57,6 +57,28 @@ class ScriptedProvider:
         return response(request) if callable(response) else response
 
 
+def test_artifact_write_failure_is_diagnosed_before_provider_call(
+    artifact_root, monkeypatch,
+):
+    provider = ScriptedProvider([_provider_final_response("must not call")])
+    loop, _ = _loop(provider)
+    store = ModelArtifactStore(artifact_root / "models")
+
+    def fail_write(*args, **kwargs):
+        raise ValidationError(
+            "Model artifact could not be written.",
+            details={"reason": "artifact_write_failed"},
+        )
+
+    monkeypatch.setattr(store, "write_request", fail_write)
+    result = _run(loop, store, lambda state: None)
+
+    assert result.status == "failed"
+    assert result.error.code == "MODEL_ARTIFACT_WRITE_FAILED"
+    assert result.error.details["reason"] == "artifact_write_failed"
+    assert provider.call_count == 0
+
+
 class SequencedGeminiClient:
     """Offline client seam for proving existing Gemini request mapping."""
 

@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlsplit
 
 from linkloom.ui.backend import RunBackend
 from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
+from linkloom.ui.investigation import ProductInvestigationService
 
 
 MAX_REQUEST_BYTES = 32 * 1024
@@ -37,9 +38,11 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         address: tuple[str, int],
         backend: RunBackend,
         product_app: ProductApplication | None = None,
+        investigation_service: ProductInvestigationService | None = None,
     ) -> None:
         self.backend = backend
         self.product_app = product_app
+        self.investigation_service = investigation_service
         super().__init__(address, LinkLoomRequestHandler)
 
 
@@ -115,6 +118,25 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/context":
             self._send_json(self.server.backend.context())
             return
+        if path.startswith("/api/agent/decisions/runs/"):
+            service = self.server.investigation_service
+            snapshot = service.inspect(path.rsplit("/", 1)[-1]) if service is not None else None
+            if snapshot is None:
+                self._send_error_payload(404, "RUN_NOT_FOUND", "The temporal Agent run was not found.")
+            else:
+                failure_status = {
+                    "provider_outcome_uncertain": HTTPStatus.SERVICE_UNAVAILABLE,
+                    "provider_failure": HTTPStatus.BAD_GATEWAY,
+                    "tool_policy_denied": HTTPStatus.FORBIDDEN,
+                    "runtime_failure": HTTPStatus.INTERNAL_SERVER_ERROR,
+                }
+                classification = (snapshot.get("error") or {}).get("classification")
+                self._send_json(
+                    snapshot,
+                    status=(failure_status.get(classification, HTTPStatus.INTERNAL_SERVER_ERROR)
+                            if snapshot.get("kind") == "error" else HTTPStatus.OK),
+                )
+            return
         if self.server.product_app is not None and path.startswith("/api/") and path not in {
             "/api/runs", "/api/context"
         } and not path.startswith("/api/runs/") and not path.startswith("/api/demo/"):
@@ -146,6 +168,33 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if self._reject_non_local_host():
             return
         path = unquote(urlsplit(self.path).path)
+        if path == "/api/agent/decisions/ask":
+            service = self.server.investigation_service
+            if service is None:
+                self._send_error_payload(503, "AGENT_NOT_CONFIGURED", "The temporal Agent is not configured.")
+                return
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            fields = ("query", "workspace_id", "subject", "relation")
+            if any(not isinstance(payload.get(key), str) or not payload[key].strip()
+                   or len(payload[key]) > (4000 if key == "query" else 512) for key in fields):
+                self._send_error_payload(400, "INVALID_TEMPORAL_REQUEST", "A question and selected decision scope are required.")
+                return
+            if payload.get("as_of") is not None and not isinstance(payload["as_of"], str):
+                self._send_error_payload(400, "INVALID_TEMPORAL_REQUEST", "as_of must be text or null.")
+                return
+            try:
+                result = service.start_temporal(
+                    payload["query"], payload["workspace_id"],
+                    subject=payload["subject"], relation=payload["relation"],
+                    as_of=payload.get("as_of"),
+                )
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+                return
+            self._send_json(result, status=HTTPStatus.ACCEPTED)
+            return
         if path != "/api/runs":
             if self.server.product_app is None or not path.startswith("/api/"):
                 self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
@@ -240,6 +289,7 @@ def create_http_server(
     backend: RunBackend,
     *,
     product_app: ProductApplication | None = None,
+    investigation_service: ProductInvestigationService | None = None,
     host: str = "127.0.0.1",
     port: int = 8765,
 ) -> LinkLoomHTTPServer:
@@ -247,7 +297,7 @@ def create_http_server(
         raise ValueError("Product UI V1 binds to localhost only.")
     if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
         raise ValueError("port must be between 0 and 65535.")
-    return LinkLoomHTTPServer((host, port), backend, product_app)
+    return LinkLoomHTTPServer((host, port), backend, product_app, investigation_service)
 
 
 __all__ = ["LinkLoomHTTPServer", "create_http_server"]

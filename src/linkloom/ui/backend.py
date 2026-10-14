@@ -12,6 +12,8 @@ from uuid import uuid4
 from linkloom.loader import VaultReader
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
+from linkloom.runtime.errors import CheckpointError
+from linkloom.runtime.team_decision_planner import plan_team_decision_query
 from linkloom.ui.projection import (
     UI_SCHEMA_VERSION,
     UIProjectionError,
@@ -47,6 +49,8 @@ class RuntimeRunBackend:
         workspace: WorkspacePresentationContext,
         max_steps: int = 8,
         max_provider_requests: int = 8,
+        final_protocol: str = "team-decision-result/v1",
+        planning_mode: str | None = None,
     ) -> None:
         if not isinstance(engine, RuntimeEngine):
             raise TypeError("RuntimeRunBackend requires a RuntimeEngine.")
@@ -56,6 +60,8 @@ class RuntimeRunBackend:
         self.workspace = workspace
         self.max_steps = max_steps
         self.max_provider_requests = max_provider_requests
+        self.final_protocol = final_protocol
+        self.planning_mode = planning_mode
         self._jobs: dict[str, _RuntimeJob] = {}
         self._lock = Lock()
         self._documents = VaultReader(
@@ -108,10 +114,17 @@ class RuntimeRunBackend:
                     thread_id=job.thread_id,
                     workflow="team_decision",
                     query=job.query,
+                    planning_mode=self.planning_mode or (
+                        "model" if (
+                            callable(getattr(self.engine.model, "propose_task_plan", None))
+                            and plan_team_decision_query(job.query) is None
+                        ) else "template"
+                    ),
                     max_steps=self.max_steps,
                     max_provider_requests=self.max_provider_requests,
                     dry_run=True,
                     caller="product_ui",
+                    final_protocol=self.final_protocol,
                 )
             )
         except Exception:
@@ -156,7 +169,12 @@ class RuntimeRunBackend:
         return value if isinstance(value, dict) else None
 
     def _project(self, job: _RuntimeJob, status: RunStatus) -> dict[str, Any]:
-        state = self.engine.checkpointer.get_latest(job.thread_id)
+        try:
+            state = self.engine.checkpointer.get_latest(job.thread_id)
+        except CheckpointError:
+            if status.status not in {"accepted", "running"}:
+                raise
+            state = None  # No checkpoint exists before the background worker starts.
         ledger = state.tool_ledger if state is not None else []
         try:
             snapshot = project_run_snapshot(

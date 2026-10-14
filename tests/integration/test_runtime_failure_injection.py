@@ -84,6 +84,55 @@ def test_failure_injection_source_stale(tmp_path: Path, test_vault: tuple[Path, 
     assert status_res.error["code"] == "CONTENT_CHANGED"
 
 
+@pytest.mark.parametrize("mutation", ["edit", "add"])
+def test_emit_result_rechecks_vault_when_index_has_not_been_rebuilt(
+    tmp_path: Path,
+    test_vault: tuple[Path, Path],
+    monkeypatch,
+    mutation: str,
+) -> None:
+    vault_root, index_path = test_vault
+    checkpoint_dir = tmp_path / "checkpoint-emit-stale"
+    request = RunRequest(
+        request_id="req_emit_stale",
+        workflow="ask",
+        query="Scanner",
+        index_path=None,
+        dry_run=True,
+    )
+    engine = RuntimeEngine(
+        vault_root=vault_root,
+        index_path=index_path,
+        checkpoint_dir=checkpoint_dir,
+    )
+    original_retrieve = engine._node_retrieve_context
+    source_note = next(vault_root.rglob("*.md"))
+
+    def mutate_after_retrieval(state, tracer):
+        result = original_retrieve(state, tracer)
+        if mutation == "edit":
+            source_note.write_text(
+                source_note.read_text(encoding="utf-8")
+                + "\nChanged after retrieval.\n",
+                encoding="utf-8",
+            )
+        else:
+            (vault_root / "added-after-retrieval.md").write_text(
+                "A new indexed note was not part of this run.\n",
+                encoding="utf-8",
+            )
+        return result
+
+    monkeypatch.setattr(engine, "_node_retrieve_context", mutate_after_retrieval)
+
+    status = engine.start(request)
+
+    assert status.status == "stale", status.error
+    assert status.error is not None
+    assert status.error["code"] == "CONTENT_CHANGED"
+    assert status.result_ref is None
+
+
 def test_failure_injection_fail_once_and_retry(tmp_path: Path, test_vault: tuple[Path, Path]) -> None:
     vault_root, index_path = test_vault
     checkpoint_dir = tmp_path / "checkpoint"

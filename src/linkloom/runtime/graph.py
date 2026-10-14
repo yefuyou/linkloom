@@ -6,6 +6,8 @@ import hashlib
 import json
 import time
 import uuid
+from dataclasses import replace
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -42,6 +44,7 @@ from linkloom.runtime.errors import (
     InterruptNotFoundError,
     InterruptResponseInvalidError,
     PermissionDeniedError,
+    ProviderOutcomeUnknownError,
     RuntimeModelError,
     RuntimeSchemaIncompatibleError,
     StaleSourceError,
@@ -158,6 +161,12 @@ class RuntimeEngine:
         memory_root: Path | str | None = None,
         model: Any | None = None,
         decision_memory_store: TemporalDecisionStore | None = None,
+        prompt_profile: str = "zero-v1",
+        memory_enabled: bool = True,
+        verified_evidence_context_limit: int = 8,
+        decision_memory_workspace_id: str | None = None,
+        temporal_decision_lookup: Any | None = None,
+        temporal_claim_validator: Any | None = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -194,6 +203,20 @@ class RuntimeEngine:
         self.fail_once = fail_once
         self.model = model
         self._decision_memory_store = decision_memory_store
+        self._decision_memory_workspace_id = decision_memory_workspace_id
+        self._temporal_decision_lookup = temporal_decision_lookup
+        self._temporal_claim_validator = temporal_claim_validator
+        if prompt_profile not in {"zero-v1", "few-v1"}:
+            raise ValidationError("Unsupported retrieval prompt profile.")
+        if not isinstance(memory_enabled, bool):
+            raise ValidationError("memory_enabled must be boolean.")
+        if (isinstance(verified_evidence_context_limit, bool)
+                or not isinstance(verified_evidence_context_limit, int)
+                or not 0 <= verified_evidence_context_limit <= 8):
+            raise ValidationError("verified_evidence_context_limit must be between zero and eight.")
+        self.prompt_profile = prompt_profile
+        self.memory_enabled = memory_enabled
+        self.verified_evidence_context_limit = verified_evidence_context_limit
 
         # Track failure injection occurrence
         self._injected_failed = False
@@ -225,7 +248,68 @@ class RuntimeEngine:
             self.index_path,
             decision_memory_store=decision_memory_store,
             decision_memory_store_unavailable=decision_memory_store_unavailable,
+            workspace_id=self._decision_memory_workspace_id,
+            temporal_decision_lookup=self._temporal_decision_lookup,
+            temporal_claim_validator=self._temporal_claim_validator,
         )
+
+    def _recall_project_memory(self, query: str, workspace_id: str) -> tuple[list[dict[str, Any]], dict[str, int]]:
+        """Consume only explicit, approved workspace hints on the model path."""
+        from linkloom.memory.models import MemoryScope
+        from linkloom.memory.retriever import MemoryRetriever
+        from linkloom.memory.store import MemoryStore
+
+        if not self.memory_enabled:
+            return [], {"recalled": 0, "filtered": 0, "injected": 0}
+        store = MemoryStore(str(self.memory_root / "memory.jsonl"))
+        scoped = [
+            item for item in store.list_active()
+            if item.scope is MemoryScope.PROJECT
+            and item.metadata.get("scope_key") == workspace_id
+        ]
+        eligible = []
+        now = datetime.now(timezone.utc)
+        for item in scoped:
+            value = item.value
+            if (
+                item.metadata.get("visibility") != "workspace"
+                or set(value) != {"kind", "text"}
+                or value.get("kind") not in {"preference", "terminology"}
+                or not isinstance(value.get("text"), str)
+                or not value["text"].strip()
+                or len(value["text"]) > 256
+                or len(item.source_refs) > 3
+                or any(not isinstance(ref, str) or not ref or len(ref) > 128 for ref in item.source_refs)
+            ):
+                continue
+            expires_at = item.metadata.get("expires_at")
+            if expires_at is not None:
+                try:
+                    expiry = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+                    if expiry.tzinfo is None or expiry <= now:
+                        continue
+                except (AttributeError, TypeError, ValueError):
+                    continue
+            eligible.append(item)
+        # Ambiguous active values for one key are excluded together.
+        grouped: dict[str, list[Any]] = {}
+        for item in eligible:
+            grouped.setdefault(item.key, []).append(item)
+        eligible = [item for item in eligible if len(grouped[item.key]) == 1]
+        selected = MemoryRetriever(eligible).retrieve(
+            query=query, scope=MemoryScope.PROJECT, scope_key=workspace_id,
+            max_items=3, max_chars=768, include_global=False, require_scope_key=True,
+        )
+        eligible_by_id = {item.id: item for item in eligible}
+        for row in selected:
+            item = eligible_by_id[row["memory_id"]]
+            row["expires_at"] = item.metadata.get("expires_at")
+            row["review_state"] = "approved"
+        return selected, {
+            "recalled": len(scoped),
+            "filtered": len(scoped) - len(selected),
+            "injected": len(selected),
+        }
 
     def _save_state(self, state: RuntimeState) -> str:
         """Helper to save state to checkpointer. Wraps write errors appropriately."""
@@ -405,6 +489,25 @@ class RuntimeEngine:
                 error=error_env.to_dict(),
             )
 
+        if (request.planning_mode == "model" and request.task_plan is None
+                and (request.max_provider_requests < 6 or request.max_steps < 5)):
+            # The plan proposal is a Provider request of its own. Reserve it
+            # inside the caller's run budget before any network-capable call.
+            error_env = ErrorEnvelope(
+                code="MODEL_PLAN_BUDGET_INSUFFICIENT",
+                category="budget",
+                message="Model planning needs room for proposal, two search/read hops and Final.",
+            )
+            tracer.emit("run.failed", "failed", error=error_env)
+            tracer.write_manifest(
+                complete=False, source_index_sha256="0" * 64,
+                incomplete_reason="model plan budget insufficient",
+            )
+            return RunStatus(
+                run_id=run_id, thread_id=thread_id, status="failed",
+                error=error_env.to_dict(),
+            )
+
         try:
             index_sha = self._calculate_index_sha256()
             adapter = self._build_runtime_agent_adapter()
@@ -418,6 +521,113 @@ class RuntimeEngine:
             tracer.emit("run.failed", "failed", error=error_env)
             tracer.write_manifest(complete=False, source_index_sha256="0" * 64, incomplete_reason="source failed")
             return RunStatus(run_id=run_id, thread_id=thread_id, status="failed", error=error_env.to_dict())
+
+        if request.planning_mode == "model" and request.task_plan is None:
+            try:
+                from linkloom.runtime.task_plan import validate_model_proposed_plan
+
+                propose = getattr(self.model, "propose_task_plan", None)
+                if not callable(propose):
+                    raise ValidationError("The configured model has no plan proposal capability.")
+                raw_plan = propose(request.query)
+                proposal_requests = 1
+                try:
+                    plan = validate_model_proposed_plan(
+                        raw_plan, user_query=request.query,
+                        max_steps=request.max_steps,
+                    )
+                except ValidationError as plan_error:
+                    # A rejected JSON object can be repaired once only after
+                    # reserving the proposal, repair, complete read path, and
+                    # Final. The model receives structured validator feedback;
+                    # Runtime still validates the replacement from scratch.
+                    if not isinstance(raw_plan, dict):
+                        raise
+                    max_repair_subgoals = min(
+                        4,
+                        (request.max_provider_requests - 3) // 2,
+                        (request.max_steps - 1) // 2,
+                    )
+                    if max_repair_subgoals < 2:
+                        raise ValidationError(
+                            "Model plan repair has no remaining full-run budget.",
+                            details={"reason": "plan_repair_budget_exhausted"},
+                        ) from plan_error
+                    repair = getattr(self.model, "repair_task_plan", None)
+                    if not callable(repair):
+                        raise ValidationError(
+                            "The configured model cannot repair a rejected plan."
+                        ) from plan_error
+                    validation_feedback = {
+                        "code": plan_error.code,
+                        "message": plan_error.message,
+                        "details": {
+                            **plan_error.details,
+                            "max_subgoals_within_run_budget": max_repair_subgoals,
+                        },
+                    }
+                    tracer.emit("plan.repair_requested", "started", attributes={
+                        "validation_code": plan_error.code,
+                        "validation_reason": plan_error.details.get("reason"),
+                        "max_subgoals": max_repair_subgoals,
+                        "proposal_provider_requests": 2,
+                    })
+                    revised = repair(request.query, raw_plan, validation_feedback)
+                    proposal_requests = 2
+                    plan = validate_model_proposed_plan(
+                        revised, user_query=request.query,
+                        max_steps=request.max_steps,
+                    )
+                if request.max_provider_requests < (
+                    2 * len(plan.subgoals) + 1 + proposal_requests
+                ):
+                    raise ValidationError(
+                        "Model plan exceeds the Provider budget including its proposal."
+                    )
+                # Persist the remaining loop allowance. The proposal has
+                # already used one Provider call and must not be available
+                # again after a cold resume.
+                request = replace(
+                    request, task_plan=plan.to_dict(),
+                    max_provider_requests=(
+                        request.max_provider_requests - proposal_requests
+                    ),
+                )
+                tracer.emit("plan.validated", "ok", attributes={
+                    "plan_origin": "model_generated",
+                    "subgoal_count": len(plan.subgoals),
+                    "proposal_provider_requests": proposal_requests,
+                    "remaining_provider_requests": request.max_provider_requests,
+                    "plan_sha256": hashlib.sha256(json.dumps(
+                        plan.to_dict(), ensure_ascii=False, sort_keys=True,
+                    ).encode("utf-8")).hexdigest(),
+                })
+            except Exception as exc:
+                repair_budget_stop = (
+                    isinstance(exc, ValidationError)
+                    and exc.details.get("reason") == "plan_repair_budget_exhausted"
+                )
+                code = (
+                    "PLAN_REPAIR_BUDGET_EXHAUSTED" if repair_budget_stop
+                    else "MODEL_PLAN_REJECTED" if isinstance(exc, ValidationError)
+                    else "MODEL_PLAN_OUTCOME_UNKNOWN" if isinstance(exc, ProviderOutcomeUnknownError)
+                    else "MODEL_PLAN_PROVIDER_ERROR"
+                )
+                error_env = ErrorEnvelope(
+                    code=code, category=("budget" if repair_budget_stop else
+                                         "provider" if isinstance(exc, ProviderOutcomeUnknownError) else "agent"),
+                    message="The model plan could not be safely accepted.",
+                    details={"reason": str(exc) if isinstance(exc, ValidationError)
+                             else "provider_request_result_uncertain"
+                             if isinstance(exc, ProviderOutcomeUnknownError)
+                             else type(exc).__name__},
+                )
+                tracer.emit("plan.rejected", "failed", error=error_env)
+                tracer.emit("run.failed", "failed", error=error_env)
+                tracer.write_manifest(complete=False, source_index_sha256=index_sha,
+                                      incomplete_reason=code)
+                return RunStatus(run_id=run_id, thread_id=thread_id,
+                                 status="failed", error=error_env.to_dict())
 
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         request_ref = f"request_{run_id}.json"
@@ -497,10 +707,15 @@ class RuntimeEngine:
             self.memory_root.mkdir(parents=True, exist_ok=True)
             store = MemoryStore(str(self.memory_root / "memory.jsonl"))
             retriever = MemoryRetriever(store.list_active())
-            injected_memory = retriever.retrieve(
+            thread_memory = retriever.retrieve(
                 query=request.query,
                 scope=MemoryScope.THREAD,
                 scope_key=thread_id,
+                include_global=False,
+                require_scope_key=True,
+            )
+            injected_memory, memory_counts = self._recall_project_memory(
+                request.query, source_context.vault_root_fingerprint,
             )
             memory_refs = [
                 {
@@ -509,18 +724,19 @@ class RuntimeEngine:
                     "key": m["key"],
                     "value_sha256": m["value_sha256"],
                 }
-                for m in injected_memory
+                for m in [*thread_memory, *injected_memory]
             ]
-            if memory_refs:
+            if injected_memory:
                 tracer.emit("memory.injected", "ok", attributes={
-                    "count": len(memory_refs),
+                    "count": len(injected_memory),
+                    **memory_counts,
                     "refs": [
                         {
-                            "memory_id": ref["memory_id"],
-                            "scope": ref["scope"],
-                            "value_sha256": ref["value_sha256"],
+                            "memory_id": item["memory_id"],
+                            "scope": item["scope"],
+                            "value_sha256": item["value_sha256"],
                         }
-                        for ref in memory_refs
+                        for item in injected_memory
                     ],
                 })
 
@@ -529,6 +745,7 @@ class RuntimeEngine:
                 workflow=request.workflow,
                 query=request.query,
                 source_context=source_context.to_dict(),
+                task_plan=request.task_plan,
                 tracer=tracer,
                 # ``max_steps`` is the model-loop budget. Coordinator's strict
                 # counter also includes post-loop review/publication work, so
@@ -536,6 +753,9 @@ class RuntimeEngine:
                 # the model another turn.
                 max_total_steps=min(12, request.max_steps) + 2,
                 injected_memory=injected_memory,
+                prompt_profile=self.prompt_profile,
+                verified_evidence_context_limit=self.verified_evidence_context_limit,
+                final_protocol=request.final_protocol,
                 tool_ledger=tool_ledger,
                 tool_checkpoint_callback=persist_tool_ledger,
                 model=self.model,
@@ -546,6 +766,17 @@ class RuntimeEngine:
             # The callback may have advanced the durable cursor several times
             # while the coordinator was running.
             state = state_cursor["state"]
+            result["memory_refs"] = memory_refs
+            seen_in_request = 0
+            if state.model_executions:
+                first = min(state.model_executions, key=lambda record: record.sequence)
+                if first.request_ref and first.request_sha256:
+                    payload = artifact_store.read(first.request_ref, expected_sha256=first.request_sha256)
+                    visible_input = payload.get("model_request", {}).get("user_input", "")
+                    seen_in_request = sum(
+                        item["value"]["text"] in visible_input for item in injected_memory
+                    )
+            result["memory_recall"] = {**memory_counts, "seen_in_request": seen_in_request}
 
             return self._finish_multi_agent(state, result, tracer)
         except Exception as exc:
@@ -745,6 +976,7 @@ class RuntimeEngine:
         result = adapter.run(
             run_id=state.run_id, workflow=state.workflow, query=request.query,
             source_context=state.source.to_dict(), tracer=tracer,
+            task_plan=request.task_plan,
             # The model-step budget is already fully consumed by a durable
             # terminal response in this resume path.  Coordinator still needs
             # one projection step for Reviewer/final state publication; this
@@ -753,6 +985,12 @@ class RuntimeEngine:
             # total_steps >= max_total_steps), so reserve one additional
             # slot for that final check after the Reviewer projection.
             max_total_steps=min(12, state.policy.max_steps) + 2,
+            injected_memory=self._recall_project_memory(
+                request.query, state.source.vault_root_fingerprint,
+            )[0],
+            prompt_profile=self.prompt_profile,
+            verified_evidence_context_limit=self.verified_evidence_context_limit,
+            final_protocol=request.final_protocol,
             tool_ledger=ledger, model=self.model, initial_state=state,
             artifact_store=ModelArtifactStore(self.checkpoint_dir / "models"),
             state_checkpoint_callback=persist, resume_model_loop=True,
@@ -1246,13 +1484,23 @@ class RuntimeEngine:
 
     def _node_emit_result(self, state: RuntimeState, tracer: OptionalTracer) -> tuple[RuntimeState, str]:
         """Node emit_result: calls P1 services to produce final result files."""
-        # Double check source index integrity before final response emission
+        # Revalidate both the indexed artifact and the backing workspace before
+        # publishing a result. The vault may have changed without an index rebuild.
         try:
             sha = self._calculate_index_sha256()
-            if sha != state.source.index_sha256:
-                raise StaleSourceError("Index hash changed during run execution.")
-        except Exception as e:
-            err = ErrorEnvelope(code="CONTENT_CHANGED", category="runtime", message=str(e))
+            fingerprint = calculate_fingerprint(self.vault_root)
+            if (
+                sha != state.source.index_sha256
+                or fingerprint != state.source.vault_root_fingerprint
+            ):
+                raise StaleSourceError("Workspace source changed during run execution.")
+            VaultReader(self.vault_root, self.index_path).verify_source_freshness()
+        except (StaleSourceError, LoaderError, OSError, ValueError):
+            err = ErrorEnvelope(
+                code="CONTENT_CHANGED",
+                category="runtime",
+                message="Workspace source no longer matches the indexed snapshot.",
+            )
             state = RuntimeState.from_dict({
                 **state.to_dict(),
                 "status": "stale",

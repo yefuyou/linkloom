@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import time
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
@@ -221,7 +222,7 @@ class RuntimeRetrievalBackend:
                     effective_scope = directory_scope
             evidence = []
             materialization_started = time.perf_counter()
-            for hit in hits:
+            for display_rank, hit in enumerate(hits, start=1):
                 document = self._documents_by_id.get(hit.resource_id)
                 if document is None:
                     continue
@@ -242,23 +243,44 @@ class RuntimeRetrievalBackend:
                 line_hits = retrieve_evidence(
                     query,
                     [document],
-                    max_results=1,
+                    max_results=min(max(document.line_count, 1), 32),
                     workspace_id=self.workspace_id,
                 )
                 if not line_hits:
                     continue
+                # A title or heading can outrank the line that carries the
+                # answer. Keep the document rank, but expose its best matching
+                # body passage when one is available.
+                passage = next(
+                    (item for item in line_hits if item.source_kind == "note_body"),
+                    line_hits[0],
+                )
                 evidence.append(
                     self._decorate_evidence(
-                        line_hits[0].to_dict(),
-                        document_rank=hit.rank,
+                        passage.to_dict(),
+                        document_rank=display_rank,
                         document_score=hit.score,
                         retrieval_channel=hit.retrieval_channel,
                         scope_path=effective_scope,
                         logical_path=hit.logical_path,
                     )
                 )
-                if len(evidence) >= top_k:
+                if self.mode is not RetrievalMode.BM25 and len(evidence) >= top_k:
                     break
+            if self.mode is RetrievalMode.BM25:
+                # Rank the answer-bearing passage, not all document text:
+                # a distractor can mention the target only to say it belongs
+                # to another project. Keep BM25 as a tie breaker and expose
+                # only the caller's requested number of existing candidates.
+                terms = _query_terms(query)
+                if len(terms) >= 2:
+                    evidence.sort(key=lambda item: (
+                        -len(terms.intersection(_passage_terms(item["quote"]))),
+                        -item["score"], item["rank"],
+                    ))
+                evidence = evidence[:top_k]
+                for rank, item in enumerate(evidence, start=1):
+                    item["rank"] = rank
             stage_timings["materialization_ms"] = (
                 time.perf_counter() - materialization_started
             ) * 1000.0
@@ -564,6 +586,20 @@ class RuntimeRetrievalBackend:
             "source_ref": value.get("source_ref") or value["relative_path"],
             "workspace_id": self.workspace_id,
         }
+
+
+_QUERY_STOPWORDS = frozenset({
+    "a", "an", "and", "are", "as", "do", "does", "for", "is", "of",
+    "or", "the", "to", "what", "which", "who",
+})
+
+
+def _query_terms(query: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]+", query.casefold())) - _QUERY_STOPWORDS
+
+
+def _passage_terms(text: str) -> set[str]:
+    return set(re.findall(r"[a-z0-9]+", text.casefold()))
 
 
 def _scope_documents(

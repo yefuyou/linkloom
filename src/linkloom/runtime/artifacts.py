@@ -140,7 +140,10 @@ class ModelArtifactStore:
                 if temporary_path.exists():
                     temporary_path.unlink()
         except OSError as error:
-            raise ValidationError("Model artifact could not be written.") from error
+            raise ValidationError(
+                "Model artifact could not be written.",
+                details={"reason": "artifact_write_failed"},
+            ) from error
         return ArtifactRef(normalized_ref, digest, kind, len(content))
 
     def read(self, ref: str, *, expected_sha256: str | None = None) -> dict[str, Any]:
