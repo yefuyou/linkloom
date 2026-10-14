@@ -403,7 +403,7 @@ def _score(snapshot: dict, artifact: dict | None, expected: dict) -> dict:
             "checks": checks, "reviewer": review}
 
 
-def _run(case_id: str) -> int:
+def _run(case_id: str, *, transport_diagnostics_enabled: bool = False) -> int:
     protocol, cases = _freeze()
     if os.environ.get(AUTHORIZATION_ENV) != REQUIRED_AUTHORIZATION:
         raise SmokeBlocked("EXACT_RECOVERY_BATCH_AUTHORIZATION_REQUIRED")
@@ -438,20 +438,47 @@ def _run(case_id: str) -> int:
                 "workspace_id": workspace_id, "reviewed_decisions": identities,
             }, indent=2), encoding="utf-8")
             from google.genai import types as genai_types
+            diagnostics = None
+            if transport_diagnostics_enabled:
+                from scripts.gemini_transport.diagnostics import TransportDiagnostics
+                diagnostic_path = run_dir / "transport_events.jsonl"
+                sink_available = True
+                try:
+                    diagnostic_path.touch(exist_ok=False)
+                except OSError:
+                    raise SmokeBlocked("TRANSPORT_DIAGNOSTIC_PREFLIGHT_FAILED") from None
+                def append_diagnostic(record):
+                    if not sink_available:
+                        raise OSError("TRANSPORT_DIAGNOSTIC_SINK_UNAVAILABLE")
+                    with diagnostic_path.open("a", encoding="utf-8") as stream:
+                        stream.write(json.dumps(record, sort_keys=True) + "\n")
+                diagnostics = TransportDiagnostics(append_diagnostic)
+                try:
+                    from scripts.gemini_transport.product import environment_snapshot
+                    with (run_dir / "transport_environment.json").open("x", encoding="utf-8") as stream:
+                        stream.write(json.dumps(environment_snapshot(), sort_keys=True))
+                except Exception:
+                    raise SmokeBlocked("TRANSPORT_DIAGNOSTIC_PREFLIGHT_FAILED") from None
             sdk = build_gemini_sdk_client(
                 os.environ["GEMINI_API_KEY"],
                 http_options_kwargs={"timeout": 130000,
                                      "retry_options": genai_types.HttpRetryOptions(attempts=1)},
+                **({"transport_diagnostics": diagnostics} if diagnostics is not None else {}),
             )
             ledger = AppendOnlyProviderLedger(
                 run_dir / "provider_ledger.jsonl", batch_id=BATCH, run_id=case["run_id"],
                 max_requests=max_requests, max_runtime_runs=1,
                 max_input_tokens_per_request=None, case_id=case_id,
             )
-            client = LedgeredGeminiClient(sdk, ledger)
+            client = LedgeredGeminiClient(sdk, ledger, **({"transport_diagnostics": diagnostics} if diagnostics is not None else {}))
             client.assert_developer_api()
+            def model_factory(_query):
+                if diagnostics is None:
+                    return GeminiProviderAdapter(client, model_id=MODEL)
+                from scripts.gemini_transport.product import product_adapter
+                return product_adapter(client, diagnostics, model_id=MODEL)
             service = ProductInvestigationService(
-                app, model_factory=lambda _query: GeminiProviderAdapter(client, model_id=MODEL),
+                app, model_factory=model_factory,
                 run_mode="GEMINI_38_FLASH_LEDGERED_HTTP", max_steps=18,
             )
             server.investigation_service = service
@@ -487,6 +514,11 @@ def _run(case_id: str) -> int:
                 "usage": client.generation_usage_records,
                 "estimated_cost_usd": client.estimated_cost_usd,
             }
+            if diagnostics is not None:
+                observed["transport_diagnostics"] = {
+                    "enabled": True, "failures": diagnostics.failures,
+                    "event_file": "transport_events.jsonl",
+                }
             ledger.finish_run(status=snapshot["run"]["status"], usage_summary={
                 "input_tokens": client.reported_input_tokens,
                 "output_tokens": client.reported_output_tokens,
@@ -524,6 +556,7 @@ def main() -> int:
     parser.add_argument("case")
     parser.add_argument("--next-stage", action="store_true", help="independent 3-case authorization")
     parser.add_argument("--execute", action="store_true", help="requires separate real Provider authorization")
+    parser.add_argument("--transport-diagnostics", action="store_true", help="opt-in sanitized transport evidence; does not authorize generation")
     parser.add_argument("--repair-archive", action="store_true", help="offline repair only; no Provider calls")
     args = parser.parse_args()
     try:
@@ -543,7 +576,7 @@ def main() -> int:
                               "remaining_generation_requests": remaining,
                               "provider_requests": 0}, ensure_ascii=False))
             return 0
-        return _run(args.case)
+        return _run(args.case, **({"transport_diagnostics_enabled": True} if args.transport_diagnostics else {}))
     except SmokeBlocked as error:
         code = error.args[0] if error.args and isinstance(error.args[0], str) else "SMOKE_BLOCKED"
         print(json.dumps({"status": "BLOCKED", "error_code": code}, ensure_ascii=False))

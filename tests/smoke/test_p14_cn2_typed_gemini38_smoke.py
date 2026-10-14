@@ -1116,9 +1116,10 @@ def _assert_developer_api_sdk(client: Any) -> None:
 class LedgeredGeminiClient:
     """Usage-observation wrapper directly around the official SDK client."""
 
-    def __init__(self, delegate: Any, ledger: AppendOnlyProviderLedger) -> None:
+    def __init__(self, delegate: Any, ledger: AppendOnlyProviderLedger, *, transport_diagnostics: Any | None = None) -> None:
         self._delegate = delegate
         self._ledger = ledger
+        self._transport_diagnostics = transport_diagnostics
         self.provider_calls = 0
         self.preflight_count_requests = 0
         self.count_tokens_preflight = False
@@ -1180,6 +1181,10 @@ class LedgeredGeminiClient:
                 raise SmokeBlocked("SDK_GENERATE_CONTENT_SURFACE_UNAVAILABLE")
             send = lambda: operation(model=model, contents=contents, config=config)
 
+        if self._transport_diagnostics is not None and self._transport_diagnostics.enabled:
+            from scripts.gemini_transport.product import diagnosed_generation
+            original_send = send
+            send = lambda: diagnosed_generation(original_send, self._transport_diagnostics, self._ledger)
         payload = {"model": model, "contents": contents, "config": config}
         started = time.monotonic()
         try:

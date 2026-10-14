@@ -361,6 +361,7 @@ def build_gemini_sdk_client(
     types_module: Any | None = None,
     http_options_kwargs: Mapping[str, Any] | None = None,
     wire_payload_observer: Callable[[Mapping[str, str | None]], Any] | None = None,
+    transport_diagnostics: Any | None = None,
 ) -> Any:
     """Construct an official Developer API client with the wire fix installed.
 
@@ -402,6 +403,23 @@ def build_gemini_sdk_client(
             setattr(observer_hook, "_linkloom_wire_observer", True)
             request_hooks.append(observer_hook)
     event_hooks["request"] = request_hooks
+    if transport_diagnostics is not None:
+        # Public SDK client_args seam. Observe after all wire compatibility hooks.
+        def safe_diagnostic_hook(callback: Any) -> Callable[[Any], None]:
+            def observe(value: Any) -> None:
+                try:
+                    callback(value)
+                except Exception:
+                    try:
+                        transport_diagnostics.failures += 1
+                    except Exception:
+                        pass  # Optional evidence must not fail a business request.
+            return observe
+        if getattr(transport_diagnostics, "enabled", False):
+            request_hooks.append(safe_diagnostic_hook(transport_diagnostics.request_hook))
+            response_hooks = list(event_hooks.get("response") or [])
+            response_hooks.append(safe_diagnostic_hook(transport_diagnostics.response_hook))
+            event_hooks["response"] = response_hooks
     client_args["event_hooks"] = event_hooks
     options["client_args"] = client_args
 

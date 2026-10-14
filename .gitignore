@@ -42,5 +42,12 @@ output/playwright/*-round*.png
 /mobile-actions.png
 
 # OS/editor
+# Private investigation artifacts: never publish Provider ledgers or transport snapshots.
+/work/
+/output/playwright/
+*.ledger.jsonl
+transport_events.jsonl
+transport_environment.json
+
 .DS_Store
 Thumbs.db
