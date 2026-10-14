@@ -10,6 +10,8 @@
     agentViewToken: 0,
     askScopes: [],
     askScope: null,
+    askCandidates: [],
+    askClarification: null,
     language: document.documentElement.lang || "en",
   };
   const page = document.getElementById("page");
@@ -266,21 +268,25 @@
     if (viewToken !== state.agentViewToken || config.workspace_id !== workspaceId) return;
     state.askScopes = config.scopes || [];
     let selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
-    if (selected < 0 && state.askScopes.length === 1) selected = 0;
-    page.innerHTML = `${heading("Ask", "Ask about a decision", "Reviewed state is queried directly. Explanations and source comparisons use a bounded investigation when available.")}
+    state.askCandidates = [];
+    state.askClarification = null;
+    page.innerHTML = `${heading("Ask", "Ask about a decision", "Ask in your own words. LinkLoom finds reviewed decisions in this workspace and asks you to choose when more than one fits.")}
       <section class="panel"><p class="metadata">Workspace: <strong>${escapeHtml(state.workspace.name)}</strong></p>
       <form id="ask-form" class="form-stack">
-        <div class="field"><label for="ask-slot">Decision scope</label><select id="ask-slot" required>
-          <option value="">Select a decision</option>${state.askScopes.map((slot, index) => `<option value="${index}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}</option>`).join("")}</select>
-          <span class="hint">${state.askScopes.length ? "The workspace and selected decision bound every lookup and investigation." : "Import and review a decision before asking about it."}</span></div>
         <div class="field"><label for="ask-query">Question</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="What supplier are we currently using? Why did it change?"></textarea></div>
+        <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>Advanced: choose a decision or exact date</summary>
+        <div class="field"><label for="ask-slot">Decision scope</label><select id="ask-slot">
+          <option value="">Discover automatically from my question</option>${state.askScopes.map((slot, index) => `<option value="${index}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}</option>`).join("")}</select>
+          <span class="hint">${state.askScopes.length ? "Only reviewed, source-verified decisions are available." : "Import and review a decision before asking about it."}</span></div>
         <div class="field"><label for="ask-date">Optional: decision valid on this date</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml(state.askScope?.as_of || "")}"><span class="hint">Leave blank for now. Historical validity uses currently recorded review receipts; dates start at 00:00 UTC.</span></div>
+        </details>
         ${config.agent?.available && config.agent?.external_provider ? `<label><input id="ask-external" type="checkbox"> Allow this external investigation to send workspace sources to the configured model and incur bounded model costs.</label>` : `<p class="hint">${config.agent?.available ? "Offline Agent investigation is available." : "Agent investigation is not configured. Direct reviewed queries remain available."}</p>`}
         <button class="button" type="submit">Ask</button></form></section><div id="ask-result" aria-live="polite"></div>`;
   }
 
   function invalidateAsk() {
     state.agentViewToken += 1;
+    state.askCandidates = [];
     const target = document.getElementById("ask-result");
     if (target) target.innerHTML = "";
   }
@@ -301,8 +307,11 @@
     const target = document.getElementById("ask-result");
     if (!target) return;
     const source = result.path === "AGENT" ? "Agent investigation" : result.path === "DETERMINISTIC" ? "Direct lookup" : "Scope clarification";
+    const discovery = result.discovery;
+    const matched = ["MATCHED", "EXPLICIT"].includes(discovery?.status);
     const context = `<p class="eyebrow">${source} · ${escapeHtml(result.status)}</p>
       <p class="metadata">${escapeHtml(state.workspace.name)} · ${escapeHtml(result.scope?.subject)} · ${escapeHtml(result.scope?.relation)} · ${escapeHtml(result.scope?.as_of || "Now")}</p>
+      ${discovery ? `<p><strong>${matched ? (discovery.status === "EXPLICIT" ? "Selected decision" : "Automatically matched decision") : escapeHtml(discovery.status)}:</strong> ${matched ? `${escapeHtml(result.scope?.subject)} · ${escapeHtml(result.scope?.relation)}` : ""}</p><p class="hint">${escapeHtml(discovery.reason)}${discovery.basis?.length ? ` Matched terms: ${escapeHtml(discovery.basis.join(" · "))}.` : ""}</p>` : ""}
       <p class="hint">${escapeHtml(result.route?.reason)}</p>`;
     const reviewerDetails = result.reviewer?.performed ? `<details><summary>Runtime Reviewer · ${escapeHtml(result.reviewer.decision)}</summary>
       <p>${escapeHtml(result.reviewer.reviewer_agent_id)} · ${escapeHtml(result.reviewer.review_id)} · ${escapeHtml(result.reviewer.created_at)}</p>
@@ -313,10 +322,17 @@
       return;
     }
     if (result.status !== "COMPLETED") {
+      state.askCandidates = discovery?.status === "AMBIGUOUS" ? (discovery.candidates || []) : [];
+      const choices = state.askCandidates.map((slot, index) => `<button type="button" class="button quiet" data-action="choose-ask-scope" data-index="${index}">${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}${slot.current_value ? ` · ${escapeHtml(slot.current_value)}` : ""}</button>`).join("");
       target.innerHTML = `<section class="panel">${context}<div class="error-box" role="alert">
         <strong>${result.status === "PROVIDER_UNCERTAIN" ? "Provider UNCERTAIN: investigation interrupted, conclusion not verified" : escapeHtml(result.error?.message || "Additional scope is required.")}</strong>
         <p>${escapeHtml(result.error?.code || result.status)}</p></div>
+        ${choices ? `<h2>Which decision do you mean?</h2><p>Your question is retained. Choose one decision to continue.</p><div class="actions">${choices}</div>${discovery.candidate_count > state.askCandidates.length ? `<p class="hint">Showing ${state.askCandidates.length} of ${discovery.candidate_count} candidates. Narrow your question or use advanced options.</p>` : ""}` : ""}
         <p class="hint">${escapeHtml(result.uncertainty?.statement || "")}</p>${reviewerDetails}</section>`;
+      if (result.error?.code === "DATE_SCOPE_REQUIRED" || result.error?.code === "INVALID_AS_OF") {
+        document.getElementById("ask-advanced").open = true;
+        document.getElementById("ask-date").focus?.();
+      }
       return;
     }
     const evidence = (result.evidence || []).map((item) => `<article class="card"><h3>Evidence · ${escapeHtml(item.source_name)}</h3>
@@ -338,10 +354,10 @@
       ${(result.conclusions || []).map((claim) => `<h2>${escapeHtml(claim.value)}</h2><p class="metadata">Effective ${escapeHtml(claim.effective_at || "")}</p>`).join("") || `<h2>No verified effective decision</h2>`}
       ${(result.timeline?.transitions || []).map((transition) => `<p>Formal replacement: ${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)} on ${escapeHtml(transition.effective_at)}</p>`).join("")}
       ${(result.rationale || []).map((item) => `<p>${escapeHtml(item.statement || item.value || item.text || "")}</p>`).join("")}
-      <p class="hint">${escapeHtml(result.uncertainty?.statement || "")}${unknownText ? ` ${escapeHtml(unknownText)}` : ""}</p>
+      <p class="hint">${unknownText ? "UNKNOWN · " : ""}${escapeHtml(result.uncertainty?.statement || "")}${unknownText ? ` ${escapeHtml(unknownText)}` : ""}</p>
       ${(result.timeline?.proposals || []).map((proposal) => `<p>Unapproved proposal: ${escapeHtml(proposal.value)} · ${escapeHtml(proposal.status)}</p>`).join("")}
-      <p class="metadata">${result.reviewer?.performed ? (result.reviewer.accepted ? "Validator and Reviewer accepted this Agent final." : "Reviewer did not accept a final.") : "Direct receipt and source verification; no LLM Reviewer."}${result.agent_run_id ? ` Run ${escapeHtml(result.agent_run_id)}` : ""}</p>
-      ${reviewerDetails}${receipts}${evidence}${effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(state.askScope?.as_of || "")}">Open Decision Timeline</button>` : ""}</section>`;
+      <p class="metadata">${result.conclusions?.length ? "VERIFIED · " : ""}${result.reviewer?.performed ? (result.reviewer.accepted ? "Validator and Reviewer accepted this Agent final." : "Reviewer did not accept a final.") : "Direct receipt and source verification · 0 model calls."}${result.agent_run_id ? ` Run ${escapeHtml(result.agent_run_id)}` : ""}</p>
+      ${reviewerDetails}${receipts}${evidence}${effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(result.scope?.as_of || "")}">Open Decision Timeline</button>` : ""}</section>`;
   }
 
   async function pollAsk(runId, workspaceId, viewToken) {
@@ -360,22 +376,29 @@
     if (target) target.innerHTML = `<div class="error-box" role="alert">${escapeHtml(error.message)} ${escapeHtml(error.code || "")}</div>`;
   }
 
-  async function submitAsk(form) {
+  async function submitAsk(form, clarifiedSlot = null) {
     const viewToken = ++state.agentViewToken;
     const workspaceId = state.workspace.workspace_id;
     const data = Object.fromEntries(new FormData(form));
     const slotValue = document.getElementById("ask-slot").value;
-    const slot = slotValue === "" ? null : state.askScopes[Number(slotValue)];
-    state.askScope = slot ? { ...slot, as_of: data.as_of || "" } : null;
+    const clarification = state.askClarification;
+    const pendingSlot = clarification?.query === data.query && clarification?.workspaceId === workspaceId ? clarification.slot : null;
+    const slot = clarifiedSlot || pendingSlot || (slotValue === "" ? null : state.askScopes[Number(slotValue)]);
+    state.askScope = !clarifiedSlot && !pendingSlot && slot ? { ...slot, as_of: data.as_of || "" } : null;
+    state.askCandidates = [];
+    const permission = document.getElementById("ask-external");
+    const allowExternal = permission?.checked === true;
+    if (permission) permission.checked = false;
     const target = document.getElementById("ask-result");
     target.innerHTML = `<p class="loading">Selecting the appropriate capability…</p>`;
     try {
       const result = await askRequest("/api/product/ask", { method: "POST", body: JSON.stringify({
         ...data, workspace_id: workspaceId, subject: slot?.subject, relation: slot?.relation,
-        allow_external_provider: document.getElementById("ask-external")?.checked === true,
+        allow_external_provider: allowExternal,
       }) });
       if (viewToken !== state.agentViewToken) return;
       renderAskResult(result, viewToken);
+      if (["COMPLETED", "INVESTIGATING"].includes(result.status)) state.askClarification = null;
       if (result.status === "INVESTIGATING") pollAsk(result.agent_run_id, workspaceId, viewToken);
     } catch (error) { showAskError(error, viewToken); }
   }
@@ -394,6 +417,7 @@
     if (!workspacePicker.value) return;
     const viewToken = ++state.agentViewToken;
     state.askScope = null;
+    state.askClarification = null;
     const target = document.getElementById("ask-result");
     if (target) target.innerHTML = "";
     const nextScreen = state.screen;
@@ -414,10 +438,12 @@
   });
 
   page.addEventListener("input", (event) => {
+    if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) invalidateAsk();
   });
 
   page.addEventListener("change", async (event) => {
+    if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) { invalidateAsk(); return; }
     if (event.target?.id !== "source-file") return;
     const file = event.target.files?.[0];
@@ -481,6 +507,14 @@
     const { action, id } = button.dataset;
     try {
       if (action === "inspect-source") await inspectSource(id);
+      else if (action === "choose-ask-scope") {
+        const slot = state.askCandidates[Number(button.dataset.index)];
+        if (slot) {
+          const form = document.getElementById("ask-form");
+          state.askClarification = {slot, query: String(new FormData(form).get("query")), workspaceId: state.workspace.workspace_id};
+          await submitAsk(form, slot);
+        }
+      }
       else if (action === "inspect-candidate") await inspectCandidate(id);
       else if (action === "inspect-decision") await inspectDecision(id);
       else if (action === "ask-timeline") await inspectDecision(id, button.dataset.asOf || "");

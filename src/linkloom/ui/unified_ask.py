@@ -3,12 +3,15 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import datetime
 import re
 from threading import Lock
 from typing import Any, Callable
 
-from linkloom.ui.product import ProductApplication, ProductApplicationError, _parse_as_of
+from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
+from linkloom.decision_memory.models import normalize_temporal_component
 
 # Supported task families, not general intent understanding. Investigation wins
 # for mixed questions so a current-state lookup cannot masquerade as an explanation.
@@ -21,8 +24,8 @@ _INVESTIGATION = re.compile(
 )
 _DECISION = re.compile(
     r"\b(current\w*|now|approved|adopted|effective|receipt\w*|valid|formal)\b|"
-    r"\bwhat\b.*\b(using|use|supplier|decision)\b|show.*\b(sources?|evidence)\b|"
-    r"当前|现行|正式|采用|生效|审核|审批|收据|查看.*来源",
+    r"\b(what|which)\b.*\b(using|use|supplier|vendor|decision)\b|show.*\b(sources?|evidence)\b|"
+    r"当前|现行|正式|采用|生效|审核|审批|收据|供应商|供货商|用的是|查看.*来源",
     re.IGNORECASE,
 )
 
@@ -44,6 +47,7 @@ class _AskRun:
     workspace_id: str
     scope: dict[str, Any]
     route: dict[str, str]
+    discovery: dict[str, Any] | None = None
 
 
 class UnifiedAskService:
@@ -58,15 +62,42 @@ class UnifiedAskService:
         service = self.investigation()
         with self.app._store_lock:
             workspace_id = self.app._workspace_id()
-            slots = sorted({(record.subject, record.relation)
-                            for record in self.app.store.list_decisions(workspace_id)
-                            if record.subject and record.relation})
+            slots = self._trusted_slots(workspace_id)
         return {"workspace_id": workspace_id,
-                "scopes": [{"subject": subject, "relation": relation} for subject, relation in slots],
+                "scopes": [{"subject": slot["subject"], "relation": slot["relation"]} for slot in slots],
                 "agent": service.config() if service else {
             "available": False, "external_provider": False, "run_mode": "MODEL_NOT_CONFIGURED",
             "message": "The investigation model is not configured.",
         }}
+
+    def _trusted_slots(self, workspace_id: str) -> list[dict[str, Any]]:
+        # Reuse the authority boundary, including receipt identity and evidence
+        # verification. Raw store rows and pending proposals are never an index.
+        records = self.app.store.list_decisions(workspace_id)
+        slots = sorted({(normalize_temporal_component(record.subject),
+                         normalize_temporal_component(record.relation))
+                        for record in records
+                        if record.subject and record.relation})
+        trusted = []
+        for subject, relation in slots:
+            view = self.app.recover_decision(subject, relation, _workspace_id=workspace_id)
+            history = view["history"]
+            last_effective_at = max(record.valid_from for record in records
+                                    if record.subject and record.relation
+                                    and normalize_temporal_component(record.subject) == subject
+                                    and normalize_temporal_component(record.relation) == relation)
+            if last_effective_at > datetime.fromisoformat(view["as_of"]):
+                # Approved scheduled slots are trusted identities too. Query
+                # validity still uses the request date, never this index date.
+                history = self.app.recover_decision(subject, relation, last_effective_at.isoformat(),
+                                                   _workspace_id=workspace_id)["history"]
+            if not history:
+                continue
+            trusted.append({"subject": history[-1]["subject"], "relation": history[-1]["relation"],
+                            "values": list(dict.fromkeys(item["value"] for item in history)),
+                            "decision_ids": [item["decision_id"] for item in history],
+                            "current_value": (view.get("effective") or {}).get("value")})
+        return trusted
 
     @staticmethod
     def _base(run: _AskRun) -> dict[str, Any]:
@@ -74,6 +105,7 @@ class UnifiedAskService:
                 "workspace_id": run.workspace_id, "scope": deepcopy(run.scope),
                 "path": {"DECISION": "DETERMINISTIC", "INVESTIGATION": "AGENT"}.get(run.route["intent"]),
                 "route": dict(run.route), "status": "NEEDS_SCOPE", "conclusions": [],
+                "discovery": deepcopy(run.discovery),
                 "evidence": [], "receipts": [], "uncertainty": {"unknown_fields": [], "statement": ""},
                 "agent_run_id": None, "reviewer": {"performed": False, "accepted": False},
                 "timeline": None, "progress": None, "error": None}
@@ -109,15 +141,24 @@ class UnifiedAskService:
             # Keep the current-workspace check and setup atomic with workspace selection.
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
-                timestamp = _parse_as_of(payload.get("as_of"))
-                if not values["subject"] or not values["relation"]:
-                    return self._failure(result, "DECISION_SCOPE_REQUIRED", "Select the decision subject and relation.", status="NEEDS_SCOPE"), 200
-                dates = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", query)
-                if dates and (timestamp is None or any(day != timestamp.date().isoformat() for day in dates)):
-                    return self._failure(result, "DATE_SCOPE_REQUIRED", "Match the selected valid-time date to the date in your question.", status="NEEDS_SCOPE"), 200
+                discovery = discover_scope(run.query, self._trusted_slots(run.workspace_id),
+                                           self.app.relation_resolver, subject=values["subject"],
+                                           relation=values["relation"])
+                result["discovery"] = discovery
+                if discovery["scope"] is None:
+                    result["path"] = None
+                    return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
+                                         discovery["reason"], status="NEEDS_SCOPE"), 200
+                values.update(discovery["scope"])
+                result["scope"].update(discovery["scope"])
+                as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
+                if date_error:
+                    result["path"] = None
+                    return self._failure(result, date_error["code"], date_error["message"],
+                                         status="NEEDS_SCOPE"), 200
                 if run.route["intent"] == "UNKNOWN":
                     return self._failure(result, "TASK_UNCLASSIFIED", run.route["reason"], status="NEEDS_SCOPE"), 200
-                view = self.app.recover_decision(values["subject"], values["relation"], payload.get("as_of"), _workspace_id=run.workspace_id)
+                view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
                 result["scope"]["as_of"] = view["as_of"]
                 if result["path"] == "DETERMINISTIC":
                     result["status"] = "COMPLETED"
@@ -134,7 +175,7 @@ class UnifiedAskService:
                     raise
                 except Exception:
                     return self._failure(result, "INVESTIGATION_START_FAILED", "The configured investigation could not start.", category="runtime"), 500
-                pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route)
+                pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route, discovery)
                 with self._lock:
                     self._runs[snapshot["run"]["id"]] = (pinned, service)
                 return self._from_snapshot(pinned, snapshot), 202

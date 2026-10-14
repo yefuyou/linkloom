@@ -23,6 +23,7 @@ from unified_ask_fixture import ATLAS, OTHER, UnifiedAskFixture
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the offline Unified Ask browser fixture")
     parser.add_argument("--port", type=int, default=8794, help="localhost port (0 chooses a free port)")
+    parser.add_argument("--discovery", action="store_true", help="seed the natural-language discovery scenarios")
     parser.add_argument(
         "--db",
         type=Path,
@@ -33,7 +34,11 @@ def main(argv: list[str] | None = None) -> int:
 
     repo = Path(__file__).resolve().parents[2]
     database_path = args.db or repo / "work" / "unified_ask_demo" / f"run-{uuid4().hex[:12]}.sqlite"
-    fixture = UnifiedAskFixture(database_path, port=args.port)
+    if args.discovery:
+        from decision_discovery_fixture import DecisionDiscoveryFixture
+        fixture = DecisionDiscoveryFixture(database_path, port=args.port)
+    else:
+        fixture = UnifiedAskFixture(database_path, port=args.port)
     fixture.configure_agent(external_provider=False)
     atlas_id = fixture.workspace_ids[ATLAS]  # type: ignore[index]
     other_id = fixture.workspace_ids[OTHER]  # type: ignore[index]

@@ -16,13 +16,17 @@ async function setup() {
   }
   const nav = ["sources", "ask"].map(screen => Object.assign(element(screen), {dataset: {screen}}));
   const pending = [];
+  const submittedBodies = [];
   const polls = [];
   let current = "a";
   const workspaces = [{workspace_id: "a", name: "Atlas"}, {workspace_id: "b", name: "Other"}];
   const response = payload => ({ok: true, status: 200, json: async () => payload});
   async function fetch(path, options = {}) {
     if (path.startsWith("/api/product/ask/runs/")) return await new Promise(resolve => polls.push(payload => resolve(response(payload))));
-    if (path === "/api/product/ask") return await new Promise(resolve => pending.push(payload => resolve(response(payload))));
+    if (path === "/api/product/ask") {
+      submittedBodies.push(JSON.parse(options.body));
+      return await new Promise(resolve => pending.push(payload => resolve(response(payload))));
+    }
     if (path === "/api/workspaces/current" && options.method === "POST") current = JSON.parse(options.body).workspace_id;
     const payload = path === "/api/workspaces" ? {workspaces}
       : path === "/api/workspaces/current" ? {workspace: workspaces.find(w => w.workspace_id === current)}
@@ -39,9 +43,12 @@ async function setup() {
   await tick(); await tick();
   await element("ask").listeners.click(); await tick();
   assert.match(element("page").innerHTML, /id="ask-slot"/);
+  assert.doesNotMatch(element("page").innerHTML, /id="ask-slot" required/);
+  assert.match(element("page").innerHTML, /Discover automatically from my question/);
   element("ask-slot").value = "0";
-  const submit = () => element("page").listeners.submit({preventDefault() {}, target: {id: "ask-form", fields: {query: "What is current?", as_of: ""}}});
-  return {element, pending, polls, submit};
+  element("ask-form").fields = {query: "What is current?", as_of: ""};
+  const submit = () => element("page").listeners.submit({preventDefault() {}, target: element("ask-form")});
+  return {element, pending, polls, submit, submittedBodies};
 }
 
 (async () => {
@@ -75,5 +82,40 @@ async function setup() {
     polls[0](payload); await tick(); await tick();
     assert.doesNotMatch(ui("ask-result").innerHTML, /OBSOLETE_AGENT_FINAL|OLD_POLL_ERROR/);
   }
+  const automatic = await setup();
+  automatic.element("ask-slot").value = "";
+  automatic.element("ask-external").checked = true;
+  const firstQuestion = automatic.submit(); await tick();
+  assert.equal(automatic.submittedBodies[0].subject, undefined);
+  assert.equal(automatic.submittedBodies[0].allow_external_provider, true);
+  assert.equal(automatic.element("ask-external").checked, false);
+  const ambiguous = result(""); ambiguous.result.status = "NEEDS_SCOPE";
+  ambiguous.result.discovery = {status: "AMBIGUOUS", candidate_count: 2, candidates: [
+    {subject: "Launch", relation: "uses supplier", current_value: "B"},
+    {subject: "Support", relation: "uses supplier", current_value: "C"},
+  ]};
+  automatic.pending[0](ambiguous); await firstQuestion;
+  assert.match(automatic.element("ask-result").innerHTML, /choose-ask-scope/);
+  const continuation = automatic.element("page").listeners.click({target: {closest: () => ({dataset: {action: "choose-ask-scope", index: "0"}})}});
+  await tick();
+  assert.equal(automatic.submittedBodies[1].query, automatic.submittedBodies[0].query);
+  assert.equal(automatic.submittedBodies[1].subject, "Launch");
+  assert.equal(automatic.submittedBodies[1].allow_external_provider, false);
+  const needsDate = result(""); needsDate.result.status = "NEEDS_SCOPE";
+  needsDate.result.error = {code: "DATE_SCOPE_REQUIRED", message: "Choose a date"};
+  automatic.pending[1](needsDate); await continuation;
+  automatic.element("ask-form").fields.as_of = "2026-10-06";
+  await automatic.element("page").listeners.input({target: automatic.element("ask-date")});
+  const dated = automatic.submit(); await tick();
+  assert.equal(automatic.submittedBodies[2].subject, "Launch");
+  assert.equal(automatic.submittedBodies[2].query, automatic.submittedBodies[0].query);
+  automatic.pending[2](result("B")); await dated;
+  assert.match(automatic.element("ask-result").innerHTML, /0 model calls/);
+  automatic.element("ask-form").fields.query = "Which decision now?";
+  await automatic.element("page").listeners.input({target: automatic.element("ask-query")});
+  const nextQuestion = automatic.submit(); await tick();
+  assert.equal(automatic.submittedBodies[3].subject, undefined);
+  automatic.pending[3](result("NEXT")); await nextQuestion;
   console.log("PASS: scope/date/query invalidation, latest question wins, workspace response isolation");
+  console.log("PASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets");
 })().catch(error => {console.error(error); process.exitCode = 1;});

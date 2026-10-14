@@ -28,6 +28,14 @@ supersedes the earlier V1 feature freeze only for this approved scope; it does
 not authorize real Gemini runs, real-vault mutation, deployment or unrelated
 benchmark changes.
 
+## Natural-Language Decision Discovery — 2026-10-15
+
+The authorized follow-up lets Ask discover one reviewed decision slot from the
+question, with candidate selection for ambiguity and exact-date clarification.
+It uses the existing deterministic/Agent paths and preserves their trust gates.
+Scope and local offline/browser evidence are in the [feature SPEC](requirements/natural-language-decision-discovery/SPEC.md)
+and [delivery record](requirements/natural-language-decision-discovery/DELIVERY.md).
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,
