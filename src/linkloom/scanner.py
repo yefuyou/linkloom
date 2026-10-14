@@ -6,12 +6,13 @@ import hashlib
 import json
 import os
 import re
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+from linkloom.text_output import write_text as _write_text
 
 
 HEADING_PATTERN = re.compile(r"^(#{1,6})[ \t]+(.+?)\s*#*\s*$")
@@ -292,23 +293,6 @@ def _is_inside(candidate: Path, root: Path) -> bool:
     except ValueError:
         return False
     return True
-
-
-def _write_text(path: Path, content: str) -> None:
-    temporary_file = tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        newline="\n",
-        dir=path.parent,
-        delete=False,
-    )
-    try:
-        with temporary_file:
-            temporary_file.write(content)
-        os.replace(temporary_file.name, path)
-    except Exception:
-        Path(temporary_file.name).unlink(missing_ok=True)
-        raise
 
 
 def _build_summary(index: dict[str, Any]) -> str:

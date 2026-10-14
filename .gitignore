@@ -44,3 +44,6 @@ output/playwright/*-round*.png
 # OS/editor
 .DS_Store
 Thumbs.db
+
+# Per-checkout local verification and build output
+/work/
