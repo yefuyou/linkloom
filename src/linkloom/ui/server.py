@@ -124,6 +124,13 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
+        if self.server.unified_ask is not None and path == "/api/product/feedback":
+            try:
+                workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
+                self._send_json(self.server.unified_ask.feedback_list(workspace_id))
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/"):
             try:
                 workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
@@ -185,6 +192,16 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if self._reject_non_local_host():
             return
         path = unquote(urlsplit(self.path).path)
+        if path.startswith("/api/product/feedback/") and self.server.unified_ask is not None:
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            try:
+                result, status = self.server.unified_ask.feedback_action(path.rsplit("/", 1)[-1], payload)
+                self._send_json(result, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path == "/api/product/ask" and self.server.unified_ask is not None:
             payload = self._read_json_payload(MAX_REQUEST_BYTES)
             if payload is None:

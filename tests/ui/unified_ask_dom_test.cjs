@@ -18,10 +18,12 @@ async function setup() {
   const pending = [];
   const submittedBodies = [];
   const polls = [];
+  const feedbackPosts = [];
   let current = "a";
   const workspaces = [{workspace_id: "a", name: "Atlas"}, {workspace_id: "b", name: "Other"}];
   const response = payload => ({ok: true, status: 200, json: async () => payload});
   async function fetch(path, options = {}) {
+    if (path.startsWith("/api/product/feedback/")) return await new Promise(resolve => feedbackPosts.push(payload => resolve(response(payload))));
     if (path.startsWith("/api/product/ask/runs/")) return await new Promise(resolve => polls.push(payload => resolve(response(payload))));
     if (path === "/api/product/ask") {
       submittedBodies.push(JSON.parse(options.body));
@@ -48,7 +50,7 @@ async function setup() {
   element("ask-slot").value = "0";
   element("ask-form").fields = {query: "What is current?", as_of: ""};
   const submit = () => element("page").listeners.submit({preventDefault() {}, target: element("ask-form")});
-  return {element, pending, polls, submit, submittedBodies};
+  return {element, pending, polls, submit, submittedBodies, feedbackPosts};
 }
 
 (async () => {
@@ -158,4 +160,21 @@ async function setup() {
   automatic.pending[3](result("NEXT")); await nextQuestion;
   console.log("PASS: scope/date/query invalidation, latest question wins, workspace response isolation");
   console.log("PASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets");
+  const feedbackUi = await setup();
+  const feedbackForm = feedbackUi.element("feedback-form");
+  feedbackForm.fields = {term: "供方", relation: "uses supplier", actor: "human"};
+  feedbackUi.element("feedback-status").isConnected = true;
+  const originalQuestion = feedbackUi.element("ask-form").fields.query;
+  const mutation = feedbackUi.element("page").listeners.submit({preventDefault() {}, target: feedbackForm});
+  await tick();
+  assert.equal(feedbackUi.element("ask-submit-button").disabled, true);
+  await feedbackUi.submit();
+  assert.equal(feedbackUi.submittedBodies.length, 0);
+  feedbackUi.feedbackPosts[0]({entry: {status: "pending"}}); await mutation;
+  assert.equal(feedbackUi.element("ask-submit-button").disabled, false);
+  assert.equal(feedbackUi.element("ask-form").fields.query, originalQuestion);
+  const afterFeedback = feedbackUi.submit(); await tick();
+  feedbackUi.pending[0](result("AFTER_FEEDBACK")); await afterFeedback;
+  assert.match(feedbackUi.element("ask-result").innerHTML, /AFTER_FEEDBACK/);
+  console.log("PASS: feedback mutation blocks racing Ask, preserves query and resumes after save");
 })().catch(error => {console.error(error); process.exitCode = 1;});

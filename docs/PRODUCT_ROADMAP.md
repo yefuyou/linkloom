@@ -53,6 +53,15 @@ support to Unified Ask or grant source relations formal decision authority.
 The [delivery](requirements/bounded-multihop/DELIVERY.md) reports the first
 independent 8/10 outcome, safe unknowns and remaining grammar/conflict limits.
 
+## Human-Governed Feedback Memory — 2026-10-15
+
+The authorized follow-up lets a local human propose, approve and revoke a
+workspace-specific terminology mapping used by Ask discovery. It reuses the
+existing Memory lifecycle; business decisions still require independent source
+verification and authorization. The [delivery](requirements/feedback-memory/DELIVERY.md)
+records comparable before/pending/approved/revoked results, offline HTTP/browser
+acceptance and the deliberately narrow adaptation boundary.
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,

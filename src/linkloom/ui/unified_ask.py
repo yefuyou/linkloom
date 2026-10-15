@@ -11,6 +11,7 @@ from typing import Any, Callable
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
+from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
 
 # Supported task families, not general intent understanding. Investigation wins
@@ -57,6 +58,24 @@ class UnifiedAskService:
         self.investigation = investigation
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
         self._lock = Lock()
+        self.feedback_memory = (FeedbackMemory(app.repository.database_path + ".feedback-memory.jsonl")
+                                if app is not None and app.repository.database_path != ":memory:" else None)
+
+    def feedback_list(self, workspace_id: str) -> dict[str, Any]:
+        with self.app._store_lock:
+            self._check_workspace(workspace_id)
+            if self.feedback_memory is None:
+                raise ProductApplicationError("FEEDBACK_UNAVAILABLE", "Feedback needs a persistent product database.", status=503)
+            return self.feedback_memory.listing(workspace_id)
+
+    def feedback_action(self, action: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        with self.app._store_lock:
+            workspace_id = payload.get("workspace_id")
+            self._check_workspace(workspace_id)
+            if self.feedback_memory is None:
+                raise ProductApplicationError("FEEDBACK_UNAVAILABLE", "Feedback needs a persistent product database.", status=503)
+            return self.feedback_memory.action(action, payload, workspace_id,
+                self.app.relation_resolver, self._trusted_slots(workspace_id))
 
     def config(self) -> dict[str, Any]:
         service = self.investigation()
@@ -141,9 +160,18 @@ class UnifiedAskService:
             # Keep the current-workspace check and setup atomic with workspace selection.
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
-                discovery = discover_scope(run.query, self._trusted_slots(run.workspace_id),
-                                           self.app.relation_resolver, subject=values["subject"],
+                slots = self._trusted_slots(run.workspace_id)
+                resolver, memory = self.app.relation_resolver, None
+                if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
+                    resolver, memory = self.feedback_memory.snapshot(run.workspace_id, run.query, resolver, slots)
+                discovery = discover_scope(run.query, slots,
+                                           resolver, subject=values["subject"],
                                            relation=values["relation"])
+                if memory is not None:
+                    discovery["memory"] = memory
+                    if memory["conflicts"]:
+                        discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0,
+                            reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                 result["discovery"] = discovery
                 if discovery["scope"] is None:
                     result["path"] = None
