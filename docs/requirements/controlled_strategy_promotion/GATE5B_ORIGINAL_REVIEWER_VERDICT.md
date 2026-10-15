@@ -107,7 +107,7 @@ observation and proves the comparison fails closed.
 
 The required adjacent command was attempted independently. The first run was
 blocked by the host's write permission on
-`C:\Users\18019\AppData\Local\Temp\pytest-of-18019` (304 passed, 1 skipped,
+`<system-temp>/pytest-of-<user>` (machine-specific path redacted during RC preparation; 304 passed, 1 skipped,
 116 fixture setup errors, and 12 permission-related failures); a project-temp
 retry hit the same pytest temp cleanup permission boundary and was stopped.
 This is an environment evidence limitation, not counted as a new Gate 5 code

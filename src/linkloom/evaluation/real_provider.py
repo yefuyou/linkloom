@@ -55,7 +55,7 @@ class CommandRunner:
 class AgyCliAdapter:
     def __init__(
         self,
-        executable: str = r"C:\Users\18019\AppData\Local\agy\bin\agy.exe",
+        executable: str = "agy",
         model: str = "gemini-3.1-pro-high",
         effort: str = "high",
         default_timeout: int = 300,

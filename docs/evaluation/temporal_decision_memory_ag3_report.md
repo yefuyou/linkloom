@@ -2,7 +2,7 @@
 
 - **Role**: AG-3 baseline, Codex repair verification, and independent Review B
 - **Target**: LinkLoom Sprint V2 Phase 3 SQLite Temporal Decision Memory
-- **Repository**: `D:\webproject\Linkloom`
+- **Repository**: LinkLoom checkout (machine-specific path redacted during RC preparation)
 - **Execution Date**: 2026-09-23
 - **Status**: **PASS (14/14 focused tests passed; independent Review B PASS)**
 
@@ -46,10 +46,10 @@ $env:PYTHONPATH='src'; python -m pytest tests/unit/test_temporal_decision_memory
 $env:PYTHONPATH='src'; python scripts/run_temporal_decision_memory_demo.py
 ```
 
-**Exact Console Output**:
+**Console Output** (output path made repository-relative during RC preparation):
 ```json
 {
-  "output": "D:\\webproject\\Linkloom\\docs\\evaluation\\temporal_decision_memory_demo.json"
+  "output": "docs/evaluation/temporal_decision_memory_demo.json"
 }
 ```
 
