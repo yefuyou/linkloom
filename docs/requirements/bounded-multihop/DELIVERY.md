@@ -17,8 +17,10 @@ no expected answers and does not stand in for a learned planning model.
 
 RuntimeAgentAdapter._planned_search_query reconstructs parent search/read pairs
 from the durable ledger, verifies typed relation objects, then uses the existing
-SubgoalQueryStrategy. A retrieved hit alone is insufficient. ToolRuntime pins the
-full source_context identity and allowed tools; read_verified_note accepts only
+SubgoalQueryStrategy. A retrieved hit alone is insufficient. ToolRuntime checks
+supplied source_context identity and allowed tools (some identity fields remain
+optional in the existing API); this controller supplies the complete identity.
+read_verified_note accepts only
 an earlier search-issued evidence ID, rechecks the indexed file version and
 quote hash, and fails when the source changes. The isolated fixture loader
 indexes only the selected workspace; injected foreign source context fails
@@ -28,9 +30,19 @@ Existing grounding recognizes aliases, owners, direct leaders, replacements,
 approvals and limited dates. TaskPlan/v2's declared directed type vocabulary is
 narrower: alias_of_project, owner_of_project, reports_to; only the explicit
 alias+owner combined path was previously permitted. This slice uses separate
-single-edge subgoals, two or three hops total. The only grounding change filters
+single-edge subgoals, two or three hops total. The source grounding change filters
 reports_to by an explicitly requested snapshot date, matching the existing
 owner rule. It never infers validity between snapshots.
+
+Independent review reproduced two Final gaps: search-only citations could support
+an unrelated claim, and an unrelated main answer could accompany a correct
+rationale. validate_relation_final now requires actual verified reads and binds
+every atomic claim to the declared hop's relation, subject, verified target and
+date. Complete main answers must cover every hop. This guard applies only to the
+two declared TaskPlan/v2 relation profiles. Targeted independent re-review found
+no remaining safety blockers. Each demo execution also creates fresh vault,
+index, runtime and trace directories, preventing output-root reuse from retaining
+another workspace's files.
 
 Unified Ask remains unchanged. It discovers one approved decision slot, pins
 subject/relation/date, and uses start_temporal with an authority-bound validator.
@@ -64,6 +76,8 @@ wording returns planning_failed; HOLD-G safely keeps the verified owner and
 stops, but classifies conflicting downstream reporting evidence as insufficient
 rather than conflicting_evidence. Neither disputed leader is asserted. These
 are real limits; the acceptance set was not rewritten to claim success.
+After the Final safety repairs, replay still scored 8/10 with the same two failure
+categories. That exposed-set replay is not a second blind evaluation.
 
 The ordinary two-hop HOLD-A executes search(owner), read(q7.md), then
 search(leader, owner=Elena Voss), then reads(q7.md,m4.md): 5 tools, 6 model turns.
@@ -82,7 +96,7 @@ checked between turns; it does not promise interruption of arbitrary native I/O.
 
 ## Safety and local reproduction
 
-- New plan/temporal and real Runtime attack tests: 11 passed.
+- New plan/temporal and real Runtime attack tests: 14 passed.
 - ToolRuntime, durable/Fake loops, original Unified Ask and Discovery: 102 passed.
 - Focused TaskPlan/Grounding/planner: 68 passed, 30 history-dependent tests
   deselected. Before changes the unrestricted baseline run had 62 passed and
@@ -103,7 +117,7 @@ The heldout command intentionally returns nonzero for the two documented task
 failures. Inspect its local report.json and Runtime artifacts for the actual
 calls and source identities. FakeModel demonstrates execution and safety
 contracts, entity-independent binding and bounded grammar; it cannot establish
-real-model generalization to unseen questions. Production delta: 51 added/1
-removed planner lines and 2 added grounding lines; no dependencies, databases,
-new Final schema or Runtime abstraction. The 203-line demo is specific to these
-source-relation contracts. Independent review status is recorded at closure.
+real-model generalization to unseen questions. Production delta: 125 added/3
+removed lines across four existing modules (planner, source grounding, TaskPlan,
+retrieval agent); no dependencies, databases, new Final schema or Runtime
+abstraction. The 206-line demo is specific to these source-relation contracts.

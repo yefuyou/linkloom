@@ -7,6 +7,8 @@ exact historical reporting snapshot; conflicting reporting sources with a known
 owner; unseen mixed-language question wording.
 
 Use the existing model-generated TaskPlan mode and normal read-only tool loop;
+require one of the declared two/three-hop v2 profiles before execution, so the
+relation Final guard applies. Other model-produced paths are outside this slice.
 no fixture controller or downstream answer/entity hints. Keep the same typed
 paths, workspace/source checks, ContextAssembler and Reviewer. Reserve planning,
 any one permitted plan repair, tools and Final inside the budget. Record plan
