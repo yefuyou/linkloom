@@ -1,0 +1,295 @@
+{
+  "schema_version": "bounded-multihop-cases/v1",
+  "cases": [
+    {
+      "id": "HOLD-A",
+      "tags": ["A"],
+      "query": "Who is the direct leader of the owner of Amber Relay?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "q7.md",
+          "content": "Elena Voss is the accountable owner of Amber Relay."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "m4.md",
+          "content": "Elena Voss reports directly to Rowan Pike."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["elena voss", "rowan pike"],
+        "reason": null,
+        "required_sources": ["q7.md", "m4.md"]
+      }
+    },
+    {
+      "id": "HOLD-B",
+      "tags": ["B"],
+      "query": "Who owns the project behind Drift-Key and who leads that owner?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "r2.md",
+          "content": "Drift-Key is the team alias for Copper Meadow."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "u8.md",
+          "content": "Jules Hart is the accountable owner of Copper Meadow."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "v3.md",
+          "content": "Jules Hart reports directly to Quinn Shaw."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["copper meadow", "jules hart", "quinn shaw"],
+        "reason": null,
+        "required_sources": ["r2.md", "u8.md", "v3.md"]
+      }
+    },
+    {
+      "id": "HOLD-C",
+      "tags": ["C"],
+      "query": "Who is the direct leader of the owner of Silver Reach?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "p5.md",
+          "content": "Noah Reed is the accountable owner of Silver Reach."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "t9.md",
+          "content": "Noah Reed reports directly to Morgan Vale."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["noah reed", "morgan vale"],
+        "reason": null,
+        "required_sources": ["p5.md", "t9.md"]
+      }
+    },
+    {
+      "id": "HOLD-D",
+      "tags": ["D"],
+      "query": "As of 2025-09-01, who owns Violet Gate and who is their direct leader?",
+      "workspace_id": "heldout-workspace",
+      "as_of": "2025-09-01",
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "c6.md",
+          "content": "As of 2025-09-01 Priya Lane is the accountable owner of Violet Gate."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "d4.md",
+          "content": "As of 2025-09-01 Priya Lane reports directly to Avery Quinn."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "e8.md",
+          "content": "As of 2026-02-01 Priya Lane reports directly to Blair Stone."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["priya lane", "avery quinn"],
+        "reason": null,
+        "required_sources": ["c6.md", "d4.md"]
+      }
+    },
+    {
+      "id": "HOLD-E",
+      "tags": ["E"],
+      "query": "Who is the direct leader of the owner of Harbor Echo?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "g1.md",
+          "content": "Asha Kim is the accountable owner of Harbor Echo."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "h5.md",
+          "content": "Arden Kim is the accountable owner of Harbor Echo."
+        }
+      ],
+      "expected": {
+        "outcome": "refused",
+        "values": [],
+        "reason": "conflicting_evidence",
+        "required_sources": []
+      }
+    },
+    {
+      "id": "HOLD-F",
+      "tags": ["F"],
+      "query": "Who is the direct leader of the owner of Onyx Harbor?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "b2.md",
+          "content": "Riley Fox is the accountable owner of Onyx Harbor."
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "values": ["riley fox"],
+        "reason": "evidence_insufficient",
+        "required_sources": ["b2.md"]
+      }
+    },
+    {
+      "id": "HOLD-G",
+      "tags": ["G"],
+      "query": "Who is the direct leader of the owner of Mariner Field?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "s4.md",
+          "content": "Tess Avery is the accountable owner of Mariner Field."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "w1.md",
+          "content": "Tess Avery reports directly to Devon Hart."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "x6.md",
+          "content": "Tess Avery reports directly to Casey North."
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "values": ["tess avery"],
+        "reason": "conflicting_evidence",
+        "required_sources": ["s4.md"]
+      }
+    },
+    {
+      "id": "HOLD-H",
+      "tags": ["H"],
+      "query": "谁负责琥珀线路？其直属领导是谁？",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "j6.md",
+          "content": "Lena Guo 是琥珀线路的负责人。"
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "k2.md",
+          "content": "Lena Guo reports directly to Marcus Reed."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["lena guo", "marcus reed"],
+        "reason": null,
+        "required_sources": ["j6.md", "k2.md"]
+      }
+    },
+    {
+      "id": "HOLD-I",
+      "tags": ["I"],
+      "query": "Who is the direct leader of the owner of Cinder Atlas?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "l3.md",
+          "content": "Owen Bell is the accountable owner of Cinder Atlas."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "n8.md",
+          "content": "Owen Bell reports directly to Harper Vale."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "a4.md",
+          "content": "Unrelated Orbit contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "a9.md",
+          "content": "Unrelated Signal contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "b7.md",
+          "content": "Unrelated Quarry contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "c3.md",
+          "content": "Unrelated Meadow contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "d8.md",
+          "content": "Unrelated Harbor contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "e1.md",
+          "content": "Unrelated Summit contains a planning discussion about a manager."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": ["owen bell", "harper vale"],
+        "reason": null,
+        "required_sources": ["l3.md", "n8.md"]
+      }
+    },
+    {
+      "id": "HOLD-J",
+      "tags": ["J"],
+      "query": "Who is the direct leader of the owner of Moss River?",
+      "workspace_id": "heldout-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "heldout-workspace",
+          "path": "l2.md",
+          "content": "Uma Hale is the accountable owner of Moss River."
+        },
+        {
+          "workspace_id": "foreign-workspace",
+          "path": "m3.md",
+          "content": "Uma Hale reports directly to Ellis Gray."
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "values": ["uma hale"],
+        "reason": "evidence_insufficient",
+        "required_sources": ["l2.md"]
+      }
+    }
+  ]
+}
