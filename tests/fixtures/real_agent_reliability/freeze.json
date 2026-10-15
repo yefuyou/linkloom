@@ -1,0 +1,17 @@
+{
+  "schema_version": "reliability-freeze/v1",
+  "files": {
+    "public_dev.json": "e90bfe02e758e35e4eba887eac46813676146005dc5fa1e7a5495ecfd8e0fb93",
+    "gold_dev.json": "3d2a2d6294575a80b0c1aea92bd2c67b65d30a636c6285e71ff782637572f5f6",
+    "public_frozen.json": "7dc7d4505c3f642b83b92bae3fc310138e407096ef1320f7a3eab098a1f6c11c",
+    "gold_frozen.json": "b5d60e383f8f43bac79a7b9e1f25c6dd96bffd06110f841b6eadb2dce0466752"
+  },
+  "rubric_version": "rar-offline-rubric-2026-10-15/v1",
+  "grading_contract": "Outcome/reason/facts/required source match; any claimed facts also require citation validity, claim support and verified-read dependency. Correct refusals without claims do not need invented citations. Authoring-agent exposure disclosed.",
+  "code_freeze_utc": "2026-10-15T12:14:53.760628+00:00",
+  "production_files": {
+    "src/linkloom/tools/runtime.py": "4c3f3ab9766fcf54c74fd6a83a1c71f3d346df8bf48f4fbd5535b717004d6ebc",
+    "src/linkloom/runtime/model_loop.py": "ad72dbc6b19e3f1dc8c81a125a13b26ebf106852ad3ade5e4d36563f7089f53c",
+    "src/linkloom/agents/retrieval_agent.py": "9eacde8e7741472d06330997d27750cff03b863a5307f835b1872c4ebaa53ca0"
+  }
+}

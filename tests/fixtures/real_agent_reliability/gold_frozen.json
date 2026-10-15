@@ -1,0 +1,23 @@
+{
+  "schema_version": "real-agent-reliability-gold/v1",
+  "partition": "frozen",
+  "rubric_version": "rar-offline-rubric-2026-10-15/v1",
+  "cases": [
+    {"id": "RAR-F-A", "expected": {"outcome": "complete", "facts": ["wrenwell"], "reason": null, "required_sources": ["decision-2026-10-07.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "C"]}},
+    {"id": "RAR-F-B", "expected": {"outcome": "complete", "facts": ["birchline"], "reason": null, "required_sources": ["decision-2026-10-01.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "C"]}},
+    {"id": "RAR-F-C", "expected": {"outcome": "complete", "facts": ["mara quinn", "noel hart"], "reason": null, "required_sources": ["a-owner.md", "a-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-D", "expected": {"outcome": "complete", "facts": ["silver reach", "owen dale", "priya shah"], "reason": null, "required_sources": ["d-alias.md", "d-owner.md", "d-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-E", "expected": {"outcome": "complete", "facts": ["rin zhao", "sol vega"], "reason": null, "required_sources": ["e-owner.md", "e-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-F", "expected": {"outcome": "complete", "facts": ["zed kaur", "quill ames"], "reason": null, "required_sources": ["f-owner.md", "f-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-G", "expected": {"outcome": "refusal", "facts": [], "reason": "conflicting_evidence", "required_sources": [], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-H", "expected": {"outcome": "complete", "facts": ["asha bell", "bo lin"], "reason": null, "required_sources": ["h-owner.md", "h-leader-old.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-I", "expected": {"outcome": "partial", "facts": ["uma ray"], "reason": "conflicting_evidence", "required_sources": ["i-owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-J", "expected": {"outcome": "partial", "facts": ["pax green"], "reason": "evidence_insufficient", "required_sources": ["j-owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-K", "expected": {"outcome": "refusal", "facts": [], "reason": "no_match", "required_sources": [], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-L", "expected": {"outcome": "partial", "facts": ["nia cole"], "reason": "evidence_insufficient", "required_sources": ["l-owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-M", "expected": {"outcome": "complete", "facts": ["tara moss", "uli chen"], "reason": null, "required_sources": ["m-owner.md", "m-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-N", "expected": {"outcome": "partial", "facts": ["yara kim"], "reason": "evidence_insufficient", "required_sources": ["n-owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-O", "expected": {"outcome": "complete", "facts": ["sana wu", "theo gray"], "reason": null, "required_sources": ["o-hostile.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-F-P", "expected": {"outcome": "runtime_failure", "facts": [], "reason": "budget_exhausted", "required_sources": [], "refusal_class": null, "exact_facts": false, "baseline_compare": ["A", "B", "C"]}}
+  ]
+}

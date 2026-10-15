@@ -889,7 +889,12 @@ def create_retrieval_tool_runtime(
         source = arguments["source_context"]
         if expected_source_context is not None:
             for key, value in expected_source_context.items():
-                if key in source and source[key] != value:
+                # Null fixture metadata carries no identity. Every configured
+                # identity must be copied exactly, including its JSON type.
+                if key not in source and value is None:
+                    continue
+                if (key not in source or type(source[key]) is not type(value)
+                        or source[key] != value):
                     raise ValidationError(
                         "source_context does not match the active Runtime source.",
                         details={"path": f"$.source_context.{key}", "reason": "semantic_mismatch"},

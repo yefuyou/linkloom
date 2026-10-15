@@ -203,6 +203,7 @@ class SingleAgentModelLoop:
         max_steps: int = 8,
         verified_evidence_context_limit: int = 0,
         task_plan: TaskPlan | None = None,
+        workspace_id: str | None = None,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -235,6 +236,9 @@ class SingleAgentModelLoop:
         self.max_steps = max_steps
         self.verified_evidence_context_limit = verified_evidence_context_limit
         self.task_plan = task_plan
+        if workspace_id is not None and (not isinstance(workspace_id, str) or not workspace_id.strip()):
+            raise ValidationError("Model loop workspace_id must be non-empty text or None.")
+        self.workspace_id = workspace_id
 
     @staticmethod
     def _project_state(
@@ -277,6 +281,7 @@ class SingleAgentModelLoop:
         agent_id: str,
         before_sequence: int,
         workspace_id: str | None = None,
+        source_fingerprint: str | None = None,
         max_bytes: int = MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
         audit: dict[str, Any] | None = None,
     ) -> list[ToolResult]:
@@ -331,6 +336,7 @@ class SingleAgentModelLoop:
                 if expected_workspace is not None:
                     break
 
+        expected_fingerprint = source_fingerprint or expected_workspace
         verified: list[tuple[Any, ToolResult, list[dict[str, Any]]]] = []
         for record in records:
             result = ToolResult.from_dict(record.result)
@@ -346,11 +352,11 @@ class SingleAgentModelLoop:
             record_workspace = None
             source_context = record.arguments.get("source_context") if isinstance(record.arguments, dict) else None
             if isinstance(source_context, dict):
-                for key in ("workspace_id", "vault_root_fingerprint"):
-                    candidate = source_context.get(key)
-                    if isinstance(candidate, str) and candidate.strip():
-                        record_workspace = candidate.strip()
-                        break
+                record_workspace = source_context.get("workspace_id")
+                record_fingerprint = source_context.get("vault_root_fingerprint")
+                if (expected_fingerprint is not None
+                        and record_fingerprint not in (None, expected_fingerprint)):
+                    continue
             if expected_workspace is not None and record_workspace not in (None, expected_workspace):
                 continue
             values = result.value if isinstance(result.value, list) else [result.value]
@@ -690,7 +696,8 @@ class SingleAgentModelLoop:
                         task_id=task_id,
                         agent_id=agent_id,
                         before_sequence=next_sequence,
-                        workspace_id=state.source.vault_root_fingerprint,
+                        workspace_id=self.workspace_id or state.source.vault_root_fingerprint,
+                        source_fingerprint=state.source.vault_root_fingerprint,
                         max_bytes=min(
                             MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
                             MAX_PROVIDER_USER_INPUT_BYTES - len(user_input.encode("utf-8")) - 2048,
@@ -2311,7 +2318,8 @@ class SingleAgentModelLoop:
                             task_id=task_id,
                             agent_id=agent_id,
                             before_sequence=turn.sequence,
-                            workspace_id=state.source.vault_root_fingerprint,
+                            workspace_id=self.workspace_id or state.source.vault_root_fingerprint,
+                            source_fingerprint=state.source.vault_root_fingerprint,
                             max_bytes=evidence_budget,
                             audit=context_audit,
                         ),

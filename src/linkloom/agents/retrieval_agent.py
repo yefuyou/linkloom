@@ -1279,6 +1279,7 @@ class RetrievalAgent:
                     self.verified_evidence_context_limit if task.workflow == "team_decision" else 0
                 ),
                 task_plan=self.task_plan if task.workflow == "team_decision" else None,
+                workspace_id=self.expected_workspace_id,
             )
             invoke_loop = loop.resume if self.resume_model_loop else loop.run
             loop_result = invoke_loop(

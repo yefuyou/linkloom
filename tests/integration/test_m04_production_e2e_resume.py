@@ -32,6 +32,13 @@ class ProcessCrash(BaseException):
     """Test-only process death which bypasses ordinary error finalization."""
 
 
+def source_context_from_request(request):
+    marker = ('team_decision_request=' if 'team_decision_request=' in request.user_input
+              else 'retrieval_request=')
+    packet, _ = json.JSONDecoder().raw_decode(request.user_input.split(marker, 1)[1])
+    return packet['source_context']
+
+
 class CrashCheckpointer(SQLiteCheckpointer):
     def __init__(self, root, boundary):
         super().__init__(root)
@@ -79,7 +86,7 @@ class PolicyProvider:
         observation = request.observation
         if observation is None:
             tool = "search_notes"
-            arguments = {"query": self.query, "source_context": {"policy": "m04"}, "limit": 2}
+            arguments = {"query": self.query, "source_context": source_context_from_request(request), "limit": 2}
         elif (self.read and observation.status == "ok" and observation.value
               and request.previous_tool_call.tool_id == "search_notes"):
             tool = "read_verified_note"
@@ -112,7 +119,7 @@ class V2BatchProvider:
                     tool_id="search_notes",
                     arguments={
                         "query": "shared",
-                        "source_context": {"policy": "m04-v2"},
+                        "source_context": source_context_from_request(request),
                         "limit": 2,
                     },
                     run_id=request.run_id,
@@ -481,7 +488,7 @@ def test_restart_does_not_reset_retrieval_step_allowance(environment):
             self.requests.append(request)
             return ModelResponse(action=ModelAction.tool(ToolCall(
                 call_id=f"again:{request.sequence}", tool_id="search_notes",
-                arguments={"query": "shared", "source_context": {}, "limit": 2},
+                arguments={"query": "shared", "source_context": source_context_from_request(request), "limit": 2},
                 sequence=request.sequence,
             )))
 

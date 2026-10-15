@@ -73,6 +73,17 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### Real-Agent Reliability Sprint — 2026-10-15
+
+The isolated reliability sprint measured the existing bounded Agent with new
+synthetic cases and Gemini 3.8 Flash, then repaired two source/workspace identity
+defects. The [delivery](requirements/real-agent-reliability/DELIVERY.md) preserves
+the first frozen 12/16 result, live successes/failures, cost and scale limits,
+and the distinction between host-compiled plans and model-selected tools. It
+does not establish enterprise identity/RBAC, general autonomous planning,
+universal injection resistance, or reliable p95 latency. No real vault or
+historical benchmark records were changed.
+
 LinkLoom helps project teams recover the currently valid decision, its history,
 supporting evidence, temporal validity, and why the conclusion is believed to
 be valid. Meeting notes, timestamped conversations, project documents, and
