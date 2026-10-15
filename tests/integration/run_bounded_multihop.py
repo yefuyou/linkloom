@@ -34,11 +34,10 @@ class SourceOnlyController:
         self.values = {}
         self.claims = []
         self.searched = False
-        self.started = time.monotonic()
 
     def __call__(self, request):
-        if time.monotonic() - self.started > 30:
-            raise ValidationError('Offline investigation deadline exceeded')
+        # This injected fake is bounded by the caller's Runtime step/request caps.
+        # A host scheduling or snapshot delay is not a model-policy refusal.
         packet = json.loads(request.user_input.split('team_decision_request=', 1)[1])
         plan = TaskPlan.from_dict(packet['task_plan'])
         goal = plan.subgoals[self.slot]

@@ -1,0 +1,3 @@
+# Historical SHA-256 identities cover original bytes, including line endings.
+GOLD.json -text
+CASES.json -text

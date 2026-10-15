@@ -1,0 +1,10 @@
+{
+  "source_commit": "d186acc64ad67b3a68aa460fd658d6ca72661419",
+  "source_directory": "work/temporal_decision_eval",
+  "data_class": "synthetic",
+  "interpretation": "Historical developer-inspected offline fixtures; not a blind holdout. Original bytes, no oracle edits.",
+  "sha256": {
+    "GOLD.json": "3d5eb89aecc3ee81b36bbfd4dd7e1a59853e2340a72fc6645bddb780dc07bf62",
+    "CASES.json": "fc9d4d7b0b58bbd4cd80724ab0aa9338bc8b333861aac2f2d5f23b9426bad844"
+  }
+}

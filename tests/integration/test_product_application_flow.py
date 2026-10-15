@@ -205,9 +205,13 @@ def test_temporal_http_provider_unknown_keeps_read_source_without_verified_final
                         outcome="unknown_provider_outcome",
                     ))
                 if self.calls == 1:
+                    source_context = json.loads(request.user_input.rsplit(
+                        "team_decision_request=", 1,
+                    )[1])["source_context"]
                     return ModelResponse(action=ModelAction.tool(ToolCall(
                         call_id="find-source", tool_id="search_notes",
-                        arguments={"query": "Launch Birchline", "limit": 5, "source_context": {}},
+                        arguments={"query": "Launch Birchline", "limit": 5,
+                                   "source_context": source_context},
                     )))
                 if self.calls == 2:
                     return ModelResponse(action=ModelAction.tool(ToolCall(
@@ -219,6 +223,7 @@ def test_temporal_http_provider_unknown_keeps_read_source_without_verified_final
                     arguments={"query": "Launch supplier", "limit": 5},
                 )))
 
+        formal_before = app.store.list_decisions(workspace_id)
         model = InterruptedProvider()
         server.investigation_service = ProductInvestigationService(
             app, model_factory=lambda _query: model, max_steps=6,
@@ -242,10 +247,17 @@ def test_temporal_http_provider_unknown_keeps_read_source_without_verified_final
         if fail_at > 1:
             assert snapshot["evidence"][0]["supports"] == ["Read during incomplete investigation"]
         assert model.calls == fail_at  # No automatic resend of the uncertain request.
+        # Repeated browser polls inspect the same terminal state; they cannot resend.
+        for _ in range(2):
+            repeated_status, repeated = _client(base, f"/api/agent/decisions/runs/{started['run']['id']}")
+            assert repeated_status == 503
+            assert repeated["decision"] is None
+        assert model.calls == fail_at
         _, recovered = _client(base, "/api/decisions/recover", method="POST", data={
             "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
         })
         assert recovered["recovery"]["effective"]["value"] == "Birchline"
+        assert app.store.list_decisions(workspace_id) == formal_before
     finally:
         _stop_product_server(server, worker, app)
 
@@ -699,6 +711,16 @@ def test_investigation_runtime_reads_replacement_source_before_final(tmp_path, m
 
 
 def test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason(tmp_path, monkeypatch):
+    _exercise_temporal_agent_replacement(tmp_path, monkeypatch)
+
+
+@pytest.mark.legacy_historical
+def test_legacy_temporal_replacement_matches_original_gold(tmp_path, monkeypatch):
+    gold_path = Path(__file__).resolve().parents[1] / "fixtures/legacy_temporal_decision/GOLD.json"
+    _exercise_temporal_agent_replacement(tmp_path, monkeypatch, historical_gold=gold_path)
+
+
+def _exercise_temporal_agent_replacement(tmp_path, monkeypatch, *, historical_gold=None):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
     replacement = _claim("Wrenwell")
     replacement.update(temporal_status="EXPLICIT", valid_from="2026-10-07")
@@ -989,8 +1011,10 @@ def test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_re
             _, refusal_snapshot = _client(base, f"/api/agent/decisions/runs/{refusal_run}")
         assert refusal_snapshot["kind"] == "error", refusal_snapshot
         assert refusal_snapshot["error"]["code"] == "TEMPORAL_DECISION_MISSING"
-        gold_path = Path(__file__).resolve().parents[2] / "work" / "temporal_decision_eval" / "GOLD.json"
-        gold_cases = json.loads(gold_path.read_text(encoding="utf-8"))["cases"]
+        if historical_gold is None:
+            return  # Core contract assertions above are independent of historical scores.
+        # Only the historical gate opens original Gold, after Runtime termination.
+        gold_cases = json.loads(historical_gold.read_text(encoding="utf-8"))["cases"]
         for case_id, actual in scored_snapshots.items():
             expected = gold_cases[case_id]
             timeline = actual["temporal_decision"]
@@ -1010,9 +1034,10 @@ def test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_re
         _stop_product_server(server, worker, app)
 
 
+@pytest.mark.legacy_historical
 def test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold(tmp_path, monkeypatch):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
-    frozen_root = Path(__file__).resolve().parents[2] / "work" / "temporal_decision_eval"
+    frozen_root = Path(__file__).resolve().parents[1] / "fixtures/legacy_temporal_decision"
     cases = json.loads((frozen_root / "CASES.json").read_text(encoding="utf-8"))
     setup = cases["holdout_setup"]
     claims = []

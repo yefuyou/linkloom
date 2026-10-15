@@ -1,5 +1,9 @@
 # Mainline RC1 review packet
 
+Historical RC1 evidence retained unchanged below. RC2 repairs and gate separation
+are recorded in [MAINLINE_RC2_REVIEW.md](MAINLINE_RC2_REVIEW.md); subsequent
+results do not erase the failures observed here.
+
 Date: 2026-10-15. Target: `master`. Scope: integrate the accepted product baseline,
 add an offline PR gate, and prepare a Draft PR. This packet does not approve a merge.
 

@@ -614,9 +614,9 @@ def poll_product_ask(
     run_id: str,
     workspace_id: str,
     *,
-    timeout: float = 30.0,
+    timeout: float = 90.0,
 ) -> tuple[int, dict[str, Any]]:
-    """Poll the unified envelope until it reaches a terminal HTTP result."""
+    """Bounded client wait; expiration does not mean the Runtime has failed."""
 
     deadline = monotonic() + timeout
     latest_status = 202
@@ -630,7 +630,10 @@ def poll_product_ask(
         if result.get("status") not in {"INVESTIGATING"}:
             return latest_status, latest
         sleep(0.01)
-    raise AssertionError(f"unified ask did not finish: {latest_status} {latest}")
+    raise AssertionError(
+        f"HTTP polling deadline ({timeout}s) reached; Runtime may still be running: "
+        f"{latest_status} {latest}"
+    )
 
 
 __all__ = [

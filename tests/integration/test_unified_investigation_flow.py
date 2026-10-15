@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+from threading import Event, local
+from time import monotonic
 
 from run_bounded_multihop import run_case
 import pytest
@@ -69,15 +71,33 @@ def test_source_permission_uncertain_budget_and_unsupported(demo):
     assert len(demo.relation_models[0].requests) <= 7
 
 
-def test_exposed_hold_g_conflict_regression(tmp_path):
+@pytest.mark.parametrize("source_order", [0, 1, 2])
+def test_exposed_hold_g_conflict_regression(tmp_path, monkeypatch, source_order):
     """Known defect regression, never a new independent generalization score."""
     cases = json.loads(Path("tests/fixtures/bounded_multihop/heldout.json").read_text(encoding="utf-8"))["cases"]
     case = next(c for c in cases if c["id"] == "HOLD-G")
-    result = run_case({key: value for key, value in case.items() if key != "expected"}, tmp_path)
+    public = {key: value for key, value in case.items() if key != "expected"}
+    # Input-order permutations and a simulated host delay cannot change a source
+    # conflict into a policy refusal. The frozen file/oracle stays unchanged.
+    documents = public["documents"]
+    public["documents"] = documents[source_order:] + documents[:source_order]
+    from types import SimpleNamespace
+    from run_bounded_multihop import SourceOnlyController
+    clock = [0.0]
+    monkeypatch.setattr("run_bounded_multihop.time", SimpleNamespace(monotonic=lambda: clock[0]))
+    original = SourceOnlyController.__call__
+    def delayed(self, request):
+        if request.sequence >= 3:
+            clock[0] = 31.0
+        return original(self, request)
+    monkeypatch.setattr(SourceOnlyController, "__call__", delayed)
+    result = run_case(public, tmp_path)
     assert result["outcome"] == "partial"
     assert result["values"] == ["tess avery"]
     assert result["reason"] == "conflicting_evidence"
     assert result["citation_valid"] and result["bindings_verified"]
+    assert {"s4.md", "w1.md", "x6.md"} <= set(result["sources"])
+    assert result["model_turns"] <= 20
 
 
 def test_actual_three_hop_ledger_binds_only_previous_verified_reads(demo):
@@ -103,6 +123,71 @@ def test_actual_three_hop_ledger_binds_only_previous_verified_reads(demo):
     assert status == 409
     status, body = request_json(demo.base_url, f"/api/agent/decisions/runs/{run_id}")
     assert status == 404 and "result" not in body
+
+
+def test_repeated_two_and_three_hop_completion_timings(demo, monkeypatch, record_property):
+    """Same HTTP/browser backend, fresh fake state per run; collect bounded timings."""
+    from linkloom.ui.backend import RuntimeRunBackend
+    from linkloom.tools.runtime import ToolRuntime
+    from types import SimpleNamespace
+    from run_bounded_multihop import SourceOnlyController
+
+    # Reproduce the RC1 failure boundary without sleeping: the old fake refused
+    # at turn seven after a 31s host delay even though tools and reads were valid.
+    fake_clock = [0.0]
+    monkeypatch.setattr("run_bounded_multihop.time", SimpleNamespace(monotonic=lambda: fake_clock[0]))
+    controller_action = SourceOnlyController.__call__
+    def delayed_action(self, request):
+        fake_clock[0] = 31.0 if request.sequence >= 7 else 0.0
+        return controller_action(self, request)
+    monkeypatch.setattr(SourceOnlyController, "__call__", delayed_action)
+
+    executions = {}
+    active = local()
+    original = RuntimeRunBackend._execute
+    def measured(self, job):
+        row = {"done": Event(), "started": monotonic(), "tools": []}
+        executions[job.ui_run_id] = row
+        active.row = row
+        try:
+            original(self, job)
+        finally:
+            row["runtime_s"] = monotonic() - row["started"]
+            row["done"].set()
+    monkeypatch.setattr(RuntimeRunBackend, "_execute", measured)
+    execute_tool = ToolRuntime.execute
+    def measured_tool(self, call, *args, **kwargs):
+        started = monotonic()
+        try:
+            return execute_tool(self, call, *args, **kwargs)
+        finally:
+            if hasattr(active, "row"):
+                active.row["tools"].append({"tool": call.tool_id, "seconds": round(monotonic() - started, 6)})
+    monkeypatch.setattr(ToolRuntime, "execute", measured_tool)
+    summaries = []
+    for query in (TWO, TWO, TWO, THREE, THREE, THREE):
+        started = monotonic()
+        _, initial = ask(demo, query)
+        run_id = initial["result"]["agent_run_id"]
+        _, body = poll_product_ask(demo, run_id, demo.app._workspace_id(), timeout=90)
+        http_s = monotonic() - started
+        result = body["result"]
+        assert result["status"] == "COMPLETED", result
+        assert result["reviewer"]["accepted"]
+        assert result["source_investigation"]["answer"] == ("陈宁" if query == TWO else "Owen Brook")
+        assert all(e["verified"] and e["source_version"] and e["content_sha256"] for e in result["evidence"])
+        assert executions[run_id]["done"].wait(2)
+        tool_s = sum(row["seconds"] for row in executions[run_id]["tools"])
+        model = demo.relation_models[-1]
+        assert model.call_count == result["metrics"]["model_turns"] <= 12
+        summaries.append({"hops": 2 if query == TWO else 3, "runtime_s": round(executions[run_id]["runtime_s"], 3),
+                          "http_s": round(http_s, 3), "client_deadline_s": 90,
+                          "tool_s": round(tool_s, 3), **result["metrics"],
+                          "tools": executions[run_id]["tools"],
+                          "reviewer": result["reviewer"]["decision"],
+                          "observations": [r.observation.tool_id if r.observation else None for r in model.requests]})
+    record_property("stability_timings", json.dumps(summaries, ensure_ascii=True))
+    print("RC2_STABILITY_TIMINGS=" + json.dumps(summaries))
 
 
 def test_relation_date_scope_and_explicit_decision_do_not_silently_change_path(demo):

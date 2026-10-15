@@ -20,3 +20,6 @@ where = ["src"]
 [tool.setuptools.package-data]
 "linkloom.ui" = ["static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
 
+[tool.pytest.ini_options]
+markers = ["legacy_historical: original developer-inspected experiment replay, separate from Core Gate"]
+
