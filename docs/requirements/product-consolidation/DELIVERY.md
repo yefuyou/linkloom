@@ -13,11 +13,13 @@ failure cleanup; research exports remain lazy and callable. Discovery was not
 replaced. Local budget commit `58ef237` is excluded; the verified remote Transport
 tip was b766f055 at task start.
 
-Full slimming integration is **incomplete**: automatic approval review rejected
-recycling the retired characterization script and five tracked egg-info files,
-requiring explicit approval for those six targets under the deletion rule. The
-files remain present and tracked. A user approval request is pending; no deletion
-or alternate untracking operation was performed. Existing worktrees were not edited.
+Full slimming integration is **complete**. On 2026-10-15 the user explicitly
+approved recycling the remaining six targets in this independent worktree. The
+retired `scripts/build_retrieval_characterization.py` and five tracked
+`src/linkloom.egg-info/` files were sent to the system Recycle Bin. All 20 source
+paths now reproduce the exact source commit's added/deleted lines while
+preserving the Discovery baseline. No tracked egg-info or retired script remains.
+Existing worktrees were not edited.
 
 ## User-visible result
 
@@ -55,7 +57,10 @@ translated. Chinese grammar/date changes are syntactic normalization only.
   All original assertions, SDK construction, TLS checks, transport behavior and
   Provider budgets were unchanged. The default test command still encounters
   this local loading limit; no production timeout was extended.
-- Slimming scanner/retrieval/CLI: 24 passed, 1 Windows symlink skip.
+- Slimming scanner/retrieval/CLI: 24 passed, 1 Windows symlink skip. After
+  completing the approved six-file recycling, focused Retrieval V2 and
+  Runtime/Trace CLI regression passed again: 13 tests. No active source/test
+  references to the retired script or tracked egg-info were found.
 - Existing DOM race harness passed: stale query/workspace/date/scope responses,
   clarification continuation, request permission reset, localization, empty
   decisions, unknown cause, non-accepted/draft suppression and HTML escaping.
@@ -104,6 +109,7 @@ abstractions. Single-slot discovery and precise-date clarification boundaries
 remain; no multi-decision causal reasoning is claimed.
 
 Frontend delta from Discovery: JS +169/-60; CSS +51/-0 (net +160 lines).
-Production file added: `text_output.py`; production files deleted: none, pending
-recycle approval. No dependencies added. The 14 non-deleting slimming patches
-were checked against the exact source commit, preserving baseline context.
+Production file added: `text_output.py`. Removed: one retired experimental
+script and five generated package-metadata files, all recycled with explicit
+approval. No dependencies added. The complete 20-path slimming patch was checked
+against the exact source commit, preserving baseline context.
