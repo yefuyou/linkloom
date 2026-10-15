@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 
 from linkloom.runtime.task_plan import TaskPlan
 
@@ -183,4 +184,52 @@ def _build_plan(
     })
 
 
-__all__ = ["plan_team_decision_query"]
+def plan_relation_investigation(query: object) -> TaskPlan | None:
+    """Opt-in source-relation plan, separate from approved temporal decisions.
+
+    This compiler recognizes a bounded grammar, not arbitrary natural language.
+    It copies only the user's root entity; dependent entities stay placeholders.
+    Existing product routing and the historical template planner are unchanged.
+    """
+    if not isinstance(query, str) or not query.strip() or len(query) > 2048:
+        return None
+    goal = query.strip()
+    text, snapshot = goal, None
+    dated = re.match(r"^(?:As of |On |截至\s*)(\d{4}-\d{2}-\d{2})[,，]?\s+", text, re.I)
+    if dated:
+        try:
+            snapshot = date.fromisoformat(dated[1]).isoformat()
+        except ValueError:
+            return None
+        text = text[dated.end():]
+    alias_patterns = (
+        rf"^(?i:who owns the project behind)\s+(?P<entity>{_ENTITY})\s+(?i:and who (?:leads|manages|supervises) that owner){_TAIL}",
+        rf"^(?i:which project does)\s+(?P<entity>{_ENTITY})\s+(?i:alias, who owns it, and who is that owner's direct leader){_TAIL}",
+    )
+    match = next((m for p in alias_patterns if (m := re.fullmatch(p, text))), None)
+    alias = match is not None
+    if match is None:
+        match = _OWNER_LEADER.fullmatch(text) or _LEADER_OF_OWNER.fullmatch(text)
+    if match is None:
+        match = re.fullmatch(
+            rf"(?P<entity>{_ENTITY})\s*的负责人(?:向谁直接汇报|的直属领导是谁){_ZH_TAIL}", text,
+        )
+    if match is None:
+        return None
+    entity = match['entity'].strip()
+    dated_prefix = f"As of {snapshot} " if snapshot else ""
+    rows = []
+    if alias:
+        rows.append(('alias', f'Which project does {entity} alias?', (), 'alias_of_project'))
+    rows.append(('owner', dated_prefix + f"Who owns {'{verified_entity}' if alias else entity}?",
+                 ('alias',) if alias else (), 'owner_of_project'))
+    rows.append(('leader', dated_prefix + 'Who is the direct leader of {verified_entity}?',
+                 ('owner',), 'reports_to'))
+    return TaskPlan.from_dict({
+        'schema_version': 'task-plan/v2', 'goal': goal,
+        'subgoals': [{'subgoal_id': key, 'question': question, 'depends_on': list(parents),
+                      'relation_path': [relation]} for key, question, parents, relation in rows],
+    })
+
+
+__all__ = ["plan_team_decision_query", "plan_relation_investigation"]

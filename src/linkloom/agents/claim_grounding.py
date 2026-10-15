@@ -979,8 +979,9 @@ def verified_relation_path_values(
             and (predicate != "reports_to" or minimum_valid_on is None
                  or fact.valid_on is None or fact.valid_on >= minimum_valid_on)
         )
-        if predicate == "owner_of_project":
+        if predicate in {"owner_of_project", "reports_to"}:
             matching = _owner_facts_at_explicit_date(question, matching)
+        if predicate == "owner_of_project":
             project_scope = current
         values = {fact.value for fact in matching}
         if len(values) != 1:
