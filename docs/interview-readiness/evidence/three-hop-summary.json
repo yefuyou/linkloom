@@ -1,0 +1,605 @@
+{
+  "schema": "interview-synthetic-teaching-summary/v1",
+  "prepared_on_shanghai": "2026-10-16",
+  "source_commit": "cd668f36300e5bfae7e8c654a54359dc40627d33",
+  "verification_level": "A_OFFLINE_PRODUCT_HTTP_FAKE_MODEL",
+  "real_provider_requests": 0,
+  "entry": "POST /api/product/ask",
+  "model_seam": "UnifiedInvestigationFixture + SourceOnlyController + FakeModelAdapter",
+  "retrieval_mode": "bm25",
+  "ui_run_id": "ui-5577f314e4e4",
+  "runtime_id": "run_p4_2ea7d27b21e3",
+  "thread_id": "ui-thread-f90f3bd85b3e",
+  "query": "Who owns the project behind Copper Meadow and who leads that owner?",
+  "task_plan": {
+    "goal": "Who owns the project behind Copper Meadow and who leads that owner?",
+    "subgoals": [
+      {
+        "subgoal_id": "alias",
+        "question": "Which project does Copper Meadow alias?",
+        "depends_on": [],
+        "relation_path": [
+          "alias_of_project"
+        ]
+      },
+      {
+        "subgoal_id": "owner",
+        "question": "Who owns {verified_entity}?",
+        "depends_on": [
+          "alias"
+        ],
+        "relation_path": [
+          "owner_of_project"
+        ]
+      },
+      {
+        "subgoal_id": "leader",
+        "question": "Who is the direct leader of {verified_entity}?",
+        "depends_on": [
+          "owner"
+        ],
+        "relation_path": [
+          "reports_to"
+        ]
+      }
+    ],
+    "schema_version": "task-plan/v2"
+  },
+  "metrics": {
+    "max_model_turns": 12,
+    "model_turns": 11,
+    "search_count": 3,
+    "read_count": 7,
+    "tool_errors": 0
+  },
+  "result_status": "COMPLETED",
+  "answer": "Owen Brook",
+  "reviewer": {
+    "review_id": "review_3dadb670",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "ref": "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+        "status": "pass"
+      },
+      {
+        "ref": "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+        "status": "pass"
+      },
+      {
+        "ref": "ev_v2_6f4e1dab7b429fb163bbf97a95bf7b01ac9a6d5502fdd4d76690a7a20f0915a6",
+        "status": "pass"
+      },
+      {
+        "result_type": "subject",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-15T16:43:02.871849+00:00",
+    "performed": true,
+    "accepted": true
+  },
+  "key_evidence": [
+    {
+      "label": "E1",
+      "evidence_ref": "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+      "citation_id": "citation-1",
+      "source_name": "relation-2.md",
+      "source_id": "src_3847ea9928e742f9b83920694f0130ef",
+      "source_version": "artifact_v1_ebffdb95300357ccb1ba4724f45a3b49fdf53e793dbf40fb73b1eb601ed1ba54",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "[2026-10-06T10:00:00Z] Synthetic: Copper Meadow is the team alias for Falcon Reach.",
+      "content_sha256": "114beae99a1f45007e965714c11e60228bc49d761e0862f5d24c40c16ad394a6",
+      "quote_sha256": "114beae99a1f45007e965714c11e60228bc49d761e0862f5d24c40c16ad394a6",
+      "verified": true
+    },
+    {
+      "label": "E2",
+      "evidence_ref": "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+      "citation_id": "citation-2",
+      "source_name": "relation-3.md",
+      "source_id": "src_ba350a8090784683b4d42c2ba54a74ec",
+      "source_version": "artifact_v1_f76a87683c4d1acc6b20cddb261b1650289d19be24fbcb1a4785f805656e99ac",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "[2026-10-06T10:00:00Z] Synthetic: Ada Vale is the accountable owner of Falcon Reach.",
+      "content_sha256": "2cfde69965bede53c9658ff0346b2c7e240b9cf681030b0a8f3672d8c802d9db",
+      "quote_sha256": "2cfde69965bede53c9658ff0346b2c7e240b9cf681030b0a8f3672d8c802d9db",
+      "verified": true
+    },
+    {
+      "label": "E3",
+      "evidence_ref": "ev_v2_6f4e1dab7b429fb163bbf97a95bf7b01ac9a6d5502fdd4d76690a7a20f0915a6",
+      "citation_id": "citation-3",
+      "source_name": "relation-4.md",
+      "source_id": "src_17e6bd2a9be646c19fe75d9bb79d751e",
+      "source_version": "artifact_v1_9c2416e106b604fb0e10fe3ec1bbc7ef50a4d30570cee6ee100f738cc67192e0",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "[2026-10-06T10:00:00Z] Synthetic: Ada Vale reports directly to Owen Brook.",
+      "content_sha256": "875041d26663e6d52fabd4247fbe72219938820b3117aa9f66f8c3da2bf23776",
+      "quote_sha256": "875041d26663e6d52fabd4247fbe72219938820b3117aa9f66f8c3da2bf23776",
+      "verified": true
+    }
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "input_observation_tool": null,
+      "input_observation_evidence": [],
+      "tool_history_count": 0,
+      "evidence_context_result_count": 0,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_1/request.json",
+      "action_kind": "tool_call",
+      "tool": "search_notes",
+      "query": "Which project does Copper Meadow alias?",
+      "limit": 2,
+      "subgoal": "alias",
+      "dependencies": {},
+      "output_evidence": [
+        "E1"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 2,
+      "input_observation_tool": "search_notes",
+      "input_observation_evidence": [
+        "E1"
+      ],
+      "tool_history_count": 0,
+      "evidence_context_result_count": 1,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_2/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+      "teaching_label": "E1",
+      "output_evidence": [
+        "E1"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 3,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "E1"
+      ],
+      "tool_history_count": 1,
+      "evidence_context_result_count": 1,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_3/request.json",
+      "action_kind": "tool_call",
+      "tool": "search_notes",
+      "query": "Who owns {verified_entity}?",
+      "limit": 2,
+      "subgoal": "owner",
+      "dependencies": {
+        "alias": "Falcon Reach"
+      },
+      "output_evidence": [
+        "E1",
+        "E2"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 4,
+      "input_observation_tool": "search_notes",
+      "input_observation_evidence": [
+        "E1",
+        "E2"
+      ],
+      "tool_history_count": 2,
+      "evidence_context_result_count": 2,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_4/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+      "teaching_label": "E1",
+      "output_evidence": [
+        "E1"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 5,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "E1"
+      ],
+      "tool_history_count": 3,
+      "evidence_context_result_count": 2,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_5/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+      "teaching_label": "E2",
+      "output_evidence": [
+        "E2"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 6,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "E2"
+      ],
+      "tool_history_count": 4,
+      "evidence_context_result_count": 2,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_6/request.json",
+      "action_kind": "tool_call",
+      "tool": "search_notes",
+      "query": "Who is the direct leader of {verified_entity}?",
+      "limit": 4,
+      "subgoal": "leader",
+      "dependencies": {
+        "owner": "Ada Vale"
+      },
+      "output_evidence": [
+        "E2",
+        "E3",
+        "D1",
+        "D2"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 7,
+      "input_observation_tool": "search_notes",
+      "input_observation_evidence": [
+        "E2",
+        "E3",
+        "D1",
+        "D2"
+      ],
+      "tool_history_count": 5,
+      "evidence_context_result_count": 3,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_7/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+      "teaching_label": "E2",
+      "output_evidence": [
+        "E2"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 8,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "E2"
+      ],
+      "tool_history_count": 6,
+      "evidence_context_result_count": 3,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_8/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_6f4e1dab7b429fb163bbf97a95bf7b01ac9a6d5502fdd4d76690a7a20f0915a6",
+      "teaching_label": "E3",
+      "output_evidence": [
+        "E3"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 9,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "E3"
+      ],
+      "tool_history_count": 7,
+      "evidence_context_result_count": 4,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_9/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_ea77f5857a8ce9484e72f6c0d0761e875cd26529909c2ac6d1d370f35537dd55",
+      "teaching_label": "D1",
+      "output_evidence": [
+        "D1"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 10,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "D1"
+      ],
+      "tool_history_count": 8,
+      "evidence_context_result_count": 5,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_10/request.json",
+      "action_kind": "tool_call",
+      "tool": "read_verified_note",
+      "note_ref": "ev_v2_1e2b9d3d6f3a0f5df5e34a181d96fb8f693fe3839eb9fe7452fb326fb729e958",
+      "teaching_label": "D2",
+      "output_evidence": [
+        "D2"
+      ],
+      "output_status": "ok"
+    },
+    {
+      "turn": 11,
+      "input_observation_tool": "read_verified_note",
+      "input_observation_evidence": [
+        "D2"
+      ],
+      "tool_history_count": 9,
+      "evidence_context_result_count": 5,
+      "request_artifact": "model/run_p4_2ea7d27b21e3/run_p4_2ea7d27b21e3_turn_11/request.json",
+      "action_kind": "final",
+      "typed_final": {
+        "schema_version": "team-decision-result/v1",
+        "decision": {
+          "value": "Copper Meadow is the team alias for Falcon Reach; Ada Vale is the accountable owner of Falcon Reach; Ada Vale reports directly to Owen Brook",
+          "status": "approved",
+          "evidence_refs": [
+            "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+            "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+            "ev_v2_6f4e1dab7b429fb163bbf97a95bf7b01ac9a6d5502fdd4d76690a7a20f0915a6"
+          ]
+        },
+        "rationale": [],
+        "actions": [],
+        "unresolved_items": [],
+        "rejected_alternatives": [],
+        "uncertainty": {
+          "status": "none",
+          "statement": null,
+          "unknown_fields": [],
+          "evidence_refs": []
+        },
+        "evidence_refs": [
+          "ev_v2_6712296b0cddc6d55dfeaedb2ca569704239301313634454d15aa0edf51a749f",
+          "ev_v2_86b000e5fdbfbadea0f5b985f187295b1839f3b313c65eb4fd1dfeb201ceac7f",
+          "ev_v2_6f4e1dab7b429fb163bbf97a95bf7b01ac9a6d5502fdd4d76690a7a20f0915a6"
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "seq": 1,
+      "type": "run.accepted",
+      "status": "ok"
+    },
+    {
+      "seq": 2,
+      "type": "run.started",
+      "status": "started"
+    },
+    {
+      "seq": 3,
+      "type": "checkpoint.saved",
+      "status": "ok"
+    },
+    {
+      "seq": 4,
+      "type": "run.started",
+      "status": "started"
+    },
+    {
+      "seq": 5,
+      "type": "agent.task.created",
+      "status": "ok"
+    },
+    {
+      "seq": 6,
+      "type": "agent.task.started",
+      "status": "started"
+    },
+    {
+      "seq": 7,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 8,
+      "type": "context.assembled",
+      "status": "ok"
+    },
+    {
+      "seq": 9,
+      "type": "retrieval.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 10,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 11,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 12,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 13,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 14,
+      "type": "context.assembled",
+      "status": "ok"
+    },
+    {
+      "seq": 15,
+      "type": "retrieval.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 16,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 17,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 18,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 19,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 20,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 21,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 22,
+      "type": "context.assembled",
+      "status": "ok"
+    },
+    {
+      "seq": 23,
+      "type": "retrieval.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 24,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 25,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 26,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 27,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 28,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 29,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 30,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 31,
+      "type": "tool.called",
+      "status": "started"
+    },
+    {
+      "seq": 32,
+      "type": "tool.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 33,
+      "type": "agent.task.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 34,
+      "type": "agent.task.created",
+      "status": "ok"
+    },
+    {
+      "seq": 35,
+      "type": "agent.task.started",
+      "status": "started"
+    },
+    {
+      "seq": 36,
+      "type": "agent.task.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 37,
+      "type": "run.completed",
+      "status": "ok"
+    },
+    {
+      "seq": 38,
+      "type": "artifact.written",
+      "status": "ok"
+    },
+    {
+      "seq": 39,
+      "type": "run.completed",
+      "status": "ok"
+    }
+  ],
+  "negative_case": {
+    "change": "owner dependency alias=Invented Meridian",
+    "ledger_sequence": 3,
+    "tool": "search_notes",
+    "error": {
+      "affected_refs": [],
+      "category": "input",
+      "code": "TOOL_INVALID_ARGUMENTS",
+      "details": {
+        "path": "$.source_context.dependency_entities",
+        "reason": "task_plan_semantic_mismatch",
+        "tool_id": "search_notes"
+      },
+      "message": "Tool arguments do not match the verified TaskPlan boundary.",
+      "retryable": false,
+      "safe_to_expose": true
+    },
+    "product_status": "FAILED",
+    "conclusions": [],
+    "reviewer": {
+      "review_id": null,
+      "reviewer_agent_id": null,
+      "decision": null,
+      "checks": null,
+      "reason": null,
+      "created_at": null,
+      "performed": false,
+      "accepted": false
+    }
+  },
+  "raw_artifacts_ignored_root": "work/interview-lab/781878f951",
+  "raw_sha256": {
+    "three-product.json": "c39a70fbaae12d77ccbefe4ea9087ab21d912ef780caaf98b15d311f4b5b5617",
+    "three-state.json": "f94c6957939b7b907be8584c68330fde779fae68704ee83c2aa6ee8eedb08867",
+    "three-requests.json": "25ebcd19885e6d932de50c1ab74a39baa0c96a81de4e5ca99041aa32b9c56a8d",
+    "invented-dependency-state.json": "ab67ff6c72de0651dd9cfffc96ff85713dc9d22a6986db49919f5e564e707e27",
+    "invented-dependency-product.json": "70ecb485893facc2ce73f08f08c7a98029e993c7195a3ce645d826a5c9a945a6"
+  },
+  "limitations": [
+    "not an LLM quality/generalization result",
+    "UI browser run is separate from indexed HTTP run",
+    "no CI or live provider rerun",
+    "raw requests and ledger are intentionally excluded from Git"
+  ]
+}
