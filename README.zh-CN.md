@@ -81,6 +81,8 @@ held-out 性能或生产就绪。LinkLoom 目前不是已部署的多人服务�
 
 ## 快速开始
 
+产品入口与八个主要文件的核心阅读顺序：[开发者导航](docs/README.md)。
+
 在 LinkLoom checkout 中运行：
 
 ~~~bash

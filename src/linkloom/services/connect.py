@@ -3,31 +3,14 @@
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 from pathlib import Path
 from typing import Any
+
+from linkloom.text_output import write_text as _write_text
 
 from linkloom.loader import LoaderError, VaultReader, _is_inside
 from linkloom.retrieval import find_relation_candidates_with_evidence
 from linkloom.schemas import ConnectResult
-
-
-def _write_text(path: Path, content: str) -> None:
-    temporary_file = tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        newline="\n",
-        dir=path.parent,
-        delete=False,
-    )
-    try:
-        with temporary_file:
-            temporary_file.write(content)
-        os.replace(temporary_file.name, path)
-    except Exception:
-        Path(temporary_file.name).unlink(missing_ok=True)
-        raise
 
 
 def _build_connect_report(result: ConnectResult) -> str:

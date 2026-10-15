@@ -93,6 +93,8 @@ LinkLoom is not a deployed multi-user service.
 
 ## Quickstart
 
+Developer entry points and the eight-file core reading path: [developer map](docs/README.md).
+
 From a LinkLoom checkout:
 
 ~~~bash

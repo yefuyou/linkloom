@@ -51,3 +51,6 @@ transport_environment.json
 
 .DS_Store
 Thumbs.db
+
+# Per-checkout local verification and build output
+/work/

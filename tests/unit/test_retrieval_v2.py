@@ -253,3 +253,33 @@ def test_rrf_only_deduplicates_the_same_immutable_evidence_identity() -> None:
         HybridRetriever(FixedRetriever(same_lexical), FixedRetriever(conflicting)).retrieve(
             RetrievalQuery(workspace_id="alpha", query="decision", top_k=5)
         )
+
+
+def test_runtime_import_keeps_research_optional_and_public_exports_available() -> None:
+    import os
+    from pathlib import Path
+    import subprocess
+    import sys
+
+    root = Path(__file__).resolve().parents[2]
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(root / "src")
+    script = """
+import sys
+import linkloom.agents.runtime_adapter
+import linkloom.retrieval_v2 as retrieval
+assert 'linkloom.retrieval_v2.benchmark' not in sys.modules
+assert 'linkloom.retrieval_v2.metrics' not in sys.modules
+assert all(name in dir(retrieval) for name in retrieval.__all__)
+from linkloom.retrieval_v2 import FrozenRetrievalBenchmark, RetrievalCaseResult
+from linkloom.retrieval_v2.benchmark import FrozenRetrievalBenchmark as benchmark
+from linkloom.retrieval_v2.metrics import RetrievalCaseResult as case_result
+assert FrozenRetrievalBenchmark is benchmark
+assert RetrievalCaseResult is case_result
+assert all(getattr(retrieval, name) is not None for name in retrieval.__all__)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script], cwd=root, env=env,
+        capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
