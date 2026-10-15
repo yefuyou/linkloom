@@ -15,10 +15,11 @@ from typing import Any, Iterable
 from linkloom.agents.model_adapter import is_verified_evidence_result
 from linkloom.agents.claim_grounding import (
     verified_dependency_values, verified_subgoal_values,
-    verified_subgoal_conflict, verified_dependent_leader_values,
+    verified_subgoal_conflict_refs, verified_dependent_leader_values,
     verified_relation_path_values, verified_owner_source_binding,
     TYPED_CLAIM_RELATIONS,
     assess_claim_text, ClaimSupportStatus, _question_relation_entity,
+    verified_relation_conflict_refs,
 )
 from linkloom.evidence_identity import passage_evidence_id
 from linkloom.runtime.errors import ValidationError
@@ -335,16 +336,27 @@ def verified_plan_subgoal_values(
         return verified_subgoal_values(subgoal.question, values)
     if not subgoal.relation_path:
         return _verified_discovery_entity(subgoal.question, values)
+    scope = _plan_relation_scope(plan, subgoal, evidence_by_subgoal)
+    if scope is None:
+        return ()
+    return verified_relation_path_values(
+        subgoal.question, subgoal.relation_path, values,
+        expected_subject=scope[0], expected_project_scope=scope[1], minimum_valid_on=scope[2],
+    )
+
+
+def _plan_relation_scope(plan, subgoal, evidence_by_subgoal):
+    """Share the same parent, project and date binding for values and conflicts."""
     expected_subject = None
     expected_project_scope = None
     minimum_valid_on = None
     if subgoal.depends_on:
         if len(subgoal.depends_on) != 1:
-            return ()
+            return None
         parent_id = subgoal.depends_on[0]
         parent_values = verified_plan_subgoal_values(plan, parent_id, evidence_by_subgoal)
         if parent_values is None or len(parent_values) != 1:
-            return ()
+            return None
         expected_subject = parent_values[0]
         parent = plan.get(parent_id)
         if subgoal.relation_path[0] == "reports_to" and parent.relation_path and parent.relation_path[-1] == "owner_of_project":
@@ -352,28 +364,36 @@ def verified_plan_subgoal_values(
             if parent.depends_on:
                 upstream = verified_plan_subgoal_values(plan, parent.depends_on[0], evidence_by_subgoal)
                 if upstream is None or len(upstream) != 1:
-                    return ()
+                    return None
                 project = upstream[0]
             elif len(parent.relation_path) == 2:
                 upstream = verified_relation_path_values(
                     parent.question, parent.relation_path[:1], evidence_by_subgoal[parent_id],
                 )
                 if len(upstream) != 1:
-                    return ()
+                    return None
                 project = upstream[0]
             binding = verified_owner_source_binding(
                 parent.question, evidence_by_subgoal[parent_id], expected_subject,
                 expected_project=project,
             )
             if binding is None:
-                return ()
+                return None
             expected_project_scope, minimum_valid_on = binding
-    return verified_relation_path_values(
-        subgoal.question, subgoal.relation_path, values,
-        expected_subject=expected_subject,
-        expected_project_scope=expected_project_scope,
-        minimum_valid_on=minimum_valid_on,
-    )
+    return expected_subject, expected_project_scope, minimum_valid_on
+
+
+def verified_plan_conflict_refs(plan, subgoal_id, evidence_by_subgoal):
+    subgoal = plan.get(subgoal_id)
+    if not subgoal.relation_path or len(subgoal.relation_path) != 1:
+        return verified_subgoal_conflict_refs(subgoal.question, evidence_by_subgoal[subgoal_id])
+    scope = _plan_relation_scope(plan, subgoal, evidence_by_subgoal)
+    if scope is None:
+        return ()
+    relation = {"owner_of_project": "owner_of", "alias_of_project": "alias_of", "reports_to": "reports_to"}[subgoal.relation_path[0]]
+    subject = scope[0] or _question_relation_entity(subgoal.question, relation)
+    return verified_relation_conflict_refs(relation, subject, evidence_by_subgoal[subgoal_id],
+        question=subgoal.question, expected_project_scope=scope[1], minimum_valid_on=scope[2]) if subject else ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -587,9 +607,7 @@ def pending_alternate_subgoals(
 def conflicted_subgoals(plan: TaskPlan, assessment: PlanAssessment) -> tuple[str, ...]:
     return tuple(
         item.subgoal_id for item in plan.subgoals
-        if verified_subgoal_conflict(
-            item.question, assessment.evidence_by_subgoal[item.subgoal_id],
-        )
+        if verified_plan_conflict_refs(plan, item.subgoal_id, assessment.evidence_by_subgoal)
     )
 
 
@@ -610,6 +628,10 @@ def validate_relation_final(
         return
     if set(payload['evidence_refs']) - set(read_refs):
         raise ValidationError('Planned Final cited evidence that was not read back.')
+    for goal in plan.subgoals:
+        opposing = verified_plan_conflict_refs(plan, goal.subgoal_id, assessment.evidence_by_subgoal)
+        if opposing and not set(opposing) <= set(payload['uncertainty']['evidence_refs']):
+            raise ValidationError('Conflicting relations require both opposing verified source citations.')
     if payload['actions'] or payload['unresolved_items'] or payload['rejected_alternatives']:
         raise ValidationError('Source-relation Final exceeds the declared relation path.')
     texts = [(item['point'], item['evidence_refs'], False) for item in payload['rationale']]

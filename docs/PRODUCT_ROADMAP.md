@@ -62,6 +62,15 @@ verification and authorization. The [delivery](requirements/feedback-memory/DELI
 records comparable before/pending/approved/revoked results, offline HTTP/browser
 acceptance and the deliberately narrow adaptation boundary.
 
+## Unified multi-hop investigation — 2026-10-15
+
+Unified Ask now routes the two declared source-relation chains through the real
+Runtime, with separate source-supported trust labels, partial/conflict results
+and per-request provider permission. Source runs disable Decision Memory tools
+and capture; formal queries retain their authority boundary. The [delivery](requirements/unified-investigation/DELIVERY.md)
+records offline HTTP/browser acceptance and the HOLD-G classification repair.
+The original blind 8/10 remains historical evidence; no real model was evaluated.
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,

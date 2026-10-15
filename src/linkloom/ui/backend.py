@@ -14,6 +14,7 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.team_decision_planner import plan_team_decision_query
+from linkloom.runtime.task_plan import validate_model_proposed_plan
 from linkloom.ui.projection import (
     UI_SCHEMA_VERSION,
     UIProjectionError,
@@ -46,6 +47,7 @@ class _RuntimeJob:
     thread_id: str
     initial_status: RunStatus
     final_status: RunStatus | None = None
+    task_plan: dict[str, Any] | None = None
 
 
 class RuntimeRunBackend:
@@ -87,10 +89,12 @@ class RuntimeRunBackend:
             "mode": "runtime",
         }
 
-    def start(self, query: str) -> dict[str, Any]:
+    def start(self, query: str, *, task_plan: dict[str, Any] | None = None) -> dict[str, Any]:
         clean_query = query.strip()
         if not clean_query:
             raise ValueError("A non-empty decision question is required.")
+        plan = (validate_model_proposed_plan(task_plan, user_query=clean_query, max_steps=self.max_steps)
+                if task_plan is not None else None)
         ui_run_id = f"ui-{uuid4().hex[:12]}"
         thread_id = f"ui-thread-{uuid4().hex[:12]}"
         initial = RunStatus(
@@ -103,6 +107,7 @@ class RuntimeRunBackend:
             query=clean_query,
             thread_id=thread_id,
             initial_status=initial,
+            task_plan=plan.to_dict() if plan else None,
         )
         with self._lock:
             self._jobs[ui_run_id] = job
@@ -123,7 +128,8 @@ class RuntimeRunBackend:
                     thread_id=job.thread_id,
                     workflow="team_decision",
                     query=job.query,
-                    planning_mode=self.planning_mode or (
+                    task_plan=job.task_plan,
+                    planning_mode=("template" if job.task_plan is not None else self.planning_mode) or (
                         "model" if (
                             callable(getattr(self.engine.model, "propose_task_plan", None))
                             and plan_team_decision_query(job.query) is None

@@ -434,8 +434,12 @@
     state.askResult = result;
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
-    const agent = result.path === "AGENT";
-    const hasFinal = result.status === "COMPLETED" && (!agent || result.reviewer?.accepted === true);
+    const source = result.path === "SOURCE_RELATION_INVESTIGATION";
+    if (source && ["COMPLETED", "INSUFFICIENT"].includes(result.status) && result.reviewer?.accepted === true && result.source_investigation) {
+      renderSourceInvestigation(target, result, locale); return;
+    }
+    const agent = result.path === "AGENT" || source;
+    const hasFinal = !source && result.status === "COMPLETED" && (!agent || result.reviewer?.accepted === true);
     const technical = askTechnical(result, locale, hasFinal);
     const code = result.error?.code;
     if (result.status === "INVESTIGATING") {
@@ -449,13 +453,14 @@
       const noMatch = result.discovery?.status === "NO_MATCH";
       const memoryConflict = (result.discovery?.memory?.conflicts || []).length > 0;
       const uncertain = result.status === "PROVIDER_UNCERTAIN";
-      const title = memoryConflict ? t("Approved terminology conflicts", "已批准术语存在冲突") : ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
+      const unsupported = code === "UNSUPPORTED_QUERY" || code === "TASK_SCOPE_CONFLICT";
+      const title = unsupported ? t("This relationship question is not supported", "目前不能可靠地拆解这个关系问题") : memoryConflict ? t("Approved terminology conflicts", "已批准术语存在冲突") : ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
         : dateNeeded ? t("Choose a specific date", "请选择一个具体日期")
         : permission ? t("This investigation needs your permission", "这次调查需要你的授权")
         : uncertain ? t("Investigation interrupted; no verified conclusion", "本次 AI 调查中断，尚未得到核验后的结论")
         : noMatch ? t("No matching reviewed decision found", "暂未找到与问题匹配的可信决策")
         : t("No verified answer is available", "本次尚未得到可核验的答案");
-      const message = memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
+      const message = unsupported ? t("Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.", "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
         : dateNeeded ? t("Select one exact date above to check which decision was valid. Your question and confirmed decision are retained.", "请在上方选择精确日期，以核实当时有效的决策。原问题和已确认的决策会保留。")
         : permission ? t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请勾选上方的本次授权，再次提问后才会发送来源内容并启动调查。")
         : uncertain ? t("Saved formal decisions are unaffected. No draft is presented as an answer.", "已保存的正式决策不受本次调查影响，本次未核验的内容不会作为答案。")
@@ -502,6 +507,32 @@
     if (result.status !== "INVESTIGATING" && !["DATE_SCOPE_REQUIRED", "INVALID_AS_OF"].includes(result.error?.code)) {
       document.getElementById("ask-result")?.scrollIntoView?.({block: "start", behavior: "smooth"});
     }
+  }
+
+  function renderSourceInvestigation(target, result, locale) {
+    const t = (en, zh) => askCopy(en, zh, locale);
+    const source = result.source_investigation;
+    const complete = result.status === "COMPLETED" && source.answer;
+    const conflict = result.uncertainty?.status === "conflicting_evidence";
+    const labels = {alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Owner → direct leader", "负责人 → 直属领导")};
+    const facts = source.facts || [];
+    const coreRefs = new Set([...facts.flatMap(fact => fact.evidence_refs || []), ...Object.values(source.conflicts || {}).flat()]);
+    const coreEvidence = (result.evidence || []).filter(item => coreRefs.has(item.evidence_ref));
+    const otherEvidence = (result.evidence || []).filter(item => !coreRefs.has(item.evidence_ref));
+    const title = complete ? escapeHtml(source.answer) : conflict ? t("Conflicting sources; no unique answer", "来源存在冲突，当前无法确定唯一结果") : t("Partly verified; evidence is still missing", "已核实部分关系，后续证据不足");
+    const steps = (source.plan?.subgoals || []).map(goal => {
+      const predicate = goal.relation_path[0];
+      const fact = facts.find(item => item.predicate === predicate);
+      return `<article class="ask-evidence"><h3>${escapeHtml(labels[predicate] || predicate)}</h3>${fact ? `<p>${escapeHtml(fact.subject)} → <strong>${escapeHtml(fact.value)}</strong>${fact.valid_on ? ` · ${escapeHtml(fact.valid_on)}` : ""}</p>` : `<p>${conflict ? t("No unique result; inspect the opposing sources below.", "没有唯一结果，请查看下方互相矛盾的原始来源。") : t("No verified result for this hop.", "尚无足够证据核实这一跳。")}</p>`}</article>`;
+    }).join("");
+    target.innerHTML = `<section class="panel ask-answer ${complete ? "" : "ask-answer--notice"}"><p class="ask-answer-status">${facts.length ? t("Source-supported relationship", "来源支持的关系") : t("Source investigation; no relationship verified", "来源调查，尚无关系得到核实")}</p>
+      <h2 class="${complete ? "ask-answer-value" : "ask-answer-headline"}">${title}</h2>
+      <p>${complete ? t("The relationship is supported by verified source reads and checked by Reviewer.", "根据已读取并核验的原始来源，可以确认该关系，结果已经过 Reviewer 核验。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
+      <p class="hint">${t("This is source investigation, not a formally approved business decision.", "这是来源关系调查结果，不代表已经通过正式业务审批。")}</p>
+      <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("hop investigation", "跳调查")}</span><span>${result.metrics?.model_turns || 0} ${t("model turns", "轮模型交互")}</span></div>
+      ${steps}<section class="ask-core-evidence"><h2>${t("Sources supporting the verified facts or conflict", "支持已核实关系或冲突的来源")}</h2>${coreEvidence.map((item, index) => askEvidence(item, index, locale)).join("")}</section>
+      ${otherEvidence.length ? `<details><summary>${t("Other sources read; no additional relationship established", "其他已读取材料，未据此确认额外关系")} (${otherEvidence.length})</summary>${otherEvidence.map((item, index) => askEvidence(item, coreEvidence.length + index, locale)).join("")}</details>` : ""}
+      <details class="ask-technical"><summary>${t("Full investigation: plan, dependencies and tool calls", "查看完整调查过程：计划、依赖与工具记录")}</summary><pre>${escapeHtml(JSON.stringify({plan: source.plan, trace: source.trace, metrics: result.metrics, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
   }
 
   async function pollAsk(runId, workspaceId, viewToken) {

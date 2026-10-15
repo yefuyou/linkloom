@@ -215,6 +215,8 @@ def plan_relation_investigation(query: object) -> TaskPlan | None:
             rf"(?P<entity>{_ENTITY})\s*的负责人(?:向谁直接汇报|的直属领导是谁){_ZH_TAIL}", text,
         )
     if match is None:
+        match = re.fullmatch(rf"(?P<entity>{_ENTITY})\s+项目负责人的直属领导是谁{_ZH_TAIL}", text)
+    if match is None:
         return None
     entity = match['entity'].strip()
     dated_prefix = f"As of {snapshot} " if snapshot else ""
@@ -225,6 +227,8 @@ def plan_relation_investigation(query: object) -> TaskPlan | None:
                  ('alias',) if alias else (), 'owner_of_project'))
     rows.append(('leader', dated_prefix + 'Who is the direct leader of {verified_entity}?',
                  ('owner',), 'reports_to'))
+    if any(len(question) > 512 for _, question, _, _ in rows):
+        return None
     return TaskPlan.from_dict({
         'schema_version': 'task-plan/v2', 'goal': goal,
         'subgoals': [{'subgoal_id': key, 'question': question, 'depends_on': list(parents),

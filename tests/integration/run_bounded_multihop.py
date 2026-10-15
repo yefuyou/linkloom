@@ -13,13 +13,13 @@ import re
 import time
 from uuid import uuid4
 
-from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, verified_subgoal_conflict
+from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
-from linkloom.runtime.task_plan import TaskPlan, verified_plan_subgoal_values, assess_task_plan, verified_dependency_entities
+from linkloom.runtime.task_plan import TaskPlan, verified_plan_subgoal_values, assess_task_plan, verified_dependency_entities, verified_plan_conflict_refs
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.scanner import scan_vault
 from linkloom.tools.contracts import ToolCall
@@ -93,8 +93,7 @@ class SourceOnlyController:
                     'dependency_entities': {parent: self.values[parent] for parent in new_goal.depends_on}},
                     'limit': 4})
         complete = len(self.claims) == len(plan.subgoals)
-        bound_question = goal.question.replace('{verified_entity}', next(iter(self.values.values()), ''))
-        conflict = verified_subgoal_conflict(bound_question, evidence[goal.subgoal_id]) if not complete else False
+        conflict = bool(verified_plan_conflict_refs(plan, goal.subgoal_id, evidence)) if not complete else False
         missing = [item.subgoal_id for item in plan.subgoals if item.subgoal_id not in self.values]
         unknown_refs = [item['evidence_id'] for item in evidence[goal.subgoal_id]] if not complete else []
         claim_refs = list(dict.fromkeys(ref for claim in self.claims for ref in claim['evidence_refs']))

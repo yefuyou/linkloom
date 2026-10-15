@@ -1266,19 +1266,21 @@ def verified_subgoal_conflict_refs(
     question: str, evidence_values: Sequence[Mapping[str, Any]],
 ) -> tuple[str, str]:
     """Identify two opposing source IDs in one relation, entity and time scope."""
-    for relation in ("owner_of", "alias_of", "superseded_by", "approved_for"):
+    for relation in ("owner_of", "alias_of", "superseded_by", "approved_for", "reports_to"):
         subject = _question_relation_entity(question, relation)
         if subject is None:
             continue
-        return verified_relation_conflict_refs(relation, subject, evidence_values)
+        return verified_relation_conflict_refs(relation, subject, evidence_values, question=question)
     return ()
 
 
 def verified_relation_conflict_refs(
     relation: str, subject: str, evidence_values: Sequence[Mapping[str, Any]],
+    *, question: str = "", expected_project_scope: str | None = None,
+    minimum_valid_on: str | None = None,
 ) -> tuple[str, str]:
     """Check a typed relation and subject against two distinct verified sources."""
-    if relation not in {"owner_of", "alias_of", "superseded_by", "approved_for"}:
+    if relation not in {"owner_of", "alias_of", "superseded_by", "approved_for", "reports_to"}:
         return ()
     normalized_subject = _normalize_entity(subject)
     groups: dict[tuple[str | None, str | None, str | None], dict[str, list[tuple[str, str]]]] = {}
@@ -1288,8 +1290,16 @@ def verified_relation_conflict_refs(
         if (evidence.get("status") != "verified" or not isinstance(ref, str)
                 or not isinstance(path, str)):
             continue
-        for fact in _source_facts(evidence):
-            if fact.relation == relation and fact.subject == normalized_subject:
+        facts = _source_facts(evidence)
+        if relation in {"owner_of", "reports_to"}:
+            facts = _owner_facts_at_explicit_date(question, facts)
+        for fact in facts:
+            relations = {"reports_to", "direct_leader_of"} if relation == "reports_to" else {relation}
+            if (fact.relation in relations and fact.subject == normalized_subject
+                    and (relation != "reports_to" or fact.project_scope is None
+                         or fact.project_scope == expected_project_scope)
+                    and (relation != "reports_to" or minimum_valid_on is None
+                         or fact.valid_on is None or fact.valid_on >= minimum_valid_on)):
                 groups.setdefault(
                     (fact.valid_on, fact.temporal_kind, fact.project_scope), {},
                 ).setdefault(fact.value, []).append((path, ref))
@@ -1352,6 +1362,8 @@ def _question_relation_entity(question: str, relation: str) -> str | None:
             rf"谁负责\s*(?P<entity>[^?？]+)",
             rf"(?:谁是|谁为)(?P<entity>[^?？]+?)(?:的)?(?:负责人|所有者)",
         )
+    elif relation == "reports_to":
+        patterns = (rf"(?i:direct leader of)\s+(?P<entity>{_ENTITY})",)
     elif relation == "approved_for":
         patterns = (
             rf"(?i:the)\s+(?P<entity>{_ENTITY}?)\s+(?i:project)\s+(?i:approv\w*)\b",

@@ -7,6 +7,17 @@ const result = value => ({result: {path: "DETERMINISTIC", status: "COMPLETED", q
   scope: {subject: "Launch", relation: "uses supplier", as_of: "2026-10-10T00:00:00+00:00"}, route: {reason: "lookup"},
   timeline: {effective: {decision_id: "decision-1", value}}, conclusions: [{value}], evidence: [], receipts: [], reviewer: {performed: false}, uncertainty: {unknown_fields: []}}});
 
+function sourceResult(complete = true) {
+  const payload = result("");
+  Object.assign(payload.result, {path: "SOURCE_RELATION_INVESTIGATION", status: complete ? "COMPLETED" : "INSUFFICIENT",
+    reviewer: {accepted: true}, conclusions: [], timeline: null,
+    uncertainty: {status: complete ? "none" : "conflicting_evidence", unknown_fields: complete ? [] : ["leader"]},
+    source_investigation: {answer: complete ? "Verified Leader" : null,
+      facts: [{subject: "project", predicate: "owner_of_project", value: "Known Owner"}],
+      plan: {subgoals: [{relation_path: ["owner_of_project"]}, {relation_path: ["reports_to"]}]}, trace: []}});
+  return payload;
+}
+
 async function setup() {
   const elements = new Map();
   function element(id) {
@@ -75,7 +86,7 @@ async function setup() {
   requests[0](result("OLD_WORKSPACE_ANSWER")); await running;
   assert.doesNotMatch(ws("page").innerHTML, /OLD_WORKSPACE_ANSWER/);
   assert.doesNotMatch(ws("ask-result").innerHTML, /OLD_WORKSPACE_ANSWER/);
-  for (const payload of [result("OBSOLETE_AGENT_FINAL"), {error: {code: "OLD_POLL_ERROR", message: "OLD_POLL_ERROR"}}]) {
+  for (const payload of [result("OBSOLETE_AGENT_FINAL"), sourceResult(), {error: {code: "OLD_POLL_ERROR", message: "OLD_POLL_ERROR"}}]) {
     const {element: ui, pending: posts, polls, submit: start} = await setup();
     const investigation = start(); await tick();
     const accepted = result(""); accepted.result.path = "AGENT"; accepted.result.status = "INVESTIGATING"; accepted.result.agent_run_id = "run-1";
@@ -177,4 +188,20 @@ async function setup() {
   feedbackUi.pending[0](result("AFTER_FEEDBACK")); await afterFeedback;
   assert.match(feedbackUi.element("ask-result").innerHTML, /AFTER_FEEDBACK/);
   console.log("PASS: feedback mutation blocks racing Ask, preserves query and resumes after save");
+  for (const complete of [true, false]) {
+    const ui = await setup();
+    const operation = ui.submit(); await tick();
+    ui.pending[0](sourceResult(complete)); await operation;
+    const html = ui.element("ask-result").innerHTML;
+    assert.match(html, /Source-supported relationship/);
+    assert.doesNotMatch(html, /Verified formal decision|Recorded authorization/);
+    assert.match(html, complete ? /Verified Leader/ : /Conflicting sources; no unique answer/);
+    assert.match(html, /Known Owner/);
+  }
+  const rejectedUi = await setup();
+  const operation = rejectedUi.submit(); await tick();
+  const rejected = sourceResult(); rejected.result.reviewer.accepted = false;
+  rejectedUi.pending[0](rejected); await operation;
+  assert.doesNotMatch(rejectedUi.element("ask-result").innerHTML, /Verified Leader|Known Owner/);
+  console.log("PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored");
 })().catch(error => {console.error(error); process.exitCode = 1;});

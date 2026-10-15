@@ -167,6 +167,7 @@ class RuntimeEngine:
         decision_memory_workspace_id: str | None = None,
         temporal_decision_lookup: Any | None = None,
         temporal_claim_validator: Any | None = None,
+        decision_memory_enabled: bool = True,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -206,6 +207,9 @@ class RuntimeEngine:
         self._decision_memory_workspace_id = decision_memory_workspace_id
         self._temporal_decision_lookup = temporal_decision_lookup
         self._temporal_claim_validator = temporal_claim_validator
+        if not isinstance(decision_memory_enabled, bool):
+            raise ValidationError("decision_memory_enabled must be boolean.")
+        self.decision_memory_enabled = decision_memory_enabled
         if prompt_profile not in {"zero-v1", "few-v1"}:
             raise ValidationError("Unsupported retrieval prompt profile.")
         if not isinstance(memory_enabled, bool):
@@ -236,6 +240,9 @@ class RuntimeEngine:
         """Build the runtime adapter even when optional persistent memory is unavailable."""
         from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 
+        if not self.decision_memory_enabled:
+            return RuntimeAgentAdapter(self.vault_root, self.index_path,
+                workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False)
         try:
             decision_memory_store = self._get_decision_memory_store()
         except Exception:

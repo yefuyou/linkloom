@@ -13,6 +13,9 @@ from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
+from linkloom.runtime.team_decision_planner import plan_relation_investigation
+
+_RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
 # Supported task families, not general intent understanding. Investigation wins
 # for mixed questions so a current-state lookup cannot masquerade as an explanation.
@@ -47,7 +50,7 @@ class _AskRun:
     query: str
     workspace_id: str
     scope: dict[str, Any]
-    route: dict[str, str]
+    route: dict[str, Any]
     discovery: dict[str, Any] | None = None
 
 
@@ -122,7 +125,8 @@ class UnifiedAskService:
     def _base(run: _AskRun) -> dict[str, Any]:
         return {"schema_version": "product-ask/v1", "query": run.query,
                 "workspace_id": run.workspace_id, "scope": deepcopy(run.scope),
-                "path": {"DECISION": "DETERMINISTIC", "INVESTIGATION": "AGENT"}.get(run.route["intent"]),
+                "path": {"DECISION": "DETERMINISTIC", "INVESTIGATION": "AGENT",
+                         "SOURCE_RELATION": "SOURCE_RELATION_INVESTIGATION"}.get(run.route["intent"]),
                 "route": dict(run.route), "status": "NEEDS_SCOPE", "conclusions": [],
                 "discovery": deepcopy(run.discovery),
                 "evidence": [], "receipts": [], "uncertainty": {"unknown_fields": [], "statement": ""},
@@ -160,6 +164,9 @@ class UnifiedAskService:
             # Keep the current-workspace check and setup atomic with workspace selection.
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
+                plan = plan_relation_investigation(run.query)
+                if plan is not None or _RELATION_QUESTION.search(run.query):
+                    return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
                 resolver, memory = self.app.relation_resolver, None
                 if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
@@ -210,6 +217,53 @@ class UnifiedAskService:
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
 
+    def _source_request(self, run, payload, plan):
+        route = {"intent": "SOURCE_RELATION", "code": "SOURCE_RELATION_MULTIHOP",
+                 "reason": "A bounded directed source-relation chain; no business approval is implied.",
+                 "plan": plan.to_dict() if plan else None}
+        run = _AskRun(run.query, run.workspace_id, run.scope, route)
+        result = self._base(run)
+        if plan is None:
+            return self._failure(result, "UNSUPPORTED_QUERY",
+                "This relationship question cannot be reliably decomposed. Supported paths: project → owner → direct leader; alias → project → owner → direct leader.", status="NEEDS_SCOPE"), 200
+        if run.scope["subject"] or run.scope["relation"]:
+            return self._failure(result, "TASK_SCOPE_CONFLICT",
+                "A source-relation question cannot use an approved decision slot. Clear the advanced decision selection or clarify the question.", status="NEEDS_SCOPE"), 200
+        as_of, error = resolve_query_date(run.query, payload.get("as_of"))
+        if error:
+            return self._failure(result, error["code"], error["message"], status="NEEDS_SCOPE"), 200
+        if as_of and re.fullmatch(r"\d{4}-\d{2}-\d{2}", as_of) is None:
+            return self._failure(result, "DATE_SCOPE_REQUIRED", "Source relationships require an exact snapshot date, without a time of day.", status="NEEDS_SCOPE"), 200
+        runtime_query = run.query
+        if as_of and not re.search(r"\d{4}-\d{2}-\d{2}", run.query):
+            runtime_query = f"As of {as_of}, {run.query}"
+            plan = plan_relation_investigation(runtime_query)
+        if plan is None:
+            return self._failure(result, "UNSUPPORTED_QUERY", "The dated relationship plan exceeds the supported bounds.", status="NEEDS_SCOPE"), 200
+        route["plan"] = plan.to_dict()
+        route["relations"] = [goal.relation_path[0] for goal in plan.subgoals]
+        result["scope"] = {"subject": "", "relation": "", "as_of": as_of}
+        service = self.investigation()
+        config = service.config() if service else {}
+        route.update(requires_external_provider=config.get("external_provider", False),
+                     external_provider_authorized=payload.get("allow_external_provider") is True,
+                     can_start=bool(config.get("available")) and (not config.get("external_provider") or payload.get("allow_external_provider") is True))
+        result["route"] = dict(route)
+        if not config.get("available"):
+            return self._failure(result, "AGENT_NOT_CONFIGURED", "No investigation model is configured.", category="configuration"), 503
+        if not route["can_start"]:
+            return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this request before sources are sent or model costs are incurred.", category="permission"), 403
+        try:
+            snapshot = service.start(runtime_query, run.workspace_id, task_plan=plan)
+        except ProductApplicationError as error:
+            return self._failure(result, error.code, str(error)), error.status
+        except Exception:
+            return self._failure(result, "INVESTIGATION_START_FAILED", "The bounded source investigation could not start.", category="runtime"), 500
+        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), route)
+        with self._lock:
+            self._runs[snapshot["run"]["id"]] = (pinned, service)
+        return self._from_snapshot(pinned, snapshot), 202
+
     @staticmethod
     def _verified_view(result: dict[str, Any], view: dict[str, Any]) -> None:
         result["timeline"] = deepcopy(view)
@@ -241,6 +295,19 @@ class UnifiedAskService:
             result["status"] = "INVESTIGATING"
             return result
         if kind in {"success", "insufficient"}:
+            if run.route["intent"] == "SOURCE_RELATION":
+                source = snapshot.get("source_investigation")
+                if not result["reviewer"]["accepted"] or source is None:
+                    return self._failure(result, "FINAL_NOT_VERIFIED", "The source relation Final was not accepted.", category="validation")
+                result.update(status="COMPLETED" if kind == "success" else "INSUFFICIENT",
+                    source_investigation=deepcopy(source), metrics=deepcopy(snapshot["metrics"]),
+                    uncertainty=deepcopy(snapshot["uncertainty"]), conclusions=[{"kind": "SOURCE_RELATION", **fact} for fact in source["facts"]])
+                result["evidence"] = [{"evidence_ref": e["ref"], "citation_id": e["id"],
+                    "source_name": e["source_name"], "source_id": e["source_id"],
+                    "source_version": e["source_version"], "line_start": e["line_start"], "line_end": e["line_end"],
+                    "quote": e["source"]["quote"], "content_sha256": e["content_sha256"],
+                    "quote_sha256": e["quote_sha256"], "verified": True} for e in snapshot["evidence"]]
+                return result
             view = snapshot.get("temporal_decision")
             if not result["reviewer"]["accepted"] or not view or view.get("status") != "FOUND":
                 return self._failure(result, "FINAL_NOT_VERIFIED", "No temporal final was accepted by Validator and Reviewer.", category="validation")

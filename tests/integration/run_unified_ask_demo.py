@@ -26,6 +26,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--answer-first", action="store_true", help="seed discovery plus one long-label browser case")
     parser.add_argument("--require-agent-permission", action="store_true", help="enforce the external permission contract using only FakeTransport")
     parser.add_argument("--discovery", action="store_true", help="seed the natural-language discovery scenarios")
+    parser.add_argument("--source-investigation", action="store_true", help="seed bounded relation sources and inject an offline model into the real product Runtime")
+    parser.add_argument("--offline-scenario", choices=("normal", "uncertain"), default="normal", help="inject a local transport outcome; never calls a Provider")
     parser.add_argument(
         "--db",
         type=Path,
@@ -36,14 +38,17 @@ def main(argv: list[str] | None = None) -> int:
 
     repo = Path(__file__).resolve().parents[2]
     database_path = args.db or repo / "work" / "unified_ask_demo" / f"run-{uuid4().hex[:12]}.sqlite"
-    if args.discovery or args.answer_first:
+    if args.source_investigation:
+        from unified_investigation_fixture import UnifiedInvestigationFixture
+        fixture = UnifiedInvestigationFixture(database_path, port=args.port)
+    elif args.discovery or args.answer_first:
         from decision_discovery_fixture import DecisionDiscoveryFixture
         fixture = DecisionDiscoveryFixture(database_path, port=args.port)
     else:
         fixture = UnifiedAskFixture(database_path, port=args.port)
     if args.answer_first:
         fixture.add_long_content_case()
-    fixture.configure_agent(external_provider=args.require_agent_permission)
+    fixture.configure_agent(external_provider=args.require_agent_permission, scenario=args.offline_scenario)
     atlas_id = fixture.workspace_ids[ATLAS]  # type: ignore[index]
     other_id = fixture.workspace_ids[OTHER]  # type: ignore[index]
     print(f"Unified Ask offline demo: {fixture.base_url}", flush=True)
@@ -51,6 +56,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Atlas workspace_id: {atlas_id}", flush=True)
     print(f"Other workspace_id: {other_id}", flush=True)
     print("Fake Agent is enabled; no credentials or external network calls are used.", flush=True)
+    if args.source_investigation:
+        print("Select Relations for source investigations: Orion 项目负责人的直属领导是谁？", flush=True)
+        print("Three hops: Who owns the project behind Copper Meadow and who leads that owner?", flush=True)
     print("Try: current lookup, historical lookup, 'Why did Launch change suppliers?', 'uncertain provider', or 'fail provider'.", flush=True)
     try:
         # UnifiedAskFixture starts the HTTPServer on its worker thread.  Keep

@@ -97,6 +97,7 @@ class RuntimeAgentAdapter:
         context_assembler: ContextAssembler | None = None,
         temporal_decision_lookup: Callable[[str | None, str | None, str | None], dict[str, Any]] | None = None,
         temporal_claim_validator: Callable[..., dict[str, Any]] | None = None,
+        decision_memory_enabled: bool = True,
     ) -> None:
         self.reader = VaultReader(vault_root=vault_root, index_path=index_path)
         self.workspace_id = workspace_id or self.reader.vault_root_fingerprint
@@ -112,13 +113,16 @@ class RuntimeAgentAdapter:
             index_update_coordinator=index_update_coordinator,
             index_version=2,
         )
-        self._decision_memory_store = (
+        if not isinstance(decision_memory_enabled, bool):
+            raise ValidationError("decision_memory_enabled must be boolean.")
+        self._decision_memory_enabled = decision_memory_enabled
+        self._decision_memory_store = None if not decision_memory_enabled else (
             decision_memory_store
             if decision_memory_store is not None
             else TemporalDecisionStore(":memory:")
         )
         self._decision_memory_store_unavailable = decision_memory_store_unavailable
-        self._decision_memory_tool = DecisionMemorySearchTool(
+        self._decision_memory_tool = None if not decision_memory_enabled else DecisionMemorySearchTool(
             self._decision_memory_store,
             authorized_workspace_id=self.workspace_id,
         )
@@ -332,6 +336,8 @@ class RuntimeAgentAdapter:
         subject: str | None = None,
         relation: str | None = None,
     ) -> list[dict[str, object]]:
+        if not self._decision_memory_enabled:
+            raise ValidationError("Decision Memory is disabled for this source investigation.")
         if self._temporal_decision_lookup is not None:
             if (subject is None) != (relation is None):
                 raise ValidationError("Reviewed temporal lookup is unavailable for this run.")
@@ -857,25 +863,26 @@ class RuntimeAgentAdapter:
         initial_refs = [f"note_ref_{idx}" for idx, _ in enumerate(documents[:2])]
         tool_funcs = {
             "search_notes": self._search_notes,
-            "search_decision_memory": self._search_decision_memory,
             "read_verified_note": self._read_verified_note_for_tool,
             "build_pair_signals": self._build_pair_signals,
             "validate_evidence": self._validate_evidence,
             "validate_schema": self._validate_schema,
         }
+        if self._decision_memory_enabled:
+            tool_funcs["search_decision_memory"] = self._search_decision_memory
         retrieval_tool_runtime = create_retrieval_tool_runtime(
             self._search_notes,
             self._read_verified_note_for_tool,
             ledger=tool_ledger,
             checkpoint_callback=tool_checkpoint_callback,
-            decision_memory_executor=self._search_decision_memory,
+            decision_memory_executor=self._search_decision_memory if self._decision_memory_enabled else None,
             reuse_preflight=self._read_documents,
             expected_source_context=source_context,
         )
         event_sink = RuntimeAgentEventSink(tracer) if tracer is not None else None
         self._integration_event_sink = event_sink
         coordinator = Coordinator(
-            registry=create_default_registry(include_decision_memory=True),
+            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled),
             retrieval_agent=RetrievalAgent(
                 model=model,
                 initial_state=initial_state,
@@ -912,7 +919,7 @@ class RuntimeAgentAdapter:
             event_sink=event_sink,
             retrieval_task_id=retrieval_task_id,
         )
-        if workflow == "team_decision":
+        if workflow == "team_decision" and self._decision_memory_enabled:
             result["memory_candidate"] = self._capture_agent_memory_candidate(
                 result,
                 run_id=run_id,
