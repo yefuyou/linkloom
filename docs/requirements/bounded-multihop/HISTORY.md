@@ -22,8 +22,10 @@ available in the new Worktree's committed docs or in the inspected local
 and are not used as wrong-answer evidence. A disconnected or interrupted run
 cannot be scored as a semantic wrong answer.
 
-The recoverable test intent from the available contracts is preserved as
-offline acceptance behavior:
+The following behaviors are established by current source contracts and this
+new task, not recovered T03/T04 questions or historical scoring rules. The
+original per-case intent and scoring cannot be confirmed without the absent
+bundle; these behaviors define the new independent offline acceptance only:
 
 - two-hop project → owner → direct leader and three-hop alias → project →
   owner → direct leader;

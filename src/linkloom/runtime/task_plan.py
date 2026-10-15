@@ -18,6 +18,7 @@ from linkloom.agents.claim_grounding import (
     verified_subgoal_conflict, verified_dependent_leader_values,
     verified_relation_path_values, verified_owner_source_binding,
     TYPED_CLAIM_RELATIONS,
+    assess_claim_text, ClaimSupportStatus, _question_relation_entity,
 )
 from linkloom.evidence_identity import passage_evidence_id
 from linkloom.runtime.errors import ValidationError
@@ -592,6 +593,64 @@ def conflicted_subgoals(plan: TaskPlan, assessment: PlanAssessment) -> tuple[str
     )
 
 
+def validate_relation_final(
+    plan: TaskPlan, assessment: PlanAssessment, payload: dict[str, Any],
+    evidence_by_ref: dict[str, dict[str, Any]], read_refs: Iterable[str],
+) -> None:
+    """Bind legacy source-relation Finals to this slice's directed plan/read set.
+
+    This is deliberately scoped to the declared two/three-hop investigation,
+    not a replacement for the existing general or temporal Final validators.
+    """
+    paths = tuple(item.relation_path for item in plan.subgoals)
+    if plan.schema_version != 'task-plan/v2' or paths not in (
+        (('owner_of_project',), ('reports_to',)),
+        (('alias_of_project',), ('owner_of_project',), ('reports_to',)),
+    ):
+        return
+    if set(payload['evidence_refs']) - set(read_refs):
+        raise ValidationError('Planned Final cited evidence that was not read back.')
+    if payload['actions'] or payload['unresolved_items'] or payload['rejected_alternatives']:
+        raise ValidationError('Source-relation Final exceeds the declared relation path.')
+    texts = [(item['point'], item['evidence_refs'], False) for item in payload['rationale']]
+    main = payload['decision']['value']
+    if main is not None:
+        texts.append((main, payload['decision']['evidence_refs'], True))
+    statement = payload['uncertainty']['statement']
+    if statement is not None:
+        texts.append((statement, payload['uncertainty']['evidence_refs'], False))
+    main_slots: set[str] = set()
+    for text, refs, is_main in texts:
+        supported = assess_claim_text(text, refs, evidence_by_ref)
+        if supported.status is not ClaimSupportStatus.SUPPORTED or not supported.claims:
+            raise ValidationError('Planned Final contains an unsupported relation assertion.')
+        for claim in supported.claims:
+            matches = []
+            for goal in plan.subgoals:
+                targets = verified_plan_subgoal_values(plan, goal.subgoal_id, assessment.evidence_by_subgoal)
+                source_relations = TYPED_CLAIM_RELATIONS[goal.relation_path[0]]['source_relations']
+                if len(targets or ()) != 1 or claim.relation not in source_relations or claim.value != targets[0]:
+                    continue
+                if goal.depends_on:
+                    parents = verified_plan_subgoal_values(plan, goal.depends_on[0], assessment.evidence_by_subgoal)
+                    if len(parents or ()) != 1 or claim.subject != parents[0]:
+                        continue
+                else:
+                    relation = 'alias_of' if goal.relation_path[0] == 'alias_of_project' else 'owner_of'
+                    if claim.subject != _question_relation_entity(goal.question, relation):
+                        continue
+                dates = re.findall(r'\d{4}-\d{2}-\d{2}', goal.question)
+                if dates and claim.valid_on != dates[0]:
+                    continue
+                matches.append(goal.subgoal_id)
+            if not matches:
+                raise ValidationError('Planned Final relation does not match a verified subgoal binding.')
+            if is_main:
+                main_slots.update(matches)
+    if main is not None and main_slots != {item.subgoal_id for item in plan.subgoals}:
+        raise ValidationError('Main Final does not cover the complete requested relation chain.')
+
+
 def verified_dependency_entities(
     plan: TaskPlan,
     assessment: PlanAssessment,
@@ -656,4 +715,4 @@ def verified_dependency_entities(
 
 __all__ = ["TaskPlan", "Subgoal", "PlanAssessment", "assess_task_plan",
            "refusal_missing_subgoals", "pending_alternate_subgoals", "conflicted_subgoals",
-           "verified_dependency_entities", "validate_model_proposed_plan"]
+           "verified_dependency_entities", "validate_model_proposed_plan", "validate_relation_final"]

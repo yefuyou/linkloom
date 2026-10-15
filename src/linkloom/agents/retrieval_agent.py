@@ -27,6 +27,7 @@ from linkloom.runtime.task_plan import (
     TaskPlan, _explicit_goal_anchors, assess_task_plan, refusal_missing_subgoals,
     pending_alternate_subgoals,
     conflicted_subgoals,
+    validate_relation_final,
 )
 from linkloom.tools.contracts import ToolError
 from linkloom.tools.runtime import ToolRuntime
@@ -863,6 +864,18 @@ class RetrievalAgent:
                     expected_workspace_id=self.expected_workspace_id or "",
                 )
                 material = not null_result
+                if decision.verified_claims is None:
+                    try:
+                        validate_relation_final(
+                            self.task_plan, assessment, decision.to_dict(), visible_evidence, read_refs,
+                        )
+                    except ValidationError:
+                        return self._failed_result(
+                            task, usage, self._safe_error(
+                                'TASK_PLAN_FINAL_SCOPE_MISMATCH', 'runtime',
+                                'Final must cite read evidence and match the requested relation chain.',
+                            ), warnings,
+                        )
                 if not material:
                     uncertainty = decision.uncertainty
                     typed_conflict_refs: dict[str, tuple[str, str]] = {}

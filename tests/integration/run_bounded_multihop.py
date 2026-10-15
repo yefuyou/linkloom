@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 import re
 import time
+from uuid import uuid4
 
 from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, verified_subgoal_conflict
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction
@@ -117,7 +118,8 @@ def run_case(public, root):
         return {'outcome': 'refused', 'reason': 'planning_failed', 'values': [], 'calls': [],
                 'sources': [], 'verified_hops': 0, 'model_turns': 0, 'context_bytes': 0,
                 'bindings_verified': True, 'citation_valid': True, 'elapsed_ms': 0}
-    vault = root / 'vault'; vault.mkdir(parents=True,exist_ok=True)
+    root = root / ('run_' + uuid4().hex[:12])
+    vault = root / 'vault'; vault.mkdir(parents=True)
     for document in public['documents']:
         if document['workspace_id'] != public['workspace_id']:
             continue
@@ -175,6 +177,7 @@ def run_case(public, root):
         'context_bytes': max((len(json.dumps([x.to_dict() for x in request.evidence_context]).encode())
                               for request in model.requests), default=0),
         'elapsed_ms': round((time.monotonic()-started)*1000), 'run_id': status.run_id,
+        'artifact_instance': root.name,
         'run_status': status.status, 'error': status.error, 'final': final}
 
 

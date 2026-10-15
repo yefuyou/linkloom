@@ -45,6 +45,14 @@ Transport and their existing trust gates. Precise slimming integration and local
 acceptance status are recorded in the [delivery](requirements/product-consolidation/DELIVERY.md);
 this does not claim real-Provider acceptance of the new discovery/UI flow.
 
+## Bounded source-relation investigation — 2026-10-15
+
+The authorized isolated follow-up adds an opt-in typed two/three-hop plan entry
+and a genuine Runtime offline demonstration. It does not add multi-decision
+support to Unified Ask or grant source relations formal decision authority.
+The [delivery](requirements/bounded-multihop/DELIVERY.md) reports the first
+independent 8/10 outcome, safe unknowns and remaining grammar/conflict limits.
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,
