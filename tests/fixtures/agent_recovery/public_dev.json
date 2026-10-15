@@ -1,0 +1,39 @@
+{
+  "schema_version": "real-agent-reliability-public/v1",
+  "partition": "dev",
+  "dataset_id": "agent-recovery-v1",
+  "dataset_role": "development-canary",
+  "canary": true,
+  "canary_budget": {"max_provider_requests": 20, "max_cases": 2, "concurrency": 1},
+  "authoring_disclosure": "Synthetic cases were authored by the Codex team participating in this sprint; authors saw Gold, so this is not an external blind test.",
+  "runtime_contract": "Public is the only runtime/model input. Gold is loaded only after execution for scoring.",
+  "cases": [
+    {
+      "id": "AR-D-CANARY-2HOP",
+      "name": "canary 2hop",
+      "stage": "development",
+      "scenario": "relation",
+      "category": ["recovery", "canary", "2hop"],
+      "query": "Who is the direct leader of the owner of Canary Reach?",
+      "workspace_id": "recovery-canary-workspace",
+      "documents": [
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-2hop-owner.md", "reviewed": true, "content": "Lena Frost is the accountable owner of Canary Reach."},
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-2hop-leader.md", "reviewed": true, "content": "Lena Frost reports directly to Ivo Lane."}
+      ]
+    },
+    {
+      "id": "AR-D-CANARY-3HOP",
+      "name": "canary 3hop",
+      "stage": "development",
+      "scenario": "relation",
+      "category": ["recovery", "canary", "3hop"],
+      "query": "Who owns the project behind Canary Delta and who leads that owner?",
+      "workspace_id": "recovery-canary-workspace",
+      "documents": [
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-3hop-alias.md", "reviewed": true, "content": "Canary Delta is the team alias for Frost Harbor."},
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-3hop-owner.md", "reviewed": true, "content": "Mara Quinn is the accountable owner of Frost Harbor."},
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-3hop-leader.md", "reviewed": true, "content": "Mara Quinn reports directly to Noel Hart."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "real-agent-reliability-public/v1",
+  "partition": "dev",
+  "dataset_id": "agent-recovery-canary-v1",
+  "dataset_role": "development-canary",
+  "stage": "development",
+  "canary": true,
+  "canary_budget": {"max_provider_requests": 20, "max_cases": 2, "concurrency": 1},
+  "authoring_disclosure": "Synthetic canary cases were authored by the Codex team and authors saw Gold; this is not an external blind test.",
+  "runtime_contract": "Public is the only runtime/model input. Gold is loaded only after execution for scoring.",
+  "cases": [
+    {
+      "id": "AR-C-MISSING-EVIDENCE",
+      "name": "development missing evidence",
+      "stage": "development",
+      "scenario": "relation",
+      "category": ["recovery", "canary", "missing_evidence"],
+      "query": "Who is the direct leader of the owner of Canary Missing?",
+      "workspace_id": "recovery-canary-workspace",
+      "documents": [
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-missing-owner.md", "reviewed": true, "content": "Lena Frost is the accountable owner of Canary Missing."},
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-missing-context.md", "reviewed": true, "content": "Canary Missing has no documented reporting line in the current source set."}
+      ]
+    },
+    {
+      "id": "AR-C-SAMEFILE-MULTIPASSAGE",
+      "name": "development same-file multi-passage",
+      "stage": "development",
+      "scenario": "relation",
+      "category": ["recovery", "canary", "same_file", "multi_passage"],
+      "query": "Who is the direct leader of the owner of Canary Passage?",
+      "workspace_id": "recovery-canary-workspace",
+      "documents": [
+        {"workspace_id": "recovery-canary-workspace", "path": "canary-samefile.md", "reviewed": true, "content": "Canary Passage weekly planning notes.\n\nLio Hart is the accountable owner of Canary Passage.\n\nThe file also records unrelated delivery dates and meeting logistics.\n\nLio Hart reports directly to Maya Qin.\n\nNo other project changes this reporting line."}
+      ]
+    }
+  ]
+}

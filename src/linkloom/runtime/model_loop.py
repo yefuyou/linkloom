@@ -1505,6 +1505,7 @@ class SingleAgentModelLoop:
                 before_sequence=before_sequence,
                 observations=durable_progress_observations(),
                 task_plan=self.task_plan,
+                expected_workspace_id=self.workspace_id,
             )
 
         def current_recovery_decision(*, before_sequence: int | None = None):
@@ -2305,7 +2306,7 @@ class SingleAgentModelLoop:
                         recovery_guidance=recovery_decision.hint,
                         observation=None if grouped_history else observation,
                         available_tools=(
-                            [] if recovery_decision.action == "FINAL_CONFLICT"
+                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
                             else list(tool_definitions)
                         ),
                         previous_tool_call=None if grouped_history else previous_tool_call,

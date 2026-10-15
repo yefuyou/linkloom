@@ -1,0 +1,12 @@
+{
+  "schema_version": "real-agent-reliability-gold/v1",
+  "partition": "dev",
+  "dataset_id": "agent-recovery-v1",
+  "rubric_version": "agent-recovery-rubric-2026-10-15/v1",
+  "authoring_disclosure": "Authors saw Gold while writing these synthetic cases; this is an engineering acceptance set, not an external blind test.",
+  "gold_contract": "Gold is loaded only after public execution and is never passed to Runtime, FakeModel, controller, or Provider.",
+  "cases": [
+    {"id": "AR-D-CANARY-2HOP", "expected": {"outcome": "complete", "facts": ["lena frost", "ivo lane"], "reason": null, "required_sources": ["canary-2hop-owner.md", "canary-2hop-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"], "requires_verified_read": true}},
+    {"id": "AR-D-CANARY-3HOP", "expected": {"outcome": "complete", "facts": ["frost harbor", "mara quinn", "noel hart"], "reason": null, "required_sources": ["canary-3hop-alias.md", "canary-3hop-owner.md", "canary-3hop-leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"], "requires_verified_read": true}}
+  ]
+}

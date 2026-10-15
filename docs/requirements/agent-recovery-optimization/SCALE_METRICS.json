@@ -1,0 +1,1387 @@
+{
+  "real_provider_requests": 0,
+  "p2_production_fix": false,
+  "causal_speedup_established": false,
+  "measurements": [
+    {
+      "role": "before_p0p1",
+      "raw_sha256": "1d8eb168577fd903bf399f2b2eae6df11f986d83eadd348f314a6f29d603f165",
+      "timing_warning": "Legacy retrieval inclusive overlaps read_notes; other is unreliable",
+      "sizes": [
+        {
+          "sources": 10,
+          "median_stage_ms": {
+            "snapshot": 109.72580000088783,
+            "scan": 126.24420000065584,
+            "read_notes": 1702.302099998633,
+            "retrieval": 287.30159999395255,
+            "verifiedread": 1.736000005621463,
+            "other": 9385.44219997857,
+            "e2e": 11704.679299997224
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 80.73339999828022
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 65.01610000123037
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1209.1075999996974
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 170.3263999952469
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.736000005621463,
+                  "inclusive_ms": 357.6605999987805,
+                  "nested_read_notes_ms": 355.92459999315906
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 7770.384400006151
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 9297.303900006227
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 130.05450000491692
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 126.24420000065584
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1729.5156999898609
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 287.30159999395255
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.8682000008993782,
+                  "inclusive_ms": 460.88869999948656,
+                  "nested_read_notes_ms": 459.0204999985872
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 10310.218800004805
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 12585.20299999509
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 109.72580000088783
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 161.98550000262912
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1702.302099998633
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 343.74700000626035
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.4767000102438033,
+                  "inclusive_ms": 500.6493000037153,
+                  "nested_read_notes_ms": 499.1725999934715
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 9385.44219997857
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 11704.679299997224
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 100,
+          "median_stage_ms": {
+            "snapshot": 528.5718999948585,
+            "scan": 245.99570000282256,
+            "read_notes": 11905.035400006454,
+            "retrieval": 1943.97570000001,
+            "verifiedread": 1.3494000013452023,
+            "other": 5209.365799986699,
+            "e2e": 19757.177799998317
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 707.2906999965198
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 245.99570000282256
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 12478.951599980064
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 2442.695100005949
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.295800000661984,
+                  "inclusive_ms": 3184.962999999698,
+                  "nested_read_notes_ms": 3183.667199999036
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 5428.334200012614
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 21304.56309999863
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 528.5718999948585
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 278.47550000296906
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 11905.035400006454
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 1834.3798000059905
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.3494000013452023,
+                  "inclusive_ms": 3017.8935999938403,
+                  "nested_read_notes_ms": 3016.544199992495
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 5209.365799986699
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 19757.177799998317
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 401.31839999958174
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 178.34099999890896
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 9727.886799999396
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 1943.97570000001
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.368400000501424,
+                  "inclusive_ms": 2761.3902000011876,
+                  "nested_read_notes_ms": 2760.021800000686
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 4338.577499998792
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 16591.46779999719
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 500,
+          "median_stage_ms": {
+            "snapshot": 3989.650299998175,
+            "scan": 1580.5967000051169,
+            "read_notes": 110670.04669998278,
+            "retrieval": 18329.98139999836,
+            "verifiedread": 2.974700000777375,
+            "other": 2380.536500022572,
+            "e2e": 137034.84880000178
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 2448.9619999949355
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1580.5967000051169
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 117022.24499998556
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 21436.25460000476
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.974700000777375,
+                  "inclusive_ms": 30207.211299995834,
+                  "nested_read_notes_ms": 30204.236599995056
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 3125.8358000122826
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 145616.86880000343
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 5090.218799996364
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1413.2511999996495
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 103340.02049999981
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 16543.430700003228
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.5680999970063567,
+                  "inclusive_ms": 28415.17950000707,
+                  "nested_read_notes_ms": 28412.611400010064
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2154.0927000023657
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 128543.58199999842
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 3989.650299998175
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1661.3299000018742
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 110670.04669998278
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 18329.98139999836
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 3.303999998024665,
+                  "inclusive_ms": 30469.428399999742,
+                  "nested_read_notes_ms": 30466.124400001718
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2380.536500022572
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 137034.84880000178
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "after_p0p1_earlier",
+      "raw_sha256": "86d42d5396ba19eaba722b7234fb18fa2c7a3a9f9d9b67adafb841c8cbd217ff",
+      "timing_warning": "Legacy retrieval inclusive overlaps read_notes; other is unreliable",
+      "sizes": [
+        {
+          "sources": 10,
+          "median_stage_ms": {
+            "snapshot": 20.967600001313258,
+            "scan": 21.375500000431202,
+            "read_notes": 417.1336999934283,
+            "retrieval": 63.922099994670134,
+            "verifiedread": 0.6230000071809627,
+            "other": 2378.9847000007285,
+            "e2e": 2905.723500000022
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 23.406600004818756
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 21.823000002768822
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 432.9437999986112
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 63.922099994670134
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 0.8791999935056083,
+                  "inclusive_ms": 125.63599998975405,
+                  "nested_read_notes_ms": 124.75679999624845
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2464.1306000048644
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 3007.105299999239
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 17.81240000127582
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 13.830700001562946
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 345.17169999162434
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 36.632299998018425
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 0.5948999969405122,
+                  "inclusive_ms": 146.79449999675853,
+                  "nested_read_notes_ms": 146.19959999981802
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2052.8777000145055
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 2466.9197000039276
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 20.967600001313258
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 21.375500000431202
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 417.1336999934283
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 66.63899999693967
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 0.6230000071809627,
+                  "inclusive_ms": 98.14740000729216,
+                  "nested_read_notes_ms": 97.5244000001112
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2378.9847000007285
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 2905.723500000022
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 100,
+          "median_stage_ms": {
+            "snapshot": 186.04059999779565,
+            "scan": 86.61959999881219,
+            "read_notes": 4029.5588999942993,
+            "retrieval": 518.1340000053751,
+            "verifiedread": 0.8244999989983626,
+            "other": 2110.589899981278,
+            "e2e": 7369.456899999932
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 186.04059999779565
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 63.43300000298768
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 4414.619099996344
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 1116.0514999937732
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 0.8244999989983626,
+                  "inclusive_ms": 1145.2538999947137,
+                  "nested_read_notes_ms": 1144.4293999957154
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 1795.0746000133222
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 7576.043300003221
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 159.85530000034487
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 86.61959999881219
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 4029.5588999942993
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 486.14099999394966
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.0878000102820806,
+                  "inclusive_ms": 1789.4205000120564,
+                  "nested_read_notes_ms": 1788.3327000017744
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2606.194300002244
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 7369.456899999932
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 201.74330000008922
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 90.1538000034634
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 3717.0602999976836
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 518.1340000053751
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 0.674000009894371,
+                  "inclusive_ms": 959.11920000799,
+                  "nested_read_notes_ms": 958.4451999980956
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 2110.589899981278
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 6638.355299997784
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 500,
+          "median_stage_ms": {
+            "snapshot": 2109.234399998968,
+            "scan": 1013.832899996487,
+            "read_notes": 93921.48809999344,
+            "retrieval": 14859.023300006811,
+            "verifiedread": 3.017099981661886,
+            "other": 3386.9522999812034,
+            "e2e": 115603.22319999977
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 793.0574000056367
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1013.832899996487
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 50380.0667000105
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 6597.904700000072
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.3702000069315545,
+                  "inclusive_ms": 10130.554299998039,
+                  "nested_read_notes_ms": 10129.184099991107
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 3386.9522999812034
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 62173.18420000083
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 2109.234399998968
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1013.7413999982527
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 93921.48809999344
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 14859.023300006811
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 3.017099981661886,
+                  "inclusive_ms": 29603.292999992846,
+                  "nested_read_notes_ms": 29600.275900011184
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 3696.7189000206417
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 115603.22319999977
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 4577.2347999954945
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1515.8117000028142
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 132626.7072999908
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 25822.262200003024
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 3.5534999988158233,
+                  "inclusive_ms": 37320.09669999388,
+                  "nested_read_notes_ms": 37316.54319999507
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 0.0
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 160572.6319999958
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "after_final_exclusive",
+      "raw_sha256": "4685ffedfdfac41010a6c96956955261a4505ac36a97953a5d7e4b3ee2f5397e",
+      "timing_warning": null,
+      "sizes": [
+        {
+          "sources": 10,
+          "median_stage_ms": {
+            "snapshot": 76.36279999860562,
+            "scan": 95.68749999743886,
+            "read_notes": 1851.0728000037489,
+            "retrieval": 42.25600000063423,
+            "verifiedread": 2.233600003819447,
+            "other": 10622.7299999955,
+            "e2e": 12716.105999999854
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 87.95709999685641
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 95.68749999743886
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1973.8785999870743
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 53.07489999540849,
+                  "inclusive_ms": 358.60200000024633,
+                  "nested_read_notes_ms": 305.52710000483785
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.2902999990037642,
+                  "inclusive_ms": 620.440899998357,
+                  "nested_read_notes_ms": 618.1505999993533
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 13224.408500027494
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 15437.296900003275
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 76.36279999860562
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 121.45079999754671
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1851.0728000037489
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 42.25600000063423,
+                  "inclusive_ms": 351.18789999978617,
+                  "nested_read_notes_ms": 308.93189999915194
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.233600003819447,
+                  "inclusive_ms": 588.0034000001615,
+                  "nested_read_notes_ms": 585.769799996342
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 10622.7299999955
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 12716.105999999854
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 73.17930000135675
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 61.199600000691134
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 1562.3070999863558
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 25.181000004522502,
+                  "inclusive_ms": 294.38780000054976,
+                  "nested_read_notes_ms": 269.20679999602726
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.618000002054032,
+                  "inclusive_ms": 466.63650000846246,
+                  "nested_read_notes_ms": 465.01850000640843
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 8291.28240000864
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 10014.76740000362
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 100,
+          "median_stage_ms": {
+            "snapshot": 555.3045999986352,
+            "scan": 299.76219999662135,
+            "read_notes": 14949.609299990698,
+            "retrieval": 130.0559000010253,
+            "verifiedread": 1.9026999943889678,
+            "other": 9477.910000008706,
+            "e2e": 25180.92200000683
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 734.76859999937
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 392.4581000028411
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 17134.013399998366
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 134.3665999957011,
+                  "inclusive_ms": 2581.380399999034,
+                  "nested_read_notes_ms": 2447.013800003333
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.1827999953529797,
+                  "inclusive_ms": 5183.2688999929815,
+                  "nested_read_notes_ms": 5181.0860999976285
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 10100.752300008025
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 28498.541799999657
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 555.3045999986352
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 299.76219999662135
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 14727.384399993753
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 118.96270000579534,
+                  "inclusive_ms": 2953.229000006104,
+                  "nested_read_notes_ms": 2834.2663000003085
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.5981000033207238,
+                  "inclusive_ms": 4197.576500002469,
+                  "nested_read_notes_ms": 4195.978399999149
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 9477.910000008706
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 25180.92200000683
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 531.8275000026915
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 242.66910000005737
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 14949.609299990698
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 130.0559000010253,
+                  "inclusive_ms": 2495.6814000033773,
+                  "nested_read_notes_ms": 2365.625500002352
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 1.9026999943889678,
+                  "inclusive_ms": 4718.905499998073,
+                  "nested_read_notes_ms": 4717.002800003684
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 9002.264900016598
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 24858.32940000546
+                }
+              }
+            }
+          ]
+        },
+        {
+          "sources": 500,
+          "median_stage_ms": {
+            "snapshot": 973.0390999975498,
+            "scan": 1300.184799998533,
+            "read_notes": 90085.2140999923,
+            "retrieval": 737.8777999983868,
+            "verifiedread": 2.7275999964331277,
+            "other": 10660.890700011805,
+            "e2e": 104234.32079999475
+          },
+          "repeats": [
+            {
+              "repeat": 0,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 7441.735099993821
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 3475.9067999984836
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 153518.68550000654
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 737.8777999983868,
+                  "inclusive_ms": 27186.035200000333,
+                  "nested_read_notes_ms": 26448.157400001946
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 3.62140000652289,
+                  "inclusive_ms": 34992.620299999544,
+                  "nested_read_notes_ms": 34988.99889999302
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 27271.37439999933
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 192449.2010000031
+                }
+              }
+            },
+            {
+              "repeat": 1,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 912.1604999963893
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 569.5143999982974
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 56563.391999996384
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 245.17439999908675,
+                  "inclusive_ms": 9747.334300001967,
+                  "nested_read_notes_ms": 9502.15990000288
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.7275999964331277,
+                  "inclusive_ms": 18453.66869999998,
+                  "nested_read_notes_ms": 18450.941100003547
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 9805.572300014319
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 68098.54120000091
+                }
+              }
+            },
+            {
+              "repeat": 2,
+              "kind": "success",
+              "evidence_verified": true,
+              "answer": "Aster Brook",
+              "metrics": {
+                "max_model_turns": 12,
+                "model_turns": 6,
+                "search_count": 2,
+                "read_count": 3,
+                "tool_errors": 0
+              },
+              "stages": {
+                "snapshot": {
+                  "count": 1,
+                  "total_ms": 973.0390999975498
+                },
+                "scan": {
+                  "count": 1,
+                  "total_ms": 1300.184799998533
+                },
+                "read_notes": {
+                  "count": 12,
+                  "total_ms": 90085.2140999923
+                },
+                "retrieval": {
+                  "count": 2,
+                  "total_ms": 1212.4752000017907,
+                  "inclusive_ms": 21963.70520000346,
+                  "nested_read_notes_ms": 20751.23000000167
+                },
+                "verifiedread": {
+                  "count": 3,
+                  "total_ms": 2.5168999927700497,
+                  "inclusive_ms": 25601.869699996314,
+                  "nested_read_notes_ms": 25599.352800003544
+                },
+                "other": {
+                  "count": 1,
+                  "total_ms": 10660.890700011805
+                },
+                "e2e": {
+                  "count": 1,
+                  "total_ms": 104234.32079999475
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

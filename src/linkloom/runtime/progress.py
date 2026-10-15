@@ -10,6 +10,7 @@ from typing import Sequence
 from linkloom.runtime.models import RuntimeState
 from linkloom.runtime.task_plan import (
     TaskPlan, assess_task_plan, conflicted_subgoals, pending_alternate_subgoals,
+    refusal_missing_subgoals,
 )
 from linkloom.agents.claim_grounding import verified_subgoal_conflict_refs
 from linkloom.tools.contracts import ToolCall, ToolError, ToolResult
@@ -34,6 +35,8 @@ class ProgressAssessment:
     conflicted_subgoals: tuple[str, ...] = ()
     conflict_evidence_ids: frozenset[str] = frozenset()
     pending_alternate_subgoals: tuple[str, ...] = ()
+    exhausted_subgoals: tuple[str, ...] = ()
+    latest_error_path: str | None = None
 
 
 def assess_progress(
@@ -44,6 +47,7 @@ def assess_progress(
     before_sequence: int | None = None,
     observations: Sequence[tuple[ToolCall, ToolResult]] = (),
     task_plan: TaskPlan | None = None,
+    expected_workspace_id: str | None = None,
 ) -> ProgressAssessment:
     """Derive progress from this checkpoint's ledger and non-ledger results.
 
@@ -117,6 +121,7 @@ def assess_progress(
     reason = "NO_TOOL_ACTIVITY"
     latest_tool_id = None
     latest_error_code = None
+    latest_error_path = None
 
     for _, _, call, result in events:
         # The prior same-argument cache is an observation, not an effective
@@ -125,6 +130,7 @@ def assess_progress(
             continue
         latest_tool_id = call.tool_id
         latest_error_code = result.error.code if result.error is not None else None
+        latest_error_path = result.error.details.get('path') if result.error is not None else None
         if latest_error_code == "TOOL_INVALID_ARGUMENTS":
             fingerprint = (
                 call.tool_id,
@@ -178,11 +184,12 @@ def assess_progress(
     conflict_slots: tuple[str, ...] = ()
     conflict_refs: frozenset[str] = frozenset()
     pending_alternates: tuple[str, ...] = ()
+    exhausted: tuple[str, ...] = ()
     if task_plan is not None and task_id is not None and agent_id is not None and latest_error_code is None:
         plan_assessment = assess_task_plan(
             task_plan, state.tool_ledger, run_id=state.run_id,
             task_id=task_id, agent_id=agent_id,
-            expected_workspace_id=state.source.vault_root_fingerprint,
+            expected_workspace_id=expected_workspace_id or state.source.vault_root_fingerprint,
         )
         pending_alternates = pending_alternate_subgoals(
             task_plan, plan_assessment, state.tool_ledger,
@@ -213,6 +220,26 @@ def assess_progress(
                 conflict_slots = ()
         if pending_alternates and not conflict_slots:
             status, reason = "SUSPECTED_STALL", "PLAN_ALTERNATE_PENDING"
+        missing = refusal_missing_subgoals(task_plan, plan_assessment)
+        searched = {
+            record.arguments.get('source_context', {}).get('subgoal_id')
+            for record in state.tool_ledger
+            if (record.run_id, record.task_id, record.agent_id) == (state.run_id, task_id, agent_id)
+            and record.tool_id == 'search_notes' and record.status == 'completed'
+        }
+        reachable_missing = [slot for slot in missing
+                             if not any(parent in missing for parent in task_plan.get(slot).depends_on)]
+        read_ids = {
+            value['evidence_id'] for record in state.tool_ledger
+            if (record.run_id, record.task_id, record.agent_id) == (state.run_id, task_id, agent_id)
+            and record.tool_id == 'read_verified_note' and record.status == 'completed'
+            and isinstance(value := (record.result or {}).get('value'), dict)
+            and isinstance(value.get('evidence_id'), str)
+        }
+        if (missing and reachable_missing and evidence_ids <= read_ids
+                and all(slot in searched for slot in reachable_missing)
+                and not pending_alternates and not conflict_slots):
+            exhausted = missing
 
     return ProgressAssessment(
         status=status,
@@ -226,6 +253,8 @@ def assess_progress(
         conflicted_subgoals=conflict_slots,
         conflict_evidence_ids=conflict_refs,
         pending_alternate_subgoals=pending_alternates,
+        exhausted_subgoals=exhausted,
+        latest_error_path=latest_error_path,
     )
 
 

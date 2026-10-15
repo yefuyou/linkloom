@@ -457,7 +457,7 @@
       const title = unsupported ? t("This relationship question is not supported", "目前不能可靠地拆解这个关系问题") : memoryConflict ? t("Approved terminology conflicts", "已批准术语存在冲突") : ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
         : dateNeeded ? t("Choose a specific date", "请选择一个具体日期")
         : permission ? t("This investigation needs your permission", "这次调查需要你的授权")
-        : uncertain ? t("Investigation interrupted; no verified conclusion", "本次 AI 调查中断，尚未得到核验后的结论")
+        : uncertain ? t("Investigation outcome uncertain; no verified conclusion", "本次调查执行结果不确定，没有可核验的最终结论")
         : noMatch ? t("No matching reviewed decision found", "暂未找到与问题匹配的可信决策")
         : t("No verified answer is available", "本次尚未得到可核验的答案");
       const message = unsupported ? t("Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.", "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")

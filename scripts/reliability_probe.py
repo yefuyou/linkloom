@@ -70,6 +70,8 @@ def serialized_live(operation):
     def run(*args, **kwargs):
         if not kwargs.get('live', False):
             return operation(*args, **kwargs)
+        if (ROOT/'docs/requirements/agent-recovery-optimization/SPEC.md').exists():
+            raise RuntimeError('HISTORICAL_LIVE_AUTHORIZATION_EXPIRED_USE_RECOVERY_ENTRY')
         with live_execution_lock(ROOT/'work/real-agent-reliability'):
             return operation(*args, **kwargs)
     return run
@@ -77,22 +79,26 @@ def serialized_live(operation):
 
 class SendBudget:
     """In-memory send admission around the existing durable ledger, not a ledger."""
-    def __init__(self):
+    def __init__(self, *, max_requests=60, max_usd=10, max_seconds=5400, input_byte_bound=65536):
         self.started = None
         self.attempts = 0
         self.reserved_usd = 0.0
         self.busy = False
+        self.max_requests = max_requests
+        self.max_usd = max_usd
+        self.max_seconds = max_seconds
+        self.input_byte_bound = input_byte_bound
 
     def admit(self, payload):
         now = time.monotonic()
         if self.started is None:
             self.started = now
-        if self.busy or self.attempts >= 60 or now - self.started >= 5400 - 130:
+        if self.busy or self.attempts >= self.max_requests or now - self.started >= self.max_seconds - 130:
             raise RuntimeError('SPRINT_SEND_LIMIT')
-        if self.reserved_usd + REQUEST_RESERVATION_USD > 10:
+        if self.reserved_usd + REQUEST_RESERVATION_USD > self.max_usd:
             raise RuntimeError('SPRINT_COST_LIMIT')
         encoded = json.dumps(payload, ensure_ascii=False, default=str).encode('utf-8')
-        if len(encoded) > 65536 or payload['model'] != MODEL:
+        if len(encoded) > self.input_byte_bound or payload['model'] != MODEL:
             raise RuntimeError('SPRINT_INPUT_BOUND')
         # Only this runner's adapter-produced text/function payload is admitted.
         def check(value):
@@ -169,18 +175,31 @@ def run_product(case, root, sdk, ledger, budget, *, offline=False):
     root.mkdir(parents=True, exist_ok=False)
     app, workspace = seed(root, case['documents'])
     requests, responses = [], []
-    controller = SourceOnlyController()
+    controller = None
 
     def fake_wire(request):
+        nonlocal controller
+        if controller is None:
+            controller = SourceOnlyController()
         # Exercise the actual installed SDK serializer/parser without a socket.
         body = json.loads(request.content)
-        assert 'parametersJsonSchema' in request.content.decode()
         current = requests[-1]
+        if current.available_tools:
+            assert 'parametersJsonSchema' in request.content.decode()
+        else:
+            # Runtime has already verified every returned identity. The
+            # deterministic test controller must not re-read a queued duplicate
+            # when exercising the Provider's final-only recovery turn.
+            controller.pending.clear()
         observation = current.observation
         if observation is None and current.tool_turns:
             observation = current.tool_turns[-1].tool_results[-1].result
         action = controller(SimpleNamespace(user_input=current.user_input,
             sequence=current.sequence, observation=observation))
+        if not current.available_tools and action.kind == 'tool_call':
+            controller.pending.clear()
+            action = controller(SimpleNamespace(user_input=current.user_input,
+                sequence=current.sequence, observation=None))
         part = ({'functionCall': {'name': action.tool_call.tool_id, 'args': action.tool_call.arguments},
                  'thoughtSignature': 'c3ByaW50'} if action.kind == 'tool_call' else {'text': action.final_answer})
         return httpx.Response(200, json={'modelVersion': MODEL, 'responseId': uuid4().hex,

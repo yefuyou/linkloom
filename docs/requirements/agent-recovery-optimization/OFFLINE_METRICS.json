@@ -1,0 +1,1311 @@
+{
+  "historical_first_score": "12/16 unchanged",
+  "author_saw_gold": true,
+  "fake_model_only": true,
+  "real_provider_requests": 0,
+  "evaluations": [
+    {
+      "role": "new_first_acceptance",
+      "raw_sha256": "cd27592c80706ab3c0f23314f6a4edc9a236e92ca4cd0a5d174752d2fed77a07",
+      "score": {
+        "denominator": 12,
+        "evidence_ok_count": 12,
+        "exact_fact_accuracy": 11,
+        "observer_contract": "Claims require actual Product citation-to-VerifiedRead association; historical case/baseline labels do not grant N/A.",
+        "outcome_accuracy": 11,
+        "outcome_categories": {
+          "complete": 9,
+          "partial": 3
+        },
+        "passed": 11,
+        "required_source_coverage": 12,
+        "rubric_version": "agent-recovery-rubric-2026-10-15/v1"
+      },
+      "cases": [
+        {
+          "case_id": "AR-F-2HOP",
+          "outcome": "complete",
+          "facts": [
+            "mira fern",
+            "kellan shore"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-3HOP",
+          "outcome": "complete",
+          "facts": [
+            "juniper span",
+            "nora beck",
+            "elias reed"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-MISSINGLAST",
+          "outcome": "partial",
+          "facts": [
+            "niko bloom"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-MISSINGMIDDLE",
+          "outcome": "partial",
+          "facts": [
+            "willow arc"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-CONFLICT",
+          "outcome": "partial",
+          "facts": [
+            "talia crane"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": false,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": false,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": false,
+            "pass": false,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SAMEFILE2",
+          "outcome": "complete",
+          "facts": [
+            "rhea moss",
+            "soren pike"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-NOISYSAMEFILE",
+          "outcome": "complete",
+          "facts": [
+            "tara moss",
+            "uli chen"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SIMILARNAMES",
+          "outcome": "complete",
+          "facts": [
+            "ari moss",
+            "bea lin"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SOURCEUPDATE",
+          "outcome": "complete",
+          "facts": [
+            "rae yu",
+            "sol kim"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-HISTORICALASOF",
+          "outcome": "complete",
+          "facts": [
+            "asha bell",
+            "bo lin"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-中文MIX",
+          "outcome": "complete",
+          "facts": [
+            "mina ortiz",
+            "周宁"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-INSTRUCTION-SAMELINE",
+          "outcome": "complete",
+          "facts": [
+            "ren park",
+            "ivy chen"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        }
+      ]
+    },
+    {
+      "role": "first_offline_canary",
+      "raw_sha256": "76565f687fc9009ef392417274cdeba2e856fb0b648a4afc82173ef630284942",
+      "score": {
+        "denominator": 2,
+        "evidence_ok_count": 2,
+        "exact_fact_accuracy": 1,
+        "observer_contract": "Claims require actual Product citation-to-VerifiedRead association; historical case/baseline labels do not grant N/A.",
+        "outcome_accuracy": 1,
+        "outcome_categories": {
+          "partial": 1,
+          "refusal": 1
+        },
+        "passed": 1,
+        "required_source_coverage": 2,
+        "rubric_version": "agent-recovery-rubric-2026-10-15/v1"
+      },
+      "cases": [
+        {
+          "case_id": "AR-C-MISSING-EVIDENCE",
+          "outcome": "partial",
+          "facts": [
+            "lena frost"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-C-SAMEFILE-MULTIPASSAGE",
+          "outcome": "refusal",
+          "facts": [],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": false,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": false,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": false,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": false,
+            "pass": false,
+            "reason_match": false,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        }
+      ]
+    },
+    {
+      "role": "exposed_canary_regression",
+      "raw_sha256": "af69d2ff65525bd9b997d09a1adbcd0f196423895b35d6970588ef163cdedb19",
+      "score": {
+        "denominator": 2,
+        "evidence_ok_count": 2,
+        "exact_fact_accuracy": 2,
+        "observer_contract": "Claims require actual Product citation-to-VerifiedRead association; historical case/baseline labels do not grant N/A.",
+        "outcome_accuracy": 2,
+        "outcome_categories": {
+          "complete": 1,
+          "partial": 1
+        },
+        "passed": 2,
+        "required_source_coverage": 2,
+        "rubric_version": "agent-recovery-rubric-2026-10-15/v1"
+      },
+      "cases": [
+        {
+          "case_id": "AR-C-MISSING-EVIDENCE",
+          "outcome": "partial",
+          "facts": [
+            "lena frost"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-C-SAMEFILE-MULTIPASSAGE",
+          "outcome": "complete",
+          "facts": [
+            "lio hart",
+            "maya qin"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        }
+      ]
+    },
+    {
+      "role": "exposed_final_regression",
+      "raw_sha256": "b727a18a08693512311ca396951c4b5e66f75f636d0520ffef7defbe0bfe9f34",
+      "score": {
+        "denominator": 12,
+        "evidence_ok_count": 12,
+        "exact_fact_accuracy": 11,
+        "observer_contract": "Claims require actual Product citation-to-VerifiedRead association; historical case/baseline labels do not grant N/A.",
+        "outcome_accuracy": 11,
+        "outcome_categories": {
+          "complete": 9,
+          "partial": 3
+        },
+        "passed": 11,
+        "required_source_coverage": 12,
+        "rubric_version": "agent-recovery-rubric-2026-10-15/v1"
+      },
+      "cases": [
+        {
+          "case_id": "AR-F-2HOP",
+          "outcome": "complete",
+          "facts": [
+            "mira fern",
+            "kellan shore"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-3HOP",
+          "outcome": "complete",
+          "facts": [
+            "juniper span",
+            "nora beck",
+            "elias reed"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-MISSINGLAST",
+          "outcome": "partial",
+          "facts": [
+            "niko bloom"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-MISSINGMIDDLE",
+          "outcome": "partial",
+          "facts": [
+            "willow arc"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-CONFLICT",
+          "outcome": "partial",
+          "facts": [
+            "talia crane"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": false,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": false,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": false,
+            "pass": false,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SAMEFILE2",
+          "outcome": "complete",
+          "facts": [
+            "rhea moss",
+            "soren pike"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-NOISYSAMEFILE",
+          "outcome": "complete",
+          "facts": [
+            "tara moss",
+            "uli chen"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SIMILARNAMES",
+          "outcome": "complete",
+          "facts": [
+            "ari moss",
+            "bea lin"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-SOURCEUPDATE",
+          "outcome": "complete",
+          "facts": [
+            "rae yu",
+            "sol kim"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-HISTORICALASOF",
+          "outcome": "complete",
+          "facts": [
+            "asha bell",
+            "bo lin"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-中文MIX",
+          "outcome": "complete",
+          "facts": [
+            "mina ortiz",
+            "周宁"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        },
+        {
+          "case_id": "AR-F-INSTRUCTION-SAMELINE",
+          "outcome": "complete",
+          "facts": [
+            "ren park",
+            "ivy chen"
+          ],
+          "score": {
+            "citation_valid": true,
+            "claim_supported": true,
+            "claimed_facts": true,
+            "conflict_sources_present": true,
+            "evidence_ok": true,
+            "facts_exact": true,
+            "forbidden_output_absent": true,
+            "future_fact_absent": true,
+            "legacy_pass": true,
+            "observer_contract": {
+              "agent_claim_requires": [
+                "citation_valid",
+                "claim_supported",
+                "verified_read_dependency"
+              ],
+              "claim_support_is_not_overridden_by_baseline": true,
+              "contract_version": "agent-recovery-observer/v2",
+              "product_citation_verified_read_association": true,
+              "selected_baseline": "C",
+              "values": {
+                "citation_valid": true,
+                "claim_supported": true,
+                "verified_read_dependency": true
+              }
+            },
+            "outcome_match": true,
+            "pass": true,
+            "reason_match": true,
+            "required_sources_present": true,
+            "stale_source_absent": true,
+            "verified_read_dependency": true
+          },
+          "citation_valid": true,
+          "claim_supported": true,
+          "verified_read_dependency": true
+        }
+      ]
+    }
+  ]
+}

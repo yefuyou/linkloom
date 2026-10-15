@@ -1,0 +1,23 @@
+{
+  "schema_version": "agent-recovery-freeze/v1",
+  "dataset_id": "agent-recovery-v1",
+  "files": {
+    "public_frozen.json": "9669b84f29c26bc812013d7b878db531194b77227c6f23ee5ba781b20d8df594",
+    "gold_frozen.json": "1596307fe7320eac16519fb719c92cdcb1eb389b89f86233cfe759302f6143e6",
+    "public_dev.json": "331b7188357b4f7d065e62733d51b65417e1f9668c95b42c507be77f67ec0381",
+    "gold_dev.json": "12a2785dafa5a11f070caf4f7c7fbd043ad51aa31046e4a81c0df190c9947ff5"
+  },
+  "case_counts": {"acceptance": 12, "development_canary": 2},
+  "acceptance_case_ids": [
+    "AR-F-2HOP", "AR-F-3HOP", "AR-F-MISSINGLAST", "AR-F-MISSINGMIDDLE",
+    "AR-F-CONFLICT", "AR-F-SAMEFILE2", "AR-F-NOISYSAMEFILE", "AR-F-SIMILARNAMES",
+    "AR-F-SOURCEUPDATE", "AR-F-HISTORICALASOF", "AR-F-中文MIX", "AR-F-INSTRUCTION-SAMELINE"
+  ],
+  "development_case_ids": ["AR-D-CANARY-2HOP", "AR-D-CANARY-3HOP"],
+  "rubric_version": "agent-recovery-rubric-2026-10-15/v1",
+  "code_freeze_utc": "2026-10-15T13:19:46.654Z",
+  "authoring_disclosure": "Authors saw Gold; this is not an external blind test.",
+  "gold_isolation": "Gold is post-execution scoring input only and must never enter Runtime, model, controller, Provider, or public request payloads.",
+  "canary_budget": {"max_provider_requests": 20, "max_cases": 2, "concurrency": 1},
+  "source_update_contract": "AR-F-SOURCEUPDATE uses an observed source update before query; no document uses valid:false to represent freshness."
+}

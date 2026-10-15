@@ -1,0 +1,12 @@
+{
+  "schema_version": "real-agent-reliability-gold/v1",
+  "partition": "dev",
+  "dataset_id": "agent-recovery-canary-v1",
+  "rubric_version": "agent-recovery-rubric-2026-10-15/v1",
+  "authoring_disclosure": "Authors saw Gold while writing these synthetic canaries; this is not an external blind test.",
+  "gold_contract": "Gold is loaded only after public execution and is never passed to Runtime, FakeModel, controller, or Provider.",
+  "cases": [
+    {"id": "AR-C-MISSING-EVIDENCE", "expected": {"outcome": "partial", "facts": ["lena frost"], "reason": "evidence_insufficient", "required_sources": ["canary-missing-owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"], "requires_verified_read": true}},
+    {"id": "AR-C-SAMEFILE-MULTIPASSAGE", "expected": {"outcome": "complete", "facts": ["lio hart", "maya qin"], "reason": null, "required_sources": ["canary-samefile.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"], "requires_verified_read": true}}
+  ]
+}

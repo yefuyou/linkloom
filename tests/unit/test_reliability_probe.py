@@ -66,10 +66,10 @@ def test_live_dataset_allowlist_blocks_unapproved_text_before_sdk(tmp_path):
     public = tmp_path/'public.json'
     public.write_text(json.dumps({'cases': [{'query': 'private synthetic sentinel'}]}), encoding='utf-8')
     with pytest.raises(ValueError, match='UNAPPROVED_LIVE_DATASET'):
-        execute(live=True, dataset=public)
+        execute.__wrapped__(live=True, dataset=public)
 
 
 def test_live_rag_cannot_move_its_ledger_outside_canonical_budget_root(tmp_path):
     from scripts.reliability_rag_baseline import execute
     with pytest.raises(ValueError, match='LIVE_OUTPUT_ROOT_MUST_BE_CANONICAL'):
-        execute(live=True, attempt='synthetic', output_root=tmp_path)
+        execute.__wrapped__(live=True, attempt='synthetic', output_root=tmp_path)

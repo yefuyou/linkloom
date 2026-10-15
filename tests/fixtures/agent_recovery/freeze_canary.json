@@ -1,0 +1,16 @@
+{
+  "schema_version": "agent-recovery-canary-freeze/v1",
+  "dataset_id": "agent-recovery-canary-v1",
+  "files": {
+    "public_canary.json": "a5fcddbc63891841d828b167312166368602aca662ffb8b43c935ba2c44ecc57",
+    "gold_canary.json": "74679c5e9edd9c75cecc707dc0d146fcbe91ebc74726b093ead879c2c40cc07e"
+  },
+  "case_counts": {"development_canary": 2},
+  "case_ids": ["AR-C-MISSING-EVIDENCE", "AR-C-SAMEFILE-MULTIPASSAGE"],
+  "rubric_version": "agent-recovery-rubric-2026-10-15/v1",
+  "code_freeze_utc": "2026-10-15T13:30:00.000Z",
+  "authoring_disclosure": "Authors saw Gold; this is not an external blind test.",
+  "gold_isolation": "Gold is post-execution scoring input only and must never enter Runtime, model, controller, Provider, or public request payloads.",
+  "canary_budget": {"max_provider_requests": 20, "max_cases": 2, "concurrency": 1},
+  "coverage": ["missing evidence", "same-file multi-passage"]
+}

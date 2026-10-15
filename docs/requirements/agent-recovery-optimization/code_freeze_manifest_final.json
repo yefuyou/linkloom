@@ -1,0 +1,32 @@
+{
+  "code_freeze_utc": "2026-10-15T15:11:02.579+00:00",
+  "dataset_freeze": {
+    "path": "tests\\fixtures\\agent_recovery\\freeze.json",
+    "read_only_reference": true,
+    "sha256": "5f19d1e7e2e09609a9c6091bb2a6d7da8d3c3e67a432e28bc478e7c4b02dcf90"
+  },
+  "files": {
+    "scripts/recovery_evaluation.py": "3c18dfeb751d9d3c4aad0b464e5eb10de6a724cf016fe2844ff68244ca2e6d8d",
+    "scripts/reliability_probe.py": "1b5175194fa48cf95470297ae940495d88500549094c60f7b642a8d414a21513",
+    "src/linkloom/agents/retrieval_agent.py": "bcc2e5f6ddbdae9d9fa266155da99b08900e11690301c5ac65d7489ad0474501",
+    "src/linkloom/retrieval_v2/runtime_backend.py": "b60d1235d29c9e987207d3ec1c3f8934f1a98e1184ddf74d3046c39cc9e914c7",
+    "src/linkloom/runtime/model_loop.py": "d05c8fd3a261ce02def0de2f38fd3c6e838ba2116d69927a9a5d031fafa45c8b",
+    "src/linkloom/runtime/progress.py": "82aa78bffdb004daf3e10713b78012da189c74a4752791da34286f5ec6a7fb58",
+    "src/linkloom/runtime/recovery_policy.py": "da8a56f2c26ed22cc245b4a635748addfe40bcf42ff8a4d4ea163a269db771fa",
+    "src/linkloom/ui/projection.py": "61830ef053b3c4b3a1f478c4ff4b7a15b5eca37008ed3f5deeb0064f93f48e36",
+    "tests/unit/test_graceful_partial_recovery.py": "c88e44d6de65a76c2126dc6ca3662466ecccceeecfcf0471c37a27020f2d4865",
+    "tests/unit/test_recovery_evaluation.py": "6b06b22e996190c855db19ca2a921d8157437944cac025db792370cee6e2a4d8",
+    "tests/unit/test_recovery_passage_coverage.py": "80e9edf46e82e07dd078095a2245ed6b5d79ebe38fd12bbb26661e60eda6be30"
+  },
+  "files_sha256": "b87a0aea1a1fe1830a0ea2b74b97b8cb42ef53163557e3a213fd8d6d4fca32af",
+  "gold_in_manifest": false,
+  "gold_loaded": false,
+  "manifest_excluded_from_files": true,
+  "public": {
+    "partition": "frozen",
+    "path": "tests\\fixtures\\agent_recovery\\public_frozen.json",
+    "sha256": "9669b84f29c26bc812013d7b878db531194b77227c6f23ee5ba781b20d8df594"
+  },
+  "schema_version": "agent-recovery-code-freeze/v1",
+  "scope": "agent-recovery-optimization first frozen public execution"
+}

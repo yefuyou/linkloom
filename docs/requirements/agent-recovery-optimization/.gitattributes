@@ -1,0 +1,2 @@
+# Keep historical byte-hash references stable across Git's CRLF conversion.
+code_freeze_manifest*.json -text whitespace=cr-at-eol

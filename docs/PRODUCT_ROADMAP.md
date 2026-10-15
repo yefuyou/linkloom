@@ -73,6 +73,17 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### Agent Recovery and Evidence Coverage — 2026-10-15
+
+The authorized follow-up improves bounded partial completion and same-file
+passage coverage while preserving Verified Read, source identity and Reviewer
+checks. It measures source-processing costs without introducing a stale cache.
+The [Sprint SPEC](requirements/agent-recovery-optimization/SPEC.md) and
+[delivery](requirements/agent-recovery-optimization/DELIVERY.md) separate the
+historical first scores, new frozen acceptance, exposed regressions and live
+Gemini comparisons. No real vault, formal-decision authority or release scope
+is added.
+
 ### Real-Agent Reliability Sprint — 2026-10-15
 
 The isolated reliability sprint measured the existing bounded Agent with new

@@ -1,0 +1,2 @@
+# Frozen inputs are hashed as bytes; preserve their original line endings.
+*.json -text whitespace=cr-at-eol
