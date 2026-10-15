@@ -1,0 +1,47 @@
+{
+  "schema_version": "reflection-input/v1",
+  "source_run_id": "run_p4_961cf695f6f8",
+  "observed_summary_sha256": "40eb79e79ae170d42ce0727fce84fe443f5e73c04d8d4295586a712472dc9b6c",
+  "evaluator_artifact_sha256": "29a1aea4f2e5a6e24c70858ab7d14fd61c4891ba8afac963e0d658ee89ff297d",
+  "evaluator_artifact_schema_version": "deepseek-posthoc-evaluation/v1",
+  "available_source_evidence_refs": [
+    "run_p4_961cf695f6f8:ev_p1_0001",
+    "run_p4_961cf695f6f8:ev_p1_0002",
+    "run_p4_961cf695f6f8:ev_p1_0003",
+    "run_p4_961cf695f6f8:ev_p1_0004",
+    "run_p4_961cf695f6f8:ev_p1_0005",
+    "run_p4_961cf695f6f8:ev_p1_0006",
+    "run_p4_961cf695f6f8:ev_p1_0007",
+    "run_p4_961cf695f6f8:ev_p1_0008",
+    "run_p4_961cf695f6f8:ev_p1_0009",
+    "run_p4_961cf695f6f8:ev_p1_0010",
+    "run_p4_961cf695f6f8:ev_p1_0011",
+    "run_p4_961cf695f6f8:ev_p1_0012",
+    "run_p4_961cf695f6f8:ev_p1_0013",
+    "run_p4_961cf695f6f8:ev_p1_0014",
+    "run_p4_961cf695f6f8:ev_p1_0015",
+    "run_p4_961cf695f6f8:ev_p1_0016",
+    "run_p4_961cf695f6f8:ev_p1_0017",
+    "run_p4_961cf695f6f8:ev_p1_0018",
+    "run_p4_961cf695f6f8:ev_p1_0019",
+    "run_p4_961cf695f6f8:ev_p1_0020"
+  ],
+  "findings": [
+    {
+      "finding_id": "finding.rejection_semantics",
+      "dimension": "semantic",
+      "outcome": "FAIL",
+      "code": "explicit_rejection_requires_evidence/v1",
+      "source_evidence_refs": [
+        "run_p4_961cf695f6f8:ev_p1_0016",
+        "run_p4_961cf695f6f8:ev_p1_0018"
+      ],
+      "evaluator_artifact_sha256": "29a1aea4f2e5a6e24c70858ab7d14fd61c4891ba8afac963e0d658ee89ff297d"
+    }
+  ],
+  "task_characteristics": [
+    "team_decision",
+    "current_decision",
+    "compared_options"
+  ]
+}

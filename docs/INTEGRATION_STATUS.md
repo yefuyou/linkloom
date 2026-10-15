@@ -1,9 +1,13 @@
-# Integration and push record — 2026-09-10
+# Historical integration and push record — 2026-09-10
 
-## Current PR and acceptance state — 2026-09-10
+This file records the 2026-09-10 integration snapshot. It predates the V1
+product UI and the 2026-10-08 browser/Gemini release acceptance; it does not
+describe the current branch, pull request, or release state. The dated details
+below are retained as historical evidence.
 
-This section is current; the integration snapshot below is retained as dated
-history.
+## PR and acceptance state at 2026-09-10
+
+The PR and acceptance details below are a dated snapshot from 2026-09-10.
 
 - PR #1 is open and mergeable: base `master` at `e5652b4`; head
   `feature/p8-agent-runtime` at `7954eaf`.

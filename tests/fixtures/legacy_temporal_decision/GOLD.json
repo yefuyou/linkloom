@@ -1,0 +1,12 @@
+{
+  "schema_version": "temporal-agent-gold/v1",
+  "scope": "post-run-only; never import as a Product source or include in a model request",
+  "cases": {
+    "TD-01": {"effective": "Birchline", "forbidden_current": ["Wrenwell", "Cedar"], "requires_review_receipt": true, "requires_source_read": true},
+    "TD-02": {"effective": "Wrenwell", "replaces": "Birchline", "forbidden_current": ["Cedar"], "requires_review_receipt": true, "requires_current_and_prior_source_reads": true},
+    "TD-03": {"effective": "Wrenwell", "replaces": "Birchline", "replacement_reason": "NOT_SOURCE_VERIFIED", "forbidden_current": ["Cedar"], "requires_current_and_prior_source_reads": true},
+    "TD-04": {"effective": "Wrenwell", "candidate": "Cedar", "candidate_status": "PROPOSED_NOT_APPROVED", "forbidden_current": ["Cedar"], "requires_review_receipt": true},
+    "TD-05": {"effective": "Cypress", "replaces": "Stonebridge", "replacement_reason": "NOT_SOURCE_VERIFIED", "forbidden_current": ["Iris"], "requires_current_and_prior_source_reads": true}
+  },
+  "success_gate": "Runtime completed; Typed Final validated; Reviewer evidence_sufficient; independent post-run checks above all pass"
+}

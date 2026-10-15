@@ -60,11 +60,11 @@ class RecordingSink:
 
 
 @pytest.fixture
-def m03_root(request: pytest.FixtureRequest) -> Path:
+def m03_root() -> Path:
     root = (
         Path(__file__).resolve().parents[2]
         / ".tmp"
-        / f"m03-compat-{request.node.name}-{uuid4().hex[:8]}"
+        / f"m03-compat-{uuid4().hex[:12]}"
     )
     root.mkdir(parents=True, exist_ok=False)
     return root
@@ -205,7 +205,20 @@ def test_runtime_adapter_migrates_search_read_and_preserves_evidence_contract(m0
 
     assert result["status"] == "completed"
     assert result["evidence"]
-    assert all(ref.startswith("ev_p1_") for ref in result["evidence"])
+    assert all(ref.startswith("ev_v2_") for ref in result["evidence"])
+    searched_ids = {
+        item["evidence_id"]
+        for record in result["tool_ledger"]
+        if record["tool_id"] == "search_notes"
+        for item in record["result"]["value"]
+    }
+    assert set(result["evidence"]) <= searched_ids
+    assert all(
+        record["arguments"]["note_ref"] in searched_ids
+        and record["result"]["value"]["evidence_id"] == record["arguments"]["note_ref"]
+        for record in result["tool_ledger"]
+        if record["tool_id"] == "read_verified_note"
+    )
 
     tool_events = [event for event in tracer.events if event["event_type"] == "tool.called"]
     assert tool_events
@@ -396,7 +409,7 @@ def test_model_executor_and_ledger_receive_identical_business_arguments(m03_root
     executor_arguments = []
     search_arguments = {
         "query": "Scanner",
-        "source_context": {"model_owned": "executor-integrity"},
+        "source_context": {},
         "limit": 2,
     }
     original_search = adapter._search_notes
@@ -573,6 +586,45 @@ def test_read_failure_is_not_silently_swallowed(m03_root: Path):
     assert model.requests[2].observation.error.code == "TOOL_EXECUTION_FAILED"
 
 
+def test_model_facing_read_requires_a_searched_evidence_id(m03_root: Path):
+    adapter, _ = _sample_adapter(m03_root)
+    first_document = adapter._read_documents()[0]
+    runtime = create_retrieval_tool_runtime(
+        adapter._search_notes,
+        adapter._read_verified_note_for_tool,
+    )
+
+    for index, ref in enumerate((first_document.relative_path, "note_ref_0")):
+        rejected = runtime.execute(
+            ToolCall(
+                call_id=f"unsearched_{index}",
+                tool_id="read_verified_note",
+                arguments={"note_ref": ref},
+                run_id="run_evidence_membership",
+                task_id="task_evidence_membership",
+                agent_id="retrieval_agent",
+            ),
+            _policy(["read_verified_note"]),
+        )
+        assert rejected.status == "error"
+
+    evidence = adapter._search_notes("Scanner", {}, 1)
+    assert evidence
+    accepted = runtime.execute(
+        ToolCall(
+            call_id="searched_evidence",
+            tool_id="read_verified_note",
+            arguments={"note_ref": evidence[0]["evidence_id"]},
+            run_id="run_evidence_membership",
+            task_id="task_evidence_membership",
+            agent_id="retrieval_agent",
+        ),
+        _policy(["read_verified_note"]),
+    )
+    assert accepted.status == "ok"
+    assert accepted.value["evidence_id"] == evidence[0]["evidence_id"]
+
+
 def test_runtime_binding_preserves_stale_hash_validation(m03_root: Path):
     adapter, vault_root = _sample_adapter(m03_root)
     evidence = adapter._search_notes("Scanner", {}, 1)
@@ -600,6 +652,22 @@ def test_runtime_binding_preserves_stale_hash_validation(m03_root: Path):
     assert result.status == "error"
     assert result.error is not None
     assert result.error.code == "TOOL_EXECUTION_FAILED"
+
+
+def test_reused_search_checks_source_hash_before_skipping_executor(m03_root: Path):
+    adapter, vault_root = _sample_adapter(m03_root)
+    runtime = create_retrieval_tool_runtime(
+        adapter._search_notes,
+        adapter._read_verified_note_for_tool,
+        reuse_preflight=adapter._read_documents,
+    )
+    assert runtime.source_allows_reuse()
+
+    document = adapter._read_documents()[0]
+    target = vault_root / document.relative_path
+    target.write_text(target.read_text(encoding="utf-8") + "\nchanged", encoding="utf-8")
+
+    assert not runtime.source_allows_reuse()
 
 
 def test_migrated_runtime_keeps_prechecks_before_executor_and_budget():
@@ -653,3 +721,72 @@ def test_whitespace_only_read_ref_is_rejected_before_policy_and_executor():
     assert result.error is not None and result.error.code == "TOOL_INVALID_ARGUMENTS"
     assert calls == []
     assert policy.call_count == 0
+
+
+@pytest.mark.parametrize("scope_path", [7, "../secret", "a\\b", "C:\\outside"])
+def test_invalid_scope_path_is_rejected_before_budget_and_executor(scope_path):
+    calls = []
+    runtime = create_retrieval_tool_runtime(
+        lambda query, source_context, limit: calls.append(source_context) or [],
+        lambda ref: {"ref": ref},
+    )
+    policy = _policy(["search_notes"], max_calls=1)
+
+    invalid = runtime.execute(
+        ToolCall(
+            "invalid_scope",
+            "search_notes",
+            {"query": "q", "source_context": {"scope_path": scope_path}, "limit": 1},
+        ),
+        policy,
+    )
+    assert invalid.error is not None
+    assert invalid.error.code == "TOOL_INVALID_ARGUMENTS"
+    assert calls == []
+    assert policy.call_count == 0
+
+    valid_null = runtime.execute(
+        ToolCall(
+            "nullable_scope",
+            "search_notes",
+            {"query": "q", "source_context": {"scope_path": None}, "limit": 1},
+        ),
+        policy,
+    )
+    assert valid_null.status == "ok"
+    assert calls == [{"scope_path": None}]
+
+
+def test_invalid_decision_memory_as_of_is_rejected_before_budget_and_executor():
+    calls = []
+    runtime = create_retrieval_tool_runtime(
+        lambda query, source_context, limit: [],
+        lambda ref: {"ref": ref},
+        decision_memory_executor=lambda query, as_of, limit: calls.append(as_of) or [],
+    )
+    policy = _policy(["search_decision_memory"], max_calls=1)
+
+    for index, as_of in enumerate(("yesterday", "2026-01-01T00:00:00", "2026-02-30T00:00:00+00:00")):
+        invalid = runtime.execute(
+            ToolCall(
+                f"invalid_as_of_{index}",
+                "search_decision_memory",
+                {"query": "decision", "as_of": as_of, "limit": 1},
+            ),
+            policy,
+        )
+        assert invalid.error is not None
+        assert invalid.error.code == "TOOL_INVALID_ARGUMENTS"
+        assert policy.call_count == 0
+        assert calls == []
+
+    valid = runtime.execute(
+        ToolCall(
+            "valid_as_of",
+            "search_decision_memory",
+            {"query": "decision", "as_of": "2026-01-01T00:00:00+00:00", "limit": 1},
+        ),
+        policy,
+    )
+    assert valid.status == "ok"
+    assert calls == ["2026-01-01T00:00:00+00:00"]

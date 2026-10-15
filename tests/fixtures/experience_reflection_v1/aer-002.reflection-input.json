@@ -1,0 +1,22 @@
+{
+  "schema_version": "reflection-input/v1",
+  "source_run_id": "run_p4_dd10d1b9eee7",
+  "observed_summary_sha256": "cad4f7cfe9ed216e4afb0f024ab840c7d4fb9baa1219d5aa3c783a8e83dc75fe",
+  "evaluator_artifact_sha256": "9e326e332d240248ee7d4386e9f6ec6c8b411b07e8d722c4cb12bf9f44ce9083",
+  "evaluator_artifact_schema_version": "deepseek-business-case-run/v1",
+  "available_source_evidence_refs": [],
+  "findings": [
+    {
+      "finding_id": "finding.provider_transient_before_final",
+      "dimension": "provider_availability",
+      "outcome": "PARTIAL",
+      "code": "provider_transient_before_final/v1",
+      "source_evidence_refs": [],
+      "evaluator_artifact_sha256": "9e326e332d240248ee7d4386e9f6ec6c8b411b07e8d722c4cb12bf9f44ce9083"
+    }
+  ],
+  "task_characteristics": [
+    "team_decision",
+    "provider_incident"
+  ]
+}

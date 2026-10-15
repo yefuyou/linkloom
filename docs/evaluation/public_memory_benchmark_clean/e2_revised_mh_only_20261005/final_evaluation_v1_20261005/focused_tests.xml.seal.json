@@ -1,0 +1,7 @@
+{
+  "identity": "e2-focused-tests",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:08:15.605877+00:00",
+  "sha256": "24539469078261e18f461c3572ad1b3e39447f5ddab29491d32e6fb30054cab7"
+}

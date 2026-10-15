@@ -181,20 +181,28 @@ class FormalEvaluationRunner:
         self.output_root = Path(output_root)
 
     def run(self, provider: str = "mock", scenario: str = "perfect", run_id: str | None = None) -> dict[str, Any]:
+        if provider == "gemini_cli":
+            from .real_provider import ProviderExecutionBlocked
+
+            raise ProviderExecutionBlocked(
+                "provider safety gate closed: real evaluation requires an adapter that "
+                "enforces request, token, cost, retry, and resume limits"
+            )
+
         started = datetime.now(timezone.utc)
         run_id = run_id or f"run_eval_{uuid.uuid4().hex[:12]}"
-        
+
         status = "completed"
         predictions: list[dict[str, Any]] = []
         bad_cases: list[Any] = []
         evidence_validations: list[dict[str, Any]] | None = None
         usage: dict[str, Any] | None = None
         oracle = provider == "mock"
-        
+
         # Inference Phase
         inference_dataset = InferenceDataset(self.repo_root)
         before_fixture = snapshot_tree(inference_dataset.fixture_root)
-        
+
         if provider == "gemini_cli":
             from .real_provider import AgyCliAdapter
             from .real_execution import RealProviderRunner
@@ -245,10 +253,10 @@ class FormalEvaluationRunner:
         for record in predictions:
             payload_report = check_inference_payload(record)
             payload_violations.update(payload_report.violations)
-            
+
             if record.get("schema_status") == "invalid":
                 continue
-                
+
             if _validate_prediction(record):
                 valid_predictions.append(record)
             else:
@@ -352,7 +360,7 @@ class FormalEvaluationRunner:
         dataset.assert_frozen()
         if payload_violations:
             status = "invalid"
-            
+
         provider_safe = True
         if provider == "mock":
             provider_safe = True
@@ -384,7 +392,7 @@ class FormalEvaluationRunner:
             )
 
         finished = datetime.now(timezone.utc)
-        
+
         # baseline eligible: real provider, all 55 tasks processed, no malformed outputs, safety passed
         baseline_eligible = False
         if provider == "gemini_cli" and safety["passed"] and status == "completed":

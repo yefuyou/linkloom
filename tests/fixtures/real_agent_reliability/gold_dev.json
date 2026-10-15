@@ -1,0 +1,16 @@
+{
+  "schema_version": "real-agent-reliability-gold/v1",
+  "partition": "dev",
+  "rubric_version": "rar-offline-rubric-2026-10-15/v1",
+  "cases": [
+    {"id": "RAR-DEV-01", "expected": {"outcome": "complete", "facts": ["wrenwell"], "reason": null, "required_sources": ["decision-2026-10-07.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "C"]}},
+    {"id": "RAR-DEV-02", "expected": {"outcome": "complete", "facts": ["nora vale", "jules chen"], "reason": null, "required_sources": ["owner.md", "reporting.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-03", "expected": {"outcome": "complete", "facts": ["mina ortiz", "周宁"], "reason": null, "required_sources": ["owner.md", "leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-04", "expected": {"outcome": "refusal", "facts": [], "reason": "conflicting_evidence", "required_sources": [], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-05", "expected": {"outcome": "partial", "facts": ["eli rowan"], "reason": "evidence_insufficient", "required_sources": ["owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-06", "expected": {"outcome": "partial", "facts": ["tess reed"], "reason": "evidence_insufficient", "required_sources": ["owner.md"], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-07", "expected": {"outcome": "complete", "facts": ["kai bell", "dana yu"], "reason": null, "required_sources": ["owner.md", "leader.md"], "refusal_class": null, "exact_facts": true, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-08", "expected": {"outcome": "runtime_failure", "facts": [], "reason": "budget_exhausted", "required_sources": [], "refusal_class": null, "exact_facts": false, "baseline_compare": ["A", "B", "C"]}},
+    {"id": "RAR-DEV-09", "expected": {"outcome": "unsupported", "facts": [], "reason": "planning_failed", "required_sources": [], "refusal_class": "correct_refusal", "exact_facts": true, "baseline_compare": ["A", "B"]}}
+  ]
+}

@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from linkloom.evidence_identity import passage_evidence_id
 from linkloom.schemas import CandidatePair, EvidenceRef, NoteDocument, ScoreBreakdown
 
 
@@ -14,8 +15,17 @@ TOKEN_PATTERN = re.compile(r"[\w\u4e00-\u9fff]+", re.UNICODE)
 
 
 def tokenize(text: str) -> list[str]:
-    """Tokenize text into lowercase alphanumeric and CJK tokens."""
+    """Tokenize terms used by structural candidate generation."""
     return [match.group(0).lower() for match in TOKEN_PATTERN.finditer(text)]
+
+
+def _evidence_tokens(text: str) -> list[str]:
+    """Add deterministic CJK bigrams only for line-level evidence matching."""
+    tokens = tokenize(text)
+    for token in tuple(tokens):
+        if len(token) > 1 and all("\u4e00" <= char <= "\u9fff" for char in token):
+            tokens.extend(token[index : index + 2] for index in range(len(token) - 1))
+    return tokens
 
 
 def _quote_sha256(quote: str) -> str:
@@ -26,9 +36,11 @@ def retrieve_evidence(
     query: str,
     documents: list[NoteDocument],
     max_results: int = 5,
+    *,
+    workspace_id: str | None = None,
 ) -> list[EvidenceRef]:
     """Perform deterministic lexical retrieval across note titles, headings, body lines, tags, and wikilinks."""
-    query_tokens = set(tokenize(query))
+    query_tokens = set(_evidence_tokens(query))
     if not query_tokens:
         return []
 
@@ -40,7 +52,7 @@ def retrieve_evidence(
         heading_lines = {h["line"]: h["text"] for h in doc.headings if "line" in h}
 
         # 1. Match in Title (only when an exact source line can be proven)
-        title_tokens = set(tokenize(doc.title))
+        title_tokens = set(_evidence_tokens(doc.title))
         matched_title = query_tokens & title_tokens
         if not matched_title:
             matched_title = {q for q in query_tokens if q in doc.title.lower()}
@@ -58,7 +70,7 @@ def retrieve_evidence(
                     h_line = h.get("line", 1)
                     if 1 <= h_line <= len(lines):
                         cand_quote = lines[h_line - 1]
-                        cand_tokens = set(tokenize(cand_quote))
+                        cand_tokens = set(_evidence_tokens(cand_quote))
                         if matched_title & cand_tokens or any(q in cand_quote.lower() for q in matched_title) or doc.title.lower() in cand_quote.lower():
                             title_line_idx = h_line
                             title_source_kind = "heading"
@@ -84,7 +96,7 @@ def retrieve_evidence(
 
             if title_line_idx is not None and 1 <= title_line_idx <= len(lines):
                 quote = lines[title_line_idx - 1]
-                quote_tokens = set(tokenize(quote))
+                quote_tokens = set(_evidence_tokens(quote))
                 if matched_title & quote_tokens or any(q in quote.lower() for q in matched_title) or doc.title.lower() in quote.lower():
                     key = (doc.relative_path, title_line_idx, quote)
                     if key not in seen_keys:
@@ -108,7 +120,7 @@ def retrieve_evidence(
         # 2. Match in headings
         for h in doc.headings:
             h_text = h.get("text", "")
-            h_tokens = set(tokenize(h_text))
+            h_tokens = set(_evidence_tokens(h_text))
             matched = query_tokens & h_tokens
             if not matched:
                 matched = {q for q in query_tokens if q in h_text.lower()}
@@ -116,7 +128,7 @@ def retrieve_evidence(
                 line_idx = h.get("line", 1)
                 if 1 <= line_idx <= len(lines):
                     quote = lines[line_idx - 1]
-                    quote_tokens = set(tokenize(quote))
+                    quote_tokens = set(_evidence_tokens(quote))
                     # Ensure the actual source line actually contains the matched query/heading tokens
                     if matched & quote_tokens or any(q in quote.lower() for q in matched) or h_text.lower() in quote.lower():
                         key = (doc.relative_path, line_idx, quote)
@@ -142,7 +154,7 @@ def retrieve_evidence(
         for line_idx, line in enumerate(lines, start=1):
             if not line.strip():
                 continue
-            line_tokens = set(tokenize(line))
+            line_tokens = set(_evidence_tokens(line))
             matched = query_tokens & line_tokens
             if not matched:
                 matched = {q for q in query_tokens if q in line.lower()}
@@ -193,8 +205,23 @@ def retrieve_evidence(
 
     results: list[EvidenceRef] = []
     for idx, (_, item) in enumerate(raw_candidates[:max_results], start=1):
+        evidence_id = (
+            f"ev_p1_{idx:04d}"
+            if workspace_id is None
+            else passage_evidence_id(
+                workspace_id=workspace_id,
+                resource_id=item.relative_path,
+                document_id=item.relative_path,
+                logical_path=f"/{item.relative_path}",
+                source_ref=item.relative_path,
+                content_hash=item.content_sha256,
+                line_start=item.line_start,
+                line_end=item.line_end,
+                quote_hash=item.quote_sha256,
+            )
+        )
         assigned_ev = EvidenceRef(
-            evidence_id=f"ev_p1_{idx:04d}",
+            evidence_id=evidence_id,
             relative_path=item.relative_path,
             content_sha256=item.content_sha256,
             line_start=item.line_start,

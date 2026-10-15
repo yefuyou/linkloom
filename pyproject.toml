@@ -5,14 +5,21 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "linkloom"
 version = "0.1.0"
-description = "Local-first Markdown knowledge assistant"
+description = "Workspace-scoped team decision recovery and temporal evidence management"
 requires-python = ">=3.11"
-dependencies = ["PyYAML>=6.0"]
+dependencies = ["PyYAML>=6.0", "rank-bm25==0.2.2"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
 smoke = ["pytest>=8.0", "google-genai==2.22.0"]
+retrieval = ["sentence-transformers>=5.0,<7.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"linkloom.ui" = ["static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
+
+[tool.pytest.ini_options]
+markers = ["legacy_historical: original developer-inspected experiment replay, separate from Core Gate"]
 

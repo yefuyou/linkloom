@@ -1,0 +1,7 @@
+{
+  "identity": "e2-canonical-regression",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:08:15.610024+00:00",
+  "sha256": "b9c8584c464cdfc265ab06dd34fed5e093e511a41348747daecf77c2ecd90230"
+}

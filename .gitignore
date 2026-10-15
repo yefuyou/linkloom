@@ -2,8 +2,13 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest-*/
+pytest-*/
+test-tmp-*/
+.test-tmp-*/
 .ruff_cache/
 .mypy_cache/
+.tmp/
 
 # Local runtime output
 .env
@@ -13,6 +18,15 @@ __pycache__/
 venv/
 dist/
 build/
+*.egg-info/
+
+# Local SQLite databases and journal sidecars
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-*
+*.sqlite3-*
+*.db-*
 
 # linkloom generated output
 .artifacts/
@@ -20,7 +34,23 @@ outputs/
 out/
 reports/
 *.log
+output/playwright/npm-cache/
+output/playwright/console-*.log
+output/playwright/page-*.yml
+output/playwright/*-round*.png
+/.playwright-cli/
+/mobile-actions.png
 
 # OS/editor
+# Private investigation artifacts: never publish Provider ledgers or transport snapshots.
+/work/
+/output/playwright/
+*.ledger.jsonl
+transport_events.jsonl
+transport_environment.json
+
 .DS_Store
 Thumbs.db
+
+# Per-checkout local verification and build output
+/work/

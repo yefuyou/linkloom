@@ -1,0 +1,7 @@
+{
+  "identity": "e2-route-preflight",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:52.747240+00:00",
+  "sha256": "16374c93246b5faa011fad3d45a9b9b1bdfaf26ad1985b21f66259312c4be6cc"
+}

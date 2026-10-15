@@ -1,0 +1,7 @@
+{
+  "identity": "formal-rehearsal-budget-ledger",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:06:23.492544+00:00",
+  "sha256": "a882d54781f8c505558c459a5bc0ab17726723f67dfe06e8545c505a06386640"
+}

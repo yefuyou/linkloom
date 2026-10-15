@@ -1,0 +1,7 @@
+{
+  "identity": "e2-revised-heldout-subset",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T02:03:32.830728+00:00",
+  "sha256": "3273ada86bc257f8e39eab0a045668044274f0bae6bd67ba70559511b274fda8"
+}

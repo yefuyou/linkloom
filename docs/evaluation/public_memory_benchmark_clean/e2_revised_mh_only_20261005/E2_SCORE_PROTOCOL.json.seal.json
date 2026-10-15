@@ -1,0 +1,7 @@
+{
+  "identity": "e2-score-protocol",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T02:03:32.837513+00:00",
+  "sha256": "67c2ce8e9c2dd9f9b5816a734ab56a58a6f9882fe50b1c442dc7e959b82650b8"
+}

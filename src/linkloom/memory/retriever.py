@@ -17,6 +17,8 @@ class MemoryRetriever:
         scope_key: Optional[str] = None,
         max_items: int = 5,
         max_chars: int = 4000,
+        include_global: bool = True,
+        require_scope_key: bool = False,
     ) -> List[Dict[str, Any]]:
         if max_items < 0 or max_chars < 0:
             raise ValueError("memory retrieval budgets must be non-negative")
@@ -24,10 +26,14 @@ class MemoryRetriever:
         for item in self.active_items:
             if item.status is not MemoryStatus.ACTIVE:
                 continue
-            if item.scope not in (scope, MemoryScope.GLOBAL):
+            allowed_scopes = (scope, MemoryScope.GLOBAL) if include_global else (scope,)
+            if item.scope not in allowed_scopes:
                 continue
             if scope_key is not None and item.scope != MemoryScope.GLOBAL:
-                if item.metadata.get("scope_key") and item.metadata.get("scope_key") != scope_key:
+                item_scope_key = item.metadata.get("scope_key")
+                if require_scope_key and item_scope_key != scope_key:
+                    continue
+                if item_scope_key and item_scope_key != scope_key:
                     continue
             filtered.append(item)
 

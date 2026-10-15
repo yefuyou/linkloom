@@ -1,0 +1,56 @@
+{
+  "schema_version": "complete-evaluation-result/v1",
+  "run_id": "run_authority_provider",
+  "completed": true,
+  "observed_summary_sha256": "045a69acb6bfb663430e6622290c0264d91a9a7928a8c39a82314875f8180f40",
+  "observed_seal_sha256": "00fe2171d718b28e1c08d1bb506cc2050645801381ac2c9cbf60c06c7e05537c",
+  "source_evaluator_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "dimensions": {
+    "runtime": "PASS",
+    "infrastructure": "PASS",
+    "provider_availability": "PARTIAL",
+    "contract": "N/E",
+    "grounding": "N/E",
+    "semantic": "N/E"
+  },
+  "findings": [
+    {
+      "finding_id": "finding.provider_availability",
+      "dimension": "provider_availability",
+      "outcome": "PARTIAL",
+      "code": "provider_transient_before_final/v1",
+      "source_evidence_refs": [],
+      "supporting_observation_ids": []
+    },
+    {
+      "finding_id": "finding.contract",
+      "dimension": "contract",
+      "outcome": "N/E",
+      "code": "provider_transient_before_final/v1",
+      "source_evidence_refs": [],
+      "supporting_observation_ids": []
+    },
+    {
+      "finding_id": "finding.grounding",
+      "dimension": "grounding",
+      "outcome": "N/E",
+      "code": "provider_transient_before_final/v1",
+      "source_evidence_refs": [],
+      "supporting_observation_ids": []
+    },
+    {
+      "finding_id": "finding.semantic",
+      "dimension": "semantic",
+      "outcome": "N/E",
+      "code": "provider_transient_before_final/v1",
+      "source_evidence_refs": [],
+      "supporting_observation_ids": []
+    }
+  ],
+  "task_characteristics": [
+    "team_decision",
+    "current_decision",
+    "compared_options"
+  ],
+  "gold_leakage_detected": false
+}

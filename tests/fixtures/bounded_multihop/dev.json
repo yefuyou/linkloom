@@ -1,0 +1,417 @@
+{
+  "schema_version": "bounded-multihop-cases/v1",
+  "cases": [
+    {
+      "id": "DEV-A",
+      "tags": [
+        "A",
+        "C"
+      ],
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-B",
+      "tags": [
+        "B",
+        "C"
+      ],
+      "query": "Who owns the project behind Comet-Key and who leads that owner?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Comet-Key is the team alias for Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n3.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "glacier bay",
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md",
+          "n3.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-C",
+      "tags": [
+        "C"
+      ],
+      "query": "Which project does Comet-Key alias, who owns it, and who is that owner's direct leader?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Comet-Key is the team alias for Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n3.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "glacier bay",
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md",
+          "n3.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-D",
+      "tags": [
+        "D"
+      ],
+      "query": "As of 2026-04-01, who owns Glacier Bay and who is their direct leader?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "As of 2026-04-01 Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "As of 2026-04-01 Mira Cole reports directly to Owen Park."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n3.md",
+          "content": "As of 2026-06-01 Mira Cole reports directly to Tara West."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-E",
+      "tags": [
+        "E"
+      ],
+      "query": "Who is the direct leader of the owner of North Dock?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of North Dock."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Tara West is the accountable owner of North Dock."
+        }
+      ],
+      "expected": {
+        "outcome": "refused",
+        "values": [],
+        "reason": "conflicting_evidence",
+        "required_sources": []
+      }
+    },
+    {
+      "id": "DEV-F",
+      "tags": [
+        "F"
+      ],
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "mira cole"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "n1.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-G",
+      "tags": [
+        "G"
+      ],
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Tara West is the accountable owner of Glacier Bay."
+        }
+      ],
+      "expected": {
+        "outcome": "refused",
+        "values": [],
+        "reason": "conflicting_evidence",
+        "required_sources": []
+      }
+    },
+    {
+      "id": "DEV-H",
+      "tags": [
+        "H"
+      ],
+      "query": "Glacier Bay 的负责人向谁直接汇报？",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-I",
+      "tags": [
+        "I"
+      ],
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n2.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n3.md",
+          "content": "Unrelated Project 0 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n4.md",
+          "content": "Unrelated Project 1 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n5.md",
+          "content": "Unrelated Project 2 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n6.md",
+          "content": "Unrelated Project 3 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n7.md",
+          "content": "Unrelated Project 4 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n8.md",
+          "content": "Unrelated Project 5 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n9.md",
+          "content": "Unrelated Project 6 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n10.md",
+          "content": "Unrelated Project 7 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n11.md",
+          "content": "Unrelated Project 8 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n12.md",
+          "content": "Unrelated Project 9 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n13.md",
+          "content": "Unrelated Project 10 contains a planning discussion about a manager."
+        },
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n14.md",
+          "content": "Unrelated Project 11 contains a planning discussion about a manager."
+        }
+      ],
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "n1.md",
+          "n2.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-J",
+      "tags": [
+        "J"
+      ],
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "other-workspace",
+          "path": "private.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ],
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "mira cole"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "n1.md"
+        ]
+      }
+    },
+    {
+      "id": "DEV-U",
+      "tags": [
+        "unsupported"
+      ],
+      "query": "Which city does Glacier Bay operate from?",
+      "workspace_id": "dev-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-workspace",
+          "path": "n1.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        }
+      ],
+      "expected": {
+        "outcome": "refused",
+        "values": [],
+        "reason": "planning_failed",
+        "required_sources": []
+      }
+    }
+  ]
+}

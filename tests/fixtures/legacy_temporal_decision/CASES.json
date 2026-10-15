@@ -1,0 +1,32 @@
+{
+  "schema_version": "temporal-agent-cases/v1",
+  "data_class": "synthetic",
+  "model_visible_gold": false,
+  "setup": {
+    "workspace": "Atlas",
+    "subject": "Launch",
+    "relation": "uses supplier",
+    "sources": [
+      {"name": "decision-01.md", "content": "[2026-10-01T10:00:00Z] Alice: We decided to use Birchline as the supplier for launch.", "review": "approve"},
+      {"name": "decision-07.md", "content": "[2026-10-07T10:00:00Z] Alice: Wrenwell replaced Birchline on 2026-10-07 as the current supplier for the launch.", "review": "approve"},
+      {"name": "decision-09.md", "content": "[2026-10-09T10:00:00Z] Alice: Someone proposes Cedar as a replacement.", "review": "leave_unapproved"}
+    ]
+  },
+  "cases": [
+    {"id": "TD-01", "query": "10月6日 Launch 项目采用什么供应商方案？", "as_of": "2026-10-06"},
+    {"id": "TD-02", "query": "Launch 现在执行什么供应商方案？它替代了哪个旧方案？", "as_of": "2026-10-10"},
+    {"id": "TD-03", "query": "为什么从 Birchline 换成 Wrenwell？现在执行什么方案？", "as_of": "2026-10-10"},
+    {"id": "TD-04", "query": "有人提出 Cedar，它已经是 Launch 的现行方案了吗？", "as_of": "2026-10-10"}
+  ],
+  "holdout_setup": {
+    "workspace": "Harbor",
+    "subject": "Harbor launch",
+    "relation": "uses supplier",
+    "sources": [
+      {"name": "harbor-01.md", "content": "[2026-04-01T09:00:00Z] Morgan: We decided to use Stonebridge as the supplier for Harbor launch.", "review": "approve"},
+      {"name": "harbor-15.md", "content": "[2026-04-15T09:00:00Z] Morgan: Cypress replaced Stonebridge on 2026-04-15 as the current supplier for Harbor launch.", "review": "approve"},
+      {"name": "harbor-18.md", "content": "[2026-04-18T09:00:00Z] Morgan: Someone proposes Iris as a replacement.", "review": "leave_unapproved"}
+    ]
+  },
+  "holdout_case": {"id": "TD-05", "query": "Harbor launch 之前和现在各采用哪家供应商？为什么变更？", "as_of": "2026-04-20"}
+}

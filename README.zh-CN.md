@@ -1,143 +1,256 @@
-# linkloom
+# LinkLoom
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
-<p align="center">
-  <img src="./assets/readme/linkloom-hero.zh-CN.svg" width="100%" alt="Linkloom 将合成 Markdown Vault 转为确定性、可检查的只读索引，并把未来改动留在审核之后。">
-</p>
+**Team Decision Recovery / Temporal Decision Intelligence（团队决策恢复 / 时序决策智能）**
 
-Linkloom 是一个本地优先工具，用于把 Markdown 和 Obsidian 笔记转为确定、
-可检查的产物——从只读扫描器开始。它面向希望从长期积累的 Vault 中找回
-知识、又不愿把重写权限交给不透明系统的人。
+LinkLoom 帮助项目团队找回当前有效的决定、它替代了什么，以及支持答案的来源证据。
+它把持续变化的会议资料转为可审计的时序决策记忆。
 
-> **当前状态 · Scanner v1 已在合成测试夹具上验收。** 第一个面向用户的切片
-> 可以发现 Markdown 文件、提取已有结构、输出机器可读索引和摘要，并证明源
-> 夹具保持不变。后续搜索、连接、行动和写回流程不作为已完成的产品能力呈现。
+用户旅程：
 
-## 第一份证明：扫描合成 Vault
+**Sources → Review → Decision Memory → Ask**
 
-最小可用运行方式是本地、确定性的，不需要 provider key 或真实 Vault：
+示例：**Birchline → 被 Wrenwell 替代 → 来源证据发生变化 →
+Wrenwell 标记为 STALE → Review Attention**
 
-```bash
+## V1 产品界面
+
+以下截图来自真实 LinkLoom 产品浏览器界面，使用合成会议资料和确定性 fake Provider。
+它们展示产品 UI；真实 Gemini 使用于另一场 release acceptance。
+
+<table>
+  <tr>
+    <th>1. Sources</th>
+    <th>2. Review</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/01-sources.png"><img src="docs/assets/v1/01-sources.png" alt="已导入会议资料、完成 ingestion 并显示精确证据片段" width="560"></a></td>
+    <td><a href="docs/assets/v1/02-review.png"><img src="docs/assets/v1/02-review.png" alt="Birchline 决策候选、日期证据和审核操作" width="560"></a></td>
+  </tr>
+  <tr>
+    <th>3. 时序决策记忆</th>
+    <th>4. Ask</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/03-decision-memory.png"><img src="docs/assets/v1/03-decision-memory.png" alt="当前 Wrenwell 决定、Birchline 前序决定和证据时间线" width="560"></a></td>
+    <td><a href="docs/assets/v1/04-ask.png"><img src="docs/assets/v1/04-ask.png" alt="Ask 返回 Wrenwell、生效日期、被替代值和来源证据" width="560"></a></td>
+  </tr>
+  <tr>
+    <th>5. 来源更新 → Review Attention</th>
+    <th>Proposal 保持 supporting-only</th>
+  </tr>
+  <tr>
+    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="来源变化后，Review Attention 将 Wrenwell 标记为 STALE" width="560"></a></td>
+    <td><a href="docs/assets/v1/02-proposal-safety.png"><img src="docs/assets/v1/02-proposal-safety.png" alt="Kestrel Ledger 作为 proposal 展示，不具权威性" width="560"></a></td>
+  </tr>
+</table>
+
+[Replacement review](docs/assets/v1/02-review-replacement.png) 展示 Wrenwell 的日期证据和批准操作。
+[历史 Ask 截图](docs/assets/v1/04-ask-as-of.png)展示 2026-10-07 查询返回 Birchline。
+
+## 为什么决策恢复不能只看文本相关度
+
+通用检索可以找到看起来相关的段落。恢复团队决定还要保留并展示：
+
+- 决定从何时开始有效；
+- 它替代了哪项决定；
+- 哪个候选经授权后成为权威记录；
+- 支持记录的确切来源和证据片段；
+- 来源变化是否使证据过期、需要重新审核。
+
+LinkLoom 将检索与时序状态、审核生命周期结合，让答案能追溯到当前或历史决定。
+
+## 四个产品界面
+
+- **Sources** 将带时间戳的资料作为不可变版本导入，并展示精确证据片段。用户主动更新来源会触发 reconciliation。
+- **Review** 展示待人工批准的决定。Kestrel Ledger 这样的 proposal 只作为 supporting evidence，不会成为权威记录。
+- **Decision Memory** 展示当前和历史记录、生效时间、supersession 与来源溯源。
+- **Ask** 基于已批准的 Decision Memory 回答当前或 as-of 查询，并在可用时显示来源证据。
+
+## 验证范围与限制
+
+V1 release acceptance 针对一条合成会议资料工作流：
+
+- 核心旅程通过真实产品浏览器 UI 完成；
+- 另一场验收使用真实 Gemini，执行 6 次 GenerateContent 请求，均首次成功；
+- 确定性 release gate 的 408 个测试通过；安装 wheel 后的 no-provider HTTP smoke 通过。
+
+这些结果验证的是有界 release 工作流，不代表普遍抽取准确率、所有 Provider 质量、
+held-out 性能或生产就绪。LinkLoom 目前不是已部署的多人服务。
+
+## 快速开始
+
+产品入口与八个主要文件的核心阅读顺序：[开发者导航](docs/README.md)。
+
+在 LinkLoom checkout 中运行：
+
+~~~bash
 python -m pip install -e .
-python -m linkloom scan tests/fixtures/sample_vault --output .artifacts/readme-demo/scan
-```
+python -m linkloom.ui --port 8765
+~~~
 
-预期输出：
+打开 http://127.0.0.1:8765/。本地数据库默认位于
+~/.linkloom/product.sqlite。UI 默认可以启动，但必须显式启用 Provider 路径后才能完成语义抽取。
 
-```text
-Indexed notes: 5
-Warnings: 1
-Index: .../.artifacts/readme-demo/scan/vault_index.json
-Summary: .../.artifacts/readme-demo/scan/scan_summary.md
-```
+若要启用现有 Gemini 路径，在未安装 Google GenAI SDK 时安装仓库已有的
+smoke extra；再通过 shell 的 secret manager 设置 GEMINI_API_KEY，并显式 opt-in：
 
-这个夹具特意包含一个 frontmatter 损坏案例。Linkloom 会保留该笔记的可见
-性并记录警告，而不是中止扫描。
+~~~bash
+python -m pip install -e ".[smoke]"
+python -m linkloom.ui --port 8765 --allow-external-provider
+~~~
 
-生成的 `vault_index.json` 包含每篇笔记的相对路径、标题、标题层级、已有标签、
-WikiLink 目标、字节大小和源 SHA-256。配套的 `scan_summary.md` 提供人类可读的
-清单。产物必须位于输入根目录之外。
+启用后，导入的来源文本会发送给 Gemini 做语义抽取。Provider 仍通过启动参数和环境配置，
+应用内暂不提供 Provider 设置。
 
-## 当前真实情况
+无需 key 的确定性预览可打开
+http://127.0.0.1:8765/legacy-ask。该页面回放较早的合成决策简报，
+不覆盖 V1 的 Sources、Review、Decision Memory 和 Ask 工作流。
 
-- **只读 Scanner — Accepted（已验收）。** 基于合成夹具的测试覆盖了文件发现、结构提取、确定性输出、警告、路径安全和输入不可变性。
-- **Runtime、provider 与 safety 基础 — Acceptance records exist（存在验收记录）。** M0 和 Gate A/B 记录了有边界的工程证据；这不代表完整助手已经达到生产就绪状态。
-- **Team Decision Eval Seed — Accepted as eval seed（作为评测种子已验收）。** 它包含 30 cases、6 workspaces 和 36 notes；Golden 8 已正式冻结。
-- **Search、可解释关系、诊断和行动连续性 — Planned / experimental（计划中 / 实验性）。** 存在支持性实验，但还没有完成端到端的用户承诺。
-- **Real-vault mutation — Future only（仅未来）。** 当前门槛下真实写入仍然禁止。任何后续写入都需要可见计划、精确批准、源版本检查、备份、审计和回滚。
+## 产品数据流
 
-[`relation_eval/`](relation_eval/README.md) 是独立的合成评测实验室。它的模拟满分
-证明的是流水线连接，而不是模型智能或真实模型基准。
+~~~text
+原始资料
+  → 不可变来源版本 + 精确证据片段
+  → 语义候选
+  → 人工审核与授权
+  → 时序决策记忆
 
-## 证据链
+Ask
+  → 时序查询与有界检索
+  → 证据组装
+  → 有依据的答案
 
-Linkloom 的设计是一串逐步提高影响范围的边界：
+来源更新
+  → 证据清单
+  → reconciliation
+  → Review Attention 中的 STALE 记录
 
-```text
-已批准的 Markdown 根目录
-        │
-        ▼
-只读扫描 ──► 确定性索引 + 摘要
-                              │
-                              ▼
-                 带引用 / 可审核的未来流程
-                              │
-                              ▼
-                 独立变更计划（未来）
-                              │
-                              ▼
-             精确批准 + 备份 + 审计 + 回滚
-```
+Runtime Agent 结果
+  → Reviewer PASS
+  → AgentMemoryCandidate
+  → 独立审核与授权
+  → DecisionMaterializer
+  → 时序决策记忆
+~~~
 
-前五个产品里程碑保持只读。没有源文件和段落时，分数、建议或生成的句子都
-不会被当作已验证知识。Linkloom 会先观察现有 Vault 结构，再提出组织方式；
-它不要求一套固定的文件夹分类。
+通用 Agent Memory 与时序决策记忆相互独立。[60–90 秒 Demo 指南](docs/V1_DEMO.md)、
+[Release Notes 草稿](docs/V1_RELEASE_NOTES_DRAFT.md)、[V1.1 backlog](docs/V1_1_BACKLOG.md)
+和[产品路线图](docs/PRODUCT_ROADMAP.md)提供更多信息。
 
-## 产品路径
+## Indexing 索引
 
-规范路线图描述的是知识生命周期，而不是自动重写循环：
+| 索引 | 用途与实现 |
+|---|---|
+| Lexical | BM25 倒排索引，匹配精确名称、ID、日期和术语；复用 `rank-bm25`。 |
+| Dense | 本地多语言 embedding，`VectorIndex` 接口后使用 exact cosine；当前小数据集不引入 ANN。 |
+| Directory-aware | `DirectoryIndex` 保存父子路径、目录文档、摘要/概览、hash、版本和 summary dirty 状态。 |
+| Temporal Decision | SQLite 保存当前/历史决定、supersession、证据来源、action 与 owner 关系。 |
 
-```text
-可读取 → 可查找 → 可连接 → 可组织 → 可行动
-                                  ↘
-                      仅在确认后修改
-```
+Hybrid 固定融合 BM25 与 Dense 各自最多 20 个候选，使用 RRF（`k=60`）、稳定排序和
+证据身份去重。workspace 和可选 directory scope 在排序前应用。目录 scope 选择可配置；
+当前冻结评测语料只有平铺目录，不能证明深层目录导航的效果。
 
-当前实现是 **Can Read** 基础。下一个产品边界是独立的规划切片；生产实现必须
-等待该切片自己的 SPEC、implementation plan 和明确的人类批准范围。这里不包含
-任何 M1 生产业务流程。
+## Incremental Update 增量更新
 
-## 评测证据
-
-无需网络即可运行仓库中已提交的种子校验器：
-
-```bash
-python docs/requirements/m1_team_decision_eval_seed/validate_dataset.py
-```
-
-它会校验合成数据集的 schema、证据锚点、轨迹约束、claim 规则和指标注册表。
-已有记录如下：
+`ContextManifest`、`FileChangeEvent` 和 `IndexUpdateCoordinator` 定义 CREATE、MODIFY、
+DELETE、MOVE。hash 未变化的修改是 no-op；内容变化时只更新受影响索引，并将祖先摘要
+标记为 dirty。
 
 ```text
-PASS: 30 cases, 6 workspaces, 36 notes
-PASS: paths, evidence anchors, trajectory constraints, claims, and metric registry
+文件事件 → Manifest / Hash 检查 → 定位受影响资源
+         → 更新受影响索引 → 标记祖先摘要 dirty
+
+周期性 Reconcile → 对比 source inventory、manifest 和 indexes
+                 → 检测缺失/过期/orphan/hash drift → 修复
 ```
 
-现有 Scanner 验收证据记录为 **8 passed, 1 skipped**。跳过的是需要 Windows
-创建链接权限的 symbolic-link 案例。在当前 Windows 环境中，focused pytest
-无法重现，因为 pytest 临时目录 ACL 在测试执行前就失败了。仓库级测试套件不
-声称已经全绿：历史记录包含 Windows ACL 和旧版绝对路径非通过案例。
+索引 Reconciliation 是可调用的确定性任务，不是已部署的 scheduler。V1 产品 UI 支持用户主动更新
+Sources：创建新的不可变资料版本，通过 exact evidence identity 找出受影响记录，执行 Decision Memory
+reconciliation，并在 Review Attention 显示 STALE 记录。这是用户触发的产品流程；任意外部文件系统修改或删除
+不会被自动监听，当前没有 OS 级 filesystem watcher。
 
-## 安全默认值
+## Development Evaluation 开发评测
 
-- **Local-first：** Scanner 路径在用户机器上运行，不需要模型 provider。
-- **默认只读：** scanner 命令永远不会写入源笔记，读取工具也与可写工具模块分离。
-- **先合成、后私有：** 验收使用 `tests/fixtures/sample_vault/` 和其他已提交的合成资产，而不是个人或雇主 Vault。
-- **先证据、后声明：** 未来的答案、关系、诊断和行动都必须保留源引用；置信度本身不是证明。
-- **不允许静默改动：** 未经过后续的人类确认门，不得执行删除、合并、重写、重命名、移动或标签操作。
+以下有界开发结果只描述对应的冻结运行，不是 held-out 证明、泛化结论或生产成功率：
 
-## 开发地图
+- V1 Flat BM25 Top-5：5/92（5.43%）；V1 Temporal：2/92（2.17%）。
+- 固定 lexical multi-hop pilot：4/16；schema-constrained planner pilot：12/16。
+- V2 development run：39/92（42.39%）。
+- 在该 V2 设置中，Reader context 比 Flat 少约 68%。
 
-从项目契约和当前里程碑证据开始：
+历史 V2 运行协议与限制保存在本地评测证据中。这些数字不证明干净 held-out 表现或普遍检索提升。
 
-- [产品路线图](docs/PRODUCT_ROADMAP.md) — 规范的六里程碑用户路径。
-- [产品 SPEC](SPEC.md) — 使命、原则、边界和非目标。
-- [开发门槛](DEV_SPEC.md) — 映射到路线图的实现状态。
-- [集成状态](docs/INTEGRATION_STATUS.md) — 带日期的 M0、Gate A/B 和评测证据，包括历史限制。
-- [Scanner SPEC](docs/requirements/read-only-vault-scanner/SPEC.md) 与 [Scanner 任务账本](docs/requirements/read-only-vault-scanner/task.md) — 已验收的第一个切片。
-- [Team Decision Eval Seed](docs/requirements/m1_team_decision_eval_seed/README.md) 与 [Golden 8 冻结记录](docs/requirements/m1_team_decision_eval_seed/GOLDEN_8_FREEZE.md) — 合成评测契约。
-- [文档索引](docs/README.md) — 架构、角色和实现笔记的导航。
+## Temporal Decision Memory 时序决策记忆
 
-## 安全地贡献
+SQLite 将业务状态演化与文档组织分开：决定记录可关联来源证据、前序决定以及由该决定
+创建且有负责人的行动项；按 subject 支持 current、历史和 `as_of` 查询。部分唯一索引防止
+同一 workspace/subject 出现两个 current truth。
 
-修改产品行为前，请阅读 [`AGENTS.md`](AGENTS.md)，找出负责的 SPEC 和
-implementation plan，并保持 Planner → Worker → Reviewer 角色分离。优先使用
-合成夹具，声明精确文件边界，并留下可运行的检查或其他客观证据。在早期开发
-中不要访问或修改真实 Vault。
+V1 验收示例中的时序链为 **Birchline → Wrenwell**。Ask 当前状态返回
+Wrenwell；查询 2026-10-07 则返回 Birchline。时间线保留两条来源证据和
+supersession 边界。来源修改改变 Wrenwell 的 evidence identity 后，该记录会显示
+为 STALE。候选仍须通过验证、审核和明确授权才能物化。
+
+## Runtime V2
+
+provider-neutral Runtime V2 实现由宿主程序注入配置好的 `RuntimeEngine`。有来源依据且成功的团队结果可捕获为
+持久化 AgentMemoryCandidate，供后续审核。Reviewer PASS 本身不等于物化授权；候选捕获也不会使其成为权威记忆。
+
+每个 model turn 持久化一个结构化 proposal：最终结果，或有序的 tool-call list。Runtime 会
+校验并按序执行调用，支持有界 proposal、checkpoint 和 resume，同时保留 provider continuation、
+tool ledger、trace、token/cost 和 evidence visibility。检索 backend 可配置，默认 Hybrid；只读
+`search_decision_memory` 先校验 workspace 授权，再查记忆并记录命中数和延迟。
+
+## Grounding 与安全
+
+关键 claim 只能引用 Agent 已通过成功检索/读取工具实际观察到的来源证据。验证会检查证据
+身份、source hash 和 quote；过期或不可用的 evidence fail closed。Decision Memory 可以帮助
+定位当前状态，但不能替代原始来源成为 Grounded Fact。
+
+LinkLoom 将导入资料和决定状态写入本地产品数据库，不会重写、重命名、移动、打标签或删除原始来源文件。
+workspace 专属 adapter 在检索前固定 workspace 范围；记忆工具在查询前校验授权 workspace。真实 Vault 写回和多人部署
+不属于 V1 范围。
+
+## Evaluation 与 Provider 状态
+
+归档评测报告保留各自协议与历史结果。这些是开发证据，不是 held-out 证明或当前 Provider 成功率。
+2026-10-08 的 V1 浏览器验收记录了 6 次真实 Gemini GenerateContent 调用，6 次均首次成功；这只是一个合成
+工作流运行，不代表普遍 Provider 质量或生产就绪。
+
+## Governed Learning 治理式学习
+
+现有 Experience / Reflection 与受治理的 Strategy 机制和 Retrieval、Decision Truth 分离。
+Experience 可为策略提案提供上下文；策略审批和 rollout 仍受控制。Strategy effectiveness
+实验及后续扩展在本 Sprint 冻结或不属于范围，因此不宣称已测得业务效果。参见
+[Portfolio Notes](docs/requirements/product_evidence_portfolio_v1/PORTFOLIO_NOTES.md)。
+
+## LangGraph Reference
+
+[`examples/langgraph_decision_agent/`](examples/langgraph_decision_agent/) 提供真实可执行的
+确定性参考：typed `StateGraph`、reducer、conditional routing、tool node、内存 checkpointer、
+`thread_id`、跨 thread Store 和 interrupt/resume 人工审批。它不迁移生产 Runtime V2，不调用真实
+模型或用户 Vault。
+
+[Runtime V2 ↔ LangGraph 映射](docs/architecture/LANGGRAPH_MAPPING.md)记录了 build-vs-buy 边界：
+自研 Runtime 用于验证 multi-action durability、partial resume、provider continuation 和
+evidence visibility。未来可重新评估是否把通用编排交给 LangGraph，同时将 evidence、workspace
+security 和 decision semantics 留在应用层。
+
+## 当前状态与验证
+
+V1 产品 UI 提供 Sources、Review、时序决策记忆和 Ask；用户主动更新来源会触发 exact-evidence reconciliation，
+并将受影响决定显示在 Review Attention。本地 release 验收和检查是有界证据，不代表已通过 CI 或已经部署。
+产品尚未部署为多人服务。语料是小规模合成数据，不验证深层目录 topology；
+确定性旧版 Demo 不调用实时模型。
+
+- [Team Decision eval seed](docs/requirements/m1_team_decision_eval_seed/README.md)
+- [Golden8 合成验收记录](docs/requirements/m1_1_team_decision_action/REVIEW_GATE.md)
+- [Portfolio Notes](docs/requirements/product_evidence_portfolio_v1/PORTFOLIO_NOTES.md)
+- [集成状态](docs/INTEGRATION_STATUS.md)
+- [产品路线图](docs/PRODUCT_ROADMAP.md)
 
 ## 许可证
 
-本项目使用 [MIT License](LICENSE)。它允许使用、复制、修改、合并、发布、分发、
-再许可和销售副本，但必须保留版权声明和许可声明。软件按“现状”提供，不附带
-任何保证。
+LinkLoom 使用 [MIT License](LICENSE)。

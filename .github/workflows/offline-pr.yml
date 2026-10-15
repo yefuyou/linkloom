@@ -1,0 +1,96 @@
+name: Offline PR checks
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repetition: [1, 2]
+    timeout-minutes: 15
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      LINKLOOM_RETRIEVAL_MODE: bm25
+      PYTHONPATH: src:.:tests/integration
+      GEMINI_API_KEY: ""
+      DEEPSEEK_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install core and test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Verify launch entry points
+        run: |
+          python -m linkloom --help
+          python -m linkloom.ui --help
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps --wheel-dir work/wheels
+      # Core is independent of historical experiment scores. Exact archived
+      # synthetic inputs are replayed in the separate legacy-temporal job below.
+      # All model interactions in these tests are injected fake adapters.
+      - name: Core product and safety regressions (no provider SDK or keys)
+        run: >-
+          python -m pytest -q -m 'not legacy_historical'
+          -o junit_family=xunit1 --junitxml=offline-core.xml
+          tests/unit/test_offline_source_controller.py
+          tests/unit/test_source_identity_contract.py
+          tests/unit/test_product_evidence_context_scope.py
+          tests/unit/test_p84_durable_model_loop.py
+          tests/unit/test_permission_gate.py
+          tests/unit/test_temporal_decision_memory.py
+          tests/unit/test_decision_memory_reconciliation.py
+          tests/unit/test_runtime_v2_grounding_visibility.py
+          tests/unit/test_semantic_ingestion_materialization.py
+          tests/unit/test_bounded_multihop.py
+          tests/integration/test_feedback_memory_flow.py
+          tests/integration/test_bounded_multihop_flow.py
+          tests/integration/test_unified_investigation_flow.py
+          tests/integration/test_decision_discovery_flow.py
+          tests/integration/test_product_application_flow.py
+      - name: Ask DOM and JavaScript syntax
+        if: always()
+        run: |
+          node --check src/linkloom/ui/static/product.js
+          node tests/ui/unified_ask_dom_test.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-core-results-${{ matrix.repetition }}
+          path: offline-core.xml
+
+  legacy-temporal:
+    name: Legacy Historical Gate (original temporal fixtures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      LINKLOOM_RETRIEVAL_MODE: bm25
+      PYTHONPATH: src:.:tests/integration
+      GEMINI_API_KEY: ""
+      DEEPSEEK_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e '.[dev]'
+      - name: Verify and replay exact original synthetic inputs (no provider)
+        run: >-
+          python -m pytest -q -m legacy_historical --junitxml=legacy-temporal.xml
+          tests/unit/test_legacy_temporal_inputs.py
+          tests/integration/test_product_application_flow.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legacy-temporal-results
+          path: legacy-temporal.xml

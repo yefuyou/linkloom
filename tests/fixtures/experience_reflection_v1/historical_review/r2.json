@@ -1,0 +1,28 @@
+{
+  "schema_version": "historical-review-receipt/v1",
+  "source_run_id": "run_p4_dd10d1b9eee7",
+  "observed_summary_sha256": "cad4f7cfe9ed216e4afb0f024ab840c7d4fb9baa1219d5aa3c783a8e83dc75fe",
+  "observed_seal_sha256": "c8e63cd5b04d2a17b8ee9b237ad156df7e57d5b7d6a77fe081aa60bd102c3bc4",
+  "source_evaluator_sha256": "9e326e332d240248ee7d4386e9f6ec6c8b411b07e8d722c4cb12bf9f44ce9083",
+  "source_evaluator_schema_version": "deepseek-business-case-run/v1",
+  "review_record_sha256": "0ad8b0ba30696c8b9052d8cfa27baaa2975c435f38672b2588bf048af1268c48",
+  "review_source": "existing_independent_review",
+  "disposition": "provider_incident",
+  "source_disposition": {
+    "terminal_status": "failed"
+  },
+  "finding": {
+    "finding_id": "finding.historical_2",
+    "dimension": "provider_availability",
+    "outcome": "PARTIAL",
+    "code": "provider_transient_before_final/v1",
+    "source_evidence_refs": []
+  },
+  "task_characteristics": [
+    "team_decision",
+    "provider_incident"
+  ],
+  "gold_leakage_detected": false,
+  "observation_selector": "none",
+  "receipt_created_at": "2026-09-16T12:04:10Z"
+}

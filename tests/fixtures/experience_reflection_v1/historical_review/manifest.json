@@ -1,0 +1,83 @@
+{
+  "schema_version": "historical-review-authority-manifest/v1",
+  "results": [
+    {
+      "result_id": "historicalreview_ceff0b1118cf3ea34b9c9665650a04616b15a521fcde7b672467d6ebcc3577c4",
+      "run_id": "run_p4_961cf695f6f8",
+      "receipt": {
+        "path": "r1.json",
+        "sha256": "ceff0b1118cf3ea34b9c9665650a04616b15a521fcde7b672467d6ebcc3577c4"
+      },
+      "sources": {
+        "observed": {
+          "path": ".artifacts/deepseek_real_provider_smoke/mps-001-745eb207a01449a98e39ee23b9b4ed1e/mps-001/observed_summary.json",
+          "sha256": "40eb79e79ae170d42ce0727fce84fe443f5e73c04d8d4295586a712472dc9b6c"
+        },
+        "observed_seal": {
+          "path": ".artifacts/deepseek_real_provider_smoke/mps-001-745eb207a01449a98e39ee23b9b4ed1e/mps-001/observed_summary.seal.json",
+          "sha256": "d05fea3edd5172b478a224618a9fc6e60b6bae7a818f2a6a5c56de73984fc725"
+        },
+        "evaluator": {
+          "path": ".artifacts/deepseek_real_provider_smoke/mps-001-745eb207a01449a98e39ee23b9b4ed1e/mps-001/posthoc_evaluation.json",
+          "sha256": "29a1aea4f2e5a6e24c70858ab7d14fd61c4891ba8afac963e0d658ee89ff297d"
+        },
+        "review_record": {
+          "path": "docs/requirements/m1_2_real_provider_smoke/task.md",
+          "sha256": "c8ac994a8740390fbf12b9f3039b6ed99e23ca75739eda82d607efe13903c993"
+        }
+      }
+    },
+    {
+      "result_id": "historicalreview_a20cf93cc2a267272ba389306780a98dc9c4f8f10d093ac5396a3f7ab69f2ebc",
+      "run_id": "run_p4_dd10d1b9eee7",
+      "receipt": {
+        "path": "r2.json",
+        "sha256": "a20cf93cc2a267272ba389306780a98dc9c4f8f10d093ac5396a3f7ab69f2ebc"
+      },
+      "sources": {
+        "observed": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-aer-002-01/aer-002/observed_summary.json",
+          "sha256": "cad4f7cfe9ed216e4afb0f024ab840c7d4fb9baa1219d5aa3c783a8e83dc75fe"
+        },
+        "observed_seal": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-aer-002-01/aer-002/observed_summary.seal.json",
+          "sha256": "c8e63cd5b04d2a17b8ee9b237ad156df7e57d5b7d6a77fe081aa60bd102c3bc4"
+        },
+        "evaluator": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-aer-002-01/aer-002/run_manifest.json",
+          "sha256": "9e326e332d240248ee7d4386e9f6ec6c8b411b07e8d722c4cb12bf9f44ce9083"
+        },
+        "review_record": {
+          "path": "docs/requirements/runtime_v2_multi_action/GATE3_REAL_EVALUATION.md",
+          "sha256": "0ad8b0ba30696c8b9052d8cfa27baaa2975c435f38672b2588bf048af1268c48"
+        }
+      }
+    },
+    {
+      "result_id": "historicalreview_d1fdd56be0519b5feac896f24f9af91d020be444acd1fb837075b33e1cb7637c",
+      "run_id": "run_p4_b63d23ad517d",
+      "receipt": {
+        "path": "r3.json",
+        "sha256": "d1fdd56be0519b5feac896f24f9af91d020be444acd1fb837075b33e1cb7637c"
+      },
+      "sources": {
+        "observed": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-iti-005-01/iti-005/observed_summary.json",
+          "sha256": "9358a9ad8118d91439c0905ddb2cd505c4d9b222635d8759a89d9730af73db05"
+        },
+        "observed_seal": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-iti-005-01/iti-005/observed_summary.seal.json",
+          "sha256": "cb46956508a3a497e91b40201745dc2f1f324ebe623d6a897463718ecd620f91"
+        },
+        "evaluator": {
+          "path": ".artifacts/deepseek_business_evaluation/run-gate3-authorized-20260916-iti-005-01/iti-005/posthoc_evaluation.json",
+          "sha256": "4659968edf56411768ca3277d9742c30b7e981107e9262ad5c67b982906d27c6"
+        },
+        "review_record": {
+          "path": "docs/requirements/runtime_v2_multi_action/GATE3_REAL_EVALUATION.md",
+          "sha256": "0ad8b0ba30696c8b9052d8cfa27baaa2975c435f38672b2588bf048af1268c48"
+        }
+      }
+    }
+  ]
+}

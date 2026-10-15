@@ -1,0 +1,37 @@
+{
+  "schema_version": "complete-evaluation-result/v1",
+  "run_id": "run_authority_b2",
+  "completed": true,
+  "observed_summary_sha256": "814ae829c44c930c5fe08d4c6bd91c762209c0f7ce876306b1f83cdb63b33bf7",
+  "observed_seal_sha256": "3634da1ae55343a5228c877dbce1bcf0c30e34259ec458c22a6ddfa174231a17",
+  "source_evaluator_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "dimensions": {
+    "runtime": "PASS",
+    "infrastructure": "PASS",
+    "provider_availability": "PASS",
+    "contract": "PASS",
+    "grounding": "PASS",
+    "semantic": "FAIL"
+  },
+  "findings": [
+    {
+      "finding_id": "finding.semantic",
+      "dimension": "semantic",
+      "outcome": "FAIL",
+      "code": "explicit_rejection_requires_evidence/v1",
+      "source_evidence_refs": [
+        "run_authority_b2:ev_real",
+        "run_authority_b2:ev_second"
+      ],
+      "supporting_observation_ids": [
+        "observation_semantic"
+      ]
+    }
+  ],
+  "task_characteristics": [
+    "team_decision",
+    "current_decision",
+    "compared_options"
+  ],
+  "gold_leakage_detected": false
+}
