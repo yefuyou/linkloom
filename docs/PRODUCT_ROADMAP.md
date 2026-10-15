@@ -36,6 +36,15 @@ It uses the existing deterministic/Agent paths and preserves their trust gates.
 Scope and local offline/browser evidence are in the [feature SPEC](requirements/natural-language-decision-discovery/SPEC.md)
 and [delivery record](requirements/natural-language-decision-discovery/DELIVERY.md).
 
+## Answer-first Product Consolidation — 2026-10-15
+
+The approved follow-up presents answers, readable UTC dates and original evidence
+before internal metadata. Ask has local Chinese/English copy, distinct unknown
+and interrupted states, and expandable audit records. It preserves Discovery,
+Transport and their existing trust gates. Precise slimming integration and local
+acceptance status are recorded in the [delivery](requirements/product-consolidation/DELIVERY.md);
+this does not claim real-Provider acceptance of the new discovery/UI flow.
+
 ## Product Goal
 
 LinkLoom helps project teams recover the currently valid decision, its history,

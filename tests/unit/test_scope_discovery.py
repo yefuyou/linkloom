@@ -15,6 +15,7 @@ RESOLVER = FrozenRelationResolver(
 
 @pytest.mark.parametrize(("query", "slots", "status", "subject"), [
     ("我们现在采用哪家供应商？", SLOTS[:1], "MATCHED", "Launch"),
+    ("为什么 Northstar 被 Seabrook 替换？", SLOTS, "MATCHED", "Launch"),
     ("Launch 现在采用哪家供应商？", SLOTS, "MATCHED", "Launch"),
     ("Why did we switch from Northstar to Seabrook?", SLOTS, "MATCHED", "Launch"),
     ("我们现在采用哪家供应商？", SLOTS, "AMBIGUOUS", None),
@@ -45,6 +46,7 @@ def test_explicit_scope_is_normalized_but_must_exist_in_trusted_index():
 @pytest.mark.parametrize(("query", "selected", "resolved", "error"), [
     ("2026-10-06 用哪家供应商？", None, "2026-10-06", None),
     ("2026年10月6日用哪家供应商？", None, "2026-10-06", None),
+    ("2026 年 10 月 6 日采用哪家供应商？", None, "2026-10-06", None),
     ("上个月这个项目用的是哪家供应商？", None, None, "DATE_SCOPE_REQUIRED"),
     ("last month supplier", "2026-09-15", "2026-09-15", None),
     ("2026-10-06 supplier", "2026-10-10", None, "DATE_SCOPE_REQUIRED"),

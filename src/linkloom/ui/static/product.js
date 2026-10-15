@@ -12,6 +12,9 @@
     askScope: null,
     askCandidates: [],
     askClarification: null,
+    askLanguage: "auto",
+    askResult: null,
+    askAgent: null,
     language: document.documentElement.lang || "en",
   };
   const page = document.getElementById("page");
@@ -261,32 +264,79 @@
       <p><button class="button quiet" data-action="back-decisions">Back to Decision Memory</button></p>`;
   }
 
+  function askLocale(query = document.getElementById("ask-query")?.value || "") {
+    if (state.askLanguage !== "auto") return state.askLanguage;
+    return /[\u3400-\u9fff]/.test(query) || state.language.startsWith("zh") ? "zh" : "en";
+  }
+
+  function askCopy(en, zh, locale = askLocale()) { return locale === "zh" ? zh : en; }
+
+  function askLabel(en, zh) {
+    return `<span data-ask-en="${escapeHtml(en)}" data-ask-zh="${escapeHtml(zh)}">${escapeHtml(askCopy(en, zh))}</span>`;
+  }
+
+  function localizeAsk(query) {
+    const locale = askLocale(query);
+    for (const element of page.querySelectorAll?.("[data-ask-en]") || []) {
+      element.textContent = locale === "zh" ? element.dataset.askZh : element.dataset.askEn;
+    }
+    for (const option of page.querySelectorAll?.("[data-ask-subject]") || []) {
+      option.textContent = `${option.dataset.askSubject} · ${decisionCategory(option.dataset.askRelation, locale)}`;
+    }
+    const input = document.getElementById("ask-query");
+    if (input) input.placeholder = askCopy("What supplier are we currently using?", "我们现在采用哪家供应商？", locale);
+  }
+
+  function decisionCategory(relation, locale) {
+    const normalized = String(relation || "").trim().toLowerCase();
+    if (["uses supplier", "uses vendor"].includes(normalized)) return askCopy("Supplier", "供应商", locale);
+    if (normalized === "has budget") return askCopy("Budget", "预算", locale);
+    return askCopy("Decision", "决策", locale);
+  }
+
+  function askDate(value, locale) {
+    if (!value) return "";
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return escapeHtml(value);
+    const readable = new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en-GB", {
+      timeZone: "UTC", year: "numeric", month: "long", day: "numeric",
+    }).format(parsed);
+    return `<time datetime="${escapeHtml(value)}" title="${escapeHtml(value)}">${escapeHtml(readable)} · UTC</time>`;
+  }
+
   async function showAsk() {
     const viewToken = state.agentViewToken;
     const workspaceId = state.workspace.workspace_id;
     const config = await request("/api/product/ask/config");
     if (viewToken !== state.agentViewToken || config.workspace_id !== workspaceId) return;
     state.askScopes = config.scopes || [];
-    let selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
+    state.askAgent = config.agent;
+    const selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
     state.askCandidates = [];
     state.askClarification = null;
-    page.innerHTML = `${heading("Ask", "Ask about a decision", "Ask in your own words. LinkLoom finds reviewed decisions in this workspace and asks you to choose when more than one fits.")}
-      <section class="panel"><p class="metadata">Workspace: <strong>${escapeHtml(state.workspace.name)}</strong></p>
+    state.askResult = null;
+    page.innerHTML = `<header class="page-heading ask-heading"><div><p class="eyebrow">Ask</p>
+      <h1>${askLabel("Ask the project record", "问一问项目决策")}</h1>
+      <p class="lede">${askLabel("Ask naturally. Get a checked answer with its original sources.", "自然提问，先看答案，再查证据。")}</p></div>
+      <div class="field ask-language"><label for="ask-language">${askLabel("Answer language", "回答语言")}</label>
+      <select id="ask-language"><option value="auto" ${state.askLanguage === "auto" ? "selected" : ""}>Auto / 跟随问题</option><option value="zh" ${state.askLanguage === "zh" ? "selected" : ""}>中文</option><option value="en" ${state.askLanguage === "en" ? "selected" : ""}>English</option></select></div></header>
+      <section class="panel ask-composer"><p class="metadata">${askLabel("Workspace", "项目空间")} <strong>${escapeHtml(state.workspace.name)}</strong></p>
       <form id="ask-form" class="form-stack">
-        <div class="field"><label for="ask-query">Question</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="What supplier are we currently using? Why did it change?"></textarea></div>
-        <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>Advanced: choose a decision or exact date</summary>
-        <div class="field"><label for="ask-slot">Decision scope</label><select id="ask-slot">
-          <option value="">Discover automatically from my question</option>${state.askScopes.map((slot, index) => `<option value="${index}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}</option>`).join("")}</select>
-          <span class="hint">${state.askScopes.length ? "Only reviewed, source-verified decisions are available." : "Import and review a decision before asking about it."}</span></div>
-        <div class="field"><label for="ask-date">Optional: decision valid on this date</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml(state.askScope?.as_of || "")}"><span class="hint">Leave blank for now. Historical validity uses currently recorded review receipts; dates start at 00:00 UTC.</span></div>
-        </details>
-        ${config.agent?.available && config.agent?.external_provider ? `<label><input id="ask-external" type="checkbox"> Allow this external investigation to send workspace sources to the configured model and incur bounded model costs.</label>` : `<p class="hint">${config.agent?.available ? "Offline Agent investigation is available." : "Agent investigation is not configured. Direct reviewed queries remain available."}</p>`}
-        <button class="button" type="submit">Ask</button></form></section><div id="ask-result" aria-live="polite"></div>`;
+        <div class="field"><label for="ask-query">${askLabel("Your question", "你的问题")}</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="${escapeHtml(askCopy("What supplier are we currently using?", "我们现在采用哪家供应商？"))}"></textarea></div>
+        <div class="ask-submit"><button class="button" type="submit">${askLabel("Ask", "提问")}</button><span class="hint">${askLabel("Ctrl / ⌘ + Enter to ask", "Ctrl / ⌘ + Enter 提交")}</span></div>
+        <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>${askLabel("Advanced: decision and exact date", "高级选项：决策与精确日期")}</summary>
+        <div class="field"><label for="ask-slot">${askLabel("Decision scope", "指定决策（可选）")}</label><select id="ask-slot">
+          <option value="" data-ask-en="Discover automatically from my question" data-ask-zh="根据问题自动查找">${askCopy("Discover automatically from my question", "根据问题自动查找")}</option>${state.askScopes.map((slot, index) => `<option value="${index}" data-ask-subject="${escapeHtml(slot.subject)}" data-ask-relation="${escapeHtml(slot.relation)}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(decisionCategory(slot.relation, askLocale()))}</option>`).join("")}</select>
+          <span class="hint">${askLabel("Only reviewed, source-verified decisions are available.", "仅包含已审核且来源可核验的决策。")}</span></div>
+        <div class="field"><label for="ask-date">${askLabel("Decision valid on this date (optional)", "查询哪一天有效的决策（可选）")}</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml((state.askScope?.as_of || "").slice(0, 10))}"><span class="hint">${askLabel("Blank means now. Dates start at 00:00 UTC; history uses currently recorded approvals.", "留空查询当前；日期以 UTC 零点为准，使用目前记录的审核信息。")}</span></div></details>
+        ${config.agent?.available && config.agent?.external_provider ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${askLabel("Allow this request to send sources to the configured external AI provider and incur bounded model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
+      </form></section><div id="ask-result" tabindex="-1" aria-live="polite"></div>`;
   }
 
   function invalidateAsk() {
     state.agentViewToken += 1;
     state.askCandidates = [];
+    state.askResult = null;
     const target = document.getElementById("ask-result");
     if (target) target.innerHTML = "";
   }
@@ -302,62 +352,105 @@
     throw error;
   }
 
+  function askEvidence(item, index, locale) {
+    const t = (en, zh) => askCopy(en, zh, locale);
+    return `<article class="ask-evidence"><h3>[${index + 1}] ${escapeHtml(item.source_name)}</h3>
+      <p class="metadata">${t("Original source", "原始来源")} · ${t("Lines", "行号")} ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)}</p>
+      <blockquote class="quote">${escapeHtml(item.quote)}</blockquote>
+      ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">${t("View source", "查看来源")}</button>` : ""}
+      <details class="ask-source-details"><summary>${t("Source version and exact references", "来源版本与完整引用")}</summary>
+        <dl><dt>${t("Version", "来源版本")}</dt><dd><code>${escapeHtml(item.source_version)}</code></dd>
+        <dt>${t("Evidence reference", "原始证据引用")}</dt><dd><code>${escapeHtml(item.evidence_ref)}</code></dd></dl>
+        ${item.citation_id ? `<p>${t("Citation", "引用编号")}: <code>${escapeHtml(item.citation_id)}</code></p>` : ""}</details></article>`;
+  }
+
+  function askTechnical(result, locale, accepted = false) {
+    const t = (en, zh) => askCopy(en, zh, locale);
+    const metadata = accepted ? result : {status: result.status, path: result.path, scope: result.scope,
+      route: result.route, discovery: result.discovery, reviewer: result.reviewer,
+      agent_run_id: result.agent_run_id, metrics: result.metrics, error: result.error,
+      uncertainty: result.uncertainty};
+    return `<details class="ask-technical"><summary>${t("Review records and technical details", "审核记录与技术详情")}</summary>
+      ${accepted ? (result.receipts || []).map((receipt) => `<section class="ask-receipt"><h3>${t("Recorded authorization", "审核收据")}</h3><dl>
+        <dt>${t("Receipt", "收据编号")}</dt><dd><code>${escapeHtml(receipt.receipt_id)}</code></dd>
+        <dt>${t("Authorization", "授权类型")}</dt><dd>${escapeHtml(receipt.authorization_type)}</dd>
+        <dt>${t("Authorized", "审核时间")}</dt><dd>${askDate(receipt.authorized_at, locale)}</dd></dl><pre>${escapeHtml(JSON.stringify(receipt, null, 2))}</pre></section>`).join("") : ""}
+      <pre>${escapeHtml(JSON.stringify(metadata, null, 2))}</pre></details>`;
+  }
+
   function renderAskResult(result, viewToken) {
     if (viewToken !== state.agentViewToken) return;
     const target = document.getElementById("ask-result");
     if (!target) return;
-    const source = result.path === "AGENT" ? "Agent investigation" : result.path === "DETERMINISTIC" ? "Direct lookup" : "Scope clarification";
-    const discovery = result.discovery;
-    const matched = ["MATCHED", "EXPLICIT"].includes(discovery?.status);
-    const context = `<p class="eyebrow">${source} · ${escapeHtml(result.status)}</p>
-      <p class="metadata">${escapeHtml(state.workspace.name)} · ${escapeHtml(result.scope?.subject)} · ${escapeHtml(result.scope?.relation)} · ${escapeHtml(result.scope?.as_of || "Now")}</p>
-      ${discovery ? `<p><strong>${matched ? (discovery.status === "EXPLICIT" ? "Selected decision" : "Automatically matched decision") : escapeHtml(discovery.status)}:</strong> ${matched ? `${escapeHtml(result.scope?.subject)} · ${escapeHtml(result.scope?.relation)}` : ""}</p><p class="hint">${escapeHtml(discovery.reason)}${discovery.basis?.length ? ` Matched terms: ${escapeHtml(discovery.basis.join(" · "))}.` : ""}</p>` : ""}
-      <p class="hint">${escapeHtml(result.route?.reason)}</p>`;
-    const reviewerDetails = result.reviewer?.performed ? `<details><summary>Runtime Reviewer · ${escapeHtml(result.reviewer.decision)}</summary>
-      <p>${escapeHtml(result.reviewer.reviewer_agent_id)} · ${escapeHtml(result.reviewer.review_id)} · ${escapeHtml(result.reviewer.created_at)}</p>
-      <p>${escapeHtml(result.reviewer.reason)}</p></details>` : "";
+    state.askResult = result;
+    const locale = askLocale(result.query);
+    const t = (en, zh) => askCopy(en, zh, locale);
+    const agent = result.path === "AGENT";
+    const hasFinal = result.status === "COMPLETED" && (!agent || result.reviewer?.accepted === true);
+    const technical = askTechnical(result, locale, hasFinal);
+    const code = result.error?.code;
     if (result.status === "INVESTIGATING") {
-      target.innerHTML = `<section class="panel">${context}<p class="loading">Reading reviewed records and verifying source evidence…</p>
-        <p class="metadata">Run ${escapeHtml(result.agent_run_id)} · ${escapeHtml(result.metrics?.model_turns || 0)} model turns</p></section>`;
+      target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${t("Investigating the sources", "正在调查相关来源")}</h2><p class="loading">${t("Checking reviewed records and source evidence…", "正在查看可信记录，核验来源证据…")}</p><p class="hint">${t("The answer is not verified yet.", "本次结论尚未核验，请等待调查完成。")}</p>${technical}</section>`;
       return;
     }
-    if (result.status !== "COMPLETED") {
-      state.askCandidates = discovery?.status === "AMBIGUOUS" ? (discovery.candidates || []) : [];
-      const choices = state.askCandidates.map((slot, index) => `<button type="button" class="button quiet" data-action="choose-ask-scope" data-index="${index}">${escapeHtml(slot.subject)} · ${escapeHtml(slot.relation)}${slot.current_value ? ` · ${escapeHtml(slot.current_value)}` : ""}</button>`).join("");
-      target.innerHTML = `<section class="panel">${context}<div class="error-box" role="alert">
-        <strong>${result.status === "PROVIDER_UNCERTAIN" ? "Provider UNCERTAIN: investigation interrupted, conclusion not verified" : escapeHtml(result.error?.message || "Additional scope is required.")}</strong>
-        <p>${escapeHtml(result.error?.code || result.status)}</p></div>
-        ${choices ? `<h2>Which decision do you mean?</h2><p>Your question is retained. Choose one decision to continue.</p><div class="actions">${choices}</div>${discovery.candidate_count > state.askCandidates.length ? `<p class="hint">Showing ${state.askCandidates.length} of ${discovery.candidate_count} candidates. Narrow your question or use advanced options.</p>` : ""}` : ""}
-        <p class="hint">${escapeHtml(result.uncertainty?.statement || "")}</p>${reviewerDetails}</section>`;
-      if (result.error?.code === "DATE_SCOPE_REQUIRED" || result.error?.code === "INVALID_AS_OF") {
-        document.getElementById("ask-advanced").open = true;
-        document.getElementById("ask-date").focus?.();
-      }
+    if (!hasFinal) {
+      const ambiguous = result.discovery?.status === "AMBIGUOUS";
+      const dateNeeded = ["DATE_SCOPE_REQUIRED", "INVALID_AS_OF"].includes(code);
+      const permission = code === "EXTERNAL_PROVIDER_PERMISSION_REQUIRED";
+      const noMatch = result.discovery?.status === "NO_MATCH";
+      const uncertain = result.status === "PROVIDER_UNCERTAIN";
+      const title = ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
+        : dateNeeded ? t("Choose a specific date", "请选择一个具体日期")
+        : permission ? t("This investigation needs your permission", "这次调查需要你的授权")
+        : uncertain ? t("Investigation interrupted; no verified conclusion", "本次 AI 调查中断，尚未得到核验后的结论")
+        : noMatch ? t("No matching reviewed decision found", "暂未找到与问题匹配的可信决策")
+        : t("No verified answer is available", "本次尚未得到可核验的答案");
+      const message = ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
+        : dateNeeded ? t("Select one exact date above to check which decision was valid. Your question and confirmed decision are retained.", "请在上方选择精确日期，以核实当时有效的决策。原问题和已确认的决策会保留。")
+        : permission ? t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请勾选上方的本次授权，再次提问后才会发送来源内容并启动调查。")
+        : uncertain ? t("Saved formal decisions are unaffected. No draft is presented as an answer.", "已保存的正式决策不受本次调查影响，本次未核验的内容不会作为答案。")
+        : noMatch ? t("Add a known project or decision term, or choose a reviewed decision in advanced options.", "请补充已知项目或决策名称，也可在高级选项中指定可信决策。")
+        : code === "AGENT_NOT_CONFIGURED" ? t("AI investigation is not configured. Direct reviewed queries are still available.", "尚未配置 AI 调查；仍可直接查询已审核记录。")
+        : t("The request did not produce an accepted answer. Details are available below.", "本次请求未产生通过核验的答案，可展开下方详情查看原因。");
+      state.askCandidates = ambiguous ? result.discovery.candidates || [] : [];
+      const choices = state.askCandidates.map((slot, index) => `<article class="ask-choice"><h3>${escapeHtml(slot.subject)}</h3><p>${escapeHtml(decisionCategory(slot.relation, locale))}${slot.current_value ? ` · <strong>${escapeHtml(slot.current_value)}</strong>` : ""}</p><button type="button" class="button quiet" data-action="choose-ask-scope" data-index="${index}">${t("Choose this decision", "选择这项决策")}</button></article>`).join("");
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="${uncertain || result.status === "FAILED" ? "alert" : "status"}"><h2>${title}</h2><p>${message}</p>${choices ? `<div class="ask-choices">${choices}</div>` : ""}${ambiguous && result.discovery.candidate_count > state.askCandidates.length ? `<p class="hint">${t("More candidates are available in advanced options. Narrow the question if needed.", "更多候选可在高级选项中查看，也可补充问题缩小范围。")}</p>` : ""}${technical}</section>`;
+      if (dateNeeded) { document.getElementById("ask-advanced").open = true; document.getElementById("ask-date").focus?.(); }
       return;
     }
-    const evidence = (result.evidence || []).map((item) => `<article class="card"><h3>Evidence · ${escapeHtml(item.source_name)}</h3>
-      <p class="metadata">Lines ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)} · Version ${escapeHtml(item.source_version)}</p>
-      <blockquote class="quote">${escapeHtml(item.quote)}</blockquote>
-      ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">Inspect source</button>` : ""}
-      <details><summary>Evidence reference</summary><p>${escapeHtml(item.evidence_ref)}</p></details></article>`).join("");
-    const receipts = (result.receipts || []).map((receipt) => `<details><summary>Review receipt · ${escapeHtml(receipt.receipt_id)}</summary>
-      <p>Authorization: ${escapeHtml(receipt.authorization_type)} · ${escapeHtml(receipt.authorized_at)}</p>
-      <p>Materialized: ${escapeHtml(receipt.materialized_at)} · Effective: ${escapeHtml(receipt.effective_at)}</p></details>`).join("");
+    const claims = result.conclusions || [];
     const effective = result.timeline?.effective;
-    const unknownLabels = {
-      replacement_reason: "Replacement reason is unknown; verified sources do not establish it.",
-      effective_decision: "The effective decision could not be verified.",
-      investigation_conclusion: "The investigation conclusion has not been verified.",
-    };
-    const unknownText = (result.uncertainty?.unknown_fields || []).map((field) => unknownLabels[field] || "Some requested information remains unverified.").join(" ");
-    target.innerHTML = `<section class="panel">${context}
-      ${(result.conclusions || []).map((claim) => `<h2>${escapeHtml(claim.value)}</h2><p class="metadata">Effective ${escapeHtml(claim.effective_at || "")}</p>`).join("") || `<h2>No verified effective decision</h2>`}
-      ${(result.timeline?.transitions || []).map((transition) => `<p>Formal replacement: ${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)} on ${escapeHtml(transition.effective_at)}</p>`).join("")}
-      ${(result.rationale || []).map((item) => `<p>${escapeHtml(item.statement || item.value || item.text || "")}</p>`).join("")}
-      <p class="hint">${unknownText ? "UNKNOWN · " : ""}${escapeHtml(result.uncertainty?.statement || "")}${unknownText ? ` ${escapeHtml(unknownText)}` : ""}</p>
-      ${(result.timeline?.proposals || []).map((proposal) => `<p>Unapproved proposal: ${escapeHtml(proposal.value)} · ${escapeHtml(proposal.status)}</p>`).join("")}
-      <p class="metadata">${result.conclusions?.length ? "VERIFIED · " : ""}${result.reviewer?.performed ? (result.reviewer.accepted ? "Validator and Reviewer accepted this Agent final." : "Reviewer did not accept a final.") : "Direct receipt and source verification · 0 model calls."}${result.agent_run_id ? ` Run ${escapeHtml(result.agent_run_id)}` : ""}</p>
-      ${reviewerDetails}${receipts}${evidence}${effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(result.scope?.as_of || "")}">Open Decision Timeline</button>` : ""}</section>`;
+    const historical = Boolean(document.getElementById("ask-date")?.value) || /\d{4}\s*(?:-|年)/.test(result.query || "");
+    const transitions = result.timeline?.transitions || [];
+    const unknown = result.uncertainty?.unknown_fields || [];
+    const reasonUnknown = agent && unknown.includes("replacement_reason");
+    const investigationUnknown = agent && unknown.length > 0;
+    const transition = transitions[transitions.length - 1];
+    const subject = result.scope?.subject || "";
+    const supplier = ["uses supplier", "uses vendor"].includes(String(result.scope?.relation).toLowerCase());
+    const unknownText = unknown.map(field => field === "replacement_reason" ? t("The sources do not establish the replacement reason.", "现有可信来源没有证明更换原因。") : field === "effective_decision" ? t("No effective formal decision could be verified.", "未能核实该日期有效的正式决策。") : field === "investigation_conclusion" ? t("The investigation conclusion has not been verified.", "本次调查结论尚未核验。") : t("Some requested information is not supported by evidence.", "请求中的部分信息尚无可信证据。")).join(" ");
+    const title = !claims.length ? t("No verifiable formal decision for this date", "该日期没有可核实的正式决策") : reasonUnknown ? (transition ? t("Change verified; the reason remains unknown", "更换事实已核实，原因尚无可信证据") : t("The reason is not established", "原因尚无可信证据")) : escapeHtml(claims[0].value);
+    const sentence = reasonUnknown && transition ? `${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)}. ${t("The replacement is verified; its cause is not established.", "已核实发生了更换，但不能据此推断原因。")}`
+      : claims.length ? (supplier ? t(`${escapeHtml(subject)} uses ${escapeHtml(claims[0].value)} as its reviewed supplier${historical ? " at the selected date" : ""}.`, `${escapeHtml(subject)} 项目${historical ? "在所选日期采用" : "当前采用"} ${escapeHtml(claims[0].value)} 作为供应商。`) : `${escapeHtml(subject)} · ${escapeHtml(decisionCategory(result.scope?.relation, locale))}: ${escapeHtml(claims[0].value)}.`) : t("There is no unique reviewed, source-verified effective decision for the selected date.", "所选日期没有唯一、已审核且来源可核验的有效决策。");
+    const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale));
+    const timelineButton = effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(result.scope?.as_of || "")}">${t("View decision timeline", "查看决策时间线")}</button>` : "";
+    const history = `<details class="ask-history"><summary>${t("Decision history and unapproved proposals", "相关历史与未审核提案")}</summary>${transitions.map(item => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} · ${askDate(item.effective_at, locale)}</p>`).join("")}${!reasonUnknown && unknownText ? `<p class="hint">${escapeHtml(unknownText)}</p>` : ""}${(result.timeline?.proposals || []).map(item => `<p class="hint">${t("Unapproved proposal, not a formal decision", "未审核提案，非正式决策")}: ${escapeHtml(item.value)}</p>`).join("")}${timelineButton}</details>`;
+    target.innerHTML = `<section class="panel ask-answer ${!claims.length || investigationUnknown ? "ask-answer--notice" : ""}">
+      <p class="ask-answer-status">${!claims.length ? t("No verified decision", "没有可核实的正式决策") : agent ? t("Source investigation checked", "来源调查已核验") : t("Verified formal decision", "已核实的正式决策")}</p>
+      <h2 class="${claims.length && !reasonUnknown ? "ask-answer-value" : "ask-answer-headline"}">${title}</h2><p class="ask-answer-sentence">${sentence}</p>
+      ${investigationUnknown || !claims.length ? `<div class="ask-unknown"><strong>${t("What remains unknown", "尚未取得证据支持的内容")}</strong><p>${escapeHtml(unknownText || result.uncertainty?.statement || "")}</p></div>` : ""}
+      <div class="ask-facts"><span>${historical ? t("Effective at the selected historical date", "所选历史日期的有效决策") : t("Current reviewed record", "当前可信记录")}: ${askDate(result.scope?.as_of, locale)}</span>${claims[0]?.effective_at ? `<span>${t("Effective from", "生效日期")}: ${askDate(claims[0].effective_at, locale)}</span>` : ""}</div>
+      <div class="ask-pills"><span>${agent ? t("AI investigated the sources", "AI 已调查相关来源") : t("Direct reviewed-record lookup", "直接查询可信决策记录")}</span><span>${agent ? (state.askAgent?.run_mode === "OFFLINE_FAKE_GEMINI" ? t("Offline synthetic demo", "离线合成演示") : t("Model used", "使用了模型")) : t("0 model calls", "零模型调用")}</span></div>
+      ${historical ? `<p class="hint">${t("Valid time uses approvals recorded now; this does not establish what people knew or approved at that historical time.", "这是使用目前审核记录查询的有效时间，不代表当时的人已经知情或批准。")}</p>` : ""}
+      ${(result.rationale || []).map(item => `<p>${escapeHtml(item.statement || item.value || item.text || "")}</p>`).join("")}
+      ${evidence.length ? `<section class="ask-core-evidence"><h2>${t("Original evidence", "原始证据")}</h2>${evidence[0]}${evidence.length > 1 ? `<details class="ask-more-evidence"><summary>${t("View remaining sources", "查看其余来源")} (${evidence.length - 1})</summary>${evidence.slice(1).join("")}</details>` : ""}</section>` : ""}
+      ${reasonUnknown && transition ? `<p class="hint">${t("Replacement effective", "更换生效日期")}: ${askDate(transition.effective_at, locale)}</p>` : ""}${history}${technical}</section>`;
+  }
+
+  function revealAskResult(result) {
+    if (result.status !== "INVESTIGATING" && !["DATE_SCOPE_REQUIRED", "INVALID_AS_OF"].includes(result.error?.code)) {
+      document.getElementById("ask-result")?.scrollIntoView?.({block: "start", behavior: "smooth"});
+    }
   }
 
   async function pollAsk(runId, workspaceId, viewToken) {
@@ -366,6 +459,7 @@
       const result = await askRequest(`/api/product/ask/runs/${encodeURIComponent(runId)}?workspace_id=${encodeURIComponent(workspaceId)}`);
       if (viewToken !== state.agentViewToken) return;
       renderAskResult(result, viewToken);
+      revealAskResult(result);
       if (result.status === "INVESTIGATING") window.setTimeout(() => pollAsk(runId, workspaceId, viewToken), 500);
     } catch (error) { showAskError(error, viewToken); }
   }
@@ -373,24 +467,26 @@
   function showAskError(error, viewToken) {
     if (viewToken !== state.agentViewToken) return;
     const target = document.getElementById("ask-result");
-    if (target) target.innerHTML = `<div class="error-box" role="alert">${escapeHtml(error.message)} ${escapeHtml(error.code || "")}</div>`;
+    if (target) target.innerHTML = `<section class="error-box" role="alert"><h2>${askCopy("The request could not be completed", "请求暂时无法完成")}</h2><p>${askCopy("Check the local service and try again.", "请检查本地服务后重试。")}</p><details><summary>${askCopy("Error details", "错误详情")}</summary><p>${escapeHtml(error.message)} ${escapeHtml(error.code || "")}</p></details></section>`;
   }
 
   async function submitAsk(form, clarifiedSlot = null) {
     const viewToken = ++state.agentViewToken;
     const workspaceId = state.workspace.workspace_id;
     const data = Object.fromEntries(new FormData(form));
+    localizeAsk(data.query);
     const slotValue = document.getElementById("ask-slot").value;
     const clarification = state.askClarification;
     const pendingSlot = clarification?.query === data.query && clarification?.workspaceId === workspaceId ? clarification.slot : null;
     const slot = clarifiedSlot || pendingSlot || (slotValue === "" ? null : state.askScopes[Number(slotValue)]);
     state.askScope = !clarifiedSlot && !pendingSlot && slot ? { ...slot, as_of: data.as_of || "" } : null;
     state.askCandidates = [];
+    state.askResult = null;
     const permission = document.getElementById("ask-external");
     const allowExternal = permission?.checked === true;
     if (permission) permission.checked = false;
     const target = document.getElementById("ask-result");
-    target.innerHTML = `<p class="loading">Selecting the appropriate capability…</p>`;
+    target.innerHTML = `<p class="loading">${askCopy("Looking for a reviewed answer…", "正在查找可信答案…")}</p>`;
     try {
       const result = await askRequest("/api/product/ask", { method: "POST", body: JSON.stringify({
         ...data, workspace_id: workspaceId, subject: slot?.subject, relation: slot?.relation,
@@ -398,6 +494,7 @@
       }) });
       if (viewToken !== state.agentViewToken) return;
       renderAskResult(result, viewToken);
+      revealAskResult(result);
       if (["COMPLETED", "INVESTIGATING"].includes(result.status)) state.askClarification = null;
       if (result.status === "INVESTIGATING") pollAsk(result.agent_run_id, workspaceId, viewToken);
     } catch (error) { showAskError(error, viewToken); }
@@ -437,12 +534,24 @@
       <form id="workspace-create" class="panel form-stack"><div class="field"><label for="workspace-name">Workspace name</label><input id="workspace-name" name="name" required maxlength="120"></div><button class="button" type="submit">Create workspace</button><button class="button quiet" type="button" data-action="back-sources">Cancel</button></form>`;
   });
 
+  page.addEventListener("keydown", (event) => {
+    if (event.target?.id === "ask-query" && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      event.preventDefault(); document.getElementById("ask-form").requestSubmit();
+    }
+  });
+
   page.addEventListener("input", (event) => {
+    if (event.target?.id === "ask-query") localizeAsk(event.target.value);
     if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) invalidateAsk();
   });
 
   page.addEventListener("change", async (event) => {
+    if (event.target?.id === "ask-language") {
+      state.askLanguage = event.target.value; localizeAsk();
+      if (state.askResult) renderAskResult(state.askResult, state.agentViewToken);
+      return;
+    }
     if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) { invalidateAsk(); return; }
     if (event.target?.id !== "source-file") return;

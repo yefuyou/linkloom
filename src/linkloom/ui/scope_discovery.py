@@ -32,7 +32,7 @@ _RELATIVE_DATE = re.compile(
 )
 _ISO_TIMESTAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?", re.IGNORECASE)
 _ISO_DATE = re.compile(r"(?<!\d)\d{4}-\d{2}-\d{2}(?!\d)")
-_CHINESE_DATE = re.compile(r"(\d{4})年(\d{1,2})月(\d{1,2})[日号]")
+_CHINESE_DATE = re.compile(r"(\d{4})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]")
 _DATE_RANGE = re.compile(
     r"\b(between|since|until)\b|\b(before|after|from)\s+\d|"
     r"\b(to|and|through|until)\s+(now|today|present)\b|"
@@ -40,7 +40,7 @@ _DATE_RANGE = re.compile(
 _CHINESE_QUESTION_WORDS = (
     "为什么", "为何", "我们", "这个项目", "该项目", "本项目", "项目", "现在", "当前",
     "目前", "采用", "正式", "已审批", "用的是", "用的", "使用", "用了", "用", "从",
-    "换成了", "换成", "替换为", "换", "成", "了", "的", "是", "哪家", "哪", "谁",
+    "换成了", "换成", "替换为", "被", "替换", "换", "成", "了", "的", "是", "哪家", "哪", "谁",
     "请", "告诉", "我", "吗", "在", "于", "和", "或", "什么", "怎么", "如何",
 )
 

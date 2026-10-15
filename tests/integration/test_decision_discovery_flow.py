@@ -22,7 +22,7 @@ def test_current_and_exact_historical_question_discover_without_model_calls(demo
     demo.configure_agent(external_provider=True)
     for query, value, date in (
         ("我们现在采用哪家供应商？", "Wrenwell", None),
-        ("2026年10月6日这个项目用的是哪家供应商？", "Birchline", "2026-10-06"),
+        ("2026 年 10 月 6 日采用哪家供应商？", "Birchline", "2026-10-06"),
     ):
         status, payload = ask(demo, query)
         result = payload["result"]
@@ -96,7 +96,7 @@ def test_approved_future_only_slot_remains_compatible_with_explicit_as_of(demo):
 @pytest.mark.parametrize("scenario", ["normal", "uncertain"])
 def test_automatic_history_discovery_uses_existing_agent_and_trust_gates(demo, scenario):
     demo.configure_agent(scenario=scenario, external_provider=True)
-    query = "为什么我们从 Birchline 换成了 Wrenwell？"
+    query = "为什么 Birchline 被 Wrenwell 替换？"
     status, denied = ask(demo, query)
     assert status == 403 and denied["result"]["error"]["code"] == "EXTERNAL_PROVIDER_PERMISSION_REQUIRED"
     assert demo.transports == []

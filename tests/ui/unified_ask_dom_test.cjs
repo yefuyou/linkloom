@@ -5,7 +5,7 @@ const source = fs.readFileSync("src/linkloom/ui/static/product.js", "utf8");
 const tick = () => new Promise(resolve => setImmediate(resolve));
 const result = value => ({result: {path: "DETERMINISTIC", status: "COMPLETED", query: "current", workspace_id: "a",
   scope: {subject: "Launch", relation: "uses supplier", as_of: "2026-10-10T00:00:00+00:00"}, route: {reason: "lookup"},
-  conclusions: [{value}], evidence: [], receipts: [], reviewer: {performed: false}, uncertainty: {unknown_fields: []}}});
+  timeline: {effective: {decision_id: "decision-1", value}}, conclusions: [{value}], evidence: [], receipts: [], reviewer: {performed: false}, uncertainty: {unknown_fields: []}}});
 
 async function setup() {
   const elements = new Map();
@@ -81,6 +81,46 @@ async function setup() {
     await ui("page").listeners.input({target: ui("ask-date")});
     polls[0](payload); await tick(); await tick();
     assert.doesNotMatch(ui("ask-result").innerHTML, /OBSOLETE_AGENT_FINAL|OLD_POLL_ERROR/);
+  }
+  const answerFirst = await setup();
+  const currentAnswer = answerFirst.submit(); await tick();
+  const trusted = result("Wrenwell");
+  trusted.result.query = "我们现在采用哪家供应商？";
+  trusted.result.evidence = [{source_name: "meeting.md", source_id: "source-1", source_version: "VERSION_LONG", evidence_ref: "REF_LONG", quote: "We decided to use Wrenwell.", line_start: 1, line_end: 1}];
+  trusted.result.receipts = [{receipt_id: "RECEIPT_LONG", authorization_type: "HUMAN_APPROVAL"}];
+  trusted.result.uncertainty = {unknown_fields: ["replacement_reason"]};
+  answerFirst.pending[0](trusted); await currentAnswer;
+  const html = answerFirst.element("ask-result").innerHTML;
+  assert.ok(html.indexOf("Wrenwell") < html.indexOf("RECEIPT_LONG"));
+  assert.match(html, /已核实的正式决策/);
+  assert.match(html, /We decided to use Wrenwell\./);
+  assert.match(html, /<details[^>]*class="ask-technical"/);
+  assert.doesNotMatch(html.slice(0, html.indexOf('class="ask-evidence"')), /RECEIPT_LONG|VERSION_LONG|REF_LONG/);
+  for (const kind of ["unknown-reason", "empty", "uncertain", "unverified-agent", "escaping"]) {
+    const ui = await setup(); const request = ui.submit(); await tick();
+    const payload = result(kind === "empty" ? "" : "Wrenwell");
+    if (kind === "unknown-reason") {
+      payload.result.path = "AGENT"; payload.result.query = "为什么换供应商？";
+      payload.result.reviewer = {performed: true, accepted: true, decision: "evidence_sufficient"};
+      payload.result.uncertainty = {unknown_fields: ["replacement_reason"]};
+      payload.result.timeline.transitions = [{from_value: "Birchline", to_value: "Wrenwell", effective_at: "2026-10-07T10:00:00Z"}];
+    } else if (kind === "empty") {
+      payload.result.conclusions = []; payload.result.timeline.effective = null;
+    } else if (["uncertain", "unverified-agent"].includes(kind)) {
+      payload.result.path = "AGENT"; payload.result.status = kind === "uncertain" ? "PROVIDER_UNCERTAIN" : "COMPLETED";
+      payload.result.conclusions = [{value: "UNVERIFIED_DRAFT"}];
+      payload.result.rationale = [{statement: "UNVERIFIED_DRAFT"}];
+    } else {
+      payload.result.conclusions[0].value = '<img src=x onerror="alert(1)">';
+      payload.result.evidence = [{source_name: '<script>alert(1)</script>', quote: '<img src=x onerror="alert(1)">'}];
+    }
+    ui.pending[0](payload); await request;
+    const output = ui.element("ask-result").innerHTML;
+    const core = output.slice(0, output.indexOf('<details class="ask-technical"'));
+    if (kind === "unknown-reason") assert.match(core, /更换事实已核实，原因尚无可信证据/);
+    if (kind === "empty") { assert.match(core, /No verifiable formal decision/); assert.doesNotMatch(core, /Verified formal decision/); }
+    if (["uncertain", "unverified-agent"].includes(kind)) { assert.doesNotMatch(output, /UNVERIFIED_DRAFT/); assert.doesNotMatch(core, /Verified formal decision/); }
+    if (kind === "escaping") { assert.doesNotMatch(output, /<img |<script>/); assert.match(output, /&lt;img /); }
   }
   const automatic = await setup();
   automatic.element("ask-slot").value = "";

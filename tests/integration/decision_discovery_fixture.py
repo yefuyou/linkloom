@@ -43,3 +43,15 @@ class DecisionDiscoveryFixture(UnifiedAskFixture):
             content="[2026-10-05T10:00:00Z] Dana: Research proposes Mallow as its supplier.",
             value="Mallow", approve=False)
         self.select_workspace(ATLAS)
+
+    def add_long_content_case(self):
+        """One reviewed long-label/escaped-quote case for real-browser layout QA."""
+        self.select_workspace(OTHER)
+        subject = "Long-running customer enablement and rollout project " * 4
+        item = claim("Longriver")
+        item["subject"] = subject.strip()
+        self.app.extractor._provider._claims.append(item)
+        self._import_and_review(name=("engineering-evidence_" * 7) + ".md",
+            content=f'[2026-10-05T10:00:00Z] Dana: We decided to use Longriver as the supplier for {subject.strip()}. Literal source text: <img src=x onerror="alert(1)">.',
+            value="Longriver", approve=True)
+        self.select_workspace(ATLAS)
