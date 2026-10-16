@@ -1,0 +1,777 @@
+{
+  "schema_version": "self-improvement-v2-dataset/v1",
+  "partition": "dev",
+  "cases": [
+    {
+      "id": "v2-dev-001",
+      "query": "Which project does D01-Key alias, who owns it, and who is that owner's direct leader?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "alias.md",
+          "content": "D01-Key is the team alias for Meridian D01."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D01 is the accountable owner of Meridian D01."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D01 reports directly to Lead D01."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-002",
+      "query": "Who owns the project behind D02-Key and who leads that owner?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "relations.md",
+          "content": "# Relation register\n\nD02-Key is the team alias for Meridian D02.\nOwner D02 is the accountable owner of Meridian D02.\nOwner D02 reports directly to Lead D02."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-003",
+      "query": "Who is the direct leader of the owner of Meridian D03?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "handbook.md",
+          "content": "# Ownership\nOwner D03 is the accountable owner of Meridian D03.\n\n## Reporting\nOwner D03 reports directly to Lead D03."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-004",
+      "query": "Who is the direct leader of the owner of Meridian D04?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "facts-en.md",
+          "content": "Owner D04 is the accountable owner of Meridian D04."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "facts-zh.md",
+          "content": "Owner D04的直属领导是Lead D04。"
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of Meridian D04? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of Meridian D04? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of Meridian D04? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-005",
+      "query": "Who is the direct leader of the owner of Meridian D05?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "repeated.md",
+          "content": "Owner D05 is the accountable owner of Meridian D05.\n\nOwner D05 is the accountable owner of Meridian D05.\n\nOwner D05 reports directly to Lead D05."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-006",
+      "query": "Who is the direct leader of the owner of Meridian D06?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D06 is the accountable owner of Meridian D06."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D06 reports directly to Lead D06."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-007",
+      "query": "Who is the direct leader of the owner of Meridian D07?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "index.md",
+          "content": "See [[owner.md]] and [[leader.md]] for the source facts."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D07 is the accountable owner of Meridian D07."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D07 reports directly to Lead D07."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of Meridian D07? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of Meridian D07? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of Meridian D07? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-008",
+      "query": "Who is the direct leader of the owner of Meridian D08?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D08 is the accountable owner of Meridian D08."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D08 reports directly to Lead D08."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-009",
+      "query": "who is the direct leader of the owner of Meridian D09?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D09 is the accountable owner of Meridian D09."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D09 reports directly to Lead D09."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-010",
+      "query": "Who is the direct leader of the owner of 青岚十计划?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "林十岳 is the accountable owner of 青岚十计划."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "林十岳 reports directly to 周十宁."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of 青岚十计划? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of 青岚十计划? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of 青岚十计划? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-011",
+      "query": "Who is the direct leader of the owner of Meridian D11?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "handbook.md",
+          "content": "# Ownership\nOwner D11 is the accountable owner of Meridian D11.\n\n## Reporting\nOwner D11的直属领导是Lead D11。"
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-012",
+      "query": "青岚十二计划的负责人向谁直接汇报？",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "handbook.md",
+          "content": "# Ownership\n林十二岳 is the accountable owner of 青岚十二计划.\n\n## Reporting\n林十二岳的直属领导是周十二宁。"
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-013",
+      "query": "Who is the direct leader of the owner of Meridian D13?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "briefing.md",
+          "content": "This synthetic note describes a bounded planning exercise. The surrounding narrative contains no ownership decision.\n\n## Scope\nThe note is informational and has no authority beyond its exact facts.\n\nOwner D13 is the accountable owner of Meridian D13.\n\nOwner D13 reports directly to Lead D13."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-014",
+      "query": "Who is the direct leader of the owner of Meridian D14?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "decision-record.md",
+          "content": "Owner D14 is the accountable owner of Meridian D14.\nOwner D14 reviews a separate Meridian D14 checklist.\nOwner D14 reports directly to Lead D14."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-015",
+      "query": "As of 2025-03-01, who is the direct leader of the owner of Meridian D15?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": "2025-03-01",
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "As of 2025-03-01 Owner D15 is the accountable owner of Meridian D15."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "As of 2025-03-01 Owner D15 reports directly to Lead D15."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-016",
+      "query": "Who is the direct leader of the owner of Meridian D16?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "matrix.md",
+          "content": "| relation | subject | value |\n|---|---|---|\n| owner | Owner D16 | Meridian D16 |\n| reports_to | Owner D16 | Lead D16 |"
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-017",
+      "query": "Who is the direct leader of the owner of Meridian D17?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D17 is the accountable owner of Meridian D17."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D17 reports directly to Lead D17."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of Meridian D17? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of Meridian D17? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of Meridian D17? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-018",
+      "query": "Who is the direct leader of the owner of Meridian D18?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D18 is the accountable owner of Meridian D18."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D18 reports directly to Lead D18."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "00-noise-0.md",
+          "content": "Owner D18 appears in a glossary entry for Meridian D18; no leadership relation is stated."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "00-noise-1.md",
+          "content": "Owner D18 appears in a glossary entry for Meridian D18; no leadership relation is stated."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "00-noise-2.md",
+          "content": "Owner D18 appears in a glossary entry for Meridian D18; no leadership relation is stated."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "00-noise-3.md",
+          "content": "Owner D18 appears in a glossary entry for Meridian D18; no leadership relation is stated."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "00-noise-4.md",
+          "content": "Owner D18 appears in a glossary entry for Meridian D18; no leadership relation is stated."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-019",
+      "query": "Who is the direct leader of the owner of Meridian D19?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D19 is the accountable owner of Meridian D19."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D19 reports directly to Lead D19."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "other-project.md",
+          "content": "Owner D19 is the accountable owner of Other Meridian."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "other-leader.md",
+          "content": "Owner D19 reports directly to Other Lead."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low.md",
+          "content": "Owner D19 reports directly to Alternate Lead."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-020",
+      "query": "Who is the direct leader of the owner of Meridian D20?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D20 is the accountable owner of Meridian D20."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D20 reports directly to Lead D20."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-00.md",
+          "content": "Meridian D20 context note 0; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-01.md",
+          "content": "Meridian D20 context note 1; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-02.md",
+          "content": "Meridian D20 context note 2; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-03.md",
+          "content": "Meridian D20 context note 3; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-04.md",
+          "content": "Meridian D20 context note 4; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-05.md",
+          "content": "Meridian D20 context note 5; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-06.md",
+          "content": "Meridian D20 context note 6; Owner D20 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-07.md",
+          "content": "Meridian D20 context note 7; Owner D20 is mentioned without a reporting assertion."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-021",
+      "query": "Who is the direct leader of the owner of Meridian D21?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "handbook.md",
+          "content": "# Ownership\nOwner D21 is the accountable owner of Meridian D21.\n## Reporting"
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of Meridian D21? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of Meridian D21? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of Meridian D21? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-022",
+      "query": "Who owns the project behind D22-Key and who leads that owner?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "alias.md",
+          "content": "D22-Key is the team alias for Meridian D22."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-023",
+      "query": "Who is the direct leader of the owner of Meridian D23?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "relations.md",
+          "content": "# Relation register"
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-00.md",
+          "content": "Meridian D23 context note 0; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-01.md",
+          "content": "Meridian D23 context note 1; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-02.md",
+          "content": "Meridian D23 context note 2; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-03.md",
+          "content": "Meridian D23 context note 3; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-04.md",
+          "content": "Meridian D23 context note 4; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-05.md",
+          "content": "Meridian D23 context note 5; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-06.md",
+          "content": "Meridian D23 context note 6; Owner D23 is mentioned without a reporting assertion."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "edge-07.md",
+          "content": "Meridian D23 context note 7; Owner D23 is mentioned without a reporting assertion."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-024",
+      "query": "Who is the direct leader of the owner of Meridian D24?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D24 is the accountable owner of Meridian D24."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D24 reports directly to Lead D24."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low.md",
+          "content": "Owner D24 reports directly to Alternate Lead."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-025",
+      "query": "Who is the direct leader of the owner of Meridian D25?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D25 is the accountable owner of Meridian D25."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D25 reports directly to Lead D25."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low-a.md",
+          "content": "Owner D25 reports directly to Alternate Lead A."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low-b.md",
+          "content": "Owner D25 reports directly to Alternate Lead B."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-026",
+      "query": "Who is the direct leader of the owner of Meridian D26?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "relations.md",
+          "content": "# Relation register\n\nOwner D26 is the accountable owner of Meridian D26.\nOwner D26 reports directly to Lead D26."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low.md",
+          "content": "Owner D26 reports directly to Alternate Lead."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-027",
+      "query": "As of 2025-03-01, who is the direct leader of the owner of Meridian D27?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": "2025-03-01",
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "As of 2025-03-01 Owner D27 is the accountable owner of Meridian D27."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "As of 2025-03-01 Owner D27 reports directly to Lead D27."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "history.md",
+          "content": "As of 2024-01-15 Owner D27 reports directly to Former Lead."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-028",
+      "query": "As of 2025-03-01, who is the direct leader of the owner of Meridian D28?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": "2025-03-01",
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "As of 2025-03-01 Owner D28 is the accountable owner of Meridian D28."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "As of 2025-03-01 Owner D28 reports directly to Lead D28."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-0.md",
+          "content": "Who is the direct leader of the owner of Meridian D28? This handbook contains no reporting fact (0)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-1.md",
+          "content": "Who is the direct leader of the owner of Meridian D28? This handbook contains no reporting fact (1)."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "guide-2.md",
+          "content": "Who is the direct leader of the owner of Meridian D28? This handbook contains no reporting fact (2)."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-029",
+      "query": "Who is the direct leader of the owner of Meridian D29?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D29 is the accountable owner of Meridian D29."
+        },
+        {
+          "workspace_id": "foreign-workspace",
+          "path": "foreign.md",
+          "content": "Owner D29 reports directly to Lead D29."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-030",
+      "query": "Who is the direct leader of the owner of Meridian D30?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "relations.md",
+          "content": "# Relation register\n\nOwner D30 is the accountable owner of Meridian D30.\nOwner D30 reports directly to Lead D30."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "other-project.md",
+          "content": "Owner D30 is the accountable owner of Other Meridian."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "other-leader.md",
+          "content": "Owner D30 reports directly to Other Lead."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "conflict-low.md",
+          "content": "Owner D30 reports directly to Alternate Lead."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-031",
+      "query": "Who manages the owner of Meridian D31?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D31 is the accountable owner of Meridian D31."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D31 reports directly to Lead D31."
+        }
+      ]
+    },
+    {
+      "id": "v2-dev-032",
+      "query": "Who leads the person responsible for Meridian D32?",
+      "workspace_id": "dev-v2-workspace",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "owner.md",
+          "content": "Owner D32 is the accountable owner of Meridian D32."
+        },
+        {
+          "workspace_id": "dev-v2-workspace",
+          "path": "leader.md",
+          "content": "Owner D32 reports directly to Lead D32."
+        }
+      ]
+    }
+  ]
+}

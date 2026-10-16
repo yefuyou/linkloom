@@ -1,0 +1,7 @@
+{
+  "freeze_sha256": "9937bbf45352ba943971a413a0b511612369aa5632472ee0899e0a8b5cd10ae6",
+  "experiment_id": "v2-frozen-experiment-01",
+  "report_sha256": "777639fb111d8492603907ad89a8a600bb1c191071800a4cd64526574ea7eba2",
+  "final_claim_sha256": "3f553433a11516cb05e6b7281557c9a68ee993e9b48c8b3dcb64f5d72bf973bc",
+  "policy": "Final has been exposed once; future use is regression-only, never independent tuning acceptance."
+}

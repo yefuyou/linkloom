@@ -262,4 +262,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if "--protocol=v2" in sys.argv or ("--protocol" in sys.argv and
+            sys.argv.index("--protocol") + 1 < len(sys.argv) and sys.argv[sys.argv.index("--protocol") + 1] == "v2"):
+        from scripts.self_improvement.v2_run import main as v2_main
+        v2_main()
+    else:
+        main()

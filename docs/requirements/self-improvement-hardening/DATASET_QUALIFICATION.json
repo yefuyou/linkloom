@@ -1,0 +1,9 @@
+{
+  "freeze_sha256": "9937bbf45352ba943971a413a0b511612369aa5632472ee0899e0a8b5cd10ae6",
+  "qualified": false,
+  "audit": "independent author-side schema and structural audit",
+  "tests_passed": 12,
+  "target_span_document_mismatches": 3,
+  "affected_partitions": {"final": 1, "stress": 2},
+  "policy": "Preserve frozen inputs and Gold. Report diagnostics, reject reliable generalization admission. No answer content supplied to generator."
+}

@@ -1,0 +1,1299 @@
+{
+  "schema_version": "self-improvement-v2-dataset/v1",
+  "partition": "final",
+  "cases": [
+    {
+      "id": "v2-final-001",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f01",
+          "lead f01"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f01",
+            "value": "owner f01",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f01",
+            "value": "lead f01",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner F01 is the accountable owner of Meridian F01."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F01 reports directly to Lead F01."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-002",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f02",
+          "lead f02"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f02",
+            "value": "owner f02",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f02",
+            "value": "lead f02",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "As of 2025-05-01 Owner F02 is the accountable owner of Meridian F02."
+          },
+          {
+            "path": "leader.md",
+            "contains": "As of 2025-05-01 Owner F02 reports directly to Lead F02."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-003",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f03",
+          "lead f03"
+        ],
+        "reason": null,
+        "required_sources": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f03",
+            "value": "owner f03",
+            "source_path": "facts-en.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f03",
+            "value": "lead f03",
+            "source_path": "facts-zh.md"
+          }
+        ],
+        "target_paths": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "target_spans": [
+          {
+            "path": "facts-en.md",
+            "contains": "Owner F03 is the accountable owner of Meridian F03."
+          },
+          {
+            "path": "facts-zh.md",
+            "contains": "Owner F03 reports directly to Lead F03."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-004",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian f04",
+          "owner f04",
+          "lead f04"
+        ],
+        "reason": null,
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f04-key",
+            "value": "meridian f04",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f04",
+            "value": "owner f04",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f04",
+            "value": "lead f04",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "F04-Key is the team alias for Meridian F04."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner F04 is the accountable owner of Meridian F04."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F04 reports directly to Lead F04."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-005",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "林五岳",
+          "周五宁"
+        ],
+        "reason": null,
+        "required_sources": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "青岚五计划",
+            "value": "林五岳",
+            "source_path": "facts-en.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "林五岳",
+            "value": "周五宁",
+            "source_path": "facts-zh.md"
+          }
+        ],
+        "target_paths": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "target_spans": [
+          {
+            "path": "facts-en.md",
+            "contains": "林五岳 is the accountable owner of 青岚五计划."
+          },
+          {
+            "path": "facts-zh.md",
+            "contains": "林五岳的直属领导是周五宁。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-006",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian f06",
+          "owner f06",
+          "lead f06"
+        ],
+        "reason": null,
+        "required_sources": [
+          "repeated.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f06-key",
+            "value": "meridian f06",
+            "source_path": "repeated.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f06",
+            "value": "owner f06",
+            "source_path": "repeated.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f06",
+            "value": "lead f06",
+            "source_path": "repeated.md"
+          }
+        ],
+        "target_paths": [
+          "repeated.md"
+        ],
+        "target_spans": [
+          {
+            "path": "repeated.md",
+            "contains": "F06-Key is the team alias for Meridian F06."
+          },
+          {
+            "path": "repeated.md",
+            "contains": "Owner F06 is the accountable owner of Meridian F06."
+          },
+          {
+            "path": "repeated.md",
+            "contains": "Owner F06 reports directly to Lead F06."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-007",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian f07",
+          "owner f07",
+          "lead f07"
+        ],
+        "reason": null,
+        "required_sources": [
+          "handbook.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f07-key",
+            "value": "meridian f07",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f07",
+            "value": "owner f07",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f07",
+            "value": "lead f07",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "F07-Key is the team alias for Meridian F07."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F07 is the accountable owner of Meridian F07."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F07 reports directly to Lead F07."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-008",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f08",
+          "lead f08"
+        ],
+        "reason": null,
+        "required_sources": [
+          "briefing.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f08",
+            "value": "owner f08",
+            "source_path": "briefing.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f08",
+            "value": "lead f08",
+            "source_path": "briefing.md"
+          }
+        ],
+        "target_paths": [
+          "briefing.md"
+        ],
+        "target_spans": [
+          {
+            "path": "briefing.md",
+            "contains": "Owner F08 is the accountable owner of Meridian F08."
+          },
+          {
+            "path": "briefing.md",
+            "contains": "Owner F08 reports directly to Lead F08."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-009",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian f09",
+          "owner f09",
+          "lead f09"
+        ],
+        "reason": null,
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f09-key",
+            "value": "meridian f09",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f09",
+            "value": "owner f09",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f09",
+            "value": "lead f09",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "F09-Key is the team alias for Meridian F09."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner F09 is the accountable owner of Meridian F09."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F09 reports directly to Lead F09."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-010",
+      "expected": {
+        "outcome": "source_unsupported",
+        "values": [],
+        "reason": "source_unsupported",
+        "required_sources": [
+          "matrix.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": false,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f10-key",
+            "value": "meridian f10",
+            "source_path": "matrix.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f10",
+            "value": "owner f10",
+            "source_path": "matrix.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f10",
+            "value": "lead f10",
+            "source_path": "matrix.md"
+          }
+        ],
+        "target_paths": [
+          "matrix.md"
+        ],
+        "target_spans": [
+          {
+            "path": "matrix.md",
+            "contains": "| relation | subject | value |\n|---|---|---|\n| owner | Owner F10 | Meridian F10 |\n| reports_to | Owner F10 | Lead F10 |"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-011",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "owner f11"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md",
+          "conflict-low.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": [
+            "leader"
+          ]
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f11",
+            "value": "owner f11",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f11",
+            "value": "lead f11",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md",
+          "conflict-low.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner F11 is the accountable owner of Meridian F11."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F11 reports directly to Lead F11."
+          },
+          {
+            "path": "conflict-low.md",
+            "contains": "Owner F11 reports directly to Alternate Lead."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-012",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "meridian f12",
+          "owner f12"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "relations.md",
+          "other-leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": [
+            "leader"
+          ]
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f12-key",
+            "value": "meridian f12",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f12",
+            "value": "owner f12",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f12",
+            "value": "lead f12",
+            "source_path": "relations.md"
+          }
+        ],
+        "target_paths": [
+          "relations.md",
+          "other-leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "relations.md",
+            "contains": "F12-Key is the team alias for Meridian F12."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner F12 is the accountable owner of Meridian F12."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner F12 reports directly to Lead F12."
+          },
+          {
+            "path": "other-leader.md",
+            "contains": "Owner F12 reports directly to Other Lead."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-013",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f13",
+          "lead f13"
+        ],
+        "reason": null,
+        "required_sources": [
+          "handbook.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f13",
+            "value": "owner f13",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f13",
+            "value": "lead f13",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "Owner F13 is the accountable owner of Meridian F13."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F13 reports directly to Lead F13."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-014",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "meridian f14"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "alias.md"
+        ],
+        "classify": {
+          "missing": [
+            "owner",
+            "leader"
+          ],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f14-key",
+            "value": "meridian f14",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f14",
+            "value": "owner f14",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f14",
+            "value": "lead f14",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "F14-Key is the team alias for Meridian F14."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-015",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "owner f15"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ],
+        "classify": {
+          "missing": [
+            "leader"
+          ],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f15",
+            "value": "owner f15",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f15",
+            "value": "lead f15",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner F15 is the accountable owner of Meridian F15."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-016",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "owner f16"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "relations.md",
+          "conflict-low-a.md",
+          "conflict-low-b.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": [
+            "leader"
+          ]
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f16",
+            "value": "owner f16",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f16",
+            "value": "lead f16",
+            "source_path": "relations.md"
+          }
+        ],
+        "target_paths": [
+          "relations.md",
+          "conflict-low-a.md",
+          "conflict-low-b.md"
+        ],
+        "target_spans": [
+          {
+            "path": "relations.md",
+            "contains": "Owner F16 is the accountable owner of Meridian F16."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner F16 reports directly to Lead F16."
+          },
+          {
+            "path": "conflict-low-a.md",
+            "contains": "Owner F16 reports directly to Alternate Lead A."
+          },
+          {
+            "path": "conflict-low-b.md",
+            "contains": "Owner F16 reports directly to Alternate Lead B."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-017",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "meridian f17",
+          "owner f17"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "handbook.md",
+          "conflict-low.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": [
+            "leader"
+          ]
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f17-key",
+            "value": "meridian f17",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f17",
+            "value": "owner f17",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f17",
+            "value": "lead f17",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md",
+          "conflict-low.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "F17-Key is the team alias for Meridian F17."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F17 is the accountable owner of Meridian F17."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F17 reports directly to Lead F17."
+          },
+          {
+            "path": "conflict-low.md",
+            "contains": "Owner F17 reports directly to Alternate Lead."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-018",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f18",
+          "lead f18"
+        ],
+        "reason": null,
+        "required_sources": [
+          "handbook.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f18",
+            "value": "owner f18",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f18",
+            "value": "lead f18",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "As of 2025-05-01 Owner F18 is the accountable owner of Meridian F18."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "As of 2025-05-01 Owner F18 reports directly to Lead F18."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-019",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner f19",
+          "lead f19"
+        ],
+        "reason": null,
+        "required_sources": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f19",
+            "value": "owner f19",
+            "source_path": "facts-en.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f19",
+            "value": "lead f19",
+            "source_path": "facts-zh.md"
+          }
+        ],
+        "target_paths": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "target_spans": [
+          {
+            "path": "facts-en.md",
+            "contains": "As of 2025-05-01 Owner F19 is the accountable owner of Meridian F19."
+          },
+          {
+            "path": "facts-zh.md",
+            "contains": "Owner F19的直属领导是Lead F19。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-020",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "meridian f20",
+          "owner f20"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "alias.md",
+          "owner.md"
+        ],
+        "classify": {
+          "missing": [
+            "leader"
+          ],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f20-key",
+            "value": "meridian f20",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f20",
+            "value": "owner f20",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f20",
+            "value": "lead f20",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "F20-Key is the team alias for Meridian F20."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner F20 is the accountable owner of Meridian F20."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-021",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "owner f21"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "handbook.md",
+          "other-leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": [
+            "leader"
+          ]
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f21",
+            "value": "owner f21",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f21",
+            "value": "lead f21",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md",
+          "other-leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "Owner F21 is the accountable owner of Meridian F21."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner F21 reports directly to Lead F21."
+          },
+          {
+            "path": "other-leader.md",
+            "contains": "Owner F21 reports directly to Other Lead."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-022",
+      "expected": {
+        "outcome": "planner_unsupported",
+        "values": [],
+        "reason": "planner_unsupported",
+        "required_sources": [],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": false,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f22",
+            "value": "owner f22",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f22",
+            "value": "lead f22",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [],
+        "target_spans": []
+      }
+    },
+    {
+      "id": "v2-final-023",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "stale_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f23",
+            "value": "owner f23",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f23",
+            "value": "lead f23",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner F23 is the accountable owner of Meridian F23."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F23 reports directly to Lead F23."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-final-024",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "forged_dependency",
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "f24-key",
+            "value": "meridian f24",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian f24",
+            "value": "owner f24",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner f24",
+            "value": "lead f24",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "F24-Key is the team alias for Meridian F24."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner F24 is the accountable owner of Meridian F24."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner F24 reports directly to Lead F24."
+          }
+        ]
+      }
+    }
+  ]
+}

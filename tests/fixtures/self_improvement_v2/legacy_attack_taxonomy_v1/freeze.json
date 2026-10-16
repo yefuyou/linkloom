@@ -1,0 +1,26 @@
+{
+  "schema_version": "self-improvement-v2-dataset/v1",
+  "freeze_id": "fb8ccf91821b775ff6875a0084234b2f43ff042e7db81a139552a306d5ed2c5f",
+  "author_visible_gold": true,
+  "gold_access": "scorer_only",
+  "note": "Synthetic structural generalization benchmark; final is independent of development by family/signature.",
+  "counts": {
+    "dev": 32,
+    "validation": 24,
+    "final": 24,
+    "stress": 16
+  },
+  "files": {
+    "dev_public.json": "7499731725f211e1b0542e1597ad8ffef18da25061b638eb4ae62c30cd2b8e67",
+    "dev_gold.json": "8e5f74806ce5e859f2c76bb7f7da9e307bc2b8bc1a2185930920020423f7d42a",
+    "validation_public.json": "07c31a2e4c660e35534df75a8e518fdbb6ef0f40c9d0b42826fbdd55e3af6d43",
+    "validation_gold.json": "40c712fca08cb58fd5db553a2978754f3bbc067b745039e0120eff66444051d4",
+    "final_public.json": "8b11b132020289d984ba38730eedca8482f4d13d6854ceae31ab375efc03d3ee",
+    "final_gold.json": "62f450bcdf8a5180cc15065d4b0a3f8c7cdfa4374682dad840b6e3e569dc1775",
+    "stress_public.json": "10a00d791d8e52564ce63d9483f6981db9afec480f6800ea3b8407a197f1d1f2",
+    "stress_gold.json": "99121937ed6a9c14d260a2331d0ed553f08871ff96b2e091eea545c4e9d3aee6",
+    "catalog.json": "6e5fc9f72e8d5863b6ac964d2517d2ac6a5f914d083d0762588b31c7c4274fa7"
+  },
+  "capability_probe": "checked-in planner and claim-grounding parser; no runtime/provider calls",
+  "final_validation": "catalog_and_hashes_only"
+}

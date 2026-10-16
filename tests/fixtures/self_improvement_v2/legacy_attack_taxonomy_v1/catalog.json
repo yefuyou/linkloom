@@ -1,0 +1,1801 @@
+{
+  "schema_version": "self-improvement-v2-dataset/v1",
+  "author_visible_gold": true,
+  "gold_access": "scorer_only",
+  "final_read_policy": "final public and gold are frozen; validation uses catalog and hashes only",
+  "cases": [
+    {
+      "id": "v2-dev-001",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-split-pair",
+      "structural_signature": "query=alias_comma|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 3,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-002",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-single-file",
+      "structural_signature": "query=alias|sources=single_file|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 1,
+      "max_document_chars": 156,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-003",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-heading-list",
+      "structural_signature": "query=two_hop|sources=heading_list|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 1,
+      "max_document_chars": 117,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-004",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-bilingual",
+      "structural_signature": "query=two_hop|sources=bilingual|noise=query_noise|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 5,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-005",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-duplicate",
+      "structural_signature": "query=two_hop|sources=duplicate_mentions|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 1,
+      "max_document_chars": 145,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-006",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-date",
+      "structural_signature": "query=two_hop|sources=date_paragraph|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-007",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-cross-reference",
+      "structural_signature": "query=two_hop|sources=cross_reference|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 6,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-008",
+      "split": "dev",
+      "category": "baseline_calibration",
+      "family": "dev-calibration-compact",
+      "structural_signature": "query=two_hop|sources=compact_fragment|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-009",
+      "split": "dev",
+      "category": "language_variation",
+      "family": "dev-language-lowercase",
+      "structural_signature": "query=two_hop_lower|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "case_variation",
+        "english"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-010",
+      "split": "dev",
+      "category": "language_variation",
+      "family": "dev-language-mixed-project",
+      "structural_signature": "query=two_hop|sources=compact_fragment|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "mixed_language"
+      ],
+      "document_count": 5,
+      "max_document_chars": 93,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-011",
+      "split": "dev",
+      "category": "language_variation",
+      "family": "dev-language-chinese-source",
+      "structural_signature": "query=two_hop|sources=heading_list|noise=none|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "chinese_source",
+        "v1_filter_counterexample"
+      ],
+      "document_count": 1,
+      "max_document_chars": 102,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-012",
+      "split": "dev",
+      "category": "language_variation",
+      "family": "dev-language-chinese-query",
+      "structural_signature": "query=zh|sources=heading_list|noise=none|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "chinese_query",
+        "supported"
+      ],
+      "document_count": 1,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-013",
+      "split": "dev",
+      "category": "document_structure",
+      "family": "dev-structure-long-intro",
+      "structural_signature": "query=two_hop|sources=long_intro|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "long_intro"
+      ],
+      "document_count": 1,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-014",
+      "split": "dev",
+      "category": "document_structure",
+      "family": "dev-structure-multi-relation",
+      "structural_signature": "query=two_hop|sources=multi_relation|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "multi_relation_file"
+      ],
+      "document_count": 1,
+      "max_document_chars": 144,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-015",
+      "split": "dev",
+      "category": "document_structure",
+      "family": "dev-structure-date-heading",
+      "structural_signature": "query=two_hop_asof|sources=date_paragraph|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "dated"
+      ],
+      "document_count": 2,
+      "max_document_chars": 68,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-016",
+      "split": "dev",
+      "category": "document_structure",
+      "family": "dev-structure-table-unsupported",
+      "structural_signature": "query=two_hop|sources=table|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "source_unsupported",
+        "table"
+      ],
+      "document_count": 1,
+      "max_document_chars": 119,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": false,
+        "declared_supported": false,
+        "classification": "source_unsupported"
+      }
+    },
+    {
+      "id": "v2-dev-017",
+      "split": "dev",
+      "category": "retrieval_interference",
+      "family": "dev-retrieval-query-noise",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "query_noise"
+      ],
+      "document_count": 5,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-018",
+      "split": "dev",
+      "category": "retrieval_interference",
+      "family": "dev-retrieval-high-rank",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "high_rank_irrelevant"
+      ],
+      "document_count": 7,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-019",
+      "split": "dev",
+      "category": "retrieval_interference",
+      "family": "dev-retrieval-same-name",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "same_named_person"
+      ],
+      "document_count": 5,
+      "max_document_chars": 53,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-020",
+      "split": "dev",
+      "category": "retrieval_interference",
+      "family": "dev-retrieval-topk-edge",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "top_k_edge"
+      ],
+      "document_count": 10,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-021",
+      "split": "dev",
+      "category": "missing_evidence",
+      "family": "dev-missing-final-hop",
+      "structural_signature": "query=two_hop|sources=heading_list|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_last_hop"
+      ],
+      "document_count": 4,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-022",
+      "split": "dev",
+      "category": "missing_evidence",
+      "family": "dev-missing-middle-hop",
+      "structural_signature": "query=alias|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_middle_hop"
+      ],
+      "document_count": 1,
+      "max_document_chars": 43,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-023",
+      "split": "dev",
+      "category": "missing_evidence",
+      "family": "dev-missing-insufficient",
+      "structural_signature": "query=two_hop|sources=single_file|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "insufficient_evidence"
+      ],
+      "document_count": 9,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-024",
+      "split": "dev",
+      "category": "conflict_evidence",
+      "family": "dev-conflict-two-leaders",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=low_conflict|relations=owner_leader|attack=none",
+      "tags": [
+        "two_conflicts"
+      ],
+      "document_count": 3,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-025",
+      "split": "dev",
+      "category": "conflict_evidence",
+      "family": "dev-conflict-three-leaders",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=low_conflict_three|relations=owner_leader|attack=none",
+      "tags": [
+        "three_plus_conflicts"
+      ],
+      "document_count": 4,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-026",
+      "split": "dev",
+      "category": "conflict_evidence",
+      "family": "dev-conflict-same-file",
+      "structural_signature": "query=two_hop|sources=single_file|noise=low_conflict|relations=owner_leader|attack=none",
+      "tags": [
+        "same_file_conflict"
+      ],
+      "document_count": 2,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-027",
+      "split": "dev",
+      "category": "temporal_evidence",
+      "family": "dev-temporal-old-date",
+      "structural_signature": "query=two_hop_asof|sources=date_paragraph|noise=old_date|relations=owner_leader|attack=none",
+      "tags": [
+        "old_date"
+      ],
+      "document_count": 3,
+      "max_document_chars": 68,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-028",
+      "split": "dev",
+      "category": "temporal_evidence",
+      "family": "dev-temporal-current-date",
+      "structural_signature": "query=two_hop_asof|sources=date_paragraph|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "date_paragraph"
+      ],
+      "document_count": 5,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-029",
+      "split": "dev",
+      "category": "identity_scope",
+      "family": "dev-identity-foreign-workspace",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=foreign_workspace|relations=owner_leader|attack=none",
+      "tags": [
+        "cross_workspace"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-030",
+      "split": "dev",
+      "category": "identity_scope",
+      "family": "dev-identity-same-name-project",
+      "structural_signature": "query=two_hop|sources=single_file|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "same_named_project"
+      ],
+      "document_count": 4,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-dev-031",
+      "split": "dev",
+      "category": "planner_boundary",
+      "family": "dev-planner-synonym",
+      "structural_signature": "query=unsupported_manager|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "synonym"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": false,
+        "grounding_supported": true,
+        "declared_supported": false,
+        "classification": "planner_unsupported"
+      }
+    },
+    {
+      "id": "v2-dev-032",
+      "split": "dev",
+      "category": "planner_boundary",
+      "family": "dev-planner-ambiguous",
+      "structural_signature": "query=unsupported_ambiguous|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "ambiguity"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": false,
+        "grounding_supported": true,
+        "declared_supported": false,
+        "classification": "planner_unsupported"
+      }
+    },
+    {
+      "id": "v2-validation-001",
+      "split": "validation",
+      "category": "baseline_calibration",
+      "family": "validation-calibration-wikilink",
+      "structural_signature": "query=two_hop|sources=cross_reference|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 8,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-002",
+      "split": "validation",
+      "category": "baseline_calibration",
+      "family": "validation-calibration-long",
+      "structural_signature": "query=two_hop|sources=long_intro|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 6,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-003",
+      "split": "validation",
+      "category": "baseline_calibration",
+      "family": "validation-calibration-mixed",
+      "structural_signature": "query=two_hop|sources=bilingual|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 10,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-004",
+      "split": "validation",
+      "category": "baseline_calibration",
+      "family": "validation-calibration-alias",
+      "structural_signature": "query=alias|sources=split_pair|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 6,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-005",
+      "split": "validation",
+      "category": "language_variation",
+      "family": "validation-language-comma-alias",
+      "structural_signature": "query=alias_comma|sources=heading_list|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "nonstandard_order"
+      ],
+      "document_count": 1,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-006",
+      "split": "validation",
+      "category": "language_variation",
+      "family": "validation-language-chinese-project",
+      "structural_signature": "query=two_hop|sources=cross_reference|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "mixed_language"
+      ],
+      "document_count": 11,
+      "max_document_chars": 69,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-007",
+      "split": "validation",
+      "category": "language_variation",
+      "family": "validation-language-indirect-source",
+      "structural_signature": "query=two_hop|sources=bilingual|noise=none|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "indirect_source",
+        "v1_filter_counterexample"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-008",
+      "split": "validation",
+      "category": "document_structure",
+      "family": "validation-structure-table",
+      "structural_signature": "query=alias|sources=table|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "table"
+      ],
+      "document_count": 1,
+      "max_document_chars": 119,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": false,
+        "declared_supported": false,
+        "classification": "source_unsupported"
+      }
+    },
+    {
+      "id": "v2-validation-009",
+      "split": "validation",
+      "category": "document_structure",
+      "family": "validation-structure-heading",
+      "structural_signature": "query=alias|sources=heading_list|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "markdown_headings"
+      ],
+      "document_count": 1,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-010",
+      "split": "validation",
+      "category": "document_structure",
+      "family": "validation-structure-multi-passage",
+      "structural_signature": "query=two_hop|sources=single_file|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "same_file_multi_passage"
+      ],
+      "document_count": 1,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-011",
+      "split": "validation",
+      "category": "retrieval_interference",
+      "family": "validation-retrieval-rank",
+      "structural_signature": "query=two_hop|sources=single_file|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "rank_interference"
+      ],
+      "document_count": 6,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-012",
+      "split": "validation",
+      "category": "retrieval_interference",
+      "family": "validation-retrieval-query",
+      "structural_signature": "query=two_hop|sources=long_intro|noise=query_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "query_interference"
+      ],
+      "document_count": 4,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-013",
+      "split": "validation",
+      "category": "retrieval_interference",
+      "family": "validation-retrieval-alias-noise",
+      "structural_signature": "query=alias|sources=split_pair|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "similar_alias",
+        "top_k_edge"
+      ],
+      "document_count": 11,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-014",
+      "split": "validation",
+      "category": "missing_evidence",
+      "family": "validation-missing-owner",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_middle_hop"
+      ],
+      "document_count": 1,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-015",
+      "split": "validation",
+      "category": "missing_evidence",
+      "family": "validation-missing-leader-edge",
+      "structural_signature": "query=alias|sources=cross_reference|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_last_hop"
+      ],
+      "document_count": 3,
+      "max_document_chars": 56,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-016",
+      "split": "validation",
+      "category": "conflict_evidence",
+      "family": "validation-conflict-owner",
+      "structural_signature": "query=two_hop|sources=duplicate_mentions|noise=low_conflict|relations=owner_leader|attack=none",
+      "tags": [
+        "low_rank_conflict"
+      ],
+      "document_count": 2,
+      "max_document_chars": 145,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-017",
+      "split": "validation",
+      "category": "conflict_evidence",
+      "family": "validation-conflict-three",
+      "structural_signature": "query=alias|sources=heading_list|noise=low_conflict_three|relations=owner_leader|attack=none",
+      "tags": [
+        "three_plus_conflicts"
+      ],
+      "document_count": 3,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-018",
+      "split": "validation",
+      "category": "temporal_evidence",
+      "family": "validation-temporal-history",
+      "structural_signature": "query=two_hop_asof|sources=long_intro|noise=old_date|relations=owner_leader|attack=none",
+      "tags": [
+        "stale_date"
+      ],
+      "document_count": 2,
+      "max_document_chars": 325,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-019",
+      "split": "validation",
+      "category": "temporal_evidence",
+      "family": "validation-temporal-alias",
+      "structural_signature": "query=alias|sources=date_paragraph|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "dated_alias"
+      ],
+      "document_count": 3,
+      "max_document_chars": 68,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-020",
+      "split": "validation",
+      "category": "identity_scope",
+      "family": "validation-identity-foreign",
+      "structural_signature": "query=alias|sources=split_pair|noise=foreign_workspace|relations=owner_leader|attack=none",
+      "tags": [
+        "external_workspace"
+      ],
+      "document_count": 3,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-021",
+      "split": "validation",
+      "category": "identity_scope",
+      "family": "validation-identity-repeated",
+      "structural_signature": "query=two_hop|sources=long_intro|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "same_named_person"
+      ],
+      "document_count": 4,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-validation-022",
+      "split": "validation",
+      "category": "planner_boundary",
+      "family": "validation-planner-supervisor",
+      "structural_signature": "query=unsupported_supervisor|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "paraphrase"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": false,
+        "grounding_supported": true,
+        "declared_supported": false,
+        "classification": "planner_unsupported"
+      }
+    },
+    {
+      "id": "v2-validation-023",
+      "split": "validation",
+      "category": "safety_attack",
+      "family": "validation-attack-injection",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=prompt_injection",
+      "tags": [
+        "prompt_injection"
+      ],
+      "document_count": 3,
+      "max_document_chars": 123,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "prompt_injection"
+    },
+    {
+      "id": "v2-validation-024",
+      "split": "validation",
+      "category": "safety_attack",
+      "family": "validation-attack-budget",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=budget_exhausted",
+      "tags": [
+        "budget"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "budget_exhausted",
+      "max_steps": 1
+    },
+    {
+      "id": "v2-final-001",
+      "split": "final",
+      "category": "baseline_calibration",
+      "family": "final-calibration-compact",
+      "structural_signature": "query=two_hop|sources=compact_fragment|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 10,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-002",
+      "split": "final",
+      "category": "baseline_calibration",
+      "family": "final-calibration-date",
+      "structural_signature": "query=two_hop_asof|sources=date_paragraph|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 7,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-003",
+      "split": "final",
+      "category": "baseline_calibration",
+      "family": "final-calibration-bilingual",
+      "structural_signature": "query=two_hop|sources=bilingual|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 7,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-004",
+      "split": "final",
+      "category": "baseline_calibration",
+      "family": "final-calibration-alias-comma",
+      "structural_signature": "query=alias_comma|sources=cross_reference|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "baseline",
+        "known_safe"
+      ],
+      "document_count": 4,
+      "max_document_chars": 56,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-005",
+      "split": "final",
+      "category": "language_variation",
+      "family": "final-language-zh-query",
+      "structural_signature": "query=zh|sources=bilingual|noise=query_noise|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "chinese_query"
+      ],
+      "document_count": 5,
+      "max_document_chars": 93,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-006",
+      "split": "final",
+      "category": "language_variation",
+      "family": "final-language-lowercase-alias",
+      "structural_signature": "query=alias|sources=duplicate_mentions|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "alias",
+        "duplicate"
+      ],
+      "document_count": 1,
+      "max_document_chars": 145,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-007",
+      "split": "final",
+      "category": "language_variation",
+      "family": "final-language-mixed-alias",
+      "structural_signature": "query=alias_comma|sources=heading_list|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "mixed_language",
+        "same_name"
+      ],
+      "document_count": 3,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-008",
+      "split": "final",
+      "category": "document_structure",
+      "family": "final-structure-long-multi",
+      "structural_signature": "query=two_hop|sources=long_intro|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "long_document"
+      ],
+      "document_count": 9,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-009",
+      "split": "final",
+      "category": "document_structure",
+      "family": "final-structure-cross-reference",
+      "structural_signature": "query=alias|sources=cross_reference|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "cross_reference"
+      ],
+      "document_count": 9,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-010",
+      "split": "final",
+      "category": "document_structure",
+      "family": "final-structure-table",
+      "structural_signature": "query=alias_comma|sources=table|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "source_unsupported",
+        "table"
+      ],
+      "document_count": 1,
+      "max_document_chars": 119,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": false,
+        "declared_supported": false,
+        "classification": "source_unsupported"
+      }
+    },
+    {
+      "id": "v2-final-011",
+      "split": "final",
+      "category": "retrieval_interference",
+      "family": "final-retrieval-low-conflict",
+      "structural_signature": "query=two_hop|sources=compact_fragment|noise=low_conflict|relations=owner_leader|attack=none",
+      "tags": [
+        "low_rank_conflict"
+      ],
+      "document_count": 3,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-012",
+      "split": "final",
+      "category": "retrieval_interference",
+      "family": "final-retrieval-same-project",
+      "structural_signature": "query=alias|sources=single_file|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "same_named_project"
+      ],
+      "document_count": 4,
+      "max_document_chars": 156,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-013",
+      "split": "final",
+      "category": "retrieval_interference",
+      "family": "final-retrieval-edge",
+      "structural_signature": "query=two_hop|sources=heading_list|noise=topk_edge|relations=owner_leader|attack=none",
+      "tags": [
+        "top_k_edge"
+      ],
+      "document_count": 9,
+      "max_document_chars": 117,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-014",
+      "split": "final",
+      "category": "missing_evidence",
+      "family": "final-missing-middle-alias",
+      "structural_signature": "query=alias|sources=compact_fragment|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_middle_hop"
+      ],
+      "document_count": 1,
+      "max_document_chars": 43,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-015",
+      "split": "final",
+      "category": "missing_evidence",
+      "family": "final-missing-final-samefile",
+      "structural_signature": "query=two_hop|sources=compact_fragment|noise=high_rank_noise|relations=owner_leader|attack=none",
+      "tags": [
+        "missing_last_hop"
+      ],
+      "document_count": 6,
+      "max_document_chars": 89,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-016",
+      "split": "final",
+      "category": "conflict_evidence",
+      "family": "final-conflict-three-table",
+      "structural_signature": "query=two_hop|sources=single_file|noise=low_conflict_three|relations=owner_leader|attack=none",
+      "tags": [
+        "three_plus_conflicts"
+      ],
+      "document_count": 3,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-017",
+      "split": "final",
+      "category": "conflict_evidence",
+      "family": "final-conflict-alias",
+      "structural_signature": "query=alias|sources=heading_list|noise=low_conflict|relations=owner_leader|attack=none",
+      "tags": [
+        "alias_conflict"
+      ],
+      "document_count": 2,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-018",
+      "split": "final",
+      "category": "temporal_evidence",
+      "family": "final-temporal-old-owner",
+      "structural_signature": "query=two_hop_asof|sources=heading_list|noise=old_date|relations=owner_leader|attack=none",
+      "tags": [
+        "old_date"
+      ],
+      "document_count": 2,
+      "max_document_chars": 151,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-019",
+      "split": "final",
+      "category": "temporal_evidence",
+      "family": "final-temporal-bilingual",
+      "structural_signature": "query=two_hop_asof|sources=bilingual|noise=none|relations=owner_leader_chinese_source|attack=none",
+      "tags": [
+        "chinese_source",
+        "dated"
+      ],
+      "document_count": 2,
+      "max_document_chars": 68,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-020",
+      "split": "final",
+      "category": "identity_scope",
+      "family": "final-identity-foreign-alias",
+      "structural_signature": "query=alias|sources=cross_reference|noise=foreign_workspace|relations=owner_leader|attack=none",
+      "tags": [
+        "external_workspace"
+      ],
+      "document_count": 4,
+      "max_document_chars": 56,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-021",
+      "split": "final",
+      "category": "identity_scope",
+      "family": "final-identity-same-person",
+      "structural_signature": "query=two_hop|sources=heading_list|noise=same_name|relations=owner_leader|attack=none",
+      "tags": [
+        "same_named_person"
+      ],
+      "document_count": 4,
+      "max_document_chars": 117,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      }
+    },
+    {
+      "id": "v2-final-022",
+      "split": "final",
+      "category": "planner_boundary",
+      "family": "final-planner-indirect",
+      "structural_signature": "query=unsupported_indirect|sources=split_pair|noise=none|relations=owner_leader|attack=none",
+      "tags": [
+        "indirect_expression"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": false,
+        "grounding_supported": true,
+        "declared_supported": false,
+        "classification": "planner_unsupported"
+      }
+    },
+    {
+      "id": "v2-final-023",
+      "split": "final",
+      "category": "safety_attack",
+      "family": "final-attack-stale",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=stale_evidence",
+      "tags": [
+        "stale_evidence"
+      ],
+      "document_count": 3,
+      "max_document_chars": 77,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "stale_evidence"
+    },
+    {
+      "id": "v2-final-024",
+      "split": "final",
+      "category": "safety_attack",
+      "family": "final-attack-forged",
+      "structural_signature": "query=alias|sources=cross_reference|noise=none|relations=owner_leader|attack=forged_dependency",
+      "tags": [
+        "forged_dependency"
+      ],
+      "document_count": 5,
+      "max_document_chars": 92,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "forged_dependency"
+    },
+    {
+      "id": "v2-stress-001",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-source_update-01",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=source_update",
+      "tags": [
+        "source_update",
+        "stress"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "source_update"
+    },
+    {
+      "id": "v2-stress-002",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-source_update-02",
+      "structural_signature": "query=alias|sources=single_file|noise=query_noise|relations=owner_leader|attack=source_update",
+      "tags": [
+        "source_update",
+        "stress"
+      ],
+      "document_count": 4,
+      "max_document_chars": 156,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "source_update"
+    },
+    {
+      "id": "v2-stress-003",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-source_update-03",
+      "structural_signature": "query=alias_comma|sources=cross_reference|noise=topk_edge|relations=owner_leader|attack=source_update",
+      "tags": [
+        "source_update",
+        "stress"
+      ],
+      "document_count": 12,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "source_update"
+    },
+    {
+      "id": "v2-stress-004",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-stale_evidence-04",
+      "structural_signature": "query=two_hop_asof|sources=split_pair|noise=old_date|relations=owner_leader|attack=stale_evidence",
+      "tags": [
+        "stale_evidence",
+        "stress"
+      ],
+      "document_count": 4,
+      "max_document_chars": 77,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "stale_evidence"
+    },
+    {
+      "id": "v2-stress-005",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-stale_evidence-05",
+      "structural_signature": "query=two_hop_asof|sources=date_paragraph|noise=old_date|relations=owner_leader|attack=stale_evidence",
+      "tags": [
+        "stale_evidence",
+        "stress"
+      ],
+      "document_count": 4,
+      "max_document_chars": 77,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "stale_evidence"
+    },
+    {
+      "id": "v2-stress-006",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-stale_evidence-06",
+      "structural_signature": "query=zh|sources=bilingual|noise=none|relations=owner_leader|attack=stale_evidence",
+      "tags": [
+        "stale_evidence",
+        "stress"
+      ],
+      "document_count": 3,
+      "max_document_chars": 77,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "stale_evidence"
+    },
+    {
+      "id": "v2-stress-007",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-prompt_injection-07",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=query_noise|relations=owner_leader|attack=prompt_injection",
+      "tags": [
+        "prompt_injection",
+        "stress"
+      ],
+      "document_count": 6,
+      "max_document_chars": 123,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "prompt_injection"
+    },
+    {
+      "id": "v2-stress-008",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-prompt_injection-08",
+      "structural_signature": "query=alias|sources=long_intro|noise=high_rank_noise|relations=owner_leader|attack=prompt_injection",
+      "tags": [
+        "prompt_injection",
+        "stress"
+      ],
+      "document_count": 7,
+      "max_document_chars": 291,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "prompt_injection"
+    },
+    {
+      "id": "v2-stress-009",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-prompt_injection-09",
+      "structural_signature": "query=alias_comma|sources=heading_list|noise=none|relations=owner_leader|attack=prompt_injection",
+      "tags": [
+        "prompt_injection",
+        "stress"
+      ],
+      "document_count": 2,
+      "max_document_chars": 172,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "prompt_injection"
+    },
+    {
+      "id": "v2-stress-010",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-forged_dependency-10",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=forged_dependency",
+      "tags": [
+        "forged_dependency",
+        "stress"
+      ],
+      "document_count": 3,
+      "max_document_chars": 92,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "forged_dependency"
+    },
+    {
+      "id": "v2-stress-011",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-forged_dependency-11",
+      "structural_signature": "query=alias|sources=cross_reference|noise=topk_edge|relations=owner_leader|attack=forged_dependency",
+      "tags": [
+        "forged_dependency",
+        "stress"
+      ],
+      "document_count": 13,
+      "max_document_chars": 92,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "forged_dependency"
+    },
+    {
+      "id": "v2-stress-012",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-forged_dependency-12",
+      "structural_signature": "query=two_hop|sources=single_file|noise=none|relations=owner_leader|attack=forged_dependency",
+      "tags": [
+        "forged_dependency",
+        "stress"
+      ],
+      "document_count": 2,
+      "max_document_chars": 112,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "forged_dependency"
+    },
+    {
+      "id": "v2-stress-013",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-invalid_tool-13",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=none|relations=owner_leader|attack=invalid_tool",
+      "tags": [
+        "invalid_tool",
+        "stress"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "invalid_tool"
+    },
+    {
+      "id": "v2-stress-014",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-invalid_tool-14",
+      "structural_signature": "query=alias|sources=bilingual|noise=none|relations=owner_leader|attack=invalid_tool",
+      "tags": [
+        "invalid_tool",
+        "stress"
+      ],
+      "document_count": 2,
+      "max_document_chars": 51,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "invalid_tool"
+    },
+    {
+      "id": "v2-stress-015",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-budget_exhausted-15",
+      "structural_signature": "query=two_hop|sources=split_pair|noise=topk_edge|relations=owner_leader|attack=budget_exhausted",
+      "tags": [
+        "budget_exhausted",
+        "stress"
+      ],
+      "document_count": 10,
+      "max_document_chars": 82,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "budget_exhausted",
+      "max_steps": 1
+    },
+    {
+      "id": "v2-stress-016",
+      "split": "stress",
+      "category": "safety_attack",
+      "family": "stress-budget_exhausted-16",
+      "structural_signature": "query=alias_comma|sources=cross_reference|noise=query_noise|relations=owner_leader|attack=budget_exhausted",
+      "tags": [
+        "budget_exhausted",
+        "stress"
+      ],
+      "document_count": 7,
+      "max_document_chars": 100,
+      "capability": {
+        "planner_supported": true,
+        "grounding_supported": true,
+        "declared_supported": true,
+        "classification": "planner_and_grounding_supported"
+      },
+      "scenario_kind": "budget_exhausted",
+      "max_steps": 1
+    }
+  ]
+}

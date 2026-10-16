@@ -1,0 +1,844 @@
+{
+  "schema_version": "self-improvement-v2-dataset/v1",
+  "partition": "stress",
+  "cases": [
+    {
+      "id": "v2-stress-001",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "source_updated_during_read",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s01",
+            "value": "owner s01",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s01",
+            "value": "lead s01",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner S01 is the accountable owner of Meridian S01."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S01 reports directly to Lead S01."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-002",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "source_updated_during_read",
+        "required_sources": [
+          "relations.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s02-key",
+            "value": "meridian s02",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s02",
+            "value": "owner s02",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s02",
+            "value": "lead s02",
+            "source_path": "relations.md"
+          }
+        ],
+        "target_paths": [
+          "relations.md"
+        ],
+        "target_spans": [
+          {
+            "path": "relations.md",
+            "contains": "S02-Key is the team alias for Meridian S02."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner S02 is the accountable owner of Meridian S02."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner S02 reports directly to Lead S02."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-003",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "source_updated_during_read",
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s03-key",
+            "value": "meridian s03",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s03",
+            "value": "owner s03",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s03",
+            "value": "lead s03",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "S03-Key is the team alias for Meridian S03."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner S03 is the accountable owner of Meridian S03."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S03 reports directly to Lead S03."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-004",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "stale_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s04",
+            "value": "owner s04",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s04",
+            "value": "lead s04",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "As of 2025-06-01 Owner S04 is the accountable owner of Meridian S04."
+          },
+          {
+            "path": "leader.md",
+            "contains": "As of 2025-06-01 Owner S04 reports directly to Lead S04."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-005",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "stale_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s05",
+            "value": "owner s05",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s05",
+            "value": "lead s05",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "As of 2025-06-01 Owner S05 is the accountable owner of Meridian S05."
+          },
+          {
+            "path": "leader.md",
+            "contains": "As of 2025-06-01 Owner S05 reports directly to Lead S05."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-006",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "stale_evidence",
+        "required_sources": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s06",
+            "value": "owner s06",
+            "source_path": "facts-en.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s06",
+            "value": "lead s06",
+            "source_path": "facts-zh.md"
+          }
+        ],
+        "target_paths": [
+          "facts-en.md",
+          "facts-zh.md"
+        ],
+        "target_spans": [
+          {
+            "path": "facts-en.md",
+            "contains": "Owner S06 is the accountable owner of Meridian S06."
+          },
+          {
+            "path": "facts-zh.md",
+            "contains": "Owner S06 reports directly to Lead S06."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-007",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "owner s07",
+          "lead s07"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s07",
+            "value": "owner s07",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s07",
+            "value": "lead s07",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner S07 is the accountable owner of Meridian S07."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S07 reports directly to Lead S07."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-008",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian s08",
+          "owner s08",
+          "lead s08"
+        ],
+        "reason": null,
+        "required_sources": [
+          "briefing.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s08-key",
+            "value": "meridian s08",
+            "source_path": "briefing.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s08",
+            "value": "owner s08",
+            "source_path": "briefing.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s08",
+            "value": "lead s08",
+            "source_path": "briefing.md"
+          }
+        ],
+        "target_paths": [
+          "briefing.md"
+        ],
+        "target_spans": [
+          {
+            "path": "briefing.md",
+            "contains": "S08-Key is the team alias for Meridian S08."
+          },
+          {
+            "path": "briefing.md",
+            "contains": "Owner S08 is the accountable owner of Meridian S08."
+          },
+          {
+            "path": "briefing.md",
+            "contains": "Owner S08 reports directly to Lead S08."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-009",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "meridian s09",
+          "owner s09",
+          "lead s09"
+        ],
+        "reason": null,
+        "required_sources": [
+          "handbook.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s09-key",
+            "value": "meridian s09",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s09",
+            "value": "owner s09",
+            "source_path": "handbook.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s09",
+            "value": "lead s09",
+            "source_path": "handbook.md"
+          }
+        ],
+        "target_paths": [
+          "handbook.md"
+        ],
+        "target_spans": [
+          {
+            "path": "handbook.md",
+            "contains": "S09-Key is the team alias for Meridian S09."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner S09 is the accountable owner of Meridian S09."
+          },
+          {
+            "path": "handbook.md",
+            "contains": "Owner S09 reports directly to Lead S09."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-010",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "forged_dependency",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s10",
+            "value": "owner s10",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s10",
+            "value": "lead s10",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner S10 is the accountable owner of Meridian S10."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S10 reports directly to Lead S10."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-011",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "forged_dependency",
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s11-key",
+            "value": "meridian s11",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s11",
+            "value": "owner s11",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s11",
+            "value": "lead s11",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "S11-Key is the team alias for Meridian S11."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner S11 is the accountable owner of Meridian S11."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S11 reports directly to Lead S11."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-012",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "forged_dependency",
+        "required_sources": [
+          "relations.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s12",
+            "value": "owner s12",
+            "source_path": "relations.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s12",
+            "value": "lead s12",
+            "source_path": "relations.md"
+          }
+        ],
+        "target_paths": [
+          "relations.md"
+        ],
+        "target_spans": [
+          {
+            "path": "relations.md",
+            "contains": "Owner S12 is the accountable owner of Meridian S12."
+          },
+          {
+            "path": "relations.md",
+            "contains": "Owner S12 reports directly to Lead S12."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-013",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "invalid_tool_call",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s13",
+            "value": "owner s13",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s13",
+            "value": "lead s13",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner S13 is the accountable owner of Meridian S13."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S13 reports directly to Lead S13."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-014",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "invalid_tool_call",
+        "required_sources": [
+          "facts-zh.md",
+          "facts-en.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s14-key",
+            "value": "meridian s14",
+            "source_path": "facts-zh.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s14",
+            "value": "owner s14",
+            "source_path": "facts-en.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s14",
+            "value": "lead s14",
+            "source_path": "facts-zh.md"
+          }
+        ],
+        "target_paths": [
+          "facts-zh.md",
+          "facts-en.md"
+        ],
+        "target_spans": [
+          {
+            "path": "facts-zh.md",
+            "contains": "S14-Key is the team alias for Meridian S14."
+          },
+          {
+            "path": "facts-en.md",
+            "contains": "Owner S14 is the accountable owner of Meridian S14."
+          },
+          {
+            "path": "facts-zh.md",
+            "contains": "Owner S14 reports directly to Lead S14."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-015",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "budget_exhausted",
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s15",
+            "value": "owner s15",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s15",
+            "value": "lead s15",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "owner.md",
+            "contains": "Owner S15 is the accountable owner of Meridian S15."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S15 reports directly to Lead S15."
+          }
+        ]
+      }
+    },
+    {
+      "id": "v2-stress-016",
+      "expected": {
+        "outcome": "runtime_failure",
+        "values": [],
+        "reason": "budget_exhausted",
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "classify": {
+          "missing": [],
+          "conflict": []
+        },
+        "supported": true,
+        "parent_facts": [
+          {
+            "subgoal_id": "alias",
+            "relation": "alias_of_project",
+            "subject": "s16-key",
+            "value": "meridian s16",
+            "source_path": "alias.md"
+          },
+          {
+            "subgoal_id": "owner",
+            "relation": "owner_of_project",
+            "subject": "meridian s16",
+            "value": "owner s16",
+            "source_path": "owner.md"
+          },
+          {
+            "subgoal_id": "leader",
+            "relation": "reports_to",
+            "subject": "owner s16",
+            "value": "lead s16",
+            "source_path": "leader.md"
+          }
+        ],
+        "target_paths": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ],
+        "target_spans": [
+          {
+            "path": "alias.md",
+            "contains": "S16-Key is the team alias for Meridian S16."
+          },
+          {
+            "path": "owner.md",
+            "contains": "Owner S16 is the accountable owner of Meridian S16."
+          },
+          {
+            "path": "leader.md",
+            "contains": "Owner S16 reports directly to Lead S16."
+          }
+        ]
+      }
+    }
+  ]
+}

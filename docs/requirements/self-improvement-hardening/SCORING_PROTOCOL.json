@@ -1,0 +1,17 @@
+{
+  "version": "v3-reviewed-before-official-candidates",
+  "freeze_sha256": "9937bbf45352ba943971a413a0b511612369aa5632472ee0899e0a8b5cd10ae6",
+  "scorer_sha256": "7d24ed5e6feec526e97de17de30edc183ba87fe6c6fc1cd2954d866e79edd2d2",
+  "rules": [
+    "unordered complete fact sets",
+    "exact state and required source references",
+    "answer-bearing target spans must be verified-read",
+    "independent conflict and upstream preservation veto",
+    "typed intentional fault diagnostics",
+    "unsupported excluded from task denominator",
+    "correct-case regressions veto",
+    "known span defects veto admission"
+  ],
+  "qualification_runs_are_exploratory": true,
+  "final_used": false
+}
