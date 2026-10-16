@@ -1,0 +1,411 @@
+{
+  "schema_version": "adaptive-planning-gold/v1",
+  "partition": "heldout",
+  "rubric_version": "adaptive-planning-eval/v1",
+  "cases": [
+    {
+      "id": "AP-H01",
+      "expected_facts": [
+        {
+          "subject": "Willow Circuit",
+          "relation": "owner_of_project",
+          "object": "Kei Morgan"
+        },
+        {
+          "subject": "Kei Morgan",
+          "relation": "reports_to",
+          "object": "Rhea Park"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "notes/AP-H01-owner.md",
+        "notes/AP-H01-leader.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Willow Circuit"
+    },
+    {
+      "id": "AP-H02",
+      "expected_facts": [
+        {
+          "subject": "Hazel-Key",
+          "relation": "alias_of_project",
+          "object": "Hazel Crossing"
+        },
+        {
+          "subject": "Hazel Crossing",
+          "relation": "owner_of_project",
+          "object": "Noa Sterling"
+        },
+        {
+          "subject": "Noa Sterling",
+          "relation": "reports_to",
+          "object": "Pax Reed"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-H02.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Hazel-Key"
+    },
+    {
+      "id": "AP-H03",
+      "expected_facts": [
+        {
+          "subject": "暮光港",
+          "relation": "owner_of_project",
+          "object": "苏禾"
+        },
+        {
+          "subject": "苏禾",
+          "relation": "reports_to",
+          "object": "谢川"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "zh/AP-H03.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "暮光港"
+    },
+    {
+      "id": "AP-H04",
+      "expected_facts": [
+        {
+          "subject": "Kumo-3",
+          "relation": "alias_of_project",
+          "object": "云帆计划"
+        },
+        {
+          "subject": "云帆计划",
+          "relation": "owner_of_project",
+          "object": "陆遥"
+        },
+        {
+          "subject": "陆遥",
+          "relation": "reports_to",
+          "object": "白宁"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-H04-alias.md",
+        "mixed/AP-H04-owner.md",
+        "mixed/AP-H04-leader.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Kumo-3"
+    },
+    {
+      "id": "AP-H05",
+      "expected_facts": [
+        {
+          "subject": "Fern Valley",
+          "relation": "owner_of_project",
+          "object": "Mina Hart"
+        },
+        {
+          "subject": "Mina Hart",
+          "relation": "reports_to",
+          "object": "Cato Wells"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-H05.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Fern Valley"
+    },
+    {
+      "id": "AP-H06",
+      "expected_facts": [
+        {
+          "subject": "Glacier Span",
+          "relation": "owner_of_project",
+          "object": "Evan Yu"
+        },
+        {
+          "subject": "Evan Yu",
+          "relation": "reports_to",
+          "object": "Lio Grant"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "register/AP-H06-ownership.md",
+        "register/AP-H06-line.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Glacier Span"
+    },
+    {
+      "id": "AP-H07",
+      "expected_facts": [
+        {
+          "subject": "Rowan Basin",
+          "relation": "owner_of_project",
+          "object": "Zoe Lin"
+        },
+        {
+          "subject": "Zoe Lin",
+          "relation": "reports_to",
+          "object": "Kian Moss"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-H07.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Rowan Basin"
+    },
+    {
+      "id": "AP-H08",
+      "expected_facts": [
+        {
+          "subject": "Prism Harbor",
+          "relation": "owner_of_project",
+          "object": "Ada Frost"
+        },
+        {
+          "subject": "Ada Frost",
+          "relation": "reports_to",
+          "object": "Rin Cole"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-H08.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Prism Harbor"
+    },
+    {
+      "id": "AP-H09",
+      "expected_facts": [
+        {
+          "subject": "Larkspur Bay",
+          "relation": "owner_of_project",
+          "object": "Yun Park"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "notes/AP-H09-owner.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Larkspur Bay"
+    },
+    {
+      "id": "AP-H10",
+      "expected_facts": [
+        {
+          "subject": "Pine-Key",
+          "relation": "alias_of_project",
+          "object": "Pine Reach"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "aliases/AP-H10.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Pine-Key"
+    },
+    {
+      "id": "AP-H11",
+      "expected_facts": [
+        {
+          "subject": "Topaz Field",
+          "relation": "owner_of_project",
+          "object": "Cleo Stone"
+        },
+        {
+          "subject": "Topaz Field",
+          "relation": "owner_of_project",
+          "object": "Dara Moss"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "conflicting_evidence",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "conflicts/AP-H11-a.md",
+        "conflicts/AP-H11-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Topaz Field"
+    },
+    {
+      "id": "AP-H12",
+      "expected_facts": [
+        {
+          "subject": "Meadow Arc",
+          "relation": "owner_of_project",
+          "object": "Eliora Ray"
+        },
+        {
+          "subject": "Eliora Ray",
+          "relation": "reports_to",
+          "object": "Faye Lin"
+        },
+        {
+          "subject": "Eliora Ray",
+          "relation": "reports_to",
+          "object": "Garen Cole"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "conflicting_evidence",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "conflicts/AP-H12-owner.md",
+        "conflicts/AP-H12-a.md",
+        "conflicts/AP-H12-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Meadow Arc"
+    },
+    {
+      "id": "AP-H13",
+      "expected_facts": [
+        {
+          "subject": "Echo-Key",
+          "relation": "alias_of_project",
+          "object": "Echo North"
+        },
+        {
+          "subject": "Echo-Key",
+          "relation": "alias_of_project",
+          "object": "Echo South"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "ambiguous_entity",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "ambiguity/AP-H13-a.md",
+        "ambiguity/AP-H13-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Echo-Key"
+    },
+    {
+      "id": "AP-H14",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "unknown_relation",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-H15",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "write_intent",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-H16",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "cross_workspace_request",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-H17",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "date_interval_unsupported",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-H18",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "relative_date_unsupported",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    }
+  ]
+}

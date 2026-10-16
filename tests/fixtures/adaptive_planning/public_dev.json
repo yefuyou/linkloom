@@ -1,0 +1,598 @@
+{
+  "schema_version": "adaptive-planning-public/v1",
+  "partition": "dev",
+  "cases": [
+    {
+      "id": "AP-D01",
+      "query": "Who owns Aurora Mesh and who is their direct leader?",
+      "category": "project_owner_leader.english",
+      "documents": [
+        {
+          "path": "notes/AP-D01-owner.md",
+          "content": "Mira Cole is the accountable owner of Aurora Mesh.\n"
+        },
+        {
+          "path": "notes/AP-D01-leader.md",
+          "content": "Mira Cole reports directly to Owen Park.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D02",
+      "query": "Who is the direct leader of the owner of Silver Comet?",
+      "category": "project_owner_leader.reversed_question",
+      "documents": [
+        {
+          "path": "register/AP-D02-ownership.md",
+          "content": "## Accountability\nLena Guo is the accountable owner of Silver Comet.\n"
+        },
+        {
+          "path": "register/AP-D02-line.md",
+          "content": "## Reporting line\nMarcus Reed is Lena Guo's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "reverse",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D03",
+      "query": "Who owns the project behind Beacon-Relay and who leads that owner?",
+      "category": "alias_project_owner_leader.alias_question",
+      "documents": [
+        {
+          "path": "aliases/AP-D03.md",
+          "content": "Beacon-Relay is the team alias for Cedar Orbit.\n"
+        },
+        {
+          "path": "notes/AP-D03-owner.md",
+          "content": "Nadia Frost is the accountable owner of Cedar Orbit.\n"
+        },
+        {
+          "path": "notes/AP-D03-leader.md",
+          "content": "Nadia Frost reports directly to Iris Vale.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D04",
+      "query": "Which project does Kite-9 alias, who owns it, and who is that owner's direct leader?",
+      "category": "alias_project_owner_leader.multi_information",
+      "documents": [
+        {
+          "path": "records/AP-D04.md",
+          "content": "# Alias register\nKite-9 is the team alias for Northstar Harbor.\nTheo Lin is the accountable owner of Northstar Harbor.\nTheo Lin reports directly to Avery Quinn.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D05",
+      "query": "谁负责青岚港？其负责人直属领导是谁？",
+      "category": "chinese.owner_leader",
+      "documents": [
+        {
+          "path": "zh/AP-D05.md",
+          "content": "# 关系登记\n\n沈砚是青岚港的负责人。\n沈砚的直属领导是王芳。\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "zh",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "chinese",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D06",
+      "query": "星河桥项目负责人的直属领导是谁？",
+      "category": "chinese.reordered_question",
+      "documents": [
+        {
+          "path": "zh/AP-D06.md",
+          "content": "# 关系登记\n\n林澈是星河桥的负责人。\n林澈的直属领导是周宁。\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "zh",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "chinese",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D07",
+      "query": "Who owns the project behind 云岚 and who manages that owner?",
+      "category": "mixed_language.alias_entity",
+      "documents": [
+        {
+          "path": "mixed/AP-D07-alias.md",
+          "content": "云岚 is the team alias for Orchid Delta.\n"
+        },
+        {
+          "path": "mixed/AP-D07-owner.md",
+          "content": "Jules Hart is the accountable owner of Orchid Delta.\n"
+        },
+        {
+          "path": "mixed/AP-D07-leader.md",
+          "content": "Jules Hart reports directly to Quinn Shaw.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "mixed",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "mixed",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D08",
+      "query": "As of 2026-05-14, who owns Juniper Field and who is their direct leader?",
+      "category": "exact_snapshot.project",
+      "documents": [
+        {
+          "path": "logs/AP-D08.md",
+          "content": "[2026-05-14T09:00:00Z] Registry: As of 2026-05-14 Priya Lane is the accountable owner of Juniper Field.\n[2026-05-14T09:03:00Z] Registry: As of 2026-05-14 Blair Stone is Priya Lane's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "exact_snapshot",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "timestamped",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D09",
+      "query": "On 2026-04-30, who owns the project behind Ember-Key and who supervises that owner?",
+      "category": "exact_snapshot.alias",
+      "documents": [
+        {
+          "path": "logs/AP-D09.md",
+          "content": "[2026-04-30T10:00:00Z] Registry: Ember-Key is the team alias for Copper Meadow.\n[2026-04-30T10:04:00Z] Registry: As of 2026-04-30 Ravi Shah is the accountable owner of Copper Meadow.\n[2026-04-30T10:07:00Z] Registry: As of 2026-04-30 Ravi Shah reports directly to Tara West.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "exact_snapshot",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "timestamped",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D10",
+      "query": "Who manages Marble Gate, and who is that manager's direct supervisor?",
+      "category": "synonym.manager_supervisor",
+      "documents": [
+        {
+          "path": "records/AP-D10.md",
+          "content": "# Marble Gate record\n\nNora Bell is the accountable owner of Marble Gate.\n\nNora Bell reports directly to Evan Grey.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D11",
+      "query": "The project Saffron Bridge—who is responsible for it, and to whom does that person report directly?",
+      "category": "synonym.reordered",
+      "documents": [
+        {
+          "path": "register/AP-D11-ownership.md",
+          "content": "## Accountability\nAsha Kim is the accountable owner of Saffron Bridge.\n"
+        },
+        {
+          "path": "register/AP-D11-line.md",
+          "content": "## Reporting line\nRowan Pike is Asha Kim's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "reverse",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D12",
+      "query": "River Lantern 的 owner 是谁？and who is their direct leader?",
+      "category": "mixed_language.reordered",
+      "documents": [
+        {
+          "path": "mixed/AP-D12-owner.md",
+          "content": "陈欣 is the accountable owner of River Lantern.\n"
+        },
+        {
+          "path": "mixed/AP-D12-leader.md",
+          "content": "陈欣 reports directly to David Lu.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "mixed",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "mixed",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D13",
+      "query": "Who is the owner of Delta Forge, then who supervises that person?",
+      "category": "synonym.owner_supervises",
+      "documents": [
+        {
+          "path": "records/AP-D13.md",
+          "content": "# Delta Forge record\n\nMina Zhou is the accountable owner of Delta Forge.\n\nMina Zhou reports directly to Omar Reid.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D14",
+      "query": "For Lumen-Arc, which project does it stand for, who is responsible, and who leads them?",
+      "category": "alias_project_owner_leader.pronouns",
+      "documents": [
+        {
+          "path": "mixed/AP-D14-alias.md",
+          "content": "Lumen-Arc is the team alias for Harbor Echo.\n"
+        },
+        {
+          "path": "mixed/AP-D14-owner.md",
+          "content": "Asha Ray is the accountable owner of Harbor Echo.\n"
+        },
+        {
+          "path": "mixed/AP-D14-leader.md",
+          "content": "Asha Ray reports directly to Arden Kim.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "mixed",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D15",
+      "query": "琥珀线路的项目负责人向谁直接汇报？",
+      "category": "chinese.reporting_question",
+      "documents": [
+        {
+          "path": "zh/AP-D15.md",
+          "content": "# 关系登记\n\nLena Guo是琥珀线路的负责人。\nLena Guo的直属领导是Marcus Reed。\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "zh",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "chinese",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D16",
+      "query": "On 2026-07-01, who is the direct leader of the owner of Onyx Harbor?",
+      "category": "exact_snapshot.reversed_question",
+      "documents": [
+        {
+          "path": "register/AP-D16-ownership.md",
+          "content": "## Accountability\nAs of 2026-07-01 Riley Fox is the accountable owner of Onyx Harbor.\n"
+        },
+        {
+          "path": "register/AP-D16-line.md",
+          "content": "## Reporting line\nAs of 2026-07-01 Ellis Gray is Riley Fox's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "exact_snapshot",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "reverse",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D17",
+      "query": "Who owns Cinder Atlas and who is that owner's reporting-line leader?",
+      "category": "synonym.reporting_line",
+      "documents": [
+        {
+          "path": "notes/AP-D17-owner.md",
+          "content": "Owen Bell is the accountable owner of Cinder Atlas.\n"
+        },
+        {
+          "path": "notes/AP-D17-leader.md",
+          "content": "Owen Bell reports directly to Harper Vale.\n"
+        },
+        {
+          "path": "context/AP-D17-noise.md",
+          "content": "This note discusses unrelated planning vocabulary and a manager, but records no typed relation.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "noisy",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D18",
+      "query": "Who is accountable for Violet Gate, and who does that person report to?",
+      "category": "synonym.accountable_report",
+      "documents": [
+        {
+          "path": "records/AP-D18.md",
+          "content": "# Violet Gate record\n\nSora Chen is the accountable owner of Violet Gate.\n\nSora Chen reports directly to Milo Grant.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D19",
+      "query": "Which project is Drift-Key an alias of? Who owns it? Who is their direct leader?",
+      "category": "alias_project_owner_leader.reordered",
+      "documents": [
+        {
+          "path": "records/AP-D19.md",
+          "content": "# Alias register\nDrift-Key is the team alias for Amber Relay.\nElena Voss is the accountable owner of Amber Relay.\nElena Voss reports directly to Rowan Pike.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D20",
+      "query": "Moss River 项目负责人的直属领导是谁？",
+      "category": "mixed_language.chinese_suffix",
+      "documents": [
+        {
+          "path": "mixed/AP-D20-owner.md",
+          "content": "Uma Hale is the accountable owner of Moss River.\n"
+        },
+        {
+          "path": "mixed/AP-D20-leader.md",
+          "content": "Uma Hale reports directly to Ellis Gray.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "mixed",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "mixed",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D21",
+      "query": "As of 2026-08-15, who owns Granite Loop and who is their direct leader?",
+      "category": "exact_snapshot.timestamped_layout",
+      "documents": [
+        {
+          "path": "logs/AP-D21.md",
+          "content": "[2026-08-15T09:00:00Z] Registry: As of 2026-08-15 Tess Avery is the accountable owner of Granite Loop.\n[2026-08-15T09:03:00Z] Registry: As of 2026-08-15 Devon Hart is Tess Avery's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "exact_snapshot",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "timestamped",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D22",
+      "query": "Qing-7 alias maps to which project, who owns it, and who is that owner's direct leader?",
+      "category": "mixed_language.alias_synonyms",
+      "documents": [
+        {
+          "path": "mixed/AP-D22-alias.md",
+          "content": "Qing-7 is the team alias for 青穹计划.\n"
+        },
+        {
+          "path": "mixed/AP-D22-owner.md",
+          "content": "李明 is the accountable owner of 青穹计划.\n"
+        },
+        {
+          "path": "mixed/AP-D22-leader.md",
+          "content": "李明 reports directly to 王芳.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "mixed",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "mixed",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-D23",
+      "query": "Who is the direct leader of the owner of Indigo Wharf?",
+      "category": "insufficient.missing_downstream",
+      "documents": [
+        {
+          "path": "notes/AP-D23-owner.md",
+          "content": "Sora Vale is the accountable owner of Indigo Wharf.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "missing_downstream",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-D24",
+      "query": "Who owns the project behind Vela-Key and who leads that owner?",
+      "category": "insufficient.alias_without_owner",
+      "documents": [
+        {
+          "path": "aliases/AP-D24.md",
+          "content": "Vela-Key is the team alias for Vela Point.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "missing_downstream",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    }
+  ]
+}

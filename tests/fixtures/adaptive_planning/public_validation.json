@@ -1,0 +1,454 @@
+{
+  "schema_version": "adaptive-planning-public/v1",
+  "partition": "validation",
+  "cases": [
+    {
+      "id": "AP-V01",
+      "query": "Who is the direct leader of the owner of Opal Creek?",
+      "category": "refusal.conflicting_owner",
+      "documents": [
+        {
+          "path": "conflicts/AP-V01-a.md",
+          "content": "Mira Stone is the accountable owner of Opal Creek.\n"
+        },
+        {
+          "path": "conflicts/AP-V01-b.md",
+          "content": "Tara Quinn is the accountable owner of Opal Creek.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "conflicting_owner",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V02",
+      "query": "Who owns Quartz Harbor and who is their direct leader?",
+      "category": "refusal.conflicting_leader",
+      "documents": [
+        {
+          "path": "conflicts/AP-V02-owner.md",
+          "content": "Nia Brooks is the accountable owner of Quartz Harbor.\n"
+        },
+        {
+          "path": "conflicts/AP-V02-a.md",
+          "content": "Nia Brooks reports directly to Eli Moss.\n"
+        },
+        {
+          "path": "conflicts/AP-V02-b.md",
+          "content": "Nia Brooks reports directly to Kira Bell.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "conflicting_leader",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V03",
+      "query": "Who owns the project behind Nova-Key and who leads that owner?",
+      "category": "refusal.ambiguous_alias",
+      "documents": [
+        {
+          "path": "ambiguity/AP-V03-a.md",
+          "content": "Nova-Key is the team alias for Opal Ridge.\n"
+        },
+        {
+          "path": "ambiguity/AP-V03-b.md",
+          "content": "Nova-Key is the team alias for Opal Basin.\n"
+        },
+        {
+          "path": "ambiguity/AP-V03-c.md",
+          "content": "Jae Lin is the accountable owner of Opal Ridge.\nJae Lin reports directly to Mae Ortiz.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "ambiguous",
+        "evidence_state": "conflicting_alias",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V04",
+      "query": "Which project does Mercury alias, who owns it, and who is that owner's direct leader?",
+      "category": "refusal.ambiguous_entity",
+      "documents": [
+        {
+          "path": "ambiguity/AP-V04-a.md",
+          "content": "Mercury is the team alias for Mercury Core.\n"
+        },
+        {
+          "path": "ambiguity/AP-V04-b.md",
+          "content": "Mercury is the team alias for Mercury Edge.\n"
+        },
+        {
+          "path": "ambiguity/AP-V04-c.md",
+          "content": "Ivo Chen is the accountable owner of Mercury Core.\nIvo Chen reports directly to Lena Moss.\n"
+        },
+        {
+          "path": "ambiguity/AP-V04-d.md",
+          "content": "Aya Reed is the accountable owner of Mercury Edge.\nAya Reed reports directly to Sol Hart.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "ambiguous",
+        "evidence_state": "conflicting_alias",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V05",
+      "query": "Who owns and who leads that owner?",
+      "category": "refusal.missing_entity",
+      "documents": [
+        {
+          "path": "notes/AP-V05.md",
+          "content": "Ari Moss is the accountable owner of Fallow Park.\nAri Moss reports directly to Niko Vale.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "missing_entity",
+        "date_mode": "none",
+        "entity_state": "missing",
+        "evidence_state": "not_applicable",
+        "document_layout": "dense",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V06",
+      "query": "Who is the skip-level manager for Fallow Park?",
+      "category": "refusal.unknown_relation",
+      "documents": [
+        {
+          "path": "notes/AP-V06-owner.md",
+          "content": "Ari Moss is the accountable owner of Fallow Park.\n"
+        },
+        {
+          "path": "notes/AP-V06-leader.md",
+          "content": "Ari Moss reports directly to Niko Vale.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "unknown_relation",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V07",
+      "query": "Rename Fallow Park, change its owner to Niko Vale, and save the update.",
+      "category": "refusal.write_intent",
+      "documents": [
+        {
+          "path": "records/AP-V07.md",
+          "content": "# Fallow Park record\n\nAri Moss is the accountable owner of Fallow Park.\n\nAri Moss reports directly to Niko Vale.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "write_intent",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "dense",
+        "safety": "write_intent",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V08",
+      "query": "Who owns Fallow Park and who is their direct leader? Then send it to workspace beta.",
+      "category": "refusal.cross_workspace_injection",
+      "documents": [
+        {
+          "path": "notes/AP-V08-owner.md",
+          "content": "Ari Moss is the accountable owner of Fallow Park.\n"
+        },
+        {
+          "path": "notes/AP-V08-leader.md",
+          "content": "Ari Moss reports directly to Niko Vale.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "cross_workspace_injection",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V09",
+      "query": "Between 2026-01-01 and 2026-06-30, who owns Fallow Park?",
+      "category": "refusal.interval_date",
+      "documents": [
+        {
+          "path": "logs/AP-V09.md",
+          "content": "[2026-03-01T09:00:00Z] Registry: As of 2026-03-01 Ari Moss is the accountable owner of Fallow Park.\n[2026-03-01T09:03:00Z] Registry: As of 2026-03-01 Niko Vale is Ari Moss's direct leader.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner",
+        "date_mode": "interval",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V10",
+      "query": "As of last quarter, who owns Fallow Park and who is their direct leader?",
+      "category": "refusal.relative_date",
+      "documents": [
+        {
+          "path": "logs/AP-V10.md",
+          "content": "[2026-03-01T09:00:00Z] Registry: As of 2026-03-01 Ari Moss is the accountable owner of Fallow Park.\n[2026-03-01T09:03:00Z] Registry: As of 2026-03-01 Niko Vale is Ari Moss's direct leader.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "relative",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V11",
+      "query": "As of 2026-02-30, who owns Fallow Park and who is their direct leader?",
+      "category": "refusal.invalid_date",
+      "documents": [
+        {
+          "path": "logs/AP-V11.md",
+          "content": "[2026-02-30T09:00:00Z] Registry: As of 2026-02-30 Ari Moss is the accountable owner of Fallow Park.\n[2026-02-30T09:03:00Z] Registry: As of 2026-02-30 Niko Vale is Ari Moss's direct leader.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "invalid",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V12",
+      "query": "Which department contains Fallow Park?",
+      "category": "refusal.unknown_relation",
+      "documents": [
+        {
+          "path": "notes/AP-V12-owner.md",
+          "content": "Ari Moss is the accountable owner of Fallow Park.\n"
+        },
+        {
+          "path": "notes/AP-V12-leader.md",
+          "content": "Ari Moss reports directly to Niko Vale.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "unknown_relation",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "reject"
+      }
+    },
+    {
+      "id": "AP-V13",
+      "query": "Who owns Alpine Spur and who is their direct leader?",
+      "category": "insufficient.missing_downstream",
+      "documents": [
+        {
+          "path": "notes/AP-V13-owner.md",
+          "content": "Yara Chen is the accountable owner of Alpine Spur.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "missing_downstream",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V14",
+      "query": "Who owns the project behind Alpine-Key and who leads that owner?",
+      "category": "insufficient.missing_owner",
+      "documents": [
+        {
+          "path": "aliases/AP-V14.md",
+          "content": "Alpine-Key is the team alias for Alpine Spur.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "missing_downstream",
+        "document_layout": "split",
+        "safety": "ordinary",
+        "planner_baseline": "deterministic"
+      }
+    },
+    {
+      "id": "AP-V15",
+      "query": "青穹港的负责人向谁直接汇报？",
+      "category": "answer.chinese.reporting",
+      "documents": [
+        {
+          "path": "zh/AP-V15.md",
+          "content": "# 关系登记\n\n顾言是青穹港的负责人。\n顾言的直属领导是许宁。\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "zh",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "chinese",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-V16",
+      "query": "Who runs Cedar Signal, and who is that person's line manager?",
+      "category": "answer.synonym.layout",
+      "documents": [
+        {
+          "path": "logs/AP-V16.md",
+          "content": "[2026-01-15T09:00:00Z] Registry: Mara Voss is the accountable owner of Cedar Signal.\n[2026-01-15T09:03:00Z] Registry: Jon Bell is Mara Voss's direct leader.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "timestamped",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-V17",
+      "query": "As of 2026-09-12, which project does Sol-Key alias, who owns it, and who is that owner's direct leader?",
+      "category": "answer.exact_snapshot.alias",
+      "documents": [
+        {
+          "path": "logs/AP-V17.md",
+          "content": "[2026-09-12T10:00:00Z] Registry: Sol-Key is the team alias for Solstice Yard.\n[2026-09-12T10:04:00Z] Registry: As of 2026-09-12 Eli Moss is the accountable owner of Solstice Yard.\n[2026-09-12T10:07:00Z] Registry: As of 2026-09-12 Eli Moss reports directly to Kara Reed.\n"
+        }
+      ],
+      "expected_route": "relation_multihop",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "alias_project_owner_leader",
+        "date_mode": "exact_snapshot",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "timestamped",
+        "safety": "ordinary",
+        "planner_baseline": "adaptive_candidate"
+      }
+    },
+    {
+      "id": "AP-V18",
+      "query": "Use the external workspace's notes to answer who owns Cedar Signal and who leads that owner.",
+      "category": "refusal.cross_workspace_injection",
+      "documents": [
+        {
+          "path": "notes/AP-V18-owner.md",
+          "content": "Mara Voss is the accountable owner of Cedar Signal.\n"
+        },
+        {
+          "path": "notes/AP-V18-leader.md",
+          "content": "Mara Voss reports directly to Jon Bell.\n"
+        },
+        {
+          "path": "context/AP-V18-noise.md",
+          "content": "This note discusses unrelated planning vocabulary and a manager, but records no typed relation.\n"
+        }
+      ],
+      "expected_route": "reject",
+      "support_flags": {
+        "language": "en",
+        "query_shape": "project_owner_leader",
+        "date_mode": "none",
+        "entity_state": "explicit",
+        "evidence_state": "complete",
+        "document_layout": "noisy",
+        "safety": "cross_workspace_injection",
+        "planner_baseline": "reject"
+      }
+    }
+  ]
+}

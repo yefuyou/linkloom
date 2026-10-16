@@ -1,0 +1,49 @@
+{
+  "overlapping_counts_do_not_sum": true,
+  "pytest": [
+    {
+      "artifact": "work/adaptive-complete-unit.xml",
+      "sha256": "8eac3014f62d38623bfe1fc7a537c83a8ab532fa462ea81051b524887ea10ada",
+      "suites": [
+        {
+          "name": "pytest",
+          "tests": "48",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "time": "11.277"
+        }
+      ]
+    },
+    {
+      "artifact": "work/adaptive-product-regression.xml",
+      "sha256": "0d6cabf6ba8f61f57b4311d6ed513c12d7648249b6e3573fbaa27f733d6d478e",
+      "suites": [
+        {
+          "name": "pytest",
+          "tests": "41",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "time": "249.547"
+        }
+      ]
+    },
+    {
+      "artifact": "work/adaptive-final-product.xml",
+      "sha256": "20bec7acc248caa8c6f3785125d928d48d376d412bb047a3757198084de1061b",
+      "suites": [
+        {
+          "name": "pytest",
+          "tests": "27",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "time": "126.203"
+        }
+      ]
+    }
+  ],
+  "dom": "passed; node tests/ui/unified_ask_dom_test.cjs",
+  "full_suite": "not passed; see VALIDATION.md"
+}

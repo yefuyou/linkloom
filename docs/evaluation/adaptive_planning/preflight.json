@@ -1,0 +1,84 @@
+{
+  "utc": "2026-10-16T04:17:49.604743+00:00",
+  "authorization": "User Linkloom B request 2026-10-16",
+  "model": "gemini-3.8-flash",
+  "credential_source": "GEMINI_API_KEY",
+  "identity": "Gemini Developer API; vertexai=False; credential principal not exposed by SDK",
+  "official_endpoint": "generativelanguage.googleapis.com",
+  "sdk": "2.22.0",
+  "sdk_retries": 0,
+  "request_timeout_ms": 130000,
+  "serial_tasks": true,
+  "max_requests": 400,
+  "max_usd": 15,
+  "max_seconds": 10800,
+  "input_token_upper_bound": 65536,
+  "max_output_tokens_including_thinking": 8192,
+  "request_reservation_usd": 0.079872,
+  "prices_per_million": {
+    "input": 0.75,
+    "output": 3.75
+  },
+  "price_source": "https://ai.google.dev/gemini-api/docs/pricing.md",
+  "model_source": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+  "ledger": "work/adaptive-planning/provider.jsonl",
+  "no_old_ledgers_read_or_modified": true,
+  "permission": "Explicit user authorization; synthetic question only; no real vault",
+  "compatible": true,
+  "endpoint_requests": 1,
+  "plan": {
+    "goal": "想查清 Willow Bay 的牵头人，以及这个人向谁直接汇报。",
+    "subgoals": [
+      {
+        "subgoal_id": "step_1",
+        "question": "Who owns Willow Bay?",
+        "depends_on": [],
+        "relation_path": [
+          "owner_of_project"
+        ]
+      },
+      {
+        "subgoal_id": "step_2",
+        "question": "Who is the direct leader of {verified_entity}?",
+        "depends_on": [
+          "step_1"
+        ],
+        "relation_path": [
+          "reports_to"
+        ]
+      }
+    ],
+    "schema_version": "task-plan/v2"
+  },
+  "plan_valid": true,
+  "accounting": {
+    "schema_version": "adaptive-provider-ledger/v1",
+    "experiment_id": "linkloom-b-20261016",
+    "model": "gemini-3.8-flash",
+    "request_count": 1,
+    "attempts": 1,
+    "max_requests": 400,
+    "max_usd": 15.0,
+    "reservation_usd": 0.079872,
+    "committed_usd": 0.0042705,
+    "reserved_usd": 0.0042705,
+    "released_usd": 0.0756015,
+    "remaining_usd": 14.9957295,
+    "usage_known_count": 1,
+    "pending_request_count": 0,
+    "strict_uncertain_count": 0,
+    "strict_uncertain_streak": 0,
+    "last_outcome": "success",
+    "first_request_at": "2026-10-16T04:17:49.623927+00:00",
+    "elapsed_seconds": 9.969,
+    "deadline_at": "2026-10-16T07:17:49.623927+00:00",
+    "stopped": false,
+    "stop_reason": null,
+    "status": "ACTIVE",
+    "trials_by_case": {
+      "PREFLIGHT": [
+        1
+      ]
+    }
+  }
+}

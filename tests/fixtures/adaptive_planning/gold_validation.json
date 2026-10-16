@@ -1,0 +1,338 @@
+{
+  "schema_version": "adaptive-planning-gold/v1",
+  "partition": "validation",
+  "rubric_version": "adaptive-planning-eval/v1",
+  "cases": [
+    {
+      "id": "AP-V01",
+      "expected_facts": [
+        {
+          "subject": "Opal Creek",
+          "relation": "owner_of_project",
+          "object": "Mira Stone"
+        },
+        {
+          "subject": "Opal Creek",
+          "relation": "owner_of_project",
+          "object": "Tara Quinn"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "conflicting_evidence",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "conflicts/AP-V01-a.md",
+        "conflicts/AP-V01-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Opal Creek"
+    },
+    {
+      "id": "AP-V02",
+      "expected_facts": [
+        {
+          "subject": "Quartz Harbor",
+          "relation": "owner_of_project",
+          "object": "Nia Brooks"
+        },
+        {
+          "subject": "Nia Brooks",
+          "relation": "reports_to",
+          "object": "Eli Moss"
+        },
+        {
+          "subject": "Nia Brooks",
+          "relation": "reports_to",
+          "object": "Kira Bell"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "conflicting_evidence",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "conflicts/AP-V02-owner.md",
+        "conflicts/AP-V02-a.md",
+        "conflicts/AP-V02-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Quartz Harbor"
+    },
+    {
+      "id": "AP-V03",
+      "expected_facts": [
+        {
+          "subject": "Nova-Key",
+          "relation": "alias_of_project",
+          "object": "Opal Ridge"
+        },
+        {
+          "subject": "Nova-Key",
+          "relation": "alias_of_project",
+          "object": "Opal Basin"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "ambiguous_entity",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "ambiguity/AP-V03-a.md",
+        "ambiguity/AP-V03-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Nova-Key"
+    },
+    {
+      "id": "AP-V04",
+      "expected_facts": [
+        {
+          "subject": "Mercury",
+          "relation": "alias_of_project",
+          "object": "Mercury Core"
+        },
+        {
+          "subject": "Mercury",
+          "relation": "alias_of_project",
+          "object": "Mercury Edge"
+        }
+      ],
+      "outcome": "refuse",
+      "refusal_reason": "ambiguous_entity",
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "ambiguity/AP-V04-a.md",
+        "ambiguity/AP-V04-b.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Mercury"
+    },
+    {
+      "id": "AP-V05",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "missing_entity",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V06",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "unknown_relation",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V07",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "write_intent",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V08",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "cross_workspace_request",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V09",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "date_interval_unsupported",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V10",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "relative_date_unsupported",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V11",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "invalid_date",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V12",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "unknown_relation",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    },
+    {
+      "id": "AP-V13",
+      "expected_facts": [
+        {
+          "subject": "Alpine Spur",
+          "relation": "owner_of_project",
+          "object": "Yara Chen"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "notes/AP-V13-owner.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Alpine Spur"
+    },
+    {
+      "id": "AP-V14",
+      "expected_facts": [
+        {
+          "subject": "Alpine-Key",
+          "relation": "alias_of_project",
+          "object": "Alpine Spur"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "aliases/AP-V14.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Alpine-Key"
+    },
+    {
+      "id": "AP-V15",
+      "expected_facts": [
+        {
+          "subject": "青穹港",
+          "relation": "owner_of_project",
+          "object": "顾言"
+        },
+        {
+          "subject": "顾言",
+          "relation": "reports_to",
+          "object": "许宁"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "zh/AP-V15.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "青穹港"
+    },
+    {
+      "id": "AP-V16",
+      "expected_facts": [
+        {
+          "subject": "Cedar Signal",
+          "relation": "owner_of_project",
+          "object": "Mara Voss"
+        },
+        {
+          "subject": "Mara Voss",
+          "relation": "reports_to",
+          "object": "Jon Bell"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-V16.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Cedar Signal"
+    },
+    {
+      "id": "AP-V17",
+      "expected_facts": [
+        {
+          "subject": "Sol-Key",
+          "relation": "alias_of_project",
+          "object": "Solstice Yard"
+        },
+        {
+          "subject": "Solstice Yard",
+          "relation": "owner_of_project",
+          "object": "Eli Moss"
+        },
+        {
+          "subject": "Eli Moss",
+          "relation": "reports_to",
+          "object": "Kara Reed"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-V17.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Sol-Key"
+    },
+    {
+      "id": "AP-V18",
+      "expected_facts": [],
+      "outcome": "refuse",
+      "refusal_reason": "cross_workspace_request",
+      "insufficient_reason": null,
+      "evidence_paths": [],
+      "expected_chain": [],
+      "root": null
+    }
+  ]
+}

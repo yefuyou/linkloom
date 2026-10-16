@@ -1,0 +1,680 @@
+{
+  "schema_version": "adaptive-planning-gold/v1",
+  "partition": "dev",
+  "rubric_version": "adaptive-planning-eval/v1",
+  "cases": [
+    {
+      "id": "AP-D01",
+      "expected_facts": [
+        {
+          "subject": "Aurora Mesh",
+          "relation": "owner_of_project",
+          "object": "Mira Cole"
+        },
+        {
+          "subject": "Mira Cole",
+          "relation": "reports_to",
+          "object": "Owen Park"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "notes/AP-D01-owner.md",
+        "notes/AP-D01-leader.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Aurora Mesh"
+    },
+    {
+      "id": "AP-D02",
+      "expected_facts": [
+        {
+          "subject": "Silver Comet",
+          "relation": "owner_of_project",
+          "object": "Lena Guo"
+        },
+        {
+          "subject": "Lena Guo",
+          "relation": "reports_to",
+          "object": "Marcus Reed"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "register/AP-D02-ownership.md",
+        "register/AP-D02-line.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Silver Comet"
+    },
+    {
+      "id": "AP-D03",
+      "expected_facts": [
+        {
+          "subject": "Beacon-Relay",
+          "relation": "alias_of_project",
+          "object": "Cedar Orbit"
+        },
+        {
+          "subject": "Cedar Orbit",
+          "relation": "owner_of_project",
+          "object": "Nadia Frost"
+        },
+        {
+          "subject": "Nadia Frost",
+          "relation": "reports_to",
+          "object": "Iris Vale"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "aliases/AP-D03.md",
+        "notes/AP-D03-owner.md",
+        "notes/AP-D03-leader.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Beacon-Relay"
+    },
+    {
+      "id": "AP-D04",
+      "expected_facts": [
+        {
+          "subject": "Kite-9",
+          "relation": "alias_of_project",
+          "object": "Northstar Harbor"
+        },
+        {
+          "subject": "Northstar Harbor",
+          "relation": "owner_of_project",
+          "object": "Theo Lin"
+        },
+        {
+          "subject": "Theo Lin",
+          "relation": "reports_to",
+          "object": "Avery Quinn"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-D04.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Kite-9"
+    },
+    {
+      "id": "AP-D05",
+      "expected_facts": [
+        {
+          "subject": "青岚港",
+          "relation": "owner_of_project",
+          "object": "沈砚"
+        },
+        {
+          "subject": "沈砚",
+          "relation": "reports_to",
+          "object": "王芳"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "zh/AP-D05.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "青岚港"
+    },
+    {
+      "id": "AP-D06",
+      "expected_facts": [
+        {
+          "subject": "星河桥",
+          "relation": "owner_of_project",
+          "object": "林澈"
+        },
+        {
+          "subject": "林澈",
+          "relation": "reports_to",
+          "object": "周宁"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "zh/AP-D06.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "星河桥"
+    },
+    {
+      "id": "AP-D07",
+      "expected_facts": [
+        {
+          "subject": "云岚",
+          "relation": "alias_of_project",
+          "object": "Orchid Delta"
+        },
+        {
+          "subject": "Orchid Delta",
+          "relation": "owner_of_project",
+          "object": "Jules Hart"
+        },
+        {
+          "subject": "Jules Hart",
+          "relation": "reports_to",
+          "object": "Quinn Shaw"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-D07-alias.md",
+        "mixed/AP-D07-owner.md",
+        "mixed/AP-D07-leader.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "云岚"
+    },
+    {
+      "id": "AP-D08",
+      "expected_facts": [
+        {
+          "subject": "Juniper Field",
+          "relation": "owner_of_project",
+          "object": "Priya Lane"
+        },
+        {
+          "subject": "Priya Lane",
+          "relation": "reports_to",
+          "object": "Blair Stone"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-D08.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Juniper Field"
+    },
+    {
+      "id": "AP-D09",
+      "expected_facts": [
+        {
+          "subject": "Ember-Key",
+          "relation": "alias_of_project",
+          "object": "Copper Meadow"
+        },
+        {
+          "subject": "Copper Meadow",
+          "relation": "owner_of_project",
+          "object": "Ravi Shah"
+        },
+        {
+          "subject": "Ravi Shah",
+          "relation": "reports_to",
+          "object": "Tara West"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-D09.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Ember-Key"
+    },
+    {
+      "id": "AP-D10",
+      "expected_facts": [
+        {
+          "subject": "Marble Gate",
+          "relation": "owner_of_project",
+          "object": "Nora Bell"
+        },
+        {
+          "subject": "Nora Bell",
+          "relation": "reports_to",
+          "object": "Evan Grey"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-D10.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Marble Gate"
+    },
+    {
+      "id": "AP-D11",
+      "expected_facts": [
+        {
+          "subject": "Saffron Bridge",
+          "relation": "owner_of_project",
+          "object": "Asha Kim"
+        },
+        {
+          "subject": "Asha Kim",
+          "relation": "reports_to",
+          "object": "Rowan Pike"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "register/AP-D11-ownership.md",
+        "register/AP-D11-line.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Saffron Bridge"
+    },
+    {
+      "id": "AP-D12",
+      "expected_facts": [
+        {
+          "subject": "River Lantern",
+          "relation": "owner_of_project",
+          "object": "陈欣"
+        },
+        {
+          "subject": "陈欣",
+          "relation": "reports_to",
+          "object": "David Lu"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-D12-owner.md",
+        "mixed/AP-D12-leader.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "River Lantern"
+    },
+    {
+      "id": "AP-D13",
+      "expected_facts": [
+        {
+          "subject": "Delta Forge",
+          "relation": "owner_of_project",
+          "object": "Mina Zhou"
+        },
+        {
+          "subject": "Mina Zhou",
+          "relation": "reports_to",
+          "object": "Omar Reid"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-D13.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Delta Forge"
+    },
+    {
+      "id": "AP-D14",
+      "expected_facts": [
+        {
+          "subject": "Lumen-Arc",
+          "relation": "alias_of_project",
+          "object": "Harbor Echo"
+        },
+        {
+          "subject": "Harbor Echo",
+          "relation": "owner_of_project",
+          "object": "Asha Ray"
+        },
+        {
+          "subject": "Asha Ray",
+          "relation": "reports_to",
+          "object": "Arden Kim"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-D14-alias.md",
+        "mixed/AP-D14-owner.md",
+        "mixed/AP-D14-leader.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Lumen-Arc"
+    },
+    {
+      "id": "AP-D15",
+      "expected_facts": [
+        {
+          "subject": "琥珀线路",
+          "relation": "owner_of_project",
+          "object": "Lena Guo"
+        },
+        {
+          "subject": "Lena Guo",
+          "relation": "reports_to",
+          "object": "Marcus Reed"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "zh/AP-D15.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "琥珀线路"
+    },
+    {
+      "id": "AP-D16",
+      "expected_facts": [
+        {
+          "subject": "Onyx Harbor",
+          "relation": "owner_of_project",
+          "object": "Riley Fox"
+        },
+        {
+          "subject": "Riley Fox",
+          "relation": "reports_to",
+          "object": "Ellis Gray"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "register/AP-D16-ownership.md",
+        "register/AP-D16-line.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Onyx Harbor"
+    },
+    {
+      "id": "AP-D17",
+      "expected_facts": [
+        {
+          "subject": "Cinder Atlas",
+          "relation": "owner_of_project",
+          "object": "Owen Bell"
+        },
+        {
+          "subject": "Owen Bell",
+          "relation": "reports_to",
+          "object": "Harper Vale"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "notes/AP-D17-owner.md",
+        "notes/AP-D17-leader.md",
+        "context/AP-D17-noise.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Cinder Atlas"
+    },
+    {
+      "id": "AP-D18",
+      "expected_facts": [
+        {
+          "subject": "Violet Gate",
+          "relation": "owner_of_project",
+          "object": "Sora Chen"
+        },
+        {
+          "subject": "Sora Chen",
+          "relation": "reports_to",
+          "object": "Milo Grant"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-D18.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Violet Gate"
+    },
+    {
+      "id": "AP-D19",
+      "expected_facts": [
+        {
+          "subject": "Drift-Key",
+          "relation": "alias_of_project",
+          "object": "Amber Relay"
+        },
+        {
+          "subject": "Amber Relay",
+          "relation": "owner_of_project",
+          "object": "Elena Voss"
+        },
+        {
+          "subject": "Elena Voss",
+          "relation": "reports_to",
+          "object": "Rowan Pike"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "records/AP-D19.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Drift-Key"
+    },
+    {
+      "id": "AP-D20",
+      "expected_facts": [
+        {
+          "subject": "Moss River",
+          "relation": "owner_of_project",
+          "object": "Uma Hale"
+        },
+        {
+          "subject": "Uma Hale",
+          "relation": "reports_to",
+          "object": "Ellis Gray"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-D20-owner.md",
+        "mixed/AP-D20-leader.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Moss River"
+    },
+    {
+      "id": "AP-D21",
+      "expected_facts": [
+        {
+          "subject": "Granite Loop",
+          "relation": "owner_of_project",
+          "object": "Tess Avery"
+        },
+        {
+          "subject": "Tess Avery",
+          "relation": "reports_to",
+          "object": "Devon Hart"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "logs/AP-D21.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Granite Loop"
+    },
+    {
+      "id": "AP-D22",
+      "expected_facts": [
+        {
+          "subject": "Qing-7",
+          "relation": "alias_of_project",
+          "object": "青穹计划"
+        },
+        {
+          "subject": "青穹计划",
+          "relation": "owner_of_project",
+          "object": "李明"
+        },
+        {
+          "subject": "李明",
+          "relation": "reports_to",
+          "object": "王芳"
+        }
+      ],
+      "outcome": "answer",
+      "refusal_reason": null,
+      "insufficient_reason": null,
+      "evidence_paths": [
+        "mixed/AP-D22-alias.md",
+        "mixed/AP-D22-owner.md",
+        "mixed/AP-D22-leader.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Qing-7"
+    },
+    {
+      "id": "AP-D23",
+      "expected_facts": [
+        {
+          "subject": "Indigo Wharf",
+          "relation": "owner_of_project",
+          "object": "Sora Vale"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "notes/AP-D23-owner.md"
+      ],
+      "expected_chain": [
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Indigo Wharf"
+    },
+    {
+      "id": "AP-D24",
+      "expected_facts": [
+        {
+          "subject": "Vela-Key",
+          "relation": "alias_of_project",
+          "object": "Vela Point"
+        }
+      ],
+      "outcome": "insufficient",
+      "refusal_reason": null,
+      "insufficient_reason": "missing_evidence",
+      "evidence_paths": [
+        "aliases/AP-D24.md"
+      ],
+      "expected_chain": [
+        "alias_of_project",
+        "owner_of_project",
+        "reports_to"
+      ],
+      "root": "Vela-Key"
+    }
+  ]
+}

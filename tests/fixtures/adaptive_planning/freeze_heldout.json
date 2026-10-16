@@ -1,0 +1,33 @@
+{
+  "schema_version": "adaptive-planning-heldout-freeze/v1",
+  "partition": "heldout",
+  "files": {
+    "public_heldout.json": "d5394bf4e6ba5c11dee49481cf7b595be2b7a1cfac62d66c1d2b65f91499cf9b",
+    "gold_heldout.json": "9d782c5f56d1da79e1a62d20bcd356db9e81f199501c296f9559304c728beb87"
+  },
+  "case_ids": [
+    "AP-H01",
+    "AP-H02",
+    "AP-H03",
+    "AP-H04",
+    "AP-H05",
+    "AP-H06",
+    "AP-H07",
+    "AP-H08",
+    "AP-H09",
+    "AP-H10",
+    "AP-H11",
+    "AP-H12",
+    "AP-H13",
+    "AP-H14",
+    "AP-H15",
+    "AP-H16",
+    "AP-H17",
+    "AP-H18"
+  ],
+  "counts": {
+    "public": 18,
+    "gold": 18
+  },
+  "frozen_for": "final acceptance only; do not use to tune prompts"
+}

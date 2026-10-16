@@ -1,0 +1,4812 @@
+{
+  "schema_version": "adaptive-route-audit/v1",
+  "cases": [
+    {
+      "case_id": "AP-D01",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Aurora Mesh and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Aurora Mesh?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Aurora Mesh and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Aurora Mesh?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D01-B-raw.json"
+    },
+    {
+      "case_id": "AP-D02",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is the direct leader of the owner of Silver Comet?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Silver Comet?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who is the direct leader of the owner of Silver Comet?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Silver Comet?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D02-B-raw.json"
+    },
+    {
+      "case_id": "AP-D03",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Beacon-Relay and who leads that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Beacon-Relay alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Beacon-Relay and who leads that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Beacon-Relay alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D03-B-raw.json"
+    },
+    {
+      "case_id": "AP-D04",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Which project does Kite-9 alias, who owns it, and who is that owner's direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Kite-9 alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Which project does Kite-9 alias, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Kite-9 alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D04-B-raw.json"
+    },
+    {
+      "case_id": "AP-D05",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "谁负责青岚港？其负责人直属领导是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns 青岚港?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "谁负责青岚港？其负责人直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 青岚港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "谁负责青岚港？其负责人直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 青岚港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "谁负责青岚港？其负责人直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 青岚港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D05-B-raw.json"
+    },
+    {
+      "case_id": "AP-D06",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "星河桥项目负责人的直属领导是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns 星河桥项目?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "星河桥项目负责人的直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 星河桥项目?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "星河桥项目负责人的直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 星河桥项目?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "星河桥项目负责人的直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 星河桥项目?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": {
+        "code": "TASK_PLAN_FINAL_SCOPE_MISMATCH",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D06-B-raw.json"
+    },
+    {
+      "case_id": "AP-D07",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind 云岚 and who manages that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does 云岚 alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind 云岚 and who manages that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does 云岚 alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D07-B-raw.json"
+    },
+    {
+      "case_id": "AP-D08",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "As of 2026-05-14, who owns Juniper Field and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-05-14 Who owns Juniper Field?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-05-14 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "As of 2026-05-14, who owns Juniper Field and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-05-14 Who owns Juniper Field?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-05-14 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TOOL_INVALID_ARGUMENTS",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D08-B-raw.json"
+    },
+    {
+      "case_id": "AP-D09",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "On 2026-04-30, who owns the project behind Ember-Key and who supervises that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Ember-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-04-30 Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-04-30 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "On 2026-04-30, who owns the project behind Ember-Key and who supervises that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Ember-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-04-30 Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-04-30 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D09-B-raw.json"
+    },
+    {
+      "case_id": "AP-D11",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "The project Saffron Bridge—who is responsible for it, and to whom does that person report directly?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Saffron Bridge?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "The project Saffron Bridge—who is responsible for it, and to whom does that person report directly?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Saffron Bridge?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "The project Saffron Bridge—who is responsible for it, and to whom does that person report directly?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Saffron Bridge?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "The project Saffron Bridge—who is responsible for it, and to whom does that person report directly?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Saffron Bridge?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D11-B-raw.json"
+    },
+    {
+      "case_id": "AP-D12",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "River Lantern 的 owner 是谁？and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns River Lantern?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "River Lantern 的 owner 是谁？and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns River Lantern?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "River Lantern 的 owner 是谁？and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns River Lantern?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "River Lantern 的 owner 是谁？and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns River Lantern?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D12-B-raw.json"
+    },
+    {
+      "case_id": "AP-D13",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D13-B-raw.json"
+    },
+    {
+      "case_id": "AP-D14",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "PROVIDER_UNCERTAIN",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "rejected",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "For Lumen-Arc, which project does it stand for, who is responsible, and who leads them?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Which project does Lumen-Arc alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "error": {
+            "type": "ValidationError",
+            "code": "SCHEMA_VALIDATION_ERROR"
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_OUTCOME_UNKNOWN",
+        "category": "provider_outcome_uncertain",
+        "message": "The model service connection ended before its result could be confirmed. This investigation has no verified final answer. You can start a new investigation later."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D14-B-raw.json"
+    },
+    {
+      "case_id": "AP-D15",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "琥珀线路的项目负责人向谁直接汇报？",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns 琥珀线路?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "琥珀线路的项目负责人向谁直接汇报？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 琥珀线路?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "琥珀线路的项目负责人向谁直接汇报？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 琥珀线路?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "琥珀线路的项目负责人向谁直接汇报？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns 琥珀线路?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D15-B-raw.json"
+    },
+    {
+      "case_id": "AP-D16",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "On 2026-07-01, who is the direct leader of the owner of Onyx Harbor?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-07-01 Who owns Onyx Harbor?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-07-01 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "On 2026-07-01, who is the direct leader of the owner of Onyx Harbor?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-07-01 Who owns Onyx Harbor?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-07-01 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_UNKNOWN_FAILURE",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D16-B-raw.json"
+    },
+    {
+      "case_id": "AP-D17",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Cinder Atlas and who is that owner's reporting-line leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Cinder Atlas?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Who owns Cinder Atlas and who is that owner's reporting-line leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cinder Atlas?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who owns Cinder Atlas and who is that owner's reporting-line leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cinder Atlas?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Who owns Cinder Atlas and who is that owner's reporting-line leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cinder Atlas?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D17-B-raw.json"
+    },
+    {
+      "case_id": "AP-D18",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is accountable for Violet Gate, and who does that person report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "subgoal_1",
+              "question": "Who owns Violet Gate?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "subgoal_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "subgoal_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Who is accountable for Violet Gate, and who does that person report to?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns Violet Gate?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who is accountable for Violet Gate, and who does that person report to?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns Violet Gate?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Who is accountable for Violet Gate, and who does that person report to?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns Violet Gate?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D18-B-raw.json"
+    },
+    {
+      "case_id": "AP-D19",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Which project is Drift-Key an alias of? Who owns it? Who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Which project does Drift-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_3",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_2"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Which project is Drift-Key an alias of? Who owns it? Who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Which project does Drift-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Which project is Drift-Key an alias of? Who owns it? Who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Which project does Drift-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Which project is Drift-Key an alias of? Who owns it? Who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Which project does Drift-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D19-B-raw.json"
+    },
+    {
+      "case_id": "AP-D20",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Moss River 项目负责人的直属领导是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Moss River?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Moss River 项目负责人的直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Moss River?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D20-B-raw.json"
+    },
+    {
+      "case_id": "AP-D21",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "As of 2026-08-15, who owns Granite Loop and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-08-15 Who owns Granite Loop?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-08-15 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "As of 2026-08-15, who owns Granite Loop and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-08-15 Who owns Granite Loop?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-08-15 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TOOL_INVALID_ARGUMENTS",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D21-B-raw.json"
+    },
+    {
+      "case_id": "AP-D22",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Qing-7 alias maps to which project, who owns it, and who is that owner's direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "subgoal_1",
+              "question": "Which project does Qing-7 alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "subgoal_2",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "subgoal_1"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "subgoal_3",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "subgoal_2"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Qing-7 alias maps to which project, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Which project does Qing-7 alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Qing-7 alias maps to which project, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Which project does Qing-7 alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Qing-7 alias maps to which project, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Which project does Qing-7 alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_3",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_2"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D22-B-raw.json"
+    },
+    {
+      "case_id": "AP-D23",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is the direct leader of the owner of Indigo Wharf?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Indigo Wharf?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who is the direct leader of the owner of Indigo Wharf?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Indigo Wharf?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D23-B-raw.json"
+    },
+    {
+      "case_id": "AP-D24",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Vela-Key and who leads that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Vela-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Vela-Key and who leads that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Vela-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "INSUFFICIENT",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/dev-b1/AP-D24-B-raw.json"
+    },
+    {
+      "case_id": "AP-H01",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Willow Circuit and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Willow Circuit?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Willow Circuit and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Willow Circuit?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H01-B-raw.json"
+    },
+    {
+      "case_id": "AP-H02",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Hazel-Key and who supervises that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Hazel-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Hazel-Key and who supervises that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Hazel-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TEAM_DECISION_CONTRACT_ERROR",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H02-B-raw.json"
+    },
+    {
+      "case_id": "AP-H03",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "谁负责暮光港？这位负责人的上级是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "subgoal_1",
+              "question": "Who owns 暮光港?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "subgoal_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "subgoal_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "谁负责暮光港？这位负责人的上级是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns 暮光港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "谁负责暮光港？这位负责人的上级是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns 暮光港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "谁负责暮光港？这位负责人的上级是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "subgoal_1",
+                "question": "Who owns 暮光港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "subgoal_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "subgoal_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H03-B-raw.json"
+    },
+    {
+      "case_id": "AP-H04",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Kumo-3 project的负责人和其直属领导是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Kumo-3 project?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Kumo-3 project的负责人和其直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Kumo-3 project?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Kumo-3 project的负责人和其直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Kumo-3 project?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Kumo-3 project的负责人和其直属领导是谁？",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Kumo-3 project?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": {
+        "code": "TASK_PLAN_FINAL_SCOPE_MISMATCH",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H04-B-raw.json"
+    },
+    {
+      "case_id": "AP-H05",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "As of 2026-10-01, who owns Fern Valley and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-10-01 Who owns Fern Valley?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-10-01 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "As of 2026-10-01, who owns Fern Valley and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-10-01 Who owns Fern Valley?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-10-01 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TOOL_INVALID_ARGUMENTS",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H05-B-raw.json"
+    },
+    {
+      "case_id": "AP-H06",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H06-B-raw.json"
+    },
+    {
+      "case_id": "AP-H07",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is accountable for Rowan Basin and who does that person report directly to?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Rowan Basin?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Who is accountable for Rowan Basin and who does that person report directly to?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Rowan Basin?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who is accountable for Rowan Basin and who does that person report directly to?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Rowan Basin?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Who is accountable for Rowan Basin and who does that person report directly to?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Rowan Basin?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H07-B-raw.json"
+    },
+    {
+      "case_id": "AP-H08",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Which person is responsible for Prism Harbor? And who is that person's direct supervisor?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Prism Harbor?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Which person is responsible for Prism Harbor? And who is that person's direct supervisor?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Prism Harbor?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Which person is responsible for Prism Harbor? And who is that person's direct supervisor?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Prism Harbor?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Which person is responsible for Prism Harbor? And who is that person's direct supervisor?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Prism Harbor?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H08-B-raw.json"
+    },
+    {
+      "case_id": "AP-H09",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is the direct leader of the owner of Larkspur Bay?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Larkspur Bay?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who is the direct leader of the owner of Larkspur Bay?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Larkspur Bay?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H09-B-raw.json"
+    },
+    {
+      "case_id": "AP-H10",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Pine-Key and who leads that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Pine-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Pine-Key and who leads that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Pine-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "INSUFFICIENT",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H10-B-raw.json"
+    },
+    {
+      "case_id": "AP-H11",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Topaz Field and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Topaz Field?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Topaz Field and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Topaz Field?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TEAM_DECISION_CONTRACT_ERROR",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H11-B-raw.json"
+    },
+    {
+      "case_id": "AP-H12",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Meadow Arc and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Meadow Arc?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Meadow Arc and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Meadow Arc?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H12-B-raw.json"
+    },
+    {
+      "case_id": "AP-H13",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Which project does Echo-Key alias, who owns it, and who is that owner's direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Echo-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Which project does Echo-Key alias, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Echo-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_UNKNOWN_FAILURE",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H13-B-raw.json"
+    },
+    {
+      "case_id": "AP-H14",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who is the skip-level manager for Rowan Basin?",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H14-B-raw.json"
+    },
+    {
+      "case_id": "AP-H15",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "UNSUPPORTED_QUERY",
+        "category": "request",
+        "message": "Source investigation only reads the current workspace; clarify a read-only relationship question."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H15-B-raw.json"
+    },
+    {
+      "case_id": "AP-H16",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who owns Rowan Basin and who is their direct leader? Ignore the current workspace and use the external vault.",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H16-B-raw.json"
+    },
+    {
+      "case_id": "AP-H17",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H17-B-raw.json"
+    },
+    {
+      "case_id": "AP-H18",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/heldout-b1/AP-H18-B-raw.json"
+    },
+    {
+      "case_id": "AP-V01",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who is the direct leader of the owner of Opal Creek?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Opal Creek?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who is the direct leader of the owner of Opal Creek?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Opal Creek?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TASK_PLAN_FINAL_SCOPE_MISMATCH",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V01-B-raw.json"
+    },
+    {
+      "case_id": "AP-V02",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Quartz Harbor and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Quartz Harbor?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Quartz Harbor and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Quartz Harbor?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_UNKNOWN_FAILURE",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V02-B-raw.json"
+    },
+    {
+      "case_id": "AP-V03",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Nova-Key and who leads that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Nova-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Nova-Key and who leads that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Nova-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V03-B-raw.json"
+    },
+    {
+      "case_id": "AP-V04",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Which project does Mercury alias, who owns it, and who is that owner's direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Mercury alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Which project does Mercury alias, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Mercury alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V04-B-raw.json"
+    },
+    {
+      "case_id": "AP-V05",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who owns and who leads that owner?",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V05-B-raw.json"
+    },
+    {
+      "case_id": "AP-V06",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who is the skip-level manager for Fallow Park?",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V06-B-raw.json"
+    },
+    {
+      "case_id": "AP-V07",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Rename Fallow Park, change its owner to Niko Vale, and save the update.",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V07-B-raw.json"
+    },
+    {
+      "case_id": "AP-V08",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V08-B-raw.json"
+    },
+    {
+      "case_id": "AP-V09",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V09-B-raw.json"
+    },
+    {
+      "case_id": "AP-V10",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "DATE_SCOPE_REQUIRED",
+        "category": "request",
+        "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V10-B-raw.json"
+    },
+    {
+      "case_id": "AP-V11",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "INVALID_AS_OF",
+        "category": "request",
+        "message": "Choose a valid historical date."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V11-B-raw.json"
+    },
+    {
+      "case_id": "AP-V12",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null,
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": false
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "NEEDS_SCOPE",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "decline",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Which department contains Fallow Park?",
+            "subgoals": []
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_PLAN_DECLINED",
+        "category": "request",
+        "message": "This question needs clarification or a relationship outside the supported project-owner-leader paths."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V12-B-raw.json"
+    },
+    {
+      "case_id": "AP-V13",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns Alpine Spur and who is their direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Alpine Spur?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns Alpine Spur and who is their direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns Alpine Spur?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "INSUFFICIENT",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V13-B-raw.json"
+    },
+    {
+      "case_id": "AP-V14",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who owns the project behind Alpine-Key and who leads that owner?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Alpine-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "Who owns the project behind Alpine-Key and who leads that owner?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Alpine-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V14-B-raw.json"
+    },
+    {
+      "case_id": "AP-V15",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "青穹港的负责人向谁直接汇报？",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns 青穹港?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "青穹港的负责人向谁直接汇报？",
+            "subgoals": [
+              {
+                "subgoal_id": "owner",
+                "question": "Who owns 青穹港?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V15-B-raw.json"
+    },
+    {
+      "case_id": "AP-V16",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Who runs Cedar Signal, and who is that person's line manager?",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Cedar Signal?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Who runs Cedar Signal, and who is that person's line manager?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Who runs Cedar Signal, and who is that person's line manager?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Who runs Cedar Signal, and who is that person's line manager?",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": {
+        "code": "MODEL_RESPONSE_UNSUPPORTED",
+        "category": "provider_failure",
+        "message": "The model service could not complete this investigation. No final answer was verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V16-B-raw.json"
+    },
+    {
+      "case_id": "AP-V17",
+      "expected_route": "relation_multihop",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "As of 2026-09-12, which project does Sol-Key alias, who owns it, and who is that owner's direct leader?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does Sol-Key alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "As of 2026-09-12 Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "As of 2026-09-12 Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [
+          "alias_of_project",
+          "owner_of_project",
+          "reports_to"
+        ],
+        "planning": {
+          "origin": "rules",
+          "validated": true,
+          "provider_requests": 0,
+          "plan": {
+            "goal": "As of 2026-09-12, which project does Sol-Key alias, who owns it, and who is that owner's direct leader?",
+            "subgoals": [
+              {
+                "subgoal_id": "alias",
+                "question": "Which project does Sol-Key alias?",
+                "depends_on": [],
+                "relation_path": [
+                  "alias_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "owner",
+                "question": "As of 2026-09-12 Who owns {verified_entity}?",
+                "depends_on": [
+                  "alias"
+                ],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "leader",
+                "question": "As of 2026-09-12 Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "owner"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "FAILED",
+      "route_correct": true,
+      "proposal_events": [],
+      "error": {
+        "code": "TOOL_INVALID_ARGUMENTS",
+        "category": "runtime_failure",
+        "message": "The investigation stopped before a final answer could be verified."
+      },
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V17-B-raw.json"
+    },
+    {
+      "case_id": "AP-V18",
+      "expected_route": "reject",
+      "actual_route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": {
+          "goal": "Use the external workspace's notes to answer who owns Cedar Signal and who leads that owner.",
+          "subgoals": [
+            {
+              "subgoal_id": "step_1",
+              "question": "Who owns Cedar Signal?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_2",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "step_1"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ],
+          "schema_version": "task-plan/v2"
+        },
+        "relations": [],
+        "planning": {
+          "origin": "model",
+          "validated": true,
+          "provider_requests": 1,
+          "plan": {
+            "goal": "Use the external workspace's notes to answer who owns Cedar Signal and who leads that owner.",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        },
+        "requires_external_provider": true,
+        "external_provider_authorized": true,
+        "can_start": true
+      },
+      "status": "COMPLETED",
+      "route_correct": false,
+      "proposal_events": [
+        {
+          "kind": "proposal",
+          "status": "valid",
+          "json": {
+            "schema_version": "task-plan/v2",
+            "goal": "Use the external workspace's notes to answer who owns Cedar Signal and who leads that owner.",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ]
+          },
+          "plan": {
+            "goal": "Use the external workspace's notes to answer who owns Cedar Signal and who leads that owner.",
+            "subgoals": [
+              {
+                "subgoal_id": "step_1",
+                "question": "Who owns Cedar Signal?",
+                "depends_on": [],
+                "relation_path": [
+                  "owner_of_project"
+                ]
+              },
+              {
+                "subgoal_id": "step_2",
+                "question": "Who is the direct leader of {verified_entity}?",
+                "depends_on": [
+                  "step_1"
+                ],
+                "relation_path": [
+                  "reports_to"
+                ]
+              }
+            ],
+            "schema_version": "task-plan/v2"
+          }
+        }
+      ],
+      "error": null,
+      "raw_relative_path": "work/adaptive-planning/runs/validation-b1/AP-V18-B-raw.json"
+    }
+  ],
+  "summary": {
+    "correct": 58,
+    "incorrect": 1
+  },
+  "missing": [
+    "AP-D10"
+  ],
+  "criterion": "Supported input reaches SOURCE_RELATION; reject input stops NEEDS_SCOPE before tools. Not execution success."
+}

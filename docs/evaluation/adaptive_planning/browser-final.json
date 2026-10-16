@@ -1,0 +1,284 @@
+{
+  "schema_version": "product-ask/v1",
+  "query": "Who manages Marble Gate, and who is that manager's direct supervisor?",
+  "workspace_id": "ws_7bb86396e2a240dfae62dae7598555b5",
+  "scope": {
+    "subject": "",
+    "relation": "",
+    "as_of": null
+  },
+  "path": "SOURCE_RELATION_INVESTIGATION",
+  "route": {
+    "intent": "SOURCE_RELATION",
+    "code": "SOURCE_RELATION_MULTIHOP",
+    "reason": "A bounded directed source-relation chain; no business approval is implied.",
+    "plan": {
+      "goal": "Who manages Marble Gate, and who is that manager's direct supervisor?",
+      "subgoals": [
+        {
+          "subgoal_id": "step_1",
+          "question": "Who owns Marble Gate?",
+          "depends_on": [],
+          "relation_path": [
+            "owner_of_project"
+          ]
+        },
+        {
+          "subgoal_id": "step_2",
+          "question": "Who is the direct leader of {verified_entity}?",
+          "depends_on": [
+            "step_1"
+          ],
+          "relation_path": [
+            "reports_to"
+          ]
+        }
+      ],
+      "schema_version": "task-plan/v2"
+    },
+    "relations": [],
+    "planning": {
+      "origin": "model",
+      "validated": true,
+      "provider_requests": 1,
+      "plan": {
+        "goal": "Who manages Marble Gate, and who is that manager's direct supervisor?",
+        "subgoals": [
+          {
+            "subgoal_id": "step_1",
+            "question": "Who owns Marble Gate?",
+            "depends_on": [],
+            "relation_path": [
+              "owner_of_project"
+            ]
+          },
+          {
+            "subgoal_id": "step_2",
+            "question": "Who is the direct leader of {verified_entity}?",
+            "depends_on": [
+              "step_1"
+            ],
+            "relation_path": [
+              "reports_to"
+            ]
+          }
+        ],
+        "schema_version": "task-plan/v2"
+      }
+    },
+    "requires_external_provider": true,
+    "external_provider_authorized": true,
+    "can_start": true
+  },
+  "status": "COMPLETED",
+  "conclusions": [
+    {
+      "kind": "SOURCE_RELATION",
+      "subject": "marble gate",
+      "predicate": "owner_of_project",
+      "value": "Nora Bell",
+      "valid_on": null,
+      "evidence_refs": [
+        "ev_v2_60821f8198dcff71c5bcb034111b482f2bd0c811d08a9d557f5db5670e85912e"
+      ]
+    },
+    {
+      "kind": "SOURCE_RELATION",
+      "subject": "nora bell",
+      "predicate": "reports_to",
+      "value": "Evan Grey",
+      "valid_on": null,
+      "evidence_refs": [
+        "ev_v2_12c0a3ecc3632a8e822030cb873a799eb6ce7102c923fa5ba4386f26ddd929c8"
+      ]
+    }
+  ],
+  "discovery": null,
+  "evidence": [
+    {
+      "evidence_ref": "ev_v2_60821f8198dcff71c5bcb034111b482f2bd0c811d08a9d557f5db5670e85912e",
+      "citation_id": "citation-1",
+      "source_name": "records/AP-D10.md",
+      "source_id": "src_f16bed90bf804fcc857ac0f487ad1b2a",
+      "source_version": "artifact_v1_d38373968c4c279d7060a8588de6e66246e655fc69e765cd49ef4156820a1c97",
+      "line_start": 2,
+      "line_end": 2,
+      "quote": "[2026-10-15T00:00:00Z] Synthetic: Nora Bell is the accountable owner of Marble Gate.",
+      "content_sha256": "d436812b251db19eedb2c6a6f41411fcf660f104456164dcb6e75d3ba4368161",
+      "quote_sha256": "5f63616f169b31014b09a10880a39f56a9c81fb5e2fc52f7f005217104099798",
+      "verified": true
+    },
+    {
+      "evidence_ref": "ev_v2_12c0a3ecc3632a8e822030cb873a799eb6ce7102c923fa5ba4386f26ddd929c8",
+      "citation_id": "citation-2",
+      "source_name": "records/AP-D10.md",
+      "source_id": "src_f16bed90bf804fcc857ac0f487ad1b2a",
+      "source_version": "artifact_v1_d38373968c4c279d7060a8588de6e66246e655fc69e765cd49ef4156820a1c97",
+      "line_start": 3,
+      "line_end": 3,
+      "quote": "[2026-10-15T00:00:00Z] Synthetic: Nora Bell reports directly to Evan Grey.",
+      "content_sha256": "d436812b251db19eedb2c6a6f41411fcf660f104456164dcb6e75d3ba4368161",
+      "quote_sha256": "0cbcb5d0448acfb42b4711c91748b0f7786cedfc0e0cb24659443cecee028525",
+      "verified": true
+    }
+  ],
+  "receipts": [],
+  "uncertainty": {
+    "statement": null,
+    "status": "none",
+    "unknown_fields": [],
+    "citations": []
+  },
+  "agent_run_id": "ui-abefa794d6fa",
+  "reviewer": {
+    "review_id": "review_1761300d",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "ref": "ev_v2_60821f8198dcff71c5bcb034111b482f2bd0c811d08a9d557f5db5670e85912e",
+        "status": "pass"
+      },
+      {
+        "ref": "ev_v2_12c0a3ecc3632a8e822030cb873a799eb6ce7102c923fa5ba4386f26ddd929c8",
+        "status": "pass"
+      },
+      {
+        "result_type": "subject",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-16T05:25:36.563573+00:00",
+    "performed": true,
+    "accepted": true
+  },
+  "timeline": null,
+  "progress": null,
+  "error": null,
+  "metrics": {
+    "max_model_turns": 12,
+    "model_turns": 6,
+    "search_count": 2,
+    "read_count": 3,
+    "tool_errors": 0,
+    "planning_provider_requests": 1
+  },
+  "source_investigation": {
+    "plan": {
+      "goal": "Who manages Marble Gate, and who is that manager's direct supervisor?",
+      "subgoals": [
+        {
+          "subgoal_id": "step_1",
+          "question": "Who owns Marble Gate?",
+          "depends_on": [],
+          "relation_path": [
+            "owner_of_project"
+          ]
+        },
+        {
+          "subgoal_id": "step_2",
+          "question": "Who is the direct leader of {verified_entity}?",
+          "depends_on": [
+            "step_1"
+          ],
+          "relation_path": [
+            "reports_to"
+          ]
+        }
+      ],
+      "schema_version": "task-plan/v2"
+    },
+    "facts": [
+      {
+        "subject": "marble gate",
+        "predicate": "owner_of_project",
+        "value": "Nora Bell",
+        "valid_on": null,
+        "evidence_refs": [
+          "ev_v2_60821f8198dcff71c5bcb034111b482f2bd0c811d08a9d557f5db5670e85912e"
+        ]
+      },
+      {
+        "subject": "nora bell",
+        "predicate": "reports_to",
+        "value": "Evan Grey",
+        "valid_on": null,
+        "evidence_refs": [
+          "ev_v2_12c0a3ecc3632a8e822030cb873a799eb6ce7102c923fa5ba4386f26ddd929c8"
+        ]
+      }
+    ],
+    "thread_id": "ui-thread-ed89953ddc31",
+    "runtime_id": "run_p4_8b4d7b95238a",
+    "answer": "Evan Grey",
+    "evidence_level": "SOURCE_SUPPORTED",
+    "trace": [
+      {
+        "sequence": 1,
+        "tool": "search_notes",
+        "status": "completed",
+        "subgoal": "step_1",
+        "query": "Marble Gate",
+        "dependencies": {},
+        "reason": null,
+        "source": null
+      },
+      {
+        "sequence": 2,
+        "tool": "read_verified_note",
+        "status": "completed",
+        "subgoal": null,
+        "query": null,
+        "dependencies": null,
+        "reason": null,
+        "source": "src_f16bed90bf804fcc857ac0f487ad1b2a.md",
+        "evidence_ref": "ev_v2_2cd990c583985cfb8d9f807c90e78b79f363b5fe03f4f5666b9791577ae43135",
+        "quote_sha256": "a41e6ba6566327e297472d10ae0ef5828d981abb3aac0bfc0a89e04668f74e6a",
+        "source_id": "src_f16bed90bf804fcc857ac0f487ad1b2a",
+        "source_version": "artifact_v1_d38373968c4c279d7060a8588de6e66246e655fc69e765cd49ef4156820a1c97"
+      },
+      {
+        "sequence": 3,
+        "tool": "read_verified_note",
+        "status": "completed",
+        "subgoal": null,
+        "query": null,
+        "dependencies": null,
+        "reason": null,
+        "source": "src_f16bed90bf804fcc857ac0f487ad1b2a.md",
+        "evidence_ref": "ev_v2_60821f8198dcff71c5bcb034111b482f2bd0c811d08a9d557f5db5670e85912e",
+        "quote_sha256": "5f63616f169b31014b09a10880a39f56a9c81fb5e2fc52f7f005217104099798",
+        "source_id": "src_f16bed90bf804fcc857ac0f487ad1b2a",
+        "source_version": "artifact_v1_d38373968c4c279d7060a8588de6e66246e655fc69e765cd49ef4156820a1c97"
+      },
+      {
+        "sequence": 4,
+        "tool": "search_notes",
+        "status": "completed",
+        "subgoal": "step_2",
+        "query": "Nora Bell",
+        "dependencies": {
+          "step_1": "Nora Bell"
+        },
+        "reason": null,
+        "source": null
+      },
+      {
+        "sequence": 5,
+        "tool": "read_verified_note",
+        "status": "completed",
+        "subgoal": null,
+        "query": null,
+        "dependencies": null,
+        "reason": null,
+        "source": "src_f16bed90bf804fcc857ac0f487ad1b2a.md",
+        "evidence_ref": "ev_v2_12c0a3ecc3632a8e822030cb873a799eb6ce7102c923fa5ba4386f26ddd929c8",
+        "quote_sha256": "0cbcb5d0448acfb42b4711c91748b0f7786cedfc0e0cb24659443cecee028525",
+        "source_id": "src_f16bed90bf804fcc857ac0f487ad1b2a",
+        "source_version": "artifact_v1_d38373968c4c279d7060a8588de6e66246e655fc69e765cd49ef4156820a1c97"
+      }
+    ],
+    "conflicts": {}
+  }
+}
