@@ -1,0 +1,4177 @@
+{
+  "schema_version": "evaluation-core-gate-report/v1",
+  "status": "PASSED",
+  "passed": 12,
+  "total": 12,
+  "targets": [
+    {
+      "id": "normal",
+      "boundary": "normal",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-252ef572",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-NORMAL-complete]",
+        "tests/integration/test_qualified_runtime.py::test_source_context_and_dependency_bindings_are_observed_not_prefilled"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\normal.xml",
+      "status": "passed",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_qualified_runtime_observes_source_outcome[CORE-NORMAL-complete]",
+        "tests.integration.test_qualified_runtime::test_source_context_and_dependency_bindings_are_observed_not_prefilled"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-252ef572\\test_qualified_runtime_observe0\\CORE-NORMAL\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "complete",
+            "reason": null,
+            "values": [
+              "ada reed",
+              "evan fox"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 5,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed",
+              "leader": "Evan Fox"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 3,
+            "verified_hops": 2,
+            "model_turns": 6,
+            "provider_requests": 6,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:1",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_1/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_1/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_df18151a73ce624e"
+                      }
+                    },
+                    "call_id": "run_p4_5504d0922554:turn:1:tool",
+                    "run_id": "run_p4_5504d0922554",
+                    "sequence": 1,
+                    "task_id": "task_24222cf0",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "f249d6d0b648c2f3393da125c6681f25be3ce5c0e79ebc2115fd816f6b1a3595",
+                "response_sha256": "4979ddd4fdc2adb4ecf779db14542dd399ffb05b849ab6735490a0cd581d845d",
+                "observation_sha256": "33e0d69c196a9bb23a6cb5206a8a6f8acb9d78151127b0fae264195226e6a95a",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:2",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_2/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_2/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab"
+                    },
+                    "call_id": "run_p4_5504d0922554:turn:2:tool",
+                    "run_id": "run_p4_5504d0922554",
+                    "sequence": 2,
+                    "task_id": "task_24222cf0",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "3c57078de7bed917bd39600e42b67705d9d6599542a0d95efc59f4f05e2c4c7e",
+                "response_sha256": "1b7d9fcbb27b36da3a6f0436132e34ee263d07c6bf24db3d10c905831d316dac",
+                "observation_sha256": "1942c4d847e3d2c3ba1e7b7ba57f39eef618115c142c1d25f204e4796cf30ddd",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:3",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_3/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_3/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_df18151a73ce624e"
+                      }
+                    },
+                    "call_id": "run_p4_5504d0922554:turn:3:tool",
+                    "run_id": "run_p4_5504d0922554",
+                    "sequence": 3,
+                    "task_id": "task_24222cf0",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "0ca78057eed06383a14a98edd699f1a979611762351cff936edf141d5c1eea18",
+                "response_sha256": "75b8812929bd145d8982ad4470e8b0e7e4f30b539335d592fbf4d483de9f07b9",
+                "observation_sha256": "099ff054626d9161a1338cb4df074d6e3735d20f66fe8ac2962ca52d1aaa6184",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:4",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_4/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_4/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab"
+                    },
+                    "call_id": "run_p4_5504d0922554:turn:4:tool",
+                    "run_id": "run_p4_5504d0922554",
+                    "sequence": 4,
+                    "task_id": "task_24222cf0",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "a6957f96fcd69c0c982d1d326850dcd57eb79a25f8a7075efea35bcf15181863",
+                "response_sha256": "43b81172a2e67a1575becbb6b06f22dc4fc73371f74d615efedd2411ab481211",
+                "observation_sha256": "4d596de17f2e079ee71399cc7a7a86f1b1381749819f9e8973a573d4b42b8870",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:5",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_5/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_5/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c"
+                    },
+                    "call_id": "run_p4_5504d0922554:turn:5:tool",
+                    "run_id": "run_p4_5504d0922554",
+                    "sequence": 5,
+                    "task_id": "task_24222cf0",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "bd4d37b95cc082b068e8ed3e47e1ca054b7dd5c5df299d05c228903a99d516c5",
+                "response_sha256": "6e37323301e3a50a4bdd20f617770e02ffbcbbce16c712c653844a5c07a0b1ed",
+                "observation_sha256": "240c5fb56201128f15c8f39e0b15dbaf11301cdc632f71819283172d09ebb4a3",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_5504d0922554",
+                "turn_id": "run_p4_5504d0922554:turn:6",
+                "task_id": "task_24222cf0",
+                "agent_id": "retrieval_agent",
+                "sequence": 6,
+                "status": "completed",
+                "request_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_6/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_6/tools.json",
+                "observation_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_5/observation.json",
+                "response_ref": "model/run_p4_5504d0922554/run_p4_5504d0922554_turn_6/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": \"Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox\", \"status\": \"approved\", \"evidence_refs\": [\"ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab\", \"ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c\"]}, \"rationale\": [], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"none\", \"statement\": null, \"unknown_fields\": [], \"evidence_refs\": []}, \"evidence_refs\": [\"ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab\", \"ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "e3c88c1f8dc824a5c0f6438fb52cb67f863da1173dd2179b20235fcd98d5e3cf",
+                "response_sha256": "2f4ca7ef6496ef0a2730f45544c80fb4fbc305be011c42309c7b8c46cb4dc384",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 47
+            },
+            "run_id": "run_p4_5504d0922554",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [
+                  "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab",
+                  "ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c"
+                ],
+                "status": "approved",
+                "value": "Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox"
+              },
+              "evidence_refs": [
+                "ev_v2_9a3ac564966a1dd7709ef57454e4c014e85479a95476be9ee4fd86f30873f3ab",
+                "ev_v2_e04f7f0ba223fa180f749b1ecc863b813350edf4943df373aa7c9e6640d48b2c"
+              ],
+              "rationale": [],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [],
+                "statement": null,
+                "status": "none",
+                "unknown_fields": []
+              },
+              "unresolved_items": []
+            },
+            "fault": null,
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_df18151a73ce624e",
+              "document_count": 1
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-252ef572\\test_source_context_and_depend0\\bindings\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "complete",
+            "reason": null,
+            "values": [
+              "ada reed",
+              "evan fox"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 5,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed",
+              "leader": "Evan Fox"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 3,
+            "verified_hops": 2,
+            "model_turns": 6,
+            "provider_requests": 6,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:1",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_1/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_1/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_90c7c891ba79cfc1"
+                      }
+                    },
+                    "call_id": "run_p4_637dbe5b24a5:turn:1:tool",
+                    "run_id": "run_p4_637dbe5b24a5",
+                    "sequence": 1,
+                    "task_id": "task_ac26b7f4",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "d8e7f6ddadb5e67a4de17092ec5bcf735d1e5486a6d55046169265011e5e8808",
+                "response_sha256": "2c686ed815c71c23ea8a018172da9763ed17fcb7a248439b1a04e5ab4411db0f",
+                "observation_sha256": "99f721af04fc870bd2a162a57c552c46a69db2134bb9471ae0ca12fd7493948f",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:2",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_2/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_2/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715"
+                    },
+                    "call_id": "run_p4_637dbe5b24a5:turn:2:tool",
+                    "run_id": "run_p4_637dbe5b24a5",
+                    "sequence": 2,
+                    "task_id": "task_ac26b7f4",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "3bad55dac35191736fd5aa4ed0975fd923dc4a88073e03aef0a07462d6456f8a",
+                "response_sha256": "1adce6db31072ba3288491dca226536c726c6f6e24a79f98f99067a1060d6e5e",
+                "observation_sha256": "348a62983450fdf59ed99bd5ac3dd4bc1bc074c2f4d02b4f577a27712b3de99b",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:3",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_3/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_3/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_90c7c891ba79cfc1"
+                      }
+                    },
+                    "call_id": "run_p4_637dbe5b24a5:turn:3:tool",
+                    "run_id": "run_p4_637dbe5b24a5",
+                    "sequence": 3,
+                    "task_id": "task_ac26b7f4",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "16024c18c963ed6a1b37151a86cce5945fbc7ad83715dcaaaccdb27b65f010d5",
+                "response_sha256": "b770ee1725d50db4e10a9dc63c51946c98f0c3e25c963f78d1056dc0e28fea71",
+                "observation_sha256": "8b29fb813bd4d6664db1e2af86447f89b24e67c4213edd1d802d3767c9611214",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:4",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_4/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_4/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715"
+                    },
+                    "call_id": "run_p4_637dbe5b24a5:turn:4:tool",
+                    "run_id": "run_p4_637dbe5b24a5",
+                    "sequence": 4,
+                    "task_id": "task_ac26b7f4",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "2d709730b70816321737d7ccae9ad6cb950df52d0aa2e9668b162d0d75ad1bd4",
+                "response_sha256": "1755e425ecd49443d41d17e15b03f591bc242a53a7a68a32631f2ef10150a459",
+                "observation_sha256": "ccd4f86d1843772b3b5cd1b0a3413c6b53aad8459835dde86880eedc052d0a9d",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:5",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_5/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_5/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e"
+                    },
+                    "call_id": "run_p4_637dbe5b24a5:turn:5:tool",
+                    "run_id": "run_p4_637dbe5b24a5",
+                    "sequence": 5,
+                    "task_id": "task_ac26b7f4",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "a06725716f3c589f2623f21aa2798542b03298e3a61e94abb6c12efba933cf23",
+                "response_sha256": "c84208e7d7517015ee0453c3e921888ba5b0d9d8dd6bb0510acb43d6fec35c48",
+                "observation_sha256": "6497f7218473e5bdcf58b4b4ced081be57dde77c11396c589e25bc1e9ea3eba4",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_637dbe5b24a5",
+                "turn_id": "run_p4_637dbe5b24a5:turn:6",
+                "task_id": "task_ac26b7f4",
+                "agent_id": "retrieval_agent",
+                "sequence": 6,
+                "status": "completed",
+                "request_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_6/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_6/tools.json",
+                "observation_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_5/observation.json",
+                "response_ref": "model/run_p4_637dbe5b24a5/run_p4_637dbe5b24a5_turn_6/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": \"Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox\", \"status\": \"approved\", \"evidence_refs\": [\"ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715\", \"ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e\"]}, \"rationale\": [], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"none\", \"statement\": null, \"unknown_fields\": [], \"evidence_refs\": []}, \"evidence_refs\": [\"ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715\", \"ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "359d62e37802284c33915361a442690f69e7cfd109998019c37ceb5f15d47961",
+                "response_sha256": "4bb50261e47f6d75bbba0540e61b70fae8076ab738969de97d3ed113142ba907",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 47
+            },
+            "run_id": "run_p4_637dbe5b24a5",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [
+                  "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715",
+                  "ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e"
+                ],
+                "status": "approved",
+                "value": "Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox"
+              },
+              "evidence_refs": [
+                "ev_v2_d2d820a0960436bf1ecdc201b08f57eed5aca64fee98f0cb09b033034a3e0715",
+                "ev_v2_604128dd7a4f12efc5e061fb62c6ae775ebd9c7e5e8a3ad7ab6e676bc7ca387e"
+              ],
+              "rationale": [],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [],
+                "statement": null,
+                "status": "none",
+                "unknown_fields": []
+              },
+              "unresolved_items": []
+            },
+            "fault": null,
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_90c7c891ba79cfc1",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "partial",
+      "boundary": "partial",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-79661706",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-PARTIAL-partial]"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\partial.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_qualified_runtime_observes_source_outcome[CORE-PARTIAL-partial]"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-79661706\\test_qualified_runtime_observe0\\CORE-PARTIAL\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "partial",
+            "reason": "insufficient_evidence",
+            "values": [
+              "ada reed"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734",
+                "content_sha256": "8e6d025f4a5c72dabb7971ceb71a46e1ddf6e19c43fb5f914869fad98ff52318"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734",
+                "content_sha256": "8e6d025f4a5c72dabb7971ceb71a46e1ddf6e19c43fb5f914869fad98ff52318"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 2,
+            "verified_hops": 1,
+            "model_turns": 5,
+            "provider_requests": 5,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_0f73f329eb3b",
+                "turn_id": "run_p4_0f73f329eb3b:turn:1",
+                "task_id": "task_41eea64e",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_1/tools.json",
+                "observation_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_1/observation.json",
+                "response_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "bbe42d4a0ad88202de9ebf2f1ad03372b96ab9807cc78134d48d91fcf0eb5687",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_2d60cdd84239eec3"
+                      }
+                    },
+                    "call_id": "run_p4_0f73f329eb3b:turn:1:tool",
+                    "run_id": "run_p4_0f73f329eb3b",
+                    "sequence": 1,
+                    "task_id": "task_41eea64e",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "b4c267f2c5254f6846efe3e39536d1047478f8c23fc68ac4243fb847d2220ab4",
+                "response_sha256": "434faec7ee9237e68dc2ef2886cd634e07771b44df3821ae6458e5e42e0fd493",
+                "observation_sha256": "b5a51632155f23fdb3b2e28ab4729627de4b47ebb1d4fa6f49da2fdc2950ec36",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_0f73f329eb3b",
+                "turn_id": "run_p4_0f73f329eb3b:turn:2",
+                "task_id": "task_41eea64e",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_2/tools.json",
+                "observation_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_2/observation.json",
+                "response_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734"
+                    },
+                    "call_id": "run_p4_0f73f329eb3b:turn:2:tool",
+                    "run_id": "run_p4_0f73f329eb3b",
+                    "sequence": 2,
+                    "task_id": "task_41eea64e",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "75f91410508770e6345d6c45f672d1b782e6cb7459793782a3a542d10bc19c97",
+                "response_sha256": "2c8d5397e99b228a950180e45e85cbafdbdd7377f3cf7d914e39708eb9af32b3",
+                "observation_sha256": "db7c17d19c28b0d8a961a6e58b83f51476a8a97574977502b3874ad6035588db",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_0f73f329eb3b",
+                "turn_id": "run_p4_0f73f329eb3b:turn:3",
+                "task_id": "task_41eea64e",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_3/tools.json",
+                "observation_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_3/observation.json",
+                "response_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "bbe42d4a0ad88202de9ebf2f1ad03372b96ab9807cc78134d48d91fcf0eb5687",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_2d60cdd84239eec3"
+                      }
+                    },
+                    "call_id": "run_p4_0f73f329eb3b:turn:3:tool",
+                    "run_id": "run_p4_0f73f329eb3b",
+                    "sequence": 3,
+                    "task_id": "task_41eea64e",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "9848fa9909d26023ea6d5699fb58c9ace40e3754081f87a07da97052931f8161",
+                "response_sha256": "c89c14289d1eb48fb1ce723a2da2d200da415351ec1253731c343214fc19e013",
+                "observation_sha256": "795d2eee80aa1238b78c93cfa5fd4eda1d5ad3f341449cdb3f6cc68d95efe116",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_0f73f329eb3b",
+                "turn_id": "run_p4_0f73f329eb3b:turn:4",
+                "task_id": "task_41eea64e",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_4/tools.json",
+                "observation_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_4/observation.json",
+                "response_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734"
+                    },
+                    "call_id": "run_p4_0f73f329eb3b:turn:4:tool",
+                    "run_id": "run_p4_0f73f329eb3b",
+                    "sequence": 4,
+                    "task_id": "task_41eea64e",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "a8e4b0a7f4c34ef876baf2530ced74f7a7beea8ccbb2cf2e1b8e31d9704e0ffb",
+                "response_sha256": "aab7cc13ebf440be4a33cdc09b298e996c1272ca8ef2c0a3636df299865b782e",
+                "observation_sha256": "93917debcbf55656c19760dc6f53e2c84476407618a6d4f37df4df036569f3db",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_0f73f329eb3b",
+                "turn_id": "run_p4_0f73f329eb3b:turn:5",
+                "task_id": "task_41eea64e",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "completed",
+                "request_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_5/tools.json",
+                "observation_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_4/observation.json",
+                "response_ref": "model/run_p4_0f73f329eb3b/run_p4_0f73f329eb3b_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": null, \"status\": \"insufficient_evidence\", \"evidence_refs\": []}, \"rationale\": [{\"point\": \"Ada Reed is the accountable owner of Beacon Lane\", \"evidence_refs\": [\"ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734\"]}], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"insufficient_evidence\", \"statement\": null, \"unknown_fields\": [\"leader\"], \"evidence_refs\": [\"ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734\"]}, \"evidence_refs\": [\"ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "14095eeebbfa5726cbfb9b1fbc7003311b6ee19b96627575e143e2e53d743dea",
+                "response_sha256": "3b4a55d15f509e30d6ca25910f7c5bc0c26c8d07ae40a3c0e301e33cfb31d1d9",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 39
+            },
+            "run_id": "run_p4_0f73f329eb3b",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [],
+                "status": "insufficient_evidence",
+                "value": null
+              },
+              "evidence_refs": [
+                "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734"
+              ],
+              "rationale": [
+                {
+                  "evidence_refs": [
+                    "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734"
+                  ],
+                  "point": "Ada Reed is the accountable owner of Beacon Lane"
+                }
+              ],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [
+                  "ev_v2_c1fa1293d3c36637a19ddbba2380d6d376ecc22ab024131b0bd13711c822f734"
+                ],
+                "statement": null,
+                "status": "insufficient_evidence",
+                "unknown_fields": [
+                  "leader"
+                ]
+              },
+              "unresolved_items": []
+            },
+            "fault": null,
+            "source_identity": {
+              "index_sha256": "bbe42d4a0ad88202de9ebf2f1ad03372b96ab9807cc78134d48d91fcf0eb5687",
+              "vault_root_fingerprint": "root_2d60cdd84239eec3",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "conflict",
+      "boundary": "conflict",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-8d6e2d59",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-CONFLICT-partial]"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\conflict.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_qualified_runtime_observes_source_outcome[CORE-CONFLICT-partial]"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-8d6e2d59\\test_qualified_runtime_observe0\\CORE-CONFLICT\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "partial",
+            "reason": "conflicting_evidence",
+            "values": [
+              "ada reed"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "conflict-0.md",
+                "evidence_id": "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4",
+                "content_sha256": "8e6d025f4a5c72dabb7971ceb71a46e1ddf6e19c43fb5f914869fad98ff52318"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "conflict-0.md",
+                "evidence_id": "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4",
+                "content_sha256": "8e6d025f4a5c72dabb7971ceb71a46e1ddf6e19c43fb5f914869fad98ff52318"
+              },
+              {
+                "sequence": 5,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "conflict-1.md",
+                "evidence_id": "ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015",
+                "content_sha256": "db150a61be0142450638d6d00eb2bfae8b1ebff3e468d1a589c22c20b168abf7"
+              },
+              {
+                "sequence": 6,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "conflict-2.md",
+                "evidence_id": "ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371",
+                "content_sha256": "06f0bda1e46dad045960755f1633a7e8f2ee9f875f4d6060f60431edfba2911e"
+              }
+            ],
+            "sources": [
+              "conflict-0.md",
+              "conflict-1.md",
+              "conflict-2.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 4,
+            "verified_hops": 1,
+            "model_turns": 7,
+            "provider_requests": 7,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:1",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_1/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_1/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 3,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "a78e7ad2cbdda3e3fc12b03658fbb2159c8de863e29e180e0df4407544009211",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_9e2b3757fd7c8e2d"
+                      }
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:1:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 1,
+                    "task_id": "task_85f92948",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "9b1e1bd7b74928ed347dbea2b607e9e6415316b6544b84914db310be1503b426",
+                "response_sha256": "48c381bb81886ce0b7533f9bf5db388b0ed0940cfd3621d7431d42932ccdccce",
+                "observation_sha256": "00ded98f80c1a5367a2a89be20272c685892611a86f1fd9baa8f0a81a4f26c98",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:2",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_2/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_2/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4"
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:2:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 2,
+                    "task_id": "task_85f92948",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "d7f89caca7dbd3954d661dcd12729f08c96466a7e13832d878ada786bca76b1d",
+                "response_sha256": "99cc1223225d046cb6b05b99bf48dccda7fe87d6079d8b1e59c7e38b93e4a03a",
+                "observation_sha256": "92c200b766a27ad9f4428e5ba3104afd5320931b305fb7ecb4692edc355ae50e",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:3",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_3/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_3/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 3,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "a78e7ad2cbdda3e3fc12b03658fbb2159c8de863e29e180e0df4407544009211",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_9e2b3757fd7c8e2d"
+                      }
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:3:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 3,
+                    "task_id": "task_85f92948",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "94d3deae624c29b6a797e0d9feb62d2f71214bb7b9e3baadefdd4253ae1fb37c",
+                "response_sha256": "ff5b183b1f37884a7ea7c419d16204ec9a54a00cc03400e9ce8d271051cff09f",
+                "observation_sha256": "c8ef770727ec237564f8ec6947c8facced0cf9a3fa0055dbb5672fc65a69fb78",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:4",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_4/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_4/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4"
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:4:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 4,
+                    "task_id": "task_85f92948",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "76043cb80c98f6ec2cacbf1fbdc26c3fd86a59e9d9327f83265c3531356d144e",
+                "response_sha256": "727966b3efb13a5d19fc2461f00bffefbb806d9474f22aa1f1892ccb36bb9163",
+                "observation_sha256": "3dec13f9ca3afb7cce6eee332345c3274f1d230fb3113024b8ef0991a6848289",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:5",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_5/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_5/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015"
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:5:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 5,
+                    "task_id": "task_85f92948",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "50b527001cc002b44ec1d1dd5d80ade4c7a79483a5c6dbb58963057b07c89923",
+                "response_sha256": "43f3b00721cc9eed09db48ae8a2438717f50cac8989ffaf61501e60cb4e03d20",
+                "observation_sha256": "27278231a885cde74566a854924941021362d33df67e28667db2e483b82adaa2",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:6",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 6,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_6/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_6/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_6/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_6/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371"
+                    },
+                    "call_id": "run_p4_f54f67382e2d:turn:6:tool",
+                    "run_id": "run_p4_f54f67382e2d",
+                    "sequence": 6,
+                    "task_id": "task_85f92948",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "0c4e0abd0403e2bb033d473be51505ea44b353ca1b34159d7945274c35111d5a",
+                "response_sha256": "3ee1b0343a139504997c4c47c8d2c11aa5ced03e5e99ea233261ecc8417696f6",
+                "observation_sha256": "b4b522de5e8d882c00a44f5777dbb806b5a394a77683891fae04fae68ec57023",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_f54f67382e2d",
+                "turn_id": "run_p4_f54f67382e2d:turn:7",
+                "task_id": "task_85f92948",
+                "agent_id": "retrieval_agent",
+                "sequence": 7,
+                "status": "completed",
+                "request_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_7/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_7/tools.json",
+                "observation_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_6/observation.json",
+                "response_ref": "model/run_p4_f54f67382e2d/run_p4_f54f67382e2d_turn_7/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": null, \"status\": \"insufficient_evidence\", \"evidence_refs\": []}, \"rationale\": [{\"point\": \"Ada Reed is the accountable owner of Beacon Lane\", \"evidence_refs\": [\"ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4\"]}], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"conflicting_evidence\", \"statement\": null, \"unknown_fields\": [\"leader\"], \"evidence_refs\": [\"ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4\", \"ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015\", \"ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371\"]}, \"evidence_refs\": [\"ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4\", \"ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015\", \"ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "09240283b08a4690156ca3e26ea155d525f435f3f2550fefe9073f930d89fad6",
+                "response_sha256": "0be54b87ff6935863d6a81e7d069c8a96855e4f71612a725c0b645ce1e5df166",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 55
+            },
+            "run_id": "run_p4_f54f67382e2d",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [],
+                "status": "insufficient_evidence",
+                "value": null
+              },
+              "evidence_refs": [
+                "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4",
+                "ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015",
+                "ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371"
+              ],
+              "rationale": [
+                {
+                  "evidence_refs": [
+                    "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4"
+                  ],
+                  "point": "Ada Reed is the accountable owner of Beacon Lane"
+                }
+              ],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [
+                  "ev_v2_bdc1ee5af29a8faf740aa1798ff2a6c164955e50ecb8a707079db039c98cecc4",
+                  "ev_v2_09251d9ca323e92262bddb157254140031017c10e51e2e3691977198dc8e1015",
+                  "ev_v2_36401c73636da8a3c2b89ddda33ba0727e2e9e711bb59f1dc0b3f46bf4bf7371"
+                ],
+                "statement": null,
+                "status": "conflicting_evidence",
+                "unknown_fields": [
+                  "leader"
+                ]
+              },
+              "unresolved_items": []
+            },
+            "fault": null,
+            "source_identity": {
+              "index_sha256": "a78e7ad2cbdda3e3fc12b03658fbb2159c8de863e29e180e0df4407544009211",
+              "vault_root_fingerprint": "root_9e2b3757fd7c8e2d",
+              "document_count": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "invalid_tool",
+      "boundary": "invalid_tool",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-663a13f9",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_rejects_invalid_tool_params_from_observed_runtime",
+        "tests/integration/test_qualified_runtime.py::test_d06_f07_goal_mismatch_regressions_are_represented_by_new_runner",
+        "tests/integration/test_qualified_runtime.py::test_unverified_dependency_never_reaches_next_executor"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\invalid_tool.xml",
+      "status": "passed",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_qualified_runtime_rejects_invalid_tool_params_from_observed_runtime",
+        "tests.integration.test_qualified_runtime::test_d06_f07_goal_mismatch_regressions_are_represented_by_new_runner",
+        "tests.integration.test_qualified_runtime::test_unverified_dependency_never_reaches_next_executor"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-663a13f9\\test_qualified_runtime_rejects0\\invalid-tool\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [],
+            "sources": [],
+            "foreign_documents_skipped": [],
+            "citation_valid": false,
+            "bindings_verified": false,
+            "observed_bindings": {
+              "owner": {}
+            },
+            "verified_values": {},
+            "executor_search_calls": 0,
+            "executor_read_calls": 0,
+            "verified_hops": 0,
+            "model_turns": 2,
+            "provider_requests": 2,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_085465ea69da",
+                "turn_id": "run_p4_085465ea69da:turn:1",
+                "task_id": "task_58bfe0f0",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_1/tools.json",
+                "observation_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_1/observation.json",
+                "response_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 0,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_72111e93a2f69b6f"
+                      }
+                    },
+                    "call_id": "run_p4_085465ea69da:turn:1:tool",
+                    "run_id": "run_p4_085465ea69da",
+                    "sequence": 1,
+                    "task_id": "task_58bfe0f0",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "ca03723f2e0226315b9927786d1346824566b06d3b884d97c20430081b9ed69f",
+                "response_sha256": "3b2760284bf71d9157fa875f5869375b06ea26fc81ba7be010e980c4970f089e",
+                "observation_sha256": "7664e3c12f12784b48d59cb66575f861be0538d75715f7667a81bf95fd6e91b4",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_085465ea69da",
+                "turn_id": "run_p4_085465ea69da:turn:2",
+                "task_id": "task_58bfe0f0",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "failed",
+                "request_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_2/tools.json",
+                "observation_ref": "model/run_p4_085465ea69da/run_p4_085465ea69da_turn_1/observation.json",
+                "response_ref": null,
+                "normalized_action": null,
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {},
+                "provider_metadata": {},
+                "request_sha256": "78f04e4e694e2e572e7762988b95bf1e4ce440667ba7dee9805f4755c6553ecb",
+                "response_sha256": null,
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": null
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [
+              {
+                "tool": "search_notes",
+                "code": null,
+                "message": "ToolError(code='TOOL_INVALID_ARGUMENTS', category='input', message='Tool arguments are invalid.', retryable=False, affected_refs=[], details={'tool_id': 'search_notes', 'path': '$.limit', 'reason': 'schema_validation'}, safe_to_expose=True)"
+              }
+            ],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 11
+            },
+            "run_id": "run_p4_085465ea69da",
+            "error": {
+              "code": "TOOL_INVALID_ARGUMENTS",
+              "category": "input",
+              "message": "Tool arguments are invalid.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "path": "$.limit",
+                "reason": "schema_validation",
+                "tool_id": "search_notes"
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "invalid_tool",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_72111e93a2f69b6f",
+              "document_count": 1
+            }
+          }
+        },
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-663a13f9\\test_unverified_dependency_nev0\\dependency\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_5b039723089d0266359d31b2b4fbc10ce3fec4eecad1ee55800c92add45f7577",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "failed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Forged Owner"
+                }
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": false,
+            "bindings_verified": false,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Forged Owner"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed"
+            },
+            "executor_search_calls": 1,
+            "executor_read_calls": 1,
+            "verified_hops": 0,
+            "model_turns": 4,
+            "provider_requests": 4,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_57985a37f04f",
+                "turn_id": "run_p4_57985a37f04f:turn:1",
+                "task_id": "task_6423fa33",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_1/tools.json",
+                "observation_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_1/observation.json",
+                "response_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_89f57d780f10fa4f"
+                      }
+                    },
+                    "call_id": "run_p4_57985a37f04f:turn:1:tool",
+                    "run_id": "run_p4_57985a37f04f",
+                    "sequence": 1,
+                    "task_id": "task_6423fa33",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "0705926eb09b5f65495af38ad935a5f477ebba83077dd8febe2c608b250bce00",
+                "response_sha256": "12f15faff8ab02413a8969a81703581b5eaf5200a8881f60d56279ddd33c79c1",
+                "observation_sha256": "10929265f61c4f797cd247b9d5c64736c1ee276cc3650cf3513d57ccd4677c0b",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_57985a37f04f",
+                "turn_id": "run_p4_57985a37f04f:turn:2",
+                "task_id": "task_6423fa33",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_2/tools.json",
+                "observation_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_2/observation.json",
+                "response_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_5b039723089d0266359d31b2b4fbc10ce3fec4eecad1ee55800c92add45f7577"
+                    },
+                    "call_id": "run_p4_57985a37f04f:turn:2:tool",
+                    "run_id": "run_p4_57985a37f04f",
+                    "sequence": 2,
+                    "task_id": "task_6423fa33",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "22fe0d4a0d7051a62eb76f0d595a4acde9ba01718cd976ca83414ecec819948d",
+                "response_sha256": "5312819c97292f5e4a07e4b90869079e247ab9cee6130d9813450c0545d8c964",
+                "observation_sha256": "3ca35c59b4f02fd886a24747800375c27bd79dd2e3b55e1a8468ff12feb209fb",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_57985a37f04f",
+                "turn_id": "run_p4_57985a37f04f:turn:3",
+                "task_id": "task_6423fa33",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_3/tools.json",
+                "observation_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_3/observation.json",
+                "response_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Forged Owner"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_89f57d780f10fa4f"
+                      }
+                    },
+                    "call_id": "run_p4_57985a37f04f:turn:3:tool",
+                    "run_id": "run_p4_57985a37f04f",
+                    "sequence": 3,
+                    "task_id": "task_6423fa33",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "bfae1ed6144d5f66897c817e4b59e2637302ad9274b2fbab09acdde8fe76b103",
+                "response_sha256": "d6bd4dbc9523634d4c84caf4d0b5fa3e9e303573ab95812ab9799ed72bf92512",
+                "observation_sha256": "00e40208a64a37fd0a429c475028faaf31ebbe6f195fa7cc0a22ea2ee58c5741",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_57985a37f04f",
+                "turn_id": "run_p4_57985a37f04f:turn:4",
+                "task_id": "task_6423fa33",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "failed",
+                "request_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_4/tools.json",
+                "observation_ref": "model/run_p4_57985a37f04f/run_p4_57985a37f04f_turn_3/observation.json",
+                "response_ref": null,
+                "normalized_action": null,
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {},
+                "provider_metadata": {},
+                "request_sha256": "24e05b2f2e9ce614a8a39393606a2ad1f0205dc501e421f3c86563172ca6591d",
+                "response_sha256": null,
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": null
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [
+              {
+                "tool": "search_notes",
+                "code": null,
+                "message": "ToolError(code='TOOL_INVALID_ARGUMENTS', category='input', message='Tool arguments do not match the verified TaskPlan boundary.', retryable=False, affected_refs=[], details={'tool_id': 'search_notes', 'reason': 'task_plan_semantic_mismatch', 'path': '$.source_context.dependency_entities'}, safe_to_expose=True)"
+              }
+            ],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 29
+            },
+            "run_id": "run_p4_57985a37f04f",
+            "error": {
+              "code": "TOOL_INVALID_ARGUMENTS",
+              "category": "input",
+              "message": "Tool arguments do not match the verified TaskPlan boundary.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "path": "$.source_context.dependency_entities",
+                "reason": "task_plan_semantic_mismatch",
+                "tool_id": "search_notes"
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "unverified_dependency",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_89f57d780f10fa4f",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "final_correction",
+      "boundary": "final_correction",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-a8faf7e6",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_final_correction_is_a_new_counted_response",
+        "tests/integration/test_final_correction_http_v3.py::test_http_invalid_final_corrects_once_with_grounding_and_reviewer"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\final_correction.xml",
+      "status": "passed",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_final_correction_is_a_new_counted_response",
+        "tests.integration.test_final_correction_http_v3::test_http_invalid_final_corrects_once_with_grounding_and_reviewer"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-a8faf7e6\\test_final_correction_is_a_new0\\final-correction\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "complete",
+            "reason": null,
+            "values": [
+              "ada reed",
+              "evan fox"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 3,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 5,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed",
+              "leader": "Evan Fox"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 3,
+            "verified_hops": 2,
+            "model_turns": 7,
+            "provider_requests": 7,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:1",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_1/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_1/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_42382947450da314"
+                      }
+                    },
+                    "call_id": "run_p4_9e8d6fc15255:turn:1:tool",
+                    "run_id": "run_p4_9e8d6fc15255",
+                    "sequence": 1,
+                    "task_id": "task_0ba3ce1b",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "af95f257f31369fb3bae816ec6125f3b3ac3e75d27130a00169b2c79e245a9ec",
+                "response_sha256": "b6deceb29e7e698198cb66e9527e4952b2edb57ff6c7e9d1979ea1666ed9f8b2",
+                "observation_sha256": "7030d25855dc325e03ec230dd1b243528efeb7f2238617ef0213bd5ca8744d4d",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:2",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_2/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_2/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9"
+                    },
+                    "call_id": "run_p4_9e8d6fc15255:turn:2:tool",
+                    "run_id": "run_p4_9e8d6fc15255",
+                    "sequence": 2,
+                    "task_id": "task_0ba3ce1b",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "ddf74f966f102a2cb0f31c79b7ab2bdcc441edc77ed11f5a8cfbefc85e10ce4a",
+                "response_sha256": "45e163e19005d341eb2fd4ac8526ccfaf5bfdb4f9afd6e97442a4784e46a31c0",
+                "observation_sha256": "2109c37307760bcc9de01defed0f165db80304fafe439e8ebff0d374b26a1f0d",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:3",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_3/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_3/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_42382947450da314"
+                      }
+                    },
+                    "call_id": "run_p4_9e8d6fc15255:turn:3:tool",
+                    "run_id": "run_p4_9e8d6fc15255",
+                    "sequence": 3,
+                    "task_id": "task_0ba3ce1b",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "8e3ab91657be68acb979689b9da57bfc64fd53682b27d45352ff69fdc2756b2d",
+                "response_sha256": "7a382cc9602010b589547cd9c93b9358dbfe7a011ac650244bd6869314ef3ebb",
+                "observation_sha256": "9596d81f94b4b0e34318c7e90a8b4fca3339d899a8c7a37ba880ccad66e9ae6e",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:4",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_4/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_4/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9"
+                    },
+                    "call_id": "run_p4_9e8d6fc15255:turn:4:tool",
+                    "run_id": "run_p4_9e8d6fc15255",
+                    "sequence": 4,
+                    "task_id": "task_0ba3ce1b",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "f5a5b11f7e08606ef84c6f2a7521c265072d99cf7508810302620dd6c61947eb",
+                "response_sha256": "78c75c6ef29b9796c85127d0783811725366c0d576b5d42d956e025c996704ad",
+                "observation_sha256": "43139a3eeaa936da4f3246b043f505a3bcfb53a3c0ae1bd4cc3d02f13077a999",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:5",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10"
+                    },
+                    "call_id": "run_p4_9e8d6fc15255:turn:5:tool",
+                    "run_id": "run_p4_9e8d6fc15255",
+                    "sequence": 5,
+                    "task_id": "task_0ba3ce1b",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "76b99bc12d6449515a73200c2c6beea5b6dd71649a81f4c1ae2007ed492701c9",
+                "response_sha256": "57951f60e327f8037e603014e045ec65a861fd3d553e207ce62b3d371a2d4517",
+                "observation_sha256": "e44cbb72937e3daa85b7ec017d02ad24a03a2644a625f9041c1930f3b00803bd",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:6",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 6,
+                "status": "final_rejected",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_6/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_6/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_6/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\":",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "71b2e38a8e2a54e37302b26d92810cea8c4aa2dd8177433b538074ae3c7c84ea",
+                "response_sha256": "3ce4c5c0dd95212e27f8e1aa27a6424b5c43af9ae3459f77e1ab07f1f9f1f5bc",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_9e8d6fc15255",
+                "turn_id": "run_p4_9e8d6fc15255:turn:7",
+                "task_id": "task_0ba3ce1b",
+                "agent_id": "retrieval_agent",
+                "sequence": 7,
+                "status": "completed",
+                "request_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_7/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_7/tools.json",
+                "observation_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_5/observation.json",
+                "response_ref": "model/run_p4_9e8d6fc15255/run_p4_9e8d6fc15255_turn_7/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": \"Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox\", \"status\": \"approved\", \"evidence_refs\": [\"ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9\", \"ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10\"]}, \"rationale\": [], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"none\", \"statement\": null, \"unknown_fields\": [], \"evidence_refs\": []}, \"evidence_refs\": [\"ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9\", \"ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "24efc5e39485be3495b8626edc3d0d0f88a89eb37991ea4cde1a9f13b58a722d",
+                "response_sha256": "c140bcd2ac4ad2abdb4780ee73945fddf5365e6f683ef75e4ff0ca6fb3e255e8",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 52
+            },
+            "run_id": "run_p4_9e8d6fc15255",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [
+                  "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9",
+                  "ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10"
+                ],
+                "status": "approved",
+                "value": "Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox"
+              },
+              "evidence_refs": [
+                "ev_v2_ec5c1a0c21069cb3fcf9d764d420c4d0c7f78d41a8956a14f16de3fef268dcb9",
+                "ev_v2_665c575647e71011ed0eba9c30bea1a14057087500622058e6e46fe0f8118b10"
+              ],
+              "rationale": [],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [],
+                "statement": null,
+                "status": "none",
+                "unknown_fields": []
+              },
+              "unresolved_items": []
+            },
+            "fault": "invalid_final_once",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_42382947450da314",
+              "document_count": 1
+            },
+            "final_correction": {
+              "invalid_response_count": 1,
+              "correction_response_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cold_resume",
+      "boundary": "cold_resume",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-1fab2c5f",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_cold_resume_reuses_durable_response_and_counts_new_provider_turns"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\cold_resume.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_cold_resume_reuses_durable_response_and_counts_new_provider_turns"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-1fab2c5f\\test_cold_resume_reuses_durabl0\\cold-resume\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "completed",
+            "outcome": "complete",
+            "reason": null,
+            "values": [
+              "ada reed",
+              "evan fox"
+            ],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 4,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 5,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "leader",
+                "dependencies": {
+                  "owner": "Ada Reed"
+                }
+              },
+              {
+                "sequence": 6,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 7,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": true,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {},
+              "leader": {
+                "owner": "Ada Reed"
+              }
+            },
+            "verified_values": {
+              "owner": "Ada Reed",
+              "leader": "Evan Fox"
+            },
+            "executor_search_calls": 2,
+            "executor_read_calls": 4,
+            "verified_hops": 2,
+            "model_turns": 8,
+            "provider_requests": 8,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:1",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_1/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_1/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_28d486b139b730d1"
+                      }
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:1:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 1,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "d24fcfaac8c2efbfb6d94f2ea9cbc6e83bae4154524d8bb40951a24f3be5e01a",
+                "response_sha256": "87766f9685a65aadd9c71db75c1cbf398670cb6f7d343d2e6a9400a26d70fd35",
+                "observation_sha256": "2b59c7fb7ffa07f3f49f7e2d9879088ce2057f5102d8f7abe780a76a7ed4c839",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:2",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_2/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_2/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511"
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:2:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 2,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "a3b6bdd2af314217859c9f2c133f87f5d42bda3a5521ac5227e384791f1ada69",
+                "response_sha256": "3c38f22c39e136456396eb301f1c2bb62fef60607f248535bc7ed42ca4efe9ba",
+                "observation_sha256": "cc563a326a08f11b2a4f52de0711f11b0f7dcee029bae4c95a776c39b72e6b4e",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:3",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_3/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_3/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_28d486b139b730d1"
+                      }
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:3:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 3,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "fcb77190fa55ca90ec145060809ddbb5edf6dea1a331e73d6e6f20bb8a586b1b",
+                "response_sha256": "6bce5b10b01e2c829b046b4b45dc17f463e6967ac2032f6cbd4bdbc7b858b98b",
+                "observation_sha256": "531a1c0c0ec19fc1e95494dad853e0b983a089991a43661318ebb64dda30dedb",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:4",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_4/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_4/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_4/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511"
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:4:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 4,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "8795b446bb1e38d8fbc044238b636f04589b6be5eccfb28d5de88c27e03b21ca",
+                "response_sha256": "a5a86c81711599c8c188f8067d22d8b6ba2362e9fb38546ae9d3b20e9fb2178d",
+                "observation_sha256": "57a38d8e7091d5348c6bed63d7316834a5e1ba86eac1daeaea8624ffbc0fecfa",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:5",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 5,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_5/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_5/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_5/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_5/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who is the direct leader of {verified_entity}?",
+                      "source_context": {
+                        "dependency_entities": {
+                          "owner": "Ada Reed"
+                        },
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "leader",
+                        "vault_root_fingerprint": "root_28d486b139b730d1"
+                      }
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:5:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 5,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "fd129dd0385d14372165601a662461cc20cfa27af35fe6a11a768ebb376d2a25",
+                "response_sha256": "b066810ac652181546e4ee967248206b3ed69d2e07a9ebb29e9b4cb3c4e60de1",
+                "observation_sha256": "6ca7cac5080f4bff9852570025df020d2205378a3458cc2191e4647a914dfee4",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:6",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 6,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_6/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_6/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_6/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_6/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511"
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:6:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 6,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "bbea0159a3df811a48c17efaf57aa73dde19bbc04e6428d391a6aa4f73ff7d67",
+                "response_sha256": "ccf5299dfa21df1f26955e3c99630c20cc4d24e1c6cdcbcfa2eba004c47bd705",
+                "observation_sha256": "5fd6ad080024f1fcfeaf5de1dd5446ed3cd3180e2f5ad908665e58c11d3df300",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:7",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 7,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_7/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_7/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_7/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_7/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954"
+                    },
+                    "call_id": "run_p4_7cdd7708e5b7:turn:7:tool",
+                    "run_id": "run_p4_7cdd7708e5b7",
+                    "sequence": 7,
+                    "task_id": "task_7518b2c5",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "f148af10df3aa00f3bdc167d7a3a8b9880be72f5d77c18b0c65f3df10816119d",
+                "response_sha256": "c0c2b5a2b59525413b6e1a2ff9ec0a759bdb54bb9e072cfcfeb7cbee743c6e08",
+                "observation_sha256": "c94a02788cde5cf4b56c700191c54f306a8a559047baa3c3d6202cfad0d5ec45",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_7cdd7708e5b7",
+                "turn_id": "run_p4_7cdd7708e5b7:turn:8",
+                "task_id": "task_7518b2c5",
+                "agent_id": "retrieval_agent",
+                "sequence": 8,
+                "status": "completed",
+                "request_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_8/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_8/tools.json",
+                "observation_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_7/observation.json",
+                "response_ref": "model/run_p4_7cdd7708e5b7/run_p4_7cdd7708e5b7_turn_8/response.json",
+                "normalized_action": {
+                  "final_answer": "{\"schema_version\": \"team-decision-result/v1\", \"decision\": {\"value\": \"Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox\", \"status\": \"approved\", \"evidence_refs\": [\"ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511\", \"ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954\"]}, \"rationale\": [], \"actions\": [], \"unresolved_items\": [], \"rejected_alternatives\": [], \"uncertainty\": {\"status\": \"none\", \"statement\": null, \"unknown_fields\": [], \"evidence_refs\": []}, \"evidence_refs\": [\"ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511\", \"ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954\"]}",
+                  "kind": "final",
+                  "tool_call": null
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "9b3a310ff5b3c660264b521e33f6ca872ae46c9cec16eced264534fd6fa08fc7",
+                "response_sha256": "4f0b58e12f5d6475fba18bb04ca1bf5ef0b3f5ac79f08d4371523b722d32b61d",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "completed",
+              "reason_code": "workflow_completed",
+              "reason": "Coordinator completed the model-driven workflow.",
+              "sequence": 61
+            },
+            "run_id": "run_p4_7cdd7708e5b7",
+            "error": null,
+            "final": {
+              "actions": [],
+              "decision": {
+                "evidence_refs": [
+                  "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511",
+                  "ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954"
+                ],
+                "status": "approved",
+                "value": "Ada Reed is the accountable owner of Beacon Lane; Ada Reed reports directly to Evan Fox"
+              },
+              "evidence_refs": [
+                "ev_v2_da6c5ac1c134e343dcf9b432a9b5d41f25c925dd4031dfd8060defbe7b950511",
+                "ev_v2_3694f487905d1ee149391daf27947e4918c3bab3a216f119a5932c5dbf692954"
+              ],
+              "rationale": [],
+              "rejected_alternatives": [],
+              "schema_version": "team-decision-result/v1",
+              "uncertainty": {
+                "evidence_refs": [],
+                "statement": null,
+                "status": "none",
+                "unknown_fields": []
+              },
+              "unresolved_items": []
+            },
+            "fault": "cold_resume",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_28d486b139b730d1",
+              "document_count": 1
+            },
+            "cold_resume": {
+              "crashed_after_durable_response": true,
+              "new_provider_requests": 7,
+              "response_origin": "provider",
+              "duplicate_executor_calls": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "provider_uncertain",
+      "boundary": "provider_uncertain",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-321d55cd",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-PROVIDER-UNCERTAIN]"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\provider_uncertain.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_fault_boundaries_fail_closed[CORE-PROVIDER-UNCERTAIN]"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-321d55cd\\test_fault_boundaries_fail_clo0\\CORE-PROVIDER-UNCERTAIN\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [],
+            "sources": [],
+            "foreign_documents_skipped": [],
+            "citation_valid": false,
+            "bindings_verified": false,
+            "observed_bindings": {},
+            "verified_values": {},
+            "executor_search_calls": 0,
+            "executor_read_calls": 0,
+            "verified_hops": 0,
+            "model_turns": 1,
+            "provider_requests": 1,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_dc9a14c8c4a8",
+                "turn_id": "run_p4_dc9a14c8c4a8:turn:1",
+                "task_id": "task_376479b5",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "failed",
+                "request_ref": "model/run_p4_dc9a14c8c4a8/run_p4_dc9a14c8c4a8_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_dc9a14c8c4a8/run_p4_dc9a14c8c4a8_turn_1/tools.json",
+                "observation_ref": null,
+                "response_ref": "model/run_p4_dc9a14c8c4a8/run_p4_dc9a14c8c4a8_turn_1/response.json",
+                "normalized_action": null,
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {},
+                "request_sha256": "5a467fe9a1851442cc7358cf2ea84664ed6029722e4479d21500e1a011192d38",
+                "response_sha256": "5e8a81340c1695c8a5e93dff89b81d3042a418ef65f97077c36cb127f4e4fb31",
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": {
+                  "category": "unknown_provider_error",
+                  "code": "MODEL_UNKNOWN_FAILURE",
+                  "details": {},
+                  "message": "Synthetic provider outcome is uncertain.",
+                  "outcome": "unknown_provider_outcome",
+                  "provider_metadata": {},
+                  "provider_request_id": null,
+                  "retryable": false
+                },
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 7
+            },
+            "run_id": "run_p4_dc9a14c8c4a8",
+            "error": {
+              "code": "MODEL_UNKNOWN_FAILURE",
+              "category": "provider",
+              "message": "Synthetic provider outcome is uncertain.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "outcome": "unknown_provider_outcome"
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "provider_uncertain",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_32f241e01291ae04",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "workspace_isolation",
+      "boundary": "workspace_isolation",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-aa52612e",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-WRONG-WORKSPACE]",
+        "tests/integration/test_final_correction_http_v3.py::test_http_wrong_workspace_tool_call_cannot_produce_answer"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\workspace_isolation.xml",
+      "status": "passed",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_fault_boundaries_fail_closed[CORE-WRONG-WORKSPACE]",
+        "tests.integration.test_final_correction_http_v3::test_http_wrong_workspace_tool_call_cannot_produce_answer"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-aa52612e\\test_fault_boundaries_fail_clo0\\CORE-WRONG-WORKSPACE\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [],
+            "sources": [],
+            "foreign_documents_skipped": [
+              "foreign.md"
+            ],
+            "citation_valid": false,
+            "bindings_verified": false,
+            "observed_bindings": {
+              "owner": {}
+            },
+            "verified_values": {},
+            "executor_search_calls": 0,
+            "executor_read_calls": 0,
+            "verified_hops": 0,
+            "model_turns": 1,
+            "provider_requests": 1,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_13e958b9b650",
+                "turn_id": "run_p4_13e958b9b650:turn:1",
+                "task_id": "task_99545542",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_13e958b9b650/run_p4_13e958b9b650_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_13e958b9b650/run_p4_13e958b9b650_turn_1/tools.json",
+                "observation_ref": "model/run_p4_13e958b9b650/run_p4_13e958b9b650_turn_1/observation.json",
+                "response_ref": "model/run_p4_13e958b9b650/run_p4_13e958b9b650_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "wrong-workspace"
+                      }
+                    },
+                    "call_id": "run_p4_13e958b9b650:turn:1:tool",
+                    "run_id": "run_p4_13e958b9b650",
+                    "sequence": 1,
+                    "task_id": "task_99545542",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "0083313f749bf1407a6ded3d9d93407d5ee193a42efd6f6192f9cab062193408",
+                "response_sha256": "a76e91efc27124c4a6e25872b4dabc5c6f066d5ed769c323da316e65949a6fc8",
+                "observation_sha256": "5f2cebbbd6a0850a6d7f7b3308c15413c42d4a199b7e78e718f4aaf55ddcdb93",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 9
+            },
+            "run_id": "run_p4_13e958b9b650",
+            "error": {
+              "code": "TOOL_INVALID_ARGUMENTS",
+              "category": "input",
+              "message": "Tool arguments are invalid.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "path": "$.source_context.vault_root_fingerprint",
+                "reason": "schema_validation",
+                "tool_id": "search_notes"
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "wrong_workspace",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_829e73a0cfd7056c",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "source_freshness",
+      "boundary": "source_freshness",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-ef9fe904",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-SOURCE-CHANGE]"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\source_freshness.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_fault_boundaries_fail_closed[CORE-SOURCE-CHANGE]"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-ef9fe904\\test_fault_boundaries_fail_clo0\\CORE-SOURCE-CHANGE\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              },
+              {
+                "sequence": 2,
+                "tool": "read_verified_note",
+                "status": "completed",
+                "hop": null,
+                "source": "relations.md",
+                "evidence_id": "ev_v2_a8ed453dcb7d12c9b7eec98233a3bb7f47e6627207a0b5764fb52cde93a6fa60",
+                "content_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa"
+              },
+              {
+                "sequence": 3,
+                "tool": "read_verified_note",
+                "status": "failed"
+              }
+            ],
+            "sources": [
+              "relations.md"
+            ],
+            "foreign_documents_skipped": [],
+            "citation_valid": false,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {}
+            },
+            "verified_values": {},
+            "executor_search_calls": 1,
+            "executor_read_calls": 2,
+            "verified_hops": 0,
+            "model_turns": 4,
+            "provider_requests": 4,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_4508fb646326",
+                "turn_id": "run_p4_4508fb646326:turn:1",
+                "task_id": "task_9e06581f",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_1/tools.json",
+                "observation_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_1/observation.json",
+                "response_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_a1dbdc30317da58a"
+                      }
+                    },
+                    "call_id": "run_p4_4508fb646326:turn:1:tool",
+                    "run_id": "run_p4_4508fb646326",
+                    "sequence": 1,
+                    "task_id": "task_9e06581f",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "289ba33a4119a56195a8898838b2a711cc059c8e3f65589d77791862ee2e57c1",
+                "response_sha256": "13bcf1cdb76f37eb0661b013241a1a8328f3572987b9f143486c2e720f369fce",
+                "observation_sha256": "f18954c649859140404f53b611989595d7c9ab499748df0f559f71ab1d7b58c0",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_4508fb646326",
+                "turn_id": "run_p4_4508fb646326:turn:2",
+                "task_id": "task_9e06581f",
+                "agent_id": "retrieval_agent",
+                "sequence": 2,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_2/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_2/tools.json",
+                "observation_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_2/observation.json",
+                "response_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_2/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_a8ed453dcb7d12c9b7eec98233a3bb7f47e6627207a0b5764fb52cde93a6fa60"
+                    },
+                    "call_id": "run_p4_4508fb646326:turn:2:tool",
+                    "run_id": "run_p4_4508fb646326",
+                    "sequence": 2,
+                    "task_id": "task_9e06581f",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "4d95c509135ee20e7a2c4bebaf57fd44692f42ae4bce879f4bc4a5517d8852f1",
+                "response_sha256": "353e922cdc75f878f45d8e08f8378ab458b4fffc4bd69109b1ec83f65a4363ac",
+                "observation_sha256": "4c54f9686f3c12de0a91ac7cc2f566d6d5b62cda84a9412b964913ca1f4ca053",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_4508fb646326",
+                "turn_id": "run_p4_4508fb646326:turn:3",
+                "task_id": "task_9e06581f",
+                "agent_id": "retrieval_agent",
+                "sequence": 3,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_3/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_3/tools.json",
+                "observation_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_3/observation.json",
+                "response_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_3/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "note_ref": "ev_v2_a8ed453dcb7d12c9b7eec98233a3bb7f47e6627207a0b5764fb52cde93a6fa60"
+                    },
+                    "call_id": "run_p4_4508fb646326:turn:3:tool",
+                    "run_id": "run_p4_4508fb646326",
+                    "sequence": 3,
+                    "task_id": "task_9e06581f",
+                    "tool_id": "read_verified_note"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "261939a54f78a32d4c6ef10099af98b289c4a2601e88b4e26a724d63943fea62",
+                "response_sha256": "1e3cde22d7ca1a4771bac3d6fcae43a2b290146133e007d87a48d071afdcd0cf",
+                "observation_sha256": "4d489110bb58c5650bff3b5435a1d534ffb3543d40a1764de8349c1e0bc0400d",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              },
+              {
+                "run_id": "run_p4_4508fb646326",
+                "turn_id": "run_p4_4508fb646326:turn:4",
+                "task_id": "task_9e06581f",
+                "agent_id": "retrieval_agent",
+                "sequence": 4,
+                "status": "failed",
+                "request_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_4/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_4/tools.json",
+                "observation_ref": "model/run_p4_4508fb646326/run_p4_4508fb646326_turn_3/observation.json",
+                "response_ref": null,
+                "normalized_action": null,
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {},
+                "provider_metadata": {},
+                "request_sha256": "06f14a93e9d747bf93498285626219991d0575fa9ff030883d0ada4fbe63840e",
+                "response_sha256": null,
+                "observation_sha256": null,
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": null
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [
+              {
+                "tool": "read_verified_note",
+                "code": null,
+                "message": "ToolError(code='TOOL_EXECUTION_FAILED', category='runtime', message='Tool execution failed.', retryable=False, affected_refs=[], details={'tool_id': 'read_verified_note', 'failure_diagnostic': {'stage': 'executor', 'exception_type': 'LoaderError', 'location': {'file': 'loader.py', 'function': 'read_notes', 'line': 148}, 'exception_chain': [{'relationship': 'raised', 'exception_type': 'LoaderError'}]}}, safe_to_expose=True)"
+              }
+            ],
+            "source_mutated": true,
+            "source_mutation": {
+              "path": "relations.md",
+              "before_sha256": "bd9901ad38ded5a3c8a8e4d0067b2ae3282350494669f33cb3a37ad8ce277cfa",
+              "after_sha256": "313f8e8955dc86ad407905c7b975a5073dae84a7c7f8eb2d9cc7cc310ca67244"
+            },
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 29
+            },
+            "run_id": "run_p4_4508fb646326",
+            "error": {
+              "code": "TOOL_EXECUTION_FAILED",
+              "category": "runtime",
+              "message": "Tool execution failed.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "failure_diagnostic": {
+                  "exception_chain": [
+                    {
+                      "exception_type": "LoaderError",
+                      "relationship": "raised"
+                    }
+                  ],
+                  "exception_type": "LoaderError",
+                  "location": {
+                    "file": "loader.py",
+                    "function": "read_notes",
+                    "line": 148
+                  },
+                  "stage": "executor"
+                },
+                "tool_id": "read_verified_note"
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "source_change",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_a1dbdc30317da58a",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "budget_exhausted",
+      "boundary": "budget_exhausted",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-8d0c89c1",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-BUDGET]"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\budget_exhausted.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.integration.test_qualified_runtime::test_fault_boundaries_fail_closed[CORE-BUDGET]"
+      ],
+      "runtime_observations": [
+        {
+          "path": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-8d0c89c1\\test_fault_boundaries_fail_clo0\\CORE-BUDGET\\observation.json",
+          "observation": {
+            "schema_version": "qualified-runtime/v1",
+            "run_status": "failed",
+            "outcome": "refused",
+            "reason": null,
+            "values": [],
+            "calls": [
+              {
+                "sequence": 1,
+                "tool": "search_notes",
+                "status": "completed",
+                "hop": "owner",
+                "dependencies": {}
+              }
+            ],
+            "sources": [],
+            "foreign_documents_skipped": [],
+            "citation_valid": false,
+            "bindings_verified": true,
+            "observed_bindings": {
+              "owner": {}
+            },
+            "verified_values": {},
+            "executor_search_calls": 1,
+            "executor_read_calls": 0,
+            "verified_hops": 0,
+            "model_turns": 1,
+            "provider_requests": 1,
+            "real_provider_requests": 0,
+            "model_executions": [
+              {
+                "run_id": "run_p4_48bb5a82079d",
+                "turn_id": "run_p4_48bb5a82079d:turn:1",
+                "task_id": "task_b7020afe",
+                "agent_id": "retrieval_agent",
+                "sequence": 1,
+                "status": "tool_result_durable",
+                "request_ref": "model/run_p4_48bb5a82079d/run_p4_48bb5a82079d_turn_1/request.json",
+                "tool_definition_snapshot_ref": "model/run_p4_48bb5a82079d/run_p4_48bb5a82079d_turn_1/tools.json",
+                "observation_ref": "model/run_p4_48bb5a82079d/run_p4_48bb5a82079d_turn_1/observation.json",
+                "response_ref": "model/run_p4_48bb5a82079d/run_p4_48bb5a82079d_turn_1/response.json",
+                "normalized_action": {
+                  "final_answer": null,
+                  "kind": "tool_call",
+                  "tool_call": {
+                    "agent_id": "retrieval_agent",
+                    "arguments": {
+                      "limit": 4,
+                      "query": "Who owns Beacon Lane?",
+                      "source_context": {
+                        "dependency_entities": {},
+                        "document_count": 1,
+                        "fixture_id": null,
+                        "index_path": "vault_index.json",
+                        "index_schema_version": 1,
+                        "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+                        "query_variant": "primary",
+                        "subgoal_id": "owner",
+                        "vault_root_fingerprint": "root_bb400f6670a6fb6a"
+                      }
+                    },
+                    "call_id": "run_p4_48bb5a82079d:turn:1:tool",
+                    "run_id": "run_p4_48bb5a82079d",
+                    "sequence": 1,
+                    "task_id": "task_b7020afe",
+                    "tool_id": "search_notes"
+                  }
+                },
+                "normalized_proposal": null,
+                "proposal_id": null,
+                "tool_result_refs": [],
+                "usage": {
+                  "duration_ms": null,
+                  "input_tokens": null,
+                  "output_tokens": null,
+                  "total_tokens": null
+                },
+                "provider_metadata": {
+                  "adapter": "qualified-runtime-v1",
+                  "network": "deny"
+                },
+                "request_sha256": "fa0a8fbe4032d5e4ba14b820d4c2f6d77247cc92f1a62b79ee45029f4d1f6471",
+                "response_sha256": "96453c6714ff9b446176ddfc5f9f2612143b805cd3b07984796f531ffe95a2f2",
+                "observation_sha256": "62977bce5fab8d4687b3d06b72117f79b6ead0e974e0220a03c2c1c49d5d02f7",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "finish_reason": null,
+                "provider_error": null,
+                "response_origin": "provider"
+              }
+            ],
+            "response_origins": [
+              "provider"
+            ],
+            "model_request_sentinel_hits": 0,
+            "model_gold_access": false,
+            "tool_errors": [],
+            "source_mutated": false,
+            "source_mutation": null,
+            "termination": {
+              "status": "failed",
+              "reason_code": "agent_workflow_failed",
+              "reason": "Coordinator did not complete the workflow.",
+              "sequence": 11
+            },
+            "run_id": "run_p4_48bb5a82079d",
+            "error": {
+              "code": "MODEL_MAX_STEPS_EXCEEDED",
+              "category": "budget",
+              "message": "The model loop reached its maximum step count.",
+              "retryable": false,
+              "affected_refs": [],
+              "details": {
+                "max_steps": 1
+              },
+              "safe_to_expose": true
+            },
+            "final": null,
+            "fault": "budget_exhausted",
+            "source_identity": {
+              "index_sha256": "63d9150245523b84a7713ae0ccdb591e758f97d8a9d084f02a1050e9a1639ff6",
+              "vault_root_fingerprint": "root_bb400f6670a6fb6a",
+              "document_count": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "qualification",
+      "boundary": "preflight cannot promote invalid inputs or skipped checks",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-2ea1456f",
+      "pytest_nodes": [
+        "tests/unit/test_evaluation_qualification.py",
+        "tests/integration/test_qualified_runtime.py::test_core_gate_junit_parser_does_not_promote_skipped_or_error_to_pass"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\qualification.xml",
+      "status": "passed",
+      "tests": 25,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.unit.test_evaluation_qualification::test_valid_sources_and_plan_qualify_without_model",
+        "tests.unit.test_evaluation_qualification::test_d06_f07_goal_mismatch_is_explicit_not_skipped",
+        "tests.unit.test_evaluation_qualification::test_gold_exact_span_and_outcome_are_checked",
+        "tests.unit.test_evaluation_qualification::test_unknown_observation_cannot_pass",
+        "tests.unit.test_evaluation_qualification::test_mechanically_renamed_cross_partition_case_rejected",
+        "tests.unit.test_evaluation_qualification::test_renaming_and_blank_padding_cannot_mint_a_new_partition",
+        "tests.unit.test_evaluation_qualification::test_dependency_answers_and_foreign_identity_are_invalid",
+        "tests.unit.test_evaluation_qualification::test_duplicate_data_and_ids_are_errors",
+        "tests.unit.test_evaluation_qualification::test_projection_has_no_oracle_fields",
+        "tests.unit.test_evaluation_qualification::test_fault_outcome_cannot_be_assumed_from_target_label",
+        "tests.unit.test_evaluation_qualification::test_missing_partition_is_not_a_valid_split",
+        "tests.unit.test_evaluation_qualification::test_gold_support_must_be_nonempty_even_with_matching_outcome",
+        "tests.unit.test_evaluation_qualification::test_exposed_reference_cannot_be_relabelled_as_new_final",
+        "tests.unit.test_evaluation_qualification::test_invalid_shape_reports_rejection_without_constructing_runner",
+        "tests.unit.test_evaluation_qualification::test_builder_must_run_authoritative_preflight_before_writing",
+        "tests.unit.test_evaluation_qualification::test_malformed_contracts_are_actionable_rejections[task_plan-value0-PLAN_ADMISSION_INVALID]",
+        "tests.unit.test_evaluation_qualification::test_malformed_contracts_are_actionable_rejections[budget-value1-BUDGET_INVALID]",
+        "tests.unit.test_evaluation_qualification::test_runtime_rejects_oracle_input_before_materializing_or_constructing_model",
+        "tests.unit.test_evaluation_qualification::test_no_final_execution_command_is_exposed",
+        "tests.unit.test_evaluation_qualification::test_same_file_conflict_cannot_claim_observable_conflict",
+        "tests.unit.test_evaluation_qualification::test_fault_labels_do_not_bypass_boundary_reachability[source_freshness-source_change-2-TARGET_BUDGET_UNREACHABLE]",
+        "tests.unit.test_evaluation_qualification::test_fault_labels_do_not_bypass_boundary_reachability[invalid_tool-invalid_tool-1-TARGET_BUDGET_UNREACHABLE]",
+        "tests.unit.test_evaluation_qualification::test_fault_labels_do_not_bypass_boundary_reachability[budget_exhausted-budget_exhausted-12-BUDGET_FAULT_NOT_REACHABLE]",
+        "tests.unit.test_evaluation_qualification::test_fault_labels_do_not_bypass_boundary_reachability[cold_resume-cold_resume-12-TARGET_SOURCE_NOT_REACHABLE]",
+        "tests.integration.test_qualified_runtime::test_core_gate_junit_parser_does_not_promote_skipped_or_error_to_pass"
+      ],
+      "runtime_observations": []
+    },
+    {
+      "id": "offline_transport",
+      "boundary": "external connections denied before DNS",
+      "basetemp": "C:\\Users\\18019\\AppData\\Local\\Temp\\llg-0012bdf0",
+      "pytest_nodes": [
+        "tests/unit/test_evaluation_offline_plugin.py"
+      ],
+      "pytest_returncode": 0,
+      "junit": "D:\\webproject\\Linkloom\\work\\linkloom-evaluation-qualification\\work\\evaluation-qualification\\clean-core-gate\\offline_transport.xml",
+      "status": "passed",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "names": [
+        "tests.unit.test_evaluation_offline_plugin::test_external_transport_is_denied"
+      ],
+      "runtime_observations": []
+    }
+  ],
+  "network": "deny",
+  "provider_sdk_requests": 0,
+  "reproduction": {
+    "source_index_tree": "c80979c4e85b20c9786b359dfc1e49ae50a6788f",
+    "clean_export": "D:/webproject/Linkloom/work/eq-qualified-clean",
+    "require_tracked": true,
+    "allow_untracked": false,
+    "dependency_install": "fresh venv with requirements-core.txt; 33 pinned runtime packages",
+    "raw_report_sha256": "c07f8a00b3e3ee5a8e4477c5e7688f260a6aa7d2294e7fc0dbfdf49b1fa431ea",
+    "total_tests": 41,
+    "real_provider_requests": 0,
+    "new_validation_final": "NOT_RUN"
+  }
+}

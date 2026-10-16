@@ -1,0 +1,32 @@
+{
+  "schema_version": "qualification-ready/v1",
+  "status": "READY_FOR_APPROVAL",
+  "scope": "New synthetic validation freeze preparation only",
+  "cases": 16,
+  "dev": 6,
+  "final": 10,
+  "gold_visibility": "author_visible",
+  "external_blind_test": false,
+  "final_execution": "NOT_RUN",
+  "new_final_cases_executed": 0,
+  "real_provider_calls": 0,
+  "real_provider_budget": 0,
+  "production_changes": false,
+  "historical_frozen_changes": false,
+  "independent_review": "APPROVED_FOR_PREPARATION",
+  "core_gate": {
+    "targets_passed": 12,
+    "tests_passed": 41
+  },
+  "historical_core_gate": "NOT_PASSED: 2 original failures and 38 unavailable-input cases",
+  "files_sha256": {
+    "tests/fixtures/evaluation_qualification/validation/qualification_cases.json": "bcc155d6ebd7d5eb829bb9395aa215d1dab01a0e812aeb47ae92c0d4e53ba7f0",
+    "tests/fixtures/evaluation_qualification/validation/validation_manifest.json": "8cb9dd24ea0ea5164259bfc02c889e91dea7ed3e7821d97b3de87554cc32a4de",
+    "docs/requirements/evaluation-qualification/VALIDATION_PREFLIGHT.json": "c2392ef2af91c106ac10b8adfe9ae5edcc4619f1045b80337d3153f2fe653c15",
+    "docs/requirements/evaluation-qualification/CORE_GATE.json": "f38507d9cd39fa61114b310d4f9764113225daabcc40d1df9634fa298e3160d8",
+    "docs/requirements/evaluation-qualification/CORE_REGRESSION.json": "02308925dd29ca6defb4e402731018d163c8bef94a288c428eab32dc86467170",
+    "docs/requirements/evaluation-qualification/REVIEW.json": "1e3f7b88257b77883624ea00419a21423397beaf81125f42cd2f2279515084d3",
+    "docs/requirements/evaluation-qualification/REVIEW.md": "17da02fee4f005553ed8a78e7906867997a1529719b7388308c119eb44bde391"
+  },
+  "next_execution_requires": "Explicit user approval of frozen identity, protocol and Provider budget"
+}

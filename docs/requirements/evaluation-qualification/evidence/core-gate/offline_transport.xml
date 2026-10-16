@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.523" timestamp="2026-10-17T01:08:55.290836+08:00" hostname="beagle"><testcase classname="tests.unit.test_evaluation_offline_plugin" name="test_external_transport_is_denied" time="0.020" /></testsuite></testsuites>

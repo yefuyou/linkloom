@@ -1,0 +1,364 @@
+............F............FFFFF.FFF...................................... [ 33%]
+.........................................FFFFFFFFFFFFFFFFFFFFF.......... [ 66%]
+......F................................................................. [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+__ test_verified_current_conflict_guides_final_only_after_both_source_reads ___
+tests\unit\test_phase3_task_plan.py:345: in test_verified_current_conflict_guides_final_only_after_both_source_reads
+    assert decide_recovery(progress(historical_records)).action == "CONTINUE"
+E   AssertionError: assert 'FINAL_PARTIAL' == 'CONTINUE'
+E     
+E     - CONTINUE
+E     + FINAL_PARTIAL
+_ test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid _
+tests\unit\test_phase3_task_plan.py:554: in test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'
+____ test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate] _____
+tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'
+_____ test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean] ______
+tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'
+_____ test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown] ______
+tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'
+______ test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle] _______
+tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'
+_ test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0] _
+tests\unit\test_phase3_task_plan.py:619: in test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-DEFAULT\\observed.json'
+_ test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1] _
+tests\unit\test_phase3_task_plan.py:619: in test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'
+____ test_model_plan_normalization_does_not_guess_a_missing_dependent_edge ____
+tests\unit\test_phase3_task_plan.py:640: in test_model_plan_normalization_does_not_guess_a_missing_dependent_edge
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'
+_ test_phase9_real_cn2_final_replays_against_exact_verified_passages[before] __
+tests\unit\test_claim_grounding.py:200: in test_phase9_real_cn2_final_replays_against_exact_verified_passages
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-before\\observed.json'
+__ test_phase9_real_cn2_final_replays_against_exact_verified_passages[after] __
+tests\unit\test_claim_grounding.py:200: in test_phase9_real_cn2_final_replays_against_exact_verified_passages
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-after\\observed.json'
+__ test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding ___
+tests\unit\test_claim_grounding.py:240: in test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-cn2-repeats-rep1\\observed.json'
+_ test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A] _
+tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+_ test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B] _
+tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+_ test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2] _
+tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting] _
+tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+__ test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date] ___
+tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+__ test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner] __
+tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project] _
+tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+__ test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1] __
+tests\unit\test_claim_grounding.py:348: in test_phase11_alias_final_replays_with_rejected_historical_candidate
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+__ test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2] __
+tests\unit\test_claim_grounding.py:348: in test_phase11_alias_final_replays_with_rejected_historical_candidate
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep2\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+_ test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref] _
+tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'
+__ test_gemini_request_serializes_verified_context_into_model_visible_input ___
+tests\unit\test_m11_verified_evidence_context.py:109: in test_gemini_request_serializes_verified_context_into_model_visible_input
+    assert "Verified context evidence 1." in model_input
+E   assert 'Verified context evidence 1.' in 'synthesize only verified evidence\nverified_evidence_context=[{"call_id":"context-call-1","tool_id":"search_notes","v...,"line_start":1,"quote_sha256":"quote-hash-1","read_required":true,"relative_path":"note-1.md","status":"verified"}]}]'
+- generated xml file: D:\webproject\Linkloom\work\linkloom-evaluation-qualification\work\evaluation-qualification\core\full249-qualified-env\candidate\batch-01.xml -
+=========================== short test summary info ===========================
+FAILED tests/unit/test_phase3_task_plan.py::test_verified_current_conflict_guides_final_only_after_both_source_reads
+FAILED tests/unit/test_phase3_task_plan.py::test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid
+FAILED tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate]
+FAILED tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean]
+FAILED tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown]
+FAILED tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle]
+FAILED tests/unit/test_phase3_task_plan.py::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0]
+FAILED tests/unit/test_phase3_task_plan.py::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1]
+FAILED tests/unit/test_phase3_task_plan.py::test_model_plan_normalization_does_not_guess_a_missing_dependent_edge
+FAILED tests/unit/test_claim_grounding.py::test_phase9_real_cn2_final_replays_against_exact_verified_passages[before]
+FAILED tests/unit/test_claim_grounding.py::test_phase9_real_cn2_final_replays_against_exact_verified_passages[after]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding
+FAILED tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner]
+FAILED tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project]
+FAILED tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref]
+FAILED tests/unit/test_m11_verified_evidence_context.py::test_gemini_request_serializes_verified_context_into_model_visible_input
+31 failed, 186 passed in 135.49s (0:02:15)

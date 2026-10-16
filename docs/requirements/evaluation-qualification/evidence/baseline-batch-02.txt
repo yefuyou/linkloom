@@ -1,0 +1,122 @@
+..................FFFFFFFFF.....                                         [100%]
+================================== FAILURES ===================================
+__ test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A] __
+tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+__ test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B] __
+tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+___________ test_phase14_cn2_legacy_final_replay_remains_compatible ___________
+tests\integration\test_team_decision_final_contract_communication.py:380: in test_phase14_cn2_legacy_final_replay_remains_compatible
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text _
+tests\integration\test_team_decision_final_contract_communication.py:403: in test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner] _
+tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+_ test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner] _
+tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+_ test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner] _
+tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation] _
+tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+_ test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date] _
+tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\b\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+- generated xml file: D:\webproject\Linkloom\work\linkloom-evaluation-qualification\work\evaluation-qualification\core\full249-qualified-env\baseline\batch-02.xml -
+=========================== short test summary info ===========================
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_cn2_legacy_final_replay_remains_compatible
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]
+FAILED tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]
+9 failed, 23 passed in 120.58s (0:02:00)

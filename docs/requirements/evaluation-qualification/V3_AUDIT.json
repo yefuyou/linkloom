@@ -1,0 +1,1474 @@
+{
+  "schema_version": "v3-qualification-disposition/v1",
+  "categories": {
+    "1": "legal input, demonstrated production failure",
+    "2": "input violates TaskPlan/Product admission",
+    "3": "runner did not execute the target action",
+    "4": "observation insufficient",
+    "5": "Gold and target disagree",
+    "6": "missing target execution evidence"
+  },
+  "old_final_identity": "EXPOSED; not blind; not rerun by this audit",
+  "cases": [
+    {
+      "id": "RAC3-D01",
+      "categories": [
+        "3",
+        "5"
+      ],
+      "disposition": "Repeated malformed Final was scripted, not a successful correction. Gold business_status=complete despite rejected Final; only owner passage was read.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "N/A",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [
+          "lantern-record.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "lantern field",
+            "ari chen"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 2,
+        "parsed_source_facts": [
+          {
+            "subject": "lantern field",
+            "predicate": "owner_of_project",
+            "object": "ari chen",
+            "path": "lantern-record.md",
+            "line": 3,
+            "quote": "Ari Chen is the accountable owner of Lantern Field."
+          },
+          {
+            "subject": "ari chen",
+            "predicate": "reports_to",
+            "object": "bo lin",
+            "path": "lantern-record.md",
+            "line": 7,
+            "quote": "Ari Chen reports directly to Bo Lin."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_e85debb607d3b52d4fe66f39824aaf258b81d967cbc83ca0e643c7f8e82628de",
+          "relative_path": "lantern-record.md",
+          "content_sha256": "05ce1508fdc839e61c8e7878b732a64735a5caf955e0e8da0a86b7f9bb1961f5",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Ari Chen is the accountable owner of Lantern Field.",
+          "quote_sha256": "e3029383f08758c7e53763752b3ae7effa92db961b1d9cafa1670833e0b4a682",
+          "source_kind": "note_body",
+          "reason": "命中查询词: field, lantern",
+          "status": "verified",
+          "logical_path": "/lantern-record.md",
+          "rank": 1,
+          "score": -0.915510240556758,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "lantern-record.md",
+          "workspace_id": "root_500e0df546abe944"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D01",
+      "old_case_sha256": "4221043052e965981abbd832ee6d8ca023293a4aacc8947606ce20c46799e8f1"
+    },
+    {
+      "id": "RAC3-D02",
+      "categories": [],
+      "disposition": "Observed valid completion, two facts and Reviewer. Historical pass retained.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "PASS",
+      "historical_passed": true,
+      "error": null,
+      "actual": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": [
+          "river-quartz-owner.md",
+          "river-quartz-line.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "river quartz",
+            "nia park"
+          ],
+          [
+            "reports_to",
+            "nia park",
+            "ellis shaw"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 3,
+        "parsed_source_facts": [
+          {
+            "subject": "river quartz",
+            "predicate": "owner_of_project",
+            "object": "nia park",
+            "path": "river-quartz-owner.md",
+            "line": 2,
+            "quote": "Nia Park is the accountable owner of River Quartz."
+          },
+          {
+            "subject": "nia park",
+            "predicate": "reports_to",
+            "object": "ellis shaw",
+            "path": "river-quartz-line.md",
+            "line": 2,
+            "quote": "Nia Park reports directly to Ellis Shaw."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_7a220ac48757d1d6c65e633da0afd3aea4ec9644acde40fa9b132699e3974df0",
+          "relative_path": "river-quartz-owner.md",
+          "content_sha256": "3bd457bfa0ccfd25c42bd79efb5aca6a6ba4ff71bebebc48bbcbf3d95e670e55",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Nia Park is the accountable owner of River Quartz.",
+          "quote_sha256": "0f94b669ea7a52ad783ac402da42c4afa19cc1045356b330e4c490d31d696580",
+          "source_kind": "note_body",
+          "reason": "Title 命中查询词: owner, quartz, river",
+          "status": "verified",
+          "logical_path": "/river-quartz-owner.md",
+          "rank": 1,
+          "score": -0.26706013646960935,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "river-quartz-owner.md",
+          "workspace_id": "root_7f549da99e22bbb9"
+        },
+        {
+          "evidence_id": "ev_v2_bf0f8e120f85ba81967ce18b57274ab8b67b1be6d3a18c2156d96c1031d718c9",
+          "relative_path": "river-quartz-line.md",
+          "content_sha256": "544d1922cbb26d77e585162c5fd6a73f177bac09e2d0baeffb8855b5192684af",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Nia Park reports directly to Ellis Shaw.",
+          "quote_sha256": "0b499a2322499217acec7a446abd5efa16438c2630c569593c48f621b8e58aa7",
+          "source_kind": "note_body",
+          "reason": "命中查询词: directly, reports",
+          "status": "verified",
+          "logical_path": "/river-quartz-line.md",
+          "rank": 2,
+          "score": -0.19281633070972812,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "river-quartz-line.md",
+          "workspace_id": "root_7f549da99e22bbb9"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D02",
+      "old_case_sha256": "d61a8bd2562b00c534b012b2051f427fe865eec4d4f3201653d9c96b781b7f7a"
+    },
+    {
+      "id": "RAC3-D03",
+      "categories": [
+        "3"
+      ],
+      "disposition": "UNVERIFIED_ABSTENTION identifies unsearched leader subgoal. Controller finalized after owner read; absence was not investigated.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "runtime",
+        "code": "UNVERIFIED_ABSTENTION",
+        "details": {
+          "unsearched_subgoals": [
+            "leader"
+          ]
+        },
+        "message": "A missing reachable subgoal was not searched.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "failed",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [
+          "moss-harbor.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "moss harbor",
+            "talia reed"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 2,
+        "parsed_source_facts": [
+          {
+            "subject": "moss harbor",
+            "predicate": "owner_of_project",
+            "object": "talia reed",
+            "path": "moss-harbor.md",
+            "line": 3,
+            "quote": "Talia Reed is the accountable owner of Moss Harbor."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_7539ab06053e405c4569d3198a1e04c354e21cf5408c88abae39ac7705058015",
+          "relative_path": "moss-harbor.md",
+          "content_sha256": "24653ed245659b3931b883151acd65b413fb1fac409a66454537fe6f5c059fc6",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Talia Reed is the accountable owner of Moss Harbor.",
+          "quote_sha256": "b5e5d0f5db98175d44fe9065caa1ed56b72096e66d3893729857c4c07e0e395f",
+          "source_kind": "note_body",
+          "reason": "命中查询词: harbor, moss",
+          "status": "verified",
+          "logical_path": "/moss-harbor.md",
+          "rank": 1,
+          "score": -0.915510240556758,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "moss-harbor.md",
+          "workspace_id": "root_94497f7a5e388a29"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D03",
+      "old_case_sha256": "498aa2f771c9c0aada95d69d1274c4e111e6943d039c9c440abf39e31bd9d749"
+    },
+    {
+      "id": "RAC3-D04",
+      "categories": [
+        "2",
+        "3"
+      ],
+      "disposition": "Single-owner question has no admitted multi-hop plan. Partial/conflict without validated subgoal coverage was correctly rejected (UNVERIFIED_ABSTENTION).",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "runtime",
+        "code": "UNVERIFIED_ABSTENTION",
+        "details": {},
+        "message": "A partial read without validated subgoal coverage cannot prove absence.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "failed",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [
+          "cedar-meridian-east.md",
+          "cedar-meridian-west.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "cedar meridian",
+            "mara singh"
+          ],
+          [
+            "owner_of_project",
+            "cedar meridian",
+            "devon wu"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 3,
+        "parsed_source_facts": [
+          {
+            "subject": "cedar meridian",
+            "predicate": "owner_of_project",
+            "object": "mara singh",
+            "path": "cedar-meridian-east.md",
+            "line": 2,
+            "quote": "Mara Singh is the accountable owner of Cedar Meridian."
+          },
+          {
+            "subject": "cedar meridian",
+            "predicate": "owner_of_project",
+            "object": "devon wu",
+            "path": "cedar-meridian-west.md",
+            "line": 2,
+            "quote": "Devon Wu is the accountable owner of Cedar Meridian."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_5d0646ac0737da7e07ff87b9bc02ebadb97759408f20d871058da9c212e94661",
+          "relative_path": "cedar-meridian-east.md",
+          "content_sha256": "0cb226bd322ca9238f9de610f04b438b891d2cf7295f1b5994d53d23c907be78",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Mara Singh is the accountable owner of Cedar Meridian.",
+          "quote_sha256": "8db319eb90dfa168f244b311eb8456d0c264ed9f563c8a207afa30364e437d2a",
+          "source_kind": "note_body",
+          "reason": "Title 命中查询词: cedar, meridian",
+          "status": "verified",
+          "logical_path": "/cedar-meridian-east.md",
+          "rank": 1,
+          "score": -1.17259047905913,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "cedar-meridian-east.md",
+          "workspace_id": "root_8cbee41947e14a44"
+        },
+        {
+          "evidence_id": "ev_v2_4a469ee1af18283d8e29578f7ccb1bcd7153050625f293ddd41291358379c408",
+          "relative_path": "cedar-meridian-west.md",
+          "content_sha256": "146d5053f516410f31b4cc0b987fdaa9d89b3469fb41ee46b8ca7c31a3009b38",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Devon Wu is the accountable owner of Cedar Meridian.",
+          "quote_sha256": "6a3fd75beb9397be12ea50ce5c975b5ad25da596b9381930898a806042f84054",
+          "source_kind": "note_body",
+          "reason": "Title 命中查询词: cedar, meridian",
+          "status": "verified",
+          "logical_path": "/cedar-meridian-west.md",
+          "rank": 2,
+          "score": -1.17259047905913,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "cedar-meridian-west.md",
+          "workspace_id": "root_8cbee41947e14a44"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D04",
+      "old_case_sha256": "3d0a34a7e86a4d76d89e68cdda7103827b720778815fcd6ddd4bae2d10dd69f8"
+    },
+    {
+      "id": "RAC3-D05",
+      "categories": [
+        "3"
+      ],
+      "disposition": "One paragraph was read; Final claimed only owner. Gold requires two relations across separate passages. Runtime accepted only the grounded fact.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": null,
+      "actual": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": [
+          "星河登记.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "星河港",
+            "林澈"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 2,
+        "parsed_source_facts": [
+          {
+            "subject": "星河港",
+            "predicate": "owner_of_project",
+            "object": "林澈",
+            "path": "星河登记.md",
+            "line": 3,
+            "quote": "林澈是星河港的负责人。"
+          },
+          {
+            "subject": "林澈",
+            "predicate": "reports_to",
+            "object": "周宁",
+            "path": "星河登记.md",
+            "line": 7,
+            "quote": "林澈的直属领导是周宁。"
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_fb4460dbfdcdc360ff061118d770f004961d08beccfdd7c5bd4c81e4ef0b5955",
+          "relative_path": "星河登记.md",
+          "content_sha256": "ebf702b2395ef92e14a941bb281e2fde51e95befc2aecbd3d1500f0cf4c8aaeb",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "林澈是星河港的负责人。",
+          "quote_sha256": "c33d10fda06ef2b4f062200bf80ee1c41cc96831e76ea321d202c0cebf84cf48",
+          "source_kind": "note_body",
+          "reason": "命中查询词: 星河, 河港, 负责, 责人",
+          "status": "verified",
+          "logical_path": "/星河登记.md",
+          "rank": 1,
+          "score": -2.39340534316981,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "星河登记.md",
+          "workspace_id": "root_169ee25e081dbaba"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D05",
+      "old_case_sha256": "a2c424e2f17b6340f3faea19ab678507d8a401db5512910169094f523ff7046f"
+    },
+    {
+      "id": "RAC3-D06",
+      "categories": [
+        "2",
+        "3",
+        "6"
+      ],
+      "disposition": "TaskPlan.goal differs from query. Runtime tool boundary was never reached; identity/dependency/executor guards were not executed.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "N/A",
+      "historical_passed": false,
+      "error": null,
+      "actual": null,
+      "input_signals": {
+        "goal_matches_query": false,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 3,
+        "parsed_source_facts": [
+          {
+            "subject": "cedar-arc",
+            "predicate": "alias_of_project",
+            "object": "northwind vale",
+            "path": "cedar-arc-alias.md",
+            "line": 1,
+            "quote": "Cedar-Arc is the team alias for Northwind Vale."
+          },
+          {
+            "subject": "northwind vale",
+            "predicate": "owner_of_project",
+            "object": "rhea moss",
+            "path": "northwind-owner.md",
+            "line": 1,
+            "quote": "Rhea Moss is the accountable owner of Northwind Vale."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "host_source_identity_is_authoritative",
+        "unverified_dependency_rejected",
+        "executor_suppressed",
+        "repeated_invalid_call_stops_recovery"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D06",
+      "old_case_sha256": "5c2a77a72da378c74a6d19db53a6970cf2b61619afbf7b5089c250bdaf70d94d"
+    },
+    {
+      "id": "RAC3-D07",
+      "categories": [
+        "3"
+      ],
+      "disposition": "Controller issued one read for a multi-passage file then Final. Second relation never became verified context.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": null,
+      "actual": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": [
+          "atlas-current-register.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "atlas current",
+            "sana ito"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 2,
+        "parsed_source_facts": [
+          {
+            "subject": "atlas current",
+            "predicate": "owner_of_project",
+            "object": "sana ito",
+            "path": "atlas-current-register.md",
+            "line": 4,
+            "quote": "Sana Ito is the accountable owner of Atlas Current."
+          },
+          {
+            "subject": "sana ito",
+            "predicate": "reports_to",
+            "object": "kian brooks",
+            "path": "atlas-current-register.md",
+            "line": 10,
+            "quote": "Sana Ito reports directly to Kian Brooks."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_1a4f51ea4bb44cf6baf119e67bea8e11c272e8b8e691d1ac9329754b3c42cd00",
+          "relative_path": "atlas-current-register.md",
+          "content_sha256": "f5826687950fa1c09a9e73261a1705f6ce6587bef8c2af3c525cc93f3581e079",
+          "line_start": 4,
+          "line_end": 4,
+          "quote": "Sana Ito is the accountable owner of Atlas Current.",
+          "quote_sha256": "bdc0f71fee59beeadd7db764c46356d4a4eb712b9677cc38b80064b41b44bf77",
+          "source_kind": "note_body",
+          "reason": "命中查询词: atlas, current, owner",
+          "status": "verified",
+          "logical_path": "/atlas-current-register.md",
+          "rank": 1,
+          "score": -1.7394694570578408,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "atlas-current-register.md",
+          "workspace_id": "root_f991bee5d05ea41a"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D07",
+      "old_case_sha256": "7cf00a120aead3add79f5b05828a3f5b5b91214f7c7358e51f41c336736ce645"
+    },
+    {
+      "id": "RAC3-D08",
+      "categories": [
+        "4",
+        "5"
+      ],
+      "disposition": "Context byte limit was not wired to Runtime; count limit is not byte accounting. Dropped-noise guard uses read-path absence, not ContextAssembler audit.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": null,
+      "actual": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": [
+          "ember-ridge-owner.md",
+          "ember-ridge-noise.md",
+          "ember-ridge-line.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "ember ridge",
+            "emi cole"
+          ],
+          [
+            "reports_to",
+            "emi cole",
+            "rowan bell"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 4,
+        "parsed_source_facts": [
+          {
+            "subject": "ember ridge",
+            "predicate": "owner_of_project",
+            "object": "emi cole",
+            "path": "ember-ridge-owner.md",
+            "line": 1,
+            "quote": "Emi Cole is the accountable owner of Ember Ridge."
+          },
+          {
+            "subject": "emi cole",
+            "predicate": "reports_to",
+            "object": "rowan bell",
+            "path": "ember-ridge-line.md",
+            "line": 1,
+            "quote": "Emi Cole reports directly to Rowan Bell."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_a732d76905eb6c555a9b9c8b47b557307570201f1296c3b50a342c98ff7ad36b",
+          "relative_path": "ember-ridge-owner.md",
+          "content_sha256": "76a53f7154f88793934dedf99c55f603c44ad4c2d6a401cff6cbc786555f9579",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "Emi Cole is the accountable owner of Ember Ridge.",
+          "quote_sha256": "240152efe2ee89fbbfece904c9f46c7f411f8597ad57737a50a6b94e678be6f3",
+          "source_kind": "note_body",
+          "reason": "Title 命中查询词: ember, owner, ridge",
+          "status": "verified",
+          "logical_path": "/ember-ridge-owner.md",
+          "rank": 1,
+          "score": 0.28107819177726995,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "ember-ridge-owner.md",
+          "workspace_id": "root_aa28b32551fdae63"
+        },
+        {
+          "evidence_id": "ev_v2_ef5a11a8caa6ea6b49ca51d71fa95453afac2dd4821866dd1c0d019c280d523c",
+          "relative_path": "ember-ridge-noise.md",
+          "content_sha256": "c6d13b2510472e281ef9a933499318df4cca6dfa8d2755fc7c11edc1433b3afa",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "This long planning note repeats release vocabulary without recording an owner or reporting relation. It is intentionally distractive context for the bounded selection test.",
+          "quote_sha256": "0af3563ca9b43f0ef87acd29e1c9fe3f6028bce468256d47d3f939ebfd3df334",
+          "source_kind": "note_body",
+          "reason": "命中查询词: owner",
+          "status": "verified",
+          "logical_path": "/ember-ridge-noise.md",
+          "rank": 2,
+          "score": 0.1390982376500291,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "ember-ridge-noise.md",
+          "workspace_id": "root_aa28b32551fdae63"
+        },
+        {
+          "evidence_id": "ev_v2_3b9bd0aebd707024ea2f95df2935ad46013c4b3932fa3624468766a537e9751e",
+          "relative_path": "ember-ridge-line.md",
+          "content_sha256": "acd3686ac84d0e9a1ea7854a8bd3c20651a1206006b3f83ccab06c636278f531",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "Emi Cole reports directly to Rowan Bell.",
+          "quote_sha256": "71ff2a96e497e3b3945c1465db0c5fab046410eacdae8a50d244d8b1daa36c27",
+          "source_kind": "note_body",
+          "reason": "命中查询词: report",
+          "status": "verified",
+          "logical_path": "/ember-ridge-line.md",
+          "rank": 3,
+          "score": 0.14534533608589778,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "ember-ridge-line.md",
+          "workspace_id": "root_aa28b32551fdae63"
+        }
+      ],
+      "unobserved_required_guards": [
+        "required_verified_reads_survive_context_budget"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D08",
+      "old_case_sha256": "ae4651dd23fa1190c49d9dd6460041d26a4a5e295c834cdf56918b9f92fca4df"
+    },
+    {
+      "id": "RAC3-D09",
+      "categories": [],
+      "disposition": "Final qualified evidence records actual MODEL_MAX_STEPS_EXCEEDED, Search+Read and no Final. Earlier provisional concerns are superseded by this saved trace.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "PASS",
+      "historical_passed": true,
+      "error": {
+        "affected_refs": [],
+        "category": "budget",
+        "code": "MODEL_MAX_STEPS_EXCEEDED",
+        "details": {
+          "max_steps": 2
+        },
+        "message": "The model loop reached its maximum step count.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "budget_exhausted",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [
+          "silver-owner.md"
+        ],
+        "facts": [
+          [
+            "owner_of_project",
+            "silver orchard",
+            "ivo lane"
+          ]
+        ]
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 1,
+        "parsed_source_facts": [
+          {
+            "subject": "silver orchard",
+            "predicate": "owner_of_project",
+            "object": "ivo lane",
+            "path": "silver-owner.md",
+            "line": 1,
+            "quote": "Ivo Lane is the accountable owner of Silver Orchard."
+          },
+          {
+            "subject": "ivo lane",
+            "predicate": "reports_to",
+            "object": "cleo hart",
+            "path": "silver-line.md",
+            "line": 1,
+            "quote": "Ivo Lane reports directly to Cleo Hart."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [
+        {
+          "evidence_id": "ev_v2_9490af1146d95ffa200c75739ebde2f360308d4923c50a026b62b2f4761d94f4",
+          "relative_path": "silver-owner.md",
+          "content_sha256": "cfd2610148fd0409f958c9bc0059d31f38c1033010481c20ebf09874c8ee770f",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "Ivo Lane is the accountable owner of Silver Orchard.",
+          "quote_sha256": "20bdc71c056197b8a65eb90bd737135c5fe5aa473705b90041c68b078f1b2663",
+          "source_kind": "note_body",
+          "reason": "Title 命中查询词: silver",
+          "status": "verified",
+          "logical_path": "/silver-owner.md",
+          "rank": 1,
+          "score": -0.11137978632761941,
+          "retrieval_channel": "bm25",
+          "retrieval_mode": "bm25",
+          "scope_path": null,
+          "index_version": 2,
+          "source_ref": "silver-owner.md",
+          "workspace_id": "root_f7ee803ad4c011b8"
+        }
+      ],
+      "unobserved_required_guards": [],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D09",
+      "old_case_sha256": "3639d5a8d33a5787d7aec1cbde11af8183a62e6acb0d413f2ea60779495c34d6"
+    },
+    {
+      "id": "RAC3-D10",
+      "categories": [
+        "4"
+      ],
+      "disposition": "Runtime unknown-outcome and one model invocation observed. Fake adapter has no paid Provider reservation ledger; append-only/cost guard is unobserved.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "N/A",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "provider",
+        "code": "MODEL_UNKNOWN_FAILURE",
+        "details": {
+          "outcome": "unknown_provider_outcome"
+        },
+        "message": "Synthetic Provider outcome is uncertain.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "unknown",
+        "runtime_status": "provider_uncertain",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "offline_script",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "willow signal",
+            "predicate": "owner_of_project",
+            "object": "miko reyes",
+            "path": "willow-signal.md",
+            "line": 1,
+            "quote": "Miko Reyes is the accountable owner of Willow Signal."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "ledger_reservation_is_append_only"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/dev/cases/RAC3-D10",
+      "old_case_sha256": "0aa0291424f844c3a7ddb7e05ea99a178e530c64cd82cfaeb961d222d81ddd11"
+    },
+    {
+      "id": "RAC3-F01",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "post_fix_provider_input_only has no scripted tools or foreign-workspace action. Empty malformed Finals cannot prove workspace isolation.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "harbor lattice",
+            "predicate": "owner_of_project",
+            "object": "juno park",
+            "path": "harbor-owner.md",
+            "line": 1,
+            "quote": "Juno Park is the accountable owner of Harbor Lattice."
+          },
+          {
+            "subject": "juno park",
+            "predicate": "reports_to",
+            "object": "soren vale",
+            "path": "harbor-line.md",
+            "line": 1,
+            "quote": "Juno Park reports directly to Soren Vale."
+          },
+          {
+            "subject": "harbor lattice",
+            "predicate": "owner_of_project",
+            "object": "mira holt",
+            "path": "foreign-harbor-owner.md",
+            "line": 1,
+            "quote": "Mira Holt is the accountable owner of Harbor Lattice."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "foreign_workspace_never_enters_active_evidence",
+        "all_claims_match_active_workspace"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F01",
+      "old_case_sha256": "e091eef8f97c61f884a062899ac50bdbb795abc41aa68cabf4fa09c57ea32246"
+    },
+    {
+      "id": "RAC3-F02",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "No source update or stale read was executed; repeated malformed Final is not freshness evidence.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": []
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "source_version_is_revalidated_before_final",
+        "stale_evidence_is_invalidated",
+        "no_old_owner_is_published"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F02",
+      "old_case_sha256": "11e151355e7767351b3abd08e44e7a9ac4c8136e0642717386992a30abff2dae"
+    },
+    {
+      "id": "RAC3-F03",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "No Search/Read or scoped Final; no observations for scope guards.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "juniper arc",
+            "predicate": "owner_of_project",
+            "object": "pema singh",
+            "path": "juniper-arc.md",
+            "line": 2,
+            "quote": "Pema Singh is the accountable owner of Juniper Arc."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "Final_claims_are_within_query_scope",
+        "neighboring_entity_is_not_projected",
+        "grounding_checks_question_scope"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F03",
+      "old_case_sha256": "cd9366883ca53afbef3d32842bab930c06075032f630660eba4a5bf77adf2f4e"
+    },
+    {
+      "id": "RAC3-F04",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "Unscripted mode generated empty Final, not the specified unknown-field/schema-boundary stimulus.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "opal station",
+            "predicate": "owner_of_project",
+            "object": "hana moss",
+            "path": "opal-station.md",
+            "line": 1,
+            "quote": "Hana Moss is the accountable owner of Opal Station."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "unknown_final_fields_are_rejected",
+        "adapter_does_not_drop_required_fields",
+        "schema_and_validator_are_aligned"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F04",
+      "old_case_sha256": "cfed0fc88466365230c27bd0f11b220c015016ac9dc2ba59dbd066238d416e0b"
+    },
+    {
+      "id": "RAC3-F05",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "No owner read or missing-hop search. Partial target never reached.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "青岚线路",
+            "predicate": "owner_of_project",
+            "object": "沈砚",
+            "path": "青岚负责人.md",
+            "line": 1,
+            "quote": "沈砚是青岚线路的负责人。"
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "partial_preserves_verified_chinese_fact",
+        "missing_leader_is_explicit_unknown",
+        "similar_project_name_is_excluded"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F05",
+      "old_case_sha256": "4b9d9860ab445c41bc693f8a712e75c81ac5939ca15ba9c0f1b54260cc0037e7"
+    },
+    {
+      "id": "RAC3-F06",
+      "categories": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "disposition": "No opposing reads. The registry-names-X-as-owner phrasing yields no supported typed facts in the existing claim grammar. Gold also mandates a context-only evidence path without exact fact spans. No authority inference was tested.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": []
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "conflicting_source_identity_is_visible",
+        "no_unproven_authority_precedence",
+        "reviewer_sees_conflict"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F06",
+      "old_case_sha256": "b1b2cc8aa81aa8295c4be30b6c3a988f539b37bf932d392f0fb14112d0c715a1"
+    },
+    {
+      "id": "RAC3-F07",
+      "categories": [
+        "2",
+        "3",
+        "6"
+      ],
+      "disposition": "TaskPlan.goal differs from query; alternate/dependency/source-context boundary not reached.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "N/A",
+      "historical_passed": false,
+      "error": null,
+      "actual": null,
+      "input_signals": {
+        "goal_matches_query": false,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "lumen-9",
+            "predicate": "alias_of_project",
+            "object": "seabird north",
+            "path": "lumen-nine-alias.md",
+            "line": 1,
+            "quote": "Lumen-9 is the team alias for Seabird North."
+          },
+          {
+            "subject": "seabird north",
+            "predicate": "owner_of_project",
+            "object": "yuki tran",
+            "path": "seabird-owner.md",
+            "line": 1,
+            "quote": "Yuki Tran is the accountable owner of Seabird North."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "dependency_entity_must_be_verified",
+        "alternate_is_bounded_to_task_plan",
+        "source_context_identity_is_copied"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F07",
+      "old_case_sha256": "09d1b8137334f013f70d39e65e24c53c25cbee6ff7ddc9f1baceba868f6c90f3"
+    },
+    {
+      "id": "RAC3-F08",
+      "categories": [
+        "3",
+        "4",
+        "6"
+      ],
+      "disposition": "No distinct reads or real context-byte selection occurred; context target unobserved.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "northstar canal",
+            "predicate": "owner_of_project",
+            "object": "uma li",
+            "path": "northstar-canal-register.md",
+            "line": 4,
+            "quote": "Uma Li is the accountable owner of Northstar Canal."
+          },
+          {
+            "subject": "uma li",
+            "predicate": "reports_to",
+            "object": "felix zhou",
+            "path": "northstar-canal-register.md",
+            "line": 10,
+            "quote": "Uma Li reports directly to Felix Zhou."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "same_file_passages_are_distinct",
+        "required_reads_are_not_dropped_for_noise",
+        "future_proposal_is_not_claimed"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F08",
+      "old_case_sha256": "1152c733d6c4faf1f2642153109fa7c2087a0bdd78fe0c03db421d6edfbca0f7"
+    },
+    {
+      "id": "RAC3-F09",
+      "categories": [
+        "3",
+        "6"
+      ],
+      "disposition": "Unscripted empty Final fails format before step exhaustion; MODEL_SCHEMA_CORRECTION_EXHAUSTED is not a budget-boundary witness.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "FAIL",
+      "historical_passed": false,
+      "error": {
+        "affected_refs": [],
+        "category": "input",
+        "code": "MODEL_SCHEMA_CORRECTION_EXHAUSTED",
+        "details": {
+          "reason_code": "FINAL_CORRECTION_EXHAUSTED"
+        },
+        "message": "The existing recovery boundary ended this run safely.",
+        "retryable": false,
+        "safe_to_expose": true
+      },
+      "actual": {
+        "business_status": "incomplete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": []
+      },
+      "input_signals": {
+        "goal_matches_query": true,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "quartz grove",
+            "predicate": "owner_of_project",
+            "object": "bea lin",
+            "path": "quartz-owner.md",
+            "line": 1,
+            "quote": "Bea Lin is the accountable owner of Quartz Grove."
+          },
+          {
+            "subject": "bea lin",
+            "predicate": "reports_to",
+            "object": "omar shaw",
+            "path": "quartz-line.md",
+            "line": 1,
+            "quote": "Bea Lin reports directly to Omar Shaw."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "budget_failure_is_explicit",
+        "no_extra_provider_request",
+        "known_owner_is_not_lost_in_a_fake_final"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F09",
+      "old_case_sha256": "c1af9c6d1923f071090576e73cb63e5b8dfb9a1c65f6dd544981ec232b36d8da"
+    },
+    {
+      "id": "RAC3-F10",
+      "categories": [
+        "2",
+        "3",
+        "6"
+      ],
+      "disposition": "TaskPlan.goal differs from query; provider_outcome=not_scripted never injects uncertain response. No unknown-outcome target evidence.",
+      "production_failure_demonstrated": false,
+      "production_failure_note": "No attributable production regression established by this case; lack of proof is not a pass.",
+      "historical_score": "N/A",
+      "historical_passed": false,
+      "error": null,
+      "actual": null,
+      "input_signals": {
+        "goal_matches_query": false,
+        "stimulus_mode": "post_fix_provider_input_only",
+        "scripted_tool_calls": 0,
+        "parsed_source_facts": [
+          {
+            "subject": "echo-4",
+            "predicate": "alias_of_project",
+            "object": "meridian fold",
+            "path": "echo-four-alias.md",
+            "line": 1,
+            "quote": "Echo-4 is the team alias for Meridian Fold."
+          },
+          {
+            "subject": "meridian fold",
+            "predicate": "owner_of_project",
+            "object": "lara qin",
+            "path": "meridian-owner.md",
+            "line": 1,
+            "quote": "Lara Qin is the accountable owner of Meridian Fold."
+          }
+        ]
+      },
+      "saved_trace": null,
+      "saved_verified_reads": [],
+      "unobserved_required_guards": [
+        "one_uncertain_outcome_is_preserved",
+        "no_second_request_after_unknown",
+        "ledger_keeps_reserved_cost",
+        "no_unverified_alias_or_owner"
+      ],
+      "data_pointer": "DATA_EVIDENCE.json#/final/cases/RAC3-F10",
+      "old_case_sha256": "901482f6b789602727abd333eccb677bc5d040f48fa26f3fa46c925fd4f8e56d"
+    }
+  ],
+  "old_artifact_sha256": {
+    "docs/requirements/real-agent-contract-v3/AUTOPSY.json": "892c2eb07271d2052ca4df955c96ac394498f2e3c63cd1b14e99453857744539",
+    "docs/requirements/real-agent-contract-v3/BROWSER.json": "5ee48a37a6cb40af0957b698223d07a313bd03a3af2a90270ad38e2444d78643",
+    "docs/requirements/real-agent-contract-v3/DATA_EVIDENCE.json": "b417e1095f1bf888504cba760e42cbfa33988889f75516c4569467145c38d52c",
+    "docs/requirements/real-agent-contract-v3/DATA_QUALIFICATION.md": "9ba6946841bd0058cfada67f249f18039aafdfb3212add75c1b52f13a1629c55",
+    "docs/requirements/real-agent-contract-v3/DELIVERY.md": "5c9ac9409af7659bc8cc50a927278401b16dca2b13b419c8f08587627906f56f",
+    "docs/requirements/real-agent-contract-v3/FAILURE_AUTOPSY.md": "d646a8ba472f462c9f9998ffb6765743e74ae1c441e993b100fbcb18e42f58cf",
+    "docs/requirements/real-agent-contract-v3/FIXES.md": "a285a490862d0f43bac63a313b815d13a9913aabca7b66095f76ccf397850695",
+    "docs/requirements/real-agent-contract-v3/implementation_plan.md": "5194146902385bf8356f44b0217a15a5d3b9b87dbba0cbea4834f0acc0da4079",
+    "docs/requirements/real-agent-contract-v3/LIVE_COMPARISON.md": "f086ae17a9424a48d07368608b603368b7a43f7865755eb2b525d42f8406cbfe",
+    "docs/requirements/real-agent-contract-v3/LIVE_EVIDENCE.json": "bde26208de9dcfdf5349772dd3b4559f0c95ca6bf91be178249ad39283b4544e",
+    "docs/requirements/real-agent-contract-v3/PRODUCT_VERIFICATION.json": "955f9ce37e3b4b6dacdc33d686730b9703350b8d1b4a1dd789a592ea829409a0",
+    "docs/requirements/real-agent-contract-v3/REGRESSION.json": "a950862125a641e3cefda16868041a063c9c5fa6183a7a011d812103b6feaef8",
+    "docs/requirements/real-agent-contract-v3/REGRESSION.md": "34fa4f75a170f944a3ab3ee1bbd12ee85ece1059ae6e8ec0f623f61354026c63",
+    "docs/requirements/real-agent-contract-v3/RESULTS.json": "d7a33aef64079cd80affb8412506fc04f648b872ca955ed811ad383669d0f374",
+    "docs/requirements/real-agent-contract-v3/REVIEW.md": "cab455e9f1c8fa06f7da10f90d0deca3f2622bb9e27903c8bfca048a5958e53e",
+    "docs/requirements/real-agent-contract-v3/SPEC.md": "6325891c86a48a40dbf18f1d6b67eeea6a2e6305248839445448614d0d355eb7",
+    "docs/requirements/real-agent-contract-v3/V2_DATA_QUALIFICATION.json": "45f2261e47f3c7bd211d5d41a29f70792d9744829c5d8f8970e0c47137fa8b53",
+    "tests/fixtures/real_agent_contract_v3/dev.json": "354dd2859e4db2177b3f4133b21d4268de013d38adb366ad14fb0adbee1571d3",
+    "tests/fixtures/real_agent_contract_v3/final.json": "6b01a48493ad7e0da3cddd66c1c60377915ef72362d4e0ad985ea7b339ce0d44",
+    "tests/fixtures/real_agent_contract_v3/freeze.json": "36c1c17530a6fb044443971177facdbfe0a5bf2138430b1eb4ef6eb8c26ae1f6",
+    "scripts/contract_v3_cases.py": "845beb78db64190ac3b81093811c6e1f33a5c984e6a0cccef00339bccc087a4d"
+  },
+  "old_scores_modified": false,
+  "model_calls": 0,
+  "limits": "Saved traces cannot establish unexecuted product behavior. Category 1 requires a legal, target-reaching reproducible failure; none demonstrated here."
+}

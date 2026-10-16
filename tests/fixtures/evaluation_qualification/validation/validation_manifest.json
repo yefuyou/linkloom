@@ -1,0 +1,1520 @@
+{
+  "schema_version": "evaluation-qualification-validation/v1",
+  "dataset": "evaluation-qualification",
+  "bundle_schema_version": "qualification-cases/v1",
+  "historical_context": {
+    "baseline_commit": "37e45b1",
+    "candidate_commit": "499bb37",
+    "historical_249": {
+      "baseline_total": 249,
+      "baseline_pass": 209,
+      "baseline_fail": 40,
+      "candidate_total": 249,
+      "candidate_pass": 208,
+      "candidate_fail": 41,
+      "status": "historical_only"
+    }
+  },
+  "gold_visibility": "author_visible",
+  "external_blind_test": false,
+  "execution": {
+    "classification": "STATIC_PREPARATION_ONLY",
+    "final_execution": "NOT_RUN",
+    "real_provider_calls": 0,
+    "new_final_cases_executed": 0
+  },
+  "splits": {
+    "dev": [
+      "EQ-D01",
+      "EQ-D02",
+      "EQ-D03",
+      "EQ-D04",
+      "EQ-D05",
+      "EQ-D06"
+    ],
+    "final": [
+      "EQ-F01",
+      "EQ-F02",
+      "EQ-F03",
+      "EQ-F04",
+      "EQ-F05",
+      "EQ-F06",
+      "EQ-F07",
+      "EQ-F08",
+      "EQ-F09",
+      "EQ-F10"
+    ]
+  },
+  "cases": [
+    {
+      "id": "EQ-D01",
+      "partition": "dev",
+      "family": "same_file_alias_context_two_hop",
+      "graph_shape": "owner@d0p2|reports@d0p3|incoming-alias@d0p4",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 4,
+              "line": 7
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "direct_leader_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 3,
+              "line": 5
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner@d0p2|reports@d0p3|incoming-alias@d0p4"
+      },
+      "graph_signature": "d9192ca7895d1af96a74e86a164f593d350b71fb9f40b9791fd7999f127d63e2",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D01-F01",
+          "evidence_id": "EQ-D01-E01",
+          "source_relation": "owner_of",
+          "subject": "Cedar Meridian",
+          "object": "Mara Singh",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "cedar-meridian/brief.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Mara Singh is the accountable owner of Cedar Meridian.",
+          "workspace_id": "ws-eq-d01"
+        },
+        {
+          "fact_id": "EQ-D01-F02",
+          "evidence_id": "EQ-D01-E02",
+          "source_relation": "direct_leader_of",
+          "subject": "Mara Singh",
+          "object": "Bo Lin",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "cedar-meridian/brief.md",
+          "line_start": 5,
+          "line_end": 5,
+          "quote": "Mara Singh reports directly to Bo Lin.",
+          "workspace_id": "ws-eq-d01"
+        },
+        {
+          "fact_id": "EQ-D01-F03",
+          "evidence_id": "EQ-D01-E03",
+          "source_relation": "alias_of",
+          "subject": "CM",
+          "object": "Cedar Meridian",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "cedar-meridian/brief.md",
+          "line_start": 7,
+          "line_end": 7,
+          "quote": "CM is the team alias for Cedar Meridian.",
+          "workspace_id": "ws-eq-d01"
+        }
+      ]
+    },
+    {
+      "id": "EQ-D02",
+      "partition": "dev",
+      "family": "missing_dependent_hop",
+      "graph_shape": "owner@d0p2|missing-dependent@d0p3|adjacent-owner-reports@d1p2",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3",
+          "n4"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 4
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n4",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner@d0p2|missing-dependent@d0p3|adjacent-owner-reports@d1p2"
+      },
+      "graph_signature": "f2e0fdd16ad789800f5470d8e46cc6d3e468a126be6c75b75c932769b5e9afee",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D02-F01",
+          "evidence_id": "EQ-D02-E01",
+          "source_relation": "owner_of",
+          "subject": "Moss Harbor",
+          "object": "Talia Reed",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "moss-harbor/status.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Talia Reed is the accountable owner of Moss Harbor.",
+          "workspace_id": "ws-eq-d02"
+        },
+        {
+          "fact_id": "EQ-D02-F02",
+          "evidence_id": "EQ-D02-E02",
+          "source_relation": "owner_of",
+          "subject": "Moss Delta",
+          "object": "Owen Vale",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "moss-harbor/adjacent.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Owen Vale owns Moss Delta.",
+          "workspace_id": "ws-eq-d02"
+        },
+        {
+          "fact_id": "EQ-D02-F03",
+          "evidence_id": "EQ-D02-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Owen Vale",
+          "object": "Priya Noor",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "moss-harbor/adjacent.md",
+          "line_start": 4,
+          "line_end": 4,
+          "quote": "Owen Vale reports directly to Priya Noor.",
+          "workspace_id": "ws-eq-d02"
+        }
+      ]
+    },
+    {
+      "id": "EQ-D03",
+      "partition": "dev",
+      "family": "competing_current_owners",
+      "graph_shape": "owner@d0p2|owner@d1p2",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner@d0p2|owner@d1p2"
+      },
+      "graph_signature": "d12548bc2ef1d2dee440d0ebc709e042582c6e33676082612892985d89b078fa",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D03-F01",
+          "evidence_id": "EQ-D03-E01",
+          "source_relation": "owner_of",
+          "subject": "Harbor Lattice",
+          "object": "Juno Park",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "harbor-lattice/registry.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Juno Park is the accountable owner of Harbor Lattice.",
+          "workspace_id": "ws-eq-d03"
+        },
+        {
+          "fact_id": "EQ-D03-F02",
+          "evidence_id": "EQ-D03-E02",
+          "source_relation": "owner_of",
+          "subject": "Harbor Lattice",
+          "object": "Mira Holt",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "harbor-lattice/review.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Mira Holt is the accountable owner of Harbor Lattice.",
+          "workspace_id": "ws-eq-d03"
+        }
+      ]
+    },
+    {
+      "id": "EQ-D04",
+      "partition": "dev",
+      "family": "alias_owner_leader_three_hop",
+      "graph_shape": "alias@d0p1|owner@d1p1|reports@d2p1",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "predicate": "alias_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 1
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "direct_leader_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 2,
+              "paragraph_index": 1,
+              "line": 1
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "owner_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 1,
+              "line": 1
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias@d0p1|owner@d1p1|reports@d2p1"
+      },
+      "graph_signature": "c715c03722993fe1123e42ab21b71db18fada5dee45f1964376735e037144eef",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D04-F01",
+          "evidence_id": "EQ-D04-E01",
+          "source_relation": "alias_of",
+          "subject": "CH",
+          "object": "Copper Haven",
+          "predicate": "alias_of_project",
+          "gold": true,
+          "path": "alias.md",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "CH aliases Copper Haven.",
+          "workspace_id": "ws-eq-d04"
+        },
+        {
+          "fact_id": "EQ-D04-F02",
+          "evidence_id": "EQ-D04-E02",
+          "source_relation": "owner_of",
+          "subject": "Copper Haven",
+          "object": "Rhea Moss",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "accountability.md",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "Rhea Moss owns Copper Haven.",
+          "workspace_id": "ws-eq-d04"
+        },
+        {
+          "fact_id": "EQ-D04-F03",
+          "evidence_id": "EQ-D04-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Rhea Moss",
+          "object": "Bo Lin",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "reporting.md",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "Rhea Moss reports directly to Bo Lin.",
+          "workspace_id": "ws-eq-d04"
+        }
+      ]
+    },
+    {
+      "id": "EQ-D05",
+      "partition": "dev",
+      "family": "malformed_tool_arguments_with_distractor",
+      "graph_shape": "owner+reports@d0p1|distractor-owner@d1p1",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3",
+          "n4"
+        ],
+        "edges": [
+          {
+            "from": "n0",
+            "predicate": "direct_leader_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n4",
+            "predicate": "owner_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner+reports@d0p1|distractor-owner@d1p1"
+      },
+      "graph_signature": "8dfad798f42244d31bb82cde3b1a33f324dc7aca4101c1029a8a6bd36b99ff74",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D05-F01",
+          "evidence_id": "EQ-D05-E01",
+          "source_relation": "owner_of",
+          "subject": "Silver Delta",
+          "object": "Ivo Chen",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "silver-delta/source.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Ivo Chen is the accountable owner of Silver Delta.",
+          "workspace_id": "ws-eq-d05"
+        },
+        {
+          "fact_id": "EQ-D05-F02",
+          "evidence_id": "EQ-D05-E02",
+          "source_relation": "direct_leader_of",
+          "subject": "Ivo Chen",
+          "object": "Ren Park",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "silver-delta/source.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Ivo Chen reports directly to Ren Park.",
+          "workspace_id": "ws-eq-d05"
+        },
+        {
+          "fact_id": "EQ-D05-F03",
+          "evidence_id": "EQ-D05-E03",
+          "source_relation": "owner_of",
+          "subject": "Silver Dawn",
+          "object": "Lena Cho",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "silver-dawn/neighbor.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Lena Cho is the accountable owner of Silver Dawn.",
+          "workspace_id": "ws-eq-d05"
+        }
+      ]
+    },
+    {
+      "id": "EQ-D06",
+      "partition": "dev",
+      "family": "compound_same_line_final_correction",
+      "graph_shape": "owner+reports@d0l2_same_line",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "predicate": "direct_leader_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner+reports@d0l2_same_line"
+      },
+      "graph_signature": "87f42986dc87422fe4211157bed09fa984245ab1d82dec2aa362294859fbff7d",
+      "source_facts": [
+        {
+          "fact_id": "EQ-D06-F01",
+          "evidence_id": "EQ-D06-E01",
+          "source_relation": "owner_of",
+          "subject": "Quartz Gate",
+          "object": "Nia Park",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "quartz-gate/decision.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Nia Park is the accountable owner of Quartz Gate. Nia Park reports directly to Ellis Shaw.",
+          "workspace_id": "ws-eq-d06"
+        },
+        {
+          "fact_id": "EQ-D06-F02",
+          "evidence_id": "EQ-D06-E02",
+          "source_relation": "direct_leader_of",
+          "subject": "Nia Park",
+          "object": "Ellis Shaw",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "quartz-gate/decision.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Nia Park is the accountable owner of Quartz Gate. Nia Park reports directly to Ellis Shaw.",
+          "workspace_id": "ws-eq-d06"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F01",
+      "partition": "final",
+      "family": "alias_fan_in_cold_resume",
+      "graph_shape": "two-alias-fan-in@d0p2|owner@d1p2|reports@d2p2",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3",
+          "n4"
+        ],
+        "edges": [
+          {
+            "from": "n0",
+            "predicate": "alias_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 4
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "alias_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n4",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 2,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "owner_of",
+            "to": "n4",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "two-alias-fan-in@d0p2|owner@d1p2|reports@d2p2"
+      },
+      "graph_signature": "e700810c9e0e99d0600aaed6430ce3adece770e75f4f7b715d2480a864438190",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F01-F01",
+          "evidence_id": "EQ-F01-E01",
+          "source_relation": "alias_of",
+          "subject": "QG",
+          "object": "Quill Garden",
+          "predicate": "alias_of_project",
+          "gold": true,
+          "path": "quill-garden/alias.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "QG is an internal alias for Quill Garden.",
+          "workspace_id": "ws-eq-f01"
+        },
+        {
+          "fact_id": "EQ-F01-F02",
+          "evidence_id": "EQ-F01-E02",
+          "source_relation": "alias_of",
+          "subject": "GardenOps",
+          "object": "Quill Garden",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "quill-garden/alias.md",
+          "line_start": 4,
+          "line_end": 4,
+          "quote": "GardenOps is the team alias for Quill Garden.",
+          "workspace_id": "ws-eq-f01"
+        },
+        {
+          "fact_id": "EQ-F01-F03",
+          "evidence_id": "EQ-F01-E03",
+          "source_relation": "owner_of",
+          "subject": "Quill Garden",
+          "object": "Yara Lin",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "quill-garden/owner.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Yara Lin owns Quill Garden.",
+          "workspace_id": "ws-eq-f01"
+        },
+        {
+          "fact_id": "EQ-F01-F04",
+          "evidence_id": "EQ-F01-E04",
+          "source_relation": "direct_leader_of",
+          "subject": "Yara Lin",
+          "object": "Sol Reyes",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "quill-garden/line.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Yara Lin reports directly to Sol Reyes.",
+          "workspace_id": "ws-eq-f01"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F02",
+      "partition": "final",
+      "family": "chinese_owner_and_leader",
+      "graph_shape": "owner@d0p1|reports@d1p1|connected-leader-spoke@d1p2|cjk-boundary",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "predicate": "direct_leader_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "direct_leader_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 1,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner@d0p1|reports@d1p1|connected-leader-spoke@d1p2|cjk-boundary"
+      },
+      "graph_signature": "aa45b80eb8ddd04cbe777a235e7d1fa018695805ac04417079d998c0c04f451f",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F02-F01",
+          "evidence_id": "EQ-F02-E01",
+          "source_relation": "owner_of",
+          "subject": "青岚线路",
+          "object": "沈砚",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "青岚线路/负责人.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "青岚线路的负责人是沈砚。",
+          "workspace_id": "ws-eq-f02"
+        },
+        {
+          "fact_id": "EQ-F02-F02",
+          "evidence_id": "EQ-F02-E02",
+          "source_relation": "direct_leader_of",
+          "subject": "沈砚",
+          "object": "陆遥",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "青岚线路/汇报.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "沈砚的直属领导是陆遥。",
+          "workspace_id": "ws-eq-f02"
+        },
+        {
+          "fact_id": "EQ-F02-F03",
+          "evidence_id": "EQ-F02-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "陆遥",
+          "object": "叶辰",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "青岚线路/汇报.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "陆遥的直属领导是叶辰。",
+          "workspace_id": "ws-eq-f02"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F03",
+      "partition": "final",
+      "family": "wrong_workspace_fault_with_connected_spoke",
+      "graph_shape": "active-owner@d0p2|active-reports@d1p2|connected-leader-spoke@d1p4|fault-wrong_workspace",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n1",
+            "predicate": "direct_leader_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 3,
+              "line": 5
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "active-owner@d0p2|active-reports@d1p2|connected-leader-spoke@d1p4|fault-wrong_workspace"
+      },
+      "graph_signature": "76010cd09afc67ecee71bdcc2cf4f9a3ab0b9d2f0bf126c741a9ba694e7dd4ac",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F03-F01",
+          "evidence_id": "EQ-F03-E01",
+          "source_relation": "owner_of",
+          "subject": "Harbor Lattice",
+          "object": "Juno Park",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "harbor-lattice/owner.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Juno Park is the accountable owner of Harbor Lattice.",
+          "workspace_id": "ws-eq-f03-active"
+        },
+        {
+          "fact_id": "EQ-F03-F02",
+          "evidence_id": "EQ-F03-E02",
+          "source_relation": "direct_leader_of",
+          "subject": "Juno Park",
+          "object": "Soren Vale",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "harbor-lattice/line.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Juno Park reports directly to Soren Vale.",
+          "workspace_id": "ws-eq-f03-active"
+        },
+        {
+          "fact_id": "EQ-F03-F03",
+          "evidence_id": "EQ-F03-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Soren Vale",
+          "object": "Talia Moss",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "harbor-lattice/line.md",
+          "line_start": 5,
+          "line_end": 5,
+          "quote": "Soren Vale reports directly to Talia Moss.",
+          "workspace_id": "ws-eq-f03-active"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F04",
+      "partition": "final",
+      "family": "stale_temporal_owner",
+      "graph_shape": "temporal-owner-shared-across-projects@d0p1|stale-before-final",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "temporal-owner-shared-across-projects@d0p1|stale-before-final"
+      },
+      "graph_signature": "4fea3267ee2dd44d91a5a7376b1a341bc4889b5ef39de3fffdba2071dd88a6b4",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F04-F01",
+          "evidence_id": "EQ-F04-E01",
+          "source_relation": "owner_of",
+          "subject": "Copper Vale",
+          "object": "Lio Chen",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "copper-vale/snapshot.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "As of 2026-09-01 Lio Chen is the accountable owner of Copper Vale.",
+          "workspace_id": "ws-eq-f04"
+        },
+        {
+          "fact_id": "EQ-F04-F02",
+          "evidence_id": "EQ-F04-E02",
+          "source_relation": "owner_of",
+          "subject": "Copper Ridge",
+          "object": "Lio Chen",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "copper-vale/snapshot.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Lio Chen owns Copper Ridge.",
+          "workspace_id": "ws-eq-f04"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F05",
+      "partition": "final",
+      "family": "budget_stop_with_connected_distractor",
+      "graph_shape": "alias-owner-reports@d0,d1,d2|connected-alias-distractor@d3",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3",
+          "n4"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 3,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n4",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 2,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n4",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias-owner-reports@d0,d1,d2|connected-alias-distractor@d3"
+      },
+      "graph_signature": "d4cbf3cacef3eb359a7d6710c6656774cd2a1e931e24072601a78154a9129771",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F05-F01",
+          "evidence_id": "EQ-F05-E01",
+          "source_relation": "alias_of",
+          "subject": "IR",
+          "object": "Indigo Reach",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "indigo-reach/alias.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "IR aliases Indigo Reach.",
+          "workspace_id": "ws-eq-f05"
+        },
+        {
+          "fact_id": "EQ-F05-F02",
+          "evidence_id": "EQ-F05-E02",
+          "source_relation": "owner_of",
+          "subject": "Indigo Reach",
+          "object": "Rin Ito",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "indigo-reach/owner.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Rin Ito owns Indigo Reach.",
+          "workspace_id": "ws-eq-f05"
+        },
+        {
+          "fact_id": "EQ-F05-F03",
+          "evidence_id": "EQ-F05-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Rin Ito",
+          "object": "Kai Wen",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "indigo-reach/line.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Rin Ito reports directly to Kai Wen.",
+          "workspace_id": "ws-eq-f05"
+        },
+        {
+          "fact_id": "EQ-F05-F04",
+          "evidence_id": "EQ-F05-E04",
+          "source_relation": "alias_of",
+          "subject": "IR",
+          "object": "Indigo Ridge",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "indigo-reach/neighbor.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "IR aliases Indigo Ridge.",
+          "workspace_id": "ws-eq-f05"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F06",
+      "partition": "final",
+      "family": "provider_uncertain_alias_owner",
+      "graph_shape": "alias+owner@d0p1+p2|terminal-uncertain",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 4
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias+owner@d0p1+p2|terminal-uncertain"
+      },
+      "graph_signature": "437303c576e0e1ac697b58932bafbbcaf37623a31edace27c1911a3b0677d1be",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F06-F01",
+          "evidence_id": "EQ-F06-E01",
+          "source_relation": "alias_of",
+          "subject": "PM",
+          "object": "Pearl Meridian",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "pearl-meridian/source.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "PM is an internal alias for Pearl Meridian.",
+          "workspace_id": "ws-eq-f06"
+        },
+        {
+          "fact_id": "EQ-F06-F02",
+          "evidence_id": "EQ-F06-E02",
+          "source_relation": "owner_of",
+          "subject": "Pearl Meridian",
+          "object": "Owen Brook",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "pearl-meridian/source.md",
+          "line_start": 4,
+          "line_end": 4,
+          "quote": "Owen Brook owns Pearl Meridian.",
+          "workspace_id": "ws-eq-f06"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F07",
+      "partition": "final",
+      "family": "alias_owner_same_file_leader",
+      "graph_shape": "alias@d0p1|owner@d1p2|reports@d1p3",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n0",
+            "predicate": "alias_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 1
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "direct_leader_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 3,
+              "line": 5
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias@d0p1|owner@d1p2|reports@d1p3"
+      },
+      "graph_signature": "dbbd4c7f9096a3a1a0a37abf05851a31c843d71ef933cd0028056bc81313ea18",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F07-F01",
+          "evidence_id": "EQ-F07-E01",
+          "source_relation": "alias_of",
+          "subject": "AB",
+          "object": "Amber Basin",
+          "predicate": "alias_of_project",
+          "gold": true,
+          "path": "amber-basin/alias.md",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "AB aliases Amber Basin.",
+          "workspace_id": "ws-eq-f07"
+        },
+        {
+          "fact_id": "EQ-F07-F02",
+          "evidence_id": "EQ-F07-E02",
+          "source_relation": "owner_of",
+          "subject": "Amber Basin",
+          "object": "Mara Singh",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "amber-basin/current.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Mara Singh is the accountable owner of Amber Basin.",
+          "workspace_id": "ws-eq-f07"
+        },
+        {
+          "fact_id": "EQ-F07-F03",
+          "evidence_id": "EQ-F07-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Mara Singh",
+          "object": "Bo Lin",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "amber-basin/current.md",
+          "line_start": 5,
+          "line_end": 5,
+          "quote": "Mara Singh reports directly to Bo Lin.",
+          "workspace_id": "ws-eq-f07"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F08",
+      "partition": "final",
+      "family": "conflict_with_unresolved_reporting_edge",
+      "graph_shape": "owner@d0p2|owner@d1p2|reports@d2p2|conflict-blocks-dependent",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 2,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 1,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "owner_of",
+            "to": "n2",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "owner@d0p2|owner@d1p2|reports@d2p2|conflict-blocks-dependent"
+      },
+      "graph_signature": "edf8a5307f5a153a1642f014b63da73c845905b4825ece97608b757831d40fb8",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F08-F01",
+          "evidence_id": "EQ-F08-E01",
+          "source_relation": "owner_of",
+          "subject": "Cedar Meridian",
+          "object": "Kira Moss",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "cedar-meridian/registry.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Kira Moss is the accountable owner of Cedar Meridian.",
+          "workspace_id": "ws-eq-f08"
+        },
+        {
+          "fact_id": "EQ-F08-F02",
+          "evidence_id": "EQ-F08-E02",
+          "source_relation": "owner_of",
+          "subject": "Cedar Meridian",
+          "object": "Dane Wu",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "cedar-meridian/review.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Dane Wu is the accountable owner of Cedar Meridian.",
+          "workspace_id": "ws-eq-f08"
+        },
+        {
+          "fact_id": "EQ-F08-F03",
+          "evidence_id": "EQ-F08-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Kira Moss",
+          "object": "Taro Lin",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "cedar-meridian/line.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Kira Moss reports directly to Taro Lin.",
+          "workspace_id": "ws-eq-f08"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F09",
+      "partition": "final",
+      "family": "host_context_mismatch_alias_chain",
+      "graph_shape": "alias+owner+reports@d0p1|malformed-host-context",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 1
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n0",
+            "predicate": "direct_leader_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "owner_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 1,
+              "line": 2
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias+owner+reports@d0p1|malformed-host-context"
+      },
+      "graph_signature": "c42b546b38d6b8cbba6eeae9850040bc55f53cda5fa90f247878eb2c366673d0",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F09-F01",
+          "evidence_id": "EQ-F09-E01",
+          "source_relation": "alias_of",
+          "subject": "PS",
+          "object": "Plover Station",
+          "predicate": "alias_of_project",
+          "gold": false,
+          "path": "plover-station/source.md",
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "PS aliases Plover Station.",
+          "workspace_id": "ws-eq-f09"
+        },
+        {
+          "fact_id": "EQ-F09-F02",
+          "evidence_id": "EQ-F09-E02",
+          "source_relation": "owner_of",
+          "subject": "Plover Station",
+          "object": "Hana Moss",
+          "predicate": "owner_of_project",
+          "gold": false,
+          "path": "plover-station/source.md",
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "Hana Moss owns Plover Station.",
+          "workspace_id": "ws-eq-f09"
+        },
+        {
+          "fact_id": "EQ-F09-F03",
+          "evidence_id": "EQ-F09-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Hana Moss",
+          "object": "Yu Lan",
+          "predicate": "reports_to",
+          "gold": false,
+          "path": "plover-station/source.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "Hana Moss reports directly to Yu Lan.",
+          "workspace_id": "ws-eq-f09"
+        }
+      ]
+    },
+    {
+      "id": "EQ-F10",
+      "partition": "final",
+      "family": "alias_owner_leader_same_document",
+      "graph_shape": "alias@d0p2|owner@d0p3|reports@d0p4",
+      "graph": {
+        "nodes": [
+          "n0",
+          "n1",
+          "n2",
+          "n3"
+        ],
+        "edges": [
+          {
+            "from": "n2",
+            "predicate": "alias_of",
+            "to": "n3",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 2,
+              "line": 3
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n1",
+            "predicate": "direct_leader_of",
+            "to": "n0",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 4,
+              "line": 7
+            },
+            "active_workspace": true
+          },
+          {
+            "from": "n3",
+            "predicate": "owner_of",
+            "to": "n1",
+            "incidence": {
+              "document_index": 0,
+              "paragraph_index": 3,
+              "line": 5
+            },
+            "active_workspace": true
+          }
+        ],
+        "shape_contract": "alias@d0p2|owner@d0p3|reports@d0p4"
+      },
+      "graph_signature": "cc0111fd925a71c44df831c841c484489bb3a39371bad72ce9673872324542ca",
+      "source_facts": [
+        {
+          "fact_id": "EQ-F10-F01",
+          "evidence_id": "EQ-F10-E01",
+          "source_relation": "alias_of",
+          "subject": "MA",
+          "object": "Marble Arc",
+          "predicate": "alias_of_project",
+          "gold": true,
+          "path": "marble-arc/record.md",
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "MA aliases Marble Arc.",
+          "workspace_id": "ws-eq-f10"
+        },
+        {
+          "fact_id": "EQ-F10-F02",
+          "evidence_id": "EQ-F10-E02",
+          "source_relation": "owner_of",
+          "subject": "Marble Arc",
+          "object": "Jia Lee",
+          "predicate": "owner_of_project",
+          "gold": true,
+          "path": "marble-arc/record.md",
+          "line_start": 5,
+          "line_end": 5,
+          "quote": "Jia Lee is the accountable owner of Marble Arc.",
+          "workspace_id": "ws-eq-f10"
+        },
+        {
+          "fact_id": "EQ-F10-F03",
+          "evidence_id": "EQ-F10-E03",
+          "source_relation": "direct_leader_of",
+          "subject": "Jia Lee",
+          "object": "Dev Rao",
+          "predicate": "reports_to",
+          "gold": true,
+          "path": "marble-arc/record.md",
+          "line_start": 7,
+          "line_end": 7,
+          "quote": "Jia Lee reports directly to Dev Rao.",
+          "workspace_id": "ws-eq-f10"
+        }
+      ]
+    }
+  ]
+}

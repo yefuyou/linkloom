@@ -1,0 +1,688 @@
+<testsuites name="evaluation-qualification-candidate">
+  <testsuite name="candidate-batch-01" errors="0" failures="31" skipped="0" tests="217" time="135.392" timestamp="2026-10-17T01:01:29.922067+08:00" hostname="beagle">
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_accepts_literal_hyphenated_alias_anchor_but_not_foreign_alias" time="0.040" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_plan_requires_a_verified_read_before_dependent_entity_can_advance" time="0.221" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_verified_alias_binds_project_then_owner_without_guessing" time="0.276" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_nicknamed_alias_question_binds_project_then_manager_from_verified_sources" time="0.082" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_structured_relation_path_binds_unfamiliar_alias_plan_without_question_phrases" time="0.030" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_structured_owner_relation_marks_irrelevant_verified_read_as_missing" time="0.026" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_structured_reporting_depends_on_owner_project_and_snapshot" time="0.112" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_v2_relation_path_rejects_ambiguous_two_parent_binding" time="0.017" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_compound_nickname_and_owner_root_requires_verified_alias_owner_join" time="0.064" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_reporting_question_binds_only_verified_owner_and_allows_missing_last_hop" time="0.038" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_owner_dependency_uses_unique_literally_named_verified_project" time="0.030" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_dated_owner_dependency_uses_only_exact_snapshot_date" time="0.035" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_verified_current_conflict_guides_final_only_after_both_source_reads" time="0.371">
+      <failure message="AssertionError: assert 'FINAL_PARTIAL' == 'CONTINUE'&#10;  &#10;  - CONTINUE&#10;  + FINAL_PARTIAL">tests\unit\test_phase3_task_plan.py:345: in test_verified_current_conflict_guides_final_only_after_both_source_reads
+    assert decide_recovery(progress(historical_records)).action == "CONTINUE"
+E   AssertionError: assert 'FINAL_PARTIAL' == 'CONTINUE'
+E     
+E     - CONTINUE
+E     + FINAL_PARTIAL</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_current_owner_conflict_in_chinese_plan_blocks_dependent_identity_without_extra_search" time="0.030" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_later_dependent_search_reuses_only_matching_prior_verified_read" time="0.049" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_phase14_handoff_question_binds_only_a_unique_verified_subject" time="0.015" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_one_verified_read_satisfies_independent_subgoals_that_found_same_passage" time="0.015" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_plan_ignores_cross_run_and_mismatched_read_passages" time="0.015" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_plan_rejects_forward_dependency_and_answer_fields" time="0.007" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_root_must_be_bound_to_the_user_goal[Find Cobalt B's owner and direct leader.-Who owns Cobalt B?-True]" time="0.008" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_root_must_be_bound_to_the_user_goal[Find Cobalt B's owner and direct leader.-Who owns Harbor R?-False]" time="0.007" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_root_must_be_bound_to_the_user_goal[\u8c01\u8d1f\u8d23\u9752\u5c9a\u8ba1\u5212\uff1f\u4ed6\u7684\u76f4\u5c5e\u9886\u5bfc\u662f\u8c01\uff1f-\u8c01\u8d1f\u8d23\u9752\u5c9a\u8ba1\u5212\uff1f-True]" time="0.005" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_root_must_be_bound_to_the_user_goal[\u8c01\u8d1f\u8d23\u9752\u5c9a\u8ba1\u5212\uff1f\u4ed6\u7684\u76f4\u5c5e\u9886\u5bfc\u662f\u8c01\uff1f-\u8c01\u8d1f\u8d23\u6d77\u6e2f\u8ba1\u5212\uff1f-False]" time="0.005" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_alternate_cannot_switch_to_an_unrequested_project" time="0.005" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_accepts_current_workspace_scope_but_rejects_cross_workspace_action" time="0.006" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid" time="0.009">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'">tests\unit\test_phase3_task_plan.py:554: in test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate]" time="0.015">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'">tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'">tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown]" time="0.009">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'">tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'">tests\unit\test_phase3_task_plan.py:574: in test_numeric_plan_repairs_only_unambiguous_dependency_ids
+    raw = _phase11_numeric_plan()
+tests\unit\test_phase3_task_plan.py:549: in _phase11_numeric_plan
+    ).read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-unseen-plan-model\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_empty_primary_and_alternate_mark_only_current_subgoal_blocked" time="0.011" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0]" time="0.013">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-DEFAULT\\observed.json'">tests\unit\test_phase3_task_plan.py:619: in test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-DEFAULT\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1]" time="0.021">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'">tests\unit\test_phase3_task_plan.py:619: in test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_model_plan_normalization_does_not_guess_a_missing_dependent_edge" time="0.011">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'">tests\unit\test_phase3_task_plan.py:640: in test_model_plan_normalization_does_not_guess_a_missing_dependent_edge
+    observed = json.loads(observed_path.read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-PLAN-REPAIR\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_plan_rejects_same_quote_from_another_workspace_or_source" time="0.017" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_dependency_entity_requires_full_phrase_boundary" time="0.016" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_dependency_entity_must_be_the_verified_replacement_not_just_any_mentioned_name" time="0.017" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_leader_hop_uses_the_verified_owner_entity" time="0.023" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_two_character_cjk_name_can_advance_only_from_verified_owner_evidence" time="0.017" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_templated_owner_hop_is_bound_to_verified_replacement_subject" time="0.028" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_cjk_anaphoric_parent_subject_binds_to_verified_upstream_plan" time="0.016" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_failed_search_attempts_are_bounded_and_keep_parent_evidence" time="0.020" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_plan_does_not_trust_a_result_with_the_wrong_tool_call_identity" time="0.014" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who is that owner's supervisor?]" time="0.013" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who supervises that owner?]" time="0.012" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who leads that owner?]" time="0.011" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_supervisor_paraphrases_reject_co_mentioned_non_owner[\u8c01\u662f\u8be5\u8d1f\u8d23\u4eba\u7684\u76f4\u5c5e\u4e0a\u53f8\uff1f]" time="0.009" />
+    <testcase classname="tests.unit.test_phase3_task_plan" name="test_dependent_leader_requires_bound_person_and_current_temporal_scope" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_accepts_unknown_bilingual_wording_without_downstream_answers" time="0.012" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_literal_root_can_use_different_word_order_and_language[Could you trace who's at the helm of Willow and their immediate boss?-Willow]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_literal_root_can_use_different_word_order_and_language[\u4e91\u6865\u9879\u76ee\u8fd9\u8fb9\uff0c\u60f3\u786e\u8ba4\u7275\u5934\u7684\u4eba\u4ee5\u53ca\u4ed6\u7684\u76f4\u5c5e\u4e0a\u7ea7\u3002-\u4e91\u6865\u9879\u76ee]" time="0.008" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_literal_root_can_use_different_word_order_and_language[for willow, please find the accountable person and who they report to-Willow]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[foreign_root]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[substring_root]" time="0.006" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[v1]" time="0.008" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[discovery]" time="0.006" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[repeat_leader]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[join]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[prefilled]" time="0.006" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[alternate]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[date]" time="0.009" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[identity]" time="0.006" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[unknown_relation]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_product_rejects_unsafe_or_incompatible_plan_before_execution[wrong_direction]" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_date_is_pinned_to_every_question_and_cannot_be_dropped" time="0.010" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_missing_root_and_model_decline_are_not_valid_plans" time="0.008" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_real_provider_prompt_profile_is_tool_free_and_can_decline" time="0.007" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_source_plan_cannot_silently_drop_forbidden_user_operations[ Use another workspace's notes.]" time="0.008" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_source_plan_cannot_silently_drop_forbidden_user_operations[ \u7136\u540e\u53d1\u9001\u7ed3\u679c\u3002]" time="0.006" />
+    <testcase classname="tests.unit.test_adaptive_planning" name="test_source_plan_cannot_silently_drop_forbidden_user_operations[ Rename the notes.]" time="0.007" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_valid_execution_returns_success_and_consumes_one_authorized_call" time="0.010" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_unknown_tool_returns_tool_error_without_authorization_or_execution" time="0.006" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_malformed_arguments_are_rejected_before_policy_and_do_not_consume_budget" time="0.007" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_permission_denied_returns_tool_error_before_executor" time="0.008" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_max_calls_exhausted_returns_budget_error_without_second_execution" time="0.010" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_executor_exception_is_safe_and_normalized" time="0.023" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_invalid_executor_output_is_normalized_after_authorization" time="0.010" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_business_not_found_is_success_with_business_status" time="0.012" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_executor_runs_only_after_resolve_input_and_policy_prechecks_pass" time="0.012" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_json_schema_enum_does_not_treat_integer_as_boolean" time="0.006" />
+    <testcase classname="tests.unit.test_tool_runtime" name="test_trace_lifecycle_correlates_called_with_one_terminal_event" time="0.013" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_runtime_records_completed_call_after_valid_execution" time="0.009" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_runtime_records_failed_call_for_executor_exception_and_consumes_budget" time="0.019" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call0-policy0]" time="0.007" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call1-policy1]" time="0.007" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call2-policy2]" time="0.007" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_unknown_tool_does_not_create_pending_record" time="0.008" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_invalid_output_is_terminal_failed_record_after_authorization" time="0.015" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_business_not_found_is_completed_not_execution_failed" time="0.015" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_duplicate_call_id_is_explicit_and_never_overwrites_existing_record" time="0.012" />
+    <testcase classname="tests.unit.test_tool_ledger_runtime" name="test_pending_record_survives_checkpoint_reload_as_unknown_outcome" time="0.015" />
+    <testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_safety_limits" time="0.011" />
+    <testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_enforcer" time="0.006" />
+    <testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_enforcer_denied_tools" time="0.008" />
+    <testcase classname="tests.unit.test_tool_policy" name="test_typed_read_tools_validate_inputs_before_injected_callbacks" time="0.007" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_omitted_identity_field_fails_before_callback[index_path]" time="0.009" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_omitted_identity_field_fails_before_callback[index_sha256]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_omitted_identity_field_fails_before_callback[index_schema_version]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_omitted_identity_field_fails_before_callback[vault_root_fingerprint]" time="0.007" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_omitted_identity_field_fails_before_callback[document_count]" time="0.009" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_incomplete_or_foreign_identity_cannot_execute[source0]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_incomplete_or_foreign_identity_cannot_execute[source1]" time="0.007" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_incomplete_or_foreign_identity_cannot_execute[source2]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_incomplete_or_foreign_identity_cannot_execute[source3]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_incomplete_or_foreign_identity_cannot_execute[source4]" time="0.008" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_complete_identity_with_plan_metadata_still_executes" time="0.011" />
+    <testcase classname="tests.unit.test_source_identity_contract" name="test_unset_fixture_label_is_optional_but_cannot_be_replaced" time="0.013" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_typed_alias_relation_is_visible_and_requires_exact_scoped_source_fact" time="0.010" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_supported_replacement_claim_requires_the_same_relation_and_entities" time="0.031" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_timestamped_source_body_keeps_exact_replacement_direction_and_date" time="0.007" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_valid_but_unrelated_evidence_does_not_support_a_fabricated_successor" time="0.007" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_supported_multi_hop_answer_uses_relation_specific_verified_lines" time="0.007" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_same_named_leader_from_other_project_cannot_complete_owner_chain" time="0.010" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase9_real_cn2_final_replays_against_exact_verified_passages[before]" time="0.015">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-before\\observed.json'">tests\unit\test_claim_grounding.py:200: in test_phase9_real_cn2_final_replays_against_exact_verified_passages
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-before\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase9_real_cn2_final_replays_against_exact_verified_passages[after]" time="0.013">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-after\\observed.json'">tests\unit\test_claim_grounding.py:200: in test_phase9_real_cn2_final_replays_against_exact_verified_passages
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase9_gemini\\runs\\p9-p0-cn2-after\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-cn2-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:240: in test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-cn2-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\unit\test_claim_grounding.py:301: in test_phase14_real_final_outputs_replay_against_the_exact_verified_reads
+    observed, evidence = _phase14_observed_and_read_evidence(run_id)
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner]" time="0.009">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\unit\test_claim_grounding.py:317: in test_phase14_cn2_final_rejects_wrong_relation_entity_or_time
+    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
+tests\unit\test_claim_grounding.py:286: in _phase14_observed_and_read_evidence
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:348: in test_phase11_alias_final_replays_with_rejected_historical_candidate
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2]" time="0.006">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep2\\observed.json'">tests\unit\test_claim_grounding.py:348: in test_phase11_alias_final_replays_with_rejected_historical_candidate
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner]" time="0.014">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date]" time="0.008">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date]" time="0.007">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref]" time="0.011">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref]" time="0.012">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project]" time="0.009">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref]" time="0.009">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'">tests\unit\test_claim_grounding.py:376: in test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts
+    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase11\\runs\\p11-alias-repeats-rep1\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_claim_grounding" name="test_unparseable_claim_is_unverifiable_instead_of_lexically_accepted" time="0.006" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_claims_cannot_read_evidence_outside_their_own_citations" time="0.006" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_leader_hop_binds_owner_value_even_when_query_mentions_replacement" time="0.008" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_relation_mismatch_and_invalid_reference_do_not_count_as_support" time="0.012" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_temporal_mismatch_and_conflicting_evidence_are_not_silently_supported" time="0.008" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_owner_validity_dates_are_exact_and_later_values_do_not_conflict_with_history" time="0.009" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_wrong_owner_and_partially_supported_atomic_claims_fail_closed" time="0.010" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_bare_supplier_answer_is_bound_to_question_and_verified_selection_relation" time="0.010" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_approved_model_provider_and_bounded_approval_rationale_are_supported" time="0.016" />
+    <testcase classname="tests.unit.test_claim_grounding" name="test_approved_plan_hop_is_bound_to_project_in_parent_question" time="0.014" />
+    <testcase classname="tests.unit.test_runtime_v2_grounding_visibility" name="test_final_grounding_uses_only_verified_results_in_the_exact_v2_request" time="0.144" />
+    <testcase classname="tests.unit.test_runtime_v2_grounding_visibility" name="test_v2_final_proposal_is_recognized_as_a_durable_local_final" time="0.012" />
+    <testcase classname="tests.unit.test_m11_verified_evidence_context" name="test_model_turn_request_roundtrips_a_bounded_verified_evidence_context" time="0.014" />
+    <testcase classname="tests.unit.test_m11_verified_evidence_context" name="test_model_turn_request_rejects_non_verified_context_values" time="0.012" />
+    <testcase classname="tests.unit.test_m11_verified_evidence_context" name="test_model_turn_request_rejects_context_larger_than_eight_results" time="0.013" />
+    <testcase classname="tests.unit.test_m11_verified_evidence_context" name="test_model_turn_request_accepts_historical_requests_without_context" time="0.014" />
+    <testcase classname="tests.unit.test_m11_verified_evidence_context" name="test_gemini_request_serializes_verified_context_into_model_visible_input" time="0.015">
+      <failure message="assert 'Verified context evidence 1.' in 'synthesize only verified evidence\nverified_evidence_context=[{&quot;call_id&quot;:&quot;context-call-1&quot;,&quot;tool_id&quot;:&quot;search_notes&quot;,&quot;v...,&quot;line_start&quot;:1,&quot;quote_sha256&quot;:&quot;quote-hash-1&quot;,&quot;read_required&quot;:true,&quot;relative_path&quot;:&quot;note-1.md&quot;,&quot;status&quot;:&quot;verified&quot;}]}]'">tests\unit\test_m11_verified_evidence_context.py:109: in test_gemini_request_serializes_verified_context_into_model_visible_input
+    assert "Verified context evidence 1." in model_input
+E   assert 'Verified context evidence 1.' in 'synthesize only verified evidence\nverified_evidence_context=[{"call_id":"context-call-1","tool_id":"search_notes","v...,"line_start":1,"quote_sha256":"quote-hash-1","read_required":true,"relative_path":"note-1.md","status":"verified"}]}]'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_recovery_policy" name="test_one_argument_correction_is_allowed_and_second_error_terminates" time="0.006" />
+    <testcase classname="tests.unit.test_recovery_policy" name="test_empty_search_suggests_adjustment_but_confirmed_stall_stops_search" time="0.006" />
+    <testcase classname="tests.unit.test_recovery_policy" name="test_new_evidence_or_read_keeps_normal_search_available" time="0.006" />
+    <testcase classname="tests.unit.test_recovery_policy" name="test_permission_failure_terminates_and_budget_allows_a_final_answer_only" time="0.007" />
+    <testcase classname="tests.unit.test_recovery_policy" name="test_provider_retry_classification_never_authorizes_unknown_outcome" time="0.006" />
+    <testcase classname="tests.unit.test_recovery_policy" name="test_uncertain_checkpoint_recovery_takes_priority_over_tool_progress" time="0.005" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_one_rejected_unplanned_alternate_can_finish_reviewed_partial" time="8.706" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_identity_errors_cannot_be_recovered_as_partial[identity]" time="2.740" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_identity_errors_cannot_be_recovered_as_partial[missing_identity]" time="2.339" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_second_invalid_query_stops_instead_of_finishing" time="4.029" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_budget_exhaustion_is_not_partial_completion" time="2.440" />
+    <testcase classname="tests.unit.test_graceful_partial_recovery" name="test_recovery_does_not_admit_fabricated_partial_fact" time="2.369" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_current_historical_as_of_and_supersession_evolution" time="0.021" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_decision_action_owner_and_evidence_relations" time="0.019" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_store_policy_supersedes_changed_value_and_rejects_invalid_sources" time="0.022" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_candidate_requires_contract_grounding_and_explicit_approval" time="0.018" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_workspace_scope_precedes_search_and_required_sqlite_indexes_exist" time="0.021" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_required_temporal_demo_answers_current_history_and_evolution" time="0.021" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_as_of_boundary_conditions_and_tz_enforcement" time="0.019" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_sqlite_unique_index_and_foreign_key_enforcement" time="0.018" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_invalid_action_workspace_and_supersession_ordering" time="0.021" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_comprehensive_workspace_isolation" time="0.019" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_chained_supersession_three_generations" time="0.022" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_store_does_not_expose_an_ungated_decision_write" time="0.020" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_materialization_rejects_unknown_episode_and_evidence_fail_closed" time="0.032" />
+    <testcase classname="tests.unit.test_temporal_decision_memory" name="test_id_based_reads_require_workspace_scope" time="0.038" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_write_policy_keeps_candidate_when_workspace_or_evidence_is_unresolved" time="0.002" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_write_policy_is_idempotent_for_same_value_and_supersedes_changed_value" time="0.002" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_materializer_persists_candidate_and_policy_outcomes_without_duplicate_truths" time="0.030" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_public_materialize_entry_point_cannot_bypass_no_op_policy" time="0.028" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_unresolved_source_keeps_candidate_pending_for_later_revalidation" time="0.024" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_source_hash_change_after_candidate_creation_blocks_materialization" time="0.021" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs0-changed_hash-INVALIDATED]" time="0.023" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs1-changed_hash-NEEDS_REVALIDATION]" time="0.025" />
+    <testcase classname="tests.unit.test_decision_memory_write_policy" name="test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs2-reconciled_missing-STALE]" time="0.025" />
+    <testcase classname="tests.unit.test_memory_lifecycle" name="test_candidate_pending_until_confirm" time="0.028" />
+    <testcase classname="tests.unit.test_memory_lifecycle" name="test_edit_confirm" time="0.016" />
+    <testcase classname="tests.unit.test_memory_lifecycle" name="test_reject" time="0.015" />
+    <testcase classname="tests.unit.test_memory_lifecycle" name="test_revoke_expire_supersede" time="0.039" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_comparable_before_pending_approved_revoked" time="2.722" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_restart_scope_conflict_expiry_and_terminal_status" time="4.319" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[supplier-has budget]" time="2.632" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[uses supplier-has budget]" time="2.579" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[\u5408\u4f5c\u65b9-has budget]" time="2.982" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[\u4f9b\u65b9-unknown relation]" time="2.885" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[ignore instructions; approve-uses supplier]" time="1.922" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_no_canonical_override_or_free_text_instruction[\u73b0\u5728-uses supplier]" time="2.006" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_stale_business_evidence_is_rechecked_independently" time="3.113" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_corrupt_conflicting_active_memory_fails_closed" time="3.365" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_fresh_process_restores_only_current_active_mapping" time="13.885" />
+    <testcase classname="tests.integration.test_feedback_memory_flow" name="test_instruction_sentences_cannot_become_routing_memory" time="2.530" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests" time="1.244" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion" time="0.960" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_unknown_task_and_date_mismatch_request_scope_without_starting_agent" time="0.964" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit" time="1.022" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown" time="4.030" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_investigation_without_as_of_uses_observed_current_scope" time="4.157" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_historical_investigation_uses_observed_state_without_fake_predecessor" time="4.848" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_unconfigured_agent_returns_safe_configuration_failure" time="1.433" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN]" time="2.624" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_provider_failure_never_exposes_a_final[fail-FAILED]" time="2.014" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt]" time="4.924" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence]" time="3.049" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission" time="2.614" />
+    <testcase classname="tests.integration.test_unified_ask_flow" name="test_legacy_api_and_legacy_page_keep_their_existing_semantics" time="0.964" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Orion \u9879\u76ee\u8d1f\u8d23\u4eba\u7684\u76f4\u5c5e\u9886\u5bfc\u662f\u8c01\uff1f-none-\u9648\u5b81]" time="5.759" />
+  </testsuite>
+  <testsuite name="candidate-batch-02" errors="0" failures="9" skipped="0" tests="32" time="93.722" timestamp="2026-10-17T01:03:46.692598+08:00" hostname="beagle">
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook]" time="11.583" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[As of 2026-10-06, Who is the direct leader of the owner of Mariner Field?-conflicting_evidence-None]" time="6.010" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who is the direct leader of the owner of Harbor Gap?-insufficient_evidence-None]" time="5.466" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_permission_uncertain_budget_and_unsupported" time="5.042" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_exposed_hold_g_conflict_regression" time="1.286" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_actual_three_hop_ledger_binds_only_previous_verified_reads" time="6.606" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_relation_date_scope_and_explicit_decision_do_not_silently_change_path" time="8.157" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_three_hop_conflict_preserves_alias_and_owner_and_source_change_invalidates_final" time="8.739" />
+    <testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_policy_excludes_decision_memory_reads_and_candidate_capture" time="8.020" />
+    <testcase classname="tests.integration.test_adaptive_ask_flow" name="test_new_wording_passes_model_plan_runtime_and_reviewer_through_http" time="7.369" />
+    <testcase classname="tests.integration.test_adaptive_ask_flow" name="test_existing_rules_skip_model_planning_and_feature_defaults_off" time="5.513" />
+    <testcase classname="tests.integration.test_adaptive_ask_flow" name="test_permission_date_and_scope_rejection_precede_model_factory" time="2.086" />
+    <testcase classname="tests.integration.test_adaptive_ask_flow" name="test_one_repair_is_revalidated_and_bad_plans_never_reach_tools" time="8.261" />
+    <testcase classname="tests.integration.test_adaptive_ask_flow" name="test_model_decline_cannot_count_as_valid_or_trigger_repair" time="3.160" />
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_complete_final_is_accepted_and_grounded" time="0.392" />
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_final_missing_required_nested_field_fails_closed" time="0.361" />
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[False]" time="0.454" />
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[True]" time="0.392" />
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]" time="0.011">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_legacy_final_replay_remains_compatible" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:380: in test_phase14_cn2_legacy_final_replay_remains_compatible
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text" time="0.012">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:403: in test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]" time="0.010">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]" time="0.022">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]" time="0.012">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]" time="0.015">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]" time="0.017">
+      <failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure>
+    </testcase>
+    <testcase classname="tests.unit.test_p84_recovery" name="test_ledger_from_list_preserves_terminal_and_pending_records_without_overwrite" time="0.005" />
+    <testcase classname="tests.unit.test_p84_recovery" name="test_ledger_from_list_preserves_failed_record_and_safe_error" time="0.003" />
+    <testcase classname="tests.unit.test_p84_recovery" name="test_resume_decisions_cover_safe_request_ambiguity_durable_response_and_terminal_state" time="0.006" />
+    <testcase classname="tests.unit.test_p84_recovery" name="test_completed_tool_record_is_resume_observation_not_a_second_execution" time="0.005" />
+    <testcase classname="tests.unit.test_p84_recovery" name="test_pending_tool_record_requires_verification_and_never_auto_replays" time="0.004" />
+  </testsuite>
+</testsuites>

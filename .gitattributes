@@ -2,3 +2,18 @@
 # Frozen V3 inputs and machine evidence must preserve recorded byte identity.
 tests/fixtures/real_agent_contract_v3/*.json text eol=lf
 docs/requirements/real-agent-contract-v3/* text eol=lf
+
+# Evaluation qualification artifacts have portable byte identities.
+scripts/*qualification*.py text eol=lf
+scripts/evaluation_core_*.py text eol=lf
+scripts/evaluation_offline_plugin.py text eol=lf
+scripts/qualified_runtime.py text eol=lf
+tests/fixtures/evaluation_qualification/** text eol=lf
+tests/unit/test_evaluation_qualification.py text eol=lf
+tests/unit/test_evaluation_offline_plugin.py text eol=lf
+tests/unit/test_evaluation_core_regression.py text eol=lf
+tests/integration/test_qualified_runtime.py text eol=lf
+docs/requirements/evaluation-qualification/** text eol=lf
+docs/requirements/evaluation-qualification/evidence/** -text -whitespace
+# Preserve the exact node-manifest bytes recorded by the complete 249 run.
+tests/fixtures/evaluation_qualification/core_nodes.json -whitespace

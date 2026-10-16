@@ -1,0 +1,207 @@
+{
+  "schema_version": "qualification-report/v1",
+  "status": "QUALIFIED",
+  "scope": "static preflight only; no model, runtime acceptance or Final execution",
+  "provider_requests": 0,
+  "errors": [],
+  "cases": [
+    {
+      "id": "EQ-D01",
+      "status": "QUALIFIED",
+      "data_sha256": "d31aa2630c97c2a55f9aac9b5c4cb89b711e31ee3f88196ba590369d0bba615d",
+      "structural_sha256": "8dc2320897a6f6475e1c3eb0d625a6de75037f8dd81e2f54083ce80fdb8665ce"
+    },
+    {
+      "id": "EQ-D02",
+      "status": "QUALIFIED",
+      "data_sha256": "be672ba3eb77917ae22b7797085ab7cfae3c7b674e2251093d35f9e05dafae66",
+      "structural_sha256": "f205e46b6be18dc622ebbd90e71af22eea5ada42ef62a37a0893eca80ba3734d"
+    },
+    {
+      "id": "EQ-D03",
+      "status": "QUALIFIED",
+      "data_sha256": "f65c843b141ad02d6665caaa9de48a58bca0364dc7fef4b80a34c40c1ead85ef",
+      "structural_sha256": "a30a9fdb1f7604e214adea7685f335eabb9032ea61b3d566dbb75bc468d7f0f0"
+    },
+    {
+      "id": "EQ-D04",
+      "status": "QUALIFIED",
+      "data_sha256": "5840bf0930609e1675f353a55044f5712e898b424ab125984f4e40b40293faea",
+      "structural_sha256": "aa63e0e3f87bcd5a37b0f8703a5af9ba0e3e7632bdd08f8db936e9a377fe80f3"
+    },
+    {
+      "id": "EQ-D05",
+      "status": "QUALIFIED",
+      "data_sha256": "59febea13b80a3ea929905c4ff51ad098c7b684a8b5021dba7935909c50bbe32",
+      "structural_sha256": "03a5089cd8b3433c9502bfd4a996b02b75e4e3eb6973d91f2dfd67d9c4d1ebab"
+    },
+    {
+      "id": "EQ-D06",
+      "status": "QUALIFIED",
+      "data_sha256": "e038057ca03e915740288a9d0147ed0466c04f038bc508ce43fcd24cc541f66c",
+      "structural_sha256": "9a526ea7491dd43e152b59e5341cf9e3ccfe9ec259825e577e3758cc37d23407"
+    },
+    {
+      "id": "EQ-F01",
+      "status": "QUALIFIED",
+      "data_sha256": "9a4fe1c00c1465453dac3e984366eabd8c1f1eab5186a75ff5287f859f2c3566",
+      "structural_sha256": "e9d5519ffb4b8fc6bcf11f63e29152746c6c8400530faa76c9fe57d650a95c74"
+    },
+    {
+      "id": "EQ-F02",
+      "status": "QUALIFIED",
+      "data_sha256": "a70f2b81876a9dd11b348da961f2438a9fd16462a2b477ce1811e9dd0be951e1",
+      "structural_sha256": "1c8481402b85c35262302840a23f04fa611eb695076759c52f0237565f162ab2"
+    },
+    {
+      "id": "EQ-F03",
+      "status": "QUALIFIED",
+      "data_sha256": "b9010525188b43256a938d273c63edd10d9a98b6db81faf9e8328f080a1d2b1e",
+      "structural_sha256": "efe7e546d522dc359604911f37e17e810b0e97690dceb4fef5bf10c88ea57a30"
+    },
+    {
+      "id": "EQ-F04",
+      "status": "QUALIFIED",
+      "data_sha256": "12d579ae7a3a568471b3e93231e699b6cf02fdb432e4559c9df7708ddbc08954",
+      "structural_sha256": "5578287f06dfcd33cb066c59e7361b7c4c9de75aaae256356aade22f2ccf7a0b"
+    },
+    {
+      "id": "EQ-F05",
+      "status": "QUALIFIED",
+      "data_sha256": "9e671e4d8a409ac5783089c115af13a575a7192fb332203ec591dfbf0136418e",
+      "structural_sha256": "f1b101d79366340ab6b44bed792968bad9ee8819c7bad6c47d583a04d32f7c4d"
+    },
+    {
+      "id": "EQ-F06",
+      "status": "QUALIFIED",
+      "data_sha256": "341d50b4909651a43e9ee5fcd5837c60c6af1098c0c1c1e784e1ae0bd111b7bb",
+      "structural_sha256": "68c82dae837807850b1d5edd2718da74c9c77999860145d18cb2c35b18f9e6e6"
+    },
+    {
+      "id": "EQ-F07",
+      "status": "QUALIFIED",
+      "data_sha256": "feb1604b1b82cdcf058633f5866d910023305061eacc0d3c7e66b03b2ba27fb5",
+      "structural_sha256": "3ae5303bb0577b61540cf483dfa3607668e57b6b6a806665f83f3f4be5bea4ec"
+    },
+    {
+      "id": "EQ-F08",
+      "status": "QUALIFIED",
+      "data_sha256": "d77cd8c188db25353c277b9bc47aceda176ea39f7638a01aa9493dda0617b3f7",
+      "structural_sha256": "7ef56e9ea74a7de3ffa452be82969efb185d92b56da612e6584270fcd466f155"
+    },
+    {
+      "id": "EQ-F09",
+      "status": "QUALIFIED",
+      "data_sha256": "dd9ff4d0f671984af1cf6ed6325e3e3c80ca6e068f061cee6baa267a6e72788f",
+      "structural_sha256": "262156a2dd17e0d549298fbedbd120d672e67eddc4bed3d536f362749ec3ec42"
+    },
+    {
+      "id": "EQ-F10",
+      "status": "QUALIFIED",
+      "data_sha256": "1cf2d6624affb9da20f3ff50a9b8ea2fe3741c88d0822c3f3ba0b88706b2666b",
+      "structural_sha256": "653abd53abe08f8f4202d0801fcb99674be07cb843a464ca54cd83a5c59c2031"
+    }
+  ],
+  "reference_audit": [
+    {
+      "id": "RAC3-D01",
+      "structural_sha256": "972cbef17f884497dcb8afa13224e015a415057c58f52d4986d68a13e5f5c562",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D02",
+      "structural_sha256": "db67d39511e30c5dafc3cb19165ca291afe838fea42f67f71d7dd75d4031429e",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D03",
+      "structural_sha256": "948d7537960d8984b44ed1ec0096cf12acdaeaad4fc9e30051c7d06686e995ed",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D04",
+      "structural_sha256": "04286d536cf672395d65241842d8352408d2d2dc64523719c09518ceaed732c8",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D05",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D06",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D07",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D08",
+      "structural_sha256": "0f5aaabeb18876866d165d03b4da6ade4f428d152d3252970445ee05e8869e36",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D09",
+      "structural_sha256": "1e6d1b5780a6a2f6e55fdffe6ff461f595a2b7605febff000fcffdc015bdbdd5",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-D10",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F01",
+      "structural_sha256": "9daa8b5168a637ffb964da0f1b65e49707cf41f1062974dec5c326c599c13324",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F02",
+      "structural_sha256": "9e311035da8e546f3b8bdc68b98d034b5711c898c9e073f7e375cebfb5dd743f",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F03",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F04",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F05",
+      "structural_sha256": "9d8e706812a4c8260ccf903c74b90e744a9c5c52e0f82e343cd1fb3cb0ab858f",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F06",
+      "structural_sha256": "73d9456c225613f103824206077262e9e5b1e4f81fce5ff959395fc0f7c45fb2",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F07",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F08",
+      "structural_sha256": "972cbef17f884497dcb8afa13224e015a415057c58f52d4986d68a13e5f5c562",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F09",
+      "structural_sha256": "db67d39511e30c5dafc3cb19165ca291afe838fea42f67f71d7dd75d4031429e",
+      "status": "COMPARED"
+    },
+    {
+      "id": "RAC3-F10",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d",
+      "status": "COMPARED"
+    }
+  ]
+}

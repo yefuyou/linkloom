@@ -1,0 +1,1291 @@
+{
+  "schema_version": "qualification-cases/v1",
+  "cases": [
+    {
+      "id": "EQ-D01",
+      "partition": "dev",
+      "target": "normal",
+      "input": {
+        "query": "Who owns Cedar Meridian and who does that owner report to?",
+        "workspace_id": "ws-eq-d01",
+        "documents": [
+          {
+            "path": "cedar-meridian/brief.md",
+            "content": "# Cedar Meridian\n\nMara Singh is the accountable owner of Cedar Meridian.\n\nMara Singh reports directly to Bo Lin.\n\nCM is the team alias for Cedar Meridian.\n",
+            "workspace_id": "ws-eq-d01"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Cedar Meridian and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Cedar Meridian?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "Cedar Meridian",
+            "predicate": "owner_of_project",
+            "object": "Mara Singh",
+            "supports": [
+              {
+                "path": "cedar-meridian/brief.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Mara Singh is the accountable owner of Cedar Meridian."
+              }
+            ]
+          },
+          {
+            "subject": "Mara Singh",
+            "predicate": "reports_to",
+            "object": "Bo Lin",
+            "supports": [
+              {
+                "path": "cedar-meridian/brief.md",
+                "line_start": 5,
+                "line_end": 5,
+                "quote": "Mara Singh reports directly to Bo Lin."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-D02",
+      "partition": "dev",
+      "target": "partial",
+      "input": {
+        "query": "Who owns Moss Harbor and who does that owner report to?",
+        "workspace_id": "ws-eq-d02",
+        "documents": [
+          {
+            "path": "moss-harbor/status.md",
+            "content": "## Moss Harbor\n\nTalia Reed is the accountable owner of Moss Harbor.\n\nThe reporting-line record will be published in a later review.\n",
+            "workspace_id": "ws-eq-d02"
+          },
+          {
+            "path": "moss-harbor/adjacent.md",
+            "content": "## Adjacent program\n\nOwen Vale owns Moss Delta.\nOwen Vale reports directly to Priya Noor.\n",
+            "workspace_id": "ws-eq-d02"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Moss Harbor and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Moss Harbor?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "partial",
+        "facts": [
+          {
+            "subject": "Moss Harbor",
+            "predicate": "owner_of_project",
+            "object": "Talia Reed",
+            "supports": [
+              {
+                "path": "moss-harbor/status.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Talia Reed is the accountable owner of Moss Harbor."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-D03",
+      "partition": "dev",
+      "target": "conflict",
+      "input": {
+        "query": "Who owns Harbor Lattice and who does that owner report to?",
+        "workspace_id": "ws-eq-d03",
+        "documents": [
+          {
+            "path": "harbor-lattice/registry.md",
+            "content": "## Current registry\n\nJuno Park is the accountable owner of Harbor Lattice.\n",
+            "workspace_id": "ws-eq-d03"
+          },
+          {
+            "path": "harbor-lattice/review.md",
+            "content": "## Review note\n\nMira Holt is the accountable owner of Harbor Lattice.\n",
+            "workspace_id": "ws-eq-d03"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Harbor Lattice and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Harbor Lattice?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "conflict",
+        "facts": [
+          {
+            "subject": "Harbor Lattice",
+            "predicate": "owner_of_project",
+            "object": "Juno Park",
+            "supports": [
+              {
+                "path": "harbor-lattice/registry.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Juno Park is the accountable owner of Harbor Lattice."
+              }
+            ]
+          },
+          {
+            "subject": "Harbor Lattice",
+            "predicate": "owner_of_project",
+            "object": "Mira Holt",
+            "supports": [
+              {
+                "path": "harbor-lattice/review.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Mira Holt is the accountable owner of Harbor Lattice."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-D04",
+      "partition": "dev",
+      "target": "normal",
+      "input": {
+        "query": "Which project does CH alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-d04",
+        "documents": [
+          {
+            "path": "alias.md",
+            "content": "CH aliases Copper Haven.\n",
+            "workspace_id": "ws-eq-d04"
+          },
+          {
+            "path": "accountability.md",
+            "content": "Rhea Moss owns Copper Haven.\n",
+            "workspace_id": "ws-eq-d04"
+          },
+          {
+            "path": "reporting.md",
+            "content": "Rhea Moss reports directly to Bo Lin.\n",
+            "workspace_id": "ws-eq-d04"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does CH alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does CH alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 8
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "CH",
+            "predicate": "alias_of_project",
+            "object": "Copper Haven",
+            "supports": [
+              {
+                "path": "alias.md",
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "CH aliases Copper Haven."
+              }
+            ]
+          },
+          {
+            "subject": "Copper Haven",
+            "predicate": "owner_of_project",
+            "object": "Rhea Moss",
+            "supports": [
+              {
+                "path": "accountability.md",
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "Rhea Moss owns Copper Haven."
+              }
+            ]
+          },
+          {
+            "subject": "Rhea Moss",
+            "predicate": "reports_to",
+            "object": "Bo Lin",
+            "supports": [
+              {
+                "path": "reporting.md",
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "Rhea Moss reports directly to Bo Lin."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-D05",
+      "partition": "dev",
+      "target": "invalid_tool",
+      "input": {
+        "query": "Who owns Silver Delta and who does that owner report to?",
+        "workspace_id": "ws-eq-d05",
+        "documents": [
+          {
+            "path": "silver-delta/source.md",
+            "content": "# Silver Delta\nIvo Chen is the accountable owner of Silver Delta.\nIvo Chen reports directly to Ren Park.\n",
+            "workspace_id": "ws-eq-d05"
+          },
+          {
+            "path": "silver-dawn/neighbor.md",
+            "content": "# Neighboring program\nLena Cho is the accountable owner of Silver Dawn.\n",
+            "workspace_id": "ws-eq-d05"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Silver Delta and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Silver Delta?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_tool"
+      },
+      "gold": {
+        "outcome": "rejected",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-D06",
+      "partition": "dev",
+      "target": "final_correction",
+      "input": {
+        "query": "Who owns Quartz Gate and who does that owner report to?",
+        "workspace_id": "ws-eq-d06",
+        "documents": [
+          {
+            "path": "quartz-gate/decision.md",
+            "content": "## Quartz Gate\nNia Park is the accountable owner of Quartz Gate. Nia Park reports directly to Ellis Shaw.\n",
+            "workspace_id": "ws-eq-d06"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Quartz Gate and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Quartz Gate?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 8
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_final_once"
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "Quartz Gate",
+            "predicate": "owner_of_project",
+            "object": "Nia Park",
+            "supports": [
+              {
+                "path": "quartz-gate/decision.md",
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "Nia Park is the accountable owner of Quartz Gate. Nia Park reports directly to Ellis Shaw."
+              }
+            ]
+          },
+          {
+            "subject": "Nia Park",
+            "predicate": "reports_to",
+            "object": "Ellis Shaw",
+            "supports": [
+              {
+                "path": "quartz-gate/decision.md",
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "Nia Park is the accountable owner of Quartz Gate. Nia Park reports directly to Ellis Shaw."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-F01",
+      "partition": "final",
+      "target": "cold_resume",
+      "input": {
+        "query": "Which project does QG alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f01",
+        "documents": [
+          {
+            "path": "quill-garden/alias.md",
+            "content": "# Naming\n\nQG is an internal alias for Quill Garden.\nGardenOps is the team alias for Quill Garden.\n",
+            "workspace_id": "ws-eq-f01"
+          },
+          {
+            "path": "quill-garden/owner.md",
+            "content": "# Accountable owner\n\nYara Lin owns Quill Garden.\n",
+            "workspace_id": "ws-eq-f01"
+          },
+          {
+            "path": "quill-garden/line.md",
+            "content": "# Reporting line\n\nYara Lin reports directly to Sol Reyes.\n",
+            "workspace_id": "ws-eq-f01"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does QG alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does QG alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "cold_resume"
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "QG",
+            "predicate": "alias_of_project",
+            "object": "Quill Garden",
+            "supports": [
+              {
+                "path": "quill-garden/alias.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "QG is an internal alias for Quill Garden."
+              }
+            ]
+          },
+          {
+            "subject": "Quill Garden",
+            "predicate": "owner_of_project",
+            "object": "Yara Lin",
+            "supports": [
+              {
+                "path": "quill-garden/owner.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Yara Lin owns Quill Garden."
+              }
+            ]
+          },
+          {
+            "subject": "Yara Lin",
+            "predicate": "reports_to",
+            "object": "Sol Reyes",
+            "supports": [
+              {
+                "path": "quill-garden/line.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Yara Lin reports directly to Sol Reyes."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-F02",
+      "partition": "final",
+      "target": "normal",
+      "input": {
+        "query": "谁负责青岚线路？其负责人直属领导是谁？",
+        "workspace_id": "ws-eq-f02",
+        "documents": [
+          {
+            "path": "青岚线路/负责人.md",
+            "content": "## 青岚线路\n青岚线路的负责人是沈砚。\n",
+            "workspace_id": "ws-eq-f02"
+          },
+          {
+            "path": "青岚线路/汇报.md",
+            "content": "## 汇报关系\n沈砚的直属领导是陆遥。\n陆遥的直属领导是叶辰。\n",
+            "workspace_id": "ws-eq-f02"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "谁负责青岚线路？其负责人直属领导是谁？",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns 青岚线路?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 10,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "青岚线路",
+            "predicate": "owner_of_project",
+            "object": "沈砚",
+            "supports": [
+              {
+                "path": "青岚线路/负责人.md",
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "青岚线路的负责人是沈砚。"
+              }
+            ]
+          },
+          {
+            "subject": "沈砚",
+            "predicate": "reports_to",
+            "object": "陆遥",
+            "supports": [
+              {
+                "path": "青岚线路/汇报.md",
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "沈砚的直属领导是陆遥。"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-F03",
+      "partition": "final",
+      "target": "workspace_isolation",
+      "input": {
+        "query": "Who owns Harbor Lattice and who does that owner report to?",
+        "workspace_id": "ws-eq-f03-active",
+        "documents": [
+          {
+            "path": "harbor-lattice/owner.md",
+            "content": "# Active workspace\n\nJuno Park is the accountable owner of Harbor Lattice.\n",
+            "workspace_id": "ws-eq-f03-active"
+          },
+          {
+            "path": "harbor-lattice/line.md",
+            "content": "# Active reporting\n\nJuno Park reports directly to Soren Vale.\n\nSoren Vale reports directly to Talia Moss.\n",
+            "workspace_id": "ws-eq-f03-active"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Harbor Lattice and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Harbor Lattice?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 10,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "wrong_workspace"
+      },
+      "gold": {
+        "outcome": "rejected",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-F04",
+      "partition": "final",
+      "target": "source_freshness",
+      "input": {
+        "query": "Who owns Copper Vale and who does that owner report to?",
+        "workspace_id": "ws-eq-f04",
+        "documents": [
+          {
+            "path": "copper-vale/snapshot.md",
+            "content": "# Copper Vale\nAs of 2026-09-01 Lio Chen is the accountable owner of Copper Vale.\nLio Chen owns Copper Ridge.\n",
+            "workspace_id": "ws-eq-f04"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Copper Vale and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Copper Vale?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "source_change"
+      },
+      "gold": {
+        "outcome": "rejected",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-F05",
+      "partition": "final",
+      "target": "budget_exhausted",
+      "input": {
+        "query": "Which project does IR alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f05",
+        "documents": [
+          {
+            "path": "indigo-reach/alias.md",
+            "content": "# Historical name\nIR aliases Indigo Reach.\n",
+            "workspace_id": "ws-eq-f05"
+          },
+          {
+            "path": "indigo-reach/owner.md",
+            "content": "# Ownership\nRin Ito owns Indigo Reach.\n",
+            "workspace_id": "ws-eq-f05"
+          },
+          {
+            "path": "indigo-reach/line.md",
+            "content": "# Reporting\nRin Ito reports directly to Kai Wen.\n",
+            "workspace_id": "ws-eq-f05"
+          },
+          {
+            "path": "indigo-reach/neighbor.md",
+            "content": "# Adjacent project\nIR aliases Indigo Ridge.\n",
+            "workspace_id": "ws-eq-f05"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does IR alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does IR alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 1
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "budget_exhausted"
+      },
+      "gold": {
+        "outcome": "budget_exhausted",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-F06",
+      "partition": "final",
+      "target": "provider_uncertain",
+      "input": {
+        "query": "Which project does PM alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f06",
+        "documents": [
+          {
+            "path": "pearl-meridian/source.md",
+            "content": "# Pearl Meridian\nPM is an internal alias for Pearl Meridian.\n\nOwen Brook owns Pearl Meridian.\n",
+            "workspace_id": "ws-eq-f06"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does PM alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does PM alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 1
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "provider_uncertain"
+      },
+      "gold": {
+        "outcome": "provider_uncertain",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-F07",
+      "partition": "final",
+      "target": "final_correction",
+      "input": {
+        "query": "Which project does AB alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f07",
+        "documents": [
+          {
+            "path": "amber-basin/alias.md",
+            "content": "AB aliases Amber Basin.\n",
+            "workspace_id": "ws-eq-f07"
+          },
+          {
+            "path": "amber-basin/current.md",
+            "content": "# Current assignment\n\nMara Singh is the accountable owner of Amber Basin.\n\nMara Singh reports directly to Bo Lin.\n",
+            "workspace_id": "ws-eq-f07"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does AB alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does AB alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 8
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_final_once"
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "AB",
+            "predicate": "alias_of_project",
+            "object": "Amber Basin",
+            "supports": [
+              {
+                "path": "amber-basin/alias.md",
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "AB aliases Amber Basin."
+              }
+            ]
+          },
+          {
+            "subject": "Amber Basin",
+            "predicate": "owner_of_project",
+            "object": "Mara Singh",
+            "supports": [
+              {
+                "path": "amber-basin/current.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Mara Singh is the accountable owner of Amber Basin."
+              }
+            ]
+          },
+          {
+            "subject": "Mara Singh",
+            "predicate": "reports_to",
+            "object": "Bo Lin",
+            "supports": [
+              {
+                "path": "amber-basin/current.md",
+                "line_start": 5,
+                "line_end": 5,
+                "quote": "Mara Singh reports directly to Bo Lin."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-F08",
+      "partition": "final",
+      "target": "conflict",
+      "input": {
+        "query": "Who owns Cedar Meridian and who does that owner report to?",
+        "workspace_id": "ws-eq-f08",
+        "documents": [
+          {
+            "path": "cedar-meridian/registry.md",
+            "content": "# Registry\n\nKira Moss is the accountable owner of Cedar Meridian.\n",
+            "workspace_id": "ws-eq-f08"
+          },
+          {
+            "path": "cedar-meridian/review.md",
+            "content": "# Review\n\nDane Wu is the accountable owner of Cedar Meridian.\n",
+            "workspace_id": "ws-eq-f08"
+          },
+          {
+            "path": "cedar-meridian/line.md",
+            "content": "# Reporting line\n\nKira Moss reports directly to Taro Lin.\n",
+            "workspace_id": "ws-eq-f08"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Cedar Meridian and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Cedar Meridian?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 10,
+          "max_provider_requests": 8
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "conflict",
+        "facts": [
+          {
+            "subject": "Cedar Meridian",
+            "predicate": "owner_of_project",
+            "object": "Kira Moss",
+            "supports": [
+              {
+                "path": "cedar-meridian/registry.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Kira Moss is the accountable owner of Cedar Meridian."
+              }
+            ]
+          },
+          {
+            "subject": "Cedar Meridian",
+            "predicate": "owner_of_project",
+            "object": "Dane Wu",
+            "supports": [
+              {
+                "path": "cedar-meridian/review.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "Dane Wu is the accountable owner of Cedar Meridian."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EQ-F09",
+      "partition": "final",
+      "target": "invalid_tool",
+      "input": {
+        "query": "Which project does PS alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f09",
+        "documents": [
+          {
+            "path": "plover-station/source.md",
+            "content": "PS aliases Plover Station.\nHana Moss owns Plover Station.\nHana Moss reports directly to Yu Lan.\n",
+            "workspace_id": "ws-eq-f09"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does PS alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does PS alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 10,
+          "max_provider_requests": 6
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_tool"
+      },
+      "gold": {
+        "outcome": "rejected",
+        "facts": []
+      }
+    },
+    {
+      "id": "EQ-F10",
+      "partition": "final",
+      "target": "normal",
+      "input": {
+        "query": "Which project does MA alias, who owns that project, and who does that owner report to?",
+        "workspace_id": "ws-eq-f10",
+        "documents": [
+          {
+            "path": "marble-arc/record.md",
+            "content": "# Marble Arc\n\nMA aliases Marble Arc.\n\nJia Lee is the accountable owner of Marble Arc.\n\nJia Lee reports directly to Dev Rao.\n",
+            "workspace_id": "ws-eq-f10"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Which project does MA alias, who owns that project, and who does that owner report to?",
+          "subgoals": [
+            {
+              "subgoal_id": "alias",
+              "question": "Which project does MA alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 8
+        }
+      },
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "gold": {
+        "outcome": "complete",
+        "facts": [
+          {
+            "subject": "MA",
+            "predicate": "alias_of_project",
+            "object": "Marble Arc",
+            "supports": [
+              {
+                "path": "marble-arc/record.md",
+                "line_start": 3,
+                "line_end": 3,
+                "quote": "MA aliases Marble Arc."
+              }
+            ]
+          },
+          {
+            "subject": "Marble Arc",
+            "predicate": "owner_of_project",
+            "object": "Jia Lee",
+            "supports": [
+              {
+                "path": "marble-arc/record.md",
+                "line_start": 5,
+                "line_end": 5,
+                "quote": "Jia Lee is the accountable owner of Marble Arc."
+              }
+            ]
+          },
+          {
+            "subject": "Jia Lee",
+            "predicate": "reports_to",
+            "object": "Dev Rao",
+            "supports": [
+              {
+                "path": "marble-arc/record.md",
+                "line_start": 7,
+                "line_end": 7,
+                "quote": "Jia Lee reports directly to Dev Rao."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

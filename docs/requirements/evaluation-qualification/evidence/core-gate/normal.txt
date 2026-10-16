@@ -1,0 +1,3 @@
+..                                                                       [100%]
+- generated xml file: D:\webproject\Linkloom\work\linkloom-evaluation-qualification\work\evaluation-qualification\clean-core-gate\normal.xml -
+2 passed in 16.72s

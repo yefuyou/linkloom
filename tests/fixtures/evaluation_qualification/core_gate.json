@@ -1,0 +1,614 @@
+{
+  "schema_version": "evaluation-qualification-core-gate/v1",
+  "cases": [
+    {
+      "id": "CORE-NORMAL",
+      "partition": "core-gate",
+      "target": "normal",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {
+        "outcome": "complete"
+      }
+    },
+    {
+      "id": "CORE-PARTIAL",
+      "partition": "core-gate",
+      "target": "partial",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {
+        "outcome": "partial"
+      }
+    },
+    {
+      "id": "CORE-CONFLICT",
+      "partition": "core-gate",
+      "target": "conflict",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "workspace_id": "synthetic-core",
+            "path": "conflict-0.md",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\n"
+          },
+          {
+            "workspace_id": "synthetic-core",
+            "path": "conflict-1.md",
+            "content": "Ada Reed reports directly to Evan Fox.\n"
+          },
+          {
+            "workspace_id": "synthetic-core",
+            "path": "conflict-2.md",
+            "content": "Ada Reed reports directly to Morgan Hale.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {
+        "outcome": "conflict"
+      }
+    },
+    {
+      "id": "CORE-INVALID-TOOL",
+      "partition": "core-gate",
+      "target": "invalid_tool",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_tool"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-FINAL-CORRECTION",
+      "partition": "core-gate",
+      "target": "final_correction",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "invalid_final_once"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-COLD-RESUME",
+      "partition": "core-gate",
+      "target": "cold_resume",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "cold_resume"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-PROVIDER-UNCERTAIN",
+      "partition": "core-gate",
+      "target": "provider_uncertain",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "provider_uncertain"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-WRONG-WORKSPACE",
+      "partition": "core-gate",
+      "target": "workspace_isolation",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "wrong_workspace"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          },
+          {
+            "path": "foreign.md",
+            "workspace_id": "foreign-workspace",
+            "content": "Foreign Person is the accountable owner of Foreign Project.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-SOURCE-CHANGE",
+      "partition": "core-gate",
+      "target": "source_freshness",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "source_change"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-BUDGET",
+      "partition": "core-gate",
+      "target": "budget_exhausted",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": "budget_exhausted"
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who is the direct leader of the owner of Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 1
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-D06-GOAL-MISMATCH",
+      "partition": "core-gate",
+      "target": "normal",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    },
+    {
+      "id": "CORE-F07-GOAL-MISMATCH",
+      "partition": "core-gate",
+      "target": "normal",
+      "protocol": {
+        "runner": "qualified-runtime-v1",
+        "fault": null
+      },
+      "input": {
+        "query": "Who is the direct leader of the owner of Beacon Lane?",
+        "workspace_id": "synthetic-core",
+        "documents": [
+          {
+            "path": "relations.md",
+            "workspace_id": "synthetic-core",
+            "content": "Ada Reed is the accountable owner of Beacon Lane.\nAda Reed reports directly to Evan Fox.\n"
+          }
+        ],
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Who owns Beacon Lane?",
+          "subgoals": [
+            {
+              "subgoal_id": "owner",
+              "question": "Who owns Beacon Lane?",
+              "depends_on": [],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "leader",
+              "question": "Who is the direct leader of {verified_entity}?",
+              "depends_on": [
+                "owner"
+              ],
+              "relation_path": [
+                "reports_to"
+              ]
+            }
+          ]
+        },
+        "budget": {
+          "max_steps": 12,
+          "max_provider_requests": 12
+        }
+      },
+      "gold": {}
+    }
+  ]
+}

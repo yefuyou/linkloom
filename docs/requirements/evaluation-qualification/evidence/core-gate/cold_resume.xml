@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="6.729" timestamp="2026-10-17T01:07:51.794652+08:00" hostname="beagle"><testcase classname="tests.integration.test_qualified_runtime" name="test_cold_resume_reuses_durable_response_and_counts_new_provider_turns" time="3.602" /></testsuite></testsuites>

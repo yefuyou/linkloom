@@ -1,0 +1,3 @@
+.                                                                        [100%]
+- generated xml file: D:\webproject\Linkloom\work\linkloom-evaluation-qualification\work\evaluation-qualification\clean-core-gate\budget_exhausted.xml -
+1 passed in 8.93s

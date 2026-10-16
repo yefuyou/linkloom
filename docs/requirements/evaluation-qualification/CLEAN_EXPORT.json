@@ -1,0 +1,70 @@
+{
+  "schema_version": "qualification-clean-export/v1",
+  "source_index_tree": "c80979c4e85b20c9786b359dfc1e49ae50a6788f",
+  "export_index_tree": "c80979c4e85b20c9786b359dfc1e49ae50a6788f",
+  "export_directory": "D:\\webproject\\Linkloom\\work\\eq-qualified-clean",
+  "tracked_files": 947,
+  "index_differences": [],
+  "export_method": "git checkout-index of staged tree; local Git index for tracked-dependency verification",
+  "python_venv": "work/evaluation-qualification/clean-env2",
+  "requirements": "tests/fixtures/evaluation_qualification/requirements-core.txt",
+  "legacy_tracked_ignored_assets": "All original tracked screenshots explicitly indexed in export; no untracked assets copied",
+  "verified_gate_files": [
+    {
+      "path": "scripts/evaluation_core_gate.py",
+      "sha256": "1280c57905938939675a2f851f4a82094e9ce8c893e177b6b4c87d4754851d03",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "scripts/evaluation_qualification.py",
+      "sha256": "21a3c466e171272bd64b76885f477461cf4273c9959f2d5773b94859e69f7247",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "scripts/qualified_runtime.py",
+      "sha256": "a6b61d7690fb6eb97902c0829c90dd1637376af1388f7d9b4d5cd1b76c0c1770",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "scripts/evaluation_offline_plugin.py",
+      "sha256": "6077a5e3a8dfab0954d7c686ca6a18c0af4a16fb1cd6efb234114014f38daba2",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "scripts/build_qualification_validation.py",
+      "sha256": "c0d5810b83f0f0103f3adcbe8d03dddae69839afd06d6b693578309033ed520c",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/fixtures/evaluation_qualification/core_gate.json",
+      "sha256": "ebc2c6b5984cbc22cbd3a3b43e7cd5a23613094b34ed8529673b3fe82c4964c0",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/fixtures/evaluation_qualification/core_gate_manifest.json",
+      "sha256": "ec86dee2ea1ea28bc5ee135f869561f4d433b5497412b1a5cd9aa19b1c668269",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/fixtures/evaluation_qualification/requirements-core.txt",
+      "sha256": "b5f301b475d15d5b6aeaa12c8ccdced1cff70a1bbfa41c149f57e4656db0edba",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/integration/test_qualified_runtime.py",
+      "sha256": "9ff875d7ab2ecc15129c3ff0bd3733e038886e99f72934dd8fa56dffbb9eb5f4",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/unit/test_evaluation_qualification.py",
+      "sha256": "025c1bdefad3e53412cd86491443890e10190aaed4e5b838f0a1525e833c35c0",
+      "current_bytes_match_snapshot": true
+    },
+    {
+      "path": "tests/unit/test_evaluation_offline_plugin.py",
+      "sha256": "e9038f490782d71f18aee01bd2e10ab057ae6828f913f8116c1818aa950c6cfe",
+      "current_bytes_match_snapshot": true
+    }
+  ],
+  "source_snapshot_matches_current_core_gate": true
+}

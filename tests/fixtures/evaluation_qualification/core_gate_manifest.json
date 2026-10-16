@@ -1,0 +1,120 @@
+{
+  "schema_version": "evaluation-core-gate/v1",
+  "dataset": "tracked synthetic representatives; distinct from prepared validation Final",
+  "targets": [
+    {
+      "id": "normal",
+      "boundary": "normal",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-NORMAL-complete]",
+        "tests/integration/test_qualified_runtime.py::test_source_context_and_dependency_bindings_are_observed_not_prefilled"
+      ],
+      "expected_tests": 2
+    },
+    {
+      "id": "partial",
+      "boundary": "partial",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-PARTIAL-partial]"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "conflict",
+      "boundary": "conflict",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_observes_source_outcome[CORE-CONFLICT-partial]"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "invalid_tool",
+      "boundary": "invalid_tool",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_qualified_runtime_rejects_invalid_tool_params_from_observed_runtime",
+        "tests/integration/test_qualified_runtime.py::test_d06_f07_goal_mismatch_regressions_are_represented_by_new_runner",
+        "tests/integration/test_qualified_runtime.py::test_unverified_dependency_never_reaches_next_executor"
+      ],
+      "expected_tests": 3
+    },
+    {
+      "id": "final_correction",
+      "boundary": "final_correction",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_final_correction_is_a_new_counted_response",
+        "tests/integration/test_final_correction_http_v3.py::test_http_invalid_final_corrects_once_with_grounding_and_reviewer"
+      ],
+      "expected_tests": 2
+    },
+    {
+      "id": "cold_resume",
+      "boundary": "cold_resume",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_cold_resume_reuses_durable_response_and_counts_new_provider_turns"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "provider_uncertain",
+      "boundary": "provider_uncertain",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-PROVIDER-UNCERTAIN]"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "workspace_isolation",
+      "boundary": "workspace_isolation",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-WRONG-WORKSPACE]",
+        "tests/integration/test_final_correction_http_v3.py::test_http_wrong_workspace_tool_call_cannot_produce_answer"
+      ],
+      "expected_tests": 2
+    },
+    {
+      "id": "source_freshness",
+      "boundary": "source_freshness",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-SOURCE-CHANGE]"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "budget_exhausted",
+      "boundary": "budget_exhausted",
+      "pytest_nodes": [
+        "tests/integration/test_qualified_runtime.py::test_fault_boundaries_fail_closed[CORE-BUDGET]"
+      ],
+      "expected_tests": 1
+    },
+    {
+      "id": "qualification",
+      "boundary": "preflight cannot promote invalid inputs or skipped checks",
+      "pytest_nodes": [
+        "tests/unit/test_evaluation_qualification.py",
+        "tests/integration/test_qualified_runtime.py::test_core_gate_junit_parser_does_not_promote_skipped_or_error_to_pass"
+      ],
+      "expected_tests": 25
+    },
+    {
+      "id": "offline_transport",
+      "boundary": "external connections denied before DNS",
+      "pytest_nodes": [
+        "tests/unit/test_evaluation_offline_plugin.py"
+      ],
+      "expected_tests": 1
+    }
+  ],
+  "tracked_dependencies": [
+    "scripts/qualified_runtime.py",
+    "scripts/evaluation_qualification.py",
+    "scripts/evaluation_offline_plugin.py",
+    "scripts/build_qualification_validation.py",
+    "tests/fixtures/evaluation_qualification/core_gate.json",
+    "tests/integration/run_bounded_multihop.py",
+    "tests/integration/unified_ask_fixture.py",
+    "tests/integration/unified_investigation_fixture.py"
+  ],
+  "final_execution": "NOT_RUN",
+  "real_provider_calls": 0
+}

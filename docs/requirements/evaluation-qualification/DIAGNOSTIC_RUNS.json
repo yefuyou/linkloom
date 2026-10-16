@@ -1,0 +1,73 @@
+{
+  "schema_version": "qualification-regression-attempts/v1",
+  "authoritative_run": "full249-qualified-env",
+  "selection_reason": "Fresh pinned venv; short source/temp paths; BM25 explicit; all 249 reported per side; original source byte integrity verified; no environment failure. Prior noisy attempts are not substituted for pass counts.",
+  "attempts": [
+    {
+      "run": "full249-20261017T0020Z",
+      "role": "INCOMPLETE_SETUP_OR_INTERRUPTED_DIAGNOSTIC",
+      "completed_report": false,
+      "logs_retained": []
+    },
+    {
+      "run": "full249-20261017T0025Z",
+      "role": "INCOMPLETE_SETUP_OR_INTERRUPTED_DIAGNOSTIC",
+      "completed_report": false,
+      "logs_retained": [
+        "work\\evaluation-qualification\\core\\full249-20261017T0025Z\\baseline\\batch-01.log",
+        "work\\evaluation-qualification\\core\\full249-20261017T0025Z\\baseline\\batch-02.log",
+        "work\\evaluation-qualification\\core\\full249-20261017T0025Z\\candidate\\batch-01.log"
+      ]
+    },
+    {
+      "run": "full249-20261017T0030Z",
+      "report": "work\\evaluation-qualification\\core\\full249-20261017T0030Z\\classification.json",
+      "sha256": "46570538887168499572d794c6689b57d7258275eb5dc0fdfcc0a53b2df61c0d",
+      "raw_status_counts": {
+        "baseline": {
+          "passed": 153,
+          "failed": 96
+        },
+        "candidate": {
+          "passed": 153,
+          "failed": 96
+        }
+      },
+      "role": "DIAGNOSTIC_ENVIRONMENT_ATTEMPT"
+    },
+    {
+      "run": "full249-qualified-env",
+      "report": "work\\evaluation-qualification\\core\\full249-qualified-env\\classification.json",
+      "sha256": "170a9d85b45e7451b2232143e5a483ca4c461999b81ee5185308cdc69031b775",
+      "raw_status_counts": {
+        "baseline": {
+          "passed": 209,
+          "failed": 4,
+          "unexecutable": 36
+        },
+        "candidate": {
+          "passed": 209,
+          "failed": 4,
+          "unexecutable": 36
+        }
+      },
+      "role": "AUTHORITATIVE"
+    },
+    {
+      "run": "full249-root-20261017",
+      "report": "work\\evaluation-qualification\\core\\full249-root-20261017\\classification.json",
+      "sha256": "15bf582afddb8eec17910a07dd60da6386f1c8073752a6aa4b03440edee58f8c",
+      "raw_status_counts": {
+        "baseline": {
+          "passed": 196,
+          "failed": 53
+        },
+        "candidate": {
+          "passed": 196,
+          "failed": 53
+        }
+      },
+      "role": "DIAGNOSTIC_ENVIRONMENT_ATTEMPT"
+    }
+  ]
+}

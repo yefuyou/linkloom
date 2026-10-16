@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="32" time="93.722" timestamp="2026-10-17T01:03:46.692598+08:00" hostname="beagle"><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook]" time="11.583" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[As of 2026-10-06, Who is the direct leader of the owner of Mariner Field?-conflicting_evidence-None]" time="6.010" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who is the direct leader of the owner of Harbor Gap?-insufficient_evidence-None]" time="5.466" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_permission_uncertain_budget_and_unsupported" time="5.042" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_exposed_hold_g_conflict_regression" time="1.286" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_actual_three_hop_ledger_binds_only_previous_verified_reads" time="6.606" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_relation_date_scope_and_explicit_decision_do_not_silently_change_path" time="8.157" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_three_hop_conflict_preserves_alias_and_owner_and_source_change_invalidates_final" time="8.739" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_policy_excludes_decision_memory_reads_and_candidate_capture" time="8.020" /><testcase classname="tests.integration.test_adaptive_ask_flow" name="test_new_wording_passes_model_plan_runtime_and_reviewer_through_http" time="7.369" /><testcase classname="tests.integration.test_adaptive_ask_flow" name="test_existing_rules_skip_model_planning_and_feature_defaults_off" time="5.513" /><testcase classname="tests.integration.test_adaptive_ask_flow" name="test_permission_date_and_scope_rejection_precede_model_factory" time="2.086" /><testcase classname="tests.integration.test_adaptive_ask_flow" name="test_one_repair_is_revalidated_and_bad_plans_never_reach_tools" time="8.261" /><testcase classname="tests.integration.test_adaptive_ask_flow" name="test_model_decline_cannot_count_as_valid_or_trigger_repair" time="3.160" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_complete_final_is_accepted_and_grounded" time="0.392" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_final_missing_required_nested_field_fails_closed" time="0.361" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[False]" time="0.454" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[True]" time="0.392" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]" time="0.010"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]" time="0.011"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:347: in test_phase14_real_final_replays_through_runtime_and_reviewer
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_legacy_final_replay_remains_compatible" time="0.010"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:380: in test_phase14_cn2_legacy_final_replay_remains_compatible
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text" time="0.012"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:403: in test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text
+    observed, vault, index = _phase14_inputs("P14-CN2")
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]" time="0.010"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]" time="0.022"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]" time="0.012"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]" time="0.015"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]" time="0.017"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tests\integration\test_team_decision_final_contract_communication.py:452: in test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date
+    observed, vault, index = _phase14_inputs(run_id)
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\eq-qualified-core\\c\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'</failure></testcase><testcase classname="tests.unit.test_p84_recovery" name="test_ledger_from_list_preserves_terminal_and_pending_records_without_overwrite" time="0.005" /><testcase classname="tests.unit.test_p84_recovery" name="test_ledger_from_list_preserves_failed_record_and_safe_error" time="0.003" /><testcase classname="tests.unit.test_p84_recovery" name="test_resume_decisions_cover_safe_request_ambiguity_durable_response_and_terminal_state" time="0.006" /><testcase classname="tests.unit.test_p84_recovery" name="test_completed_tool_record_is_resume_observation_not_a_second_execution" time="0.005" /><testcase classname="tests.unit.test_p84_recovery" name="test_pending_tool_record_requires_verification_and_never_auto_replays" time="0.004" /></testsuite></testsuites>

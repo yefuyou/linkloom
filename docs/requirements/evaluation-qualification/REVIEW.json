@@ -1,0 +1,77 @@
+{
+  "schema_version": "evaluation-qualification-review/v1",
+  "status": "APPROVED_FOR_PREPARATION",
+  "review_mode": "independent_final_re_review",
+  "scope": "evaluation qualification preparation and handoff evidence only",
+  "findings": [
+    {
+      "id": "P1-CORE-GATE-BOUNDARIES",
+      "severity": "P1",
+      "status": "closed",
+      "evidence": "CORE_GATE.json: PASSED, 12/12 targets, 41/41 tests, zero failed/skipped/errors; raw JUnit and logs retained under evidence/core-gate/.",
+      "closure": "Clean tracked evidence observes backend counting, SourceFreshness, SQLite cold resume, conflict, budget, provider-uncertain, workspace, correction, and transport boundaries."
+    },
+    {
+      "id": "P1-OFFLINE-HTTP-BOUNDARY",
+      "severity": "P1",
+      "status": "closed",
+      "evidence": "The clean Core Gate has passed final_correction, workspace_isolation, and offline_transport targets.",
+      "closure": "The clean run executes the localhost HTTP tests while external transport denial remains separately covered."
+    },
+    {
+      "id": "P1-249-CHANGED-FILES",
+      "severity": "P1",
+      "status": "closed",
+      "evidence": "CORE_REGRESSION.json: 249 requested/reported nodes on each exact commit, raw 209 passed/40 failed on both sides, 39 changed paths, and before/after blob identities.",
+      "closure": "Raw JUnit, logs, archive verification, environment, and portable hashes are retained; normalization remains fail-closed."
+    },
+    {
+      "id": "P1-CLEAN-TRACKED-GATE",
+      "severity": "P1",
+      "status": "closed",
+      "evidence": "CLEAN_EXPORT.json: source_index_tree=export_index_tree c80979c4e85b20c9786b359dfc1e49ae50a6788f, index_differences=[], 947 tracked files, and 11 byte matches; CLEAN_ENVIRONMENT.json records the fresh pinned environment.",
+      "closure": "The authoritative Core Gate was reproduced from the tracked index export with allow_untracked=false."
+    }
+  ],
+  "checks": {
+    "builder_check": "PASS: 16 cases (6 dev, 10 final); final_execution=NOT_RUN; real_provider_calls=0",
+    "authoritative_preflight": "PASS: rejects D06/F07 mismatch, unreachable targets, invalid Gold/source spans, and mechanical cross-partition renames",
+    "qualification_unit_tests": "PASS: 25 Core Gate tests (24 qualification unit tests plus 1 JUnit parser test)",
+    "v3_audit_reproducible": "PASS: old frozen files/Gold/scores preserved; no model calls",
+    "core_gate_clean_tracked": "PASS: 12/12 targets; 41/41 tests; failed=0; skipped=0; errors=0; network=deny; provider_sdk_requests=0",
+    "core_gate_runtime_witnesses": "PASS: backend counting, SourceFreshness identity change, SQLite cold resume, and requested guard boundaries",
+    "core_regression_execution": "COMPLETE: 249 nodes on each exact commit; raw baseline=209 passed/40 failed; raw candidate=209 passed/40 failed",
+    "core_regression_normalized": "LIMITED: stable_pass=209; original_failure=2; unexecutable=38; new_failure=0; fixed=0; notrun=0; environment=0",
+    "historical_input_provenance": "LIMITED: 11 missing original files affect 38 nodes; no Git blob/log/main probe result; no replacements created",
+    "changed_file_identity": "PASS: 39 changed paths with baseline/candidate blob identities; no src/ or old-frozen-path change",
+    "classification_contract_tests": "PASS: 7",
+    "regression_cli": "FAIL_CLOSED_EXPECTED: returns 1 because comparison is not all stable_pass",
+    "new_final_execution": "NOT_RUN",
+    "real_provider_requests": 0,
+    "production_budget": 0
+  },
+  "evidence": {
+    "core_gate": "docs/requirements/evaluation-qualification/CORE_GATE.json",
+    "clean_export": "docs/requirements/evaluation-qualification/CLEAN_EXPORT.json",
+    "clean_environment": "docs/requirements/evaluation-qualification/CLEAN_ENVIRONMENT.json",
+    "core_regression": "docs/requirements/evaluation-qualification/CORE_REGRESSION.json",
+    "input_provenance": "docs/requirements/evaluation-qualification/INPUT_PROVENANCE.json",
+    "raw_core_gate": "docs/requirements/evaluation-qualification/evidence/core-gate/",
+    "raw_regression": "docs/requirements/evaluation-qualification/evidence/"
+  },
+  "limitations": [
+    "The historical 249-node suite is not all-green: two original assertion failures remain.",
+    "Thirty-eight nodes are unexecutable because eleven trusted historical input files are unavailable; no substitutes were synthesized.",
+    "The synthetic Core Gate is an offline contract qualification, not a model-accuracy, reliability-improvement, or paid-provider result.",
+    "No new Final case, Gemini request, or production/provider budget was authorized or executed."
+  ],
+  "decision": {
+    "status": "APPROVED_FOR_PREPARATION",
+    "ready_for": "preparation/approval packet generation",
+    "not_authorized": [
+      "claiming the historical Core suite is fully green",
+      "running a new Final partition",
+      "making real Gemini or other Provider requests"
+    ]
+  }
+}

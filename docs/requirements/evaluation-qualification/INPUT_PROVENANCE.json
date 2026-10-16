@@ -1,0 +1,212 @@
+{
+  "schema_version": "qualification-historical-inputs/v1",
+  "affected_tests": 38,
+  "missing_files": 11,
+  "method": "Exact FileNotFound paths in fresh JUnit; git cat-file at both commits; git log --all for each path; read-only main-checkout existence probe",
+  "no_replacement_inputs_created": true,
+  "inputs": [
+    {
+      "relative_path": "work/phase11/runs/p11-unseen-plan-model/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_phase3_task_plan::test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid",
+        "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate]",
+        "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean]",
+        "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown]",
+        "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle]"
+      ],
+      "node_count": 5,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase14_gemini/runs/P14-PLAN-DEFAULT/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_phase3_task_plan::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0]"
+      ],
+      "node_count": 1,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase14_gemini/runs/P14-PLAN-REPAIR/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_phase3_task_plan::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1]",
+        "tests.unit.test_phase3_task_plan::test_model_plan_normalization_does_not_guess_a_missing_dependent_edge"
+      ],
+      "node_count": 2,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase9_gemini/runs/p9-p0-cn2-before/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase9_real_cn2_final_replays_against_exact_verified_passages[before]"
+      ],
+      "node_count": 1,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase9_gemini/runs/p9-p0-cn2-after/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase9_real_cn2_final_replays_against_exact_verified_passages[after]"
+      ],
+      "node_count": 1,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase11/runs/p11-cn2-repeats-rep1/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding"
+      ],
+      "node_count": 1,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase14_gemini/runs/P14-ALIAS-A/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]"
+      ],
+      "node_count": 3,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase14_gemini/runs/P14-ALIAS-B/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]"
+      ],
+      "node_count": 3,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase14_gemini/runs/P14-CN2/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2]",
+        "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting]",
+        "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date]",
+        "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner]",
+        "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]"
+      ],
+      "node_count": 10,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase11/runs/p11-alias-repeats-rep1/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project]",
+        "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref]"
+      ],
+      "node_count": 10,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    },
+    {
+      "relative_path": "work/phase11/runs/p11-alias-repeats-rep2/observed.json",
+      "affected_nodes": [
+        "tests.unit.test_claim_grounding::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2]"
+      ],
+      "node_count": 1,
+      "git_blob_available": {
+        "baseline": false,
+        "candidate": false
+      },
+      "reachable_git_commits": [],
+      "main_checkout_read_only_exists": false,
+      "trusted_original_input_available": false,
+      "reconstruction_performed": false,
+      "decision": "UNEXECUTABLE; no trusted source or byte hash recovered"
+    }
+  ]
+}

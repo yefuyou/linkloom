@@ -1,0 +1,1581 @@
+{
+  "schema_version": "qualification-report/v1",
+  "status": "REJECTED",
+  "scope": "static preflight only; no model, runtime acceptance or Final execution",
+  "provider_requests": 0,
+  "errors": [
+    {
+      "case_id": "RAC3-D01",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D01",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D01",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-complete-invalid",
+          "vault_root_fingerprint": "rac3-dev-complete-invalid-v1",
+          "index_id": "idx-rac3-d01",
+          "index_sha256": "synthetic-index-rac3-d01",
+          "document_count": 1,
+          "source_version": "lantern-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D01",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D01",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Lantern Field",
+          "object": "Ari Chen"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D01",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Ari Chen",
+          "object": "Bo Lin"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-complete-valid",
+          "vault_root_fingerprint": "rac3-dev-complete-valid-v1",
+          "index_id": "idx-rac3-d02",
+          "index_sha256": "synthetic-index-rac3-d02",
+          "document_count": 2,
+          "source_version": "river-quartz-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "River Quartz",
+          "object": "Nia Park"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D02",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Nia Park",
+          "object": "Ellis Shaw"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D03",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D03",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D03",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-partial",
+          "vault_root_fingerprint": "rac3-dev-partial-v1",
+          "index_id": "idx-rac3-d03",
+          "index_sha256": "synthetic-index-rac3-d03",
+          "document_count": 1,
+          "source_version": "moss-harbor-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D03",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D03",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Moss Harbor",
+          "object": "Talia Reed"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-conflict",
+          "vault_root_fingerprint": "rac3-dev-conflict-v1",
+          "index_id": "idx-rac3-d04",
+          "index_sha256": "synthetic-index-rac3-d04",
+          "document_count": 2,
+          "source_version": "cedar-meridian-v2"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Cedar Meridian",
+          "object": "Mara Singh"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D04",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Cedar Meridian",
+          "object": "Devon Wu"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-chinese-boundary",
+          "vault_root_fingerprint": "rac3-dev-chinese-boundary-v1",
+          "index_id": "idx-rac3-d05",
+          "index_sha256": "synthetic-index-rac3-d05",
+          "document_count": 1,
+          "source_version": "xinghe-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "星河港",
+          "object": "林澈"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D05",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "林澈",
+          "object": "周宁"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D06",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D06",
+      "code": "QUERY_GOAL_MISMATCH",
+      "evidence": {
+        "query": "Which project does Cedar-Arc alias, and who owns it?",
+        "goal": "Resolve the Cedar-Arc alias and its accountable owner."
+      }
+    },
+    {
+      "case_id": "RAC3-D06",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "Model plan goal differs from the user query.",
+        "plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve the Cedar-Arc alias and its accountable owner.",
+          "subgoals": [
+            {
+              "subgoal_id": "step_one",
+              "question": "Which project does Cedar-Arc alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "step_two",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "step_one"
+              ],
+              "alternate_question": "Who is accountable for {verified_entity}?",
+              "relation_path": [
+                "owner_of_project"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D06",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-tool-arguments",
+          "vault_root_fingerprint": "rac3-dev-tool-arguments-v1",
+          "index_id": "idx-rac3-d06",
+          "index_sha256": "synthetic-index-rac3-d06",
+          "document_count": 2,
+          "source_version": "cedar-arc-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D06",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-same-file",
+          "vault_root_fingerprint": "rac3-dev-same-file-v1",
+          "index_id": "idx-rac3-d07",
+          "index_sha256": "synthetic-index-rac3-d07",
+          "document_count": 1,
+          "source_version": "atlas-current-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Atlas Current",
+          "object": "Sana Ito"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D07",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Sana Ito",
+          "object": "Kian Brooks"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-context",
+          "vault_root_fingerprint": "rac3-dev-context-v1",
+          "index_id": "idx-rac3-d08",
+          "index_sha256": "synthetic-index-rac3-d08",
+          "document_count": 3,
+          "source_version": "ember-ridge-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Ember Ridge",
+          "object": "Emi Cole"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D08",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Emi Cole",
+          "object": "Rowan Bell"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D09",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D09",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D09",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-budget",
+          "vault_root_fingerprint": "rac3-dev-budget-v1",
+          "index_id": "idx-rac3-d09",
+          "index_sha256": "synthetic-index-rac3-d09",
+          "document_count": 2,
+          "source_version": "silver-orchard-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D09",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D09",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Silver Orchard",
+          "object": "Ivo Lane"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-D10",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-D10",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-D10",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-dev-uncertain",
+          "vault_root_fingerprint": "rac3-dev-uncertain-v1",
+          "index_id": "idx-rac3-d10",
+          "index_sha256": "synthetic-index-rac3-d10",
+          "document_count": 1,
+          "source_version": "willow-signal-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-D10",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "SOURCE_WORKSPACE_MISMATCH",
+      "evidence": {
+        "path": "foreign-harbor-owner.md",
+        "workspace": "other-final-workspace",
+        "host": "rac3-final-workspace"
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-workspace",
+          "vault_root_fingerprint": "rac3-final-workspace-v2",
+          "index_id": "idx-rac3-f01",
+          "index_sha256": "synthetic-index-rac3-f01",
+          "document_count": 2,
+          "source_version": "harbor-lattice-v2"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Harbor Lattice",
+          "object": "Juno Park"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F01",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Juno Park",
+          "object": "Soren Vale"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F02",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F02",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F02",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-freshness",
+          "vault_root_fingerprint": "rac3-final-freshness-v1",
+          "index_id": "idx-rac3-f02",
+          "index_sha256": "synthetic-index-rac3-f02-old",
+          "document_count": 1,
+          "source_version": "copper-vale-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F02",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F03",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F03",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F03",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-scope",
+          "vault_root_fingerprint": "rac3-final-scope-v1",
+          "index_id": "idx-rac3-f03",
+          "index_sha256": "synthetic-index-rac3-f03",
+          "document_count": 1,
+          "source_version": "juniper-arc-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F03",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F03",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Juniper Arc",
+          "object": "Pema Singh"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F04",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F04",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F04",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-schema",
+          "vault_root_fingerprint": "rac3-final-schema-v1",
+          "index_id": "idx-rac3-f04",
+          "index_sha256": "synthetic-index-rac3-f04",
+          "document_count": 1,
+          "source_version": "opal-station-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F04",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F04",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Opal Station",
+          "object": "Hana Moss"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F05",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F05",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F05",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-partial-zh",
+          "vault_root_fingerprint": "rac3-final-partial-zh-v1",
+          "index_id": "idx-rac3-f05",
+          "index_sha256": "synthetic-index-rac3-f05",
+          "document_count": 2,
+          "source_version": "qinglan-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F05",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F05",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "青岚线路",
+          "object": "沈砚"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-conflict",
+          "vault_root_fingerprint": "rac3-final-conflict-v1",
+          "index_id": "idx-rac3-f06",
+          "index_sha256": "synthetic-index-rac3-f06",
+          "document_count": 3,
+          "source_version": "fable-crossing-v3"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Fable Crossing",
+          "object": "Yara Cole"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F06",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Fable Crossing",
+          "object": "Tomas Reed"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "QUERY_GOAL_MISMATCH",
+      "evidence": {
+        "query": "Which project does Lumen-9 stand for, and who is responsible for it?",
+        "goal": "Resolve the Lumen-9 alias and the owner of its verified project."
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "Model plan goal differs from the user query.",
+        "plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve the Lumen-9 alias and the owner of its verified project.",
+          "subgoals": [
+            {
+              "subgoal_id": "alias_step",
+              "question": "Which project does Lumen-9 alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "owner_step",
+              "question": "Who is responsible for {verified_entity}?",
+              "depends_on": [
+                "alias_step"
+              ],
+              "alternate_question": "Who owns {verified_entity}?",
+              "relation_path": [
+                "owner_of_project"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-dependency",
+          "vault_root_fingerprint": "rac3-final-dependency-v1",
+          "index_id": "idx-rac3-f07",
+          "index_sha256": "synthetic-index-rac3-f07",
+          "document_count": 2,
+          "source_version": "lumen-nine-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "alias_of_project",
+          "subject": "Lumen-9",
+          "object": "Seabird North"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F07",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Seabird North",
+          "object": "Yuki Tran"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-passages",
+          "vault_root_fingerprint": "rac3-final-passages-v2",
+          "index_id": "idx-rac3-f08",
+          "index_sha256": "synthetic-index-rac3-f08",
+          "document_count": 1,
+          "source_version": "northstar-canal-v2"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Northstar Canal",
+          "object": "Uma Li"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F08",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "reports_to",
+          "subject": "Uma Li",
+          "object": "Felix Zhou"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F09",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F09",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "TaskPlan requires only goal and subgoals.",
+        "plan": null
+      }
+    },
+    {
+      "case_id": "RAC3-F09",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-budget",
+          "vault_root_fingerprint": "rac3-final-budget-v1",
+          "index_id": "idx-rac3-f09",
+          "index_sha256": "synthetic-index-rac3-f09",
+          "document_count": 2,
+          "source_version": "quartz-grove-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F09",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F09",
+      "code": "GOLD_SUPPORT_MISSING",
+      "evidence": {
+        "fact": {
+          "predicate": "owner_of_project",
+          "subject": "Quartz Grove",
+          "object": "Bea Lin"
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F10",
+      "code": "PARTITION_INVALID",
+      "evidence": {
+        "partition": null,
+        "allowed": [
+          "dev",
+          "final"
+        ]
+      }
+    },
+    {
+      "case_id": "RAC3-F10",
+      "code": "QUERY_GOAL_MISMATCH",
+      "evidence": {
+        "query": "Which project does Echo-4 alias, and who owns it?",
+        "goal": "Resolve Echo-4 and its accountable owner."
+      }
+    },
+    {
+      "case_id": "RAC3-F10",
+      "code": "PLAN_ADMISSION_INVALID",
+      "evidence": {
+        "message": "Model plan goal differs from the user query.",
+        "plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve Echo-4 and its accountable owner.",
+          "subgoals": [
+            {
+              "subgoal_id": "echo_alias",
+              "question": "Which project does Echo-4 alias?",
+              "depends_on": [],
+              "relation_path": [
+                "alias_of_project"
+              ]
+            },
+            {
+              "subgoal_id": "echo_owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": [
+                "echo_alias"
+              ],
+              "relation_path": [
+                "owner_of_project"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case_id": "RAC3-F10",
+      "code": "UNMATERIALIZED_SOURCE_IDENTITY",
+      "evidence": {
+        "source": {
+          "workspace_id": "rac3-final-uncertain",
+          "vault_root_fingerprint": "rac3-final-uncertain-v1",
+          "index_id": "idx-rac3-f10",
+          "index_sha256": "synthetic-index-rac3-f10",
+          "document_count": 2,
+          "source_version": "echo-four-v1"
+        },
+        "required": "Scanner-owned identity, not fixture pseudo SHA"
+      }
+    },
+    {
+      "case_id": "RAC3-F10",
+      "code": "UNOBSERVABLE_TARGET",
+      "evidence": {
+        "target": null,
+        "supported": [
+          "budget_exhausted",
+          "cold_resume",
+          "conflict",
+          "final_correction",
+          "invalid_tool",
+          "normal",
+          "partial",
+          "provider_uncertain",
+          "source_freshness",
+          "workspace_isolation"
+        ]
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "RAC3-D01",
+      "status": "REJECTED",
+      "data_sha256": "09bd89ed7d10d50282b74b138c4bf507841a87e079241172dd35ae4bde7a0894",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494"
+    },
+    {
+      "id": "RAC3-D02",
+      "status": "REJECTED",
+      "data_sha256": "8ec2d3e04f3a837fb9936d09c8172145b9755d190643a12279833062e3805b01",
+      "structural_sha256": "db67d39511e30c5dafc3cb19165ca291afe838fea42f67f71d7dd75d4031429e"
+    },
+    {
+      "id": "RAC3-D03",
+      "status": "REJECTED",
+      "data_sha256": "5f4f8a43f913569972f5afd2880ca35f39e356255be118f3ca673cf7c7115e93",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800"
+    },
+    {
+      "id": "RAC3-D04",
+      "status": "REJECTED",
+      "data_sha256": "db9720075612e65396088239fd10ab6a668f0a68232622cc7e7641b58a467357",
+      "structural_sha256": "04286d536cf672395d65241842d8352408d2d2dc64523719c09518ceaed732c8"
+    },
+    {
+      "id": "RAC3-D05",
+      "status": "REJECTED",
+      "data_sha256": "520c8116598eae112a12fa5c45e23d4c06cacd0be3bcbb5bd071d72a5cf35c9c",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494"
+    },
+    {
+      "id": "RAC3-D06",
+      "status": "REJECTED",
+      "data_sha256": "7c5c37b370e405da0a136e1dfd8881e705db321dc87c740cea2483ac9e7bdca3",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d"
+    },
+    {
+      "id": "RAC3-D07",
+      "status": "REJECTED",
+      "data_sha256": "7d34204980f2c2caf16d91d8e75eff620ca4a5fbc573a2679f46d5444a1189fb",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494"
+    },
+    {
+      "id": "RAC3-D08",
+      "status": "REJECTED",
+      "data_sha256": "5571066dc6cb11925d9f9a1ee41c950b79ee9018144f9a02555abf1fb0e48b90",
+      "structural_sha256": "0f5aaabeb18876866d165d03b4da6ade4f428d152d3252970445ee05e8869e36"
+    },
+    {
+      "id": "RAC3-D09",
+      "status": "REJECTED",
+      "data_sha256": "ac1367f5b245ebde1e84b35664c03161c5216a1b1f223dc8536b915269aa566b",
+      "structural_sha256": "db67d39511e30c5dafc3cb19165ca291afe838fea42f67f71d7dd75d4031429e"
+    },
+    {
+      "id": "RAC3-D10",
+      "status": "REJECTED",
+      "data_sha256": "41f0802a74fd5ea7f6369667495f901604f5b63985286a390f2cde880caafb2b",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800"
+    },
+    {
+      "id": "RAC3-F01",
+      "status": "REJECTED",
+      "data_sha256": "324994e0ea7b6dfa3f0a587818f5749842894c3625305cbf99d4fa5a135ae048",
+      "structural_sha256": "9daa8b5168a637ffb964da0f1b65e49707cf41f1062974dec5c326c599c13324"
+    },
+    {
+      "id": "RAC3-F02",
+      "status": "REJECTED",
+      "data_sha256": "3d80f08bf48c77b28398c64106418844d501276c7e93f1354a191b2a77f58327",
+      "structural_sha256": "9e311035da8e546f3b8bdc68b98d034b5711c898c9e073f7e375cebfb5dd743f"
+    },
+    {
+      "id": "RAC3-F03",
+      "status": "REJECTED",
+      "data_sha256": "91e08bc63784952d9960c47bba2af458ee76193a00382e07cc50c68773eb2cd8",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800"
+    },
+    {
+      "id": "RAC3-F04",
+      "status": "REJECTED",
+      "data_sha256": "9fdbd85bcb0360089616e790afc0146075cbafbc3821c3f6574ec01916ff2f89",
+      "structural_sha256": "9194baf6e3ea5e1d6177b84ccf9420cc1528ab8e8b59ff9ea6cb2394bdc59800"
+    },
+    {
+      "id": "RAC3-F05",
+      "status": "REJECTED",
+      "data_sha256": "f4350e59b6b3435f4a9cbf32dc0c519f1aeea08d8f68a1955018f2d5559282eb",
+      "structural_sha256": "9d8e706812a4c8260ccf903c74b90e744a9c5c52e0f82e343cd1fb3cb0ab858f"
+    },
+    {
+      "id": "RAC3-F06",
+      "status": "REJECTED",
+      "data_sha256": "3dafc7126776f278718b95711477b562b0f3126503ef5ddff45409a8ad049734",
+      "structural_sha256": "73d9456c225613f103824206077262e9e5b1e4f81fce5ff959395fc0f7c45fb2"
+    },
+    {
+      "id": "RAC3-F07",
+      "status": "REJECTED",
+      "data_sha256": "61c349559224b8795e33999796d80371ffbaf01cd25933cf0f02bd5457c91fe8",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d"
+    },
+    {
+      "id": "RAC3-F08",
+      "status": "REJECTED",
+      "data_sha256": "73403b6d46e999ee1d574102b7384a2547f0ddd50adec3d02d9b1e2104acf8b5",
+      "structural_sha256": "1911d1b269cb59b493590d774b3f4fa4ec692bf917ccc8f9de072929a57ff494"
+    },
+    {
+      "id": "RAC3-F09",
+      "status": "REJECTED",
+      "data_sha256": "a5a9cd51f1311fce06ba84518bc886f2ac1f06c635d9d0f40f78aba8e47381cd",
+      "structural_sha256": "db67d39511e30c5dafc3cb19165ca291afe838fea42f67f71d7dd75d4031429e"
+    },
+    {
+      "id": "RAC3-F10",
+      "status": "REJECTED",
+      "data_sha256": "2940302e06cce3b09ca9a7a17ed5bdf7256d9f568cebd26217454bc0926e773c",
+      "structural_sha256": "dc38a0ba27ecf02129e53f8d28e8b0c9a40ae05e1a870a39a85c0bf1ebbd9a4d"
+    }
+  ],
+  "reference_audit": []
+}
