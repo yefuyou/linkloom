@@ -1,0 +1,143 @@
+{
+  "partition": "validation",
+  "cases": [
+    {
+      "id": "validation-normal",
+      "query": "Who is the direct leader of the owner of Amber Ridge?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "leader.md",
+          "content": "Nina Reed reports directly to Evan Shaw."
+        }
+      ]
+    },
+    {
+      "id": "validation-ranking",
+      "query": "Who is the direct leader of the owner of Amber Ridge?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "leader.md",
+          "content": "Nina Reed reports directly to Evan Shaw."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "guide0.md",
+          "content": "Who is the direct leader of Nina Reed? This direct leader handbook is a question, with no reporting fact. Section 0."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "guide1.md",
+          "content": "Who is the direct leader of Nina Reed? This direct leader handbook is a question, with no reporting fact. Section 1."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "guide2.md",
+          "content": "Who is the direct leader of Nina Reed? This direct leader handbook is a question, with no reporting fact. Section 2."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "guide3.md",
+          "content": "Who is the direct leader of Nina Reed? This direct leader handbook is a question, with no reporting fact. Section 3."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "guide4.md",
+          "content": "Who is the direct leader of Nina Reed? This direct leader handbook is a question, with no reporting fact. Section 4."
+        }
+      ]
+    },
+    {
+      "id": "validation-missing",
+      "query": "Who is the direct leader of the owner of Amber Ridge?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        }
+      ]
+    },
+    {
+      "id": "validation-conflict",
+      "query": "Who is the direct leader of the owner of Amber Ridge?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "leader.md",
+          "content": "Nina Reed reports directly to Evan Shaw."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "conflict.md",
+          "content": "Nina Reed reports directly to Luca Page."
+        }
+      ]
+    },
+    {
+      "id": "validation-foreign",
+      "query": "Who is the direct leader of the owner of Amber Ridge?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        },
+        {
+          "workspace_id": "foreign-workspace",
+          "path": "private.md",
+          "content": "Nina Reed reports directly to Evan Shaw."
+        }
+      ]
+    },
+    {
+      "id": "validation-alias",
+      "query": "Who owns the project behind Amber-Key and who leads that owner?",
+      "workspace_id": "validation-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "validation-lab",
+          "path": "owner.md",
+          "content": "Nina Reed is the accountable owner of Amber Ridge."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "leader.md",
+          "content": "Nina Reed reports directly to Evan Shaw."
+        },
+        {
+          "workspace_id": "validation-lab",
+          "path": "alias.md",
+          "content": "Amber-Key is the team alias for Amber Ridge."
+        }
+      ]
+    }
+  ]
+}

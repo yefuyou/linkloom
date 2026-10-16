@@ -1,0 +1,93 @@
+{
+  "partition": "final",
+  "cases": [
+    {
+      "id": "final-normal",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "lena hart",
+          "theo stone"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "final-ranking",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "lena hart",
+          "theo stone"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "final-missing",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "lena hart"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "final-conflict",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "lena hart"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md",
+          "conflict.md"
+        ]
+      }
+    },
+    {
+      "id": "final-foreign",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "lena hart"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "final-alias",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "silver meadow",
+          "lena hart",
+          "theo stone"
+        ],
+        "reason": null,
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    }
+  ]
+}

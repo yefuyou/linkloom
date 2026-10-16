@@ -1,0 +1,143 @@
+{
+  "partition": "final",
+  "cases": [
+    {
+      "id": "final-normal",
+      "query": "Who is the direct leader of the owner of Silver Meadow?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "leader.md",
+          "content": "Lena Hart reports directly to Theo Stone."
+        }
+      ]
+    },
+    {
+      "id": "final-ranking",
+      "query": "Who is the direct leader of the owner of Silver Meadow?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "leader.md",
+          "content": "Lena Hart reports directly to Theo Stone."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "guide0.md",
+          "content": "Who is the direct leader of Lena Hart? This direct leader handbook is a question, with no reporting fact. Section 0."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "guide1.md",
+          "content": "Who is the direct leader of Lena Hart? This direct leader handbook is a question, with no reporting fact. Section 1."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "guide2.md",
+          "content": "Who is the direct leader of Lena Hart? This direct leader handbook is a question, with no reporting fact. Section 2."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "guide3.md",
+          "content": "Who is the direct leader of Lena Hart? This direct leader handbook is a question, with no reporting fact. Section 3."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "guide4.md",
+          "content": "Who is the direct leader of Lena Hart? This direct leader handbook is a question, with no reporting fact. Section 4."
+        }
+      ]
+    },
+    {
+      "id": "final-missing",
+      "query": "Who is the direct leader of the owner of Silver Meadow?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        }
+      ]
+    },
+    {
+      "id": "final-conflict",
+      "query": "Who is the direct leader of the owner of Silver Meadow?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "leader.md",
+          "content": "Lena Hart reports directly to Theo Stone."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "conflict.md",
+          "content": "Lena Hart reports directly to Iris Lake."
+        }
+      ]
+    },
+    {
+      "id": "final-foreign",
+      "query": "Who is the direct leader of the owner of Silver Meadow?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        },
+        {
+          "workspace_id": "foreign-workspace",
+          "path": "private.md",
+          "content": "Lena Hart reports directly to Theo Stone."
+        }
+      ]
+    },
+    {
+      "id": "final-alias",
+      "query": "Who owns the project behind Silver-Key and who leads that owner?",
+      "workspace_id": "final-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "final-lab",
+          "path": "owner.md",
+          "content": "Lena Hart is the accountable owner of Silver Meadow."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "leader.md",
+          "content": "Lena Hart reports directly to Theo Stone."
+        },
+        {
+          "workspace_id": "final-lab",
+          "path": "alias.md",
+          "content": "Silver-Key is the team alias for Silver Meadow."
+        }
+      ]
+    }
+  ]
+}

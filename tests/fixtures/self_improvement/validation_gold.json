@@ -1,0 +1,93 @@
+{
+  "partition": "validation",
+  "cases": [
+    {
+      "id": "validation-normal",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "nina reed",
+          "evan shaw"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "validation-ranking",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "nina reed",
+          "evan shaw"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "validation-missing",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "nina reed"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "validation-conflict",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "nina reed"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md",
+          "conflict.md"
+        ]
+      }
+    },
+    {
+      "id": "validation-foreign",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "nina reed"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "validation-alias",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "amber ridge",
+          "nina reed",
+          "evan shaw"
+        ],
+        "reason": null,
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    }
+  ]
+}

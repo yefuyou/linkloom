@@ -1,0 +1,2 @@
+# Frozen experiment digests must survive Windows checkout line endings.
+tests/fixtures/self_improvement/*.json text eol=lf

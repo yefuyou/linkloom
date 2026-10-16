@@ -1,0 +1,93 @@
+{
+  "partition": "dev",
+  "cases": [
+    {
+      "id": "dev-normal",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "dev-ranking",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    },
+    {
+      "id": "dev-missing",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "mira cole"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "dev-conflict",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "mira cole"
+        ],
+        "reason": "conflicting_evidence",
+        "required_sources": [
+          "owner.md",
+          "leader.md",
+          "conflict.md"
+        ]
+      }
+    },
+    {
+      "id": "dev-foreign",
+      "expected": {
+        "outcome": "partial",
+        "values": [
+          "mira cole"
+        ],
+        "reason": "evidence_insufficient",
+        "required_sources": [
+          "owner.md"
+        ]
+      }
+    },
+    {
+      "id": "dev-alias",
+      "expected": {
+        "outcome": "complete",
+        "values": [
+          "glacier bay",
+          "mira cole",
+          "owen park"
+        ],
+        "reason": null,
+        "required_sources": [
+          "alias.md",
+          "owner.md",
+          "leader.md"
+        ]
+      }
+    }
+  ]
+}

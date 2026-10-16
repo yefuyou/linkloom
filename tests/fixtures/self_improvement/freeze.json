@@ -1,0 +1,13 @@
+{
+  "schema_version": "self-improvement-splits/v1",
+  "author_visible_gold": true,
+  "note": "Distinct entities and files; synthetic schema transfer, not unseen natural-data generalization",
+  "files": {
+    "dev_public.json": "b26b7373d4baaca352fbd86a2beb07c11b60fa2ec77739259dcaa4715d5ec489",
+    "dev_gold.json": "c278f38ba06910c7987098b13db5e17f6d7d737c3cc1734bbc78c3d4f6b24d00",
+    "validation_public.json": "48f76dcee5077b068532a8bc04991bff4dbc93fb66f0e435e77e500f367c8596",
+    "validation_gold.json": "6171620c34827c2142511a70535df4f0c698a5498e7e7aade169c7325368ab2a",
+    "final_public.json": "c362a267e2600d2d1a6489746141371e6c22d85e47523cf7a0b30f5c0ed2358e",
+    "final_gold.json": "7de16cf42640042b238a73c8699708927b970b9e901d751e78764183efa3e3b5"
+  }
+}

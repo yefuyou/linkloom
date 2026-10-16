@@ -1,0 +1,143 @@
+{
+  "partition": "dev",
+  "cases": [
+    {
+      "id": "dev-normal",
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "leader.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ]
+    },
+    {
+      "id": "dev-ranking",
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "leader.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "guide0.md",
+          "content": "Who is the direct leader of Mira Cole? This direct leader handbook is a question, with no reporting fact. Section 0."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "guide1.md",
+          "content": "Who is the direct leader of Mira Cole? This direct leader handbook is a question, with no reporting fact. Section 1."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "guide2.md",
+          "content": "Who is the direct leader of Mira Cole? This direct leader handbook is a question, with no reporting fact. Section 2."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "guide3.md",
+          "content": "Who is the direct leader of Mira Cole? This direct leader handbook is a question, with no reporting fact. Section 3."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "guide4.md",
+          "content": "Who is the direct leader of Mira Cole? This direct leader handbook is a question, with no reporting fact. Section 4."
+        }
+      ]
+    },
+    {
+      "id": "dev-missing",
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        }
+      ]
+    },
+    {
+      "id": "dev-conflict",
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "leader.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "conflict.md",
+          "content": "Mira Cole reports directly to Tara West."
+        }
+      ]
+    },
+    {
+      "id": "dev-foreign",
+      "query": "Who is the direct leader of the owner of Glacier Bay?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "foreign-workspace",
+          "path": "private.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        }
+      ]
+    },
+    {
+      "id": "dev-alias",
+      "query": "Who owns the project behind Glacier-Key and who leads that owner?",
+      "workspace_id": "dev-lab",
+      "as_of": null,
+      "documents": [
+        {
+          "workspace_id": "dev-lab",
+          "path": "owner.md",
+          "content": "Mira Cole is the accountable owner of Glacier Bay."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "leader.md",
+          "content": "Mira Cole reports directly to Owen Park."
+        },
+        {
+          "workspace_id": "dev-lab",
+          "path": "alias.md",
+          "content": "Glacier-Key is the team alias for Glacier Bay."
+        }
+      ]
+    }
+  ]
+}
