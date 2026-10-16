@@ -134,6 +134,9 @@ def decide_model_resume(
         )
 
     record = _latest_record(state)
+    if record is not None and record.status == "final_rejected":
+        return _decision(state, "safe_to_invoke_model", "rejected_final_correction",
+                         "A rejected Final permits only its bounded correction.", record)
     if record is None or record.status == "request_durable":
         return _decision(
             state,

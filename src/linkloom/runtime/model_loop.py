@@ -204,6 +204,7 @@ class SingleAgentModelLoop:
         verified_evidence_context_limit: int = 0,
         task_plan: TaskPlan | None = None,
         workspace_id: str | None = None,
+        final_shape_validator: Callable[[str], None] | None = None,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -236,6 +237,7 @@ class SingleAgentModelLoop:
         self.max_steps = max_steps
         self.verified_evidence_context_limit = verified_evidence_context_limit
         self.task_plan = task_plan
+        self.final_shape_validator = final_shape_validator
         if workspace_id is not None and (not isinstance(workspace_id, str) or not workspace_id.strip()):
             raise ValidationError("Model loop workspace_id must be non-empty text or None.")
         self.workspace_id = workspace_id
@@ -1511,6 +1513,7 @@ class SingleAgentModelLoop:
         def current_recovery_decision(*, before_sequence: int | None = None):
             return decide_recovery(
                 current_progress_assessment(before_sequence=before_sequence),
+                rejected_finals=sum(record.status == "final_rejected" for record in model_records),
             )
 
         def terminal_recovery_error() -> ToolError | None:
@@ -1519,7 +1522,7 @@ class SingleAgentModelLoop:
                 return None
             code = (
                 "MODEL_SCHEMA_CORRECTION_EXHAUSTED"
-                if decision.reason_code == "SCHEMA_CORRECTION_EXHAUSTED"
+                if decision.reason_code in {"SCHEMA_CORRECTION_EXHAUSTED", "FINAL_CORRECTION_EXHAUSTED"}
                 else "MODEL_UNRECOVERABLE_TOOL_ERROR"
             )
             return self._error(
@@ -1663,6 +1666,18 @@ class SingleAgentModelLoop:
                 safe_to_expose=True,
             )
 
+        def reject_final_shape(turn: AgentTurn, record: ModelExecutionRecord, text: str) -> bool:
+            if self.final_shape_validator is None:
+                return False
+            try:
+                self.final_shape_validator(text)
+            except ValidationError:
+                upsert_record(replace(record, status="final_rejected"))
+                turns[turn_index(turn)] = replace(turns[turn_index(turn)], status="failed")
+                publish(project())
+                return True
+            return False
+
         def terminal_final(turn: AgentTurn, record: ModelExecutionRecord, action: ModelAction) -> ModelLoopResult:
             nonlocal termination
             turns[turn_index(turn)] = replace(turn, status="completed", model_response_ref=record.response_ref)
@@ -1756,6 +1771,9 @@ class SingleAgentModelLoop:
                     "Provider continuation identity does not match the bound proposal."
                 )
 
+            if any(item.status == "final_rejected" for item in model_records):
+                return self._error("MODEL_FINAL_CORRECTION_EXHAUSTED", "schema",
+                                   "A Final correction cannot invoke tools.", {})
             current_turn_index = turn_index(turn)
             runtime_call_ids = [
                 model_call.runtime_call.call_id
@@ -1931,6 +1949,8 @@ class SingleAgentModelLoop:
             if bound.kind != "tool_call" or bound.tool_call is None:
                 return None
             call = bound.tool_call
+            if any(item.status == "final_rejected" for item in model_records):
+                raise ValidationError("A Final correction cannot invoke tools.")
             if search_strategy_stalled(call):
                 return ToolResult(
                     call.call_id, call.tool_id, "error",
@@ -2194,7 +2214,8 @@ class SingleAgentModelLoop:
                     provider_continuation = validated_response.provider_continuation
                 elif decision.decision == "requires_model_reinvoke":
                     raise ValidationError("Explicit model reinvocation requires a new request record.")
-                elif decision.decision == "safe_to_invoke_model" and record is not None:
+                elif (decision.decision == "safe_to_invoke_model" and record is not None
+                      and record.status != "final_rejected"):
                     if record.status == "request_durable":
                         completed_tool_turns = list(load_request(record).tool_turns)
                     forced_record = record
@@ -2206,6 +2227,9 @@ class SingleAgentModelLoop:
                 return failed_result(recovery_error)
             model_steps = 0
             while model_steps < self.max_steps:
+                recovery_error = terminal_recovery_error()
+                if recovery_error is not None:
+                    return failed_result(recovery_error)
                 if pending_response is not None and forced_turn is not None:
                     turn = forced_turn
                     record = pending_record
@@ -2221,6 +2245,9 @@ class SingleAgentModelLoop:
                     proposal = response_envelope.proposal
                     if proposal is not None:
                         if proposal.kind == "final":
+                            if reject_final_shape(turn, record, proposal.final_answer):
+                                next_sequence = max(next_sequence, turn.sequence + 1)
+                                continue
                             return terminal_proposal(turn, record, proposal)
                         proposal_error = execute_tool_proposal(
                             turn,
@@ -2237,6 +2264,9 @@ class SingleAgentModelLoop:
                                 "Durable response has no proposal, action, or provider error."
                             )
                         if action.kind == "final":
+                            if reject_final_shape(turn, record, action.final_answer):
+                                next_sequence = max(next_sequence, turn.sequence + 1)
+                                continue
                             return terminal_final(turn, record, action)
                         tool_result = execute_tool_action(
                             turn,
@@ -2306,7 +2336,7 @@ class SingleAgentModelLoop:
                         recovery_guidance=recovery_decision.hint,
                         observation=None if grouped_history else observation,
                         available_tools=(
-                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
+                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL", "CORRECT_FINAL"}
                             else list(tool_definitions)
                         ),
                         previous_tool_call=None if grouped_history else previous_tool_call,
@@ -2479,6 +2509,30 @@ class SingleAgentModelLoop:
                 if response_envelope.error is not None:
                     upsert_record(replace(record, status="failed"))
                     return failed_result(provider_tool_error(response_envelope.error))
+
+                proposed_final = (
+                    response_envelope.proposal.final_answer
+                    if response_envelope.proposal is not None and response_envelope.proposal.kind == "final"
+                    else response_envelope.action.final_answer
+                    if response_envelope.action is not None and response_envelope.action.kind == "final"
+                    else None
+                )
+                if proposed_final is None and any(item.status == "final_rejected" for item in model_records):
+                    return failed_result(self._error(
+                        "MODEL_FINAL_CORRECTION_EXHAUSTED", "schema",
+                        "The Final correction must contain a Final, not more tool calls.", {},
+                    ))
+                if proposed_final is not None and reject_final_shape(turns[turn_index(turn)], record, proposed_final):
+                    recovery_error = terminal_recovery_error()
+                    if recovery_error is not None:
+                        return failed_result(recovery_error)
+                    if model_steps >= self.max_steps:
+                        return failed_result(self._error(
+                            "MODEL_FINAL_INVALID", "schema",
+                            "The Final is invalid and no correction budget remains.", {},
+                        ))
+                    next_sequence = max(next_sequence, turn.sequence + 1)
+                    continue
 
                 bound_proposal = response_envelope.proposal
                 if bound_proposal is not None:

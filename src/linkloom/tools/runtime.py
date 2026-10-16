@@ -760,8 +760,12 @@ def create_retrieval_tool_runtime(
                     },
                     "source_context": {
                         "type": "object",
+                        "required": [key for key, value in (expected_source_context or {}).items()
+                                     if value is not None],
                         "description": "Copy the full Runtime source_context identity from retrieval_request; do not omit or alter workspace/index fields. Only scope_path and task_plan subgoal fields may be added.",
                         "properties": {
+                            **{key: {"enum": [value]} for key, value
+                               in (expected_source_context or {}).items()},
                             "scope_path": {
                                 "type": ["string", "null"],
                                 "description": "Optional logical directory within the selected source; null searches the whole source.",

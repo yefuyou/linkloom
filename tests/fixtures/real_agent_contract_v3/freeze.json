@@ -1,0 +1,125 @@
+{
+  "schema_version": "real-agent-contract-v3-freeze/v2",
+  "dataset": "real-agent-contract-v3",
+  "base_commit": "37e45b169f19c4edd29db59f637e690caab31ad6",
+  "branch": "codex/linkloom-real-agent-contract-v3",
+  "qualification_revision": {
+    "from": "v1",
+    "to": "v2",
+    "reason": "V1 max_provider_requests=2 could not execute the required model rounds for Search/Read/Final and left no request for a bounded new-model-turn Final correction.",
+    "old_v1_content_hashes": {
+      "docs/requirements/real-agent-contract-v3/SPEC.md": "646020269e156ae13b6f97a925035f7bd86232c6bc12cc16dd4d7c11bb61128d",
+      "docs/requirements/real-agent-contract-v3/implementation_plan.md": "e524bb1412093dd4394ae590f744975c320350ee54260a6fb1ed95a3653fec89",
+      "tests/fixtures/real_agent_contract_v3/dev.json": "718480b5a3d7c7d3094a3ed3118aeacb497ff1b5acd1fb42425f5e3efdc93cae",
+      "tests/fixtures/real_agent_contract_v3/final.json": "d85bceb629f8b82149e8b17d92bbf6e09cbb93ee5c5e115b7015487b1be9f3fb",
+      "tests/fixtures/real_agent_contract_v3/freeze.json": "e17117e3cd6aa046e82ca102d8863e23d7a6c8de3dc5dc09d4f5afd36b954a7f"
+    },
+    "backup_directory": "work/v3-freeze-v1/",
+    "source_materialization": "Fixture index_id/source_version/pseudo-SHA values are logical scanner inputs only; the adapter must materialize Runtime SourceContext before ToolCall or Provider input.",
+    "final_execution": "NOT_RUN",
+    "real_provider_calls": 0
+  },
+  "freeze_created_before_repair_confirmation": true,
+  "gold_visibility": "author_visible",
+  "external_blind_test": false,
+  "final_execution": "NOT_RUN",
+  "real_provider_calls": 0,
+  "freeze_order": [
+    "inspect_existing_fixture_contracts",
+    "write_SPEC_and_implementation_plan",
+    "write_dev_and_final_cases",
+    "hash_content_files",
+    "write_this_manifest",
+    "main_agent_confirms_repair_boundary",
+    "worker_repairs_and_runs_dev_only",
+    "run_final_once_after_repair"
+  ],
+  "partitions": {
+    "dev": {
+      "path": "tests/fixtures/real_agent_contract_v3/dev.json",
+      "case_count": 10,
+      "case_ids": [
+        "RAC3-D01",
+        "RAC3-D02",
+        "RAC3-D03",
+        "RAC3-D04",
+        "RAC3-D05",
+        "RAC3-D06",
+        "RAC3-D07",
+        "RAC3-D08",
+        "RAC3-D09",
+        "RAC3-D10"
+      ],
+      "sha256": "354dd2859e4db2177b3f4133b21d4268de013d38adb366ad14fb0adbee1571d3"
+    },
+    "final": {
+      "path": "tests/fixtures/real_agent_contract_v3/final.json",
+      "case_count": 10,
+      "case_ids": [
+        "RAC3-F01",
+        "RAC3-F02",
+        "RAC3-F03",
+        "RAC3-F04",
+        "RAC3-F05",
+        "RAC3-F06",
+        "RAC3-F07",
+        "RAC3-F08",
+        "RAC3-F09",
+        "RAC3-F10"
+      ],
+      "sha256": "6b01a48493ad7e0da3cddd66c1c60377915ef72362d4e0ad985ea7b339ce0d44"
+    }
+  },
+  "frozen_content_files": {
+    "docs/requirements/real-agent-contract-v3/SPEC.md": "6325891c86a48a40dbf18f1d6b67eeea6a2e6305248839445448614d0d355eb7",
+    "docs/requirements/real-agent-contract-v3/implementation_plan.md": "5194146902385bf8356f44b0217a15a5d3b9b87dbba0cbea4834f0acc0da4079",
+    "tests/fixtures/real_agent_contract_v3/dev.json": "354dd2859e4db2177b3f4133b21d4268de013d38adb366ad14fb0adbee1571d3",
+    "tests/fixtures/real_agent_contract_v3/final.json": "6b01a48493ad7e0da3cddd66c1c60377915ef72362d4e0ad985ea7b339ce0d44"
+  },
+  "budget_audit": {
+    "semantics": "Each decide/complete model round consumes one provider request; ToolRuntime execution consumes none; max_steps counts model turns; one optional Final correction requires one new model round; uncertain outcomes are terminal and are not retried.",
+    "RAC3-D01": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 3, "optional_correction_rounds": 1},
+    "RAC3-D02": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 4},
+    "RAC3-D03": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-D04": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 4},
+    "RAC3-D05": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-D06": {"max_steps": 6, "max_provider_requests": 4, "minimum_model_rounds": 3},
+    "RAC3-D07": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-D08": {"max_steps": 8, "max_provider_requests": 5, "minimum_model_rounds": 5},
+    "RAC3-D09": {"max_steps": 2, "max_provider_requests": 2, "minimum_model_rounds": 2},
+    "RAC3-D10": {"max_steps": 8, "max_provider_requests": 1, "minimum_model_rounds": 1, "uncertain_terminal": true},
+    "RAC3-F01": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 4},
+    "RAC3-F02": {"max_steps": 8, "max_provider_requests": 2, "minimum_model_rounds": 2},
+    "RAC3-F03": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-F04": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-F05": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 4},
+    "RAC3-F06": {"max_steps": 8, "max_provider_requests": 5, "minimum_model_rounds": 5},
+    "RAC3-F07": {"max_steps": 8, "max_provider_requests": 4, "minimum_model_rounds": 4},
+    "RAC3-F08": {"max_steps": 8, "max_provider_requests": 3, "minimum_model_rounds": 3},
+    "RAC3-F09": {"max_steps": 2, "max_provider_requests": 2, "minimum_model_rounds": 2},
+    "RAC3-F10": {"max_steps": 8, "max_provider_requests": 1, "minimum_model_rounds": 1, "uncertain_terminal": true}
+  },
+  "coverage": {
+    "complete_evidence_invalid_final": ["RAC3-D01"],
+    "complete_evidence_valid_final": ["RAC3-D02"],
+    "partial": ["RAC3-D03", "RAC3-F05"],
+    "conflict": ["RAC3-D04", "RAC3-F06"],
+    "chinese_boundary": ["RAC3-D05", "RAC3-F05"],
+    "tool_arguments": ["RAC3-D06", "RAC3-F07"],
+    "same_file_multiple_passages": ["RAC3-D07", "RAC3-F08"],
+    "context_budget": ["RAC3-D08", "RAC3-F08"],
+    "budget_exhausted": ["RAC3-D09", "RAC3-F09"],
+    "provider_outcome_uncertain": ["RAC3-D10", "RAC3-F10"],
+    "workspace_isolation": ["RAC3-F01"],
+    "freshness": ["RAC3-F02"],
+    "dependency_binding": ["RAC3-D06", "RAC3-F07"]
+  },
+  "protected_assets": [
+    "src/linkloom/",
+    "tests/fixtures/adaptive_planning/",
+    "tests/fixtures/real_agent_reliability/",
+    "tests/eval/relation_gold.yaml",
+    "historical Provider Ledgers and other worktrees"
+  ],
+  "self_hash_policy": "freeze.json is self-referential; its V2 SHA-256 is reported in the Planner handoff rather than embedded in this manifest."
+}

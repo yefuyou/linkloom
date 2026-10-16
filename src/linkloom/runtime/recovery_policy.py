@@ -33,6 +33,7 @@ def decide_recovery(
     error: ToolError | None = None,
     provider_error: ModelProviderError | None = None,
     resume_decision: ModelResumeDecision | None = None,
+    rejected_finals: int = 0,
 ) -> RecoveryDecision:
     """Choose a next-step constraint, never a model or tool invocation."""
     if resume_decision is not None and resume_decision.decision in {
@@ -43,6 +44,14 @@ def decide_recovery(
         if provider_error.retryable and provider_error.outcome == "known_failure":
             return RecoveryDecision("DEFER_TO_PROVIDER_RETRY", provider_error.code)
         return RecoveryDecision("TERMINATE", provider_error.code)
+    if rejected_finals:
+        return RecoveryDecision(
+            "CORRECT_FINAL" if rejected_finals == 1 else "TERMINATE",
+            "FINAL_FORMAT_CORRECTION" if rejected_finals == 1 else "FINAL_CORRECTION_EXHAUSTED",
+            "The previous Final failed JSON/schema validation. Return one complete Final JSON object "
+            "using the selected schema and only already verified evidence. No new tools or invented facts. "
+            "Preserve unknown fields and both opposing conflict citations; all validators still apply.",
+        )
     terminal_code = error.code if error is not None else progress.latest_error_code
     if terminal_code in _TERMINAL_TOOL_ERRORS:
         return RecoveryDecision("TERMINATE", terminal_code)

@@ -1,0 +1,21 @@
+{
+  "method": "CUA real browser form interaction on local HTTP, not DOM simulation",
+  "model_kind": "OFFLINE_FAKE_MODEL",
+  "question": "Orion 项目负责人的直属领导是谁？",
+  "observed_heading": "陈宁",
+  "observed_relation_rows": [
+    "orion → 林舟",
+    "林舟 → 陈宁"
+  ],
+  "observed_reviewer_explanation": "根据已读取并核验的原始来源，可以确认该关系，结果已经过 Reviewer 核验。",
+  "observed_authority_disclaimer": "这是来源关系调查结果，不代表已经通过正式业务审批。",
+  "observed_model_turns": 9,
+  "screenshot_observed_in_tool": true,
+  "final_json_sha256": "af51444abe4d237944ee58be421baf1beab1e9f09c05eaa74970c236e7901477",
+  "prior_browser_trials": [
+    "v3-browser-01: Controller deadline expired before first request",
+    "v3-browser-02: Controller deadline expired before first request"
+  ],
+  "provider_requests": 0,
+  "status": "COMPLETED"
+}

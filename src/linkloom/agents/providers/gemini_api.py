@@ -39,7 +39,7 @@ from linkloom.agents.providers.gemini_diagnostics import (
     gemini_response_diagnostics,
 )
 from linkloom.agents.providers.retry_policy import classify_retryable_failure
-from linkloom.runtime.errors import ValidationError
+from linkloom.runtime.errors import ValidationError, ProviderOutcomeUnknownError
 from linkloom.runtime.models import (
     _assert_json_safe_primitive,
     _assert_no_forbidden_persisted_keys,
@@ -1256,6 +1256,8 @@ def _code_for_status(status_code: Any, default: str) -> tuple[str, str]:
 
 
 def _exception_code(exception: BaseException) -> tuple[str, str]:
+    if isinstance(exception, ProviderOutcomeUnknownError):
+        return "MODEL_UNKNOWN_FAILURE", "unknown_provider_outcome"
     if isinstance(exception, TimeoutError):
         return "MODEL_TIMEOUT", "unknown_provider_outcome"
     # google-genai's APIError exposes the HTTP status as ``code``.  Keep the
@@ -1591,7 +1593,10 @@ class GeminiProviderAdapter:
                 payload=payload,
                 elapsed_ms=elapsed_ms,
             )
-            retry_classification = classify_retryable_failure(None, diagnostics)
+            retry_classification = (
+                None if isinstance(exception, ProviderOutcomeUnknownError)
+                else classify_retryable_failure(None, diagnostics)
+            )
             retryable = retry_classification is not None
             if retryable:
                 # A narrowly classified transport/status failure is eligible for

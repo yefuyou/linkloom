@@ -791,6 +791,7 @@ class ToolExecutionRecord:
 
 
 MODEL_EXECUTION_STATUSES = {
+    "final_rejected",
     "request_durable",
     "request_sent",
     "response_obtained",

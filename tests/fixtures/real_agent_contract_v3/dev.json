@@ -1,0 +1,796 @@
+{
+  "schema_version": "real-agent-contract-v3-fixture/v1",
+  "dataset": "real-agent-contract-v3",
+  "partition": "dev",
+  "purpose": "author_visible_contract_debugging",
+  "base_commit": "37e45b169f19c4edd29db59f637e690caab31ad6",
+  "gold_visibility": "author_visible",
+  "external_blind_test": false,
+  "cases": [
+    {
+      "id": "RAC3-D01",
+      "categories": ["complete_evidence_invalid_final", "final_schema"],
+      "input": {
+        "workspace_id": "rac3-dev-complete-invalid",
+        "vault_root_fingerprint": "rac3-dev-complete-invalid-v1",
+        "query": "Who owns Lantern Field and who is that owner's direct leader?",
+        "source": {
+          "workspace_id": "rac3-dev-complete-invalid",
+          "vault_root_fingerprint": "rac3-dev-complete-invalid-v1",
+          "index_id": "idx-rac3-d01",
+          "index_sha256": "synthetic-index-rac3-d01",
+          "document_count": 1,
+          "source_version": "lantern-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-complete-invalid",
+            "path": "lantern-record.md",
+            "content": "# Lantern Field\n\nAri Chen is the accountable owner of Lantern Field.\n\nThe delivery timetable is still being discussed.\n\nAri Chen reports directly to Bo Lin.\n",
+            "valid": true,
+            "source_version": "lantern-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Lantern Field owner direct leader",
+              "source_context": {
+                "workspace_id": "rac3-dev-complete-invalid",
+                "vault_root_fingerprint": "rac3-dev-complete-invalid-v1",
+                "index_id": "idx-rac3-d01",
+                "index_sha256": "synthetic-index-rac3-d01",
+                "document_count": 1,
+                "source_version": "lantern-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d01-lantern-record"}
+          }
+        ],
+        "final": {"variant": "missing_required_uncertainty_field"}
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "rejected",
+        "final_contract": "rejected",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": ["lantern-record.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Lantern Field", "object": "Ari Chen"},
+          {"predicate": "reports_to", "subject": "Ari Chen", "object": "Bo Lin"}
+        ],
+        "required_guards": ["invalid_final_is_not_projected_as_success", "observed_evidence_is_retained_for_diagnosis"],
+        "forbidden_coercions": ["fill_missing_final_fields", "skip_grounding", "skip_reviewer"]
+      }
+    },
+    {
+      "id": "RAC3-D02",
+      "categories": ["complete_evidence_valid_final", "final_grounding", "reviewer"],
+      "input": {
+        "workspace_id": "rac3-dev-complete-valid",
+        "vault_root_fingerprint": "rac3-dev-complete-valid-v1",
+        "query": "Who is accountable for River Quartz and who does that person report to?",
+        "source": {
+          "workspace_id": "rac3-dev-complete-valid",
+          "vault_root_fingerprint": "rac3-dev-complete-valid-v1",
+          "index_id": "idx-rac3-d02",
+          "index_sha256": "synthetic-index-rac3-d02",
+          "document_count": 2,
+          "source_version": "river-quartz-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-complete-valid",
+            "path": "river-quartz-owner.md",
+            "content": "## Accountability\nNia Park is the accountable owner of River Quartz.\n",
+            "valid": true,
+            "source_version": "river-quartz-v1"
+          },
+          {
+            "workspace_id": "rac3-dev-complete-valid",
+            "path": "river-quartz-line.md",
+            "content": "## Reporting line\nNia Park reports directly to Ellis Shaw.\n",
+            "valid": true,
+            "source_version": "river-quartz-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "River Quartz accountable owner reports directly",
+              "source_context": {
+                "workspace_id": "rac3-dev-complete-valid",
+                "vault_root_fingerprint": "rac3-dev-complete-valid-v1",
+                "index_id": "idx-rac3-d02",
+                "index_sha256": "synthetic-index-rac3-d02",
+                "document_count": 2,
+                "source_version": "river-quartz-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d02-river-quartz-owner"}
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d02-river-quartz-line"}
+          }
+        ],
+        "final": {"variant": "valid_complete"}
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["river-quartz-owner.md", "river-quartz-line.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "River Quartz", "object": "Nia Park"},
+          {"predicate": "reports_to", "subject": "Nia Park", "object": "Ellis Shaw"}
+        ],
+        "required_guards": ["claims_use_observed_verified_refs", "reviewer_pass_is_not_human_approval"],
+        "forbidden_coercions": ["accept_unobserved_evidence_ref", "invent_action_or_deadline"]
+      }
+    },
+    {
+      "id": "RAC3-D03",
+      "categories": ["partial", "missing_downstream_evidence", "recovery"],
+      "input": {
+        "workspace_id": "rac3-dev-partial",
+        "vault_root_fingerprint": "rac3-dev-partial-v1",
+        "query": "Who owns Moss Harbor and who is that owner's direct leader?",
+        "source": {
+          "workspace_id": "rac3-dev-partial",
+          "vault_root_fingerprint": "rac3-dev-partial-v1",
+          "index_id": "idx-rac3-d03",
+          "index_sha256": "synthetic-index-rac3-d03",
+          "document_count": 1,
+          "source_version": "moss-harbor-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-partial",
+            "path": "moss-harbor.md",
+            "content": "# Moss Harbor\n\nTalia Reed is the accountable owner of Moss Harbor.\nThe reporting-line record will be published in a later review.\n",
+            "valid": true,
+            "source_version": "moss-harbor-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Moss Harbor owner direct leader",
+              "source_context": {
+                "workspace_id": "rac3-dev-partial",
+                "vault_root_fingerprint": "rac3-dev-partial-v1",
+                "index_id": "idx-rac3-d03",
+                "index_sha256": "synthetic-index-rac3-d03",
+                "document_count": 1,
+                "source_version": "moss-harbor-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d03-moss-harbor"}
+          }
+        ],
+        "final": {"variant": "valid_partial_owner_only"}
+      },
+      "gold": {
+        "business_status": "partial",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["moss-harbor.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Moss Harbor", "object": "Talia Reed"}
+        ],
+        "required_guards": ["verified_owner_is_retained", "missing_leader_is_unknown", "partial_is_not_failure"],
+        "forbidden_coercions": ["invent_leader", "convert_missing_hop_to_complete"]
+      }
+    },
+    {
+      "id": "RAC3-D04",
+      "categories": ["conflict", "multiple_verified_sources", "reviewer"],
+      "input": {
+        "workspace_id": "rac3-dev-conflict",
+        "vault_root_fingerprint": "rac3-dev-conflict-v1",
+        "query": "Who owns Cedar Meridian?",
+        "source": {
+          "workspace_id": "rac3-dev-conflict",
+          "vault_root_fingerprint": "rac3-dev-conflict-v1",
+          "index_id": "idx-rac3-d04",
+          "index_sha256": "synthetic-index-rac3-d04",
+          "document_count": 2,
+          "source_version": "cedar-meridian-v2"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-conflict",
+            "path": "cedar-meridian-east.md",
+            "content": "## Current registry\nMara Singh is the accountable owner of Cedar Meridian.\n",
+            "valid": true,
+            "source_version": "cedar-meridian-v2"
+          },
+          {
+            "workspace_id": "rac3-dev-conflict",
+            "path": "cedar-meridian-west.md",
+            "content": "## Current registry\nDevon Wu is the accountable owner of Cedar Meridian.\n",
+            "valid": true,
+            "source_version": "cedar-meridian-v2"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Cedar Meridian accountable owner",
+              "source_context": {
+                "workspace_id": "rac3-dev-conflict",
+                "vault_root_fingerprint": "rac3-dev-conflict-v1",
+                "index_id": "idx-rac3-d04",
+                "index_sha256": "synthetic-index-rac3-d04",
+                "document_count": 2,
+                "source_version": "cedar-meridian-v2",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d04-cedar-east"}
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d04-cedar-west"}
+          }
+        ],
+        "final": {"variant": "valid_conflict"}
+      },
+      "gold": {
+        "business_status": "conflict",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["cedar-meridian-east.md", "cedar-meridian-west.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Cedar Meridian", "object": "Mara Singh"},
+          {"predicate": "owner_of_project", "subject": "Cedar Meridian", "object": "Devon Wu"}
+        ],
+        "required_guards": ["both_conflicting_refs_are_preserved", "conflict_is_explicit", "no_winner_is_selected"],
+        "forbidden_coercions": ["choose_latest_without_authority", "drop_one_source", "label_conflict_as_insufficient_only"]
+      }
+    },
+    {
+      "id": "RAC3-D05",
+      "categories": ["chinese_boundary", "entity_suffix", "grounding"],
+      "input": {
+        "workspace_id": "rac3-dev-chinese-boundary",
+        "vault_root_fingerprint": "rac3-dev-chinese-boundary-v1",
+        "query": "谁负责“星河港”？其负责人向谁直接汇报？",
+        "source": {
+          "workspace_id": "rac3-dev-chinese-boundary",
+          "vault_root_fingerprint": "rac3-dev-chinese-boundary-v1",
+          "index_id": "idx-rac3-d05",
+          "index_sha256": "synthetic-index-rac3-d05",
+          "document_count": 1,
+          "source_version": "xinghe-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-chinese-boundary",
+            "path": "星河登记.md",
+            "content": "# 关系登记\n\n林澈是星河港的负责人。\n\n星河港口的负责人是赵宁，属于另一条业务线。\n\n林澈的直属领导是周宁。\n",
+            "valid": true,
+            "source_version": "xinghe-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "星河港 负责人 直属领导",
+              "source_context": {
+                "workspace_id": "rac3-dev-chinese-boundary",
+                "vault_root_fingerprint": "rac3-dev-chinese-boundary-v1",
+                "index_id": "idx-rac3-d05",
+                "index_sha256": "synthetic-index-rac3-d05",
+                "document_count": 1,
+                "source_version": "xinghe-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d05-xinghe"}
+          }
+        ],
+        "final": {"variant": "valid_chinese_boundary"}
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["星河登记.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "星河港", "object": "林澈"},
+          {"predicate": "reports_to", "subject": "林澈", "object": "周宁"}
+        ],
+        "required_guards": ["entity_boundary_is_exact", "quoted_chinese_passage_supports_claims"],
+        "forbidden_coercions": ["use_星河港口_for_星河港", "normalize_away_chinese_suffix"]
+      }
+    },
+    {
+      "id": "RAC3-D06",
+      "categories": ["tool_arguments", "source_context", "dependency_binding", "executor_suppression"],
+      "input": {
+        "workspace_id": "rac3-dev-tool-arguments",
+        "vault_root_fingerprint": "rac3-dev-tool-arguments-v1",
+        "query": "Which project does Cedar-Arc alias, and who owns it?",
+        "source": {
+          "workspace_id": "rac3-dev-tool-arguments",
+          "vault_root_fingerprint": "rac3-dev-tool-arguments-v1",
+          "index_id": "idx-rac3-d06",
+          "index_sha256": "synthetic-index-rac3-d06",
+          "document_count": 2,
+          "source_version": "cedar-arc-v1"
+        },
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve the Cedar-Arc alias and its accountable owner.",
+          "subgoals": [
+            {
+              "subgoal_id": "step_one",
+              "question": "Which project does Cedar-Arc alias?",
+              "depends_on": [],
+              "relation_path": ["alias_of_project"]
+            },
+            {
+              "subgoal_id": "step_two",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": ["step_one"],
+              "alternate_question": "Who is accountable for {verified_entity}?",
+              "relation_path": ["owner_of_project"]
+            }
+          ]
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-tool-arguments",
+            "path": "cedar-arc-alias.md",
+            "content": "Cedar-Arc is the team alias for Northwind Vale.\n",
+            "valid": true,
+            "source_version": "cedar-arc-v1"
+          },
+          {
+            "workspace_id": "rac3-dev-tool-arguments",
+            "path": "northwind-owner.md",
+            "content": "Rhea Moss is the accountable owner of Northwind Vale.\n",
+            "valid": true,
+            "source_version": "cedar-arc-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 6,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Cedar-Arc alias",
+              "source_context": {
+                "workspace_id": "wrong-workspace",
+                "vault_root_fingerprint": "rac3-dev-tool-arguments-v1",
+                "index_id": "idx-rac3-d06",
+                "index_sha256": "synthetic-index-rac3-d06",
+                "document_count": 99,
+                "source_version": "cedar-arc-v1",
+                "subgoal_id": "step_one",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Who owns Northwind Vale?",
+              "source_context": {
+                "workspace_id": "rac3-dev-tool-arguments",
+                "vault_root_fingerprint": "rac3-dev-tool-arguments-v1",
+                "index_id": "idx-rac3-d06",
+                "index_sha256": "synthetic-index-rac3-d06",
+                "document_count": 2,
+                "source_version": "cedar-arc-v1",
+                "subgoal_id": "step_two",
+                "dependency_entities": {"step_one": "Invented Vale"},
+                "query_variant": "alternate"
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "northwind-owner.md"}
+          }
+        ],
+        "final": {"variant": "none_after_invalid_tool_calls"}
+      },
+      "gold": {
+        "business_status": "incomplete",
+        "runtime_status": "safe_error",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": [],
+        "required_guards": ["host_source_identity_is_authoritative", "unverified_dependency_rejected", "executor_suppressed", "repeated_invalid_call_stops_recovery"],
+        "forbidden_coercions": ["repair_workspace_from_model_guess", "accept_path_as_evidence_id", "bind_invented_parent_entity"]
+      }
+    },
+    {
+      "id": "RAC3-D07",
+      "categories": ["same_file_multiple_passages", "evidence_identity", "deduplication"],
+      "input": {
+        "workspace_id": "rac3-dev-same-file",
+        "vault_root_fingerprint": "rac3-dev-same-file-v1",
+        "query": "Who owns Atlas Current and who is that person's direct leader?",
+        "source": {
+          "workspace_id": "rac3-dev-same-file",
+          "vault_root_fingerprint": "rac3-dev-same-file-v1",
+          "index_id": "idx-rac3-d07",
+          "index_sha256": "synthetic-index-rac3-d07",
+          "document_count": 1,
+          "source_version": "atlas-current-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-same-file",
+            "path": "atlas-current-register.md",
+            "content": "# Atlas Current registry\n\n## Ownership\nSana Ito is the accountable owner of Atlas Current.\n\n## Unrelated note\nThe migration checklist is awaiting a security review.\n\n## Reporting line\nSana Ito reports directly to Kian Brooks.\n",
+            "valid": true,
+            "source_version": "atlas-current-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Atlas Current owner reporting line",
+              "source_context": {
+                "workspace_id": "rac3-dev-same-file",
+                "vault_root_fingerprint": "rac3-dev-same-file-v1",
+                "index_id": "idx-rac3-d07",
+                "index_sha256": "synthetic-index-rac3-d07",
+                "document_count": 1,
+                "source_version": "atlas-current-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d07-atlas-current"}
+          }
+        ],
+        "final": {"variant": "valid_complete_same_file_two_passages"}
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["atlas-current-register.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Atlas Current", "object": "Sana Ito"},
+          {"predicate": "reports_to", "subject": "Sana Ito", "object": "Kian Brooks"}
+        ],
+        "required_guards": ["same_file_passages_remain_addressable", "distinct_passages_are_not_collapsed_into_one_claim", "unrelated_text_is_not_claimed"],
+        "forbidden_coercions": ["drop_second_passage", "treat_file_path_as_complete_evidence", "claim_migration_status"]
+      }
+    },
+    {
+      "id": "RAC3-D08",
+      "categories": ["context_budget", "context_truncation", "required_read_retention"],
+      "input": {
+        "workspace_id": "rac3-dev-context",
+        "vault_root_fingerprint": "rac3-dev-context-v1",
+        "query": "Who owns Ember Ridge and who does that owner report to?",
+        "source": {
+          "workspace_id": "rac3-dev-context",
+          "vault_root_fingerprint": "rac3-dev-context-v1",
+          "index_id": "idx-rac3-d08",
+          "index_sha256": "synthetic-index-rac3-d08",
+          "document_count": 3,
+          "source_version": "ember-ridge-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-context",
+            "path": "ember-ridge-owner.md",
+            "content": "Emi Cole is the accountable owner of Ember Ridge.\n",
+            "valid": true,
+            "source_version": "ember-ridge-v1"
+          },
+          {
+            "workspace_id": "rac3-dev-context",
+            "path": "ember-ridge-line.md",
+            "content": "Emi Cole reports directly to Rowan Bell.\n",
+            "valid": true,
+            "source_version": "ember-ridge-v1"
+          },
+          {
+            "workspace_id": "rac3-dev-context",
+            "path": "ember-ridge-noise.md",
+            "content": "This long planning note repeats release vocabulary without recording an owner or reporting relation. It is intentionally distractive context for the bounded selection test.\n",
+            "valid": true,
+            "source_version": "ember-ridge-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 5,
+          "max_context_bytes": 900
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "context_pressure": "retain_verified_reads_drop_duplicate_or_noise",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Ember Ridge owner report",
+              "source_context": {
+                "workspace_id": "rac3-dev-context",
+                "vault_root_fingerprint": "rac3-dev-context-v1",
+                "index_id": "idx-rac3-d08",
+                "index_sha256": "synthetic-index-rac3-d08",
+                "document_count": 3,
+                "source_version": "ember-ridge-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d08-ember-owner"}
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d08-ember-line"}
+          },
+          {
+            "tool_id": "read_verified_note",
+            "arguments": {"note_ref": "ev-rac3-d08-ember-noise"}
+          }
+        ],
+        "final": {"variant": "valid_complete_after_context_selection"}
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["ember-ridge-owner.md", "ember-ridge-line.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Ember Ridge", "object": "Emi Cole"},
+          {"predicate": "reports_to", "subject": "Emi Cole", "object": "Rowan Bell"}
+        ],
+        "required_guards": ["required_verified_reads_survive_context_budget", "dropped_noise_is_audited", "selected_context_is_workspace_scoped"],
+        "forbidden_coercions": ["drop_required_read_then_claim_complete", "use_search_hit_without_read", "treat_context_truncation_as_provider_success"]
+      }
+    },
+    {
+      "id": "RAC3-D09",
+      "categories": ["budget_exhausted", "runtime_budget", "no_fake_insufficiency"],
+      "input": {
+        "workspace_id": "rac3-dev-budget",
+        "vault_root_fingerprint": "rac3-dev-budget-v1",
+        "query": "Who owns Silver Orchard and who is that owner's direct leader?",
+        "source": {
+          "workspace_id": "rac3-dev-budget",
+          "vault_root_fingerprint": "rac3-dev-budget-v1",
+          "index_id": "idx-rac3-d09",
+          "index_sha256": "synthetic-index-rac3-d09",
+          "document_count": 2,
+          "source_version": "silver-orchard-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-budget",
+            "path": "silver-owner.md",
+            "content": "Ivo Lane is the accountable owner of Silver Orchard.\n",
+            "valid": true,
+            "source_version": "silver-orchard-v1"
+          },
+          {
+            "workspace_id": "rac3-dev-budget",
+            "path": "silver-line.md",
+            "content": "Ivo Lane reports directly to Cleo Hart.\n",
+            "valid": true,
+            "source_version": "silver-orchard-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 2,
+          "max_provider_requests": 2,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "success",
+        "tool_calls": [
+          {
+            "tool_id": "search_notes",
+            "arguments": {
+              "query": "Silver Orchard owner",
+              "source_context": {
+                "workspace_id": "rac3-dev-budget",
+                "vault_root_fingerprint": "rac3-dev-budget-v1",
+                "index_id": "idx-rac3-d09",
+                "index_sha256": "synthetic-index-rac3-d09",
+                "document_count": 2,
+                "source_version": "silver-orchard-v1",
+                "dependency_entities": {}
+              },
+              "limit": 5
+            }
+          }
+        ],
+        "final": {"variant": "not_received_after_max_steps"}
+      },
+      "gold": {
+        "business_status": "incomplete",
+        "runtime_status": "budget_exhausted",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": ["silver-owner.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Silver Orchard", "object": "Ivo Lane"}
+        ],
+        "required_guards": ["budget_is_terminal", "ledger_counts_the_search", "partial_evidence_is_not_projected_as_final", "budget_failure_is_not_insufficient_evidence"],
+        "forbidden_coercions": ["send_post_budget_final_request", "convert_budget_failure_to_partial", "retry_without_reservation"]
+      }
+    },
+    {
+      "id": "RAC3-D10",
+      "categories": ["provider_outcome_uncertain", "uncertainty_stop", "ledger"],
+      "input": {
+        "workspace_id": "rac3-dev-uncertain",
+        "vault_root_fingerprint": "rac3-dev-uncertain-v1",
+        "query": "Who owns Willow Signal?",
+        "source": {
+          "workspace_id": "rac3-dev-uncertain",
+          "vault_root_fingerprint": "rac3-dev-uncertain-v1",
+          "index_id": "idx-rac3-d10",
+          "index_sha256": "synthetic-index-rac3-d10",
+          "document_count": 1,
+          "source_version": "willow-signal-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-dev-uncertain",
+            "path": "willow-signal.md",
+            "content": "Miko Reyes is the accountable owner of Willow Signal.\n",
+            "valid": true,
+            "source_version": "willow-signal-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 1,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "offline_script",
+        "provider_outcome": "uncertain",
+        "uncertain_reason": "transport_closed_after_request_without_terminal_usage",
+        "tool_calls": [],
+        "final": {"variant": "not_received_after_uncertain"}
+      },
+      "gold": {
+        "business_status": "unknown",
+        "runtime_status": "provider_uncertain",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": [],
+        "required_guards": ["uncertain_outcome_is_terminal_for_this_batch", "ledger_reservation_is_append_only", "no_automatic_resend", "no_unverified_final"],
+        "forbidden_coercions": ["treat_uncertain_as_retryable_failure", "show_owner_without_verified_read", "charge_unknown_request_as_zero"]
+      }
+    }
+  ]
+}

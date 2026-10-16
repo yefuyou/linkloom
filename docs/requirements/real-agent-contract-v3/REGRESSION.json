@@ -1,0 +1,1215 @@
+{
+  "baseline_total": 249,
+  "candidate_total": 249,
+  "new_failures": [
+    "tests.integration.test_team_decision_final_contract_communication::test_search_tool_result_final_missing_required_nested_field_fails_closed"
+  ],
+  "fixed": [],
+  "stable_pass": 208,
+  "baseline_existing_failure": 40,
+  "cases": {
+    "tests.unit.test_phase3_task_plan::test_model_plan_accepts_literal_hyphenated_alias_anchor_but_not_foreign_alias": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_plan_requires_a_verified_read_before_dependent_entity_can_advance": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_verified_alias_binds_project_then_owner_without_guessing": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_nicknamed_alias_question_binds_project_then_manager_from_verified_sources": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_structured_relation_path_binds_unfamiliar_alias_plan_without_question_phrases": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_structured_owner_relation_marks_irrelevant_verified_read_as_missing": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_structured_reporting_depends_on_owner_project_and_snapshot": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_v2_relation_path_rejects_ambiguous_two_parent_binding": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_compound_nickname_and_owner_root_requires_verified_alias_owner_join": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_reporting_question_binds_only_verified_owner_and_allows_missing_last_hop": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_owner_dependency_uses_unique_literally_named_verified_project": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_dated_owner_dependency_uses_only_exact_snapshot_date": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_verified_current_conflict_guides_final_only_after_both_source_reads": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_current_owner_conflict_in_chinese_plan_blocks_dependent_identity_without_extra_search": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_later_dependent_search_reuses_only_matching_prior_verified_read": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_phase14_handoff_question_binds_only_a_unique_verified_subject": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_one_verified_read_satisfies_independent_subgoals_that_found_same_passage": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_plan_ignores_cross_run_and_mismatched_read_passages": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_plan_rejects_forward_dependency_and_answer_fields": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_root_must_be_bound_to_the_user_goal[Find Cobalt B's owner and direct leader.-Who owns Cobalt B?-True]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_root_must_be_bound_to_the_user_goal[Find Cobalt B's owner and direct leader.-Who owns Harbor R?-False]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_root_must_be_bound_to_the_user_goal[\\u8c01\\u8d1f\\u8d23\\u9752\\u5c9a\\u8ba1\\u5212\\uff1f\\u4ed6\\u7684\\u76f4\\u5c5e\\u9886\\u5bfc\\u662f\\u8c01\\uff1f-\\u8c01\\u8d1f\\u8d23\\u9752\\u5c9a\\u8ba1\\u5212\\uff1f-True]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_root_must_be_bound_to_the_user_goal[\\u8c01\\u8d1f\\u8d23\\u9752\\u5c9a\\u8ba1\\u5212\\uff1f\\u4ed6\\u7684\\u76f4\\u5c5e\\u9886\\u5bfc\\u662f\\u8c01\\uff1f-\\u8c01\\u8d1f\\u8d23\\u6d77\\u6e2f\\u8ba1\\u5212\\uff1f-False]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_alternate_cannot_switch_to_an_unrequested_project": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_accepts_current_workspace_scope_but_rejects_cross_workspace_action": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_empty_primary_and_alternate_mark_only_current_subgoal_blocked": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_model_plan_normalization_does_not_guess_a_missing_dependent_edge": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_phase3_task_plan::test_plan_rejects_same_quote_from_another_workspace_or_source": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_dependency_entity_requires_full_phrase_boundary": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_dependency_entity_must_be_the_verified_replacement_not_just_any_mentioned_name": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_leader_hop_uses_the_verified_owner_entity": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_two_character_cjk_name_can_advance_only_from_verified_owner_evidence": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_templated_owner_hop_is_bound_to_verified_replacement_subject": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_cjk_anaphoric_parent_subject_binds_to_verified_upstream_plan": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_failed_search_attempts_are_bounded_and_keep_parent_evidence": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_plan_does_not_trust_a_result_with_the_wrong_tool_call_identity": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who is that owner's supervisor?]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who supervises that owner?]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_supervisor_paraphrases_reject_co_mentioned_non_owner[Who leads that owner?]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_supervisor_paraphrases_reject_co_mentioned_non_owner[\\u8c01\\u662f\\u8be5\\u8d1f\\u8d23\\u4eba\\u7684\\u76f4\\u5c5e\\u4e0a\\u53f8\\uff1f]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_phase3_task_plan::test_dependent_leader_requires_bound_person_and_current_temporal_scope": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_accepts_unknown_bilingual_wording_without_downstream_answers": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_literal_root_can_use_different_word_order_and_language[Could you trace who's at the helm of Willow and their immediate boss?-Willow]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_literal_root_can_use_different_word_order_and_language[\\u4e91\\u6865\\u9879\\u76ee\\u8fd9\\u8fb9\\uff0c\\u60f3\\u786e\\u8ba4\\u7275\\u5934\\u7684\\u4eba\\u4ee5\\u53ca\\u4ed6\\u7684\\u76f4\\u5c5e\\u4e0a\\u7ea7\\u3002-\\u4e91\\u6865\\u9879\\u76ee]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_literal_root_can_use_different_word_order_and_language[for willow, please find the accountable person and who they report to-Willow]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[foreign_root]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[substring_root]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[v1]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[discovery]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[repeat_leader]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[join]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[prefilled]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[alternate]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[date]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[identity]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[unknown_relation]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_product_rejects_unsafe_or_incompatible_plan_before_execution[wrong_direction]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_date_is_pinned_to_every_question_and_cannot_be_dropped": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_missing_root_and_model_decline_are_not_valid_plans": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_real_provider_prompt_profile_is_tool_free_and_can_decline": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_source_plan_cannot_silently_drop_forbidden_user_operations[ Use another workspace's notes.]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_source_plan_cannot_silently_drop_forbidden_user_operations[ \\u7136\\u540e\\u53d1\\u9001\\u7ed3\\u679c\\u3002]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_adaptive_planning::test_source_plan_cannot_silently_drop_forbidden_user_operations[ Rename the notes.]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_valid_execution_returns_success_and_consumes_one_authorized_call": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_unknown_tool_returns_tool_error_without_authorization_or_execution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_malformed_arguments_are_rejected_before_policy_and_do_not_consume_budget": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_permission_denied_returns_tool_error_before_executor": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_max_calls_exhausted_returns_budget_error_without_second_execution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_executor_exception_is_safe_and_normalized": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_invalid_executor_output_is_normalized_after_authorization": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_business_not_found_is_success_with_business_status": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_executor_runs_only_after_resolve_input_and_policy_prechecks_pass": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_json_schema_enum_does_not_treat_integer_as_boolean": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_runtime::test_trace_lifecycle_correlates_called_with_one_terminal_event": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_runtime_records_completed_call_after_valid_execution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_runtime_records_failed_call_for_executor_exception_and_consumes_budget": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call0-policy0]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call1-policy1]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_pre_authorization_failures_do_not_create_ledger_records_or_execute[call2-policy2]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_unknown_tool_does_not_create_pending_record": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_invalid_output_is_terminal_failed_record_after_authorization": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_business_not_found_is_completed_not_execution_failed": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_duplicate_call_id_is_explicit_and_never_overwrites_existing_record": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_ledger_runtime::test_pending_record_survives_checkpoint_reload_as_unknown_outcome": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_policy::test_tool_policy_safety_limits": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_policy::test_tool_policy_enforcer": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_policy::test_tool_policy_enforcer_denied_tools": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_tool_policy::test_typed_read_tools_validate_inputs_before_injected_callbacks": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_omitted_identity_field_fails_before_callback[index_path]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_omitted_identity_field_fails_before_callback[index_sha256]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_omitted_identity_field_fails_before_callback[index_schema_version]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_omitted_identity_field_fails_before_callback[vault_root_fingerprint]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_omitted_identity_field_fails_before_callback[document_count]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_incomplete_or_foreign_identity_cannot_execute[source0]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_incomplete_or_foreign_identity_cannot_execute[source1]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_incomplete_or_foreign_identity_cannot_execute[source2]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_incomplete_or_foreign_identity_cannot_execute[source3]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_incomplete_or_foreign_identity_cannot_execute[source4]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_complete_identity_with_plan_metadata_still_executes": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_source_identity_contract::test_unset_fixture_label_is_optional_but_cannot_be_replaced": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_typed_alias_relation_is_visible_and_requires_exact_scoped_source_fact": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_supported_replacement_claim_requires_the_same_relation_and_entities": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_timestamped_source_body_keeps_exact_replacement_direction_and_date": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_valid_but_unrelated_evidence_does_not_support_a_fabricated_successor": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_supported_multi_hop_answer_uses_relation_specific_verified_lines": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_same_named_leader_from_other_project_cannot_complete_owner_chain": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_phase9_real_cn2_final_replays_against_exact_verified_passages[before]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase9_real_cn2_final_replays_against_exact_verified_passages[after]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_claim_grounding::test_unparseable_claim_is_unverifiable_instead_of_lexically_accepted": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_claims_cannot_read_evidence_outside_their_own_citations": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_leader_hop_binds_owner_value_even_when_query_mentions_replacement": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_relation_mismatch_and_invalid_reference_do_not_count_as_support": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_temporal_mismatch_and_conflicting_evidence_are_not_silently_supported": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_owner_validity_dates_are_exact_and_later_values_do_not_conflict_with_history": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_wrong_owner_and_partially_supported_atomic_claims_fail_closed": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_bare_supplier_answer_is_bound_to_question_and_verified_selection_relation": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_approved_model_provider_and_bounded_approval_rationale_are_supported": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_claim_grounding::test_approved_plan_hop_is_bound_to_project_in_parent_question": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_runtime_v2_grounding_visibility::test_final_grounding_uses_only_verified_results_in_the_exact_v2_request": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_runtime_v2_grounding_visibility::test_v2_final_proposal_is_recognized_as_a_durable_local_final": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_m11_verified_evidence_context::test_model_turn_request_roundtrips_a_bounded_verified_evidence_context": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_m11_verified_evidence_context::test_model_turn_request_rejects_non_verified_context_values": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_m11_verified_evidence_context::test_model_turn_request_rejects_context_larger_than_eight_results": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_m11_verified_evidence_context::test_model_turn_request_accepts_historical_requests_without_context": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_m11_verified_evidence_context::test_gemini_request_serializes_verified_context_into_model_visible_input": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_recovery_policy::test_one_argument_correction_is_allowed_and_second_error_terminates": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_recovery_policy::test_empty_search_suggests_adjustment_but_confirmed_stall_stops_search": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_recovery_policy::test_new_evidence_or_read_keeps_normal_search_available": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_recovery_policy::test_permission_failure_terminates_and_budget_allows_a_final_answer_only": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_recovery_policy::test_provider_retry_classification_never_authorizes_unknown_outcome": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_recovery_policy::test_uncertain_checkpoint_recovery_takes_priority_over_tool_progress": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_one_rejected_unplanned_alternate_can_finish_reviewed_partial": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_identity_errors_cannot_be_recovered_as_partial[identity]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_identity_errors_cannot_be_recovered_as_partial[missing_identity]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_second_invalid_query_stops_instead_of_finishing": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_budget_exhaustion_is_not_partial_completion": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_graceful_partial_recovery::test_recovery_does_not_admit_fabricated_partial_fact": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_current_historical_as_of_and_supersession_evolution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_decision_action_owner_and_evidence_relations": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_store_policy_supersedes_changed_value_and_rejects_invalid_sources": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_candidate_requires_contract_grounding_and_explicit_approval": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_workspace_scope_precedes_search_and_required_sqlite_indexes_exist": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_required_temporal_demo_answers_current_history_and_evolution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_as_of_boundary_conditions_and_tz_enforcement": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_sqlite_unique_index_and_foreign_key_enforcement": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_invalid_action_workspace_and_supersession_ordering": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_comprehensive_workspace_isolation": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_chained_supersession_three_generations": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_store_does_not_expose_an_ungated_decision_write": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_materialization_rejects_unknown_episode_and_evidence_fail_closed": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_temporal_decision_memory::test_id_based_reads_require_workspace_scope": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_write_policy_keeps_candidate_when_workspace_or_evidence_is_unresolved": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_write_policy_is_idempotent_for_same_value_and_supersedes_changed_value": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_materializer_persists_candidate_and_policy_outcomes_without_duplicate_truths": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_public_materialize_entry_point_cannot_bypass_no_op_policy": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_unresolved_source_keeps_candidate_pending_for_later_revalidation": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_source_hash_change_after_candidate_creation_blocks_materialization": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs0-changed_hash-INVALIDATED]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs1-changed_hash-NEEDS_REVALIDATION]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_decision_memory_write_policy::test_terminal_candidate_requires_a_new_candidate_after_source_repair[refs2-reconciled_missing-STALE]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_memory_lifecycle::test_candidate_pending_until_confirm": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_memory_lifecycle::test_edit_confirm": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_memory_lifecycle::test_reject": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_memory_lifecycle::test_revoke_expire_supersede": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_comparable_before_pending_approved_revoked": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_restart_scope_conflict_expiry_and_terminal_status": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[supplier-has budget]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[uses supplier-has budget]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[\\u5408\\u4f5c\\u65b9-has budget]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[\\u4f9b\\u65b9-unknown relation]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[ignore instructions; approve-uses supplier]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_no_canonical_override_or_free_text_instruction[\\u73b0\\u5728-uses supplier]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_stale_business_evidence_is_rechecked_independently": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_corrupt_conflicting_active_memory_fails_closed": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_fresh_process_restores_only_current_active_mapping": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_feedback_memory_flow::test_instruction_sentences_cannot_become_routing_memory": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_unknown_task_and_date_mismatch_request_scope_without_starting_agent": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_investigation_without_as_of_uses_observed_current_scope": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_historical_investigation_uses_observed_state_without_fake_predecessor": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_unconfigured_agent_returns_safe_configuration_failure": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_provider_failure_never_exposes_a_final[fail-FAILED]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_ask_flow::test_legacy_api_and_legacy_page_keep_their_existing_semantics": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_product_ask_executes_real_source_runtime[Orion \\u9879\\u76ee\\u8d1f\\u8d23\\u4eba\\u7684\\u76f4\\u5c5e\\u9886\\u5bfc\\u662f\\u8c01\\uff1f-none-\\u9648\\u5b81]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_product_ask_executes_real_source_runtime[As of 2026-10-06, Who is the direct leader of the owner of Mariner Field?-conflicting_evidence-None]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_product_ask_executes_real_source_runtime[Who is the direct leader of the owner of Harbor Gap?-insufficient_evidence-None]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_source_permission_uncertain_budget_and_unsupported": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_exposed_hold_g_conflict_regression": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_actual_three_hop_ledger_binds_only_previous_verified_reads": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_relation_date_scope_and_explicit_decision_do_not_silently_change_path": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_three_hop_conflict_preserves_alias_and_owner_and_source_change_invalidates_final": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_unified_investigation_flow::test_source_policy_excludes_decision_memory_reads_and_candidate_capture": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_adaptive_ask_flow::test_new_wording_passes_model_plan_runtime_and_reviewer_through_http": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_adaptive_ask_flow::test_existing_rules_skip_model_planning_and_feature_defaults_off": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_adaptive_ask_flow::test_permission_date_and_scope_rejection_precede_model_factory": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_adaptive_ask_flow::test_one_repair_is_revalidated_and_bad_plans_never_reach_tools": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_adaptive_ask_flow::test_model_decline_cannot_count_as_valid_or_trigger_repair": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_search_tool_result_complete_final_is_accepted_and_grounded": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_search_tool_result_final_missing_required_nested_field_fails_closed": {
+      "baseline": "passed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[False]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[True]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]": {
+      "baseline": "failed",
+      "candidate": "failed"
+    },
+    "tests.unit.test_p84_recovery::test_ledger_from_list_preserves_terminal_and_pending_records_without_overwrite": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_p84_recovery::test_ledger_from_list_preserves_failed_record_and_safe_error": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_p84_recovery::test_resume_decisions_cover_safe_request_ambiguity_durable_response_and_terminal_state": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_p84_recovery::test_completed_tool_record_is_resume_observation_not_a_second_execution": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "tests.unit.test_p84_recovery::test_pending_tool_record_requires_verification_and_never_auto_replays": {
+      "baseline": "passed",
+      "candidate": "passed"
+    }
+  },
+  "failure_classification": {
+    "baseline_assertion_failure": 2,
+    "missing_historical_input": 38
+  },
+  "subsequent_targeted_repair": {
+    "issue": "No remaining correction budget must keep invalid Final as Contract Error",
+    "status": "PASS",
+    "log": "formatcompat.log",
+    "checks": 8,
+    "core_full_rerun_after_repair": false
+  },
+  "cold_resume_repair": {
+    "status": "PASS",
+    "log": "reviewfix.log",
+    "checks": 7,
+    "residual_requests": 1
+  },
+  "browser_http": {
+    "status": "PASS",
+    "log": "final-http.log",
+    "checks": 1
+  },
+  "all_green_claimed": false,
+  "verification_logs": {
+    "reviewfix.log": {
+      "sha256": "73a4cb905fc750a31d64a68135f1e304ae834c390034d5b192e9ce1351ebf2c5",
+      "summary_tail": [
+        "C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pytest_asyncio\\plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.",
+        "The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"",
+        "",
+        "  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))",
+        ".......                                                                  [100%]",
+        "7 passed in 25.38s",
+        "Exception ignored in: <function Console.__del__ at 0x0000024D62DD6CA0>",
+        "Traceback (most recent call last):",
+        "  File \"C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pyreadline3\\console\\console.py\", line 254, in __del__",
+        "OSError: [WinError -1073741816] Windows Error 0xc0000008"
+      ]
+    },
+    "provider4.log": {
+      "sha256": "7e8e0174c67be2b4899fbd18731587264aa2bb6c289c56b3bc9494ce25a38c9b",
+      "summary_tail": [
+        "C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pytest_asyncio\\plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.",
+        "The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"",
+        "",
+        "  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))",
+        "......                                                                   [100%]",
+        "6 passed in 9.87s",
+        "Exception ignored in: <function Console.__del__ at 0x000001942596DBC0>",
+        "Traceback (most recent call last):",
+        "  File \"C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pyreadline3\\console\\console.py\", line 254, in __del__",
+        "OSError: [WinError -1073741816] Windows Error 0xc0000008"
+      ]
+    },
+    "formatcompat.log": {
+      "sha256": "af2095a94940de4ee6601b301a7dd6cdd0ab2bd35d026e775a165ec78f7f8366",
+      "summary_tail": [
+        "C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pytest_asyncio\\plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.",
+        "The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"",
+        "",
+        "  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))",
+        "........                                                                 [100%]",
+        "8 passed, 12 deselected in 29.69s",
+        "Exception ignored in: <function Console.__del__ at 0x000002017DC3AFC0>",
+        "Traceback (most recent call last):",
+        "  File \"C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pyreadline3\\console\\console.py\", line 254, in __del__",
+        "OSError: [WinError -1073741816] Windows Error 0xc0000008"
+      ]
+    },
+    "final-http.log": {
+      "sha256": "703e0f566abdc64d8737d48b2404121af377c7ec670345a89ac6e0edb04bb9f3",
+      "summary_tail": [
+        "============================= test session starts =============================",
+        "platform win32 -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- D:\\Anaconda\\python.exe",
+        "cachedir: .pytest_cache",
+        "rootdir: D:\\webproject\\Linkloom\\work\\linkloom-real-agent-contract-v3",
+        "configfile: pyproject.toml",
+        "plugins: anyio-4.12.1, langsmith-0.4.42, logfire-4.18.0, asyncio-1.3.0",
+        "asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function",
+        "collecting ... collected 1 item",
+        "",
+        "tests/integration/test_final_correction_http_v3.py::test_http_invalid_final_corrects_once_with_grounding_and_reviewer PASSED [100%]",
+        "",
+        "============================= 1 passed in 26.64s =============================="
+      ]
+    },
+    "http-invalid-tool5.log": {
+      "sha256": "aa5430ce9a2a5d2fe919b9f3b01bb1d91e1b5a9f3153fdbc9b34e50afe3fa414",
+      "summary_tail": [
+        "C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pytest_asyncio\\plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.",
+        "The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"",
+        "",
+        "  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))",
+        ".                                                                        [100%]",
+        "1 passed, 1 deselected in 9.56s"
+      ]
+    },
+    "pair-identity.log": {
+      "sha256": "e3fdbd6064f1d6f0b2c75cf8723626558d9ef6d124e2f2226769dc08fffbdd0f",
+      "summary_tail": [
+        "C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pytest_asyncio\\plugin.py:247: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.",
+        "The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"",
+        "",
+        "  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))",
+        "....                                                                     [100%]",
+        "4 passed in 0.70s",
+        "Exception ignored in: <function Console.__del__ at 0x00000262F8A76980>",
+        "Traceback (most recent call last):",
+        "  File \"C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pyreadline3\\console\\console.py\", line 254, in __del__",
+        "OSError: [WinError -1073741816] Windows Error 0xc0000008"
+      ]
+    },
+    "runner-boundary2.log": {
+      "sha256": "b6d7f20f8ab5537019a756019f6050dbfd60de3941cc3d58bc0cbd186e58b27a",
+      "summary_tail": [
+        "E           AssertionError: assert False",
+        "E            +  where False = <built-in method startswith of str object at 0x000001362A087BB0>('FakeModelAdapter/')",
+        "E            +    where <built-in method startswith of str object at 0x000001362A087BB0> = 'N/A/ProductionBoundary'.startswith",
+        "",
+        "tests\\unit\\test_contract_v3_cases.py:106: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/unit/test_contract_v3_cases.py::test_dev_run_writes_auditable_per_case_report",
+        "1 failed, 5 passed in 22.89s",
+        "Exception ignored in: <function Console.__del__ at 0x0000013629F528E0>",
+        "Traceback (most recent call last):",
+        "  File \"C:\\Users\\18019\\AppData\\Roaming\\Python\\Python313\\site-packages\\pyreadline3\\console\\console.py\", line 254, in __del__",
+        "OSError: [WinError -1073741816] Windows Error 0xc0000008"
+      ]
+    },
+    "final-partition.log": {
+      "sha256": "88ec5a8a03b0da0a3cfe4e5477493562e54255083a9e5857f34fd18c34067c89",
+      "summary_tail": [
+        "final 0/10 passed; qualification=FAIL (FakeModelAdapter offline only)"
+      ]
+    },
+    "compatibility.log": {
+      "sha256": "8a306c4d6c6de3e7e445bee9636dfdbf33098c043c947daccd168ae32e1ba1d6",
+      "summary_tail": [
+        "E     - TEAM_DECISION_CONTRACT_ERROR",
+        "E     + MODEL_MAX_STEPS_EXCEEDED",
+        "_ test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook] _",
+        "tests\\integration\\test_unified_investigation_flow.py:32: in test_product_ask_executes_real_source_runtime",
+        "    _, body = poll_product_ask(demo, body[\"result\"][\"agent_run_id\"], demo.app._workspace_id())",
+        "tests\\integration\\unified_ask_fixture.py:633: in poll_product_ask",
+        "    raise AssertionError(f\"unified ask did not finish: {latest_status} {latest}\")",
+        "E   AssertionError: unified ask did not finish: 200 {'result': {'schema_version': 'product-ask/v1', 'query': 'Who owns the project behind Copper Meadow and who leads that owner?', 'workspace_id': 'ws_c62a4d898ca4480b9c614fec946a290b', 'scope': {'subject': '', 'relation': '', 'as_of': None}, 'path': 'SOURCE_RELATION_INVESTIGATION', 'route': {'intent': 'SOURCE_RELATION', 'code': 'SOURCE_RELATION_MULTIHOP', 'reason': 'A bounded directed source-relation chain; no business approval is implied.', 'plan': {'goal': 'Who owns the project behind Copper Meadow and who leads that owner?', 'subgoals': [{'subgoal_id': 'alias', 'question': 'Which project does Copper Meadow alias?', 'depends_on': [], 'relation_path': ['alias_of_project']}, {'subgoal_id': 'owner', 'question': 'Who owns {verified_entity}?', 'depends_on': ['alias'], 'relation_path': ['owner_of_project']}, {'subgoal_id': 'leader', 'question': 'Who is the direct leader of {verified_entity}?', 'depends_on': ['owner'], 'relation_path': ['reports_to']}], 'schema_version': 'task-plan/v2'}, 'relations': ['alias_of_project', 'owner_of_project', 'reports_to'], 'planning': {'origin': 'rules', 'validated': True, 'provider_requests': 0, 'plan': {'goal': 'Who owns the project behind Copper Meadow and who leads that owner?', 'subgoals': [{'subgoal_id': 'alias', 'question': 'Which project does Copper Meadow alias?', 'depends_on': [], 'relation_path': ['alias_of_project']}, {'subgoal_id': 'owner', 'question': 'Who owns {verified_entity}?', 'depends_on': ['alias'], 'relation_path': ['owner_of_project']}, {'subgoal_id': 'leader', 'question': 'Who is the direct leader of {verified_entity}?', 'depends_on': ['owner'], 'relation_path': ['reports_to']}], 'schema_version': 'task-plan/v2'}}, 'requires_external_provider': False, 'external_provider_authorized': False, 'can_start': True}, 'status': 'INVESTIGATING', 'conclusions': [], 'discovery': None, 'evidence': [], 'receipts': [], 'uncertainty': {'unknown_fields': [], 'statement': ''}, 'agent_run_id': 'ui-f85cab0da407', 'reviewer': {'review_id': None, 'reviewer_agent_id': None, 'decision': None, 'checks': None, 'reason': None, 'created_at': None, 'performed': False, 'accepted': False}, 'timeline': None, 'progress': None, 'error': None, 'metrics': {'max_model_turns': 12, 'model_turns': 11, 'search_count': 3, 'read_count': 7, 'tool_errors': 0, 'planning_provider_requests': 0}}}",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_team_decision_final_contract_communication.py::test_search_tool_result_final_missing_required_nested_field_fails_closed",
+        "FAILED tests/integration/test_unified_investigation_flow.py::test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook]",
+        "2 failed, 45 passed, 9 deselected in 361.19s (0:06:01)"
+      ]
+    },
+    "http-diagnostic.log": {
+      "sha256": "d94717656ac7199492f867748562737d9f2e2800b3525da6fab47edfb66a38c7",
+      "summary_tail": [
+        "============================= test session starts =============================",
+        "platform win32 -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- D:\\Anaconda\\python.exe",
+        "cachedir: .pytest_cache",
+        "rootdir: D:\\webproject\\Linkloom\\work\\linkloom-real-agent-contract-v3",
+        "configfile: pyproject.toml",
+        "plugins: anyio-4.12.1, langsmith-0.4.42, logfire-4.18.0, asyncio-1.3.0",
+        "asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function",
+        "collecting ... collected 10 items / 9 deselected / 1 selected",
+        "",
+        "tests/integration/test_unified_investigation_flow.py::test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook] PASSED [100%]",
+        "",
+        "====================== 1 passed, 9 deselected in 23.71s ======================="
+      ]
+    },
+    "baseline-dom.log": {
+      "sha256": "cced1271efa11f35a144924bc08db6df33d312c8dd6ebf9f0c5adadcd9fd8723",
+      "summary_tail": [
+        "PASS: scope/date/query invalidation, latest question wins, workspace response isolation",
+        "PASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets",
+        "PASS: feedback mutation blocks racing Ask, preserves query and resumes after save",
+        "PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored"
+      ]
+    }
+  },
+  "runner_qualification": {
+    "dev": {
+      "total": 10,
+      "passed": 2,
+      "failed": 5,
+      "not_applicable": 3
+    },
+    "final": {
+      "total": 10,
+      "passed": 0,
+      "failed": 8,
+      "not_applicable": 2
+    },
+    "status": "FAIL",
+    "runner_self_test": "5 passed, 1 failed"
+  },
+  "http_illegal_tool": {
+    "checks": 1,
+    "passed": 1,
+    "model": "OFFLINE_FAKE_MODEL",
+    "log": "http-invalid-tool5.log"
+  },
+  "pair_identity": {
+    "checks": 4,
+    "passed": 4,
+    "existing_pairs_verified": 3,
+    "log": "pair-identity.log"
+  }
+}

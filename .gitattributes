@@ -1,0 +1,4 @@
+.gitattributes text eol=lf
+# Frozen V3 inputs and machine evidence must preserve recorded byte identity.
+tests/fixtures/real_agent_contract_v3/*.json text eol=lf
+docs/requirements/real-agent-contract-v3/* text eol=lf

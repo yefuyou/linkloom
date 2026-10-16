@@ -1,0 +1,598 @@
+{
+  "schema_version": "real-agent-contract-v3-fixture/v1",
+  "dataset": "real-agent-contract-v3",
+  "partition": "final",
+  "purpose": "post_fix_single_run",
+  "base_commit": "37e45b169f19c4edd29db59f637e690caab31ad6",
+  "gold_visibility": "author_visible",
+  "external_blind_test": false,
+  "cases": [
+    {
+      "id": "RAC3-F01",
+      "categories": ["workspace_isolation", "foreign_evidence", "source_identity"],
+      "input": {
+        "workspace_id": "rac3-final-workspace",
+        "vault_root_fingerprint": "rac3-final-workspace-v2",
+        "query": "Who owns Harbor Lattice and who does that owner report to?",
+        "source": {
+          "workspace_id": "rac3-final-workspace",
+          "vault_root_fingerprint": "rac3-final-workspace-v2",
+          "index_id": "idx-rac3-f01",
+          "index_sha256": "synthetic-index-rac3-f01",
+          "document_count": 2,
+          "source_version": "harbor-lattice-v2"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-workspace",
+            "path": "harbor-owner.md",
+            "content": "Juno Park is the accountable owner of Harbor Lattice.\n",
+            "valid": true,
+            "source_version": "harbor-lattice-v2"
+          },
+          {
+            "workspace_id": "rac3-final-workspace",
+            "path": "harbor-line.md",
+            "content": "Juno Park reports directly to Soren Vale.\n",
+            "valid": true,
+            "source_version": "harbor-lattice-v2"
+          },
+          {
+            "workspace_id": "other-final-workspace",
+            "path": "foreign-harbor-owner.md",
+            "content": "Mira Holt is the accountable owner of Harbor Lattice.\n",
+            "valid": true,
+            "source_version": "foreign-harbor-v9"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "final_answer": "not supplied"
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["harbor-owner.md", "harbor-line.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Harbor Lattice", "object": "Juno Park"},
+          {"predicate": "reports_to", "subject": "Juno Park", "object": "Soren Vale"}
+        ],
+        "required_guards": ["foreign_workspace_never_enters_active_evidence", "all_claims_match_active_workspace"],
+        "forbidden_coercions": ["prefer_foreign_hit", "merge_workspace_evidence", "cite_foreign_source"]
+      }
+    },
+    {
+      "id": "RAC3-F02",
+      "categories": ["freshness", "stale_source", "source_update"],
+      "input": {
+        "workspace_id": "rac3-final-freshness",
+        "vault_root_fingerprint": "rac3-final-freshness-v1",
+        "query": "Who owns Copper Vale?",
+        "source": {
+          "workspace_id": "rac3-final-freshness",
+          "vault_root_fingerprint": "rac3-final-freshness-v1",
+          "index_id": "idx-rac3-f02",
+          "index_sha256": "synthetic-index-rac3-f02-old",
+          "document_count": 1,
+          "source_version": "copper-vale-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-freshness",
+            "path": "copper-vale.md",
+            "content": "At the 2026-09-01 snapshot, Lio Chen is the accountable owner of Copper Vale.\n",
+            "valid": true,
+            "source_version": "copper-vale-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 2,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "source_update": {
+          "path": "copper-vale.md",
+          "new_source_version": "copper-vale-v2",
+          "new_content": "At the 2026-10-12 snapshot, Ren Ito is the accountable owner of Copper Vale.\n"
+        }
+      },
+      "gold": {
+        "business_status": "unknown",
+        "runtime_status": "stale",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": [],
+        "required_guards": ["source_version_is_revalidated_before_final", "stale_evidence_is_invalidated", "no_old_owner_is_published"],
+        "forbidden_coercions": ["treat_old_index_as_current", "silently_refresh_without_new_read", "show_stale_fact_as_complete"]
+      }
+    },
+    {
+      "id": "RAC3-F03",
+      "categories": ["final_scope", "out_of_scope_claim", "grounding"],
+      "input": {
+        "workspace_id": "rac3-final-scope",
+        "vault_root_fingerprint": "rac3-final-scope-v1",
+        "query": "Who owns Juniper Arc?",
+        "source": {
+          "workspace_id": "rac3-final-scope",
+          "vault_root_fingerprint": "rac3-final-scope-v1",
+          "index_id": "idx-rac3-f03",
+          "index_sha256": "synthetic-index-rac3-f03",
+          "document_count": 1,
+          "source_version": "juniper-arc-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-scope",
+            "path": "juniper-arc.md",
+            "content": "## Ownership\nPema Singh is the accountable owner of Juniper Arc.\n\nThe neighboring Juniper Bay program is outside this question.\n",
+            "valid": true,
+            "source_version": "juniper-arc-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "final_must_not_add_neighboring_entity"
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["juniper-arc.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Juniper Arc", "object": "Pema Singh"}
+        ],
+        "required_guards": ["Final_claims_are_within_query_scope", "neighboring_entity_is_not_projected", "grounding_checks_question_scope"],
+        "forbidden_coercions": ["accept_unrelated_fact", "treat_same_prefix_as_same_entity", "review_unscoped_final"]
+      }
+    },
+    {
+      "id": "RAC3-F04",
+      "categories": ["final_schema", "unknown_field", "adapter_projection"],
+      "input": {
+        "workspace_id": "rac3-final-schema",
+        "vault_root_fingerprint": "rac3-final-schema-v1",
+        "query": "Who is accountable for Opal Station?",
+        "source": {
+          "workspace_id": "rac3-final-schema",
+          "vault_root_fingerprint": "rac3-final-schema-v1",
+          "index_id": "idx-rac3-f04",
+          "index_sha256": "synthetic-index-rac3-f04",
+          "document_count": 1,
+          "source_version": "opal-station-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-schema",
+            "path": "opal-station.md",
+            "content": "Hana Moss is the accountable owner of Opal Station.\n",
+            "valid": true,
+            "source_version": "opal-station-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "adapter_must_preserve_closed_final_schema"
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["opal-station.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Opal Station", "object": "Hana Moss"}
+        ],
+        "required_guards": ["unknown_final_fields_are_rejected", "adapter_does_not_drop_required_fields", "schema_and_validator_are_aligned"],
+        "forbidden_coercions": ["strip_unknown_field_and_accept", "fill_missing_fields", "project_free_text_as_structured_success"]
+      }
+    },
+    {
+      "id": "RAC3-F05",
+      "categories": ["partial", "chinese_boundary", "unknown_downstream"],
+      "input": {
+        "workspace_id": "rac3-final-partial-zh",
+        "vault_root_fingerprint": "rac3-final-partial-zh-v1",
+        "query": "谁负责青岚线路？其负责人直属领导是谁？",
+        "source": {
+          "workspace_id": "rac3-final-partial-zh",
+          "vault_root_fingerprint": "rac3-final-partial-zh-v1",
+          "index_id": "idx-rac3-f05",
+          "index_sha256": "synthetic-index-rac3-f05",
+          "document_count": 2,
+          "source_version": "qinglan-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-partial-zh",
+            "path": "青岚负责人.md",
+            "content": "沈砚是青岚线路的负责人。\n",
+            "valid": true,
+            "source_version": "qinglan-v1"
+          },
+          {
+            "workspace_id": "rac3-final-partial-zh",
+            "path": "青岚背景.md",
+            "content": "青岚港是另一个项目；这份说明没有记录任何直属领导关系。\n",
+            "valid": true,
+            "source_version": "qinglan-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "partial_result_must_keep_沈砚_and_unknown_leader"
+      },
+      "gold": {
+        "business_status": "partial",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["青岚负责人.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "青岚线路", "object": "沈砚"}
+        ],
+        "required_guards": ["partial_preserves_verified_chinese_fact", "missing_leader_is_explicit_unknown", "similar_project_name_is_excluded"],
+        "forbidden_coercions": ["infer_leader_from_background_note", "use_青岚港_for_青岚线路", "force_complete_status"]
+      }
+    },
+    {
+      "id": "RAC3-F06",
+      "categories": ["conflict", "same_relation", "no_silent_winner"],
+      "input": {
+        "workspace_id": "rac3-final-conflict",
+        "vault_root_fingerprint": "rac3-final-conflict-v1",
+        "query": "Who is the accountable owner of Fable Crossing?",
+        "source": {
+          "workspace_id": "rac3-final-conflict",
+          "vault_root_fingerprint": "rac3-final-conflict-v1",
+          "index_id": "idx-rac3-f06",
+          "index_sha256": "synthetic-index-rac3-f06",
+          "document_count": 3,
+          "source_version": "fable-crossing-v3"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-conflict",
+            "path": "fable-approved.md",
+            "content": "The 2026-10-04 registry names Yara Cole as the accountable owner of Fable Crossing.\n",
+            "valid": true,
+            "source_version": "fable-crossing-v3"
+          },
+          {
+            "workspace_id": "rac3-final-conflict",
+            "path": "fable-working.md",
+            "content": "The 2026-10-04 working register names Tomas Reed as the accountable owner of Fable Crossing.\n",
+            "valid": true,
+            "source_version": "fable-crossing-v3"
+          },
+          {
+            "workspace_id": "rac3-final-conflict",
+            "path": "fable-context.md",
+            "content": "The two registers have not yet been reconciled.\n",
+            "valid": true,
+            "source_version": "fable-crossing-v3"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 5,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "authority_is_not_encoded_by_file_name_alone"
+      },
+      "gold": {
+        "business_status": "conflict",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["fable-approved.md", "fable-working.md", "fable-context.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Fable Crossing", "object": "Yara Cole"},
+          {"predicate": "owner_of_project", "subject": "Fable Crossing", "object": "Tomas Reed"}
+        ],
+        "required_guards": ["conflicting_source_identity_is_visible", "no_unproven_authority_precedence", "reviewer_sees_conflict"],
+        "forbidden_coercions": ["pick_approved_filename_as_authority_without_rule", "drop_working_register", "claim_single_owner"]
+      }
+    },
+    {
+      "id": "RAC3-F07",
+      "categories": ["tool_arguments", "dependency_binding", "alternate_query", "query_variant"],
+      "input": {
+        "workspace_id": "rac3-final-dependency",
+        "vault_root_fingerprint": "rac3-final-dependency-v1",
+        "query": "Which project does Lumen-9 stand for, and who is responsible for it?",
+        "source": {
+          "workspace_id": "rac3-final-dependency",
+          "vault_root_fingerprint": "rac3-final-dependency-v1",
+          "index_id": "idx-rac3-f07",
+          "index_sha256": "synthetic-index-rac3-f07",
+          "document_count": 2,
+          "source_version": "lumen-nine-v1"
+        },
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve the Lumen-9 alias and the owner of its verified project.",
+          "subgoals": [
+            {
+              "subgoal_id": "alias_step",
+              "question": "Which project does Lumen-9 alias?",
+              "depends_on": [],
+              "relation_path": ["alias_of_project"]
+            },
+            {
+              "subgoal_id": "owner_step",
+              "question": "Who is responsible for {verified_entity}?",
+              "depends_on": ["alias_step"],
+              "alternate_question": "Who owns {verified_entity}?",
+              "relation_path": ["owner_of_project"]
+            }
+          ]
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-dependency",
+            "path": "lumen-nine-alias.md",
+            "content": "Lumen-9 is the team alias for Seabird North.\n",
+            "valid": true,
+            "source_version": "lumen-nine-v1"
+          },
+          {
+            "workspace_id": "rac3-final-dependency",
+            "path": "seabird-owner.md",
+            "content": "Yuki Tran is the accountable owner of Seabird North.\n",
+            "valid": true,
+            "source_version": "lumen-nine-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 4,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "alternate_query_must_reuse_only_verified_parent_entity"
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["lumen-nine-alias.md", "seabird-owner.md"],
+        "facts": [
+          {"predicate": "alias_of_project", "subject": "Lumen-9", "object": "Seabird North"},
+          {"predicate": "owner_of_project", "subject": "Seabird North", "object": "Yuki Tran"}
+        ],
+        "required_guards": ["dependency_entity_must_be_verified", "alternate_is_bounded_to_task_plan", "source_context_identity_is_copied"],
+        "forbidden_coercions": ["bind_model_named_project", "accept_illegal_alternate", "reuse_foreign_dependency"]
+      }
+    },
+    {
+      "id": "RAC3-F08",
+      "categories": ["same_file_multiple_passages", "context_budget", "evidence_identity"],
+      "input": {
+        "workspace_id": "rac3-final-passages",
+        "vault_root_fingerprint": "rac3-final-passages-v2",
+        "query": "Who owns Northstar Canal and who is their direct supervisor?",
+        "source": {
+          "workspace_id": "rac3-final-passages",
+          "vault_root_fingerprint": "rac3-final-passages-v2",
+          "index_id": "idx-rac3-f08",
+          "index_sha256": "synthetic-index-rac3-f08",
+          "document_count": 1,
+          "source_version": "northstar-canal-v2"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-passages",
+            "path": "northstar-canal-register.md",
+            "content": "# Northstar Canal\n\n### Owner\nUma Li is the accountable owner of Northstar Canal.\n\n### Working notes\nThe 2026-10-08 review covered two unrelated delivery risks and did not alter ownership.\n\n### Supervisor\nUma Li reports directly to Felix Zhou.\n\n### Appendix\nA future staffing proposal is not an assigned change.\n",
+            "valid": true,
+            "source_version": "northstar-canal-v2"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 3,
+          "max_context_bytes": 1100
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "two_required_passages_must_survive_bounded_context"
+      },
+      "gold": {
+        "business_status": "complete",
+        "runtime_status": "completed",
+        "final_contract": "accepted",
+        "grounding": "pass",
+        "reviewer": "pass",
+        "evidence_paths": ["northstar-canal-register.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Northstar Canal", "object": "Uma Li"},
+          {"predicate": "reports_to", "subject": "Uma Li", "object": "Felix Zhou"}
+        ],
+        "required_guards": ["same_file_passages_are_distinct", "required_reads_are_not_dropped_for_noise", "future_proposal_is_not_claimed"],
+        "forbidden_coercions": ["claim_from_path_only", "drop_supervisor_passage", "promote_future_staffing_proposal"]
+      }
+    },
+    {
+      "id": "RAC3-F09",
+      "categories": ["budget_exhausted", "partial_evidence", "runtime_termination"],
+      "input": {
+        "workspace_id": "rac3-final-budget",
+        "vault_root_fingerprint": "rac3-final-budget-v1",
+        "query": "Who owns Quartz Grove and who does that person report to?",
+        "source": {
+          "workspace_id": "rac3-final-budget",
+          "vault_root_fingerprint": "rac3-final-budget-v1",
+          "index_id": "idx-rac3-f09",
+          "index_sha256": "synthetic-index-rac3-f09",
+          "document_count": 2,
+          "source_version": "quartz-grove-v1"
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-budget",
+            "path": "quartz-owner.md",
+            "content": "Bea Lin is the accountable owner of Quartz Grove.\n",
+            "valid": true,
+            "source_version": "quartz-grove-v1"
+          },
+          {
+            "workspace_id": "rac3-final-budget",
+            "path": "quartz-line.md",
+            "content": "Bea Lin reports directly to Omar Shaw.\n",
+            "valid": true,
+            "source_version": "quartz-grove-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 2,
+          "max_provider_requests": 2,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "step_limit_must_stop_before_unbounded_repair"
+      },
+      "gold": {
+        "business_status": "incomplete",
+        "runtime_status": "budget_exhausted",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": ["quartz-owner.md"],
+        "facts": [
+          {"predicate": "owner_of_project", "subject": "Quartz Grove", "object": "Bea Lin"}
+        ],
+        "required_guards": ["budget_failure_is_explicit", "no_extra_provider_request", "known_owner_is_not_lost_in_a_fake_final"],
+        "forbidden_coercions": ["turn_budget_failure_into_insufficient_evidence", "continue_after_max_steps", "claim_supervisor_without_read"]
+      }
+    },
+    {
+      "id": "RAC3-F10",
+      "categories": ["provider_outcome_uncertain", "ledger", "no_retry"],
+      "input": {
+        "workspace_id": "rac3-final-uncertain",
+        "vault_root_fingerprint": "rac3-final-uncertain-v1",
+        "query": "Which project does Echo-4 alias, and who owns it?",
+        "source": {
+          "workspace_id": "rac3-final-uncertain",
+          "vault_root_fingerprint": "rac3-final-uncertain-v1",
+          "index_id": "idx-rac3-f10",
+          "index_sha256": "synthetic-index-rac3-f10",
+          "document_count": 2,
+          "source_version": "echo-four-v1"
+        },
+        "task_plan": {
+          "schema_version": "task-plan/v2",
+          "goal": "Resolve Echo-4 and its accountable owner.",
+          "subgoals": [
+            {
+              "subgoal_id": "echo_alias",
+              "question": "Which project does Echo-4 alias?",
+              "depends_on": [],
+              "relation_path": ["alias_of_project"]
+            },
+            {
+              "subgoal_id": "echo_owner",
+              "question": "Who owns {verified_entity}?",
+              "depends_on": ["echo_alias"],
+              "relation_path": ["owner_of_project"]
+            }
+          ]
+        },
+        "documents": [
+          {
+            "workspace_id": "rac3-final-uncertain",
+            "path": "echo-four-alias.md",
+            "content": "Echo-4 is the team alias for Meridian Fold.\n",
+            "valid": true,
+            "source_version": "echo-four-v1"
+          },
+          {
+            "workspace_id": "rac3-final-uncertain",
+            "path": "meridian-owner.md",
+            "content": "Lara Qin is the accountable owner of Meridian Fold.\n",
+            "valid": true,
+            "source_version": "echo-four-v1"
+          }
+        ],
+        "budget": {
+          "max_steps": 8,
+          "max_provider_requests": 1,
+          "max_context_bytes": 12000
+        }
+      },
+      "stimulus": {
+        "mode": "post_fix_provider_input_only",
+        "provider_outcome": "not_scripted",
+        "risk_signal": "unknown_provider_outcome_must_not_be_reissued"
+      },
+      "gold": {
+        "business_status": "unknown",
+        "runtime_status": "provider_uncertain",
+        "final_contract": "not_received",
+        "grounding": "not_run",
+        "reviewer": "not_run",
+        "evidence_paths": [],
+        "facts": [],
+        "required_guards": ["one_uncertain_outcome_is_preserved", "no_second_request_after_unknown", "ledger_keeps_reserved_cost", "no_unverified_alias_or_owner"],
+        "forbidden_coercions": ["retry_uncertain_provider", "show_partial_as_success", "treat_unknown_usage_as_zero"]
+      }
+    }
+  ]
+}

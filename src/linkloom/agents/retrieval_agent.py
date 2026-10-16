@@ -36,6 +36,18 @@ from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 StateCheckpointCallback = Callable[[RuntimeState], None]
 
+
+def _validate_final_shape(text: str) -> None:
+    """Check shape only; the durable projection still validates actual evidence."""
+    try:
+        payload = json.loads(text)
+    except (TypeError, ValueError) as error:
+        raise ValidationError("Final must contain complete JSON.") from error
+    refs = payload.get("evidence_refs", []) if isinstance(payload, dict) else []
+    # Reuse the existing harmless reference-order normalization. These declared
+    # refs are not trusted evidence and this check never projects an answer.
+    TeamDecisionResult.from_grounded_final(text, refs)
+
 PROMPT_PROFILES = frozenset({"zero-v1", "few-v1"})
 
 
@@ -816,6 +828,11 @@ class RetrievalAgent:
                         )
                     )
                 )
+                if error.get("code") == "MODEL_FINAL_INVALID":
+                    error = self._safe_error(
+                        "TEAM_DECISION_CONTRACT_ERROR", "schema",
+                        "The Team Decision Final is invalid and no correction budget remains.",
+                    )
                 return self._failed_result(task, usage, error, warnings)
             try:
                 visible_evidence = self._final_model_visible_evidence(state, task)
@@ -1309,6 +1326,11 @@ class RetrievalAgent:
                 ),
                 task_plan=self.task_plan if task.workflow == "team_decision" else None,
                 workspace_id=self.expected_workspace_id,
+                final_shape_validator=(
+                    _validate_final_shape
+                    if task.workflow == "team_decision" and self.final_protocol == SCHEMA_VERSION
+                    else None
+                ),
             )
             invoke_loop = loop.resume if self.resume_model_loop else loop.run
             loop_result = invoke_loop(

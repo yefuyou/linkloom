@@ -1,0 +1,41 @@
+{
+  "schema_version": "v2-data-qualification-amendment/v1",
+  "revision": "v3-source-grounded-qualification-1",
+  "source_commit": "2f099b0fbc0493a5c24a6a4e4799c02b556033a3",
+  "historical_final_already_exposed": true,
+  "freeze_sha256": "9937bbf45352ba943971a413a0b511612369aa5632472ee0899e0a8b5cd10ae6",
+  "originals_modified": false,
+  "new_score_computed": false,
+  "mismatches": [
+    {
+      "id": "v2-final-006",
+      "partition": "final",
+      "original_span": {
+        "path": "repeated.md",
+        "contains": "F06-Key is the team alias for Meridian F06."
+      },
+      "source_content": "Owner F06 is the accountable owner of Meridian F06.\n\nOwner F06 is the accountable owner of Meridian F06.\n\nOwner F06 reports directly to Lead F06.",
+      "disposition": "EXCLUDED_FROM_QUALIFIED_SPAN_METRICS; historical score retained; no answer Gold change"
+    },
+    {
+      "id": "v2-stress-008",
+      "partition": "stress",
+      "original_span": {
+        "path": "briefing.md",
+        "contains": "S08-Key is the team alias for Meridian S08."
+      },
+      "source_content": "This synthetic note describes a bounded planning exercise. The surrounding narrative contains no ownership decision.\n\n## Scope\nThe note is informational and has no authority beyond its exact facts.\n\nOwner S08 is the accountable owner of Meridian S08.\n\nOwner S08 reports directly to Lead S08.",
+      "disposition": "EXCLUDED_FROM_QUALIFIED_SPAN_METRICS; historical score retained; no answer Gold change"
+    },
+    {
+      "id": "v2-stress-014",
+      "partition": "stress",
+      "original_span": {
+        "path": "facts-zh.md",
+        "contains": "S14-Key is the team alias for Meridian S14."
+      },
+      "source_content": "Owner S14 reports directly to Lead S14.",
+      "disposition": "EXCLUDED_FROM_QUALIFIED_SPAN_METRICS; historical score retained; no answer Gold change"
+    }
+  ]
+}

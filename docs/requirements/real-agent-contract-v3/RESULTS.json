@@ -1,0 +1,812 @@
+{
+  "schema_version": "real-agent-contract-v3-results/v1",
+  "status": "EXPERIMENTAL_VALIDATED",
+  "integration_recommended": false,
+  "reliability_improvement_proven": false,
+  "query_only_enabled": false,
+  "adaptive_default_enabled": false,
+  "branch": "codex/linkloom-real-agent-contract-v3",
+  "base_commit": "37e45b169f19c4edd29db59f637e690caab31ad6",
+  "v2_reference_commit": "2f099b0fbc0493a5c24a6a4e4799c02b556033a3",
+  "pr_created": false,
+  "master_modified": false,
+  "autopsy": {
+    "adaptive_failed": 18,
+    "v2_real_runs": 11,
+    "unobserved": "UNKNOWN",
+    "record": "AUTOPSY.json"
+  },
+  "production_fixes": [
+    "typed ProviderOutcomeUnknown remains terminal/uncertain",
+    "one counted Final-shape correction through existing recovery with cold-resume residual budget",
+    "declared actual source identity schema; no injected dependency facts"
+  ],
+  "live": {
+    "model": "gemini-3.8-flash",
+    "compatibility_confirmed": true,
+    "serial": true,
+    "automatic_retries": 0,
+    "request_count": 35,
+    "preflight_requests": 1,
+    "canary_requests": 6,
+    "pair_requests": 28,
+    "paired_metrics": [
+      {
+        "trial": "normal-old",
+        "case_id": "V3-L-NORMAL",
+        "status": "COMPLETED",
+        "score": {
+          "passed": true,
+          "not_applicable": false,
+          "outcome": "answer",
+          "expected_outcome": "answer",
+          "outcome_ok": true,
+          "fact_exact": true,
+          "actual_facts": [
+            [
+              "lena hart",
+              "reports_to",
+              "noa bell"
+            ],
+            [
+              "silver orchard",
+              "owner_of_project",
+              "lena hart"
+            ]
+          ],
+          "expected_facts": [
+            [
+              "lena hart",
+              "reports_to",
+              "noa bell"
+            ],
+            [
+              "silver orchard",
+              "owner_of_project",
+              "lena hart"
+            ]
+          ],
+          "evidence_paths_ok": true,
+          "actual_evidence_paths": [
+            "leader.md",
+            "owner.md"
+          ],
+          "expected_evidence_paths": [
+            "leader.md",
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Silver Orchard",
+          "root_ok": true,
+          "reviewer_ok": true,
+          "evidence_ok": true,
+          "plan_valid": true,
+          "structural_plan_valid": true,
+          "artifact_verified": true,
+          "grounding": {
+            "valid": true,
+            "citation_valid": true,
+            "evidence_valid": true,
+            "reviewer_valid": true
+          },
+          "error_code": null
+        },
+        "model_turns": 5,
+        "tool_calls": 4,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 5,
+          "search_count": 2,
+          "read_count": 2,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 5,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000008",
+          "linkloom-contract-v3-20261016-000009",
+          "linkloom-contract-v3-20261016-000010",
+          "linkloom-contract-v3-20261016-000011",
+          "linkloom-contract-v3-20261016-000012"
+        ],
+        "known_cost_usd": 0.03864825,
+        "unknown_usage_reserved_usd": 0,
+        "known_input_tokens": 26926,
+        "known_output_tokens": 838,
+        "known_thinking_tokens": 4083
+      },
+      {
+        "trial": "normal-new",
+        "case_id": "V3-L-NORMAL",
+        "status": "COMPLETED",
+        "score": {
+          "passed": true,
+          "not_applicable": false,
+          "outcome": "answer",
+          "expected_outcome": "answer",
+          "outcome_ok": true,
+          "fact_exact": true,
+          "actual_facts": [
+            [
+              "lena hart",
+              "reports_to",
+              "noa bell"
+            ],
+            [
+              "silver orchard",
+              "owner_of_project",
+              "lena hart"
+            ]
+          ],
+          "expected_facts": [
+            [
+              "lena hart",
+              "reports_to",
+              "noa bell"
+            ],
+            [
+              "silver orchard",
+              "owner_of_project",
+              "lena hart"
+            ]
+          ],
+          "evidence_paths_ok": true,
+          "actual_evidence_paths": [
+            "leader.md",
+            "owner.md"
+          ],
+          "expected_evidence_paths": [
+            "leader.md",
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Silver Orchard",
+          "root_ok": true,
+          "reviewer_ok": true,
+          "evidence_ok": true,
+          "plan_valid": true,
+          "structural_plan_valid": true,
+          "artifact_verified": true,
+          "grounding": {
+            "valid": true,
+            "citation_valid": true,
+            "evidence_valid": true,
+            "reviewer_valid": true
+          },
+          "error_code": null
+        },
+        "model_turns": 5,
+        "tool_calls": 4,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 5,
+          "search_count": 2,
+          "read_count": 2,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 5,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000013",
+          "linkloom-contract-v3-20261016-000014",
+          "linkloom-contract-v3-20261016-000015",
+          "linkloom-contract-v3-20261016-000016",
+          "linkloom-contract-v3-20261016-000017"
+        ],
+        "known_cost_usd": 0.0461415,
+        "unknown_usage_reserved_usd": 0,
+        "known_input_tokens": 27792,
+        "known_output_tokens": 915,
+        "known_thinking_tokens": 5831
+      },
+      {
+        "trial": "partial-old",
+        "case_id": "V3-L-PARTIAL",
+        "status": "INSUFFICIENT",
+        "score": {
+          "passed": true,
+          "not_applicable": false,
+          "outcome": "insufficient",
+          "expected_outcome": "insufficient",
+          "outcome_ok": true,
+          "fact_exact": true,
+          "actual_facts": [
+            [
+              "amber coast",
+              "owner_of_project",
+              "ravi moss"
+            ]
+          ],
+          "expected_facts": [
+            [
+              "amber coast",
+              "owner_of_project",
+              "ravi moss"
+            ]
+          ],
+          "evidence_paths_ok": true,
+          "actual_evidence_paths": [
+            "owner.md"
+          ],
+          "expected_evidence_paths": [
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Amber Coast",
+          "root_ok": true,
+          "reviewer_ok": true,
+          "evidence_ok": true,
+          "plan_valid": true,
+          "structural_plan_valid": true,
+          "artifact_verified": true,
+          "grounding": {
+            "valid": true,
+            "citation_valid": true,
+            "evidence_valid": true,
+            "reviewer_valid": true
+          },
+          "error_code": null
+        },
+        "model_turns": 4,
+        "tool_calls": 3,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 4,
+          "search_count": 2,
+          "read_count": 1,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 4,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000018",
+          "linkloom-contract-v3-20261016-000019",
+          "linkloom-contract-v3-20261016-000020",
+          "linkloom-contract-v3-20261016-000021"
+        ],
+        "known_cost_usd": 0.02631525,
+        "unknown_usage_reserved_usd": 0,
+        "known_input_tokens": 17622,
+        "known_output_tokens": 757,
+        "known_thinking_tokens": 2736
+      },
+      {
+        "trial": "partial-new",
+        "case_id": "V3-L-PARTIAL",
+        "status": "INSUFFICIENT",
+        "score": {
+          "passed": true,
+          "not_applicable": false,
+          "outcome": "insufficient",
+          "expected_outcome": "insufficient",
+          "outcome_ok": true,
+          "fact_exact": true,
+          "actual_facts": [
+            [
+              "amber coast",
+              "owner_of_project",
+              "ravi moss"
+            ]
+          ],
+          "expected_facts": [
+            [
+              "amber coast",
+              "owner_of_project",
+              "ravi moss"
+            ]
+          ],
+          "evidence_paths_ok": true,
+          "actual_evidence_paths": [
+            "owner.md"
+          ],
+          "expected_evidence_paths": [
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Amber Coast",
+          "root_ok": true,
+          "reviewer_ok": true,
+          "evidence_ok": true,
+          "plan_valid": true,
+          "structural_plan_valid": true,
+          "artifact_verified": true,
+          "grounding": {
+            "valid": true,
+            "citation_valid": true,
+            "evidence_valid": true,
+            "reviewer_valid": true
+          },
+          "error_code": null
+        },
+        "model_turns": 4,
+        "tool_calls": 3,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 4,
+          "search_count": 2,
+          "read_count": 1,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 4,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000022",
+          "linkloom-contract-v3-20261016-000023",
+          "linkloom-contract-v3-20261016-000024",
+          "linkloom-contract-v3-20261016-000025"
+        ],
+        "known_cost_usd": 0.02508225,
+        "unknown_usage_reserved_usd": 0,
+        "known_input_tokens": 18713,
+        "known_output_tokens": 662,
+        "known_thinking_tokens": 2284
+      },
+      {
+        "trial": "conflict-old",
+        "case_id": "V3-L-CONFLICT",
+        "status": "FAILED",
+        "score": {
+          "passed": false,
+          "not_applicable": false,
+          "outcome": "error",
+          "expected_outcome": "insufficient",
+          "outcome_ok": false,
+          "fact_exact": false,
+          "actual_facts": [],
+          "expected_facts": [
+            [
+              "opal haven",
+              "owner_of_project",
+              "mina fox"
+            ]
+          ],
+          "evidence_paths_ok": false,
+          "actual_evidence_paths": [],
+          "expected_evidence_paths": [
+            "leader-a.md",
+            "leader-b.md",
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Opal Haven",
+          "root_ok": true,
+          "reviewer_ok": false,
+          "evidence_ok": false,
+          "plan_valid": false,
+          "structural_plan_valid": true,
+          "artifact_verified": null,
+          "grounding": {
+            "valid": false,
+            "citation_valid": false,
+            "evidence_valid": false,
+            "reviewer_valid": false
+          },
+          "error_code": "MODEL_UNAVAILABLE"
+        },
+        "model_turns": 4,
+        "tool_calls": 3,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 4,
+          "search_count": 2,
+          "read_count": 1,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 4,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000026",
+          "linkloom-contract-v3-20261016-000027",
+          "linkloom-contract-v3-20261016-000028",
+          "linkloom-contract-v3-20261016-000029"
+        ],
+        "known_cost_usd": 0.012909,
+        "unknown_usage_reserved_usd": 0.079872,
+        "known_input_tokens": 12602,
+        "known_output_tokens": 445,
+        "known_thinking_tokens": 477
+      },
+      {
+        "trial": "conflict-new",
+        "case_id": "V3-L-CONFLICT",
+        "status": "PROVIDER_UNCERTAIN",
+        "score": {
+          "passed": false,
+          "not_applicable": false,
+          "outcome": "error",
+          "expected_outcome": "insufficient",
+          "outcome_ok": false,
+          "fact_exact": false,
+          "actual_facts": [],
+          "expected_facts": [
+            [
+              "opal haven",
+              "owner_of_project",
+              "mina fox"
+            ]
+          ],
+          "evidence_paths_ok": false,
+          "actual_evidence_paths": [],
+          "expected_evidence_paths": [
+            "leader-a.md",
+            "leader-b.md",
+            "owner.md"
+          ],
+          "chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "expected_chain": [
+            "owner_of_project",
+            "reports_to"
+          ],
+          "chain_ok": true,
+          "root": "Opal Haven",
+          "root_ok": true,
+          "reviewer_ok": false,
+          "evidence_ok": false,
+          "plan_valid": false,
+          "structural_plan_valid": true,
+          "artifact_verified": null,
+          "grounding": {
+            "valid": false,
+            "citation_valid": false,
+            "evidence_valid": false,
+            "reviewer_valid": false
+          },
+          "error_code": "MODEL_UNKNOWN_FAILURE"
+        },
+        "model_turns": 6,
+        "tool_calls": 5,
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0,
+          "planning_provider_requests": 0
+        },
+        "requests": 6,
+        "request_ids": [
+          "linkloom-contract-v3-20261016-000030",
+          "linkloom-contract-v3-20261016-000031",
+          "linkloom-contract-v3-20261016-000032",
+          "linkloom-contract-v3-20261016-000033",
+          "linkloom-contract-v3-20261016-000034",
+          "linkloom-contract-v3-20261016-000035"
+        ],
+        "known_cost_usd": 0.02723475,
+        "unknown_usage_reserved_usd": 0.079872,
+        "known_input_tokens": 29948,
+        "known_output_tokens": 602,
+        "known_thinking_tokens": 671
+      }
+    ],
+    "pair_identity": [
+      {
+        "category": "normal",
+        "same_public_case_sha256": true,
+        "same_plan": true,
+        "same_workspace": true,
+        "same_source_names": true,
+        "provider_confounded": false,
+        "query_only_enabled": false
+      },
+      {
+        "category": "partial",
+        "same_public_case_sha256": true,
+        "same_plan": true,
+        "same_workspace": true,
+        "same_source_names": true,
+        "provider_confounded": false,
+        "query_only_enabled": false
+      },
+      {
+        "category": "conflict",
+        "same_public_case_sha256": true,
+        "same_plan": true,
+        "same_workspace": true,
+        "same_source_names": true,
+        "provider_confounded": true,
+        "query_only_enabled": false
+      }
+    ],
+    "known_usage_usd": 0.22179075,
+    "unknown_usage_reserved_usd": 0.159744,
+    "budget_occupied_usd": 0.38153475,
+    "budget_max_usd": 4,
+    "strict_uncertain_count": 1,
+    "pending": 0,
+    "requests_replayed": 0,
+    "experiment_complete": true,
+    "stop_reason": "planned pairs completed; do not spend further after inconclusive Provider failure"
+  },
+  "dataset": {
+    "qualification": "FAIL",
+    "dev": {
+      "total": 10,
+      "passed": 2,
+      "failed": 5,
+      "not_applicable": 3
+    },
+    "final": {
+      "total": 10,
+      "passed": 0,
+      "failed": 8,
+      "not_applicable": 2
+    },
+    "final_execution_count": 1,
+    "external_blind": false,
+    "gold_visibility": "author_visible",
+    "gold_entered_provider": false
+  },
+  "regression": {
+    "same_nodes": 249,
+    "baseline": {
+      "pass": 209,
+      "fail": 40
+    },
+    "candidate_initial": {
+      "pass": 208,
+      "fail": 41
+    },
+    "initial_new_failure_fixed_targeted": true,
+    "full_rerun_after_last_production_repair": false,
+    "historical_missing_inputs": 38,
+    "baseline_assertion_failures": 2,
+    "cold_resume_checks_passed": 7,
+    "provider_identity_checks_passed_independent": 9,
+    "http_final_checks_passed": 1,
+    "http_illegal_tool_checks_passed": 1,
+    "pair_identity_checks_passed": 4,
+    "runner_tests_passed": 5,
+    "runner_tests_failed": 1,
+    "core_all_green": false,
+    "full_collection_errors": 4
+  },
+  "review": {
+    "production_cold_resume_blocker": "RESOLVED",
+    "pair_identity_P1": "RESOLVED",
+    "overall": "ACCEPTANCE_INCOMPLETE",
+    "record": "REVIEW.md"
+  },
+  "human_approval_required": [
+    "redesign and qualify a new evaluation set before a new frozen acceptance batch",
+    "additional real-provider budget or broader strategy comparison",
+    "PR/integration and default behavior changes"
+  ],
+  "production_file_sha256": {
+    "src/linkloom/cli.py": "c9425c663ade08cf960c57a9adad34f6ab96d4d086949a1edc512a1e2882181f",
+    "src/linkloom/evidence_identity.py": "54997ef3f3945740eb73846ee0c34206d941561205b9f1f913556b44c0a02a39",
+    "src/linkloom/loader.py": "429e96d79eef0aa66b209ed9036f4928c50b6cb245703c89f12ae92214e39ed1",
+    "src/linkloom/retrieval.py": "71020997cfc68f32481b054761769fa736f5db687877fa299a8510821333137d",
+    "src/linkloom/scanner.py": "0d839f021fd478e5ae49a55f6a83fbb65b54be6f2aed6aa14fe754453cb92a56",
+    "src/linkloom/schemas.py": "44d4813e8db787353f82c2a69a85630e3f0386ae8bff2edd21dde3e440f6496c",
+    "src/linkloom/text_output.py": "707cb3c5076d74c9f2b71010f61e68efce352d1bb4688b8bfe83e2ea04344813",
+    "src/linkloom/__init__.py": "ab4ff75bfa1596e995bf68d42976dbcdfe98b4f0e5b4346c250c4b27c94eff2e",
+    "src/linkloom/__main__.py": "0b02cf57b7be0f0d7e5be1883827c326b7f4531caa144f9b352c39023601b467",
+    "src/linkloom/agents/base.py": "e150620b84b3a151c6cdf7cdabf30f40c49b079b48cf726beaea2473d59650e9",
+    "src/linkloom/agents/claim_grounding.py": "20becac8980e4028d5fc35f1828c2da1a03d8f3bb5cc27eec743e126d0248126",
+    "src/linkloom/agents/coordinator.py": "c394052e65e2ff04e3bff8bc5c9da44f791577020539dddab537449c55eda7e6",
+    "src/linkloom/agents/curator_agent.py": "c90331e891e433af69f9f1b00e22a64acd2d7c3a68de4707c3fa820d6dbb2e16",
+    "src/linkloom/agents/memory_candidate.py": "2c87cb70458b100709745a1e28e737a05c7782aebb2dd1cb9c23bd8f764a238f",
+    "src/linkloom/agents/memory_candidate_persistence.py": "b83893cd66b16c6e0388aff381d6dac87b110148608f8560a7e535e72d52dbc3",
+    "src/linkloom/agents/model_adapter.py": "ade9e89051eb56345ac96ce3f9cc725e5e26bc00e279e4c43eaf2adeb3e0bc12",
+    "src/linkloom/agents/registry.py": "5428fd7d9ea4213cffa6c5f462fd505ce9867f8f724de5d28caf6fdc16c2867b",
+    "src/linkloom/agents/retrieval_agent.py": "08b0e167a8459b043c70448fc1a04c9fe2f3a98c1301683dfbf82b4ae69de5ba",
+    "src/linkloom/agents/reviewer_agent.py": "ff2a1226ed53e22c59a1172a94098b6080f550c91fd7265d564498606e165039",
+    "src/linkloom/agents/runtime_adapter.py": "f896c1e7d21a7ea5baaa53a542734b69f58bd1ccf81f85648d350076baf5fbf5",
+    "src/linkloom/agents/runtime_evidence.py": "5f39ecfe7e7327457d3ab78e3e08dd1060c3104b3928ab93f7152cafc97d188b",
+    "src/linkloom/agents/team_decision.py": "dbb351432a48b0369d00160cdecd9678d5f2c9b6d6f4288ba0f93d3fbf1da6af",
+    "src/linkloom/agents/__init__.py": "fed15c04f4ae73ce43fa9944e4a6dde6f5b75ca6886cf9f3ffe46dd6cbc63140",
+    "src/linkloom/context/assembler.py": "85b12c932b77c889e29ee2f58e4ab2bc8e5da1aca788b7112e39ca5e7ff5a8b9",
+    "src/linkloom/context/manifest.py": "f808d5ae0401e6c031ff58e5849ed891dd41c49d7f0a480944d8fb1233210fd3",
+    "src/linkloom/context/models.py": "b40af9172b0c9fa03642f11de3dcf7d1864074381eced5eb67860ec8e0b25dea",
+    "src/linkloom/context/__init__.py": "16d78f3f2bb58dd0aa93befb9865b797485a07110049378887ef132c702fec32",
+    "src/linkloom/decision_memory/demo.py": "d1907ec0e33eace7f67826f25fd6531a1587c838d0c4cf1f40bc157d3d594823",
+    "src/linkloom/decision_memory/materialization.py": "e591faad473062364ad3de723de8aa24cc349d9ceb3244e6b697abe6be7d9e8d",
+    "src/linkloom/decision_memory/models.py": "d0c324b66016daa9dbb79a1df54505fe0f887ce2c97a58425b548fc654df6021",
+    "src/linkloom/decision_memory/policy.py": "881523ce56782763004dcdeb98431b2ff13e3c1c12efb03d83636dba35db85db",
+    "src/linkloom/decision_memory/reconciliation.py": "a08e460222b5e1499e71f384bdb6b8a985290fef8713d61605d76fd567d6fa3d",
+    "src/linkloom/decision_memory/sources.py": "ba06a6d64e38b83c7f24cc8478bb0025325e117c9d00408a641f715807ed9ade",
+    "src/linkloom/decision_memory/store.py": "bf69b9478dc9e0d11c5aa6c0394c944eae6912f15b00ea43b9954323c3abc1f7",
+    "src/linkloom/decision_memory/tool.py": "5183f5d8c1eaf22eebce675a762981d4d0562c0c081cc2e30d75c48b7589535a",
+    "src/linkloom/decision_memory/__init__.py": "2582ebc00d22e76937a3f40afa65bbdb891ab918b3dcac66b6256d70137829d8",
+    "src/linkloom/evaluation/bad_cases.py": "123495c68f160cb505c0238ab0172595ff86db61763c0f1f6e842830ba4d89d5",
+    "src/linkloom/evaluation/dataset.py": "e8e2aca0c8f1e44a12c51524767e3cc8b6bb7a17a5863d52a97016c5619f1aba",
+    "src/linkloom/evaluation/experience.py": "a0f5d8e7ee3f6825564a92fe511dfb84bb314bc767c4d88ecf783bf536bd6ced",
+    "src/linkloom/evaluation/inference.py": "f71a53b4719056d6a0ca8e8a992efe1e9cc12c8eb5d79fca60a6fcd117153f37",
+    "src/linkloom/evaluation/isolation.py": "7deaa7ae916fbbbab7b8277eb87a2aecc9c3b1328fa0909701e3f56d745d8784",
+    "src/linkloom/evaluation/metrics.py": "4855cb4da51e866ee3baaca3747320eef86d78b6f3e8ae37d0fa472b68a1945c",
+    "src/linkloom/evaluation/models.py": "e948fe9fa72e4b8c1da0c3e98f10d30c806c33292311efdbf7ecf2b51abc8bb2",
+    "src/linkloom/evaluation/real_execution.py": "33f6ae33dfd6beca750c1defcc7a831bd04351d14a571772089518dc535eda59",
+    "src/linkloom/evaluation/real_provider.py": "fd29a503d55fa293d7479437179607d01890f12f3b7c5bfed07b4f6501e30370",
+    "src/linkloom/evaluation/reporting.py": "23d680bb4f3d90f354f2a5b2238b87d966825edb9b387bdddbba8971c9f3b362",
+    "src/linkloom/evaluation/runner.py": "35d78f3e50a51fdd616e676a0e01fefb11e492a12258fbd0abf855cf35bc8e6d",
+    "src/linkloom/evaluation/strategy.py": "99a9f2401946b99f74b9da786cf8c023d6add52344ef9a1833382c842a3c0527",
+    "src/linkloom/evaluation/strategy_oracle.py": "1616a5ef711a3c6fb8258fa5c9ebfd2b404610fc979651a2f14e5062df5aef4a",
+    "src/linkloom/evaluation/writeback_eval.py": "565c2be9a13efbec13098725771430d11858b9d12bf95bcdfc10af550a2ec65a",
+    "src/linkloom/evaluation/__init__.py": "09d4a2e5c8037f0d278ad2a372d6ae8ac0a3240b6ab0cd952889bbe4e599fce8",
+    "src/linkloom/experience/authority.py": "7318e1971303ad3c5b3f8138b2f2ba4855af98df9e9a84c9893e7375535edfdf",
+    "src/linkloom/experience/context.py": "5aeb434f8fa8765a2b772121784b8ae960ce23477e39d04330819fd1abd90dab",
+    "src/linkloom/experience/models.py": "e7d0e647d5e4d2d5f0dc8106b5694487b07cf30b2331fa04c7a632f1cad034b5",
+    "src/linkloom/experience/policy.py": "2ad792d30432b6d6cab489b2acdcd63060a7e4ab0bd07de78d6ce7fbf86fc2c9",
+    "src/linkloom/experience/reflection.py": "fb584448e0300f60d203e83e569e0c94fce2e3e51ae4b1822fe7e87509a91b3b",
+    "src/linkloom/experience/retrieval.py": "a7e792cb7a62b82fd97fb6cdd1c3f7521002554228bb3432086c53e90aed877c",
+    "src/linkloom/experience/store.py": "b0b436cf599ec6bb3b6e109c43d6ce7ea413a3259395b51b3209c316c32ff652",
+    "src/linkloom/experience/__init__.py": "560e2099bcde9879290bf1214e746f557cf14c71867c0442c5a347d818726056",
+    "src/linkloom/experiments/strategy_admission.py": "046b2036332292e81de664503e2cc45d6c868005a986e6f90126a68889a331d9",
+    "src/linkloom/experiments/__init__.py": "d2df4d907b2c2b3473794f9e44bb0338cc73e1b5fc7d817eaf95ed568a9053a4",
+    "src/linkloom/indexing/bm25.py": "ca0411e275d7dfea936964d1638ae836f090b7857b254c7b86ad4015ee6f30e5",
+    "src/linkloom/indexing/coordinator.py": "7b564514a1003845d87cebd4212e05958efaed3c523f0175968790074401f504",
+    "src/linkloom/indexing/directory.py": "c667903da807510230d6c38005e47cb11e34bbad295acf057d811864b7f7cf04",
+    "src/linkloom/indexing/models.py": "dc32900a7f613d343a772907c9b227912e66d9330f4e3e1aeb5fa9f534b8dcd3",
+    "src/linkloom/indexing/reconcile.py": "2d93e6d15d1e4ad201d604693de72a6460b8a48ed3c6214c8f52866bf7995874",
+    "src/linkloom/indexing/vector.py": "047f63e6f4ea44a5e2da1763845f35e6e12ea24ca9cdfe3977c713ae3ba008d5",
+    "src/linkloom/indexing/__init__.py": "697aef9d37e424b3e3f9c62d2128560279c6e68f077c8186a0b406f4f15dd375",
+    "src/linkloom/memory/lifecycle.py": "e964092641315743fb781ba6873f9a1bebecc63165485f5652e33622118fbde4",
+    "src/linkloom/memory/models.py": "5d4782b9775ca9643aeb6040bb8b6671d5e02239b59f3492796487b0a8e8ea89",
+    "src/linkloom/memory/policy.py": "daca68dc872588fb2508950e9b88834e34663cb982b01b1814c7176a4c186961",
+    "src/linkloom/memory/redaction.py": "bddfda352351bddf909f6cb350b919bdd7361e66889aa96ab35b358569520135",
+    "src/linkloom/memory/retriever.py": "a7412eef3ca2e8cc783e8b62057281ca0629d1370c6ec8173bcb44765847fc11",
+    "src/linkloom/memory/store.py": "d18ef37c413292127e4d289a7a12223982b3e5e469ae110b42d8d8c132642a04",
+    "src/linkloom/memory/__init__.py": "86bce2b8c2c03444d60544a727b296642b76e98ecc1682d01b8808118e702fe7",
+    "src/linkloom/mutations/apply.py": "cc129842dbf1ad087ab06cec4aa5a7fcef2ace80aec5feb2c3496d8f189567c4",
+    "src/linkloom/mutations/audit.py": "c45db9440383be17c2d07e54f4dcaeac8676cfd39eb55ef002df7907bc288cb7",
+    "src/linkloom/mutations/backup.py": "3bd19b0d8c9e014cd14340f7f4678a3e38fa74c3fc63af5679883cf7e768a3b2",
+    "src/linkloom/mutations/e2e.py": "d448c498a3faab91fead825be1bcae6c916b2eb12cd83f4383e1179bd6bf783e",
+    "src/linkloom/mutations/models.py": "e7665df3ff2abe9c687b66c1a70d827d180ef739d4568d5bf82a811833d68f65",
+    "src/linkloom/mutations/operations.py": "3d6e15e1fce5e0dbac53ff34638f484e984e8a4405d6290723e30bc0564167bc",
+    "src/linkloom/mutations/permission.py": "46b340357e3561263879d9b0a1c13e4a0068dd21da49262eb34cfdd72dc7be89",
+    "src/linkloom/mutations/preview.py": "ad19bb1c1bf1b9447beed260cf14611eb1dbcc3c13f5ae25aec8243cc432624d",
+    "src/linkloom/mutations/rollback.py": "2bb04df3a251580204f34108dd6c17a77c97e7bbd8cbc81fc151aa8263cb7d00",
+    "src/linkloom/mutations/runtime.py": "471a77ed1b75e433fb1918707c55167d23ab4a78d2e7c214683b020c691e888e",
+    "src/linkloom/mutations/__init__.py": "3ee77431b5ab8352cd3a1ad92305334e3407afe684c6a761d3dd7b6dcb6f7dd6",
+    "src/linkloom/observability/events.py": "06807c77dba88cedf4bb8eb4839706f7237a59f16c6a457975c71f9eeffba50b",
+    "src/linkloom/observability/reader.py": "22e723147302dac02a5b1af8029369da769e8c474b05eedafec65cea5a6e0f52",
+    "src/linkloom/observability/redaction.py": "21867ca0d5a588665b6049c016fe5650c1cfad2ca1953c0d49622c2957fb459b",
+    "src/linkloom/observability/sinks.py": "012753f25be18c873b11e6bf59e06110c4d1b45543aa3882e72d46512e417d8e",
+    "src/linkloom/observability/summary.py": "eeaeb71c49baaca5e18526399f305bf00de357144c07c17608fe76ed8fc21577",
+    "src/linkloom/observability/__init__.py": "346be5f4c516f0595eb6646097a46c64de13c1037476fd38b6b5fb53b28983fb",
+    "src/linkloom/retrieval_v2/benchmark.py": "4347886ee11842b1da85cb64f9b8207066d1d9b3d8f4a92ef26be4cc8159f954",
+    "src/linkloom/retrieval_v2/characterization.py": "f85c0f1039e0a51a295bb8f2c9da19e9b9262921be4b009e0b58b2d0f639e21a",
+    "src/linkloom/retrieval_v2/downstream_comparison.py": "432c4a6dd488fb2a19728d3555a72af3433853b3859bd7928ecef70831b995b0",
+    "src/linkloom/retrieval_v2/metrics.py": "80e9afb95fde8e74955d6fc820d9e57343864273993b508a29fb7996bb9a1c61",
+    "src/linkloom/retrieval_v2/models.py": "64c8faceafbad09d4c22a3d0d10058bbd5321832f3b225754a3d80a2bf4d62c5",
+    "src/linkloom/retrieval_v2/retrievers.py": "2d14b95d5d8a82d09fed928e49d069012b3507a7c7538dd42a68a5e0420f3904",
+    "src/linkloom/retrieval_v2/runtime_backend.py": "b60d1235d29c9e987207d3ec1c3f8934f1a98e1184ddf74d3046c39cc9e914c7",
+    "src/linkloom/retrieval_v2/subgoal_query_strategy.py": "3ab5849e395ff3b2717858466981fb60d6e57a37ff60b17610ac986bf20bdbff",
+    "src/linkloom/retrieval_v2/__init__.py": "74f049c5bce797a4615068fa1dbd3fbd5694322c16aa1654f42f731adb791c1d",
+    "src/linkloom/runtime/adaptive_planning.py": "5b1bdecb82cae8b7dd3883baf75e74d02e3ca5a7288bf4fc199150e1480b7119",
+    "src/linkloom/runtime/artifacts.py": "81ca873fb47899e82bab4c365ab42af62f4d9a5d945ca32efe69bed59b85f5ba",
+    "src/linkloom/runtime/checkpoint.py": "eb5e3cd03c6915e075cd7f4a6223c4e14aa239e1aa71d0479c5507af8cf1aac4",
+    "src/linkloom/runtime/errors.py": "1feffda44a890931fcd3b0434216ee284b228396fd019462995b6aaaa9a52f42",
+    "src/linkloom/runtime/graph.py": "848ff55e3a91e7c909974c04f560f92b5e6a61d0a0f75ab75c8b47e47253b9d0",
+    "src/linkloom/runtime/models.py": "cad4d1b3544d5c95baf34d831b99c86d1adb1f947db31db48d9e3609c83b8c22",
+    "src/linkloom/runtime/model_loop.py": "647cb0d47521a609f71a5dbc85537c6ec31c6582cfb8b080a714ceba5dcde31f",
+    "src/linkloom/runtime/policy.py": "97f7db94b59928f7afb58225929657304fed4872538e564fef418c33adc0b90d",
+    "src/linkloom/runtime/progress.py": "82aa78bffdb004daf3e10713b78012da189c74a4752791da34286f5ec6a7fb58",
+    "src/linkloom/runtime/recovery.py": "72252ac3f604dd5d37df0cb773153ff5c58c4fb45a8542cf0fc13ca1e6e09b97",
+    "src/linkloom/runtime/recovery_policy.py": "0b790aa2b4562519a7df213bbdadd9761975a6c5bf07ca7f8975dedf6b6a20e0",
+    "src/linkloom/runtime/task_plan.py": "9da2e36be80a6510f204a3fc74131270e4e6cafec261b455bd2b9a4f64668e1b",
+    "src/linkloom/runtime/team_decision_planner.py": "7e2709894a4c304821312628cc8b0b3aedc8306fb5e0d925d4815eb09fe8f9ea",
+    "src/linkloom/runtime/__init__.py": "2f7b5a585619baaf6244290d1fceb8fff5a735c012782ad38d20c0bd4a8955a2",
+    "src/linkloom/semantic_ingestion/artifacts.py": "3c3f13cc0aba373ad5f06de83955a7cb84ac1bf96ef7d5364d114a4b9637b0a7",
+    "src/linkloom/semantic_ingestion/candidate_models.py": "a0e00461e72bc6b23001a798d3c036b953f47bfae81b43c4ed0e24f0bc94314c",
+    "src/linkloom/semantic_ingestion/candidate_persistence.py": "440ca959eda6b153bf518a0f99cb9410d804c4b7b2e8aaaba40fd2e279d5306d",
+    "src/linkloom/semantic_ingestion/evidence.py": "b471df4bf14d1cfb1608ec195207d841c7ac3a3eb5d05365ea8e6acdd18d5f2f",
+    "src/linkloom/semantic_ingestion/extraction.py": "6e6ca5215472022c80fbb52ddb3a5aced659342e36af97bf88e249c428d5ec2b",
+    "src/linkloom/semantic_ingestion/materializable.py": "3e004c28fce9e656266c8a3f9519fadeafd65671fed11acbab02ba72587c2d41",
+    "src/linkloom/semantic_ingestion/materialization.py": "a27d0a9a714f106561532dda16027e4934440f65c92038beee6f85acf3681940",
+    "src/linkloom/semantic_ingestion/metrics.py": "cfca1718cd2d422ab122699d4a12a07913e6df9eaa96d8e768dde1a24d8194b2",
+    "src/linkloom/semantic_ingestion/pipeline.py": "41a962ea19e5a84c01cc296365c5f382f111d3a3cb9ac8b04de6efb65e41e7f5",
+    "src/linkloom/semantic_ingestion/relations.py": "f61d3e2cdbf535bf6888273c20777eb1df2898d9ef458ec4e1165b19d3c58efd",
+    "src/linkloom/semantic_ingestion/timestamped_text.py": "bd6683812d5a76f5c8fe9a482baefcb82e669a959eeffd6581b9d228e2b6ae45",
+    "src/linkloom/semantic_ingestion/validation.py": "c61e7712ec60f7f88d7fe041c9637eaa3e0866f1e869dac946fb001ff62f832b",
+    "src/linkloom/semantic_ingestion/__init__.py": "a46da2b584ad1941031a48e4ff2f3a1bf9e74d2c276fd50ad37c3ab76680060b",
+    "src/linkloom/services/ask.py": "132c6cf1c9edd146612a936bcc103923544ea2712d8a2394258c257465d98f25",
+    "src/linkloom/services/connect.py": "eae215b74fc772af4b4be9f4dc62a2b0456ffe8099f9641611e2a6c6beb4d357",
+    "src/linkloom/services/__init__.py": "039f993856132960a0c66e7f96929c0793fb7b5ff9a19d59ed177310a2f6f821",
+    "src/linkloom/strategy/authority.py": "3b7a8eb96d387ed2173624cdf9fb610d1e113468c8eab916b5d01497b3d5126a",
+    "src/linkloom/strategy/context.py": "976f9c3be38997b784202db088b6fa5424f80422974f4c980d8aef6a65ad5afd",
+    "src/linkloom/strategy/generation.py": "af0ce8662da10ac953687ea75373d46cf25597c254e4e0790028fb2395026345",
+    "src/linkloom/strategy/models.py": "8024b2ae80caf7312040d3f3d090a53c8d3ad6f34ad91e260698b44e4f36ae69",
+    "src/linkloom/strategy/policy.py": "9c21a8218c6f9057f2598f89b7db5e16bbfd0e9fd1f1328c0c7aa52aca80f8d5",
+    "src/linkloom/strategy/retrieval.py": "7d245166e060f77e87c9306a9debbaf6037da913700e1c0d1e8f579f2e60f6e1",
+    "src/linkloom/strategy/store.py": "b7a0ef0a1c7c00154f01ee27739046929b829c3e6fc2e2da25974a958fe4966d",
+    "src/linkloom/strategy/__init__.py": "00f5f012b0b4d3a41c0138159f054da142a51f875c6c380c7408fcd2eae1a1cb",
+    "src/linkloom/tools/contracts.py": "1d755d6de4d6dfff1ee3de083a01153161909ac8ba00295a6ba4951f0c39a002",
+    "src/linkloom/tools/ledger.py": "aabd1ffbcb834478085de8968381b7594169d78caab119b16f57f06224d25288",
+    "src/linkloom/tools/read_tools.py": "11ccb88798a72cb1aa03607b657763cc8f7f7f2bb7836d9805d0cf31a8c4d648",
+    "src/linkloom/tools/recovery.py": "b525c1780da5e749c188558f6a08170f3966bc44d4c1169bf3bf940488ad6eab",
+    "src/linkloom/tools/registry.py": "1fb32523b8c8a171bae0c61fa66dc4b82721a748d6317a55ac0bb16e63cc40fb",
+    "src/linkloom/tools/runtime.py": "ff559c39f34eedc171d679256cba83b1d91d97741c06e37cc51240724add97ce",
+    "src/linkloom/tools/tool_policy.py": "0dbf2b53c41e58289e1820ac1c967658105392364abd9e258d4959a5dd677641",
+    "src/linkloom/tools/__init__.py": "e0527648f23d34b619f25fe80cc0e0bc11e1dfe8572091c9e07b241e97d64839",
+    "src/linkloom/ui/backend.py": "2f8b81f3b884eb08be7b828ea8b42445e7ceda88032477f32119bc6ffd9d17ef",
+    "src/linkloom/ui/demo.py": "2cc83d1edc108459aa3aef7932d910ad7d5dbba36f040df438fd84f2967a40f5",
+    "src/linkloom/ui/feedback_memory.py": "29af244d79b9cfca29d310831712277e6ae582759a8daea691ad8494baca2f8c",
+    "src/linkloom/ui/investigation.py": "207b5782adb12a1699e3a1b4367aad533ac30ca9b784c148c84bb392ee1f0c68",
+    "src/linkloom/ui/product.py": "3f5f18bf2159216ef9ba6917372ab533c089bbc65c7a4b40894575dc55ffe7d7",
+    "src/linkloom/ui/projection.py": "61830ef053b3c4b3a1f478c4ff4b7a15b5eca37008ed3f5deeb0064f93f48e36",
+    "src/linkloom/ui/scope_discovery.py": "688d3f7e8700fca5b471f409396c5756dc4fc24d6bcba4565ae6c8d19841120e",
+    "src/linkloom/ui/server.py": "b0728c87220e7a1faaad877566417a226659506ee3c1bb725fc949d4fffe2f90",
+    "src/linkloom/ui/unified_ask.py": "bbaed3c2c8a12035101eacb9af6e3a395d2160915be841dc096121d9dc3ffe31",
+    "src/linkloom/ui/__init__.py": "5a3a54470219c6a65428ae2b050d230644c6f018a663beb9a7ae54542b681419",
+    "src/linkloom/ui/__main__.py": "857e7a651c55d57431ed2c2b96d72cb2f7266df0d9ba3ebaba5b6a8634e05cd1",
+    "src/linkloom/evaluation/trajectory/capabilities.py": "f2928db2a3e60f8411b2c940436041b7afb370f9892c8c8eeda4e37bf700b785",
+    "src/linkloom/evaluation/trajectory/dataset.py": "f1b002ed02948569ef6b9e2f018e5ffc9870380e7302c5b781e78f6bc9907699",
+    "src/linkloom/evaluation/trajectory/fixture.py": "263a44795be2f7c59daf8b65bf3b8d712ba81681086322b77f45524c61392a62",
+    "src/linkloom/evaluation/trajectory/grader.py": "124e6e3c9f7e321ecee1e4ce1eb52e1b0c86541e488e22995a19bc8ce4d1f728",
+    "src/linkloom/evaluation/trajectory/harness.py": "61f248fe10b6a16c9c83d713dd7992e904c8b63c4825fce2d863668100eae90a",
+    "src/linkloom/evaluation/trajectory/metrics.py": "fc0f40adcfaf2127cf073892a6ca03ff9f579f45d601bb144530ce4d1d0faaf1",
+    "src/linkloom/evaluation/trajectory/models.py": "d44dd3a6f6aafe3cd8cce99d4d07b38c1899360da45612544786f026e7d4d607",
+    "src/linkloom/evaluation/trajectory/reporting.py": "891cb15e18d18f3e717a5a07dda092142b979bbdc05212dd307137667d57bbd2",
+    "src/linkloom/evaluation/trajectory/runner.py": "cbfe0e32a0d1212d121b3807d3a4dcdb38ae83de56ad21ce6b573b1fecc28c3b",
+    "src/linkloom/evaluation/trajectory/__init__.py": "f4af660e1dc1f856da9ec5e80eaaa36dedc69404fda81a78e70c6ecf8e4cb130",
+    "src/linkloom/evaluation/trajectory/__main__.py": "e5d5223ca285f176249467f24847e6ab21466f9055202e8f3c6dadd8bf2e4cb9",
+    "src/linkloom/agents/providers/deepseek_api.py": "b3655a06ae60098cf09c298f14fc598f182103f7f44a3b2792740056078b2183",
+    "src/linkloom/agents/providers/failure_diagnostics.py": "a006709b96785003b8b64a895457a13f81e243973a9e7ad810f1d4a6c572901e",
+    "src/linkloom/agents/providers/gemini_api.py": "b198eea1075d69d123c56397492f1db8fba99793359edc97fe5556561143241d",
+    "src/linkloom/agents/providers/gemini_diagnostics.py": "b041683c8a90b4efb3588a0248e1757549b0913239adc9bb15fc4a27e6c69708",
+    "src/linkloom/agents/providers/retry_policy.py": "5a9b4cdc18c42720dc8948db5ac46f57f66950579c3b1a20dfb931ac0494282a",
+    "src/linkloom/agents/providers/__init__.py": "3efaca3d15dcf28c2fa64ae4dd599ddef9642f1697b686d849fe748027cbd458"
+  },
+  "evidence_sha256": {
+    "AUTOPSY.json": "19af48c7dea9799f9463db51ab3d41c695fd6d6610fd5bc44b9ffb311ba443d2",
+    "BROWSER.json": "42ece387b2fb38bb1f12f8ad49727fe778c2fdcb6a6a5c7718273589a494a785",
+    "DATA_EVIDENCE.json": "399ba69442628c43ae956dd05bbdcacf9dfe97f79e94cb5373694a602f63c876",
+    "DATA_QUALIFICATION.md": "558d55cee5bab54e9f60b47a97a9b3080bbfc735f8a4bac1e82f847a7e29230d",
+    "FAILURE_AUTOPSY.md": "9b78b1ac9b795ff7eca08586d2d6c3c2a0ac6d636483bc5d11c6e873b14ae91b",
+    "FIXES.md": "7da7cf61f3332566eb766665727494fa3444d705ac40d63ea10b674e3b34a20f",
+    "implementation_plan.md": "5194146902385bf8356f44b0217a15a5d3b9b87dbba0cbea4834f0acc0da4079",
+    "LIVE_COMPARISON.md": "99e43b436ff1baca83e3eb91c8698bd411941b3900750e999c2ebaa5d18c9a44",
+    "LIVE_EVIDENCE.json": "1b0d24a72a5e5dfaa352d7a6f1f9b4826ca490366b9d633d59b157d7cf2a6c13",
+    "PRODUCT_VERIFICATION.json": "74a8c5283fa24afd5d934224bea7b49337b8a7ec26a534ac23750fa0caec5fcc",
+    "REGRESSION.json": "aa81f834996222da34babef68f44da789fc2d56f4a1ada9eba5db9ac461a578e",
+    "REGRESSION.md": "77c774e7d30d44a983f5e5cf28f539d1efd4d302d6a38a66fb2f78b73c608627",
+    "REVIEW.md": "cab455e9f1c8fa06f7da10f90d0deca3f2622bb9e27903c8bfca048a5958e53e",
+    "SPEC.md": "6325891c86a48a40dbf18f1d6b67eeea6a2e6305248839445448614d0d355eb7",
+    "V2_DATA_QUALIFICATION.json": "f629c114a785f52fad51373c447f2116ce89461b19baa0069336b80eb26ceab4"
+  }
+}
