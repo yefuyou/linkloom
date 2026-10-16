@@ -529,10 +529,10 @@
       <h2 class="${complete ? "ask-answer-value" : "ask-answer-headline"}">${title}</h2>
       <p>${complete ? t("The relationship is supported by verified source reads and checked by Reviewer.", "根据已读取并核验的原始来源，可以确认该关系，结果已经过 Reviewer 核验。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
       <p class="hint">${t("This is source investigation, not a formally approved business decision.", "这是来源关系调查结果，不代表已经通过正式业务审批。")}</p>
-      <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("hop investigation", "跳调查")}</span><span>${result.metrics?.model_turns || 0} ${t("model turns", "轮模型交互")}</span></div>
+      <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("hop investigation", "跳调查")}</span><span>${result.metrics?.model_turns || 0} ${t("model turns", "轮模型交互")}</span>${result.route?.planning?.origin === "model" ? `<span>${t("Model plan validated", "模型计划已校验")} · ${result.metrics?.planning_provider_requests || 0} ${t("planning calls", "次规划调用")}</span>` : ""}</div>
       ${steps}<section class="ask-core-evidence"><h2>${t("Sources supporting the verified facts or conflict", "支持已核实关系或冲突的来源")}</h2>${coreEvidence.map((item, index) => askEvidence(item, index, locale)).join("")}</section>
       ${otherEvidence.length ? `<details><summary>${t("Other sources read; no additional relationship established", "其他已读取材料，未据此确认额外关系")} (${otherEvidence.length})</summary>${otherEvidence.map((item, index) => askEvidence(item, coreEvidence.length + index, locale)).join("")}</details>` : ""}
-      <details class="ask-technical"><summary>${t("Full investigation: plan, dependencies and tool calls", "查看完整调查过程：计划、依赖与工具记录")}</summary><pre>${escapeHtml(JSON.stringify({plan: source.plan, trace: source.trace, metrics: result.metrics, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      <details class="ask-technical"><summary>${t("Full investigation: plan, dependencies and tool calls", "查看完整调查过程：计划、依赖与工具记录")}</summary><pre>${escapeHtml(JSON.stringify({planning: result.route?.planning, plan: source.plan, trace: source.trace, metrics: result.metrics, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
   }
 
   async function pollAsk(runId, workspaceId, viewToken) {

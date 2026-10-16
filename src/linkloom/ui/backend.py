@@ -187,9 +187,9 @@ class RuntimeRunBackend:
         try:
             state = self.engine.checkpointer.get_latest(job.thread_id)
         except CheckpointError:
-            if status.status not in {"accepted", "running"}:
+            if status.status not in {"accepted", "running", "failed"}:
                 raise
-            state = None  # No checkpoint exists before the background worker starts.
+            state = None  # Also possible when model plan admission fails before execution.
         ledger = state.tool_ledger if state is not None else []
         artifact = self._safe_result_artifact(status)
         try:
@@ -219,6 +219,15 @@ class RuntimeRunBackend:
                 tool_ledger=ledger,
             )
         snapshot["reviewer"] = project_reviewer(artifact)
+        if state is not None and state.request_ref:
+            request = json.loads((self.engine.checkpoint_dir / state.request_ref).read_text(encoding="utf-8"))
+            if request.get("task_plan") is not None:
+                snapshot["task_plan"] = request["task_plan"]
+                snapshot["planning"] = {
+                    "origin": "model" if request.get("planning_mode") == "model" else "rules",
+                    "validated": True,
+                    "provider_requests": self.max_provider_requests - request["max_provider_requests"],
+                }
         snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
         snapshot["run"]["id"] = job.ui_run_id
         return snapshot

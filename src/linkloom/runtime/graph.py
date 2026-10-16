@@ -168,6 +168,7 @@ class RuntimeEngine:
         temporal_decision_lookup: Any | None = None,
         temporal_claim_validator: Any | None = None,
         decision_memory_enabled: bool = True,
+        model_plan_profile: str | None = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -203,6 +204,10 @@ class RuntimeEngine:
         self.fail_at = fail_at
         self.fail_once = fail_once
         self.model = model
+        from linkloom.runtime.adaptive_planning import SOURCE_RELATION_PROFILE
+        if model_plan_profile not in (None, SOURCE_RELATION_PROFILE):
+            raise ValidationError("Unsupported model plan profile.")
+        self.model_plan_profile = model_plan_profile
         self._decision_memory_store = decision_memory_store
         self._decision_memory_workspace_id = decision_memory_workspace_id
         self._temporal_decision_lookup = temporal_decision_lookup
@@ -532,18 +537,26 @@ class RuntimeEngine:
         if request.planning_mode == "model" and request.task_plan is None:
             try:
                 from linkloom.runtime.task_plan import validate_model_proposed_plan
+                from linkloom.runtime.adaptive_planning import validate_source_relation_plan
+
+                validate_plan = (validate_source_relation_plan if self.model_plan_profile
+                                 else validate_model_proposed_plan)
+                profile_args = {"profile": self.model_plan_profile} if self.model_plan_profile else {}
 
                 propose = getattr(self.model, "propose_task_plan", None)
                 if not callable(propose):
                     raise ValidationError("The configured model has no plan proposal capability.")
-                raw_plan = propose(request.query)
+                raw_plan = propose(request.query, **profile_args)
                 proposal_requests = 1
                 try:
-                    plan = validate_model_proposed_plan(
+                    plan = validate_plan(
                         raw_plan, user_query=request.query,
                         max_steps=request.max_steps,
                     )
                 except ValidationError as plan_error:
+                    if self.model_plan_profile and isinstance(raw_plan, dict) and raw_plan.get("subgoals") == []:
+                        raise ValidationError("The model declined the unsupported relation question.",
+                                              details={"reason": "model_declined"}) from plan_error
                     # A rejected JSON object can be repaired once only after
                     # reserving the proposal, repair, complete read path, and
                     # Final. The model receives structured validator feedback;
@@ -579,9 +592,9 @@ class RuntimeEngine:
                         "max_subgoals": max_repair_subgoals,
                         "proposal_provider_requests": 2,
                     })
-                    revised = repair(request.query, raw_plan, validation_feedback)
+                    revised = repair(request.query, raw_plan, validation_feedback, **profile_args)
                     proposal_requests = 2
-                    plan = validate_model_proposed_plan(
+                    plan = validate_plan(
                         revised, user_query=request.query,
                         max_steps=request.max_steps,
                     )
@@ -616,6 +629,7 @@ class RuntimeEngine:
                 )
                 code = (
                     "PLAN_REPAIR_BUDGET_EXHAUSTED" if repair_budget_stop
+                    else "MODEL_PLAN_DECLINED" if isinstance(exc, ValidationError) and exc.details.get("reason") == "model_declined"
                     else "MODEL_PLAN_REJECTED" if isinstance(exc, ValidationError)
                     else "MODEL_PLAN_OUTCOME_UNKNOWN" if isinstance(exc, ProviderOutcomeUnknownError)
                     else "MODEL_PLAN_PROVIDER_ERROR"
@@ -624,7 +638,8 @@ class RuntimeEngine:
                     code=code, category=("budget" if repair_budget_stop else
                                          "provider" if isinstance(exc, ProviderOutcomeUnknownError) else "agent"),
                     message="The model plan could not be safely accepted.",
-                    details={"reason": str(exc) if isinstance(exc, ValidationError)
+                    details={"outcome": "unknown_provider_outcome" if isinstance(exc, ProviderOutcomeUnknownError) else "known_failure",
+                             "reason": str(exc) if isinstance(exc, ValidationError)
                              else "provider_request_result_uncertain"
                              if isinstance(exc, ProviderOutcomeUnknownError)
                              else type(exc).__name__},

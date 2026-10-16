@@ -66,6 +66,10 @@ def main() -> int:
         help="Explicitly enable bounded read-only temporal Agent runs using the configured Gemini model.",
     )
     parser.add_argument(
+        "--adaptive-planning", action="store_true",
+        help="Opt in to bounded model planning for unfamiliar source-relation questions (default off).",
+    )
+    parser.add_argument(
         "--model",
         default=os.environ.get("LINKLOOM_SEMANTIC_MODEL", GEMINI_38_FLASH_MODEL_ID),
         help="Gemini model for explicitly enabled semantic extraction and temporal Agent runs.",
@@ -85,6 +89,8 @@ def main() -> int:
         )
     if args.allow_temporal_agent and not args.allow_external_provider:
         parser.error("--allow-temporal-agent requires --allow-external-provider")
+    if args.adaptive_planning and not args.allow_temporal_agent:
+        parser.error("--adaptive-planning requires --allow-temporal-agent")
 
     extractor = None
     sdk_client = None
@@ -93,7 +99,9 @@ def main() -> int:
         if not api_key:
             parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
         try:
-            sdk_client = build_gemini_sdk_client(api_key)
+            sdk_client = build_gemini_sdk_client(api_key, http_options_kwargs={
+                "timeout": 130000, "retry_options": {"attempts": 1},
+            })
             provider = GeminiProviderAdapter(
                 GeminiSDKClientBridge(sdk_client),
                 model_id=args.model,
@@ -132,6 +140,7 @@ def main() -> int:
             ),
             run_mode="GEMINI_38_FLASH_EXPLICIT",
             max_steps=8,
+            adaptive_planning=args.adaptive_planning,
         )
         if args.allow_temporal_agent else None
     )

@@ -73,6 +73,15 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### Adaptive source-relation planning — 2026-10-16
+
+The user-authorized isolated Linkloom B work adds optional model translation of
+unfamiliar language into the two existing source-relation paths, with stricter
+product admission, exact scope and the existing Runtime/Grounding/Reviewer.
+The [SPEC](requirements/adaptive-planning/SPEC.md) defines the synthetic split
+evaluation and independently accounted live Gemini limits. The feature defaults
+off; integration and enablement depend on the measured delivery evidence.
+
 ### Agent Recovery and Evidence Coverage — 2026-10-15
 
 The authorized follow-up improves bounded partial completion and same-file

@@ -15,6 +15,7 @@ from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
 from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
+from linkloom.runtime.adaptive_planning import SOURCE_RELATION_PROFILE, validate_source_relation_plan
 from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, TYPED_CLAIM_RELATIONS
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
@@ -47,12 +48,16 @@ class ProductInvestigationService:
         max_steps: int = 8,
         external_provider: bool = True,
         relation_max_steps: int = 12,
+        adaptive_planning: bool = False,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.run_mode = run_mode
         self.max_steps = max_steps
         self.external_provider = external_provider
+        if not isinstance(adaptive_planning, bool):
+            raise ValueError("adaptive_planning must be boolean.")
+        self.adaptive_planning = adaptive_planning
         if isinstance(relation_max_steps, bool) or not isinstance(relation_max_steps, int) or not 1 <= relation_max_steps <= 12:
             raise ValueError("Source investigation allows 1–12 model turns.")
         self.relation_max_steps = relation_max_steps
@@ -65,6 +70,7 @@ class ProductInvestigationService:
             "external_provider": self.external_provider,
             "run_mode": self.run_mode,
             "relation_max_model_turns": self.relation_max_steps,
+            "adaptive_planning": self.adaptive_planning,
             "message": (
                 "Agent model is not configured. Start the explicit offline demo to inspect a synthetic run."
                 if self.model_factory is None
@@ -76,6 +82,7 @@ class ProductInvestigationService:
         self, query: str, workspace_id: str, *,
         temporal_scope: tuple[str, str, str] | None = None,
         task_plan: TaskPlan | None = None,
+        adaptive: bool = False,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
@@ -85,11 +92,14 @@ class ProductInvestigationService:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
         if not isinstance(workspace_id, str) or not workspace_id.strip():
             raise ProductApplicationError("WORKSPACE_REQUIRED", "Select a workspace first.", status=409)
+        if adaptive and (not self.adaptive_planning or temporal_scope is not None or task_plan is not None):
+            raise ProductApplicationError("INVALID_RELATION_PLAN", "Adaptive planning is not enabled for this source request.")
         if task_plan is not None:
             expected = plan_relation_investigation(query)
             if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
                 raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
-        max_steps = self.relation_max_steps if task_plan is not None else self.max_steps
+        source_run = task_plan is not None or adaptive
+        max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
@@ -164,12 +174,13 @@ class ProductInvestigationService:
                 checkpoint_dir=root / "runtime",
                 trace_dir=root / "traces",
                 model=self.model_factory(query.strip()),
-                decision_memory_store=self.product_app.store if task_plan is None else None,
-                decision_memory_enabled=task_plan is None,
-                memory_enabled=task_plan is None,
+                decision_memory_store=self.product_app.store if not source_run else None,
+                decision_memory_enabled=not source_run,
+                memory_enabled=not source_run,
                 decision_memory_workspace_id=workspace_id,
                 temporal_decision_lookup=temporal_lookup,
                 temporal_claim_validator=temporal_validator,
+                model_plan_profile=SOURCE_RELATION_PROFILE if adaptive else None,
             )
             backend = RuntimeRunBackend(
                 engine=engine,
@@ -177,13 +188,13 @@ class ProductInvestigationService:
                     display_name=str(workspace["name"]), document_count=len(sources)
                 ),
                 max_steps=max_steps,
-                max_provider_requests=max_steps,
+                max_provider_requests=max_steps + (2 if adaptive else 0),
                 final_protocol=("claim-proposal/v1" if temporal_scope is not None
                                 else "team-decision-result/v1"),
                 # The current TaskPlan relation vocabulary covers people and
                 # projects, not approved business-decision slots. The model
                 # still chooses read-only tools; no incompatible plan is sent.
-                planning_mode="template" if temporal_scope is not None or task_plan is not None else None,
+                planning_mode="model" if adaptive else "template" if temporal_scope is not None or task_plan is not None else None,
             )
             snapshot = backend.start(query.strip(), task_plan=task_plan.to_dict() if task_plan else None)
         except Exception:
@@ -210,7 +221,7 @@ class ProductInvestigationService:
         try:
             state = job.backend.engine.checkpointer.get_latest(snapshot["run"]["thread_id"])
         except CheckpointError:
-            if snapshot["kind"] != "running":
+            if snapshot["kind"] not in {"running", "error"}:
                 raise
             state = None  # The worker may not have created its first checkpoint yet.
         with self.product_app._store_lock:
@@ -249,7 +260,15 @@ class ProductInvestigationService:
             "search_count": sum(item.tool_id == "search_notes" for item in ledger),
             "read_count": sum(item.tool_id == "read_verified_note" for item in ledger),
             "tool_errors": sum(item.status == "failed" for item in ledger),
+            "planning_provider_requests": snapshot.get("planning", {}).get("provider_requests",
+                None if (snapshot.get("error") or {}).get("code", "").startswith("MODEL_PLAN_") else 0),
         }
+        if snapshot.get("planning"):
+            if snapshot["planning"]["origin"] == "model":
+                # The persisted Runtime plan already passed strict admission.
+                task_plan = validate_source_relation_plan(snapshot["task_plan"],
+                    user_query=snapshot["query"], max_steps=max_steps or self.relation_max_steps)
+            snapshot["planning"]["plan"] = task_plan.to_dict() if task_plan else snapshot.get("task_plan")
         snapshot["trace"] = [
             {
                 "sequence": item.sequence,

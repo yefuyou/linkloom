@@ -14,6 +14,7 @@ from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
+from linkloom.runtime.adaptive_planning import source_scope_violation
 
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
@@ -165,7 +166,7 @@ class UnifiedAskService:
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
                 plan = plan_relation_investigation(run.query)
-                if plan is not None or _RELATION_QUESTION.search(run.query):
+                if plan is not None:
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
                 resolver, memory = self.app.relation_resolver, None
@@ -181,11 +182,19 @@ class UnifiedAskService:
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                 result["discovery"] = discovery
                 if discovery["scope"] is None:
+                    service = self.investigation()
+                    if discovery["status"] == "NO_MATCH" and _RELATION_QUESTION.search(run.query):
+                        return self._source_request(run, payload, None)
+                    if (discovery["status"] == "NO_MATCH" and not (values["subject"] or values["relation"])
+                            and service is not None and service.config().get("adaptive_planning")):
+                        return self._source_request(run, payload, None)
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
                 values.update(discovery["scope"])
                 result["scope"].update(discovery["scope"])
+                if _RELATION_QUESTION.search(run.query) and run.route["intent"] != "DECISION":
+                    return self._source_request(run, payload, None)
                 as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                 if date_error:
                     result["path"] = None
@@ -218,12 +227,19 @@ class UnifiedAskService:
             return self._failure(result, error.code, str(error)), error.status
 
     def _source_request(self, run, payload, plan):
+        service = self.investigation()
+        config = service.config() if service else {}
+        adaptive = plan is None and config.get("adaptive_planning") is True
         route = {"intent": "SOURCE_RELATION", "code": "SOURCE_RELATION_MULTIHOP",
                  "reason": "A bounded directed source-relation chain; no business approval is implied.",
                  "plan": plan.to_dict() if plan else None}
         run = _AskRun(run.query, run.workspace_id, run.scope, route)
         result = self._base(run)
-        if plan is None:
+        if source_scope_violation(run.query):
+            return self._failure(result, "UNSUPPORTED_QUERY",
+                "Source investigation only reads the current workspace; clarify a read-only relationship question.",
+                status="NEEDS_SCOPE"), 200
+        if plan is None and not adaptive:
             return self._failure(result, "UNSUPPORTED_QUERY",
                 "This relationship question cannot be reliably decomposed. Supported paths: project → owner → direct leader; alias → project → owner → direct leader.", status="NEEDS_SCOPE"), 200
         if run.scope["subject"] or run.scope["relation"]:
@@ -237,14 +253,14 @@ class UnifiedAskService:
         runtime_query = run.query
         if as_of and not re.search(r"\d{4}-\d{2}-\d{2}", run.query):
             runtime_query = f"As of {as_of}, {run.query}"
-            plan = plan_relation_investigation(runtime_query)
-        if plan is None:
+            if not adaptive:
+                plan = plan_relation_investigation(runtime_query)
+        if plan is None and not adaptive:
             return self._failure(result, "UNSUPPORTED_QUERY", "The dated relationship plan exceeds the supported bounds.", status="NEEDS_SCOPE"), 200
-        route["plan"] = plan.to_dict()
-        route["relations"] = [goal.relation_path[0] for goal in plan.subgoals]
+        route["plan"] = plan.to_dict() if plan else None
+        route["relations"] = [goal.relation_path[0] for goal in plan.subgoals] if plan else []
+        route["planning"] = {"origin": "model" if adaptive else "rules", "validated": plan is not None}
         result["scope"] = {"subject": "", "relation": "", "as_of": as_of}
-        service = self.investigation()
-        config = service.config() if service else {}
         route.update(requires_external_provider=config.get("external_provider", False),
                      external_provider_authorized=payload.get("allow_external_provider") is True,
                      can_start=bool(config.get("available")) and (not config.get("external_provider") or payload.get("allow_external_provider") is True))
@@ -254,7 +270,7 @@ class UnifiedAskService:
         if not route["can_start"]:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this request before sources are sent or model costs are incurred.", category="permission"), 403
         try:
-            snapshot = service.start(runtime_query, run.workspace_id, task_plan=plan)
+            snapshot = service.start(runtime_query, run.workspace_id, task_plan=plan, **({"adaptive": True} if adaptive else {}))
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
         except Exception:
@@ -285,6 +301,10 @@ class UnifiedAskService:
         result["agent_run_id"] = snapshot["run"]["id"]
         result["progress"] = snapshot.get("progress")
         result["metrics"] = snapshot.get("metrics", {})
+        if snapshot.get("planning"):
+            result["route"]["planning"] = deepcopy(snapshot["planning"])
+            if snapshot["planning"].get("plan"):
+                result["route"]["plan"] = deepcopy(snapshot["planning"]["plan"])
         disposition = snapshot.get("reviewer", {})
         result["reviewer"] = {key: deepcopy(disposition.get(key)) for key in
                               ("review_id", "reviewer_agent_id", "decision", "checks", "reason", "created_at")}
@@ -337,6 +357,10 @@ class UnifiedAskService:
             result["uncertainty"] = deepcopy(snapshot.get("uncertainty") or result["uncertainty"])
             return result
         error = snapshot.get("error") or {}
+        if error.get("code") == "MODEL_PLAN_DECLINED":
+            return self._failure(result, "MODEL_PLAN_DECLINED",
+                "This question needs clarification or a relationship outside the supported project-owner-leader paths.",
+                status="NEEDS_SCOPE")
         uncertain = error.get("classification") == "provider_outcome_uncertain"
         result["uncertainty"] = {"unknown_fields": ["investigation_conclusion"],
                                  "statement": "Investigation interrupted; no final conclusion was verified."}
