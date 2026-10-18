@@ -1,0 +1,94 @@
+{
+  "schema": "task-discovery-synthetic/v1",
+  "cases": [
+    {
+      "case_id": "C01", "workspace_id": "discovery-c01", "anchor": "update",
+      "sources": [
+        {"id": "plan.md", "content": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。", "tasks": [{"id": "plan", "project": "霁月项目", "description": "接入收据导出"}]},
+        {"id": "update.md", "content": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。", "tasks": [{"id": "update", "project": "霁月项目", "description": "调整导出签名"}]},
+        {"id": "noise.md", "content": "霁月项目任务 BILL-99：预订会议室。", "tasks": [{"id": "noise", "project": "霁月项目", "description": "预订会议室"}]}
+      ]
+    },
+    {
+      "case_id": "C02", "workspace_id": "discovery-c02", "anchor": "receipt",
+      "sources": [
+        {"id": "export.md", "content": "霁月项目任务 BILL-57：接入收据导出。", "tasks": [{"id": "export", "project": "霁月项目", "description": "接入收据导出"}]},
+        {"id": "receipt.txt", "content": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。", "tasks": [{"id": "receipt", "description": "完成回执审计"}]},
+        {"id": "other.md", "content": "青榆项目任务 BILL-57：预订会议室。", "tasks": [{"id": "other", "project": "青榆项目", "description": "预订会议室"}]}
+      ]
+    },
+    {
+      "case_id": "C03", "workspace_id": "discovery-c03", "anchor": "alias-task",
+      "sources": [
+        {"id": "aliases.md", "content": "本工作区的“白鹭”是“霁月项目”的内部代号。", "tasks": []},
+        {"id": "old.md", "content": "霁月项目任务 BILL-57：接入收据导出。", "tasks": [{"id": "old", "project": "霁月项目", "description": "接入收据导出"}]},
+        {"id": "alias.md", "content": "项目：白鹭；任务 BILL-57：迁移导出校验。", "tasks": [{"id": "alias-task", "project": "白鹭", "description": "迁移导出校验"}]}
+      ]
+    },
+    {
+      "case_id": "C04", "workspace_id": "discovery-c04", "anchor": "adapt",
+      "sources": [
+        {"id": "vendor.md", "content": "霁月项目供应商由澄川数据改为远汀服务。", "tasks": []},
+        {"id": "adapt.md", "content": "霁月项目；供应商：远汀服务；完成网关签名适配。", "tasks": [{"id": "adapt", "project": "霁月项目", "vendor": "远汀服务", "description": "完成网关签名适配"}]},
+        {"id": "chairs.md", "content": "霁月项目；供应商：青原家具；清点办公桌。", "tasks": [{"id": "chairs", "project": "霁月项目", "vendor": "青原家具", "description": "清点办公桌"}]}
+      ]
+    },
+    {
+      "case_id": "C05", "workspace_id": "discovery-c05", "anchor": "task-a",
+      "sources": [
+        {"id": "a.md", "content": "霁月项目任务 OPS-10：完成网关适配。", "tasks": [{"id": "task-a", "project": "霁月项目", "description": "完成网关适配"}]},
+        {"id": "b.md", "content": "青榆项目任务 OPS-10：完成网关适配。", "tasks": [{"id": "task-b", "project": "青榆项目", "description": "完成网关适配"}]}
+      ]
+    },
+    {
+      "case_id": "C06", "workspace_id": "discovery-c06", "anchor": "bake",
+      "sources": [
+        {"id": "bread.md", "content": "制作面包。", "tasks": [{"id": "bake", "description": "制作面包"}]},
+        {"id": "clock.md", "content": "校准时钟。", "tasks": [{"id": "clock", "description": "校准时钟"}]}
+      ]
+    },
+    {
+      "case_id": "C07", "workspace_id": "discovery-c07", "anchor": "later",
+      "sources": [
+        {"id": "old.md", "content": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。", "tasks": [{"id": "old", "project": "霁月项目", "deadline_text": "2027-04-02", "description": "完成回执校验"}]},
+        {"id": "new.md", "content": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。", "tasks": [{"id": "later", "project": "霁月项目", "deadline_text": "2027-04-07", "description": "修订old.md的任务 QA-22 的计划"}]}
+      ]
+    },
+    {
+      "case_id": "C08", "workspace_id": "discovery-c08", "anchor": "audit",
+      "sources": [
+        {"id": "first.md", "content": "霁月项目；完成审计导出。", "tasks": [{"id": "audit", "project": "霁月项目", "description": "完成审计导出"}]},
+        {"id": "second.md", "content": "霁月项目；审计导出验收。", "tasks": [{"id": "check", "project": "霁月项目", "description": "审计导出验收"}]},
+        {"id": "room.md", "content": "霁月项目；预订会议室。", "tasks": [{"id": "room", "project": "霁月项目", "description": "预订会议室"}]}
+      ]
+    },
+    {
+      "case_id": "C09", "workspace_id": "discovery-c09", "anchor": "followup",
+      "sources": [
+        {"id": "multi.md", "content": "霁月项目任务 QA-22：完成回执校验。\n霁月项目任务 QA-23：完成备份恢复。", "tasks": [{"id": "receipt", "project": "霁月项目", "raw": "霁月项目任务 QA-22：完成回执校验。", "description": "完成回执校验"}, {"id": "backup", "project": "霁月项目", "raw": "霁月项目任务 QA-23：完成备份恢复。", "description": "完成备份恢复"}]},
+        {"id": "follow.md", "content": "完成审计输出。本任务与multi.md的任务 QA-22 有工作联系。", "tasks": [{"id": "followup", "description": "完成审计输出"}]}
+      ]
+    },
+    {
+      "case_id": "C10", "workspace_id": "discovery-c10", "anchor": "hidden-ref",
+      "sources": [
+        {"id": "old.md", "content": "任务 QA-22：完成回执校验。", "tasks": [{"id": "old", "description": "完成回执校验"}]},
+        {"id": "narrow.md", "content": "完成审计输出。\n本任务与old.md的任务 QA-22 有工作联系。", "tasks": [{"id": "hidden-ref", "raw": "完成审计输出。", "description": "完成审计输出"}]}
+      ]
+    },
+    {
+      "case_id": "C11", "workspace_id": "discovery-c11", "anchor": "equal-a",
+      "sources": [
+        {"id": "a.md", "content": "霁月项目；完成网关适配。", "tasks": [{"id": "equal-a", "project": "霁月项目", "description": "完成网关适配"}]},
+        {"id": "b.md", "content": "霁月项目；完成网关适配。", "tasks": [{"id": "equal-b", "project": "霁月项目", "description": "完成网关适配"}]}
+      ]
+    },
+    {
+      "case_id": "C12", "workspace_id": "discovery-c12", "anchor": "disconnected-a",
+      "sources": [
+        {"id": "a.md", "content": "霁月项目；清点办公桌。", "tasks": [{"id": "disconnected-a", "project": "霁月项目", "description": "清点办公桌"}]},
+        {"id": "b.md", "content": "霁月项目；修理咖啡机。", "tasks": [{"id": "disconnected-b", "project": "霁月项目", "description": "修理咖啡机"}]}
+      ]
+    }
+  ]
+}

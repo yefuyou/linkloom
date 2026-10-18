@@ -1,0 +1,2012 @@
+[
+  {
+    "case_id": "C01",
+    "workspace_id": "discovery-c01",
+    "anchor": "O:update",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:plan",
+        "predicate_hint": "SAME_TASK",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_2d3a404769de7f54484f84722110857c8205b046e126f98e569eb9f2552666f9",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_2fc3080eda93e154b5501a8e5ac5cb86143edebf0ac3d573aadbb47ff584d9ca",
+            "artifact_id": "plan.md",
+            "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+            "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+            "payload_hash": "cd9bc75d2e574ca82ceeccfde34a3f7d355c7e52e13be5d12a8586b926842a7b"
+          },
+          "object": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0",
+            "artifact_id": "update.md",
+            "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+            "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+            "payload_hash": "91215ec29a42aecf87d1397aba56dace47aa603d012b271ef72e7d7b9c7e30f9"
+          },
+          "predicate_hint": "SAME_TASK",
+          "priority": 100,
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "plan.md",
+                "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+                "source_ref": "artifact://discovery-c01/plan.md",
+                "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+                "ordinal": 0,
+                "message_id": "message_v1_605af2ac3e6cc51848834851c4859948932e438866aa514a741dea1c8691bc4d",
+                "segment_id": "segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+                "char_start": 0,
+                "char_end": 29,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+                "quote_sha256": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c"
+              },
+              "char_start": 0,
+              "char_end": 29,
+              "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+                "source_ref": "artifact://discovery-c01/update.md",
+                "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+                "ordinal": 0,
+                "message_id": "message_v1_3de56c23cca568b087ff6ffa5f8d85293f302da83beba18eadb514bcea2b5104",
+                "segment_id": "segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "char_start": 0,
+                "char_end": 29,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+                "quote_sha256": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b"
+              },
+              "char_start": 0,
+              "char_end": 29,
+              "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "KEY_REUSE_NOT_EXCLUDED",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:noise",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_84a69c9505d823b041352f371d3cc2fa1c872b726990b85687339ca4eb5232bf",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_76de21304cd34430eda8e733b309947478a3a4d9777ddfcc4057a49d39b552a2",
+            "artifact_id": "noise.md",
+            "artifact_version_id": "artifact_v1_1018672a65b172a7c9bb81e6029992a99def179b54302421cbc3115aed778e4a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_953384626673818e41b63d036977e184c82e02f1c205a30717ccb385114f650b",
+            "content_hash": "04098e7fb45275081a884aa2d7aecd871018c60037482f1d2e63323edbd7d53e",
+            "payload_hash": "23c93683fc692c134988d9aa330e640f74f369e064d8d2bb93af4b14df7860d5"
+          },
+          "object": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0",
+            "artifact_id": "update.md",
+            "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+            "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+            "payload_hash": "91215ec29a42aecf87d1397aba56dace47aa603d012b271ef72e7d7b9c7e30f9"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+                "source_ref": "artifact://discovery-c01/update.md",
+                "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+                "ordinal": 0,
+                "message_id": "message_v1_3de56c23cca568b087ff6ffa5f8d85293f302da83beba18eadb514bcea2b5104",
+                "segment_id": "segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "char_start": 0,
+                "char_end": 29,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+                "quote_sha256": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b"
+              },
+              "char_start": 0,
+              "char_end": 29,
+              "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "noise.md",
+                "artifact_version_id": "artifact_v1_1018672a65b172a7c9bb81e6029992a99def179b54302421cbc3115aed778e4a",
+                "source_ref": "artifact://discovery-c01/noise.md",
+                "content_hash": "04098e7fb45275081a884aa2d7aecd871018c60037482f1d2e63323edbd7d53e",
+                "ordinal": 0,
+                "message_id": "message_v1_eb4effe86c0cadd4c679da75e152dcc386652ec9ef8aa56bfaf94e98b649f80f",
+                "segment_id": "segment_v1_953384626673818e41b63d036977e184c82e02f1c205a30717ccb385114f650b",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_953384626673818e41b63d036977e184c82e02f1c205a30717ccb385114f650b",
+                "char_start": 0,
+                "char_end": 21,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 BILL-99：预订会议室。",
+                "quote_sha256": "04098e7fb45275081a884aa2d7aecd871018c60037482f1d2e63323edbd7d53e"
+              },
+              "char_start": 0,
+              "char_end": 21,
+              "quote": "霁月项目任务 BILL-99：预订会议室。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:plan",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_f2e66517cfc1f2495c2cfbd5e6541431c1fca9c89a172ddb9f3471ef267529fa",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_2fc3080eda93e154b5501a8e5ac5cb86143edebf0ac3d573aadbb47ff584d9ca",
+            "artifact_id": "plan.md",
+            "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+            "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+            "payload_hash": "cd9bc75d2e574ca82ceeccfde34a3f7d355c7e52e13be5d12a8586b926842a7b"
+          },
+          "object": {
+            "workspace_id": "discovery-c01",
+            "observation_id": "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0",
+            "artifact_id": "update.md",
+            "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+            "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+            "payload_hash": "91215ec29a42aecf87d1397aba56dace47aa603d012b271ef72e7d7b9c7e30f9"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "plan.md",
+                "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+                "source_ref": "artifact://discovery-c01/plan.md",
+                "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+                "ordinal": 0,
+                "message_id": "message_v1_605af2ac3e6cc51848834851c4859948932e438866aa514a741dea1c8691bc4d",
+                "segment_id": "segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+                "char_start": 0,
+                "char_end": 29,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+                "quote_sha256": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c"
+              },
+              "char_start": 0,
+              "char_end": 29,
+              "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c01",
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+                "source_ref": "artifact://discovery-c01/update.md",
+                "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+                "ordinal": 0,
+                "message_id": "message_v1_3de56c23cca568b087ff6ffa5f8d85293f302da83beba18eadb514bcea2b5104",
+                "segment_id": "segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+                "char_start": 0,
+                "char_end": 29,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+                "quote_sha256": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b"
+              },
+              "char_start": 0,
+              "char_end": 29,
+              "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 3,
+      "considered_candidates": 3,
+      "returned_candidates": 3,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 3,
+        "artifact_rows": 3,
+        "source_characters": 79,
+        "current_workspace_artifacts": 3,
+        "context_signals": 0
+      },
+      "generated_candidates": 3,
+      "endpoint_fanout": {
+        "task_observation_v1_2fc3080eda93e154b5501a8e5ac5cb86143edebf0ac3d573aadbb47ff584d9ca": 2,
+        "task_observation_v1_76de21304cd34430eda8e733b309947478a3a4d9777ddfcc4057a49d39b552a2": 1,
+        "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0": 3
+      },
+      "max_endpoint_fanout": 3,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C02",
+    "workspace_id": "discovery-c02",
+    "anchor": "O:receipt",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:export",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_f1df4e970cb19c92f77a6b104a91a53b9f5079410a1bffac002a55f4e4f2210b",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "object": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 95,
+          "reason_codes": [
+            "EXPLICIT_FILE_TASK_REFERENCE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c02",
+                "artifact_id": "receipt.txt",
+                "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+                "source_ref": "artifact://discovery-c02/receipt.txt",
+                "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+                "ordinal": 0,
+                "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+                "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+                "char_start": 0,
+                "char_end": 38,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+                "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+              },
+              "char_start": 0,
+              "char_end": 38,
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c02",
+                "artifact_id": "receipt.txt",
+                "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+                "source_ref": "artifact://discovery-c02/receipt.txt",
+                "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+                "ordinal": 0,
+                "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+                "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+                "char_start": 0,
+                "char_end": 38,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+                "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+              },
+              "char_start": 7,
+              "char_end": 38,
+              "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+              "role": "UNRESOLVED_REFERENCE"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c02",
+                "artifact_id": "export.md",
+                "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+                "source_ref": "artifact://discovery-c02/export.md",
+                "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+                "ordinal": 0,
+                "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+                "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+                "char_start": 0,
+                "char_end": 22,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 BILL-57：接入收据导出。",
+                "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+              },
+              "char_start": 0,
+              "char_end": 22,
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 3,
+      "considered_candidates": 1,
+      "returned_candidates": 1,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 3,
+        "artifact_rows": 3,
+        "source_characters": 81,
+        "current_workspace_artifacts": 3,
+        "context_signals": 0
+      },
+      "generated_candidates": 1,
+      "endpoint_fanout": {
+        "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a": 0,
+        "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0": 1,
+        "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5": 1
+      },
+      "max_endpoint_fanout": 1,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C03",
+    "workspace_id": "discovery-c03",
+    "anchor": "O:alias-task",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:old",
+        "predicate_hint": "SAME_TASK",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_b7635e1c768af6bba55d5116f85ae2f82c9e3f0b1ccc18361f5133c0895324e5",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c03",
+            "observation_id": "task_observation_v1_0bcf43a3f2929f8999a47226ac756ca660e4b144dd0f2c08739d8280e85fb7ca",
+            "artifact_id": "old.md",
+            "artifact_version_id": "artifact_v1_14c5d14891b9d8728ba6f977fbc97dccb54bdedcd4dc1ef765c928ab2fa0097b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "835a42c9cb1c61decb74a2416bc5ff296a448030b4b26fcf83cc87d857e7fc5c"
+          },
+          "object": {
+            "workspace_id": "discovery-c03",
+            "observation_id": "task_observation_v1_aecc12386cb6394739974b23dc30cfb8f834b053e048f8aa63e7c5a189c1a1f3",
+            "artifact_id": "alias.md",
+            "artifact_version_id": "artifact_v1_5bfb92c649028717792bbd212102fae7214d166b081cd9d6d884b2b25dfd8576",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+            "content_hash": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4",
+            "payload_hash": "53570ad528829305e220ec29513519bd272cdb2a240c7bbd4d5e717b96970b31"
+          },
+          "predicate_hint": "SAME_TASK",
+          "priority": 100,
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "aliases.md",
+                "artifact_version_id": "artifact_v1_eaaff34bd8a5a7e8d2145958a27a6b5efc44b75463e0e70bb49312818b12f43a",
+                "source_ref": "artifact://discovery-c03/aliases.md",
+                "content_hash": "2eac25af49cc56ab0e26733cab160dc9f56985ec3c9ec6fadc97836a49b81bd0",
+                "ordinal": 0,
+                "message_id": "message_v1_1baedf9b47d272ae47331d5ba29763fb155f7bc1fcc959f88aa4643396117d21",
+                "segment_id": "segment_v1_d483c10dba2db0bdd5718bb08f7d4b00a999e84aec85d1a223f48b448e546db6",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d483c10dba2db0bdd5718bb08f7d4b00a999e84aec85d1a223f48b448e546db6",
+                "char_start": 0,
+                "char_end": 22,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "本工作区的“白鹭”是“霁月项目”的内部代号。",
+                "quote_sha256": "2eac25af49cc56ab0e26733cab160dc9f56985ec3c9ec6fadc97836a49b81bd0"
+              },
+              "char_start": 0,
+              "char_end": 22,
+              "quote": "本工作区的“白鹭”是“霁月项目”的内部代号。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "alias.md",
+                "artifact_version_id": "artifact_v1_5bfb92c649028717792bbd212102fae7214d166b081cd9d6d884b2b25dfd8576",
+                "source_ref": "artifact://discovery-c03/alias.md",
+                "content_hash": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4",
+                "ordinal": 0,
+                "message_id": "message_v1_8f201f7594d2b8f39829bb4e2ece290d1cc86ac026b62770f72e135a9df28b17",
+                "segment_id": "segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+                "char_start": 0,
+                "char_end": 24,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：白鹭；任务 BILL-57：迁移导出校验。",
+                "quote_sha256": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4"
+              },
+              "char_start": 0,
+              "char_end": 24,
+              "quote": "项目：白鹭；任务 BILL-57：迁移导出校验。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "old.md",
+                "artifact_version_id": "artifact_v1_14c5d14891b9d8728ba6f977fbc97dccb54bdedcd4dc1ef765c928ab2fa0097b",
+                "source_ref": "artifact://discovery-c03/old.md",
+                "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+                "ordinal": 0,
+                "message_id": "message_v1_819352d5121c11fa0316599a5d13fde1314424910fa7f529735837ae241656e8",
+                "segment_id": "segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+                "char_start": 0,
+                "char_end": 22,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 BILL-57：接入收据导出。",
+                "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+              },
+              "char_start": 0,
+              "char_end": 22,
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "ALIAS_SCOPE_REQUIRES_VERIFICATION",
+            "KEY_REUSE_NOT_EXCLUDED",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:old",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_bd36d24bfd79367fce8804b9e3e609dcbbe8d59e29628e3d578754ab679d3e7e",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c03",
+            "observation_id": "task_observation_v1_0bcf43a3f2929f8999a47226ac756ca660e4b144dd0f2c08739d8280e85fb7ca",
+            "artifact_id": "old.md",
+            "artifact_version_id": "artifact_v1_14c5d14891b9d8728ba6f977fbc97dccb54bdedcd4dc1ef765c928ab2fa0097b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "835a42c9cb1c61decb74a2416bc5ff296a448030b4b26fcf83cc87d857e7fc5c"
+          },
+          "object": {
+            "workspace_id": "discovery-c03",
+            "observation_id": "task_observation_v1_aecc12386cb6394739974b23dc30cfb8f834b053e048f8aa63e7c5a189c1a1f3",
+            "artifact_id": "alias.md",
+            "artifact_version_id": "artifact_v1_5bfb92c649028717792bbd212102fae7214d166b081cd9d6d884b2b25dfd8576",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+            "content_hash": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4",
+            "payload_hash": "53570ad528829305e220ec29513519bd272cdb2a240c7bbd4d5e717b96970b31"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_ALIAS_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "aliases.md",
+                "artifact_version_id": "artifact_v1_eaaff34bd8a5a7e8d2145958a27a6b5efc44b75463e0e70bb49312818b12f43a",
+                "source_ref": "artifact://discovery-c03/aliases.md",
+                "content_hash": "2eac25af49cc56ab0e26733cab160dc9f56985ec3c9ec6fadc97836a49b81bd0",
+                "ordinal": 0,
+                "message_id": "message_v1_1baedf9b47d272ae47331d5ba29763fb155f7bc1fcc959f88aa4643396117d21",
+                "segment_id": "segment_v1_d483c10dba2db0bdd5718bb08f7d4b00a999e84aec85d1a223f48b448e546db6",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d483c10dba2db0bdd5718bb08f7d4b00a999e84aec85d1a223f48b448e546db6",
+                "char_start": 0,
+                "char_end": 22,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "本工作区的“白鹭”是“霁月项目”的内部代号。",
+                "quote_sha256": "2eac25af49cc56ab0e26733cab160dc9f56985ec3c9ec6fadc97836a49b81bd0"
+              },
+              "char_start": 0,
+              "char_end": 22,
+              "quote": "本工作区的“白鹭”是“霁月项目”的内部代号。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "alias.md",
+                "artifact_version_id": "artifact_v1_5bfb92c649028717792bbd212102fae7214d166b081cd9d6d884b2b25dfd8576",
+                "source_ref": "artifact://discovery-c03/alias.md",
+                "content_hash": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4",
+                "ordinal": 0,
+                "message_id": "message_v1_8f201f7594d2b8f39829bb4e2ece290d1cc86ac026b62770f72e135a9df28b17",
+                "segment_id": "segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1cf7945454656972a344495ed538d317a6eaf5f9e6f686906a9a8b6318136ee3",
+                "char_start": 0,
+                "char_end": 24,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：白鹭；任务 BILL-57：迁移导出校验。",
+                "quote_sha256": "f6984861034b36b8f2eef6f5e5917ece7c80a5b76b02a5cf601cec393d71f5f4"
+              },
+              "char_start": 0,
+              "char_end": 24,
+              "quote": "项目：白鹭；任务 BILL-57：迁移导出校验。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c03",
+                "artifact_id": "old.md",
+                "artifact_version_id": "artifact_v1_14c5d14891b9d8728ba6f977fbc97dccb54bdedcd4dc1ef765c928ab2fa0097b",
+                "source_ref": "artifact://discovery-c03/old.md",
+                "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+                "ordinal": 0,
+                "message_id": "message_v1_819352d5121c11fa0316599a5d13fde1314424910fa7f529735837ae241656e8",
+                "segment_id": "segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_727dbc62a7a2df0ac22c1ca081d520a774095e7219ba5f99c40fef5a62ca5550",
+                "char_start": 0,
+                "char_end": 22,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 BILL-57：接入收据导出。",
+                "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+              },
+              "char_start": 0,
+              "char_end": 22,
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 2,
+      "returned_candidates": 2,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 3,
+        "source_characters": 68,
+        "current_workspace_artifacts": 3,
+        "context_signals": 1
+      },
+      "generated_candidates": 2,
+      "endpoint_fanout": {
+        "task_observation_v1_0bcf43a3f2929f8999a47226ac756ca660e4b144dd0f2c08739d8280e85fb7ca": 2,
+        "task_observation_v1_aecc12386cb6394739974b23dc30cfb8f834b053e048f8aa63e7c5a189c1a1f3": 2
+      },
+      "max_endpoint_fanout": 2,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C04",
+    "workspace_id": "discovery-c04",
+    "anchor": "O:adapt",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "C:vendor.md",
+        "predicate_hint": "AFFECTED_BY",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_bb6bff59def5b182baed32a49135a16eb8c8bde08f4e369619342b4e10935ee9",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c04",
+            "observation_id": "task_observation_v1_4b2fa26e4429910693b4f03aa7ecafab236afd47f3ebb1ac13de764dde08f46d",
+            "artifact_id": "adapt.md",
+            "artifact_version_id": "artifact_v1_4652fe18c50472a3027f4259959b0851d1c80dda74b298a302792d07ef1fe447",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+            "content_hash": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07",
+            "payload_hash": "236a43cfb1dee0614d54ca923c823693f9d23913ec540baa89e90ee31d43d395"
+          },
+          "object": {
+            "endpoint_type": "CHANGE",
+            "workspace_id": "discovery-c04",
+            "project": "霁月项目",
+            "before_vendor": "澄川数据",
+            "after_vendor": "远汀服务",
+            "evidence": {
+              "span": {
+                "workspace_id": "discovery-c04",
+                "artifact_id": "vendor.md",
+                "artifact_version_id": "artifact_v1_2ba8d34cc53ac1cfadc11af39087e9310b704427d70424f98a185a8de5717e7e",
+                "source_ref": "artifact://discovery-c04/vendor.md",
+                "content_hash": "19184cd6029f72ba0c566e03376d0ca0ec40240694aa768277aeb4ac58920bf6",
+                "ordinal": 0,
+                "message_id": "message_v1_afaa86116ac4fbd25e104cdddb49b599edd406ac18bab41ad08ac26ecb330bce",
+                "segment_id": "segment_v1_4ef368e23bc70950ee85c04fac40550095e4c6efa4ef53e25c37192e247d6d2d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4ef368e23bc70950ee85c04fac40550095e4c6efa4ef53e25c37192e247d6d2d",
+                "char_start": 0,
+                "char_end": 19,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目供应商由澄川数据改为远汀服务。",
+                "quote_sha256": "19184cd6029f72ba0c566e03376d0ca0ec40240694aa768277aeb4ac58920bf6"
+              },
+              "char_start": 0,
+              "char_end": 19,
+              "quote": "霁月项目供应商由澄川数据改为远汀服务。",
+              "role": "RELATION_PROPOSAL"
+            },
+            "kind": "SOURCE_CLAIM",
+            "decision_id": null,
+            "candidate_id": null,
+            "receipt_id": null
+          },
+          "predicate_hint": "AFFECTED_BY",
+          "priority": 60,
+          "reason_codes": [
+            "PROJECT_VENDOR_CHANGE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c04",
+                "artifact_id": "adapt.md",
+                "artifact_version_id": "artifact_v1_4652fe18c50472a3027f4259959b0851d1c80dda74b298a302792d07ef1fe447",
+                "source_ref": "artifact://discovery-c04/adapt.md",
+                "content_hash": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07",
+                "ordinal": 0,
+                "message_id": "message_v1_273538b78f3d02e0229847a056062d67316d5369bf619a6dcb70752b6498537a",
+                "segment_id": "segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+                "char_start": 0,
+                "char_end": 23,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；供应商：远汀服务；完成网关签名适配。",
+                "quote_sha256": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07"
+              },
+              "char_start": 0,
+              "char_end": 23,
+              "quote": "霁月项目；供应商：远汀服务；完成网关签名适配。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c04",
+                "artifact_id": "vendor.md",
+                "artifact_version_id": "artifact_v1_2ba8d34cc53ac1cfadc11af39087e9310b704427d70424f98a185a8de5717e7e",
+                "source_ref": "artifact://discovery-c04/vendor.md",
+                "content_hash": "19184cd6029f72ba0c566e03376d0ca0ec40240694aa768277aeb4ac58920bf6",
+                "ordinal": 0,
+                "message_id": "message_v1_afaa86116ac4fbd25e104cdddb49b599edd406ac18bab41ad08ac26ecb330bce",
+                "segment_id": "segment_v1_4ef368e23bc70950ee85c04fac40550095e4c6efa4ef53e25c37192e247d6d2d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4ef368e23bc70950ee85c04fac40550095e4c6efa4ef53e25c37192e247d6d2d",
+                "char_start": 0,
+                "char_end": 19,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目供应商由澄川数据改为远汀服务。",
+                "quote_sha256": "19184cd6029f72ba0c566e03376d0ca0ec40240694aa768277aeb4ac58920bf6"
+              },
+              "char_start": 0,
+              "char_end": 19,
+              "quote": "霁月项目供应商由澄川数据改为远汀服务。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "DELAY_UNPROVEN",
+            "DIRECT_IMPACT_UNPROVEN",
+            "SOURCE_CLAIM_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:chairs",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_e11bd36ce997a992703e3df15ca6f10a259934f9ee6d221bff459debca593db9",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c04",
+            "observation_id": "task_observation_v1_2c9cf717cf56978ffcde77965833c587c44f328ebf084e7246c59a317e415359",
+            "artifact_id": "chairs.md",
+            "artifact_version_id": "artifact_v1_17e805785d5c4b32d78a7d0d1a6f88145022ea2da7feb9cc040cbac38e6bfa94",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d18fd37a6123da548becb7d9b09b4e1742a86a18f2b2fbb98d0300e5d189ac99",
+            "content_hash": "4e710c4f4e7521fcb0460665337fd76e42d4d8928405535c19a93c765d02ff33",
+            "payload_hash": "8f1430dcc070a9f185d53b2ca2283ee1f131cc440a9b78064937f9dfc1166116"
+          },
+          "object": {
+            "workspace_id": "discovery-c04",
+            "observation_id": "task_observation_v1_4b2fa26e4429910693b4f03aa7ecafab236afd47f3ebb1ac13de764dde08f46d",
+            "artifact_id": "adapt.md",
+            "artifact_version_id": "artifact_v1_4652fe18c50472a3027f4259959b0851d1c80dda74b298a302792d07ef1fe447",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+            "content_hash": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07",
+            "payload_hash": "236a43cfb1dee0614d54ca923c823693f9d23913ec540baa89e90ee31d43d395"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c04",
+                "artifact_id": "chairs.md",
+                "artifact_version_id": "artifact_v1_17e805785d5c4b32d78a7d0d1a6f88145022ea2da7feb9cc040cbac38e6bfa94",
+                "source_ref": "artifact://discovery-c04/chairs.md",
+                "content_hash": "4e710c4f4e7521fcb0460665337fd76e42d4d8928405535c19a93c765d02ff33",
+                "ordinal": 0,
+                "message_id": "message_v1_a3d975aff5a58dff309a83a65923a8699c6a90713cd42cbcc2abd580198c4c80",
+                "segment_id": "segment_v1_d18fd37a6123da548becb7d9b09b4e1742a86a18f2b2fbb98d0300e5d189ac99",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d18fd37a6123da548becb7d9b09b4e1742a86a18f2b2fbb98d0300e5d189ac99",
+                "char_start": 0,
+                "char_end": 20,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；供应商：青原家具；清点办公桌。",
+                "quote_sha256": "4e710c4f4e7521fcb0460665337fd76e42d4d8928405535c19a93c765d02ff33"
+              },
+              "char_start": 0,
+              "char_end": 20,
+              "quote": "霁月项目；供应商：青原家具；清点办公桌。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c04",
+                "artifact_id": "adapt.md",
+                "artifact_version_id": "artifact_v1_4652fe18c50472a3027f4259959b0851d1c80dda74b298a302792d07ef1fe447",
+                "source_ref": "artifact://discovery-c04/adapt.md",
+                "content_hash": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07",
+                "ordinal": 0,
+                "message_id": "message_v1_273538b78f3d02e0229847a056062d67316d5369bf619a6dcb70752b6498537a",
+                "segment_id": "segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bdf22bc464c7a3d3d9824a17da134f8266df0ffcba5b30c56a33ad3cab3fd3e",
+                "char_start": 0,
+                "char_end": 23,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；供应商：远汀服务；完成网关签名适配。",
+                "quote_sha256": "61a48a75e9d856146879541550cbcef3681ce8ea0b72a33750d6c5be2061ee07"
+              },
+              "char_start": 0,
+              "char_end": 23,
+              "quote": "霁月项目；供应商：远汀服务；完成网关签名适配。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 2,
+      "returned_candidates": 2,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 3,
+        "source_characters": 62,
+        "current_workspace_artifacts": 3,
+        "context_signals": 1
+      },
+      "generated_candidates": 2,
+      "endpoint_fanout": {
+        "task_observation_v1_2c9cf717cf56978ffcde77965833c587c44f328ebf084e7246c59a317e415359": 1,
+        "task_observation_v1_4b2fa26e4429910693b4f03aa7ecafab236afd47f3ebb1ac13de764dde08f46d": 2
+      },
+      "max_endpoint_fanout": 2,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C05",
+    "workspace_id": "discovery-c05",
+    "anchor": "O:task-a",
+    "baseline": [
+      {
+        "target": "O:task-b",
+        "predicate_hint": "RELATED_TO",
+        "reason_codes": [
+          "EXACT_NORMALIZED_DESCRIPTION"
+        ]
+      }
+    ],
+    "discovery": [],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 0,
+      "returned_candidates": 0,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 42,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 0,
+      "endpoint_fanout": {
+        "task_observation_v1_6cf006f25ce118db045260fdb08552c43b4899779fa4f6e41fddbda2ac9f4e48": 0,
+        "task_observation_v1_fb2882f2956ccfe2f5b3a285547110272c00d389b4cbae87c6163bbd9b6a002b": 0
+      },
+      "max_endpoint_fanout": 0,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C06",
+    "workspace_id": "discovery-c06",
+    "anchor": "O:bake",
+    "baseline": [],
+    "discovery": [],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 0,
+      "returned_candidates": 0,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 10,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 0,
+      "endpoint_fanout": {
+        "task_observation_v1_36dcb5f8074037da6d76a787ae32a04ae33b1ac027f56aa120c5b2e1c2f78103": 0,
+        "task_observation_v1_c04cae40a4d93abf00819ba3febb456f26ff03fb52dd4dded740c777c936a51a": 0
+      },
+      "max_endpoint_fanout": 0,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C07",
+    "workspace_id": "discovery-c07",
+    "anchor": "O:later",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:old",
+        "predicate_hint": "SAME_TASK",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_09415818811f63bbdc79b5bf9a3e53651248beb668be852c16f41af0fd0a9028",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_0ec630bdbea569f8232523cf166e00a01671d8990ecc6e071a970eb4dbc4fe7f",
+            "artifact_id": "old.md",
+            "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+            "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+            "payload_hash": "36607d80a57704a0f71d8162b15e5bcfdaae99b3dbc808dc1fcd5ff67cc79b98"
+          },
+          "object": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_804a3c6db7666dbafe61bbff6bbbd6340e84bb76f29daba7302b0015eec56756",
+            "artifact_id": "new.md",
+            "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+            "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+            "payload_hash": "0e694106613012d43c409a4b1693aae266a920669d525e649eeadf1fe03b1cc1"
+          },
+          "predicate_hint": "SAME_TASK",
+          "priority": 100,
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "new.md",
+                "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+                "source_ref": "artifact://discovery-c07/new.md",
+                "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+                "ordinal": 0,
+                "message_id": "message_v1_938372cb48719f28a0fe161b6bee204b9971f9ef6e681aefff4852444887c645",
+                "segment_id": "segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "char_start": 0,
+                "char_end": 46,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+                "quote_sha256": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de"
+              },
+              "char_start": 0,
+              "char_end": 46,
+              "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "old.md",
+                "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+                "source_ref": "artifact://discovery-c07/old.md",
+                "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+                "ordinal": 0,
+                "message_id": "message_v1_40b71b8fc75c1f2ff923319ce2b0bb095ec7e63afe2b770039fb84d99d2b264b",
+                "segment_id": "segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "char_start": 0,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+                "quote_sha256": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0"
+              },
+              "char_start": 0,
+              "char_end": 36,
+              "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "KEY_REUSE_NOT_EXCLUDED",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:old",
+        "predicate_hint": "REVISES_PLAN",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_890d1b43e6e87c8dbe441623ffbe93e13f2e338a14ab226922b593e1bdaca44d",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_804a3c6db7666dbafe61bbff6bbbd6340e84bb76f29daba7302b0015eec56756",
+            "artifact_id": "new.md",
+            "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+            "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+            "payload_hash": "0e694106613012d43c409a4b1693aae266a920669d525e649eeadf1fe03b1cc1"
+          },
+          "object": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_0ec630bdbea569f8232523cf166e00a01671d8990ecc6e071a970eb4dbc4fe7f",
+            "artifact_id": "old.md",
+            "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+            "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+            "payload_hash": "36607d80a57704a0f71d8162b15e5bcfdaae99b3dbc808dc1fcd5ff67cc79b98"
+          },
+          "predicate_hint": "REVISES_PLAN",
+          "priority": 95,
+          "reason_codes": [
+            "EXPLICIT_FILE_TASK_REFERENCE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "new.md",
+                "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+                "source_ref": "artifact://discovery-c07/new.md",
+                "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+                "ordinal": 0,
+                "message_id": "message_v1_938372cb48719f28a0fe161b6bee204b9971f9ef6e681aefff4852444887c645",
+                "segment_id": "segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "char_start": 0,
+                "char_end": 46,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+                "quote_sha256": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de"
+              },
+              "char_start": 5,
+              "char_end": 30,
+              "quote": "本任务修订old.md的任务 QA-22 的计划；",
+              "role": "UNRESOLVED_REFERENCE"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "new.md",
+                "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+                "source_ref": "artifact://discovery-c07/new.md",
+                "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+                "ordinal": 0,
+                "message_id": "message_v1_938372cb48719f28a0fe161b6bee204b9971f9ef6e681aefff4852444887c645",
+                "segment_id": "segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "char_start": 0,
+                "char_end": 46,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+                "quote_sha256": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de"
+              },
+              "char_start": 0,
+              "char_end": 46,
+              "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "old.md",
+                "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+                "source_ref": "artifact://discovery-c07/old.md",
+                "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+                "ordinal": 0,
+                "message_id": "message_v1_40b71b8fc75c1f2ff923319ce2b0bb095ec7e63afe2b770039fb84d99d2b264b",
+                "segment_id": "segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "char_start": 0,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+                "quote_sha256": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0"
+              },
+              "char_start": 0,
+              "char_end": 36,
+              "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:old",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_77aaf6004825b4cd3f5184438848c565270c57fee337d46c40b4e86f58c9c178",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_0ec630bdbea569f8232523cf166e00a01671d8990ecc6e071a970eb4dbc4fe7f",
+            "artifact_id": "old.md",
+            "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+            "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+            "payload_hash": "36607d80a57704a0f71d8162b15e5bcfdaae99b3dbc808dc1fcd5ff67cc79b98"
+          },
+          "object": {
+            "workspace_id": "discovery-c07",
+            "observation_id": "task_observation_v1_804a3c6db7666dbafe61bbff6bbbd6340e84bb76f29daba7302b0015eec56756",
+            "artifact_id": "new.md",
+            "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+            "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+            "payload_hash": "0e694106613012d43c409a4b1693aae266a920669d525e649eeadf1fe03b1cc1"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "new.md",
+                "artifact_version_id": "artifact_v1_11a39c81b4bcfa70e35a136612584d38e6d819ea6f66ee3ba54301c2a4a99358",
+                "source_ref": "artifact://discovery-c07/new.md",
+                "content_hash": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de",
+                "ordinal": 0,
+                "message_id": "message_v1_938372cb48719f28a0fe161b6bee204b9971f9ef6e681aefff4852444887c645",
+                "segment_id": "segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2a2c863bb404819d45f36b231b8b79c4df9b202309590acf7bd03377f203de4d",
+                "char_start": 0,
+                "char_end": 46,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+                "quote_sha256": "8ce2dec21fe37a597ae552ea29a138899ef2e9f10df0b557d40db8f23924c0de"
+              },
+              "char_start": 0,
+              "char_end": 46,
+              "quote": "霁月项目；本任务修订old.md的任务 QA-22 的计划；截止日期：2027-04-07。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c07",
+                "artifact_id": "old.md",
+                "artifact_version_id": "artifact_v1_5dfe80bbb69cd4d69e469adbbeea0efcd993e4584c32982405b295dd9555f425",
+                "source_ref": "artifact://discovery-c07/old.md",
+                "content_hash": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0",
+                "ordinal": 0,
+                "message_id": "message_v1_40b71b8fc75c1f2ff923319ce2b0bb095ec7e63afe2b770039fb84d99d2b264b",
+                "segment_id": "segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a3c28f6744e7736b0310466ebc1c9f94b41b58f09600f14388a0a68b3e708391",
+                "char_start": 0,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+                "quote_sha256": "c21cab11666981f3a97dc9796ed51ebe56751cfe0ab390a9e52cb0d883fd28e0"
+              },
+              "char_start": 0,
+              "char_end": 36,
+              "quote": "霁月项目任务 QA-22：完成回执校验；截止日期：2027-04-02。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 3,
+      "returned_candidates": 3,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 82,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 3,
+      "endpoint_fanout": {
+        "task_observation_v1_0ec630bdbea569f8232523cf166e00a01671d8990ecc6e071a970eb4dbc4fe7f": 3,
+        "task_observation_v1_804a3c6db7666dbafe61bbff6bbbd6340e84bb76f29daba7302b0015eec56756": 3
+      },
+      "max_endpoint_fanout": 3,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C08",
+    "workspace_id": "discovery-c08",
+    "anchor": "O:audit",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:check",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_96627300ed4fd77a615b93e25f1d40a61159c1e0bf4ebc3ca138f3a98e09978d",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c08",
+            "observation_id": "task_observation_v1_042dd039046e44c2f84c26033a0241698b879f8d34f69bdcfaaff105419de405",
+            "artifact_id": "second.md",
+            "artifact_version_id": "artifact_v1_2840e7c2e68406b032888b0ee53e322ca68446647ccd78fb4f7e939953bb46c3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5ffd4f71ffd640dca273013e575f5e25c8c9bc6566177ae9206570f549add634",
+            "content_hash": "f9e6c2e27ea13f7c8cf95c8622752aac3c661d5aaee9dc60acba72cf83daedf0",
+            "payload_hash": "bbc674aebe1d8f15bc7b16a10d503bde0f036f5d25a1c11b4a899813168af887"
+          },
+          "object": {
+            "workspace_id": "discovery-c08",
+            "observation_id": "task_observation_v1_1dc83c9b6c876115be2744327df3782369c30e226518cd80659a96cfecb88e3e",
+            "artifact_id": "first.md",
+            "artifact_version_id": "artifact_v1_fbeb1e2257ea89116790c18a7fdf173acdcb8095b4ac09a4a056f08222e66883",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+            "content_hash": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c",
+            "payload_hash": "9771d36f42a0a5963dcc61917861dbdd8f742715549b4ce25e56c0b5efdaab41"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 40,
+          "reason_codes": [
+            "LEXICAL_OVERLAP_WITHIN_PROJECT",
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c08",
+                "artifact_id": "second.md",
+                "artifact_version_id": "artifact_v1_2840e7c2e68406b032888b0ee53e322ca68446647ccd78fb4f7e939953bb46c3",
+                "source_ref": "artifact://discovery-c08/second.md",
+                "content_hash": "f9e6c2e27ea13f7c8cf95c8622752aac3c661d5aaee9dc60acba72cf83daedf0",
+                "ordinal": 0,
+                "message_id": "message_v1_44eac4255607a4bcb6db3b5f4059524d368bb6f424345bc573af9852c9617386",
+                "segment_id": "segment_v1_5ffd4f71ffd640dca273013e575f5e25c8c9bc6566177ae9206570f549add634",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5ffd4f71ffd640dca273013e575f5e25c8c9bc6566177ae9206570f549add634",
+                "char_start": 0,
+                "char_end": 12,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；审计导出验收。",
+                "quote_sha256": "f9e6c2e27ea13f7c8cf95c8622752aac3c661d5aaee9dc60acba72cf83daedf0"
+              },
+              "char_start": 0,
+              "char_end": 12,
+              "quote": "霁月项目；审计导出验收。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c08",
+                "artifact_id": "first.md",
+                "artifact_version_id": "artifact_v1_fbeb1e2257ea89116790c18a7fdf173acdcb8095b4ac09a4a056f08222e66883",
+                "source_ref": "artifact://discovery-c08/first.md",
+                "content_hash": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c",
+                "ordinal": 0,
+                "message_id": "message_v1_6598f85605a27caccef180579114bd7bb3cfc9b50214eb078f5459f8d33aca93",
+                "segment_id": "segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+                "char_start": 0,
+                "char_end": 12,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；完成审计导出。",
+                "quote_sha256": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c"
+              },
+              "char_start": 0,
+              "char_end": 12,
+              "quote": "霁月项目；完成审计导出。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      },
+      {
+        "target": "O:room",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_96149d3e99537a42d5b92bfbd1fae043709984d7bb40631e5944cd78d68cbdf9",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c08",
+            "observation_id": "task_observation_v1_1dc83c9b6c876115be2744327df3782369c30e226518cd80659a96cfecb88e3e",
+            "artifact_id": "first.md",
+            "artifact_version_id": "artifact_v1_fbeb1e2257ea89116790c18a7fdf173acdcb8095b4ac09a4a056f08222e66883",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+            "content_hash": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c",
+            "payload_hash": "9771d36f42a0a5963dcc61917861dbdd8f742715549b4ce25e56c0b5efdaab41"
+          },
+          "object": {
+            "workspace_id": "discovery-c08",
+            "observation_id": "task_observation_v1_eccbc2e5d6c0292c8953400919d6c5eabfa47d24f9ce12ede37b597d33c689e9",
+            "artifact_id": "room.md",
+            "artifact_version_id": "artifact_v1_9c90c68949377a260976f5892b7b839b67de4f4d37190266b8418983a343a584",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4236be3ff8d34ae2c39c33e51a3b4ce70124afa31ca95f0e5e546ef1bc2f7709",
+            "content_hash": "6c4af504cc08135329dcab1cb1a46008b72227fa0c8754cfb21ef55e257c1540",
+            "payload_hash": "ddb8fffbd6fcaf9769c0fb08e8bef3979bc2d5b72c43d6687f2929a7e2283fe5"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c08",
+                "artifact_id": "first.md",
+                "artifact_version_id": "artifact_v1_fbeb1e2257ea89116790c18a7fdf173acdcb8095b4ac09a4a056f08222e66883",
+                "source_ref": "artifact://discovery-c08/first.md",
+                "content_hash": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c",
+                "ordinal": 0,
+                "message_id": "message_v1_6598f85605a27caccef180579114bd7bb3cfc9b50214eb078f5459f8d33aca93",
+                "segment_id": "segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2ce30fb7672a79109ef1620e5a3478138161857171f22bec249b9e0f959582f",
+                "char_start": 0,
+                "char_end": 12,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；完成审计导出。",
+                "quote_sha256": "34806644a768bf74d6eed7ae93c532ef4687953beb09f6248d8458656341543c"
+              },
+              "char_start": 0,
+              "char_end": 12,
+              "quote": "霁月项目；完成审计导出。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c08",
+                "artifact_id": "room.md",
+                "artifact_version_id": "artifact_v1_9c90c68949377a260976f5892b7b839b67de4f4d37190266b8418983a343a584",
+                "source_ref": "artifact://discovery-c08/room.md",
+                "content_hash": "6c4af504cc08135329dcab1cb1a46008b72227fa0c8754cfb21ef55e257c1540",
+                "ordinal": 0,
+                "message_id": "message_v1_4b8352d87d0d9bf53f9bb0f51148411e972627edcc29e6116a8189c7098bd407",
+                "segment_id": "segment_v1_4236be3ff8d34ae2c39c33e51a3b4ce70124afa31ca95f0e5e546ef1bc2f7709",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4236be3ff8d34ae2c39c33e51a3b4ce70124afa31ca95f0e5e546ef1bc2f7709",
+                "char_start": 0,
+                "char_end": 11,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；预订会议室。",
+                "quote_sha256": "6c4af504cc08135329dcab1cb1a46008b72227fa0c8754cfb21ef55e257c1540"
+              },
+              "char_start": 0,
+              "char_end": 11,
+              "quote": "霁月项目；预订会议室。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 3,
+      "considered_candidates": 2,
+      "returned_candidates": 2,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 3,
+        "artifact_rows": 3,
+        "source_characters": 35,
+        "current_workspace_artifacts": 3,
+        "context_signals": 0
+      },
+      "generated_candidates": 2,
+      "endpoint_fanout": {
+        "task_observation_v1_042dd039046e44c2f84c26033a0241698b879f8d34f69bdcfaaff105419de405": 1,
+        "task_observation_v1_1dc83c9b6c876115be2744327df3782369c30e226518cd80659a96cfecb88e3e": 2,
+        "task_observation_v1_eccbc2e5d6c0292c8953400919d6c5eabfa47d24f9ce12ede37b597d33c689e9": 1
+      },
+      "max_endpoint_fanout": 2,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C09",
+    "workspace_id": "discovery-c09",
+    "anchor": "O:followup",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:receipt",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_4fc88f41273418ce4e50770451b302f7b2af51ea1c29e8a73b70cde95fa24433",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c09",
+            "observation_id": "task_observation_v1_0dddb74fb2d6fe94f4b76ead6b8aacb4554c37f748f2667c60732af59caef4e9",
+            "artifact_id": "follow.md",
+            "artifact_version_id": "artifact_v1_c181300208af4020885976a12e3db7dfcf4d405c13c06536478cb8744cc47f88",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_028f91674f6ffca3542000f938bc36555d79d368d01db8c32ecf7d272ce723f7",
+            "content_hash": "07bfcae23f750cff40c934be00372d3026c05794328205f6d68a92f4993dd286",
+            "payload_hash": "a9843b2bd4b102e56186b7c280728886cae847c9d9bd4bd0d45b724e87c7fc75"
+          },
+          "object": {
+            "workspace_id": "discovery-c09",
+            "observation_id": "task_observation_v1_c8b2093015e361aa4d0acdad21df4c65df1b16b3481a8ebefc6f44fe5980b2e4",
+            "artifact_id": "multi.md",
+            "artifact_version_id": "artifact_v1_077114df4159461064c411e1c60b90350138d5022178a7ca592c2a45c9987fda",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f903b437bc20ad99384f54881535a57692845e4d9f42cd2cb8e38e9b06146a49",
+            "content_hash": "d9c4f01c16500ce108585c0b49c0b9611e649f96162a495d4f6320e5e4cc88fb",
+            "payload_hash": "f49a3150945c3646444e6f02c18c6b9e6d54883a2a28c20f5bf04e8211e377d2"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 95,
+          "reason_codes": [
+            "EXPLICIT_FILE_TASK_REFERENCE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c09",
+                "artifact_id": "multi.md",
+                "artifact_version_id": "artifact_v1_077114df4159461064c411e1c60b90350138d5022178a7ca592c2a45c9987fda",
+                "source_ref": "artifact://discovery-c09/multi.md",
+                "content_hash": "d9c4f01c16500ce108585c0b49c0b9611e649f96162a495d4f6320e5e4cc88fb",
+                "ordinal": 0,
+                "message_id": "message_v1_e33bdd7c26c9300aa7853a9119fab84e57e6cf40dc47d61b38c80ba0a1343e69",
+                "segment_id": "segment_v1_f903b437bc20ad99384f54881535a57692845e4d9f42cd2cb8e38e9b06146a49",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f903b437bc20ad99384f54881535a57692845e4d9f42cd2cb8e38e9b06146a49",
+                "char_start": 0,
+                "char_end": 41,
+                "line_start": 1,
+                "line_end": 2,
+                "quote": "霁月项目任务 QA-22：完成回执校验。\n霁月项目任务 QA-23：完成备份恢复。",
+                "quote_sha256": "d9c4f01c16500ce108585c0b49c0b9611e649f96162a495d4f6320e5e4cc88fb"
+              },
+              "char_start": 0,
+              "char_end": 20,
+              "quote": "霁月项目任务 QA-22：完成回执校验。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c09",
+                "artifact_id": "follow.md",
+                "artifact_version_id": "artifact_v1_c181300208af4020885976a12e3db7dfcf4d405c13c06536478cb8744cc47f88",
+                "source_ref": "artifact://discovery-c09/follow.md",
+                "content_hash": "07bfcae23f750cff40c934be00372d3026c05794328205f6d68a92f4993dd286",
+                "ordinal": 0,
+                "message_id": "message_v1_995004f5cc6fa346c3f2dfd7c59a946e809e80377b2d88722916116ab29c4b96",
+                "segment_id": "segment_v1_028f91674f6ffca3542000f938bc36555d79d368d01db8c32ecf7d272ce723f7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_028f91674f6ffca3542000f938bc36555d79d368d01db8c32ecf7d272ce723f7",
+                "char_start": 0,
+                "char_end": 35,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "完成审计输出。本任务与multi.md的任务 QA-22 有工作联系。",
+                "quote_sha256": "07bfcae23f750cff40c934be00372d3026c05794328205f6d68a92f4993dd286"
+              },
+              "char_start": 7,
+              "char_end": 35,
+              "quote": "本任务与multi.md的任务 QA-22 有工作联系。",
+              "role": "UNRESOLVED_REFERENCE"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c09",
+                "artifact_id": "follow.md",
+                "artifact_version_id": "artifact_v1_c181300208af4020885976a12e3db7dfcf4d405c13c06536478cb8744cc47f88",
+                "source_ref": "artifact://discovery-c09/follow.md",
+                "content_hash": "07bfcae23f750cff40c934be00372d3026c05794328205f6d68a92f4993dd286",
+                "ordinal": 0,
+                "message_id": "message_v1_995004f5cc6fa346c3f2dfd7c59a946e809e80377b2d88722916116ab29c4b96",
+                "segment_id": "segment_v1_028f91674f6ffca3542000f938bc36555d79d368d01db8c32ecf7d272ce723f7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_028f91674f6ffca3542000f938bc36555d79d368d01db8c32ecf7d272ce723f7",
+                "char_start": 0,
+                "char_end": 35,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "完成审计输出。本任务与multi.md的任务 QA-22 有工作联系。",
+                "quote_sha256": "07bfcae23f750cff40c934be00372d3026c05794328205f6d68a92f4993dd286"
+              },
+              "char_start": 0,
+              "char_end": 35,
+              "quote": "完成审计输出。本任务与multi.md的任务 QA-22 有工作联系。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 3,
+      "considered_candidates": 1,
+      "returned_candidates": 1,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 3,
+        "artifact_rows": 2,
+        "source_characters": 76,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 1,
+      "endpoint_fanout": {
+        "task_observation_v1_07b61fff24bc012a92a502d03ac4b4236bd01cf7c9f35ab5f753dde9238d9d58": 0,
+        "task_observation_v1_0dddb74fb2d6fe94f4b76ead6b8aacb4554c37f748f2667c60732af59caef4e9": 1,
+        "task_observation_v1_c8b2093015e361aa4d0acdad21df4c65df1b16b3481a8ebefc6f44fe5980b2e4": 1
+      },
+      "max_endpoint_fanout": 1,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C10",
+    "workspace_id": "discovery-c10",
+    "anchor": "O:hidden-ref",
+    "baseline": [],
+    "discovery": [],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 0,
+      "returned_candidates": 0,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 50,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 0,
+      "endpoint_fanout": {
+        "task_observation_v1_a60bfd0301269eda7bae9280ec6d7e4984de19ed5b47ed49d5bfc99176578bc4": 0,
+        "task_observation_v1_df555de5aecac1fdf4cd881aeec337e00cc3e9060b8957bd10648ec402e480b1": 0
+      },
+      "max_endpoint_fanout": 0,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C11",
+    "workspace_id": "discovery-c11",
+    "anchor": "O:equal-a",
+    "baseline": [
+      {
+        "target": "O:equal-b",
+        "predicate_hint": "RELATED_TO",
+        "reason_codes": [
+          "EXACT_NORMALIZED_DESCRIPTION"
+        ]
+      }
+    ],
+    "discovery": [
+      {
+        "target": "O:equal-b",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_434d4b58eeddcab19113a6b6a55625d6fe953d5fd1b551cb27fe0dc9a0fe961f",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c11",
+            "observation_id": "task_observation_v1_0f84f103ba43b6dc3cf960a459418ae74071ad6f7c734ed1e3913cd60e56d512",
+            "artifact_id": "a.md",
+            "artifact_version_id": "artifact_v1_ca226897638b05e74ad07a26ef49ebfafbd5ba2212528acfbb8a6a3a22f24d3f",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4caccb6d5dec7ae7fb29cb86198492fbba9380e0790899e829b4ef138292e3f0",
+            "content_hash": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646",
+            "payload_hash": "f1d8ce06044c74a06bc17bb40a9d82f7559952870ca7e2515612e115e41b784e"
+          },
+          "object": {
+            "workspace_id": "discovery-c11",
+            "observation_id": "task_observation_v1_d8225a762459c8cc860169cb1f9bb05c853177e3ff67cd049c1962082f00d3a8",
+            "artifact_id": "b.md",
+            "artifact_version_id": "artifact_v1_1ad877f8537bc975a08073a3af843b3d4a2f0a6f7a87d80716dda508df960485",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3a70b967ddcc6cedf58fe1ba3e86af079f0de20a66e4afc5fc9349c991a1fd7a",
+            "content_hash": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646",
+            "payload_hash": "c8b2e6d8c2bb2bfdd695b2e84defafe519eab5615f60e7a943d1d850919b4df1"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 40,
+          "reason_codes": [
+            "LEXICAL_OVERLAP_WITHIN_PROJECT",
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c11",
+                "artifact_id": "a.md",
+                "artifact_version_id": "artifact_v1_ca226897638b05e74ad07a26ef49ebfafbd5ba2212528acfbb8a6a3a22f24d3f",
+                "source_ref": "artifact://discovery-c11/a.md",
+                "content_hash": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646",
+                "ordinal": 0,
+                "message_id": "message_v1_88ea67c3c6e05b543ec24b8ee2c538ab0450a0b200f18a2d61ade2d49c5984ea",
+                "segment_id": "segment_v1_4caccb6d5dec7ae7fb29cb86198492fbba9380e0790899e829b4ef138292e3f0",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4caccb6d5dec7ae7fb29cb86198492fbba9380e0790899e829b4ef138292e3f0",
+                "char_start": 0,
+                "char_end": 12,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；完成网关适配。",
+                "quote_sha256": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646"
+              },
+              "char_start": 0,
+              "char_end": 12,
+              "quote": "霁月项目；完成网关适配。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c11",
+                "artifact_id": "b.md",
+                "artifact_version_id": "artifact_v1_1ad877f8537bc975a08073a3af843b3d4a2f0a6f7a87d80716dda508df960485",
+                "source_ref": "artifact://discovery-c11/b.md",
+                "content_hash": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646",
+                "ordinal": 0,
+                "message_id": "message_v1_e33b6e46cf92af50aac99e754869687f4ed76d92160fc5eca31242a3c1c45b9b",
+                "segment_id": "segment_v1_3a70b967ddcc6cedf58fe1ba3e86af079f0de20a66e4afc5fc9349c991a1fd7a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3a70b967ddcc6cedf58fe1ba3e86af079f0de20a66e4afc5fc9349c991a1fd7a",
+                "char_start": 0,
+                "char_end": 12,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；完成网关适配。",
+                "quote_sha256": "b95e286b9ddda532f7f0420a6400290a18d5db4ddc6df713f47b82f53f1a2646"
+              },
+              "char_start": 0,
+              "char_end": 12,
+              "quote": "霁月项目；完成网关适配。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 1,
+      "returned_candidates": 1,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 24,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 1,
+      "endpoint_fanout": {
+        "task_observation_v1_0f84f103ba43b6dc3cf960a459418ae74071ad6f7c734ed1e3913cd60e56d512": 1,
+        "task_observation_v1_d8225a762459c8cc860169cb1f9bb05c853177e3ff67cd049c1962082f00d3a8": 1
+      },
+      "max_endpoint_fanout": 1,
+      "truncation_reasons": []
+    }
+  },
+  {
+    "case_id": "C12",
+    "workspace_id": "discovery-c12",
+    "anchor": "O:disconnected-a",
+    "baseline": [],
+    "discovery": [
+      {
+        "target": "O:disconnected-b",
+        "predicate_hint": "RELATED_TO",
+        "candidate": {
+          "candidate_id": "task_relation_candidate_v1_6430c043bc58b8e61537985125c8e0f53cdf08f2db0a5fc78c35491256ee06fb",
+          "schema_version": "task-relation-candidate/v1",
+          "rule_version": "candidate-discovery/v1",
+          "phase": "DISCOVERED",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "discovery-c12",
+            "observation_id": "task_observation_v1_cfb9e645e0b073d274d53cddab8303a93d6c4ec98c1e529292d4fddd9c078ed2",
+            "artifact_id": "a.md",
+            "artifact_version_id": "artifact_v1_dd0f6d013b3d68ff58e1471a7f958d00a0d5e4f1b906abd5c976dd846026b8a4",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bdbf21fb160239c27a251e0a1a038c91c2dcf39ba6d8bde0e4adf348b6d7fdf8",
+            "content_hash": "a8afe780d6397119e799511413fd1e60e9a16146606bec85a6b4227b81c75478",
+            "payload_hash": "011d174307d656c8ab3d55ae8b764ff061f40b7d2019b3f7ab212f7c1bb34b43"
+          },
+          "object": {
+            "workspace_id": "discovery-c12",
+            "observation_id": "task_observation_v1_ed954867240dd8e9bf9db21cbadee51557c7e60e7e5b640ee6dfcbf3213aebce",
+            "artifact_id": "b.md",
+            "artifact_version_id": "artifact_v1_4a16c292916e6c2d6f2db7a9ff2f178e59ff6a924ce643fca85d27b874202549",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5cdcae403885c6532bc0706da5ac62cc38118a17d9c9610ef032841eba7c63d1",
+            "content_hash": "76371a0109eedc586caf14dbf4a2c7d6e6264576b5bc3593642b8b3f5976d91f",
+            "payload_hash": "8c23fc4cd7ab800d7b146ecdfff2c7e9f3a0501179841ff0c3a5ce7ff0f1c996"
+          },
+          "predicate_hint": "RELATED_TO",
+          "priority": 25,
+          "reason_codes": [
+            "PROJECT_SCOPE"
+          ],
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "discovery-c12",
+                "artifact_id": "b.md",
+                "artifact_version_id": "artifact_v1_4a16c292916e6c2d6f2db7a9ff2f178e59ff6a924ce643fca85d27b874202549",
+                "source_ref": "artifact://discovery-c12/b.md",
+                "content_hash": "76371a0109eedc586caf14dbf4a2c7d6e6264576b5bc3593642b8b3f5976d91f",
+                "ordinal": 0,
+                "message_id": "message_v1_6c85a2cb29376068d562ff9394b5d58d86970d8beb50b9e6abfb47f3c8442a56",
+                "segment_id": "segment_v1_5cdcae403885c6532bc0706da5ac62cc38118a17d9c9610ef032841eba7c63d1",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5cdcae403885c6532bc0706da5ac62cc38118a17d9c9610ef032841eba7c63d1",
+                "char_start": 0,
+                "char_end": 11,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；修理咖啡机。",
+                "quote_sha256": "76371a0109eedc586caf14dbf4a2c7d6e6264576b5bc3593642b8b3f5976d91f"
+              },
+              "char_start": 0,
+              "char_end": 11,
+              "quote": "霁月项目；修理咖啡机。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "discovery-c12",
+                "artifact_id": "a.md",
+                "artifact_version_id": "artifact_v1_dd0f6d013b3d68ff58e1471a7f958d00a0d5e4f1b906abd5c976dd846026b8a4",
+                "source_ref": "artifact://discovery-c12/a.md",
+                "content_hash": "a8afe780d6397119e799511413fd1e60e9a16146606bec85a6b4227b81c75478",
+                "ordinal": 0,
+                "message_id": "message_v1_cf8db0f54bd4a5e732626c8760fb3104fdbb8af68ad2359c923b148e575da378",
+                "segment_id": "segment_v1_bdbf21fb160239c27a251e0a1a038c91c2dcf39ba6d8bde0e4adf348b6d7fdf8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bdbf21fb160239c27a251e0a1a038c91c2dcf39ba6d8bde0e4adf348b6d7fdf8",
+                "char_start": 0,
+                "char_end": 11,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "霁月项目；清点办公桌。",
+                "quote_sha256": "a8afe780d6397119e799511413fd1e60e9a16146606bec85a6b4227b81c75478"
+              },
+              "char_start": 0,
+              "char_end": 11,
+              "quote": "霁月项目；清点办公桌。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "uncertainty": [
+            "PROJECT_COOCCURRENCE_ONLY",
+            "VERIFIER_REQUIRED"
+          ]
+        }
+      }
+    ],
+    "diagnostics": {
+      "rejected": [],
+      "eligible_observations": 2,
+      "considered_candidates": 1,
+      "returned_candidates": 1,
+      "truncated": false,
+      "limits": {
+        "max_observations": 128,
+        "max_artifacts": 64,
+        "max_source_chars": 500000,
+        "max_candidates": 5,
+        "max_per_observation": 5,
+        "max_context_signals": 128,
+        "max_generated_candidates": 1000
+      },
+      "input_counts": {
+        "observation_rows": 2,
+        "artifact_rows": 2,
+        "source_characters": 22,
+        "current_workspace_artifacts": 2,
+        "context_signals": 0
+      },
+      "generated_candidates": 1,
+      "endpoint_fanout": {
+        "task_observation_v1_cfb9e645e0b073d274d53cddab8303a93d6c4ec98c1e529292d4fddd9c078ed2": 1,
+        "task_observation_v1_ed954867240dd8e9bf9db21cbadee51557c7e60e7e5b640ee6dfcbf3213aebce": 1
+      },
+      "max_endpoint_fanout": 1,
+      "truncation_reasons": []
+    }
+  }
+]
