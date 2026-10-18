@@ -110,7 +110,8 @@ def main(dest=DEST):
             question['required_evidence'] = [dict(source_index=observations[ref]['source_index'],
                 quote=observations[ref]['task']['text']) for ref in refs]
             if case['case_id']=='H02' and question['verdict']=='SUPPORTED':
-                question['required_evidence'].append(dict(source_index=0,quote=case['sources'][0]['content'].strip()))
+                statement=re.sub(r'^\[[^]]+\] [^:]+: ', '',case['sources'][0]['content'].strip())
+                question['required_evidence'].append(dict(source_index=0,quote=statement))
     write(dest/'gold/holdout.json', gold)
 
 

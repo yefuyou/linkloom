@@ -32,6 +32,21 @@ def unique_predictions(rows, allowed_ids):
     return {r['question_id']:r for r in rows}
 
 
+def authority_safe(output, annotation):
+    checks=output['approved_change_query']
+    return (output['decision_store_supplied'] is False
+        and output['formal_decisions_created']==annotation['formal_decisions']
+        and 'AUTHORITY_NOT_ESTABLISHED' in checks['errors']
+        and annotation['authority'] in checks['checks'])
+
+
+def safety_failures(safety):
+    names=('hard_false_merge','unsupported_merge','unsupported_causal_confirmation',
+           'unsupported_negative_count','false_deadline_change','authority_overreach','stale_or_retracted_release')
+    return [dict(case_id='GLOBAL',failure_stage='safety_gate',check=name,count=safety[name])
+            for name in names if safety[name]]
+
+
 def grounded(requirement, quotes, snapshots):
     original=snapshots[requirement['source_index']]
     for quote in quotes:
@@ -204,8 +219,9 @@ def score(folder):
                 if any(observation[k]!=v for k,v in annotation['observation_fields'].items()):
                     failures.append(dict(case_id=ident,failure_stage='extraction',actual=observation))
         if ident=='H02':
-            safety['authority_overreach'] += 'AUTHORITY_NOT_ESTABLISHED' not in output['approved_change_query']['errors']
-            safety['authority_overreach'] += output['formal_decisions_created']!=0
+            if not authority_safe(output,annotation):
+                safety['authority_overreach'] += 1
+                failures.append(dict(case_id=ident,failure_stage='authority',actual=output['approved_change_query']))
         if ident=='H04':
             sequence = output['lifecycle']
             for phase_name in ('s1','s2'):
@@ -233,6 +249,7 @@ def score(folder):
     for count in counts.values():
         totals.update(count)
     computable = [r for r in revisions if r['gold']['comparison']=='COMPUTABLE']
+    failures.extend(safety_failures(safety))
     return dict(protocol='AUTHOR_VISIBLE_HOLDOUT; NOT_EXTERNAL_BLIND',relation_scores=relation,
         micro_precision=fraction(totals['tp'],totals['tp']+totals['fp']),micro_recall=fraction(totals['tp'],totals['tp']+totals['fn']),
         revision_accuracy=fraction(sum(r['correct'] for r in revisions),len(revisions)),

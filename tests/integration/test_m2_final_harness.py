@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from scripts.run_m2_final import build, run_case
-from scripts.score_m2_final import proof_check, unique_predictions, grounded
+from scripts.score_m2_final import proof_check, unique_predictions, grounded, authority_safe, safety_failures
 import pytest
 
 
@@ -60,3 +60,14 @@ def test_required_proof_is_bound_to_the_original_source():
         content_hash=b.content_hash,quote=b.content)
     assert not grounded(dict(source_index=0,quote='shared exact words'),[quote],[a,b])
     assert grounded(dict(source_index=1,quote='shared exact words'),[quote],[a,b])
+
+
+def test_authority_overreach_fails_the_gate_even_with_correct_relations():
+    from collections import Counter
+    annotation=dict(formal_decisions=0,authority='SOURCE_CLAIM_ONLY')
+    output=dict(decision_store_supplied=False,formal_decisions_created=0,
+                approved_change_query=dict(errors=['AUTHORITY_NOT_ESTABLISHED'],checks=['SOURCE_CLAIM_ONLY']))
+    assert authority_safe(output,annotation)
+    output['formal_decisions_created']=1
+    assert not authority_safe(output,annotation)
+    assert safety_failures(Counter(authority_overreach=1))[0]['failure_stage']=='safety_gate'
