@@ -1,0 +1,71 @@
+{
+  "baseline": "af001a4d968676c30979254ac70dfb750e8f9ad6",
+  "branch": "codex/linkloom-m3-eval-fixtures",
+  "independent_review": {"status": "PASS", "method": "read-only static review and follow-up verification", "report": "REVIEW.md"},
+  "fixture_validation": {
+    "validation": "STATIC_ONLY",
+    "splits": {
+      "dev": {
+        "cases": 12,
+        "tasks": 24,
+        "relations": 27,
+        "revisions": 8,
+        "input_sha256": "7adb257057a48d1952cab39d7a896658db6ee17fdc227fbf3c0ba8439cf38d24",
+        "gold_sha256": "5687d071ad755048bed03b3545faa3ee43272ee756ca32b5453cbc29654913be"
+      },
+      "holdout": {
+        "cases": 4,
+        "tasks": 8,
+        "relations": 12,
+        "revisions": 2,
+        "input_sha256": "de5bf2b7134658e126a61c5cdcb62ad76655bce7ef14664f796118d3c765d8a1",
+        "gold_sha256": "4a46d1a00876efc7142cb84be38877a46b24930bd1a02743f097225b155aaa5f"
+      }
+    },
+    "holdout_executed": false,
+    "model_calls": 0
+  },
+  "checks": [
+    {
+      "command": "PYTHONPATH=src;. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest evals/m3_task_impact/tests -q",
+      "result": "35 passed in 1.80s",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src;. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest tests/unit/test_evaluation_metrics.py tests/unit/test_evaluation_bad_cases.py -q",
+      "result": "4 passed in 2.03s",
+      "exit_code": 0
+    }
+  ],
+  "environment_note": "Python 3.13. Global pyreadline3 destructor emitted WinError after pytest; pytest process exit 0. No production environment edits.",
+  "default_statuses": {
+    "NOT_EVALUATED": 12
+  },
+  "scripted_statuses": {
+    "SCORED": 1,
+    "NOT_EVALUATED": 11
+  },
+  "model_evaluation": "NOT_RUN",
+  "holdout_evaluation": "NOT_RUN",
+  "production_m3_evaluation": "NOT_RUN",
+  "gold_visibility": "author-visible synthetic; not strict external blind testing",
+  "fingerprints": {
+    "fixtures.py": "ae90905b07ef21a26709c46e6d04c76fd77cde63bde1a342ef47ef3100493c83",
+    "README.md": "958cdaa9d27de8f5163c7070f22e8f5db334d814086eb76d39693bf2451fee01",
+    "reporting.py": "b12946b1328bbd7368c2bd1b1d6260fd40532af6cc19ec991d3978c69beecc98",
+    "runner.py": "9a4123bfaccbf58241b48628dbad18526d951b8e0888b0c59d3ec364e97fe540",
+    "scorer.py": "91926a661e871095b1e9b8ee6bdecb9a81280528260a2bca6b1e764bb2e24fa4",
+    "SPEC.md": "1928daf342cf497afc631a80a69c9af8f7aece1bacde9bbdb50de59602aaab06",
+    "validation.py": "20c36859646c4925fb8e11d9c89c29f89928e25a5f59b85ae0432b4dc9bd958f",
+    "__init__.py": "23f3b076799f6495bfebecaa10ed2acd15231a4b962eb2f745f1013621c8b3e2",
+    "__main__.py": "61e8070d240919e22127f99011633546be3e8dd3350107cb8cd4636c46d17af4",
+    "gold/dev.json": "38d2c46389f32593638e695a7214a06df5b650d3e07e0e9ac3109e132ed9a81d",
+    "gold/holdout.json": "b9c9d59248fd3fbc7ce675a941352232172bb3b039de0d6ad1bb7e468616bc14",
+    "tests/test_reporting.py": "fc356b8b6488d7fbd29eb5b169539b2829e43fe9ed3a1b46e762b1008f3c8fe3",
+    "tests/test_runner.py": "ea703bde04b244fc13cb3d031ceae9c6caa0bfdc9bad942d7b320c16d8bf659e",
+    "tests/test_scoring.py": "220b54e0503496f526983b4a92ff2c81e514f52d77cd3617da08bd647b413e30",
+    "tests/test_validation.py": "8f34707dd5b918bcabe43ea2f6a71c680a6c2faee2f6be36db733620ebf3e283",
+    "data/dev/inputs.json": "008bfbbd41b9ad9d444360525b5d63eb2e347660d8a1c94c1d1c9e1da587f156",
+    "data/holdout/inputs.json": "2d0a8fb8ae0d59db3184b2825b51eaba3b2a55f03a9eadea15bef9b656790b34"
+  }
+}

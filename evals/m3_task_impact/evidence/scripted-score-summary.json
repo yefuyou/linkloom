@@ -1,0 +1,245 @@
+{
+  "schema": "m3-score/v1",
+  "split": "dev",
+  "summary": {
+    "cases": 12,
+    "evaluated_cases": 1,
+    "statuses": {
+      "SCORED": 1,
+      "NOT_EVALUATED": 11
+    },
+    "failure_stages": {
+      "capability_gap": 11
+    },
+    "by_scope": {
+      "SCRIPTED_WIRING_ONLY": {
+        "cases": 1,
+        "metrics": {
+          "abstention_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "deadline_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "evidence_groundedness": {
+            "numerator": 2,
+            "denominator": 2,
+            "value": 1.0
+          },
+          "evidence_readback": {
+            "numerator": 2,
+            "denominator": 2,
+            "value": 1.0
+          },
+          "false_merge_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "false_revision_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "owner_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "project_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "relation_by_predicate": {},
+          "relation_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "relation_recall": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "relation_state_accuracy": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "revision_accuracy": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "task_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "task_discovery_precision": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "task_discovery_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          }
+        },
+        "counts": {
+          "grounded_claims": 2,
+          "total_claims": 2,
+          "evidence_refs": 2,
+          "valid_evidence_refs": 2,
+          "discovered_tasks": 1,
+          "extra_tasks": 0,
+          "published_merges": 0,
+          "hard_false_merge": 0,
+          "unsupported_merge": 0,
+          "false_revision": 0,
+          "unsupported_negative": 0
+        }
+      }
+    }
+  },
+  "qualification": "Preparation only; scripted scores do not establish M3 Agent capability.",
+  "model_evaluation": "NOT_RUN",
+  "holdout_evaluation": "NOT_RUN",
+  "d01": {
+    "case_id": "D01",
+    "status": "SCORED",
+    "metrics": {
+      "task_discovery_recall": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "task_discovery_precision": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "task_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "owner_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "deadline_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "project_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "relation_precision": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "relation_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "relation_by_predicate": {},
+      "relation_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "false_revision_rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "revision_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      },
+      "abstention_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "evidence_groundedness": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "evidence_readback": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "false_merge_rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": null
+      }
+    },
+    "counts": {
+      "grounded_claims": 2,
+      "total_claims": 2,
+      "evidence_refs": 2,
+      "valid_evidence_refs": 2,
+      "discovered_tasks": 1,
+      "extra_tasks": 0,
+      "published_merges": 0,
+      "hard_false_merge": 0,
+      "unsupported_merge": 0,
+      "false_revision": 0,
+      "unsupported_negative": 0
+    },
+    "failure_stage": null,
+    "failure_stages": [],
+    "bad_cases": [],
+    "observability": {
+      "adapter_kind": "SCRIPTED",
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 1,
+        "tool_receipts": [
+          {
+            "seq": 1,
+            "tool": "list_sources",
+            "arguments": {},
+            "result_sha256": "b1b9d1946cbf0b4a2ec0761048918a75ec79ffa6cf9f276452eb9c762e0ddfbe",
+            "status": "OK"
+          },
+          {
+            "seq": 2,
+            "tool": "read_source",
+            "arguments": {
+              "doc_id": "a"
+            },
+            "result_sha256": "1d8cf35738d5b24f86df3d253c5b8dc474ba721bc2624bdef1b5798140089f52",
+            "status": "OK"
+          }
+        ],
+        "model_calls": 0,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 6.155
+      },
+      "run_status": "EXECUTED",
+      "input_sha256": "e8102b40d49c11a3c0156595cb3ee778bd2e80094de352b20a5ef73e37d6eee4"
+    },
+    "scope": "SCRIPTED_WIRING_ONLY"
+  }
+}
