@@ -1,0 +1,1338 @@
+{
+  "case_id": "H02",
+  "predictions": [
+    {
+      "question_id": "H02-1",
+      "assessment": {
+        "assessment_id": "task_assessment_v2_73389330b6b9e0db3febb4dec71693d9c29e7f0a6bc2ae127a160e381320e1f4",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "AFFECTED_BY",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+        },
+        "object": {
+          "endpoint_type": "CHANGE",
+          "workspace_id": "m2-final-h02",
+          "project": "星河项目",
+          "before_vendor": "云桥科技",
+          "after_vendor": "星帆通信",
+          "evidence": {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "char_start": 32,
+            "char_end": 60,
+            "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+            "role": "RELATION_PROPOSAL"
+          },
+          "kind": "SOURCE_CLAIM",
+          "decision_id": null,
+          "candidate_id": null,
+          "receipt_id": null
+        },
+        "verdict": "UNKNOWN",
+        "reason_codes": [
+          "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+            "provenance": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "raw_text": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 102,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 102,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 87,
+                "char_end": 101,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T14:00:00+00:00",
+            "event_time": "2026-10-15T02:05:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [
+          "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+        ],
+        "assessed_at": "2026-10-18T14:00:00+00:00",
+        "relation_detail": null,
+        "premise_ids": [],
+        "authority_checks": [
+          "FORMAL_AUTHORITY_NOT_ESTABLISHED",
+          "SOURCE_CLAIM_ONLY"
+        ]
+      }
+    },
+    {
+      "question_id": "H02-2",
+      "assessment": {
+        "assessment_id": "task_assessment_v2_ec3769ca9f5d5b48c1079ab3d4bbbfd7a8d25001f249fc182abba77155d7029a",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "AFFECTED_BY",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+        },
+        "object": {
+          "endpoint_type": "CHANGE",
+          "workspace_id": "m2-final-h02",
+          "project": "星河项目",
+          "before_vendor": "云桥科技",
+          "after_vendor": "星帆通信",
+          "evidence": {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "char_start": 32,
+            "char_end": 60,
+            "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+            "role": "RELATION_PROPOSAL"
+          },
+          "kind": "SOURCE_CLAIM",
+          "decision_id": null,
+          "candidate_id": null,
+          "receipt_id": null
+        },
+        "verdict": "UNKNOWN",
+        "reason_codes": [
+          "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+            "provenance": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "raw_text": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "description": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+                "char_start": 135,
+                "char_end": 203,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+                "char_start": 135,
+                "char_end": 203,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 135,
+                "char_end": 138,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 131,
+                "char_end": 133,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 138,
+                "char_end": 142,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 161,
+                "char_end": 175,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T14:00:00+00:00",
+            "event_time": "2026-10-15T02:06:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [
+          "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+        ],
+        "assessed_at": "2026-10-18T14:00:00+00:00",
+        "relation_detail": null,
+        "premise_ids": [],
+        "authority_checks": [
+          "FORMAL_AUTHORITY_NOT_ESTABLISHED",
+          "SOURCE_CLAIM_ONLY"
+        ]
+      }
+    },
+    {
+      "question_id": "H02-3",
+      "assessment": {
+        "assessment_id": "task_assessment_v2_a63fbd812d9f36a0c915e4131584897d49303a674c1c99c3d5661a2e2e17dfb9",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "AFFECTED_BY",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+        },
+        "object": {
+          "endpoint_type": "CHANGE",
+          "workspace_id": "m2-final-h02",
+          "project": "星河项目",
+          "before_vendor": "云桥科技",
+          "after_vendor": "星帆通信",
+          "evidence": {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "char_start": 32,
+            "char_end": 60,
+            "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+            "role": "RELATION_PROPOSAL"
+          },
+          "kind": "SOURCE_CLAIM",
+          "decision_id": null,
+          "candidate_id": null,
+          "receipt_id": null
+        },
+        "verdict": "UNKNOWN",
+        "reason_codes": [
+          "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+            "provenance": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "raw_text": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+                "char_start": 236,
+                "char_end": 276,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+                "char_start": 236,
+                "char_end": 276,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 236,
+                "char_end": 239,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 232,
+                "char_end": 234,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 239,
+                "char_end": 243,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 261,
+                "char_end": 275,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T14:00:00+00:00",
+            "event_time": "2026-10-15T02:07:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+              "source_ref": "artifact://m2-final-h02/A.md",
+              "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+              "ordinal": 0,
+              "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+              "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+              "char_start": 32,
+              "char_end": 60,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+              "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-final-h02",
+              "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+            },
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [
+          "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+        ],
+        "assessed_at": "2026-10-18T14:00:00+00:00",
+        "relation_detail": null,
+        "premise_ids": [],
+        "authority_checks": [
+          "FORMAL_AUTHORITY_NOT_ESTABLISHED",
+          "SOURCE_CLAIM_ONLY"
+        ]
+      }
+    }
+  ],
+  "discovery": {
+    "candidates": [
+      {
+        "candidate_id": "task_relation_candidate_v1_5427b24649499df38ff52cc0d4e0893ab84b100aeefee3c383d6e5a403229dbe",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+        },
+        "object": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "char_start": 236,
+            "char_end": 276,
+            "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "char_start": 135,
+            "char_end": 203,
+            "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_578ae0995fb8efaa65b8d93753e7fbb4dc7429f7e14e602a193e4dd15ce0fecd",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "1db73ad20db28f8f2d05817835416495f561e2d55e5e322b9bd40f0042284255"
+        },
+        "object": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 1,
+              "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+              "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+              "char_start": 135,
+              "char_end": 203,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+              "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+            },
+            "char_start": 135,
+            "char_end": 203,
+            "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "char_start": 32,
+            "char_end": 102,
+            "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_713211c4914a69dac99a71a2ca08b405f9034d4e21fdf8aadebbca2ed7e52775",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "f760a7e490725e9b01aea53851937757a3232ad703ed49ee806d6d1f8d8ca67e"
+        },
+        "object": {
+          "workspace_id": "m2-final-h02",
+          "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "payload_hash": "c51b857df9b8fee64637d44ad70ff90503aa2c37a1e16f51d9b064650c8f6441"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 2,
+              "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+              "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+              "char_start": 236,
+              "char_end": 276,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+              "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+            },
+            "char_start": 236,
+            "char_end": 276,
+            "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-final-h02",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+              "source_ref": "artifact://m2-final-h02/B.md",
+              "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+              "ordinal": 0,
+              "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+              "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+              "char_start": 32,
+              "char_end": 102,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+              "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+            },
+            "char_start": 32,
+            "char_end": 102,
+            "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      }
+    ],
+    "rejected": [],
+    "eligible_observations": 3,
+    "considered_candidates": 3,
+    "returned_candidates": 3,
+    "truncated": false,
+    "limits": {
+      "max_observations": 128,
+      "max_artifacts": 64,
+      "max_source_chars": 500000,
+      "max_candidates": 100,
+      "max_per_observation": 10,
+      "max_context_signals": 128,
+      "max_generated_candidates": 1000
+    },
+    "input_counts": {
+      "observation_rows": 3,
+      "artifact_rows": 2,
+      "source_characters": 338,
+      "current_workspace_artifacts": 2,
+      "context_signals": 0
+    },
+    "generated_candidates": 3,
+    "endpoint_fanout": {
+      "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23": 2,
+      "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821": 2,
+      "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209": 2
+    },
+    "max_endpoint_fanout": 2,
+    "truncation_reasons": []
+  },
+  "decision_store_supplied": false,
+  "formal_decisions_created": 0,
+  "approved_change_query": {
+    "errors": [
+      "AUTHORITY_NOT_ESTABLISHED"
+    ],
+    "checks": [
+      "SOURCE_CLAIM_ONLY"
+    ]
+  }
+}

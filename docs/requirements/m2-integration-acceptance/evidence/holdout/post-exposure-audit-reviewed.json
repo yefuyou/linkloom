@@ -1,0 +1,303 @@
+{
+  "protocol": "POST_EXPOSURE_AUDIT_OF_SAME_FIRST_PREDICTIONS; NO_M2_RERUN; NOT_BLIND",
+  "audit_script_sha256": "ab798f82acb66ebf8e8a07a1d3d44b86444121404c76b4150c20ac2e895efab3",
+  "original_metrics_sha256": "045cc40251d6c05e91975fafe1cc1e4d66773e44aebb700cec2361e811a17d26",
+  "implementation_commit": "312d717893b3c5d4d759701b4fc3364650401c22",
+  "original_predictions_unchanged": true,
+  "protected_files_unchanged": true,
+  "gold_unchanged": true,
+  "expectations_source": "independent Reviewer, original M2_EVAL_SPEC; supplied before Reviewer read predictions",
+  "expectations": {
+    "H01-1": {
+      "verdict": "SUPPORTED",
+      "codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison": "NOT_COMPARABLE",
+      "comparison_codes": [
+        "DEADLINE_ROLE_OR_PRECISION_UNSUITABLE"
+      ]
+    },
+    "H02-1": {
+      "verdict": "SUPPORTED",
+      "codes": [
+        "EXPLICIT_DIRECT_CHANGE_IMPACT"
+      ]
+    },
+    "H02-2": {
+      "verdict": "REFUTED",
+      "codes": [
+        "EXPLICIT_DIRECT_CHANGE_IMPACT"
+      ]
+    },
+    "H02-3": {
+      "verdict": "UNKNOWN",
+      "codes": [
+        "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+      ],
+      "missing_terms": [
+        "连接",
+        "具体供应商变更",
+        "共现不足"
+      ]
+    },
+    "H03-1": {
+      "verdict": "CONFLICT",
+      "codes": [
+        "CONFLICTING_REVISION_EVIDENCE"
+      ],
+      "comparison": "BLOCKED",
+      "comparison_codes": [
+        "CONFLICTING_REVISION_EVIDENCE"
+      ]
+    },
+    "H04-1": {
+      "verdict": "SUPPORTED",
+      "codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ]
+    },
+    "H04-2": {
+      "verdict": "REFUTED",
+      "codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ],
+      "comparison": "NOT_APPLICABLE",
+      "comparison_codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ],
+      "detail": "NO_BUSINESS_PLAN_REVISION"
+    }
+  },
+  "reason_checks": [
+    {
+      "case_id": "H01",
+      "question_id": "H01-1",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false,
+        "comparison_status": false,
+        "comparison_reason": false,
+        "blocked_delta_null": true
+      },
+      "passed": false,
+      "actual_codes": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "actual_missing": [
+        "需要当前有效的同任务证明和唯一绑定新旧计划的明确修订/反证。"
+      ],
+      "comparison_codes": [
+        "NO_REVISION_EVIDENCE"
+      ]
+    },
+    {
+      "case_id": "H02",
+      "question_id": "H02-1",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false
+      },
+      "passed": false,
+      "actual_codes": [
+        "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+      ],
+      "actual_missing": [
+        "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+      ],
+      "comparison_codes": null
+    },
+    {
+      "case_id": "H02",
+      "question_id": "H02-2",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false
+      },
+      "passed": false,
+      "actual_codes": [
+        "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+      ],
+      "actual_missing": [
+        "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+      ],
+      "comparison_codes": null
+    },
+    {
+      "case_id": "H02",
+      "question_id": "H02-3",
+      "checks": {
+        "verdict": true,
+        "relation_reason": true,
+        "missing_evidence": true
+      },
+      "passed": true,
+      "actual_codes": [
+        "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+      ],
+      "actual_missing": [
+        "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+      ],
+      "comparison_codes": null
+    },
+    {
+      "case_id": "H03",
+      "question_id": "H03-1",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false,
+        "comparison_status": false,
+        "comparison_reason": false,
+        "blocked_delta_null": true
+      },
+      "passed": false,
+      "actual_codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ],
+      "actual_missing": [],
+      "comparison_codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ]
+    },
+    {
+      "case_id": "H04",
+      "question_id": "H04-1",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false
+      },
+      "passed": false,
+      "actual_codes": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "actual_missing": [
+        "需要当前有效的同任务证明和唯一绑定新旧计划的明确修订/反证。"
+      ],
+      "comparison_codes": [
+        "NO_REVISION_EVIDENCE"
+      ]
+    },
+    {
+      "case_id": "H04",
+      "question_id": "H04-2",
+      "checks": {
+        "verdict": false,
+        "relation_reason": false,
+        "comparison_status": false,
+        "comparison_reason": false,
+        "blocked_delta_null": true,
+        "relation_detail": false
+      },
+      "passed": false,
+      "actual_codes": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "actual_missing": [
+        "需要当前有效的同任务证明和唯一绑定新旧计划的明确修订/反证。"
+      ],
+      "comparison_codes": [
+        "NO_REVISION_EVIDENCE"
+      ]
+    }
+  ],
+  "exact_change_checks": [
+    {
+      "question_id": "H02-1",
+      "checks": {
+        "typed_fields": true,
+        "exact_evidence": true,
+        "dependency": true,
+        "authority": true
+      },
+      "passed": true
+    },
+    {
+      "question_id": "H02-2",
+      "checks": {
+        "typed_fields": true,
+        "exact_evidence": true,
+        "dependency": true,
+        "authority": true
+      },
+      "passed": true
+    },
+    {
+      "question_id": "H02-3",
+      "checks": {
+        "typed_fields": true,
+        "exact_evidence": true,
+        "dependency": true,
+        "authority": true
+      },
+      "passed": true
+    }
+  ],
+  "candidate_atoms": [
+    {
+      "case_id": "H01",
+      "snapshot": "s0",
+      "predicate": "REVISES_PLAN",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    },
+    {
+      "case_id": "H01",
+      "snapshot": "s0",
+      "predicate": "SAME_TASK",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    },
+    {
+      "case_id": "H02",
+      "snapshot": "s0",
+      "predicate": "AFFECTED_BY",
+      "endpoint_pair_recalled": false,
+      "predicate_hint_recalled": false
+    },
+    {
+      "case_id": "H03",
+      "snapshot": "s0",
+      "predicate": "SAME_TASK",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    },
+    {
+      "case_id": "H04",
+      "snapshot": "s0",
+      "predicate": "REVISES_PLAN",
+      "endpoint_pair_recalled": false,
+      "predicate_hint_recalled": false
+    },
+    {
+      "case_id": "H04",
+      "snapshot": "s0",
+      "predicate": "SAME_TASK",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    },
+    {
+      "case_id": "H04",
+      "snapshot": "s1",
+      "predicate": "SAME_TASK",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    },
+    {
+      "case_id": "H04",
+      "snapshot": "s2",
+      "predicate": "SAME_TASK",
+      "endpoint_pair_recalled": true,
+      "predicate_hint_recalled": true
+    }
+  ],
+  "candidate_endpoint_pair_recall": {
+    "numerator": 6,
+    "denominator": 8
+  },
+  "candidate_predicate_hint_recall": {
+    "numerator": 6,
+    "denominator": 8
+  },
+  "original_overall": "FAIL",
+  "audited_overall": "FAIL"
+}

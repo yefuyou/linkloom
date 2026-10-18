@@ -1,0 +1,20 @@
+{
+  "baseline": "eee882f4c676e900ee8895ac5b09f5fb2b3e6e36",
+  "common_ancestor": "af001a4d968676c30979254ac70dfb750e8f9ad6",
+  "original_b": "98e6fde17d34886e1e35bb8eae77e1b0ef6a9422",
+  "original_c": "526d59ef0f216940b2677402bb4ba5ff6d81cd32",
+  "cherry_picks": [
+    "58db89a",
+    "d75ca74"
+  ],
+  "path_allowlist_check": "PASS",
+  "unexpected_paths": [],
+  "production_change_outside_B": "one line strip in task_work_proofs._target",
+  "original_p1_p3_p4_m1_gold_unchanged": true,
+  "forbidden_git_operations": [],
+  "real_vault_access": false,
+  "pr_created": false,
+  "independent_branch": "codex/linkloom-m2-integration-acceptance",
+  "target_remote_branch": "codex/linkloom-m2-progress",
+  "expected_remote_head": "eee882f4c676e900ee8895ac5b09f5fb2b3e6e36"
+}

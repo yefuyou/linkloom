@@ -15,9 +15,20 @@
       "label": "prefreeze-harness-final",
       "passed": 7,
       "exit_code": 0
+    },
+    {
+      "label": "postrun-audit-tests",
+      "passed": 2,
+      "exit_code": 0,
+      "superseded_by": "postrun-audit-final-2; overlapping two tests, not added to unique count"
+    },
+    {
+      "label": "postrun-audit-final-2",
+      "passed": 3,
+      "exit_code": 0
     }
   ],
-  "unique_passing_tests": 378,
+  "unique_passing_tests": 381,
   "failures": [
     {
       "stage": "C02 B-to-P2 interface compatibility",
@@ -32,6 +43,15 @@
       "cause": "without an explicit checkout PYTHONPATH, Python resolves the old editable main checkout",
       "repair": "set PYTHONPATH to integration src and root before python -m evals.m3_task_impact",
       "final": "12 NOT_RUN/NOT_EVALUATED; scripted D01 separated"
+    },
+    {
+      "stage": "post-exposure audit tooling",
+      "attempts": [
+        "snapshot parameter shadowed by phase variable",
+        "endpoint object shadowed across phase iterations"
+      ],
+      "effect": "audit report failed before writing; original M2 predictions and frozen files unchanged",
+      "repair": "separate variable names, multi-question and multi-snapshot Dev probes; final 3 passed"
     }
   ],
   "environment_warning": "pyreadline3 Console destructor prints a Windows handle warning after pytest; final exit codes are 0",
@@ -43,5 +63,7 @@
     "p4_atomic_checks": "53/53",
     "candidate_recall": "8/9; C10 remains missed",
     "scripted": "SCRIPTED_WIRING_ONLY, never production Agent score"
-  }
+  },
+  "m2_holdout_first_run": "FAIL, 0/4 cases; original frozen metrics retained",
+  "post_exposure_audit": "same predictions only; no production/Gold/frozen scorer changes"
 }
