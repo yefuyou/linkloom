@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field, fields
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 import hashlib
 import json
 import re
@@ -70,6 +70,7 @@ class EvidenceQuote:
             "TASK_KEY", "PROJECT_SCOPE", "TASK_NAMESPACE", "IDENTITY_ASSERTION",
             "IDENTITY_COUNTER", "UNRESOLVED_REFERENCE", "AMBIGUITY",
             "RELATION_PROPOSAL", "PROJECT_BINDING", "PROJECT_ALIAS", "WORK_LINK", "DIRECT_IMPACT", "CHANGE_CLAIM",
+            "PLAN_REVISION", "PLAN_COUNTER", "PLAN_EFFECTIVE", "DEADLINE_BOUND",
         }:
             raise ValueError("invalid identity evidence role/span")
         if (type(self.char_start) is not int or type(self.char_end) is not int
@@ -195,6 +196,8 @@ class RelationAssessment:
     relation_detail: str | None = None
     premise_ids: tuple[str, ...] = ()
     authority_checks: tuple[str, ...] = ()
+    changed_fields: tuple[str, ...] = ()
+    asserted_effective_at: str | None = None
     assessment_id: str = field(init=False)
 
     schema_version: ClassVar[str] = "task-relation-assessment/v1"
@@ -203,9 +206,19 @@ class RelationAssessment:
     def __post_init__(self):
         shapes = {"SAME_TASK": (ObservationRef, ObservationRef), "RELATED_TO": (ObservationRef, ObservationRef),
                   "IN_PROJECT": (ObservationRef, ProjectRef), "PROJECT_ALIAS": (ProjectRef, ProjectRef),
-                  "AFFECTED_BY": (ObservationRef, ChangeRef)}
+                  "AFFECTED_BY": (ObservationRef, ChangeRef), "REVISES_PLAN": (ObservationRef, ObservationRef)}
         if self.predicate not in shapes:
             raise ValueError("relation predicate not implemented")
+        if self.predicate != 'REVISES_PLAN' and (self.changed_fields or self.asserted_effective_at is not None):
+            raise ValueError('revision metadata is only valid on REVISES_PLAN')
+        if not isinstance(self.changed_fields, tuple) or any(v not in {'deadline','scope'} for v in self.changed_fields):
+            raise ValueError('unsupported plan revision field')
+        object.__setattr__(self, 'changed_fields', tuple(sorted(set(self.changed_fields))))
+        if self.predicate == 'REVISES_PLAN' and self.verdict == 'SUPPORTED' and not self.changed_fields:
+            raise ValueError('supported revision requires explicitly changed fields')
+        if self.asserted_effective_at is not None:
+            if not isinstance(self.asserted_effective_at, str) or date.fromisoformat(self.asserted_effective_at).isoformat() != self.asserted_effective_at:
+                raise ValueError('effective date must preserve explicit DAY precision')
         if self.predicate == 'SAME_TASK' and (self.relation_detail is not None or self.premise_ids or self.authority_checks):
             raise ValueError('P1 assessments do not contain P2 metadata')
         for name in ('premise_ids', 'authority_checks'):
@@ -257,7 +270,7 @@ class RelationAssessment:
         identity = self._payload()
         identity.pop("assessed_at")
         identity.pop("observations")  # Their immutable semantic payloads are hashed by the endpoint refs.
-        prefix = 'task_assessment_v1_' if self.predicate == 'SAME_TASK' else 'task_assessment_v2_'
+        prefix = 'task_assessment_v1_' if self.predicate == 'SAME_TASK' else 'task_assessment_v3_' if self.predicate == 'REVISES_PLAN' else 'task_assessment_v2_'
         object.__setattr__(self, "assessment_id", prefix + canonical_hash(identity))
 
     @property
@@ -290,6 +303,9 @@ class RelationAssessment:
             payload.update(schema_version="task-relation-assessment/v2", rule_version="direct-relations-rules/v1",
                            relation_detail=self.relation_detail, premise_ids=list(self.premise_ids),
                            authority_checks=list(self.authority_checks))
+        if self.predicate == 'REVISES_PLAN':
+            payload.update(schema_version='task-relation-assessment/v3', rule_version='plan-revision-rules/v1',
+                           changed_fields=list(self.changed_fields), asserted_effective_at=self.asserted_effective_at)
         return payload
 
     def to_dict(self):
@@ -311,6 +327,7 @@ class RelationAssessment:
                 missing_evidence=tuple(data["missing_evidence"]), assessed_at=datetime.fromisoformat(data["assessed_at"]),
                 predicate=data["predicate"], relation_detail=data.get("relation_detail"),
                 premise_ids=tuple(data.get("premise_ids", ())), authority_checks=tuple(data.get("authority_checks", ())),
+                changed_fields=tuple(data.get('changed_fields', ())), asserted_effective_at=data.get('asserted_effective_at'),
             )
             if result.to_dict() != data:
                 raise ValueError("noncanonical or altered identity assessment")

@@ -1,0 +1,98 @@
+[
+  {
+    "question_id": "D04-b-revision",
+    "same_task": "SUPPORTED",
+    "revision": "SUPPORTED",
+    "changed_fields": [
+      "deadline"
+    ],
+    "comparison": "COMPUTABLE",
+    "old_deadline": {
+      "value": "2026-10-14",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "new_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "delta_calendar_days": 4,
+    "reason_codes": [
+      "VERIFIED_PLAN_BOUNDARIES"
+    ]
+  },
+  {
+    "question_id": "D04-c-revision",
+    "same_task": "SUPPORTED",
+    "revision": "SUPPORTED",
+    "changed_fields": [
+      "scope"
+    ],
+    "comparison": "COMPUTABLE",
+    "old_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "new_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "delta_calendar_days": 0,
+    "reason_codes": [
+      "VERIFIED_PLAN_BOUNDARIES"
+    ]
+  },
+  {
+    "question_id": "D05-revision",
+    "same_task": "SUPPORTED",
+    "revision": "UNKNOWN",
+    "changed_fields": [],
+    "comparison": "BLOCKED",
+    "old_deadline": {
+      "value": "2026-10-14",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "new_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "delta_calendar_days": null,
+    "reason_codes": [
+      "NO_REVISION_EVIDENCE"
+    ]
+  },
+  {
+    "question_id": "D07-revision",
+    "same_task": "UNKNOWN",
+    "revision": "UNKNOWN",
+    "changed_fields": [],
+    "comparison": "BLOCKED",
+    "old_deadline": {
+      "value": "2026-10-14",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "new_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE"
+    },
+    "delta_calendar_days": null,
+    "reason_codes": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ]
+  }
+]

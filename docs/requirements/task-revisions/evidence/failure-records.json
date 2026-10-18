@@ -1,0 +1,57 @@
+[
+  {
+    "phase": "red-contract",
+    "observed": "missing task_plan_revision module",
+    "resolved_by": "new P3 entry point"
+  },
+  {
+    "phase": "red-dev",
+    "failed_cases": [
+      "D04 scope",
+      "V02 boundary",
+      "V03 correction",
+      "V04 conflict",
+      "V05 future",
+      "V07 zero"
+    ],
+    "resolved_by": "finite proof coverage, explicit correction/branch/effective date and unchanged boundary validation"
+  },
+  {
+    "phase": "red-safety",
+    "observed": "positive and negative same statement returned REFUTED",
+    "expected": "CONFLICT",
+    "resolved_by": "retain both valid proof sides"
+  },
+  {
+    "phase": "red-other-task",
+    "observed": [
+      "SUPPORTED for other task revision",
+      "REFUTED for other task denial"
+    ],
+    "expected": "UNKNOWN",
+    "resolved_by": "local action-subject ownership"
+  },
+  {
+    "phase": "independent review R1",
+    "observed": "proof exceeded observation raw end; false +4",
+    "expected": "UNKNOWN / BLOCKED / null",
+    "resolved_by": "verify both start and end containment"
+  },
+  {
+    "phase": "independent review R2",
+    "observed": "不应替代 treated as positive; false +4",
+    "expected": "no supported revision / null",
+    "resolved_by": "whole positive replacement clause grammar"
+  },
+  {
+    "phase": "independent review R3",
+    "observed": "前完成 + 含当日 or 最晚在 guessed BEFORE; false +4",
+    "expected": "UNKNOWN bound / NOT_COMPARABLE / null",
+    "resolved_by": "preserve conflicting local boundary modifiers"
+  },
+  {
+    "phase": "publication-preparation",
+    "observed": "Test launched before archive overlay completed; old runner passed p3 as a pytest path; no tests ran.",
+    "resolved_by": "Waited for publication preparation to finish, then used a fresh label; isolated publication copy passed 285 tests and reproduced Dev 12/12. Original failed output retained."
+  }
+]

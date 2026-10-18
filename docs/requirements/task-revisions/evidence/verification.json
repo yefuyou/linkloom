@@ -1,0 +1,25 @@
+{
+  "P3_focused": {
+    "passed": 44,
+    "exit_code": 0
+  },
+  "related_regression": {
+    "passed": 241,
+    "exit_code": 0
+  },
+  "isolated_publication_reproduction": {
+    "base_commit": "d085240f0f5ee1aa804824c61cc4f95f4734cf42",
+    "overlay_files": 30,
+    "passed": 285,
+    "seconds": 66.83,
+    "exit_code": 0,
+    "dev_full_match": {"numerator": 12, "denominator": 12},
+    "initial_preparation_race": "Old runner started before overlay completion: no tests ran, missing path p3. Failure retained; rerun after preparation completed used a fresh label."
+  },
+  "independent_review": "PASS after three reproduced and fixed findings",
+  "real_provider_calls": 0,
+  "holdout_executed": false,
+  "CI_verified": false,
+  "deployed": false,
+  "logs": "preserved locally in new P3 acceptance-local directory; no old ledger changed"
+}

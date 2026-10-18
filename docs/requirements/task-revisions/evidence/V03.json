@@ -1,0 +1,1008 @@
+{
+  "case_id": "V03",
+  "predictions": [
+    {
+      "question_id": "V03-source-correction",
+      "same_task": {
+        "assessment_id": "task_assessment_v1_3e26c39aa672b26e869406b801a4e042371426b807cbec42600ed23175fb5a04",
+        "schema_version": "task-relation-assessment/v1",
+        "rule_version": "same-task-rules/v1",
+        "predicate": "SAME_TASK",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+          "artifact_id": "corrected.md",
+          "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+          "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+          "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+          "artifact_id": "recorded.md",
+          "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+          "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+          "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_TASK_REFERENCE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "raw_text": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "description": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "owner": "林嘉",
+            "deadline": "2026-12-05",
+            "deadline_text": "2026年12月05日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "赤松云项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "char_start": 32,
+                "char_end": 126,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "char_start": 32,
+                "char_end": 126,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "林嘉",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "赤松云项目",
+                "char_start": 35,
+                "char_end": 40,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年12月05日前完成",
+                "char_start": 75,
+                "char_end": 89,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-12-03T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "raw_text": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+            "description": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+            "owner": "林嘉",
+            "deadline": "2026-12-09",
+            "deadline_text": "2026年12月09日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "赤松云项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "char_start": 32,
+                "char_end": 74,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "char_start": 32,
+                "char_end": 74,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "林嘉",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "赤松云项目",
+                "char_start": 35,
+                "char_end": 40,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年12月09日前完成",
+                "char_start": 59,
+                "char_end": 73,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-12-01T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "char_start": 50,
+            "char_end": 126,
+            "quote": "本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "role": "IDENTITY_ASSERTION"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "char_start": 35,
+            "char_end": 40,
+            "quote": "赤松云项目",
+            "role": "PROJECT_SCOPE"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "char_start": 40,
+            "char_end": 49,
+            "quote": "任务 REL-63",
+            "role": "TASK_KEY"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "char_start": 40,
+            "char_end": 49,
+            "quote": "任务 REL-63",
+            "role": "TASK_KEY"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "char_start": 35,
+            "char_end": 40,
+            "quote": "赤松云项目",
+            "role": "PROJECT_SCOPE"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T10:58:53.698321+00:00"
+      },
+      "revision": {
+        "assessment_id": "task_assessment_v3_aff64e138149afb06b9f8919db55f009faa46a006c5c91194121cc6218bc96b0",
+        "schema_version": "task-relation-assessment/v3",
+        "rule_version": "plan-revision-rules/v1",
+        "predicate": "REVISES_PLAN",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+          "artifact_id": "corrected.md",
+          "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+          "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+          "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+          "artifact_id": "recorded.md",
+          "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+          "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+          "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+        },
+        "verdict": "REFUTED",
+        "reason_codes": [
+          "EXPLICIT_NO_BUSINESS_REVISION"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "raw_text": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "description": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "owner": "林嘉",
+            "deadline": "2026-12-05",
+            "deadline_text": "2026年12月05日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "赤松云项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "char_start": 32,
+                "char_end": 126,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "char_start": 32,
+                "char_end": 126,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "林嘉",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "赤松云项目",
+                "char_start": 35,
+                "char_end": 40,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年12月05日前完成",
+                "char_start": 75,
+                "char_end": 89,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-12-03T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "raw_text": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+            "description": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+            "owner": "林嘉",
+            "deadline": "2026-12-09",
+            "deadline_text": "2026年12月09日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "赤松云项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "char_start": 32,
+                "char_end": 74,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "char_start": 32,
+                "char_end": 74,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "林嘉",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "赤松云项目",
+                "char_start": 35,
+                "char_end": 40,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年12月09日前完成",
+                "char_start": 59,
+                "char_end": 73,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-12-01T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "char_start": 50,
+            "char_end": 126,
+            "quote": "本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "role": "PLAN_COUNTER"
+          }
+        ],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T10:58:53.748217+00:00",
+        "relation_detail": "NO_BUSINESS_PLAN_REVISION",
+        "premise_ids": [
+          "task_assessment_v1_3e26c39aa672b26e869406b801a4e042371426b807cbec42600ed23175fb5a04"
+        ],
+        "authority_checks": [],
+        "changed_fields": [],
+        "asserted_effective_at": null
+      },
+      "comparison": {
+        "comparison_id": "revision_comparison_v1_687b5a59c05bb7315bef2974b4b821a7d8b2900fdd980e38efd87606af84d808",
+        "schema_version": "revision-comparison/v1",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+          "artifact_id": "corrected.md",
+          "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+          "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+          "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v03",
+          "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+          "artifact_id": "recorded.md",
+          "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+          "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+          "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+        },
+        "same_task_id": "task_assessment_v1_3e26c39aa672b26e869406b801a4e042371426b807cbec42600ed23175fb5a04",
+        "revision_id": "task_assessment_v3_aff64e138149afb06b9f8919db55f009faa46a006c5c91194121cc6218bc96b0",
+        "status": "NOT_APPLICABLE",
+        "reason_codes": [
+          "EXPLICIT_NO_BUSINESS_REVISION"
+        ],
+        "old_deadline": {
+          "value": "2026-12-09",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v03",
+                "artifact_id": "recorded.md",
+                "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+                "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+                "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+                "ordinal": 0,
+                "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+                "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+              },
+              "char_start": 59,
+              "char_end": 73,
+              "quote": "2026年12月09日前完成",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v03",
+                "artifact_id": "recorded.md",
+                "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+                "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+                "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+                "ordinal": 0,
+                "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+                "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+                "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+              },
+              "char_start": 32,
+              "char_end": 74,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "new_deadline": {
+          "value": "2026-12-05",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v03",
+                "artifact_id": "corrected.md",
+                "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+                "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+                "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+                "ordinal": 0,
+                "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+                "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+                "char_start": 32,
+                "char_end": 126,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+              },
+              "char_start": 75,
+              "char_end": 89,
+              "quote": "2026年12月05日前完成",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v03",
+                "artifact_id": "corrected.md",
+                "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+                "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+                "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+                "ordinal": 0,
+                "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+                "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+                "char_start": 32,
+                "char_end": 126,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+                "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+              },
+              "char_start": 50,
+              "char_end": 126,
+              "quote": "本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "delta_calendar_days": null,
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_e937e228be5b633e9bf2bb196681739001c6f4d0ff2caeb7a518a922f52b8e36",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "payload_hash": "efa3017e5c70b128466b5d86fec1425d8a7453231702dccf369f7d89ad82fb76"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "observation_id": "task_observation_v1_3e3b4ce741f983fa4888ddbadd99d7eae992d4e8dbf0ffef5db04f0f609fc49e",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "payload_hash": "b6755a30dbcea2ebb7f7695babda40cad511ff8bbc7b482ae8d22f8e42aef315"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "corrected.md",
+              "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/corrected.md",
+              "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+              "ordinal": 0,
+              "message_id": "message_v1_1be15f1930d005ec9d7158c97b3010e0741344fd25136bcf70de5a626efd3357",
+              "segment_id": "segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0819f5687c2ef3489c807993924c683b9fa048278445481789e5565086efea38",
+              "char_start": 32,
+              "char_end": 126,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+              "quote_sha256": "de8e8cc2cc24da229418e9def9ec9ca4e31c27eca403cb4aae3b4262d2c97245"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v03",
+              "artifact_id": "recorded.md",
+              "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+              "source_ref": "artifact://m2-task-revisions-dev-v03/recorded.md",
+              "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+              "ordinal": 0,
+              "message_id": "message_v1_2f5072aeed52b49b6e6d8c07fe4a70c9b665fe59986ff8866e39e2f4b5c0f052",
+              "segment_id": "segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9ab064bea3e1d11cd1a9bc20f83e62261c708e67af4ac8c938982153e41c1e85",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+              "quote_sha256": "09e6eff7ce43e425a88eb38fea8fe3f9bdeb38bafc71379b6c3316e7bd782c15"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "asserted_effective_at": null,
+        "as_of": null,
+        "plan_currentness": "NOT_ESTABLISHED",
+        "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY"
+      }
+    }
+  ],
+  "observations_unchanged": true,
+  "sources": [
+    {
+      "workspace_id": "m2-task-revisions-dev-v03",
+      "artifact_id": "recorded.md",
+      "artifact_version_id": "artifact_v1_8ebf3c9e192f227ed78d7569c923f4a59f6ed654e30ad6ef6fd3df00438534e8",
+      "content_hash": "849240f3ad570cc9568f2548a4cdd7222de6e7573325996d104f3a81e9cb933d",
+      "content": "[2026-12-01T09:00:00+08:00] 林嘉: 我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。\n"
+    },
+    {
+      "workspace_id": "m2-task-revisions-dev-v03",
+      "artifact_id": "corrected.md",
+      "artifact_version_id": "artifact_v1_2401a6ef10e5d5c569eb7bfafbdbc09ade2f63537d29b36501d21fdc8e06428f",
+      "content_hash": "bf06230de390e059cd584ded38f85d3dcb343d12446d8bf22423e9fb22bbf16a",
+      "content": "[2026-12-03T09:00:00+08:00] 林嘉: 我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。\n"
+    }
+  ]
+}

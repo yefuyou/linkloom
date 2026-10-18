@@ -1,0 +1,963 @@
+{
+  "case_id": "D05",
+  "predictions": [
+    {
+      "question_id": "D05-revision",
+      "same_task": {
+        "assessment_id": "task_assessment_v1_0c27a24a7e788336fff457a2f146443a9276c920c6ba8f09ae0ec9e4bb931328",
+        "schema_version": "task-relation-assessment/v1",
+        "rule_version": "same-task-rules/v1",
+        "predicate": "SAME_TASK",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+          "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+          "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+          "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+          "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "SCOPED_TASK_KEY"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+            "provenance": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "raw_text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+            "description": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-14",
+            "deadline_text": "2026年10月14日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月14日前完成",
+                "char_start": 57,
+                "char_end": 71,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-10T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+            "provenance": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "raw_text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 57,
+                "char_end": 71,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-15T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "char_start": 35,
+            "char_end": 39,
+            "quote": "星河项目",
+            "role": "PROJECT_SCOPE"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "char_start": 39,
+            "char_end": 47,
+            "quote": "任务 API-5",
+            "role": "TASK_KEY"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "char_start": 35,
+            "char_end": 39,
+            "quote": "星河项目",
+            "role": "PROJECT_SCOPE"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "char_start": 39,
+            "char_end": 47,
+            "quote": "任务 API-5",
+            "role": "TASK_KEY"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T10:58:52.987162+00:00"
+      },
+      "revision": {
+        "assessment_id": "task_assessment_v3_8c8fb5b11584b4c6a3cdadddaacaeed685bcf1173b97a42b66240060fcda8564",
+        "schema_version": "task-relation-assessment/v3",
+        "rule_version": "plan-revision-rules/v1",
+        "predicate": "REVISES_PLAN",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+          "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+          "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+          "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+          "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+        },
+        "verdict": "UNKNOWN",
+        "reason_codes": [
+          "NO_REVISION_EVIDENCE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+            "provenance": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "raw_text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 57,
+                "char_end": 71,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-15T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+            "provenance": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "raw_text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+            "description": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-14",
+            "deadline_text": "2026年10月14日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月14日前完成",
+                "char_start": 57,
+                "char_end": 71,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-10T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [
+          "需要当前有效的同任务证明和唯一绑定新旧计划的明确修订/反证。"
+        ],
+        "assessed_at": "2026-10-18T10:58:53.064774+00:00",
+        "relation_detail": null,
+        "premise_ids": [
+          "task_assessment_v1_0c27a24a7e788336fff457a2f146443a9276c920c6ba8f09ae0ec9e4bb931328"
+        ],
+        "authority_checks": [],
+        "changed_fields": [],
+        "asserted_effective_at": null
+      },
+      "comparison": {
+        "comparison_id": "revision_comparison_v1_edf89959491d25579bc31960a62b425bc0f69dc7c72da6533c7edb790ad5ab5d",
+        "schema_version": "revision-comparison/v1",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+          "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+          "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d05",
+          "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+          "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+          "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+        },
+        "same_task_id": "task_assessment_v1_0c27a24a7e788336fff457a2f146443a9276c920c6ba8f09ae0ec9e4bb931328",
+        "revision_id": "task_assessment_v3_8c8fb5b11584b4c6a3cdadddaacaeed685bcf1173b97a42b66240060fcda8564",
+        "status": "BLOCKED",
+        "reason_codes": [
+          "NO_REVISION_EVIDENCE"
+        ],
+        "old_deadline": {
+          "value": "2026-10-14",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-identity-dev-d05",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+                "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+                "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+                "ordinal": 0,
+                "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+                "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+              },
+              "char_start": 57,
+              "char_end": 71,
+              "quote": "2026年10月14日前完成",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-identity-dev-d05",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+                "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+                "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+                "ordinal": 0,
+                "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+                "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+                "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+              },
+              "char_start": 32,
+              "char_end": 72,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "new_deadline": {
+          "value": "2026-10-18",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-identity-dev-d05",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+                "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+                "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+                "ordinal": 0,
+                "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+                "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+              },
+              "char_start": 57,
+              "char_end": 71,
+              "quote": "2026年10月18日前完成",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-identity-dev-d05",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+                "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+                "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+                "ordinal": 0,
+                "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+                "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+                "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+              },
+              "char_start": 32,
+              "char_end": 72,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "delta_calendar_days": null,
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_e532c13024161f3e973fb6d1d0dda58b01d8e47027e518716fea5de59739ed7e",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "payload_hash": "4b86841edb842aea7cba1e703ae28966a5b090c403e437fc491928eeb195b213"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+              "source_ref": "artifact://m2-task-identity-dev-d05/A.md",
+              "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+              "ordinal": 0,
+              "message_id": "message_v1_f06473201bd7f232c65febee47649242d9ed3724a33be533569a9ac0d32d7208",
+              "segment_id": "segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_21ef63f514f0f2d8a3afc95429e365d1f93aa9411aa3a05c83a59c51c8a07f33",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "398a60f783965a4f7445851b46315c3e0531087089eb993f9c84ef1c1352d2c2"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "observation_id": "task_observation_v1_10b855ed05c949aa6aff2e1a9add4d864b82f14e5552af14cc5c2d6878c99fed",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "payload_hash": "47fcbd868ff56bc9a82fb98eba7cc6dfe6a4e18303d860b23c496942bc0675f6"
+            },
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d05",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+              "source_ref": "artifact://m2-task-identity-dev-d05/B.md",
+              "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+              "ordinal": 0,
+              "message_id": "message_v1_1e11bdb4b523566942558ba795568c9430074f6378ae7021885ed0f38cc9e605",
+              "segment_id": "segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_31b7bc919b5e43c89693cb7d0c56b01b47023db10ab7a1a1d0e0c1cc3db4ccb5",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+              "quote_sha256": "a0c3c7f48c6347b8b8926082891de748e7171fdff3973b7aff95b0ed135ba645"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "asserted_effective_at": null,
+        "as_of": null,
+        "plan_currentness": "NOT_ESTABLISHED",
+        "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY"
+      }
+    }
+  ],
+  "observations_unchanged": true,
+  "sources": [
+    {
+      "workspace_id": "m2-task-identity-dev-d05",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_d83121747858a48210ceda35a7b62aebac6a242e8c9ba468a045a59d63ee1f57",
+      "content_hash": "c0800b0ef3a18f410d3e70fbf49939eef1940eb2c941c1bd3e4ffe3baaa27d2c",
+      "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。\n"
+    },
+    {
+      "workspace_id": "m2-task-identity-dev-d05",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_b9afcaf7cebcfb2a321f8045c0838489cc4f67e14ef9fb0bf87ddabb43c5461d",
+      "content_hash": "4e2fed0b47740a7934f2670191ddb9d4cf6e6552a54dd12393a7c015fb05d889",
+      "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。\n"
+    }
+  ]
+}

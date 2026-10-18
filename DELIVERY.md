@@ -1,11 +1,9 @@
-# LinkLoom M2-P2 交付
+# LinkLoom M2-P3 交付
 
-本轮实现 IN_PROJECT、PROJECT_ALIAS、RELATED_TO、AFFECTED_BY 的固定候选、证据约束判定。完整实现说明、文件职责、D03/D06/D07/D08 真实 JSON、审批隔离证据、失败记录与复现命令见 [M2-P2 DELIVERY](docs/requirements/task-relations-p2/DELIVERY.md)。
+已实现 SAME_TASK 证据重验 → REVISES_PLAN → RevisionComparison。完整模块说明、逐题结果、D04 两次修订及 D05/D07 阻断的真实 JSON、失败与独立审阅记录，见 [P3 DELIVERY](docs/requirements/task-revisions/DELIVERY.md)。[P2 历史交付](docs/requirements/task-relations-p2/DELIVERY.md) 保持原内容。
 
-本地 Dev 20/20 个原子问题符合独立 Gold；四类关系正例全部通过，无错误项目绑定、无据影响确认或 SOURCE_CLAIM 越权。P2＋P1 聚焦检查 108 passed；相关 M1/P1/Decision Memory 回归 188 passed（有交集，不相加）。逐题指标见 [metrics.json](docs/requirements/task-relations-p2/evidence/metrics.json)。
+Dev 完整匹配 **12/12**，修订 Precision / Recall **7/7、7/7**，可计算子集 **5/5**；无据修订、虚假日期变化均为 0，非法/过期身份放行 **0/5**。P3 聚焦 **44 passed**，相关既有回归 **241 passed**；以 P2 已提交基线加本轮发布清单重建隔离副本，合并复现 **285 passed**。详见 [metrics.json](docs/requirements/task-revisions/evidence/metrics.json)。
 
-从干净 HEAD 加明确交付文件构建的隔离副本，合并去重检查 **241 passed**，Dev 导出再次 20/20。独立审阅发现的三项问题已修复并复核，无剩余 Required。
+D04 截止边界后移 +4；范围修订、截止明确未变为 0。D05 无修订证据、D07 身份未证实均 BLOCKED / null。未推断实际延期；缺年份、边界不兼容或有效冲突不能计算。真实 Provider 和保留集运行均为 0。
 
-尚未实现计划修订、截止日期比较、自动发现、关系持久化或 Agent/UI 接线；原五行案例 B 的项目、身份和具体变更影响仍为 UNKNOWN。真实 Provider 调用与保留集执行均为 0。下一阶段需先实现 SAME_TASK 前提之上的明确计划修订证明及日期可比性校验。
-
-固定交付分支：`codex/linkloom-m2-progress`。本轮包含可复现所需的本地 M1/P1 前置源码、测试和交付文档，其他既有工作区修改未纳入提交。
+固定交付分支：`codex/linkloom-m2-progress`。P4 尚需独立关系侧库、追加式生命周期事件、依赖失效及只读当前/历史查询；本轮已停在 P3。已有无关工作区修改保留。

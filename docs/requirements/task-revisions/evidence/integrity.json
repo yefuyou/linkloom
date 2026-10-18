@@ -1,0 +1,8 @@
+{
+  "protected_files": 38,
+  "allowed_model_extension": [
+    "src/linkloom/semantic_ingestion/task_relation_models.py"
+  ],
+  "M1_P1_P2_source_and_history_unchanged": true,
+  "unrelated_tracked_diff_unchanged": true
+}

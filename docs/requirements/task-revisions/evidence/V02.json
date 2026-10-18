@@ -1,0 +1,1010 @@
+{
+  "case_id": "V02",
+  "predictions": [
+    {
+      "question_id": "V02-incompatible-boundary",
+      "same_task": {
+        "assessment_id": "task_assessment_v1_e1d508bad40308c8bea5b3859ce6cb88dae6cb4c31fa641d72dcd4b26353a657",
+        "schema_version": "task-relation-assessment/v1",
+        "rule_version": "same-task-rules/v1",
+        "predicate": "SAME_TASK",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+          "artifact_id": "after.md",
+          "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+          "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+          "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+          "artifact_id": "before.md",
+          "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+          "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+          "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_TASK_REFERENCE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "raw_text": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "description": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "owner": "罗宁",
+            "deadline": "2026-11-20",
+            "deadline_text": "2026年11月20日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "澄明门户项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "char_start": 32,
+                "char_end": 110,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "char_start": 32,
+                "char_end": 110,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "罗宁",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "澄明门户项目",
+                "char_start": 35,
+                "char_end": 41,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期为2026年11月20日",
+                "char_start": 84,
+                "char_end": 100,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-11-09T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "raw_text": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+            "description": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+            "owner": "罗宁",
+            "deadline": "2026-11-20",
+            "deadline_text": "2026年11月20日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "澄明门户项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "char_start": 32,
+                "char_end": 76,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "char_start": 32,
+                "char_end": 76,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "罗宁",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "澄明门户项目",
+                "char_start": 35,
+                "char_end": 41,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年11月20日前完成",
+                "char_start": 61,
+                "char_end": 75,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-11-07T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "char_start": 52,
+            "char_end": 110,
+            "quote": "本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "role": "IDENTITY_ASSERTION"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "char_start": 41,
+            "char_end": 51,
+            "quote": "任务 AUTH-52",
+            "role": "TASK_KEY"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "char_start": 41,
+            "char_end": 51,
+            "quote": "任务 AUTH-52",
+            "role": "TASK_KEY"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "char_start": 35,
+            "char_end": 41,
+            "quote": "澄明门户项目",
+            "role": "PROJECT_SCOPE"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "char_start": 35,
+            "char_end": 41,
+            "quote": "澄明门户项目",
+            "role": "PROJECT_SCOPE"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T10:58:53.519562+00:00"
+      },
+      "revision": {
+        "assessment_id": "task_assessment_v3_93135ddf2703b7f86d0bd9a2c9903f64fbf7b335a9c465ad66aec105271ef365",
+        "schema_version": "task-relation-assessment/v3",
+        "rule_version": "plan-revision-rules/v1",
+        "predicate": "REVISES_PLAN",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+          "artifact_id": "after.md",
+          "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+          "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+          "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+          "artifact_id": "before.md",
+          "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+          "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+          "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_PLAN_REPLACEMENT"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "raw_text": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "description": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "owner": "罗宁",
+            "deadline": "2026-11-20",
+            "deadline_text": "2026年11月20日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "澄明门户项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "char_start": 32,
+                "char_end": 110,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "char_start": 32,
+                "char_end": 110,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "罗宁",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "澄明门户项目",
+                "char_start": 35,
+                "char_end": 41,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期为2026年11月20日",
+                "char_start": 84,
+                "char_end": 100,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-11-09T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+            "provenance": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "raw_text": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+            "description": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+            "owner": "罗宁",
+            "deadline": "2026-11-20",
+            "deadline_text": "2026年11月20日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "澄明门户项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "char_start": 32,
+                "char_end": 76,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "char_start": 32,
+                "char_end": 76,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "罗宁",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "澄明门户项目",
+                "char_start": 35,
+                "char_end": 41,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年11月20日前完成",
+                "char_start": 61,
+                "char_end": 75,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-11-07T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "char_start": 52,
+            "char_end": 110,
+            "quote": "本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "role": "PLAN_REVISION"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T10:58:53.574146+00:00",
+        "relation_detail": "BUSINESS_PLAN_REVISION",
+        "premise_ids": [
+          "task_assessment_v1_e1d508bad40308c8bea5b3859ce6cb88dae6cb4c31fa641d72dcd4b26353a657"
+        ],
+        "authority_checks": [],
+        "changed_fields": [
+          "deadline"
+        ],
+        "asserted_effective_at": null
+      },
+      "comparison": {
+        "comparison_id": "revision_comparison_v1_096582be014a08f93f5612d61cfd5811f3110ee72c88a7f7c3bb334335803222",
+        "schema_version": "revision-comparison/v1",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+          "artifact_id": "after.md",
+          "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+          "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+          "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+        },
+        "object": {
+          "workspace_id": "m2-task-revisions-dev-v02",
+          "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+          "artifact_id": "before.md",
+          "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+          "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+          "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+        },
+        "same_task_id": "task_assessment_v1_e1d508bad40308c8bea5b3859ce6cb88dae6cb4c31fa641d72dcd4b26353a657",
+        "revision_id": "task_assessment_v3_93135ddf2703b7f86d0bd9a2c9903f64fbf7b335a9c465ad66aec105271ef365",
+        "status": "NOT_COMPARABLE",
+        "reason_codes": [
+          "DEADLINE_BOUND_UNKNOWN_OR_INCOMPATIBLE"
+        ],
+        "old_deadline": {
+          "value": "2026-11-20",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v02",
+                "artifact_id": "before.md",
+                "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+                "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+                "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+                "ordinal": 0,
+                "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+                "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+                "char_start": 32,
+                "char_end": 76,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+              },
+              "char_start": 61,
+              "char_end": 75,
+              "quote": "2026年11月20日前完成",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v02",
+                "artifact_id": "before.md",
+                "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+                "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+                "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+                "ordinal": 0,
+                "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+                "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+                "char_start": 32,
+                "char_end": 76,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+                "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+              },
+              "char_start": 32,
+              "char_end": 76,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "new_deadline": {
+          "value": "2026-11-20",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "bound": "ON_OR_BEFORE",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v02",
+                "artifact_id": "after.md",
+                "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+                "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+                "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+                "ordinal": 0,
+                "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+                "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+                "char_start": 32,
+                "char_end": 110,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+              },
+              "char_start": 52,
+              "char_end": 110,
+              "quote": "本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "role": "DEADLINE_BOUND"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-revisions-dev-v02",
+                "artifact_id": "after.md",
+                "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+                "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+                "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+                "ordinal": 0,
+                "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+                "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+                "char_start": 32,
+                "char_end": 110,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+                "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+              },
+              "char_start": 84,
+              "char_end": 100,
+              "quote": "截止日期为2026年11月20日",
+              "role": "DEADLINE_BOUND"
+            }
+          ]
+        },
+        "delta_calendar_days": null,
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_b9e41ad6b43ddb7aac0e8c49f6dc76146f9f96da492f9dc40e2f200d4feb59bc",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "payload_hash": "e3cd20c44f860b2bf61a56e15ed31cc58ae4bba3afa5c178f739f60198e68b28"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "after.md",
+              "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/after.md",
+              "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+              "ordinal": 0,
+              "message_id": "message_v1_5856b20d966a814ee7f4a5834a1bd8d5e0e3b2115b9f5373b752c56e22761704",
+              "segment_id": "segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_10b64871ac15c54b8815d255a0e46cf3247758c564754c5c48f7c82db1063333",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+              "quote_sha256": "e3a31568e79e1e6a11bd9fc1896247c091abfa25cbbb2f79559a41efa25702b8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "observation_id": "task_observation_v1_5fbca3d4070fd91d72e1d0f4ea4ef34be2bd7990591072e8c6102b9510226123",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "payload_hash": "7130d9991da2fd31936c0c31ef4157021d475a6acdb76e92c738973afa4eb83a"
+            },
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-revisions-dev-v02",
+              "artifact_id": "before.md",
+              "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+              "source_ref": "artifact://m2-task-revisions-dev-v02/before.md",
+              "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+              "ordinal": 0,
+              "message_id": "message_v1_acd109c294a59c4aeb965413df226801f30b0df840bb4bd5b08accbbf9af9a3c",
+              "segment_id": "segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a2b5c4719da6d65db4e090e21fc5d7f444055937207895ca26c6cef3c1dca967",
+              "char_start": 32,
+              "char_end": 76,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+              "quote_sha256": "ffa695abee0544371bad008f8bd2b4a885f2fa4d5f074135bb0fc50b8f8173f6"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "asserted_effective_at": null,
+        "as_of": null,
+        "plan_currentness": "NOT_ESTABLISHED",
+        "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY"
+      }
+    }
+  ],
+  "observations_unchanged": true,
+  "sources": [
+    {
+      "workspace_id": "m2-task-revisions-dev-v02",
+      "artifact_id": "before.md",
+      "artifact_version_id": "artifact_v1_f884a74c78693e5fa533a928d99eb6a8bfdae05f54577aac48b0291e1b077fd6",
+      "content_hash": "51f3de8593428031c76feed7f8f39ab999e1b28e47682d44c11a4d387c8a9bcf",
+      "content": "[2026-11-07T09:00:00+08:00] 罗宁: 我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。\n"
+    },
+    {
+      "workspace_id": "m2-task-revisions-dev-v02",
+      "artifact_id": "after.md",
+      "artifact_version_id": "artifact_v1_134fea82cddc6d5e049b2c1f7525e0d4a4922c47b87e627c70703b0a76fa6007",
+      "content_hash": "58702d503839918ccf09b32556bbd603942d57d77f913aeb3b6c3e55639709df",
+      "content": "[2026-11-09T09:00:00+08:00] 罗宁: 我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。\n"
+    }
+  ]
+}
