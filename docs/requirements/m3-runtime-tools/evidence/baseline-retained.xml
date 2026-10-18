@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="14" time="34.366" timestamp="2026-10-19T00:22:31.326452+08:00" hostname="beagle"><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace" time="1.693"><failure message="AssertionError: assert 'failed' == 'completed'&#10;  &#10;  - completed&#10;  + failed">m11_root = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/.tmp/m11-fe75959a436e4d33bc00131c17c5d3bd')
+
+    def test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace(m11_root):
+        environment = _environment(m11_root)
+        model = _mps_model()
+        engine = _engine(environment, model, checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-frozen-mps")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None and status.result_ref
+        result = _result(environment["root"], status.run_id)
+
+&gt;       assert status.status == state.status == result["status"] == "completed"
+E       AssertionError: assert 'failed' == 'completed'
+E
+E         - completed
+E         + failed
+
+tests\integration\test_m11_team_decision_vertical_slice.py:250: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_fabricated_team_decision_evidence_fails_the_outer_workflow" time="1.893"><failure message="AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISION_CONTRACT_ERROR'&#10;  &#10;  - TEAM_DECISION_CONTRACT_ERROR&#10;  + TOOL_INVALID_ARGUMENTS">m11_root = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/.tmp/m11-afa54214b2d24b4eacdd273bb14200e8')
+
+    def test_fabricated_team_decision_evidence_fails_the_outer_workflow(m11_root):
+        environment = _environment(m11_root)
+        engine = _engine(environment, _mps_model(fabricated_ref=True), checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-fabricated")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None
+        result = _result(environment["root"], status.run_id)
+        events = TraceReader(environment["root"] / "traces").read_events(status.run_id)
+
+        assert status.status == state.status == result["status"] == "failed"
+        assert status.result_ref and state.result_ref == status.result_ref
+&gt;       assert state.error.code == result["error"]["code"] == "TEAM_DECISION_CONTRACT_ERROR"
+E       AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISION_CONTRACT_ERROR'
+E
+E         - TEAM_DECISION_CONTRACT_ERROR
+E         + TOOL_INVALID_ARGUMENTS
+
+tests\integration\test_m11_team_decision_vertical_slice.py:279: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_evidence_review_failure_cannot_publish_completed_workflow" time="1.753"><failure message="AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISIO...REVIEW_FAILED'&#10;  &#10;  - TEAM_DECISION_EVIDENCE_REVIEW_FAILED&#10;  + TOOL_INVALID_ARGUMENTS">m11_root = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/.tmp/m11-a8f4e84f5b4a410792f7254abee9f7a3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022FA0C04640&gt;
+
+    def test_team_decision_evidence_review_failure_cannot_publish_completed_workflow(m11_root, monkeypatch):
+        environment = _environment(m11_root)
+        monkeypatch.setattr(
+            RuntimeAgentAdapter,
+            "_validate_evidence",
+            lambda self, ref: {"status": "fail", "reason": "synthetic_review_failure", "ref": ref},
+        )
+        engine = _engine(environment, _mps_model(), checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-review-failure")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None
+        result = _result(environment["root"], status.run_id)
+
+        assert status.status == state.status == result["status"] == "failed"
+&gt;       assert state.error.code == "TEAM_DECISION_EVIDENCE_REVIEW_FAILED"
+E       AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISIO...REVIEW_FAILED'
+E
+E         - TEAM_DECISION_EVIDENCE_REVIEW_FAILED
+E         + TOOL_INVALID_ARGUMENTS
+
+tests\integration\test_m11_team_decision_vertical_slice.py:300: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools" time="2.152"><failure message="TypeError: 'NoneType' object is not subscriptable">m11_root = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/.tmp/m11-8d2ab199d975422bbf40e46bf17e604d')
+
+    def test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools(m11_root):
+        fresh_environment = _environment(m11_root / "fresh")
+        fresh_model = _mps_model()
+        fresh = _engine(fresh_environment, fresh_model, checkpointer=InMemoryCheckpointer())
+        fresh_status = _start(fresh, fresh_environment, "m11-fresh")
+        fresh_state = fresh.checkpointer.get_latest(fresh_status.thread_id)
+        assert fresh_state is not None
+&gt;       fresh_result = _result(fresh_environment["root"], fresh_status.run_id)["result"]["team_decision"]
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\integration\test_m11_team_decision_vertical_slice.py:312: TypeError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_cold_resume_revalidates_a_durable_final" time="1.718"><failure message="Failed: DID NOT RAISE &lt;class 'test_m11_team_decision_vertical_slice.ProcessCrash'&gt;">m11_root = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/.tmp/m11-e10a32750d0548f380fe9b560da3ef99')
+
+    def test_team_decision_cold_resume_revalidates_a_durable_final(m11_root):
+        environment = _environment(m11_root)
+        before = _mps_model(fabricated_ref=True)
+        first = _engine(
+            environment,
+            before,
+            checkpointer=CrashOnDurableFinal(environment["root"] / "checkpoints"),
+        )
+&gt;       with pytest.raises(ProcessCrash):
+E       Failed: DID NOT RAISE &lt;class 'test_m11_team_decision_vertical_slice.ProcessCrash'&gt;
+
+tests\integration\test_m11_team_decision_vertical_slice.py:364: Failed</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]" time="0.057"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">run_id = 'P14-ALIAS-A'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_real_final_replay0')
+
+    @pytest.mark.parametrize("run_id", ["P14-ALIAS-A", "P14-ALIAS-B"])
+    def test_phase14_real_final_replays_through_runtime_and_reviewer(run_id: str, tmp_path: Path):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:347:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-ALIAS-A/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]" time="0.034"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">run_id = 'P14-ALIAS-B'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_real_final_replay1')
+
+    @pytest.mark.parametrize("run_id", ["P14-ALIAS-A", "P14-ALIAS-B"])
+    def test_phase14_real_final_replays_through_runtime_and_reviewer(run_id: str, tmp_path: Path):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:347:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-ALIAS-B/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_legacy_final_replay_remains_compatible" time="0.068"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_cn2_legacy_final_0')
+
+    def test_phase14_cn2_legacy_final_replay_remains_compatible(
+        tmp_path: Path,
+    ) -&gt; None:
+&gt;       observed, vault, index = _phase14_inputs("P14-CN2")
+
+tests\integration\test_team_decision_final_contract_communication.py:380:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text" time="0.038"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_cn2_typed_claims_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022F9F8ACC30&gt;
+
+    def test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -&gt; None:
+        from linkloom.agents import team_decision
+
+&gt;       observed, vault, index = _phase14_inputs("P14-CN2")
+
+tests\integration\test_team_decision_final_contract_communication.py:403:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]" time="0.037"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">run_id = 'P14-ALIAS-A', mutation = 'wrong_owner'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_runtime_reviewer_0')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-ALIAS-A/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]" time="0.041"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">run_id = 'P14-ALIAS-B', mutation = 'wrong_owner'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_runtime_reviewer_1')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-ALIAS-B/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]" time="0.039"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'wrong_owner'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_runtime_reviewer_2')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]" time="0.043"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'reverse_relation'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_runtime_reviewer_3')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]" time="0.037"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'wrong_date'
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/pytest-baseline-retained-02/test_phase14_runtime_reviewer_4')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-runtime-tools/work/baseline-2639243/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-runtime-tools\\work\\baseline-2639243\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,76 @@
+{
+  "schema_version": "m3-runtime-tools-checks/v1",
+  "base_sha": "26392432dcef70692461e6f2f50bc1bd5528f69a",
+  "checks": {
+    "reviewed-final.xml": {
+      "total": 21,
+      "passed": 21,
+      "failed": []
+    },
+    "p4-query-store.xml": {
+      "total": 27,
+      "passed": 27,
+      "failed": []
+    },
+    "legacy-regression.xml": {
+      "total": 132,
+      "passed": 118,
+      "failed": [
+        "tests.integration.test_m11_team_decision_vertical_slice::test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_fabricated_team_decision_evidence_fails_the_outer_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_evidence_review_failure_cannot_publish_completed_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_revalidates_a_durable_final",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]"
+      ]
+    },
+    "baseline-retained.xml": {
+      "total": 14,
+      "passed": 0,
+      "failed": [
+        "tests.integration.test_m11_team_decision_vertical_slice::test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_fabricated_team_decision_evidence_fails_the_outer_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_evidence_review_failure_cannot_publish_completed_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_revalidates_a_durable_final",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]"
+      ]
+    }
+  },
+  "new_regression_failures": [],
+  "retained_baseline_failures": [
+    "tests.integration.test_m11_team_decision_vertical_slice::test_fabricated_team_decision_evidence_fails_the_outer_workflow",
+    "tests.integration.test_m11_team_decision_vertical_slice::test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace",
+    "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools",
+    "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_revalidates_a_durable_final",
+    "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_evidence_review_failure_cannot_publish_completed_workflow",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]",
+    "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]"
+  ],
+  "legacy_suite_all_green": false,
+  "live_provider_runs": 0,
+  "m3_gold_or_scorer_changed": false
+}

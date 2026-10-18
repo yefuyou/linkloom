@@ -718,6 +718,7 @@ def create_retrieval_tool_runtime(
     decision_memory_executor: Callable[..., Any] | None = None,
     reuse_preflight: Callable[[], Any] | None = None,
     expected_source_context: dict[str, Any] | None = None,
+    task_relation_tools: Any = None,
 ) -> ToolRuntime:
     """Compose provider-neutral, read-only retrieval tools at the runtime boundary.
 
@@ -889,6 +890,18 @@ def create_retrieval_tool_runtime(
             ),
         )
 
+    if task_relation_tools is not None:
+        from linkloom.tools.task_relations import register_task_relation_tools
+        register_task_relation_tools(registry, task_relation_tools)
+
+    def validate_task_query_arguments(arguments: dict[str, Any]) -> None:
+        if "as_of" in arguments:
+            from datetime import date
+            try:
+                date.fromisoformat(arguments["as_of"])
+            except ValueError as error:
+                raise ValidationError("as_of must be a calendar date.", details={"path": "$.as_of"}) from error
+
     def validate_search_arguments(arguments: dict[str, Any]) -> None:
         source = arguments["source_context"]
         if expected_source_context is not None:
@@ -978,6 +991,7 @@ def create_retrieval_tool_runtime(
         ledger=ledger,
         checkpoint_callback=checkpoint_callback,
         argument_validators={
+            **({"query_task_relations": validate_task_query_arguments} if task_relation_tools is not None else {}),
             "search_notes": validate_search_arguments,
             "read_verified_note": validate_read_arguments,
             **(

@@ -1,0 +1,228 @@
+{
+  "claims": {
+    "llm_semantic_proposals_connected": false,
+    "m3_business_score": null,
+    "real_model_autonomous_planning": false,
+    "runtime_tool_wiring": true
+  },
+  "execution_kind": "FAKE_MODEL_SCRIPTED_TOOL_ACTIONS",
+  "passed": true,
+  "scenarios": [
+    {
+      "checkpoint": "verified_rules/checkpoint.json",
+      "checkpoint_id": "cp_0023_0023",
+      "current_supported": 3,
+      "error": null,
+      "missing_database_created": false,
+      "model_requests": 3,
+      "query_status": "VERIFIED_RELATIONS_AVAILABLE",
+      "result": "verified_rules/checkpoints/results/run_p4_74e9fc7f584b/result.json",
+      "review": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-18T16:30:24.083900+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_60742aa3",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "run_id": "run_p4_74e9fc7f584b",
+      "scenario": "verified_rules",
+      "sidecar_sha256_after": "80997b14587a09386d9a578b6a686d12d9df3c08e9d8ac6487db7f2215ccdf63",
+      "sidecar_sha256_before": "80997b14587a09386d9a578b6a686d12d9df3c08e9d8ac6487db7f2215ccdf63",
+      "sources_unchanged": true,
+      "status": "completed",
+      "thread_id": "thread_p4_744884b047ca",
+      "tool_ledger": [
+        "inspect_task_context",
+        "query_task_relations"
+      ],
+      "trace": "verified_rules/traces/run_p4_74e9fc7f584b/events.jsonl",
+      "vault_anchor_unchanged": true
+    },
+    {
+      "checkpoint": "no_records/checkpoint.json",
+      "checkpoint_id": "cp_0023_0023",
+      "current_supported": 0,
+      "error": null,
+      "missing_database_created": false,
+      "model_requests": 3,
+      "query_status": "NO_VERIFIED_RELATIONS",
+      "result": "no_records/checkpoints/results/run_p4_f0e7442721e3/result.json",
+      "review": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-18T16:30:27.220886+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_2b2cd1e9",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "run_id": "run_p4_f0e7442721e3",
+      "scenario": "no_records",
+      "sidecar_sha256_after": "f87dcdea0aff72fc866fb6140104adec92eed9b5c40779867daf4e58e9cbfef3",
+      "sidecar_sha256_before": "f87dcdea0aff72fc866fb6140104adec92eed9b5c40779867daf4e58e9cbfef3",
+      "sources_unchanged": true,
+      "status": "completed",
+      "thread_id": "thread_p4_f53589065ca6",
+      "tool_ledger": [
+        "inspect_task_context",
+        "query_task_relations"
+      ],
+      "trace": "no_records/traces/run_p4_f0e7442721e3/events.jsonl",
+      "vault_anchor_unchanged": true
+    },
+    {
+      "checkpoint": "stale/checkpoint.json",
+      "checkpoint_id": "cp_0023_0023",
+      "current_supported": 0,
+      "error": null,
+      "missing_database_created": false,
+      "model_requests": 3,
+      "query_status": "NO_CURRENT_SUPPORTED_RELATIONS",
+      "result": "stale/checkpoints/results/run_p4_899d2f1efd84/result.json",
+      "review": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-18T16:30:33.230775+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_71404356",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "run_id": "run_p4_899d2f1efd84",
+      "scenario": "stale",
+      "sidecar_sha256_after": "b35a40a5f266ce4ff371ad9865e3b904442f5796e2c60629b0bd3944738fcb1b",
+      "sidecar_sha256_before": "b35a40a5f266ce4ff371ad9865e3b904442f5796e2c60629b0bd3944738fcb1b",
+      "sources_unchanged": true,
+      "status": "completed",
+      "thread_id": "thread_p4_adff00f839d7",
+      "tool_ledger": [
+        "inspect_task_context",
+        "query_task_relations"
+      ],
+      "trace": "stale/traces/run_p4_899d2f1efd84/events.jsonl",
+      "vault_anchor_unchanged": true
+    },
+    {
+      "checkpoint": "revoked/checkpoint.json",
+      "checkpoint_id": "cp_0023_0023",
+      "current_supported": 0,
+      "error": null,
+      "missing_database_created": false,
+      "model_requests": 3,
+      "query_status": "NO_CURRENT_SUPPORTED_RELATIONS",
+      "result": "revoked/checkpoints/results/run_p4_c59adf5f9bb2/result.json",
+      "review": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-18T16:30:41.763581+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_932c8d78",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "run_id": "run_p4_c59adf5f9bb2",
+      "scenario": "revoked",
+      "sidecar_sha256_after": "f116b6e5a7a5bbca619d5063d2144e0993c31b8acbaad53158a18f3fd4a54709",
+      "sidecar_sha256_before": "f116b6e5a7a5bbca619d5063d2144e0993c31b8acbaad53158a18f3fd4a54709",
+      "sources_unchanged": true,
+      "status": "completed",
+      "thread_id": "thread_p4_afb060a63b5f",
+      "tool_ledger": [
+        "inspect_task_context",
+        "query_task_relations"
+      ],
+      "trace": "revoked/traces/run_p4_c59adf5f9bb2/events.jsonl",
+      "vault_anchor_unchanged": true
+    },
+    {
+      "checkpoint": "insufficient/checkpoint.json",
+      "checkpoint_id": "cp_0023_0023",
+      "current_supported": 0,
+      "error": null,
+      "missing_database_created": false,
+      "model_requests": 3,
+      "query_status": "NO_CURRENT_SUPPORTED_RELATIONS",
+      "result": "insufficient/checkpoints/results/run_p4_2b441311a1e9/result.json",
+      "review": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-18T16:30:46.028830+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_f920ebec",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "run_id": "run_p4_2b441311a1e9",
+      "scenario": "insufficient",
+      "sidecar_sha256_after": "fb533b36c8b28a31893db2eabdc0bc7ee40b5965dde096d4975d9d741b8bdc9a",
+      "sidecar_sha256_before": "fb533b36c8b28a31893db2eabdc0bc7ee40b5965dde096d4975d9d741b8bdc9a",
+      "sources_unchanged": true,
+      "status": "completed",
+      "thread_id": "thread_p4_8016fc4cf9ad",
+      "tool_ledger": [
+        "inspect_task_context",
+        "query_task_relations"
+      ],
+      "trace": "insufficient/traces/run_p4_2b441311a1e9/events.jsonl",
+      "vault_anchor_unchanged": true
+    }
+  ],
+  "schema_version": "m3-runtime-tools-evidence/v1"
+}

@@ -182,7 +182,7 @@ class Coordinator:
             if ret_result.status == "failed":
                 retrieval_task_dict["status"] = "failed"
                 emit("agent.task.failed", "retrieval_agent", "failed", attributes={"task_id": retrieval_task.task_id}, error=ret_result.error)
-                if workflow == "team_decision":
+                if workflow in {"team_decision", "task_relations"}:
                     status = "failed"
                     workflow_error = ret_result.error or {
                         "code": "TEAM_DECISION_CONTRACT_ERROR",
@@ -300,14 +300,15 @@ class Coordinator:
             emit("agent.task.completed", "reviewer_agent", "ok", attributes={"task_id": reviewer_task.task_id})
             enforce_limits()
 
-            if workflow == "team_decision" and (
+            if workflow in {"team_decision", "task_relations"} and (
                 business_payload is None or review_decision["decision"] != "evidence_sufficient"
             ):
                 status = "failed"
                 workflow_error = {
-                    "code": "TEAM_DECISION_EVIDENCE_REVIEW_FAILED",
+                    "code": "TASK_RELATIONS_EVIDENCE_REVIEW_FAILED" if workflow == "task_relations" else "TEAM_DECISION_EVIDENCE_REVIEW_FAILED",
                     "category": "runtime",
-                    "message": "The Team Decision evidence review did not pass.",
+                    "message": ("The task relation evidence review did not pass." if workflow == "task_relations"
+                                else "The Team Decision evidence review did not pass."),
                     "retryable": False,
                     "affected_refs": [],
                     "details": {"review_decision": review_decision["decision"]},
@@ -330,7 +331,7 @@ class Coordinator:
                 "review_decision": review_decision["decision"]
             }
             if business_payload is not None:
-                final_result["team_decision"] = business_payload
+                final_result["task_relations" if workflow == "task_relations" else "team_decision"] = business_payload
             emit("run.completed", "coordinator", "ok")
             
         except Exception as e:

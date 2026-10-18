@@ -50,17 +50,20 @@ class AgentRegistry:
                 f"Handoff from {from_agent_id} to {to_agent_id} is not allowed; only coordinator may delegate."
             )
 
-def create_default_registry(*, include_decision_memory: bool = False) -> AgentRegistry:
+def create_default_registry(*, include_decision_memory: bool = False, task_relations: bool = False) -> AgentRegistry:
     registry = AgentRegistry()
     retrieval_capabilities = ["search_notes", "read_verified_note"]
     if include_decision_memory:
         retrieval_capabilities.append("search_decision_memory")
+    if task_relations:
+        retrieval_capabilities = ["inspect_task_context", "query_task_relations"]
+    workflows = ["ask", "connect", "team_decision", "task_relations"] if task_relations else ["ask", "connect", "team_decision"]
     registry.register(AgentIdentity(
         agent_id="coordinator",
         role="router",
         version="p4-coordinator-v1",
         capabilities=[],
-        allowed_workflows=["ask", "connect", "team_decision"],
+        allowed_workflows=workflows,
         can_read_gold=False,
         can_write_vault=False,
         max_steps=12
@@ -70,7 +73,7 @@ def create_default_registry(*, include_decision_memory: bool = False) -> AgentRe
         role="retrieval",
         version="p4-retrieval-v1",
         capabilities=retrieval_capabilities,
-        allowed_workflows=["ask", "connect", "team_decision"],
+        allowed_workflows=workflows,
         can_read_gold=False,
         can_write_vault=False,
         # The Runtime assigns a stricter per-task cap.  Team Decision can use
@@ -92,7 +95,7 @@ def create_default_registry(*, include_decision_memory: bool = False) -> AgentRe
         role="reviewer",
         version="p4-reviewer-v1",
         capabilities=["validate_evidence", "validate_schema"],
-        allowed_workflows=["ask", "connect", "team_decision"],
+        allowed_workflows=workflows,
         can_read_gold=False,
         can_write_vault=False,
         max_steps=3

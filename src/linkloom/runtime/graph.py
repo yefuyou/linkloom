@@ -169,6 +169,7 @@ class RuntimeEngine:
         temporal_claim_validator: Any | None = None,
         decision_memory_enabled: bool = True,
         model_plan_profile: str | None = None,
+        task_relation_tools: Any = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -204,6 +205,7 @@ class RuntimeEngine:
         self.fail_at = fail_at
         self.fail_once = fail_once
         self.model = model
+        self._task_relation_tools = task_relation_tools
         from linkloom.runtime.adaptive_planning import SOURCE_RELATION_PROFILE
         if model_plan_profile not in (None, SOURCE_RELATION_PROFILE):
             raise ValidationError("Unsupported model plan profile.")
@@ -241,9 +243,16 @@ class RuntimeEngine:
             )
         return self._decision_memory_store
 
-    def _build_runtime_agent_adapter(self) -> Any:
+    def _build_runtime_agent_adapter(self, *, task_relations: bool = False) -> Any:
         """Build the runtime adapter even when optional persistent memory is unavailable."""
         from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
+
+        if task_relations:
+            if self._task_relation_tools is None:
+                raise ValidationError("Task relation tools are not configured.")
+            return RuntimeAgentAdapter(self.vault_root, self.index_path,
+                workspace_id=self._task_relation_tools.workspace_id, decision_memory_enabled=False,
+                task_relation_tools=self._task_relation_tools)
 
         if not self.decision_memory_enabled:
             return RuntimeAgentAdapter(self.vault_root, self.index_path,
@@ -453,7 +462,7 @@ class RuntimeEngine:
         write path: the coordinator returns a read-only result artifact and
         the Runtime persists only refs and task metadata in its checkpoint.
         """
-        if request.workflow not in ("ask", "connect", "team_decision"):
+        if request.workflow not in ("ask", "connect", "team_decision", "task_relations"):
             raise ValidationError(f"Workflow '{request.workflow}' not supported in P4.")
 
         thread_id = request.thread_id or f"thread_p4_{uuid.uuid4().hex[:12]}"
@@ -522,7 +531,8 @@ class RuntimeEngine:
 
         try:
             index_sha = self._calculate_index_sha256()
-            adapter = self._build_runtime_agent_adapter()
+            adapter = (self._build_runtime_agent_adapter(task_relations=True) if request.workflow == "task_relations"
+                       else self._build_runtime_agent_adapter())
             documents = adapter.reader.read_notes()
         except Exception as exc:
             error_env = ErrorEnvelope(
@@ -869,7 +879,7 @@ class RuntimeEngine:
             tracer.write_manifest(complete=True, source_index_sha256=index_sha)
             return self._build_status(final_state, checkpoint_id)
 
-        if state.workflow == "team_decision" and isinstance(result.get("error"), dict):
+        if state.workflow in {"team_decision", "task_relations"} and isinstance(result.get("error"), dict):
             error_env = ErrorEnvelope.from_dict(result["error"])
         else:
             error_env = ErrorEnvelope(
@@ -894,10 +904,10 @@ class RuntimeEngine:
                 sequence=state.step_seq + 1,
             ).to_dict(),
             "error": error_env.to_dict(),
-            "result_ref": result_ref if state.workflow == "team_decision" else state.result_ref,
+            "result_ref": result_ref if state.workflow in {"team_decision", "task_relations"} else state.result_ref,
         })
         checkpoint_id = self._save_state(final_state)
-        if state.workflow == "team_decision":
+        if state.workflow in {"team_decision", "task_relations"}:
             tracer.emit(
                 "artifact.written",
                 "ok",
@@ -982,7 +992,8 @@ class RuntimeEngine:
             )
 
         try:
-            adapter = self._build_runtime_agent_adapter()
+            adapter = (self._build_runtime_agent_adapter(task_relations=True) if state.workflow == "task_relations"
+                       else self._build_runtime_agent_adapter())
             adapter.reader.read_notes()
         except (LoaderError, OSError):
             raise StaleSourceError("The source no longer matches the durable run.") from None
