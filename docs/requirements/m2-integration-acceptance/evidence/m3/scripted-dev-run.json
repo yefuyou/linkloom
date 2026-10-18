@@ -1,0 +1,106 @@
+{
+  "schema": "m3-predictions/v1",
+  "split": "dev",
+  "records": [
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D01",
+      "input_sha256": "e8102b40d49c11a3c0156595cb3ee778bd2e80094de352b20a5ef73e37d6eee4",
+      "adapter_kind": "SCRIPTED",
+      "status": "EXECUTED",
+      "answer": {
+        "tasks": [
+          {
+            "ref": "a:1",
+            "task": "回调接入",
+            "owner": "许澄",
+            "project": "青岚项目",
+            "deadline": {
+              "value": "2026-11-12",
+              "precision": "DAY",
+              "role": "TASK_DEADLINE",
+              "bound": "BEFORE"
+            },
+            "evidence": [
+              {
+                "ref": "a:1",
+                "span": {
+                  "workspace_id": "m3-d01",
+                  "artifact_id": "a",
+                  "artifact_version_id": "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2",
+                  "source_ref": "artifact://m3-d01/a",
+                  "content_hash": "1249544efad7e17992f1763e373028a10804425e6fd607583fc171fadaa389b2",
+                  "ordinal": 0,
+                  "message_id": "message_v1_005bbaab12d5c109bc1e07d37391c48706bfa6390d37449092b88095566f2445",
+                  "segment_id": "segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责青岚项目任务 QL-11 的回调接入，计划在2026年11月12日前完成。",
+                  "quote_sha256": "0870b5f75764cb55e44cb8684de2438b4fac29454d3fc03fe7d240e1867dbc50"
+                }
+              }
+            ]
+          }
+        ],
+        "relations": [],
+        "revisions": [],
+        "answer_status": "COMPLETE",
+        "abstentions": [],
+        "answer_evidence": [
+          {
+            "ref": "a:1",
+            "span": {
+              "workspace_id": "m3-d01",
+              "artifact_id": "a",
+              "artifact_version_id": "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2",
+              "source_ref": "artifact://m3-d01/a",
+              "content_hash": "1249544efad7e17992f1763e373028a10804425e6fd607583fc171fadaa389b2",
+              "ordinal": 0,
+              "message_id": "message_v1_005bbaab12d5c109bc1e07d37391c48706bfa6390d37449092b88095566f2445",
+              "segment_id": "segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+              "char_start": 32,
+              "char_end": 72,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责青岚项目任务 QL-11 的回调接入，计划在2026年11月12日前完成。",
+              "quote_sha256": "0870b5f75764cb55e44cb8684de2438b4fac29454d3fc03fe7d240e1867dbc50"
+            }
+          }
+        ]
+      },
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 1,
+        "tool_receipts": [
+          {
+            "seq": 1,
+            "tool": "list_sources",
+            "arguments": {},
+            "result_sha256": "b1b9d1946cbf0b4a2ec0761048918a75ec79ffa6cf9f276452eb9c762e0ddfbe",
+            "status": "OK"
+          },
+          {
+            "seq": 2,
+            "tool": "read_source",
+            "arguments": {
+              "doc_id": "a"
+            },
+            "result_sha256": "1d8cf35738d5b24f86df3d253c5b8dc474ba721bc2624bdef1b5798140089f52",
+            "status": "OK"
+          }
+        ],
+        "model_calls": 0,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 8.824
+      },
+      "failure_stage": null,
+      "error_type": null
+    }
+  ]
+}

@@ -1,0 +1,2509 @@
+{
+  "candidate": {
+    "candidate_id": "task_relation_candidate_v1_f1df4e970cb19c92f77a6b104a91a53b9f5079410a1bffac002a55f4e4f2210b",
+    "schema_version": "task-relation-candidate/v1",
+    "rule_version": "candidate-discovery/v1",
+    "phase": "DISCOVERED",
+    "relation_status": "UNCONFIRMED",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "discovery-c02",
+      "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+      "artifact_id": "export.md",
+      "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+      "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+      "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+    },
+    "object": {
+      "workspace_id": "discovery-c02",
+      "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+      "artifact_id": "receipt.txt",
+      "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+      "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+      "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+    },
+    "predicate_hint": "RELATED_TO",
+    "priority": 95,
+    "reason_codes": [
+      "EXPLICIT_FILE_TASK_REFERENCE"
+    ],
+    "evidence": [
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "char_start": 0,
+        "char_end": 38,
+        "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "char_start": 7,
+        "char_end": 38,
+        "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+        "role": "UNRESOLVED_REFERENCE"
+      },
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "char_start": 0,
+        "char_end": 22,
+        "quote": "霁月项目任务 BILL-57：接入收据导出。",
+        "role": "RELATION_PROPOSAL"
+      }
+    ],
+    "uncertainty": [
+      "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+      "VERIFIER_REQUIRED"
+    ]
+  },
+  "valid_before": true,
+  "related_directions": [
+    {
+      "assessment_id": "task_assessment_v2_e1c8be2f5f94024e7f78d9e63125046b227b093d7946b72db39249ec004e8b6f",
+      "schema_version": "task-relation-assessment/v2",
+      "rule_version": "direct-relations-rules/v1",
+      "predicate": "RELATED_TO",
+      "phase": "ASSESSED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "artifact_id": "export.md",
+        "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+        "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+        "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+      },
+      "object": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "artifact_id": "receipt.txt",
+        "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+        "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+        "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+      },
+      "verdict": "UNKNOWN",
+      "reason_codes": [
+        "INSUFFICIENT_RELATION_EVIDENCE"
+      ],
+      "lifecycle": "ACTIVE",
+      "observations": [
+        {
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+          "description": "接入收据导出",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "霁月项目",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "char_start": 0,
+              "char_end": 22,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "接入收据导出",
+              "char_start": 15,
+              "char_end": 21,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "霁月项目",
+              "char_start": 0,
+              "char_end": 4,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "description": "完成回执审计",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "char_start": 0,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成回执审计",
+              "char_start": 0,
+              "char_end": 6,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "dependencies": [
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "source_ref": "artifact://discovery-c02/other.md",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "ordinal": 0,
+            "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+            "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "char_start": 0,
+            "char_end": 21,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青榆项目任务 BILL-57：预订会议室。",
+            "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "supporting_evidence": [],
+      "counter_evidence": [],
+      "context_evidence": [],
+      "evidence_validity": true,
+      "missing_evidence": [
+        "需要唯一绑定端点、作用域及该关系命题的明确原文证据。"
+      ],
+      "assessed_at": "2026-10-18T14:07:26.466004+00:00",
+      "relation_detail": null,
+      "premise_ids": [],
+      "authority_checks": []
+    },
+    {
+      "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+      "schema_version": "task-relation-assessment/v2",
+      "rule_version": "direct-relations-rules/v1",
+      "predicate": "RELATED_TO",
+      "phase": "ASSESSED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "artifact_id": "receipt.txt",
+        "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+        "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+        "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+      },
+      "object": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "artifact_id": "export.md",
+        "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+        "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+        "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+      },
+      "verdict": "SUPPORTED",
+      "reason_codes": [
+        "EXPLICIT_WORK_LINK"
+      ],
+      "lifecycle": "ACTIVE",
+      "observations": [
+        {
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "description": "完成回执审计",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "char_start": 0,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成回执审计",
+              "char_start": 0,
+              "char_end": 6,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+          "description": "接入收据导出",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "霁月项目",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "char_start": 0,
+              "char_end": 22,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "接入收据导出",
+              "char_start": 15,
+              "char_end": 21,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "霁月项目",
+              "char_start": 0,
+              "char_end": 4,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "dependencies": [
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "source_ref": "artifact://discovery-c02/other.md",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "ordinal": 0,
+            "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+            "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "char_start": 0,
+            "char_end": 21,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青榆项目任务 BILL-57：预订会议室。",
+            "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "char_start": 7,
+          "char_end": 38,
+          "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+          "role": "WORK_LINK"
+        }
+      ],
+      "counter_evidence": [],
+      "context_evidence": [],
+      "evidence_validity": true,
+      "missing_evidence": [],
+      "assessed_at": "2026-10-18T14:07:26.529213+00:00",
+      "relation_detail": "WORK_LINK",
+      "premise_ids": [],
+      "authority_checks": []
+    }
+  ],
+  "same_task": {
+    "assessment_id": "task_assessment_v1_d61247df145a167b45944c5aee28b54fe5ae709abbdf2359726b61d1b3a53ce9",
+    "schema_version": "task-relation-assessment/v1",
+    "rule_version": "same-task-rules/v1",
+    "predicate": "SAME_TASK",
+    "phase": "ASSESSED",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "discovery-c02",
+      "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+      "artifact_id": "receipt.txt",
+      "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+      "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+      "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+    },
+    "object": {
+      "workspace_id": "discovery-c02",
+      "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+      "artifact_id": "export.md",
+      "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+      "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+      "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+    },
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "lifecycle": "ACTIVE",
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "provenance": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+        "description": "完成回执审计",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "char_start": 0,
+            "char_end": 38,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成回执审计",
+            "char_start": 0,
+            "char_end": 6,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      {
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "provenance": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+        "description": "接入收据导出",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": "霁月项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "char_start": 0,
+            "char_end": 22,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "接入收据导出",
+            "char_start": 15,
+            "char_end": 21,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "霁月项目",
+            "char_start": 0,
+            "char_end": 4,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "dependencies": [
+      {
+        "observation": {
+          "workspace_id": "discovery-c02",
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+        },
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "discovery-c02",
+          "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+          "artifact_id": "other.md",
+          "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+          "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+        },
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "other.md",
+          "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+          "source_ref": "artifact://discovery-c02/other.md",
+          "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+          "ordinal": 0,
+          "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+          "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "char_start": 0,
+          "char_end": 21,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "青榆项目任务 BILL-57：预订会议室。",
+          "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "discovery-c02",
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+        },
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "context_evidence": [
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "char_start": 21,
+        "char_end": 31,
+        "quote": "任务 BILL-57",
+        "role": "TASK_KEY"
+      },
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "char_start": 4,
+        "char_end": 14,
+        "quote": "任务 BILL-57",
+        "role": "TASK_KEY"
+      },
+      {
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "char_start": 0,
+        "char_end": 4,
+        "quote": "霁月项目",
+        "role": "PROJECT_SCOPE"
+      }
+    ],
+    "evidence_validity": true,
+    "missing_evidence": [
+      "需要作用域明确且无冲突的任务编号，或唯一指向另一观察的明确同一任务声明；不会补写项目、负责人或日期。"
+    ],
+    "assessed_at": "2026-10-18T14:07:26.594560+00:00"
+  },
+  "persisted_read": {
+    "assessment": {
+      "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+      "schema_version": "task-relation-assessment/v2",
+      "rule_version": "direct-relations-rules/v1",
+      "predicate": "RELATED_TO",
+      "phase": "ASSESSED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "artifact_id": "receipt.txt",
+        "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+        "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+        "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+      },
+      "object": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "artifact_id": "export.md",
+        "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+        "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+        "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+      },
+      "verdict": "SUPPORTED",
+      "reason_codes": [
+        "EXPLICIT_WORK_LINK"
+      ],
+      "lifecycle": "ACTIVE",
+      "observations": [
+        {
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "description": "完成回执审计",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "char_start": 0,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成回执审计",
+              "char_start": 0,
+              "char_end": 6,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+          "description": "接入收据导出",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "霁月项目",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "char_start": 0,
+              "char_end": 22,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "接入收据导出",
+              "char_start": 15,
+              "char_end": 21,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "霁月项目",
+              "char_start": 0,
+              "char_end": 4,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "dependencies": [
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "source_ref": "artifact://discovery-c02/other.md",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "ordinal": 0,
+            "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+            "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "char_start": 0,
+            "char_end": 21,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青榆项目任务 BILL-57：预订会议室。",
+            "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "char_start": 7,
+          "char_end": 38,
+          "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+          "role": "WORK_LINK"
+        }
+      ],
+      "counter_evidence": [],
+      "context_evidence": [],
+      "evidence_validity": true,
+      "missing_evidence": [],
+      "assessed_at": "2026-10-18T14:07:26.529213+00:00",
+      "relation_detail": "WORK_LINK",
+      "premise_ids": [],
+      "authority_checks": []
+    },
+    "persistent_lifecycle": "ACTIVE",
+    "evidence_state": "VERIFIED",
+    "current_supported": true,
+    "category": "CURRENT_CONFIRMED",
+    "blocking_reasons": [],
+    "premise_states": [],
+    "source_checks": [
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "other.md",
+          "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+          "source_ref": "artifact://discovery-c02/other.md",
+          "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+          "ordinal": 0,
+          "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+          "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "char_start": 0,
+          "char_end": 21,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "青榆项目任务 BILL-57：预订会议室。",
+          "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "events": [
+      {
+        "event_id": "relation_event_v1_d9e3ea6288f507e81836cc0747814f94f5877a466e8687039ef2f505b64e1d1b",
+        "workspace_id": "discovery-c02",
+        "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+        "event_type": "ACTIVE",
+        "reason": "IMMUTABLE_RECORD_CAPTURED",
+        "actor": "system:relation-store",
+        "previous_event_id": null,
+        "recorded_at": "2026-10-18T14:07:26.529213+00:00",
+        "evidence": [],
+        "replacement_id": null
+      }
+    ],
+    "context_recheck": null,
+    "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+  },
+  "confirmed_before": 1,
+  "query_only": true,
+  "query_db_bytes_unchanged": true,
+  "after_retraction": {
+    "assessment": {
+      "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+      "schema_version": "task-relation-assessment/v2",
+      "rule_version": "direct-relations-rules/v1",
+      "predicate": "RELATED_TO",
+      "phase": "ASSESSED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "artifact_id": "receipt.txt",
+        "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+        "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+        "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+      },
+      "object": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "artifact_id": "export.md",
+        "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+        "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+        "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+      },
+      "verdict": "SUPPORTED",
+      "reason_codes": [
+        "EXPLICIT_WORK_LINK"
+      ],
+      "lifecycle": "ACTIVE",
+      "observations": [
+        {
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "description": "完成回执审计",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "char_start": 0,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成回执审计",
+              "char_start": 0,
+              "char_end": 6,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+          "description": "接入收据导出",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "霁月项目",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "char_start": 0,
+              "char_end": 22,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "接入收据导出",
+              "char_start": 15,
+              "char_end": 21,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "霁月项目",
+              "char_start": 0,
+              "char_end": 4,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "dependencies": [
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "source_ref": "artifact://discovery-c02/other.md",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "ordinal": 0,
+            "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+            "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "char_start": 0,
+            "char_end": 21,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青榆项目任务 BILL-57：预订会议室。",
+            "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "char_start": 7,
+          "char_end": 38,
+          "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+          "role": "WORK_LINK"
+        }
+      ],
+      "counter_evidence": [],
+      "context_evidence": [],
+      "evidence_validity": true,
+      "missing_evidence": [],
+      "assessed_at": "2026-10-18T14:07:26.529213+00:00",
+      "relation_detail": "WORK_LINK",
+      "premise_ids": [],
+      "authority_checks": []
+    },
+    "persistent_lifecycle": "RETRACTED",
+    "evidence_state": "VERIFIED",
+    "current_supported": false,
+    "category": "HISTORICAL",
+    "blocking_reasons": [
+      "LIFECYCLE_RETRACTED"
+    ],
+    "premise_states": [],
+    "source_checks": [
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "other.md",
+          "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+          "source_ref": "artifact://discovery-c02/other.md",
+          "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+          "ordinal": 0,
+          "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+          "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "char_start": 0,
+          "char_end": 21,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "青榆项目任务 BILL-57：预订会议室。",
+          "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "events": [
+      {
+        "event_id": "relation_event_v1_d9e3ea6288f507e81836cc0747814f94f5877a466e8687039ef2f505b64e1d1b",
+        "workspace_id": "discovery-c02",
+        "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+        "event_type": "ACTIVE",
+        "reason": "IMMUTABLE_RECORD_CAPTURED",
+        "actor": "system:relation-store",
+        "previous_event_id": null,
+        "recorded_at": "2026-10-18T14:07:26.529213+00:00",
+        "evidence": [],
+        "replacement_id": null
+      },
+      {
+        "event_id": "relation_event_v1_0a6e1fd76a52d4f87ff163efccc3ff86aad6d652e86bf7fc50be2e5d99b6fdab",
+        "workspace_id": "discovery-c02",
+        "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+        "event_type": "RETRACTED",
+        "reason": "synthetic explicit review revocation",
+        "actor": "integration-reviewer",
+        "previous_event_id": "relation_event_v1_d9e3ea6288f507e81836cc0747814f94f5877a466e8687039ef2f505b64e1d1b",
+        "recorded_at": "2026-10-18T14:07:27.529213+00:00",
+        "evidence": [],
+        "replacement_id": null
+      }
+    ],
+    "context_recheck": null,
+    "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+  },
+  "confirmed_after_retraction": 0,
+  "candidate_valid_after_source_change": false,
+  "after_source_change": {
+    "assessment": {
+      "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+      "schema_version": "task-relation-assessment/v2",
+      "rule_version": "direct-relations-rules/v1",
+      "predicate": "RELATED_TO",
+      "phase": "ASSESSED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+        "artifact_id": "receipt.txt",
+        "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+        "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+        "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+      },
+      "object": {
+        "workspace_id": "discovery-c02",
+        "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+        "artifact_id": "export.md",
+        "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+        "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+        "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+      },
+      "verdict": "SUPPORTED",
+      "reason_codes": [
+        "EXPLICIT_WORK_LINK"
+      ],
+      "lifecycle": "ACTIVE",
+      "observations": [
+        {
+          "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "raw_text": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "description": "完成回执审计",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+              "char_start": 0,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成回执审计",
+              "char_start": 0,
+              "char_end": 6,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+          "provenance": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "raw_text": "霁月项目任务 BILL-57：接入收据导出。",
+          "description": "接入收据导出",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "霁月项目",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "霁月项目任务 BILL-57：接入收据导出。",
+              "char_start": 0,
+              "char_end": 22,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "接入收据导出",
+              "char_start": 15,
+              "char_end": 21,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "霁月项目",
+              "char_start": 0,
+              "char_end": 4,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-18T00:00:00+00:00",
+          "event_time": null,
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "dependencies": [
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_b627774232622a01a067db7448fa370422f763cd89f8afb79e8e4c15c0e61db5",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "payload_hash": "7938416c0b1e559a550270f1d608a62a9adfb345c415d56cc9224100a3ce98e2"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_89faaa2602c0959ee67adfc778e7730503c8cfe542c9ca1dea6f3bcfd93a509a",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "payload_hash": "b5513082790d55dbd4118fa2bdf30858e4643aff9225e79ab6de6d4d9fc5dd3e"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "other.md",
+            "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+            "source_ref": "artifact://discovery-c02/other.md",
+            "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+            "ordinal": 0,
+            "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+            "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+            "char_start": 0,
+            "char_end": 21,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青榆项目任务 BILL-57：预订会议室。",
+            "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": {
+            "workspace_id": "discovery-c02",
+            "observation_id": "task_observation_v1_9c3d4b588c5ee261f7a641faa3e9485e3ae17590d2282b62eff4fae78a9f04c0",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "payload_hash": "ccf071850211112ddb154df3b75271ecf0bac887adbe402abc2c47b0782d0dbf"
+          },
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "export.md",
+            "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+            "source_ref": "artifact://discovery-c02/export.md",
+            "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+            "ordinal": 0,
+            "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+            "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+            "char_start": 0,
+            "char_end": 22,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目任务 BILL-57：接入收据导出。",
+            "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "supporting_evidence": [
+        {
+          "span": {
+            "workspace_id": "discovery-c02",
+            "artifact_id": "receipt.txt",
+            "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+            "source_ref": "artifact://discovery-c02/receipt.txt",
+            "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+            "ordinal": 0,
+            "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+            "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+            "char_start": 0,
+            "char_end": 38,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+            "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+          },
+          "char_start": 7,
+          "char_end": 38,
+          "quote": "本任务与export.md的任务 BILL-57 有工作联系。",
+          "role": "WORK_LINK"
+        }
+      ],
+      "counter_evidence": [],
+      "context_evidence": [],
+      "evidence_validity": true,
+      "missing_evidence": [],
+      "assessed_at": "2026-10-18T14:07:26.529213+00:00",
+      "relation_detail": "WORK_LINK",
+      "premise_ids": [],
+      "authority_checks": []
+    },
+    "persistent_lifecycle": "ACTIVE",
+    "evidence_state": "STALE",
+    "current_supported": false,
+    "category": "HISTORICAL",
+    "blocking_reasons": [
+      "ASSESSMENT_REPLAY_MISMATCH",
+      "STALE_EVIDENCE"
+    ],
+    "premise_states": [],
+    "source_checks": [
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "NOT_CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "receipt.txt",
+          "artifact_version_id": "artifact_v1_9bb3f2ee5df5ec7ccad90ad79af5ae283d8025d043fb99cca2fb924c99523299",
+          "source_ref": "artifact://discovery-c02/receipt.txt",
+          "content_hash": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77",
+          "ordinal": 0,
+          "message_id": "message_v1_393a92b526eafcae3446725939d5260ef2d144b78c6492b7304220aa29aaa4ed",
+          "segment_id": "segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c70f8f5d1cc725c6386a081ae8800ffe5a599b28641c399cff1a3facccae8509",
+          "char_start": 0,
+          "char_end": 38,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "完成回执审计；本任务与export.md的任务 BILL-57 有工作联系。",
+          "quote_sha256": "8b020407bebb39725eef8b5b86839bdf2a8b7d87589ec50cacc9584ec0be9d77"
+        },
+        "source_status": "NOT_CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "other.md",
+          "artifact_version_id": "artifact_v1_7e9fbabc36031e9c4db8d90e6f440b2a9658b7ad9ec0a625471cf61629b6a10d",
+          "source_ref": "artifact://discovery-c02/other.md",
+          "content_hash": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e",
+          "ordinal": 0,
+          "message_id": "message_v1_7cf28ab308aadd03e627ad03c310e59cf8e455d50b3455488ce3e4f6ce5ba100",
+          "segment_id": "segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fd4c10a1656a0703e8757953455b6f56f8cff5716dd91f1928be9bc0b741ede7",
+          "char_start": 0,
+          "char_end": 21,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "青榆项目任务 BILL-57：预订会议室。",
+          "quote_sha256": "1998649d5fe89103bd35f4e4be293d89ec84885809f30aabfa94ff25afa0039e"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "discovery-c02",
+          "artifact_id": "export.md",
+          "artifact_version_id": "artifact_v1_d7b4ebc4898fa684f8f705a263a32beb68c2cd9b99189951429503bddfcc5730",
+          "source_ref": "artifact://discovery-c02/export.md",
+          "content_hash": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97",
+          "ordinal": 0,
+          "message_id": "message_v1_defc49c4a900a062eeb88b012f17bafa659ec4ab76f43e4be41845b41a7ea1fa",
+          "segment_id": "segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d6db412ffcba62d2a97bd62ad746297e253b464fdc8970f6fa600689339c9119",
+          "char_start": 0,
+          "char_end": 22,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "霁月项目任务 BILL-57：接入收据导出。",
+          "quote_sha256": "2c0f27a61f39fff99cb1c13c5418ac4cc364fd7c1e096c3749ed40c39578dd97"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "events": [
+      {
+        "event_id": "relation_event_v1_d9e3ea6288f507e81836cc0747814f94f5877a466e8687039ef2f505b64e1d1b",
+        "workspace_id": "discovery-c02",
+        "assessment_id": "task_assessment_v2_94c389cda583b65e3643d67008b2efc8be33190c964504992e72c1f3601ba95a",
+        "event_type": "ACTIVE",
+        "reason": "IMMUTABLE_RECORD_CAPTURED",
+        "actor": "system:relation-store",
+        "previous_event_id": null,
+        "recorded_at": "2026-10-18T14:07:26.529213+00:00",
+        "evidence": [],
+        "replacement_id": null
+      }
+    ],
+    "context_recheck": null,
+    "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+  },
+  "confirmed_after_source_change": 0
+}

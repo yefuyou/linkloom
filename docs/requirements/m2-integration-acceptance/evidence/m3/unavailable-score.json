@@ -1,0 +1,302 @@
+{
+  "schema": "m3-score/v1",
+  "split": "dev",
+  "results": [
+    {
+      "case_id": "D01",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.667
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "e8102b40d49c11a3c0156595cb3ee778bd2e80094de352b20a5ef73e37d6eee4"
+      }
+    },
+    {
+      "case_id": "D02",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.631
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "cb80936e4b6da57d58c5fddbb56258bce7abab3408d1a01adc0f860bd6dcd914"
+      }
+    },
+    {
+      "case_id": "D03",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.433
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "8f450b879b49b30fb1e23c13d01c984d2c432b566c279ee6361eb0d08b384aa2"
+      }
+    },
+    {
+      "case_id": "D04",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.418
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "c0bd06bde126a71f65eee655b4a47a9757dd5cf9ac4e02cee70a8c8343c1e6d2"
+      }
+    },
+    {
+      "case_id": "D05",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.42
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "48a05a5352cd76ba14c30e2b7a43fd5f83dd00c819cba7719e780cb92306cc2c"
+      }
+    },
+    {
+      "case_id": "D06",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.467
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "6cb2a8397c71c5092e07eefa308f9b0157b8da452096ef74c39905df42679e7d"
+      }
+    },
+    {
+      "case_id": "D07",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.366
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "3bab5899bfa389fb21b40cd617c73123b6dd31f95eb8d8868499841481de115b"
+      }
+    },
+    {
+      "case_id": "D08",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.422
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "69bfbe638e95f07055278efdf2358d19308b4807baaa53af3956813028d0c0e9"
+      }
+    },
+    {
+      "case_id": "D09",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.511
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "e0398692106b78def2db453580c0626ebcb5e8cc11eba0b6824b2ae89c1c5c5f"
+      }
+    },
+    {
+      "case_id": "D10",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.717
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "d2e13cda82b53cd4b9e4d05d9889087563e7a30445113b888bd2a4da5f9220c7"
+      }
+    },
+    {
+      "case_id": "D11",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.439
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "fba4a1eefdea5d87311348fb8051cc420bcaf83b5ac45836341cb03e29736a6a"
+      }
+    },
+    {
+      "case_id": "D12",
+      "status": "NOT_EVALUATED",
+      "metrics": null,
+      "failure_stage": "capability_gap",
+      "counts": {},
+      "bad_cases": [],
+      "observability": {
+        "adapter_kind": "UNAVAILABLE",
+        "execution": {
+          "target_action": "analyze_task_impact",
+          "target_invocations": 0,
+          "tool_receipts": [],
+          "model_calls": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "cost_usd": null,
+          "wall_ms": 0.266
+        },
+        "run_status": "NOT_RUN",
+        "input_sha256": "c22789f8dcf9a12d60b715c0847467a6a5bc8a54dfe5cf18726a601213982299"
+      }
+    }
+  ],
+  "statuses": {
+    "NOT_EVALUATED": 12
+  },
+  "summary": {
+    "cases": 12,
+    "evaluated_cases": 0,
+    "statuses": {
+      "NOT_EVALUATED": 12
+    },
+    "failure_stages": {
+      "capability_gap": 12
+    },
+    "by_scope": {}
+  },
+  "input_sha256": "4da5257ec9a418c16bc85708d89d36fcc4ceecd6ca56aa0f0edc962586ca010d",
+  "gold_sha256": "cd301c89fbad85907621cda774cbfa1ebd252089b088837aebb48602b24b488f",
+  "predictions_sha256": "1192f9c93a7000e2d4e867abfe7272c8a929539373089af980a8d389e41ac9a0",
+  "model_evaluation": "NOT_RUN",
+  "holdout_evaluation": "NOT_RUN",
+  "qualification": "Preparation only; scripted scores do not establish M3 Agent capability."
+}

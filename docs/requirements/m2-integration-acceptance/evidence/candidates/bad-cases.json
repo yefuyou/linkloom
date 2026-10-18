@@ -1,0 +1,493 @@
+[
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C01",
+    "returned": [],
+    "missed": [
+      "O:plan"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C02",
+    "returned": [],
+    "missed": [
+      "O:export"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:export"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C03",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C04",
+    "returned": [],
+    "missed": [
+      "C:vendor.md"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C05",
+    "returned": [
+      "O:task-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:task-b"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C07",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C08",
+    "returned": [],
+    "missed": [
+      "O:check"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C09",
+    "returned": [],
+    "missed": [
+      "O:receipt"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:receipt"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 1,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 1,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 1,
+    "case_id": "C12",
+    "returned": [
+      "O:disconnected-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:disconnected-b"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C01",
+    "returned": [],
+    "missed": [
+      "O:plan"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C02",
+    "returned": [],
+    "missed": [
+      "O:export"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:export"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C03",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C04",
+    "returned": [],
+    "missed": [
+      "C:vendor.md"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C05",
+    "returned": [
+      "O:task-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:task-b"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C07",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C08",
+    "returned": [],
+    "missed": [
+      "O:check"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C09",
+    "returned": [],
+    "missed": [
+      "O:receipt"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:receipt"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 3,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 3,
+    "case_id": "C01",
+    "returned": [
+      "O:plan",
+      "O:noise",
+      "O:plan"
+    ],
+    "missed": [],
+    "noise": [
+      "O:noise"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 3,
+    "case_id": "C04",
+    "returned": [
+      "C:vendor.md",
+      "O:chairs"
+    ],
+    "missed": [],
+    "noise": [
+      "O:chairs"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 3,
+    "case_id": "C08",
+    "returned": [
+      "O:check",
+      "O:room"
+    ],
+    "missed": [],
+    "noise": [
+      "O:room"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 3,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 3,
+    "case_id": "C12",
+    "returned": [
+      "O:disconnected-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:disconnected-b"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C01",
+    "returned": [],
+    "missed": [
+      "O:plan"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C02",
+    "returned": [],
+    "missed": [
+      "O:export"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:export"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C03",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C04",
+    "returned": [],
+    "missed": [
+      "C:vendor.md"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C05",
+    "returned": [
+      "O:task-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:task-b"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C07",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C08",
+    "returned": [],
+    "missed": [
+      "O:check"
+    ],
+    "noise": [],
+    "explicit_missed": []
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C09",
+    "returned": [],
+    "missed": [
+      "O:receipt"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:receipt"
+    ]
+  },
+  {
+    "method": "baseline",
+    "k": 5,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 5,
+    "case_id": "C01",
+    "returned": [
+      "O:plan",
+      "O:noise",
+      "O:plan"
+    ],
+    "missed": [],
+    "noise": [
+      "O:noise"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 5,
+    "case_id": "C04",
+    "returned": [
+      "C:vendor.md",
+      "O:chairs"
+    ],
+    "missed": [],
+    "noise": [
+      "O:chairs"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 5,
+    "case_id": "C08",
+    "returned": [
+      "O:check",
+      "O:room"
+    ],
+    "missed": [],
+    "noise": [
+      "O:room"
+    ],
+    "explicit_missed": []
+  },
+  {
+    "method": "discovery",
+    "k": 5,
+    "case_id": "C10",
+    "returned": [],
+    "missed": [
+      "O:old"
+    ],
+    "noise": [],
+    "explicit_missed": [
+      "O:old"
+    ]
+  },
+  {
+    "method": "discovery",
+    "k": 5,
+    "case_id": "C12",
+    "returned": [
+      "O:disconnected-b"
+    ],
+    "missed": [],
+    "noise": [
+      "O:disconnected-b"
+    ],
+    "explicit_missed": []
+  }
+]

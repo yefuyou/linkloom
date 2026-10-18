@@ -16,6 +16,7 @@ def unique_source(name, endpoint, artifacts):
 
 
 def _target(fragment, target, artifacts, inventory):
+    fragment = fragment.strip()
     key = re.fullmatch(r'任务\s*(\S+)', fragment)
     artifact = next(a for a in artifacts if a.artifact_version_id == target.provenance.artifact_version_id)
     if key:

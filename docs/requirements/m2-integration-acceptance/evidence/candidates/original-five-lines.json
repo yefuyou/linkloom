@@ -1,0 +1,220 @@
+{
+  "discovery": {
+    "candidates": [],
+    "rejected": [],
+    "eligible_observations": 2,
+    "considered_candidates": 0,
+    "returned_candidates": 0,
+    "truncated": false,
+    "limits": {
+      "max_observations": 128,
+      "max_artifacts": 64,
+      "max_source_chars": 500000,
+      "max_candidates": 100,
+      "max_per_observation": 10,
+      "max_context_signals": 128,
+      "max_generated_candidates": 1000
+    },
+    "input_counts": {
+      "observation_rows": 2,
+      "artifact_rows": 1,
+      "source_characters": 442,
+      "current_workspace_artifacts": 1,
+      "context_signals": 0
+    },
+    "generated_candidates": 0,
+    "endpoint_fanout": {
+      "task_observation_v1_45bea20318a2c914115987d0015c59775f16a60e76a1407021e8c2b4f2dbf1d8": 0,
+      "task_observation_v1_d9f1c177093c97989489a1f651168082677d715bb226a9542d9fd7651630d406": 0
+    },
+    "max_endpoint_fanout": 0,
+    "truncation_reasons": []
+  },
+  "observations": [
+    {
+      "observation_id": "task_observation_v1_d9f1c177093c97989489a1f651168082677d715bb226a9542d9fd7651630d406",
+      "provenance": {
+        "workspace_id": "discovery-original-safety",
+        "artifact_id": "meeting.txt",
+        "artifact_version_id": "artifact_v1_b41766b3934f7c1f1ffc9ac6f09987cfcb9a860293e725635e3d4e579268dd31",
+        "source_ref": "artifact://discovery-original-safety/meeting.txt",
+        "content_hash": "c9b0e4ac07669c42035c130ccda720ac605802ef8e10b2dabb99f449aaac4439",
+        "ordinal": 1,
+        "message_id": "message_v1_1bff40500cd183cbe5d6acf277ed2c945d865bce060f0e169d2a3115ded5306f",
+        "segment_id": "segment_v1_e8b23b1b2504f16c6a0a88737cc79965e3da183aeae0560b4c82e1bd1c8417ed",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e8b23b1b2504f16c6a0a88737cc79965e3da183aeae0560b4c82e1bd1c8417ed",
+        "char_start": 126,
+        "char_end": 161,
+        "line_start": 2,
+        "line_end": 2,
+        "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+        "quote_sha256": "1b1aa6927b45c5e8c95dd92d770f42d7d62ab495e6ce1b90bb623a632eb821af"
+      },
+      "raw_text": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+      "description": "短信接口接入；联调",
+      "owner": "陈晨",
+      "deadline": "2026-10-14",
+      "deadline_text": "2026年10月14日",
+      "deadline_precision": "DAY",
+      "deadline_role": "TASK_DEADLINE",
+      "project": "星河项目",
+      "vendor": null,
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "vendor"
+      ],
+      "validation_issues": [],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+          "char_start": 126,
+          "char_end": 161,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "短信接口接入",
+          "char_start": 134,
+          "char_end": 140,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "联调",
+          "char_start": 158,
+          "char_end": 160,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "我负责",
+          "char_start": 126,
+          "char_end": 129,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "陈晨",
+          "char_start": 122,
+          "char_end": 124,
+          "basis": "SPEAKER"
+        },
+        {
+          "field": "project",
+          "quote": "星河项目",
+          "char_start": 129,
+          "char_end": 133,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "deadline",
+          "quote": "2026年10月14日前完成",
+          "char_start": 144,
+          "char_end": 158,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-18T00:00:00+00:00",
+      "event_time": "2026-10-10T01:05:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY"
+    },
+    {
+      "observation_id": "task_observation_v1_45bea20318a2c914115987d0015c59775f16a60e76a1407021e8c2b4f2dbf1d8",
+      "provenance": {
+        "workspace_id": "discovery-original-safety",
+        "artifact_id": "meeting.txt",
+        "artifact_version_id": "artifact_v1_b41766b3934f7c1f1ffc9ac6f09987cfcb9a860293e725635e3d4e579268dd31",
+        "source_ref": "artifact://discovery-original-safety/meeting.txt",
+        "content_hash": "c9b0e4ac07669c42035c130ccda720ac605802ef8e10b2dabb99f449aaac4439",
+        "ordinal": 3,
+        "message_id": "message_v1_478739b94fc8be6d3c04a95bff31e16ee74de23757facba4c328fbcfe37c5928",
+        "segment_id": "segment_v1_f7f55413d2384f72e67b6f6b6d8961c5aa8a6bdea9fdcc02c1b941c89f507acb",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7f55413d2384f72e67b6f6b6d8961c5aa8a6bdea9fdcc02c1b941c89f507acb",
+        "char_start": 316,
+        "char_end": 362,
+        "line_start": 4,
+        "line_end": 4,
+        "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+        "quote_sha256": "3e4abff4f742f514071b9305608814b9a5e369901f6fa4b2dd883400b844f3d0"
+      },
+      "raw_text": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+      "description": "短信接口接入；按新供应商星帆通信的接口调整",
+      "owner": "陈晨",
+      "deadline": "2026-10-18",
+      "deadline_text": "2026年10月18日",
+      "deadline_precision": "DAY",
+      "deadline_role": "TASK_DEADLINE",
+      "project": null,
+      "vendor": "星帆通信",
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "project"
+      ],
+      "validation_issues": [],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+          "char_start": 316,
+          "char_end": 362,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "短信接口接入",
+          "char_start": 321,
+          "char_end": 327,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "按新供应商星帆通信的接口调整",
+          "char_start": 329,
+          "char_end": 343,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "我继续负责",
+          "char_start": 316,
+          "char_end": 321,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "陈晨",
+          "char_start": 312,
+          "char_end": 314,
+          "basis": "SPEAKER"
+        },
+        {
+          "field": "vendor",
+          "quote": "星帆通信",
+          "char_start": 334,
+          "char_end": 338,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "deadline",
+          "quote": "2026年10月18日前完成",
+          "char_start": 347,
+          "char_end": 361,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-18T00:00:00+00:00",
+      "event_time": "2026-10-15T02:05:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY"
+    }
+  ],
+  "same_task": "UNKNOWN",
+  "revision": "UNKNOWN",
+  "comparison_status": "BLOCKED",
+  "delta_calendar_days": null,
+  "boundary": "Original public five-line safety probe; not an old heldout run or a Provider evaluation"
+}

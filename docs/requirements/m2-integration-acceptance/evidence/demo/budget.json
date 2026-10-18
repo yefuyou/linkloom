@@ -1,0 +1,119 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "task_relation_candidate_v1_2d3a404769de7f54484f84722110857c8205b046e126f98e569eb9f2552666f9",
+      "schema_version": "task-relation-candidate/v1",
+      "rule_version": "candidate-discovery/v1",
+      "phase": "DISCOVERED",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY",
+      "subject": {
+        "workspace_id": "discovery-c01",
+        "observation_id": "task_observation_v1_2fc3080eda93e154b5501a8e5ac5cb86143edebf0ac3d573aadbb47ff584d9ca",
+        "artifact_id": "plan.md",
+        "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+        "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+        "payload_hash": "cd9bc75d2e574ca82ceeccfde34a3f7d355c7e52e13be5d12a8586b926842a7b"
+      },
+      "object": {
+        "workspace_id": "discovery-c01",
+        "observation_id": "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0",
+        "artifact_id": "update.md",
+        "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+        "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+        "payload_hash": "91215ec29a42aecf87d1397aba56dace47aa603d012b271ef72e7d7b9c7e30f9"
+      },
+      "predicate_hint": "SAME_TASK",
+      "priority": 100,
+      "reason_codes": [
+        "SCOPED_TASK_KEY"
+      ],
+      "evidence": [
+        {
+          "span": {
+            "workspace_id": "discovery-c01",
+            "artifact_id": "plan.md",
+            "artifact_version_id": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+            "source_ref": "artifact://discovery-c01/plan.md",
+            "content_hash": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c",
+            "ordinal": 0,
+            "message_id": "message_v1_605af2ac3e6cc51848834851c4859948932e438866aa514a741dea1c8691bc4d",
+            "segment_id": "segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3d894a823617970c0fb9c96589418f4cf6e274813757c760d10829ace872289",
+            "char_start": 0,
+            "char_end": 29,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+            "quote_sha256": "3d3cd040d6f8b5e4eab55e94e92c0f5d3f007714b741e1ce7e6005c938b7466c"
+          },
+          "char_start": 0,
+          "char_end": 29,
+          "quote": "霁月项目；系统：账务；任务 BILL-57：接入收据导出。",
+          "role": "RELATION_PROPOSAL"
+        },
+        {
+          "span": {
+            "workspace_id": "discovery-c01",
+            "artifact_id": "update.md",
+            "artifact_version_id": "artifact_v1_9d96186352b21c7c60bbff27a15a31b0c6f8f8e5199b5da9215db3555bbaff69",
+            "source_ref": "artifact://discovery-c01/update.md",
+            "content_hash": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b",
+            "ordinal": 0,
+            "message_id": "message_v1_3de56c23cca568b087ff6ffa5f8d85293f302da83beba18eadb514bcea2b5104",
+            "segment_id": "segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b84bdd6cbb5472b3eaf9e6a864285fb5e45e9a875dd42cba8ddeab4e1898e7a0",
+            "char_start": 0,
+            "char_end": 29,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+            "quote_sha256": "4fd8cf47cbd27a51af2ef3c05dfe08d4dcaf3970a6bdc3659bdff53e3a3a315b"
+          },
+          "char_start": 0,
+          "char_end": 29,
+          "quote": "霁月项目；系统：账务；任务 BILL-57：调整导出签名。",
+          "role": "RELATION_PROPOSAL"
+        }
+      ],
+      "uncertainty": [
+        "KEY_REUSE_NOT_EXCLUDED",
+        "VERIFIER_REQUIRED"
+      ]
+    }
+  ],
+  "rejected": [],
+  "eligible_observations": 3,
+  "considered_candidates": 4,
+  "returned_candidates": 1,
+  "truncated": true,
+  "limits": {
+    "max_observations": 128,
+    "max_artifacts": 64,
+    "max_source_chars": 500000,
+    "max_candidates": 1,
+    "max_per_observation": 1,
+    "max_context_signals": 128,
+    "max_generated_candidates": 1000
+  },
+  "input_counts": {
+    "observation_rows": 3,
+    "artifact_rows": 3,
+    "source_characters": 79,
+    "current_workspace_artifacts": 3,
+    "context_signals": 0
+  },
+  "generated_candidates": 4,
+  "endpoint_fanout": {
+    "task_observation_v1_2fc3080eda93e154b5501a8e5ac5cb86143edebf0ac3d573aadbb47ff584d9ca": 1,
+    "task_observation_v1_76de21304cd34430eda8e733b309947478a3a4d9777ddfcc4057a49d39b552a2": 0,
+    "task_observation_v1_d070dd9707eb461791dc25a53a10bcabff4d7614bfee7b2ddc8f8099573540b0": 1
+  },
+  "max_endpoint_fanout": 1,
+  "truncation_reasons": [
+    "MAX_CANDIDATES",
+    "MAX_PER_OBSERVATION"
+  ]
+}

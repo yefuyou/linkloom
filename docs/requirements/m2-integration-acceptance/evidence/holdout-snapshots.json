@@ -1,0 +1,1172 @@
+[
+  {
+    "case_id": "H01",
+    "sources": [
+      {
+        "artifact_id": "A.md",
+        "artifact_version_id": "artifact_v1_db6bc9f5ac87124382873122c0513e55d75ab45e550b21933f3ad75c87a83223",
+        "content_hash": "e05b8061652a11fc874e9a36532bc495cdd31d09b023cbbf5284f6692aad4f9d",
+        "content": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。\n",
+        "metadata": {
+          "document_date": "2026-10-15"
+        }
+      },
+      {
+        "artifact_id": "B.md",
+        "artifact_version_id": "artifact_v1_e61ec7286be3907383c45ab5b1953f8a97b9ce33254386760f50cac618ce3f54",
+        "content_hash": "d2c645f0fafad51043d51d7018b53d43d456771086be620a74d80c986177fc91",
+        "content": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。\n",
+        "metadata": {
+          "document_date": "2026-10-15"
+        }
+      }
+    ],
+    "observations": {
+      "A.md:A1": {
+        "observation_id": "task_observation_v1_1568b0f331af3e872c8f2b304eb9f81be8fb318504e15d1b47a7d435ca4dd483",
+        "provenance": {
+          "workspace_id": "m2-final-h01",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_db6bc9f5ac87124382873122c0513e55d75ab45e550b21933f3ad75c87a83223",
+          "source_ref": "artifact://m2-final-h01/A.md",
+          "content_hash": "e05b8061652a11fc874e9a36532bc495cdd31d09b023cbbf5284f6692aad4f9d",
+          "ordinal": 0,
+          "message_id": "message_v1_4e158b7fdf2421a409291798d95586eddf5f4ce5c06449182bafa584c7fd44f7",
+          "segment_id": "segment_v1_91086a7261e7efddd10adedf550bda1c1923f137ddded07a888ac65bd486cd94",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_91086a7261e7efddd10adedf550bda1c1923f137ddded07a888ac65bd486cd94",
+          "char_start": 0,
+          "char_end": 37,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。\n",
+          "quote_sha256": "e05b8061652a11fc874e9a36532bc495cdd31d09b023cbbf5284f6692aad4f9d"
+        },
+        "raw_text": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。",
+        "description": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": "10月14日",
+        "deadline_precision": "MONTH_DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "vendor"
+        ],
+        "validation_issues": [
+          "DEADLINE_YEAR_MISSING"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。",
+            "char_start": 0,
+            "char_end": 36,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。",
+            "char_start": 0,
+            "char_end": 36,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 0,
+            "char_end": 4,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "10月14日前完成",
+            "char_start": 16,
+            "char_end": 25,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md:B1": {
+        "observation_id": "task_observation_v1_b984c14ff5c6a2fd8ca1ae6f57a5cd296de03208e4893b1fc499b65ec309eac2",
+        "provenance": {
+          "workspace_id": "m2-final-h01",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_e61ec7286be3907383c45ab5b1953f8a97b9ce33254386760f50cac618ce3f54",
+          "source_ref": "artifact://m2-final-h01/B.md",
+          "content_hash": "d2c645f0fafad51043d51d7018b53d43d456771086be620a74d80c986177fc91",
+          "ordinal": 0,
+          "message_id": "message_v1_e4ead84214174f3c1a3605a226b5b2c458d9f34c971ef1c4df4d4f7a8dd79fe5",
+          "segment_id": "segment_v1_5a86a456f2abedbd0adec6268720154c005a901c60b351d420c12011e08efe63",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5a86a456f2abedbd0adec6268720154c005a901c60b351d420c12011e08efe63",
+          "char_start": 0,
+          "char_end": 57,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。\n",
+          "quote_sha256": "d2c645f0fafad51043d51d7018b53d43d456771086be620a74d80c986177fc91"
+        },
+        "raw_text": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。",
+        "description": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": "10月18日",
+        "deadline_precision": "MONTH_DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "vendor"
+        ],
+        "validation_issues": [
+          "DEADLINE_YEAR_MISSING"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。",
+            "char_start": 0,
+            "char_end": 56,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。",
+            "char_start": 0,
+            "char_end": 56,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 0,
+            "char_end": 4,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "10月18日前完成",
+            "char_start": 35,
+            "char_end": 44,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    },
+    "evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-final-h01",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_db6bc9f5ac87124382873122c0513e55d75ab45e550b21933f3ad75c87a83223",
+          "source_ref": "artifact://m2-final-h01/A.md",
+          "content_hash": "e05b8061652a11fc874e9a36532bc495cdd31d09b023cbbf5284f6692aad4f9d",
+          "ordinal": 0,
+          "message_id": "message_v1_4e158b7fdf2421a409291798d95586eddf5f4ce5c06449182bafa584c7fd44f7",
+          "segment_id": "segment_v1_91086a7261e7efddd10adedf550bda1c1923f137ddded07a888ac65bd486cd94",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_91086a7261e7efddd10adedf550bda1c1923f137ddded07a888ac65bd486cd94",
+          "char_start": 0,
+          "char_end": 37,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。\n",
+          "quote_sha256": "e05b8061652a11fc874e9a36532bc495cdd31d09b023cbbf5284f6692aad4f9d"
+        },
+        "char_start": 0,
+        "char_end": 37,
+        "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。\n",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h01",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_e61ec7286be3907383c45ab5b1953f8a97b9ce33254386760f50cac618ce3f54",
+          "source_ref": "artifact://m2-final-h01/B.md",
+          "content_hash": "d2c645f0fafad51043d51d7018b53d43d456771086be620a74d80c986177fc91",
+          "ordinal": 0,
+          "message_id": "message_v1_e4ead84214174f3c1a3605a226b5b2c458d9f34c971ef1c4df4d4f7a8dd79fe5",
+          "segment_id": "segment_v1_5a86a456f2abedbd0adec6268720154c005a901c60b351d420c12011e08efe63",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5a86a456f2abedbd0adec6268720154c005a901c60b351d420c12011e08efe63",
+          "char_start": 0,
+          "char_end": 57,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。\n",
+          "quote_sha256": "d2c645f0fafad51043d51d7018b53d43d456771086be620a74d80c986177fc91"
+        },
+        "char_start": 0,
+        "char_end": 57,
+        "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。\n",
+        "role": "RELATION_PROPOSAL"
+      }
+    ]
+  },
+  {
+    "case_id": "H02",
+    "sources": [
+      {
+        "artifact_id": "A.md",
+        "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+        "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+        "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。\n",
+        "metadata": {}
+      },
+      {
+        "artifact_id": "B.md",
+        "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+        "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+        "content": "[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。\n[2026-10-15T10:06:00+08:00] 陈晨: 我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。\n[2026-10-15T10:07:00+08:00] 陈晨: 我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。\n",
+        "metadata": {}
+      }
+    ],
+    "observations": {
+      "B.md:B1": {
+        "observation_id": "task_observation_v1_8ef263bed86c37ec5ff3e36173c1be1dbe3c774c976284139176b9a47ed27821",
+        "provenance": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 0,
+          "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+          "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "char_start": 32,
+          "char_end": 102,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+          "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+        },
+        "raw_text": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+        "description": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "char_start": 32,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+            "char_start": 32,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 87,
+            "char_end": 101,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-10-15T02:05:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md:B2": {
+        "observation_id": "task_observation_v1_2002df1d88117117512c26e960fc5e53921e32530a68c722ca14b5c1437ffe23",
+        "provenance": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 1,
+          "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+          "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "char_start": 135,
+          "char_end": 203,
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+          "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+        },
+        "raw_text": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+        "description": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "char_start": 135,
+            "char_end": 203,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+            "char_start": 135,
+            "char_end": 203,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 135,
+            "char_end": 138,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 131,
+            "char_end": 133,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 138,
+            "char_end": 142,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 161,
+            "char_end": 175,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-10-15T02:06:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md:B3": {
+        "observation_id": "task_observation_v1_bccdc0e329f6996bbfb2835560dbd0c2bf8f30880967311da91aa7bd76196209",
+        "provenance": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 2,
+          "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+          "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "char_start": 236,
+          "char_end": 276,
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+          "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+        },
+        "raw_text": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+        "description": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "char_start": 236,
+            "char_end": 276,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+            "char_start": 236,
+            "char_end": 276,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 236,
+            "char_end": 239,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 232,
+            "char_end": 234,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 239,
+            "char_end": 243,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 261,
+            "char_end": 275,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-10-15T02:07:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    },
+    "evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_291e1c0cdfb3070cdcf0d877314cc0e12b84e194932e4842f27e0a5199afbaeb",
+          "source_ref": "artifact://m2-final-h02/A.md",
+          "content_hash": "27ba37506547c9320eab8730f2a22ae6a73631d4cfa9e10d2cac4af7b3c61940",
+          "ordinal": 0,
+          "message_id": "message_v1_78d4025c5350126011e8fb5aef901a7430d77e3429f88850ae19299f8a59c3f0",
+          "segment_id": "segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cd996e29ba21fec704ecad0d8d94e22120e0945a7f266750c4ca2b2e5c71b021",
+          "char_start": 32,
+          "char_end": 60,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+          "quote_sha256": "7542250362b91c7e7c593c9983c526f6492e23176af97d74b91cbf30706f50bd"
+        },
+        "char_start": 32,
+        "char_end": 60,
+        "quote": "星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 0,
+          "message_id": "message_v1_40a34950623385fb2103cce2d4bd152fe642946752c8868ada3463287ebb67c0",
+          "segment_id": "segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7ca02cbcfdf77d786316ac565c21f271bd3f399c3a1d5eb0cc0bd70d32c274a",
+          "char_start": 32,
+          "char_end": 102,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+          "quote_sha256": "ec291023d83437fb676196af0b7a3c9b5dcf467e5896a46e8e34aef5e7011821"
+        },
+        "char_start": 32,
+        "char_end": 102,
+        "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 1,
+          "message_id": "message_v1_a8f8de93c6d7584af881feddb40e158e7af578e471a781fb0851bc4ed6582ba3",
+          "segment_id": "segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf4abea5359989668747ed768160bfad45aff0143e38943d372f689a2c09f677",
+          "char_start": 135,
+          "char_end": 203,
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+          "quote_sha256": "71edc8cda0e548bca1b6f15b4c768bfdf0a1338c811539f4148138c40a32060a"
+        },
+        "char_start": 135,
+        "char_end": 203,
+        "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h02",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_f8a38057cc77dbee8f6d3d6c1d3e953eaac3fa8aefcbf3042cc94103b5898777",
+          "source_ref": "artifact://m2-final-h02/B.md",
+          "content_hash": "391926e4a1a75a8a097fc84e277a2d48e50bf57450d3fbd62ad7a59202822564",
+          "ordinal": 2,
+          "message_id": "message_v1_bcc91ee6a16c698cd7d00dbe6c4b5068a951fc630f3b4d2db3fc296ab8ba1c31",
+          "segment_id": "segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5576f565206ee30b6e8095ffb5c2195bf67f4e119442eb16586f0514f39aec25",
+          "char_start": 236,
+          "char_end": 276,
+          "line_start": 3,
+          "line_end": 3,
+          "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+          "quote_sha256": "69a0918b5e6e3653f6988c293cb8f04874e51468ca9231db76eebb8506067d73"
+        },
+        "char_start": 236,
+        "char_end": 276,
+        "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。",
+        "role": "RELATION_PROPOSAL"
+      }
+    ]
+  },
+  {
+    "case_id": "H03",
+    "sources": [
+      {
+        "artifact_id": "A.md",
+        "artifact_version_id": "artifact_v1_fc0ec5e5c768e873d2461aea67860b4f3871c88b0c54a8e50253f02140f7b7df",
+        "content_hash": "b0c6891ef30177592b1237e39edb27ab687cf85e027aff2cd2354dc5236da98e",
+        "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。\n",
+        "metadata": {
+          "source_updated_at": "2026-10-10T09:00:00+08:00"
+        }
+      },
+      {
+        "artifact_id": "B.md",
+        "artifact_version_id": "artifact_v1_e758d483f28a9069ffe685c981a7ab7e880574ef54913bb7c9523708d9ef7129",
+        "content_hash": "a29d3dc3199a37d99bcd85435b89cdab46c50031f9b87014d365898326e120b4",
+        "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。\n",
+        "metadata": {
+          "source_updated_at": "2026-10-15T09:00:00+08:00"
+        }
+      }
+    ],
+    "observations": {
+      "A.md:A1": {
+        "observation_id": "task_observation_v1_99fb76230f2c4bae852ab059cacec125378e92a731033e4f82eb463f3888ad5b",
+        "provenance": {
+          "workspace_id": "m2-final-h03",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_fc0ec5e5c768e873d2461aea67860b4f3871c88b0c54a8e50253f02140f7b7df",
+          "source_ref": "artifact://m2-final-h03/A.md",
+          "content_hash": "b0c6891ef30177592b1237e39edb27ab687cf85e027aff2cd2354dc5236da98e",
+          "ordinal": 0,
+          "message_id": "message_v1_f2c5c5ccdb7496425ea9777f05de3e906e4eae3affe53af8eb023f6418d71a16",
+          "segment_id": "segment_v1_b08a3f195eeb053e72e86e8e41a5756ee7bc537ccafdb4d13777ca508ba65a4b",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b08a3f195eeb053e72e86e8e41a5756ee7bc537ccafdb4d13777ca508ba65a4b",
+          "char_start": 32,
+          "char_end": 98,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+          "quote_sha256": "506964b2a72bc5b52802ad9fb4aea3ece5f67e30917112097863601617a6ac40"
+        },
+        "raw_text": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+        "description": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+        "owner": "陈晨",
+        "deadline": "2026-10-14",
+        "deadline_text": "2026年10月14日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+            "char_start": 32,
+            "char_end": 98,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+            "char_start": 32,
+            "char_end": 98,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月14日前完成",
+            "char_start": 57,
+            "char_end": 71,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-10-10T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md:B1": {
+        "observation_id": "task_observation_v1_da278efaea6276c003a4b5db73f82b76e8aef87a64c30d58a1623b3c2c989bb8",
+        "provenance": {
+          "workspace_id": "m2-final-h03",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_e758d483f28a9069ffe685c981a7ab7e880574ef54913bb7c9523708d9ef7129",
+          "source_ref": "artifact://m2-final-h03/B.md",
+          "content_hash": "a29d3dc3199a37d99bcd85435b89cdab46c50031f9b87014d365898326e120b4",
+          "ordinal": 0,
+          "message_id": "message_v1_09d6247a15c298489463552cbdbb566b63119e91b5c9a07e154d45fe9b10ae65",
+          "segment_id": "segment_v1_eb8a34056c328f94a3e9bf2b2fb2e9d0eb5d35c7a1db2b36558cb02fefec44e1",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_eb8a34056c328f94a3e9bf2b2fb2e9d0eb5d35c7a1db2b36558cb02fefec44e1",
+          "char_start": 32,
+          "char_end": 94,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+          "quote_sha256": "90db0baeb6e7408ee65d60780e260fc5ea29bfea9f70d74eca3a85311c219036"
+        },
+        "raw_text": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+        "description": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+            "char_start": 32,
+            "char_end": 94,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+            "char_start": 32,
+            "char_end": 94,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 57,
+            "char_end": 71,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-10-15T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    },
+    "evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-final-h03",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_fc0ec5e5c768e873d2461aea67860b4f3871c88b0c54a8e50253f02140f7b7df",
+          "source_ref": "artifact://m2-final-h03/A.md",
+          "content_hash": "b0c6891ef30177592b1237e39edb27ab687cf85e027aff2cd2354dc5236da98e",
+          "ordinal": 0,
+          "message_id": "message_v1_f2c5c5ccdb7496425ea9777f05de3e906e4eae3affe53af8eb023f6418d71a16",
+          "segment_id": "segment_v1_b08a3f195eeb053e72e86e8e41a5756ee7bc537ccafdb4d13777ca508ba65a4b",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b08a3f195eeb053e72e86e8e41a5756ee7bc537ccafdb4d13777ca508ba65a4b",
+          "char_start": 32,
+          "char_end": 98,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+          "quote_sha256": "506964b2a72bc5b52802ad9fb4aea3ece5f67e30917112097863601617a6ac40"
+        },
+        "char_start": 32,
+        "char_end": 98,
+        "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h03",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_e758d483f28a9069ffe685c981a7ab7e880574ef54913bb7c9523708d9ef7129",
+          "source_ref": "artifact://m2-final-h03/B.md",
+          "content_hash": "a29d3dc3199a37d99bcd85435b89cdab46c50031f9b87014d365898326e120b4",
+          "ordinal": 0,
+          "message_id": "message_v1_09d6247a15c298489463552cbdbb566b63119e91b5c9a07e154d45fe9b10ae65",
+          "segment_id": "segment_v1_eb8a34056c328f94a3e9bf2b2fb2e9d0eb5d35c7a1db2b36558cb02fefec44e1",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_eb8a34056c328f94a3e9bf2b2fb2e9d0eb5d35c7a1db2b36558cb02fefec44e1",
+          "char_start": 32,
+          "char_end": 94,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+          "quote_sha256": "90db0baeb6e7408ee65d60780e260fc5ea29bfea9f70d74eca3a85311c219036"
+        },
+        "char_start": 32,
+        "char_end": 94,
+        "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。",
+        "role": "RELATION_PROPOSAL"
+      }
+    ]
+  },
+  {
+    "case_id": "H04",
+    "sources": [
+      {
+        "artifact_id": "A.md",
+        "artifact_version_id": "artifact_v1_05820546eef5a9b65b936ef12264d220aeae22f76e9f2a338f125ce2d7e51b06",
+        "content_hash": "e6bc403db3777b2ccbce75ba4c3ae51d8162d712a656090c87dbd5c1d9acbebf",
+        "content": "[2026-11-01T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。\n",
+        "metadata": {}
+      },
+      {
+        "artifact_id": "B.md",
+        "artifact_version_id": "artifact_v1_d2356f30101f6d03718c7afe8403fc4e1015dca7d8bad37b17a26d037c8656de",
+        "content_hash": "2496410fe4b1fc170c01418d18a295151239c4a24637f5d514baf97878b54d03",
+        "content": "[2026-11-02T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。\n",
+        "metadata": {}
+      },
+      {
+        "artifact_id": "B.md",
+        "artifact_version_id": "artifact_v1_310e47056ba47cf58ea42679fdb866d45cf8d0c4f049c71c9151641172fccbc0",
+        "content_hash": "9ebf24a27f7562357e8fa789519d7d81b922cc72e3f4a1c00e45fd946045831b",
+        "content": "[2026-11-03T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。\n",
+        "metadata": {}
+      }
+    ],
+    "observations": {
+      "A.md/v1:A1": {
+        "observation_id": "task_observation_v1_15c105202757975c0c61c8fcb657f8ba38ef5f79f64ec3278e42c678530dd5f5",
+        "provenance": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_05820546eef5a9b65b936ef12264d220aeae22f76e9f2a338f125ce2d7e51b06",
+          "source_ref": "artifact://m2-final-h04/A.md",
+          "content_hash": "e6bc403db3777b2ccbce75ba4c3ae51d8162d712a656090c87dbd5c1d9acbebf",
+          "ordinal": 0,
+          "message_id": "message_v1_ec250a8b1637d094c0e9f82df58f597b5523d4cc457f908cc3194083478b2030",
+          "segment_id": "segment_v1_f12be86529083885db5327dfef6510161a71900d80c4346300d12b84b4285d9d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f12be86529083885db5327dfef6510161a71900d80c4346300d12b84b4285d9d",
+          "char_start": 32,
+          "char_end": 72,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+          "quote_sha256": "0b15347b821e87b6ba94e0836006d989ef894acd5d2f9d95281ad0d787aeb129"
+        },
+        "raw_text": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+        "description": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-11-20",
+        "deadline_text": "2026年11月20日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+            "char_start": 32,
+            "char_end": 72,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+            "char_start": 32,
+            "char_end": 72,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年11月20日前完成",
+            "char_start": 57,
+            "char_end": 71,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-11-01T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md/v1:B1": {
+        "observation_id": "task_observation_v1_83444d4c6f0639ca5fdc11e12dce6ceeb2d7d89463747c8f36e194fdaaa0a671",
+        "provenance": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_d2356f30101f6d03718c7afe8403fc4e1015dca7d8bad37b17a26d037c8656de",
+          "source_ref": "artifact://m2-final-h04/B.md",
+          "content_hash": "2496410fe4b1fc170c01418d18a295151239c4a24637f5d514baf97878b54d03",
+          "ordinal": 0,
+          "message_id": "message_v1_6ccc9e1ffd5814b3985c924bb840f5b38e80f94f2ad6dbb733bd735e7b394185",
+          "segment_id": "segment_v1_a02b56d50fb88c07f3c6bcff1f44da34a1ece2e26744e001715f9bd3b3a6a3b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a02b56d50fb88c07f3c6bcff1f44da34a1ece2e26744e001715f9bd3b3a6a3b8",
+          "char_start": 32,
+          "char_end": 99,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+          "quote_sha256": "734f28b09dfa92b5bda289b80c87caacb46b6c2f9658505c32a26e1229c8735e"
+        },
+        "raw_text": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+        "description": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-11-22",
+        "deadline_text": "2026年11月22日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+            "char_start": 32,
+            "char_end": 99,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+            "char_start": 32,
+            "char_end": 99,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年11月22日前完成",
+            "char_start": 84,
+            "char_end": 98,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-11-02T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "B.md/v2:B1": {
+        "observation_id": "task_observation_v1_1d2c24b2cb6aae3ae22f9bc0e6c82028a71974ec50238e41630a8859c3f1f849",
+        "provenance": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_310e47056ba47cf58ea42679fdb866d45cf8d0c4f049c71c9151641172fccbc0",
+          "source_ref": "artifact://m2-final-h04/B.md",
+          "content_hash": "9ebf24a27f7562357e8fa789519d7d81b922cc72e3f4a1c00e45fd946045831b",
+          "ordinal": 0,
+          "message_id": "message_v1_2dd8482bfd58609acfe81fb2c075d9029a77c37f80b2d6c63965435499ad8c1e",
+          "segment_id": "segment_v1_ae3d1512d453ab288ebe023305f6065dbaa056eac64c11c465702ce59b966b36",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ae3d1512d453ab288ebe023305f6065dbaa056eac64c11c465702ce59b966b36",
+          "char_start": 32,
+          "char_end": 109,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+          "quote_sha256": "771411f51c6d66ae514d3c92c919952dfc855211a0344eb5fea573cba2140087"
+        },
+        "raw_text": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+        "description": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-11-20",
+        "deadline_text": "2026年11月20日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+            "char_start": 32,
+            "char_end": 109,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+            "char_start": 32,
+            "char_end": 109,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年11月20日前完成",
+            "char_start": 94,
+            "char_end": 108,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T14:00:00+00:00",
+        "event_time": "2026-11-03T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    },
+    "evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_05820546eef5a9b65b936ef12264d220aeae22f76e9f2a338f125ce2d7e51b06",
+          "source_ref": "artifact://m2-final-h04/A.md",
+          "content_hash": "e6bc403db3777b2ccbce75ba4c3ae51d8162d712a656090c87dbd5c1d9acbebf",
+          "ordinal": 0,
+          "message_id": "message_v1_ec250a8b1637d094c0e9f82df58f597b5523d4cc457f908cc3194083478b2030",
+          "segment_id": "segment_v1_f12be86529083885db5327dfef6510161a71900d80c4346300d12b84b4285d9d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f12be86529083885db5327dfef6510161a71900d80c4346300d12b84b4285d9d",
+          "char_start": 32,
+          "char_end": 72,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+          "quote_sha256": "0b15347b821e87b6ba94e0836006d989ef894acd5d2f9d95281ad0d787aeb129"
+        },
+        "char_start": 32,
+        "char_end": 72,
+        "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_d2356f30101f6d03718c7afe8403fc4e1015dca7d8bad37b17a26d037c8656de",
+          "source_ref": "artifact://m2-final-h04/B.md",
+          "content_hash": "2496410fe4b1fc170c01418d18a295151239c4a24637f5d514baf97878b54d03",
+          "ordinal": 0,
+          "message_id": "message_v1_6ccc9e1ffd5814b3985c924bb840f5b38e80f94f2ad6dbb733bd735e7b394185",
+          "segment_id": "segment_v1_a02b56d50fb88c07f3c6bcff1f44da34a1ece2e26744e001715f9bd3b3a6a3b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a02b56d50fb88c07f3c6bcff1f44da34a1ece2e26744e001715f9bd3b3a6a3b8",
+          "char_start": 32,
+          "char_end": 99,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+          "quote_sha256": "734f28b09dfa92b5bda289b80c87caacb46b6c2f9658505c32a26e1229c8735e"
+        },
+        "char_start": 32,
+        "char_end": 99,
+        "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。",
+        "role": "RELATION_PROPOSAL"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-final-h04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_310e47056ba47cf58ea42679fdb866d45cf8d0c4f049c71c9151641172fccbc0",
+          "source_ref": "artifact://m2-final-h04/B.md",
+          "content_hash": "9ebf24a27f7562357e8fa789519d7d81b922cc72e3f4a1c00e45fd946045831b",
+          "ordinal": 0,
+          "message_id": "message_v1_2dd8482bfd58609acfe81fb2c075d9029a77c37f80b2d6c63965435499ad8c1e",
+          "segment_id": "segment_v1_ae3d1512d453ab288ebe023305f6065dbaa056eac64c11c465702ce59b966b36",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ae3d1512d453ab288ebe023305f6065dbaa056eac64c11c465702ce59b966b36",
+          "char_start": 32,
+          "char_end": 109,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+          "quote_sha256": "771411f51c6d66ae514d3c92c919952dfc855211a0344eb5fea573cba2140087"
+        },
+        "char_start": 32,
+        "char_end": 109,
+        "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。",
+        "role": "RELATION_PROPOSAL"
+      }
+    ]
+  }
+]

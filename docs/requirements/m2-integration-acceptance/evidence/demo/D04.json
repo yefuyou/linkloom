@@ -1,0 +1,1829 @@
+{
+  "discovery": {
+    "candidates": [
+      {
+        "candidate_id": "task_relation_candidate_v1_09bd9c0945c9394b58e524eff306cfecadaf0615f8648757e97490b14846870f",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "predicate_hint": "SAME_TASK",
+        "priority": 100,
+        "reason_codes": [
+          "SCOPED_TASK_KEY"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 32,
+            "char_end": 110,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "KEY_REUSE_NOT_EXCLUDED",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_a41d678eda3dc267f87fdc11964564288099997a399dfc5352139da78b4d888f",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "predicate_hint": "SAME_TASK",
+        "priority": 100,
+        "reason_codes": [
+          "SCOPED_TASK_KEY"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+              "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "ordinal": 0,
+              "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+              "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+            },
+            "char_start": 32,
+            "char_end": 74,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 32,
+            "char_end": 110,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "KEY_REUSE_NOT_EXCLUDED",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_e3b45c787aaf3ba75cde0a77435d974a3327d336d8fe418ea3bfe254c6257135",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "predicate_hint": "SAME_TASK",
+        "priority": 100,
+        "reason_codes": [
+          "SCOPED_TASK_KEY"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+              "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "ordinal": 0,
+              "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+              "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+            },
+            "char_start": 32,
+            "char_end": 74,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "KEY_REUSE_NOT_EXCLUDED",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_6578a68c3bc8a00dc5572b4349b13410f1502ab09ae955409e8b5a9ef5bec801",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "predicate_hint": "REVISES_PLAN",
+        "priority": 95,
+        "reason_codes": [
+          "EXPLICIT_FILE_TASK_REFERENCE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 32,
+            "char_end": 110,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 60,
+            "char_end": 110,
+            "quote": "本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "UNRESOLVED_REFERENCE"
+          }
+        ],
+        "uncertainty": [
+          "NONASSERTIVE_REFERENCE",
+          "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+          "UNQUALIFIED_FILE_REFERENCE",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_deafdb26a430664dbc09ec5da4f7876261d8e11bbc6b85a8069b96bbb5dfd04a",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "predicate_hint": "REVISES_PLAN",
+        "priority": 95,
+        "reason_codes": [
+          "EXPLICIT_FILE_TASK_REFERENCE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+              "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "ordinal": 0,
+              "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+              "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+            },
+            "char_start": 32,
+            "char_end": 74,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 48,
+            "char_end": 112,
+            "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "UNRESOLVED_REFERENCE"
+          }
+        ],
+        "uncertainty": [
+          "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+          "UNQUALIFIED_FILE_REFERENCE",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_7ae03a95c1cbde607a7eea2d7da8488b64cf99e4c17057af6bb270093b9ade46",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+              "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "ordinal": 0,
+              "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+              "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+            },
+            "char_start": 32,
+            "char_end": 74,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 32,
+            "char_end": 110,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_b8af96d1ef2ce9b7b4e18c3b7ad249c77e901b3718ca4962b1520e876f1fec58",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "C.md",
+              "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+              "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+              "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+              "ordinal": 0,
+              "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+              "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+              "char_start": 32,
+              "char_end": 110,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+              "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+            },
+            "char_start": 32,
+            "char_end": 110,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      },
+      {
+        "candidate_id": "task_relation_candidate_v1_ddbeca6f823982a6ddfdf5202134b6965a1b52bd5a48ce32838fed5604125604",
+        "schema_version": "task-relation-candidate/v1",
+        "rule_version": "candidate-discovery/v1",
+        "phase": "DISCOVERED",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "object": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "predicate_hint": "RELATED_TO",
+        "priority": 40,
+        "reason_codes": [
+          "LEXICAL_OVERLAP_WITHIN_PROJECT",
+          "PROJECT_SCOPE"
+        ],
+        "evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+              "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "ordinal": 0,
+              "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+              "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+              "char_start": 32,
+              "char_end": 74,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+            },
+            "char_start": 32,
+            "char_end": 74,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-identity-dev-d04",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+              "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+              "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+              "ordinal": 0,
+              "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+              "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+              "char_start": 32,
+              "char_end": 112,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+              "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+            },
+            "char_start": 32,
+            "char_end": 112,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "uncertainty": [
+          "PROJECT_COOCCURRENCE_ONLY",
+          "VERIFIER_REQUIRED"
+        ]
+      }
+    ],
+    "rejected": [],
+    "eligible_observations": 3,
+    "considered_candidates": 8,
+    "returned_candidates": 8,
+    "truncated": false,
+    "limits": {
+      "max_observations": 128,
+      "max_artifacts": 64,
+      "max_source_chars": 500000,
+      "max_candidates": 100,
+      "max_per_observation": 10,
+      "max_context_signals": 128,
+      "max_generated_candidates": 1000
+    },
+    "input_counts": {
+      "observation_rows": 3,
+      "artifact_rows": 3,
+      "source_characters": 299,
+      "current_workspace_artifacts": 3,
+      "context_signals": 0
+    },
+    "generated_candidates": 8,
+    "endpoint_fanout": {
+      "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23": 6,
+      "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980": 5,
+      "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc": 5
+    },
+    "max_endpoint_fanout": 6,
+    "truncation_reasons": []
+  },
+  "same_task": {
+    "assessment_id": "task_assessment_v1_670bf6d9f96d39f8358dafcd9185a16922d718ffd2d087990befe8c6337029c2",
+    "schema_version": "task-relation-assessment/v1",
+    "rule_version": "same-task-rules/v1",
+    "predicate": "SAME_TASK",
+    "phase": "ASSESSED",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+      "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+      "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+    },
+    "object": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+      "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+      "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+    },
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_TASK_REFERENCE"
+    ],
+    "lifecycle": "ACTIVE",
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+        "provenance": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "raw_text": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "description": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 88,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": "2026-10-15T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      {
+        "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+        "provenance": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "raw_text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "description": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-10-14",
+        "deadline_text": "2026年10月14日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月14日前完成",
+            "char_start": 59,
+            "char_end": 73,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": "2026-10-10T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "dependencies": [
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "ordinal": 0,
+          "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+          "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "char_start": 32,
+          "char_end": 110,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+          "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "char_start": 39,
+        "char_end": 47,
+        "quote": "任务 API-4",
+        "role": "TASK_KEY"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "char_start": 48,
+        "char_end": 112,
+        "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "role": "IDENTITY_ASSERTION"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "char_start": 35,
+        "char_end": 39,
+        "quote": "星河项目",
+        "role": "PROJECT_SCOPE"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "char_start": 35,
+        "char_end": 39,
+        "quote": "星河项目",
+        "role": "PROJECT_SCOPE"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "char_start": 39,
+        "char_end": 47,
+        "quote": "任务 API-4",
+        "role": "TASK_KEY"
+      }
+    ],
+    "counter_evidence": [],
+    "context_evidence": [],
+    "evidence_validity": true,
+    "missing_evidence": [],
+    "assessed_at": "2026-10-18T14:07:28.868629+00:00"
+  },
+  "revision": {
+    "assessment_id": "task_assessment_v3_1f5541f1aeb698540d34088cc1bcff2c39b93254c24d5d82fc2045acc9e46029",
+    "schema_version": "task-relation-assessment/v3",
+    "rule_version": "plan-revision-rules/v1",
+    "predicate": "REVISES_PLAN",
+    "phase": "ASSESSED",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+      "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+      "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+    },
+    "object": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+      "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+      "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+    },
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_PLAN_REPLACEMENT"
+    ],
+    "lifecycle": "ACTIVE",
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+        "provenance": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "raw_text": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "description": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 88,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": "2026-10-15T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      {
+        "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+        "provenance": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "raw_text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "description": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-10-14",
+        "deadline_text": "2026年10月14日",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "星河项目",
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月14日前完成",
+            "char_start": 59,
+            "char_end": 73,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": "2026-10-10T01:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "dependencies": [
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "ordinal": 0,
+          "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+          "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "char_start": 32,
+          "char_end": 110,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+          "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "char_start": 48,
+        "char_end": 112,
+        "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "role": "PLAN_REVISION"
+      }
+    ],
+    "counter_evidence": [],
+    "context_evidence": [],
+    "evidence_validity": true,
+    "missing_evidence": [],
+    "assessed_at": "2026-10-18T14:07:29.197501+00:00",
+    "relation_detail": "BUSINESS_PLAN_REVISION",
+    "premise_ids": [
+      "task_assessment_v1_670bf6d9f96d39f8358dafcd9185a16922d718ffd2d087990befe8c6337029c2"
+    ],
+    "authority_checks": [],
+    "changed_fields": [
+      "deadline"
+    ],
+    "asserted_effective_at": null
+  },
+  "comparison": {
+    "comparison_id": "revision_comparison_v1_d43315542bbbe0b81031d8a328a968ae8f0f2bda1e02d2bb74fdd9453eaa5492",
+    "schema_version": "revision-comparison/v1",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+      "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+      "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+    },
+    "object": {
+      "workspace_id": "m2-task-identity-dev-d04",
+      "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+      "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+      "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+    },
+    "same_task_id": "task_assessment_v1_670bf6d9f96d39f8358dafcd9185a16922d718ffd2d087990befe8c6337029c2",
+    "revision_id": "task_assessment_v3_1f5541f1aeb698540d34088cc1bcff2c39b93254c24d5d82fc2045acc9e46029",
+    "status": "COMPUTABLE",
+    "reason_codes": [
+      "VERIFIED_PLAN_BOUNDARIES"
+    ],
+    "old_deadline": {
+      "value": "2026-10-14",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE",
+      "evidence": [
+        {
+          "span": {
+            "workspace_id": "m2-task-identity-dev-d04",
+            "artifact_id": "A.md",
+            "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+            "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+            "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+            "ordinal": 0,
+            "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+            "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+            "char_start": 32,
+            "char_end": 74,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+          },
+          "char_start": 32,
+          "char_end": 74,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "role": "DEADLINE_BOUND"
+        },
+        {
+          "span": {
+            "workspace_id": "m2-task-identity-dev-d04",
+            "artifact_id": "A.md",
+            "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+            "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+            "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+            "ordinal": 0,
+            "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+            "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+            "char_start": 32,
+            "char_end": 74,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+          },
+          "char_start": 59,
+          "char_end": 73,
+          "quote": "2026年10月14日前完成",
+          "role": "DEADLINE_BOUND"
+        }
+      ]
+    },
+    "new_deadline": {
+      "value": "2026-10-18",
+      "precision": "DAY",
+      "role": "TASK_DEADLINE",
+      "bound": "BEFORE",
+      "evidence": [
+        {
+          "span": {
+            "workspace_id": "m2-task-identity-dev-d04",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+            "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+            "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+            "ordinal": 0,
+            "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+            "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+            "char_start": 32,
+            "char_end": 112,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+          },
+          "char_start": 88,
+          "char_end": 102,
+          "quote": "2026年10月18日前完成",
+          "role": "DEADLINE_BOUND"
+        },
+        {
+          "span": {
+            "workspace_id": "m2-task-identity-dev-d04",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+            "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+            "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+            "ordinal": 0,
+            "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+            "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+            "char_start": 32,
+            "char_end": 112,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+          },
+          "char_start": 48,
+          "char_end": 112,
+          "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "role": "DEADLINE_BOUND"
+        }
+      ]
+    },
+    "delta_calendar_days": 4,
+    "dependencies": [
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_82780bb37e9700d4558042da9174fa104d351595488d783ecf923da1f2607980",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "payload_hash": "b0878cab5e09e6a309bf571b4bc36dea9ce0e5ac4299115c82e5c8ce1799228a"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "C.md",
+          "artifact_version_id": "artifact_v1_2547cc0904fc17f4fe0ee1f264474bc28c3f0a18f3c8ebf1ed0683cf57dae4b8",
+          "source_ref": "artifact://m2-task-identity-dev-d04/C.md",
+          "content_hash": "e42f30d5536e368e54f67cd39f04a999433304798510ecd80ad41acd79696094",
+          "ordinal": 0,
+          "message_id": "message_v1_3dd7b1cb05a6db77547263f2d7679b8f71a4f84cafbae17f605a753bece9ca37",
+          "segment_id": "segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8a466047a7e6843dc11eee1bd8f6c30034b6f6a0c703d07c14b2f19e3fd1bb63",
+          "char_start": 32,
+          "char_end": 110,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+          "quote_sha256": "73587196c128538d06c16d05ffbcd95b856719957f3364b5d20142ba2732af87"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_1c763d2f0ffb945ef8b4a07d4b884b13817bef186c73543ba1d6213bd17a4d23",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "payload_hash": "0739f99b3f360dc7b30fb1413913796e33ae8b95bba7cb38dbaf40796dd360f1"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "observation_id": "task_observation_v1_f3cac9751e18a273361d766c9634f070b361233506b1f054250645a7eae439dc",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "payload_hash": "8da4927f2337b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295"
+        },
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_9213d9cb49a364a6459f8d2f92199c624b110338d63fb2de3e36ff1a1e74c4c6",
+          "source_ref": "artifact://m2-task-identity-dev-d04/A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_08d234aa6d6d71e2f56baab44143f1c601fed61228ca4e2a741fdd974b4fedb3",
+          "segment_id": "segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f04d5bae46c89f25d087abadd6daf6df3b21ea6a4d2014cb5bbe9a502af5da71",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": null,
+        "span": {
+          "workspace_id": "m2-task-identity-dev-d04",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_37d4941623d564a9dc73de76d93809ceb9dfe067a4e0892bf7c7f4b23459b496",
+          "source_ref": "artifact://m2-task-identity-dev-d04/B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_4278e69276b202530cbd04565df6a58abdc19ddbaedbc2a04d545f83558afdb3",
+          "segment_id": "segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d79e50c3ddc1f55507fbb88012150545868df6caeccc72b90e73a24a941118",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "asserted_effective_at": null,
+    "as_of": null,
+    "plan_currentness": "NOT_ESTABLISHED",
+    "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY"
+  }
+}

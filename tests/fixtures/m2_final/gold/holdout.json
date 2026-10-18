@@ -1,0 +1,252 @@
+{
+  "schema": "m2-final-gold/v1",
+  "split": "holdout",
+  "author_visible": true,
+  "cases": [
+    {
+      "case_id": "H01",
+      "questions": [
+        {
+          "question_id": "H01-1",
+          "same_task": "SUPPORTED",
+          "verdict": "SUPPORTED",
+          "comparison": "NOT_COMPARABLE",
+          "delta": null,
+          "changed_fields": [
+            "deadline"
+          ],
+          "required_proof_sources": [
+            "A.md",
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 1,
+              "quote": "替代其原计划"
+            },
+            {
+              "source_index": 1,
+              "quote": "改为10月18日前完成"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "星河项目任务 SDK-8：本条为A.md的同一任务，替代其原计划，改为10月18日前完成签名校验，负责人仍待定。"
+            },
+            {
+              "source_index": 0,
+              "quote": "星河项目任务 SDK-8：计划在10月14日前完成签名校验，负责人待定。"
+            }
+          ]
+        }
+      ],
+      "observation_fields": {
+        "owner": null,
+        "deadline": null,
+        "deadline_precision": "MONTH_DAY",
+        "deadline_role": "TASK_DEADLINE"
+      }
+    },
+    {
+      "case_id": "H02",
+      "questions": [
+        {
+          "question_id": "H02-1",
+          "verdict": "SUPPORTED",
+          "required_proof_sources": [
+            "A.md",
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 1,
+              "quote": "由于A.md记载的供应商更换"
+            },
+            {
+              "source_index": 1,
+              "quote": "此任务必须补测签名兼容性"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "我负责星河项目任务 AUTH-3 的兼容性验证；由于A.md记载的供应商更换，此任务必须补测签名兼容性，计划在2026年10月18日前完成。"
+            },
+            {
+              "source_index": 0,
+              "quote": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目今天正式决定把短信供应商从云桥科技改成星帆通信。"
+            }
+          ]
+        },
+        {
+          "question_id": "H02-2",
+          "verdict": "REFUTED",
+          "required_proof_sources": [
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 1,
+              "quote": "AUTH-4无需因A.md的此次供应商更换做任何调整"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "我负责星河项目任务 AUTH-4 的日志归档，计划在2026年10月18日前完成；AUTH-4无需因A.md的此次供应商更换做任何调整。"
+            }
+          ]
+        },
+        {
+          "question_id": "H02-3",
+          "verdict": "UNKNOWN",
+          "required_proof_sources": [],
+          "decisive_fragments": [],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "我负责星河项目任务 OPT-5 的缓存优化，计划在2026年10月18日前完成。"
+            }
+          ]
+        }
+      ],
+      "authority": "SOURCE_CLAIM_ONLY",
+      "formal_decisions": 0
+    },
+    {
+      "case_id": "H03",
+      "questions": [
+        {
+          "question_id": "H03-1",
+          "same_task": "SUPPORTED",
+          "verdict": "CONFLICT",
+          "comparison": "BLOCKED",
+          "delta": null,
+          "changed_fields": [],
+          "required_proof_sources": [
+            "A.md",
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 1,
+              "quote": "本条是执行计划，替代A.md的14日计划"
+            },
+            {
+              "source_index": 0,
+              "quote": "B.md的18日版本是草稿，不替代本条14日计划"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月18日前完成。\n本条是执行计划，替代A.md的14日计划。"
+            },
+            {
+              "source_index": 0,
+              "quote": "我负责星河项目任务 API-9 的回调联调，计划在2026年10月14日前完成。\nB.md的18日版本是草稿，不替代本条14日计划。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "H04",
+      "questions": [
+        {
+          "question_id": "H04-1",
+          "same_task": "SUPPORTED",
+          "verdict": "SUPPORTED",
+          "comparison": "COMPUTABLE",
+          "delta": 2,
+          "old": "2026-11-20",
+          "new": "2026-11-22",
+          "bound": "BEFORE",
+          "changed_fields": [
+            "deadline"
+          ],
+          "required_proof_sources": [
+            "A.md",
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 1,
+              "quote": "本条替代原计划"
+            },
+            {
+              "source_index": 1,
+              "quote": "将2026年11月20日前完成改为2026年11月22日前完成"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s0"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 1,
+              "quote": "我负责星河项目任务 API-6，与A.md是同一任务；本条替代原计划，将2026年11月20日前完成改为2026年11月22日前完成。"
+            },
+            {
+              "source_index": 0,
+              "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。"
+            }
+          ]
+        },
+        {
+          "question_id": "H04-2",
+          "same_task": "SUPPORTED",
+          "verdict": "REFUTED",
+          "comparison": "NOT_APPLICABLE",
+          "delta": null,
+          "changed_fields": [],
+          "required_proof_sources": [
+            "B.md"
+          ],
+          "decisive_fragments": [
+            {
+              "source_index": 2,
+              "quote": "任务计划未曾修订"
+            }
+          ],
+          "evaluation_snapshots": [
+            "s1",
+            "s2"
+          ],
+          "required_evidence": [
+            {
+              "source_index": 2,
+              "quote": "我负责星河项目任务 API-6，与A.md是同一任务；更正B.md/v1，22日是资料更新时间的误录，任务计划未曾修订，仍在2026年11月20日前完成。"
+            },
+            {
+              "source_index": 0,
+              "quote": "我负责星河项目任务 API-6 的回调接入，计划在2026年11月20日前完成。"
+            }
+          ]
+        }
+      ],
+      "lifecycle": {
+        "s1_old_evidence": "STALE",
+        "s2_old_revision": "RETRACTED",
+        "historical_delta": 2,
+        "current_delta": null
+      }
+    }
+  ]
+}

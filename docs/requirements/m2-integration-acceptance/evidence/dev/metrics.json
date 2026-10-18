@@ -1,0 +1,363 @@
+{
+  "scope": "original D01-D08; fixed pairs; duplicates removed across P1/P2/P3",
+  "relation_scores": {
+    "SAME_TASK": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "total": 7,
+      "precision": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 4,
+        "denominator": 4,
+        "value": 1.0
+      }
+    },
+    "RELATED_TO": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "total": 2,
+      "precision": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      }
+    },
+    "AFFECTED_BY": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "total": 2,
+      "precision": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      }
+    },
+    "IN_PROJECT": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "total": 4,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      }
+    },
+    "PROJECT_ALIAS": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "total": 1,
+      "precision": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      }
+    },
+    "REVISES_PLAN": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "total": 5,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      }
+    }
+  },
+  "atoms": [
+    {
+      "case_id": "D01",
+      "predicate": "SAME_TASK",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D02",
+      "predicate": "SAME_TASK",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "valid": true
+    },
+    {
+      "case_id": "D03",
+      "predicate": "SAME_TASK",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D04",
+      "predicate": "SAME_TASK",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D05",
+      "predicate": "SAME_TASK",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "SAME_TASK",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D03",
+      "predicate": "RELATED_TO",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D06",
+      "predicate": "AFFECTED_BY",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "IN_PROJECT",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "RELATED_TO",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "AFFECTED_BY",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D08",
+      "predicate": "PROJECT_ALIAS",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D08",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D08",
+      "predicate": "IN_PROJECT",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "valid": true
+    },
+    {
+      "case_id": "D01",
+      "predicate": "REVISES_PLAN",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "valid": true
+    },
+    {
+      "case_id": "D04",
+      "predicate": "REVISES_PLAN",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D04",
+      "predicate": "REVISES_PLAN",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    },
+    {
+      "case_id": "D05",
+      "predicate": "REVISES_PLAN",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D07",
+      "predicate": "REVISES_PLAN",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "valid": true
+    },
+    {
+      "case_id": "D04-C-B",
+      "predicate": "SAME_TASK",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "valid": true
+    }
+  ],
+  "state_accuracy": {
+    "REFUTED_total": 3,
+    "REFUTED_correct": 3,
+    "UNKNOWN_total": 7,
+    "UNKNOWN_correct": 7
+  },
+  "revision_accuracy": {
+    "numerator": 5,
+    "denominator": 5,
+    "value": 1.0
+  },
+  "computable_accuracy": {
+    "numerator": 2,
+    "denominator": 2,
+    "value": 1.0
+  },
+  "supplemental_p3_counts": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "revision_accuracy_total": 12,
+    "revision_accuracy_correct": 12,
+    "unproved_revisions": 0,
+    "false_deadline_changes": 0,
+    "evidence_readback_total": 65,
+    "evidence_readback_ok": 65,
+    "date_readback_total": 46,
+    "date_readback_ok": 46,
+    "dependency_readback_total": 52,
+    "dependency_readback_ok": 52,
+    "computable_total": 5,
+    "computable_correct": 5
+  },
+  "supplemental_p2_scores": {
+    "SAME_TASK": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "n": 2,
+      "precision": {
+        "numerator": 0,
+        "denominator": 0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 0
+      }
+    },
+    "RELATED_TO": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "n": 2,
+      "precision": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "recall": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    "AFFECTED_BY": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "n": 6,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2
+      }
+    },
+    "IN_PROJECT": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "n": 7,
+      "precision": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "recall": {
+        "numerator": 4,
+        "denominator": 4
+      }
+    },
+    "PROJECT_ALIAS": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "n": 3,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2
+      }
+    }
+  },
+  "false_merge": {
+    "numerator": 0,
+    "denominator": 4,
+    "value": 0.0
+  },
+  "input_sha256": "dd06888cbef61e6ae92b69eec09fa0857114f9ff4782d3920d61f15bb3d6a3ed",
+  "gold_sha256": "edcda35b8aed4c41867784c72ec5a17235df31601e51d6b06a5728febab8b4fe",
+  "predictions_sha256": "9188b0ba8b74b78fd7b7b377abc46201a0891d3eaf29d9a7a45a2cb6233e3d2e"
+}

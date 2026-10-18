@@ -1,0 +1,304 @@
+{
+  "relation_scores": {
+    "SAME_TASK": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "n": 2,
+      "precision": {
+        "numerator": 0,
+        "denominator": 0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 0
+      }
+    },
+    "RELATED_TO": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "n": 2,
+      "precision": {
+        "numerator": 1,
+        "denominator": 1
+      },
+      "recall": {
+        "numerator": 1,
+        "denominator": 1
+      }
+    },
+    "AFFECTED_BY": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "n": 6,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2
+      }
+    },
+    "IN_PROJECT": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "n": 7,
+      "precision": {
+        "numerator": 4,
+        "denominator": 4
+      },
+      "recall": {
+        "numerator": 4,
+        "denominator": 4
+      }
+    },
+    "PROJECT_ALIAS": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "n": 3,
+      "precision": {
+        "numerator": 2,
+        "denominator": 2
+      },
+      "recall": {
+        "numerator": 2,
+        "denominator": 2
+      }
+    }
+  },
+  "state_accuracy": {
+    "UNKNOWN_total": 6,
+    "UNKNOWN_correct": 6,
+    "REFUTED_total": 3,
+    "REFUTED_correct": 3,
+    "NOT_ASSESSABLE_total": 2,
+    "NOT_ASSESSABLE_correct": 2
+  },
+  "readbacks": {
+    "quote_total": 24,
+    "quote_ok": 24,
+    "dependency_total": 62,
+    "dependency_ok": 62
+  },
+  "cases": [
+    {
+      "case_id": "D03",
+      "question_id": "D03-same-task",
+      "predicate": "SAME_TASK",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D03",
+      "question_id": "D03-related-work-link",
+      "predicate": "RELATED_TO",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D06",
+      "question_id": "D06-affected-by-reviewed-change",
+      "predicate": "AFFECTED_BY",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-a2-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-b2-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-same-task",
+      "predicate": "SAME_TASK",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-related",
+      "predicate": "RELATED_TO",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-affected-by-source-claim",
+      "predicate": "AFFECTED_BY",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D08",
+      "question_id": "D08-project-alias",
+      "predicate": "PROJECT_ALIAS",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D08",
+      "question_id": "D08-b3-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "D08",
+      "question_id": "D08-b6-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V01",
+      "question_id": "V01-a-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V01",
+      "question_id": "V01-b-in-project",
+      "predicate": "IN_PROJECT",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V02",
+      "question_id": "V02-alias-local",
+      "predicate": "PROJECT_ALIAS",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V02",
+      "question_id": "V02-alias-cross-workspace",
+      "predicate": "PROJECT_ALIAS",
+      "gold": "NOT_ASSESSABLE",
+      "actual": "NOT_ASSESSABLE",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": false
+    },
+    {
+      "case_id": "V03",
+      "question_id": "V03-explicit-no-impact",
+      "predicate": "AFFECTED_BY",
+      "gold": "REFUTED",
+      "actual": "REFUTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V04",
+      "question_id": "V04-stale-change-evidence",
+      "predicate": "AFFECTED_BY",
+      "gold": "NOT_ASSESSABLE",
+      "actual": "NOT_ASSESSABLE",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": false
+    },
+    {
+      "case_id": "V05",
+      "question_id": "V05-same-supplier-no-cause",
+      "predicate": "AFFECTED_BY",
+      "gold": "UNKNOWN",
+      "actual": "UNKNOWN",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V06",
+      "question_id": "V06-direct-cause-source-claim",
+      "predicate": "AFFECTED_BY",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    },
+    {
+      "case_id": "V07",
+      "question_id": "V07-explicit-cross-document-project-bridge",
+      "predicate": "IN_PROJECT",
+      "gold": "SUPPORTED",
+      "actual": "SUPPORTED",
+      "correct": true,
+      "gold_support_evidence_covered": true,
+      "evidence_validity": true
+    }
+  ],
+  "unsupported_project_bindings": 0,
+  "unsupported_direct_impacts": 0,
+  "source_claim_formal_spoofs": 0,
+  "excluded": [
+    {
+      "question_id": "D07-revises-plan",
+      "reason": "OUTSIDE_P2_NOT_IMPLEMENTED"
+    }
+  ],
+  "input_sha256": "2aec4181a1360bfa2fb69b1d5ad32f6c03b68bfa8e4ee676f6904e243f32e4b2",
+  "gold_sha256": "71cf56a0b8aacb8bab8ae180bf9de7a759093090ecfc2443392b7e25ee442bb6",
+  "real_provider_calls": 0,
+  "holdout_executed": false,
+  "scope": "fixed candidates; offline finite grammar; no discovery recall"
+}

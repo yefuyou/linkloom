@@ -1,0 +1,549 @@
+{
+  "counts": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "revision_accuracy_total": 12,
+    "revision_accuracy_correct": 12,
+    "unproved_revisions": 0,
+    "false_deadline_changes": 0,
+    "evidence_readback_total": 65,
+    "evidence_readback_ok": 65,
+    "date_readback_total": 46,
+    "date_readback_ok": 46,
+    "dependency_readback_total": 52,
+    "dependency_readback_ok": 52,
+    "computable_total": 5,
+    "computable_correct": 5
+  },
+  "precision": {
+    "numerator": 7,
+    "denominator": 7
+  },
+  "recall": {
+    "numerator": 7,
+    "denominator": 7
+  },
+  "state_accuracy": {
+    "REFUTED_total": 2,
+    "REFUTED_correct": 2,
+    "UNKNOWN_total": 2,
+    "UNKNOWN_correct": 2,
+    "CONFLICT_total": 1,
+    "CONFLICT_correct": 1
+  },
+  "cases": [
+    {
+      "case_id": "D01",
+      "question_id": "D01-revision",
+      "gold": {
+        "question_id": "D01-revision",
+        "verdict": "REFUTED",
+        "changed_fields": [],
+        "comparison_status": "NOT_APPLICABLE",
+        "old_date": "2026-10-14",
+        "new_date": null,
+        "old_bound": "BEFORE",
+        "new_bound": null,
+        "delta_calendar_days": null,
+        "explanation": "B 明确确认与 A 是同一任务，但同时明确说明仅更换称呼且不修订任务计划；身份确认不能被升级为业务计划修订。",
+        "evidence": [
+          {
+            "source_id": "A.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 SMS-17 的短信接口接入，计划在2026年10月14日前完成。"
+          },
+          {
+            "source_id": "B.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目的通知网关接入；本条对应A.md的SMS-17，是同一个任务，仅更换称呼，不修订任务计划。"
+          }
+        ]
+      },
+      "actual_verdict": "REFUTED",
+      "changed_fields": [],
+      "comparison_status": "NOT_APPLICABLE",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ],
+      "comparison_reasons": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ]
+    },
+    {
+      "case_id": "D04",
+      "question_id": "D04-b-revision",
+      "gold": {
+        "question_id": "D04-b-revision",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "COMPUTABLE",
+        "old_date": "2026-10-14",
+        "new_date": "2026-10-18",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": 4,
+        "explanation": "B 明确回指 A 的同一任务，并明确将原截止边界从 2026-10-14 前改为 2026-10-18 前且替代原计划，因此截止边界可计算后移四个日历日；未声明的生效时间不能从事件时间补出。",
+        "evidence": [
+          {
+            "source_id": "A.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+          },
+          {
+            "source_id": "B.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "COMPUTABLE",
+      "delta_calendar_days": 4,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "VERIFIED_PLAN_BOUNDARIES"
+      ]
+    },
+    {
+      "case_id": "D04",
+      "question_id": "D04-c-revision",
+      "gold": {
+        "question_id": "D04-c-revision",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "scope"
+        ],
+        "comparison_status": "COMPUTABLE",
+        "old_date": "2026-10-18",
+        "new_date": "2026-10-18",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": 0,
+        "explanation": "C 明确回指 B 的同一任务并替代 B 的计划，只在原任务范围内增加回执校验；截止日期和边界均被明确保留为 2026-10-18 前，故这是范围修订且日期差为零。",
+        "evidence": [
+          {
+            "source_id": "B.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+          },
+          {
+            "source_id": "C.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "scope"
+      ],
+      "comparison_status": "COMPUTABLE",
+      "delta_calendar_days": 0,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "VERIFIED_PLAN_BOUNDARIES"
+      ]
+    },
+    {
+      "case_id": "D05",
+      "question_id": "D05-revision",
+      "gold": {
+        "question_id": "D05-revision",
+        "verdict": "UNKNOWN",
+        "changed_fields": [],
+        "comparison_status": "BLOCKED",
+        "old_date": "2026-10-14",
+        "new_date": "2026-10-18",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": null,
+        "explanation": "A 与 B 的任务身份由同一项目、同一编号和一致描述支持，但两条日期之间没有修改、纠错、替代或新旧计划顺序的修订依据；不能把日期差自动解释为业务计划修订。",
+        "evidence": [
+          {
+            "source_id": "A.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。"
+          },
+          {
+            "source_id": "B.md",
+            "segment_index": 0,
+            "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。"
+          }
+        ]
+      },
+      "actual_verdict": "UNKNOWN",
+      "changed_fields": [],
+      "comparison_status": "BLOCKED",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "comparison_reasons": [
+        "NO_REVISION_EVIDENCE"
+      ]
+    },
+    {
+      "case_id": "D07",
+      "question_id": "D07-revision",
+      "gold": {
+        "question_id": "D07-revision",
+        "verdict": "UNKNOWN",
+        "changed_fields": [],
+        "comparison_status": "BLOCKED",
+        "old_date": "2026-10-14",
+        "new_date": "2026-10-18",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": null,
+        "explanation": "A 的任务明确属于星河项目，B 的任务没有项目字段、没有唯一回指 A，也没有明确的同一任务或修订声明；相邻的供应商变更和相似措辞不能补齐身份或制造延期。",
+        "evidence": [
+          {
+            "source_id": "A.txt",
+            "segment_index": 1,
+            "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"
+          },
+          {
+            "source_id": "B.txt",
+            "segment_index": 1,
+            "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"
+          }
+        ]
+      },
+      "actual_verdict": "UNKNOWN",
+      "changed_fields": [],
+      "comparison_status": "BLOCKED",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "SAME_TASK_NOT_SUPPORTED"
+      ],
+      "comparison_reasons": [
+        "SAME_TASK_NOT_SUPPORTED"
+      ]
+    },
+    {
+      "case_id": "V01",
+      "question_id": "V01-missing-year",
+      "gold": {
+        "question_id": "V01-missing-year",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "NOT_COMPARABLE",
+        "old_date": null,
+        "new_date": "2026-11-18",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": null,
+        "explanation": "B 以明确的同一任务和替代声明支持截止计划修订，但 A 的截止日期只有月日，没有年份；不能从来源事件年份或导入时间补齐年份，因此日期比较不可比。",
+        "evidence": [
+          {
+            "source_id": "old.md",
+            "segment_index": 0,
+            "quote": "我负责青岚平台项目任务 SYNC-41 的数据同步，计划在11月14日前完成。"
+          },
+          {
+            "source_id": "new.md",
+            "segment_index": 0,
+            "quote": "我负责青岚平台项目任务 SYNC-41；本条是old.md的同一任务，现修订计划，将原定11月14日前完成改为2026年11月18日前完成，本计划替代原计划。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "NOT_COMPARABLE",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "DEADLINE_ROLE_OR_PRECISION_UNSUITABLE"
+      ]
+    },
+    {
+      "case_id": "V02",
+      "question_id": "V02-incompatible-boundary",
+      "gold": {
+        "question_id": "V02-incompatible-boundary",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "NOT_COMPARABLE",
+        "old_date": "2026-11-20",
+        "new_date": "2026-11-20",
+        "old_bound": "BEFORE",
+        "new_bound": "ON_OR_BEFORE",
+        "delta_calendar_days": null,
+        "explanation": "B 明确声明替代原计划并改变截止边界，但旧资料使用 BEFORE，新资料使用 ON_OR_BEFORE；边界语义不一致，不能把相同数字日期强行比较为可计算修订。",
+        "evidence": [
+          {
+            "source_id": "before.md",
+            "segment_index": 0,
+            "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。"
+          },
+          {
+            "source_id": "after.md",
+            "segment_index": 0,
+            "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "NOT_COMPARABLE",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "DEADLINE_BOUND_UNKNOWN_OR_INCOMPATIBLE"
+      ]
+    },
+    {
+      "case_id": "V03",
+      "question_id": "V03-source-correction",
+      "gold": {
+        "question_id": "V03-source-correction",
+        "verdict": "REFUTED",
+        "changed_fields": [],
+        "comparison_status": "NOT_APPLICABLE",
+        "old_date": null,
+        "new_date": null,
+        "old_bound": null,
+        "new_bound": null,
+        "delta_calendar_days": null,
+        "explanation": "B 明确把日期变化定义为资料录入纠错，并明确声明不是业务计划修订；来源纠错不能自动生成 REVISES_PLAN，也不能把前一份独立来源自动标为 STALE。两份合成来源在本题均保持 CURRENT。",
+        "evidence": [
+          {
+            "source_id": "recorded.md",
+            "segment_index": 0,
+            "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。"
+          },
+          {
+            "source_id": "corrected.md",
+            "segment_index": 0,
+            "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。"
+          }
+        ]
+      },
+      "actual_verdict": "REFUTED",
+      "changed_fields": [],
+      "comparison_status": "NOT_APPLICABLE",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ],
+      "comparison_reasons": [
+        "EXPLICIT_NO_BUSINESS_REVISION"
+      ]
+    },
+    {
+      "case_id": "V04",
+      "question_id": "V04-conflicting-revision",
+      "gold": {
+        "question_id": "V04-conflicting-revision",
+        "verdict": "CONFLICT",
+        "changed_fields": [],
+        "comparison_status": "BLOCKED",
+        "old_date": null,
+        "new_date": null,
+        "old_bound": null,
+        "new_bound": null,
+        "delta_calendar_days": null,
+        "explanation": "revision-a.md 和 revision-b.md 都是有效来源，都明确替代 base.md 的计划，但分别提出 2026-12-14 和 2026-12-12 两个不同截止日；没有唯一替代链终点，必须保留冲突并阻断比较，不能按来源时间取最后一条。",
+        "evidence": [
+          {
+            "source_id": "base.md",
+            "segment_index": 0,
+            "quote": "我负责云杉结算项目任务 BILL-74 的对账导出，计划在2026年12月10日前完成。"
+          },
+          {
+            "source_id": "revision-a.md",
+            "segment_index": 0,
+            "quote": "我负责云杉结算项目任务 BILL-74；本条是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月14日前完成，替代原计划。"
+          },
+          {
+            "source_id": "revision-b.md",
+            "segment_index": 0,
+            "quote": "我负责云杉结算项目任务 BILL-74；本条也是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月12日前完成，替代原计划；该来源仍有效。"
+          }
+        ]
+      },
+      "actual_verdict": "CONFLICT",
+      "changed_fields": [],
+      "comparison_status": "BLOCKED",
+      "delta_calendar_days": null,
+      "complete_match": true,
+      "reason_codes": [
+        "CONFLICTING_REVISION_EVIDENCE"
+      ],
+      "comparison_reasons": [
+        "CONFLICTING_REVISION_EVIDENCE"
+      ]
+    },
+    {
+      "case_id": "V05",
+      "question_id": "V05-future-effective",
+      "gold": {
+        "question_id": "V05-future-effective",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "COMPUTABLE",
+        "old_date": "2026-12-20",
+        "new_date": "2026-12-25",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": 5,
+        "effective_from": "2026-12-20",
+        "plan_currentness": "FUTURE_EFFECTIVE",
+        "explanation": "B 明确修订并给出 2026-12-20 的未来生效日；在题目提供的 as_of=2026-12-15 时，修订关系和日期差可计算，但新计划尚未成为该时点的当前计划。",
+        "evidence": [
+          {
+            "source_id": "current.md",
+            "segment_index": 0,
+            "quote": "我负责澄海数据项目任务 MIG-85 的迁移校验，计划在2026年12月20日前完成。"
+          },
+          {
+            "source_id": "future.md",
+            "segment_index": 0,
+            "quote": "我负责澄海数据项目任务 MIG-85；本条是current.md的同一任务，现修订计划，将原定2026年12月20日前完成改为2026年12月25日前完成，本计划自2026年12月20日起生效并替代原计划。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "COMPUTABLE",
+      "delta_calendar_days": 5,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "VERIFIED_PLAN_BOUNDARIES"
+      ]
+    },
+    {
+      "case_id": "V06",
+      "question_id": "V06-earlier-boundary",
+      "gold": {
+        "question_id": "V06-earlier-boundary",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "COMPUTABLE",
+        "old_date": "2026-12-30",
+        "new_date": "2026-12-24",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": -6,
+        "explanation": "B 明确将同一任务的截止边界从 2026-12-30 前改为 2026-12-24 前并替代原计划，因此可计算出截止边界提前六个日历日；这不等同于实际完成状态。",
+        "evidence": [
+          {
+            "source_id": "old.md",
+            "segment_index": 0,
+            "quote": "我负责霁川分析项目任务 QA-96 的验收脚本，计划在2026年12月30日前完成。"
+          },
+          {
+            "source_id": "new.md",
+            "segment_index": 0,
+            "quote": "我负责霁川分析项目任务 QA-96；本条是old.md的同一任务，现将原定2026年12月30日前完成改为2026年12月24日前完成，本计划替代原计划。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "COMPUTABLE",
+      "delta_calendar_days": -6,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "VERIFIED_PLAN_BOUNDARIES"
+      ]
+    },
+    {
+      "case_id": "V07",
+      "question_id": "V07-same-day-revision",
+      "gold": {
+        "question_id": "V07-same-day-revision",
+        "verdict": "SUPPORTED",
+        "changed_fields": [
+          "deadline"
+        ],
+        "comparison_status": "COMPUTABLE",
+        "old_date": "2027-01-15",
+        "new_date": "2027-01-15",
+        "old_bound": "BEFORE",
+        "new_bound": "BEFORE",
+        "delta_calendar_days": 0,
+        "explanation": "B 明确声称修订并替代原截止计划，即使新旧数字日期相同，也应保留该业务修订声明并计算为零日差；不能因为数值未变就改判为没有修订。",
+        "evidence": [
+          {
+            "source_id": "prior.md",
+            "segment_index": 0,
+            "quote": "我负责北辰仓项目任务 DOC-107 的接口文档，计划在2027年01月15日前完成。"
+          },
+          {
+            "source_id": "revision.md",
+            "segment_index": 0,
+            "quote": "我负责北辰仓项目任务 DOC-107；本条是prior.md的同一任务，现修订截止计划，将原定2027年01月15日前完成改为2027年01月15日前完成，本计划替代原计划。"
+          }
+        ]
+      },
+      "actual_verdict": "SUPPORTED",
+      "changed_fields": [
+        "deadline"
+      ],
+      "comparison_status": "COMPUTABLE",
+      "delta_calendar_days": 0,
+      "complete_match": true,
+      "reason_codes": [
+        "EXPLICIT_PLAN_REPLACEMENT"
+      ],
+      "comparison_reasons": [
+        "VERIFIED_PLAN_BOUNDARIES"
+      ]
+    }
+  ],
+  "real_provider_calls": 0,
+  "holdout_executed": false,
+  "input_sha256": "97532f81b75e41e49343e32a6211bfed46b6d7db36c428bb1f03f13fdf364fcb",
+  "gold_sha256": "f677680333b8313fe82e584d31a47a4b2e239e830d5582d2e11ea2ad25a508a5",
+  "invalid_identity_release": {
+    "numerator": 0,
+    "denominator": 5
+  },
+  "scope": "fixed candidates; independent Dev Gold; finite rule coverage, not discovery/Provider recall"
+}

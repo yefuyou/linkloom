@@ -1,0 +1,26 @@
+[
+  {
+    "case_id": "C01",
+    "updated_source": "plan.md",
+    "valid_before": true,
+    "valid_after": false,
+    "old_version": "artifact_v1_77104ea25e65b883bdfe2cabb6905f895794aa3b99f74b13cd2b7416e78e4fe0",
+    "new_version": "artifact_v1_e771404fb43f078cb5fd729ff8c0c28e6af0bec6b193b772f3b82c71b6a6de3a"
+  },
+  {
+    "case_id": "C03",
+    "updated_source": "aliases.md",
+    "valid_before": true,
+    "valid_after": false,
+    "old_version": "artifact_v1_eaaff34bd8a5a7e8d2145958a27a6b5efc44b75463e0e70bb49312818b12f43a",
+    "new_version": "artifact_v1_b33888dfff1c26acab6529586ae420d73558617ac820bed6d087882a7e88bbac"
+  },
+  {
+    "case_id": "C04",
+    "updated_source": "vendor.md",
+    "valid_before": true,
+    "valid_after": false,
+    "old_version": "artifact_v1_2ba8d34cc53ac1cfadc11af39087e9310b704427d70424f98a185a8de5717e7e",
+    "new_version": "artifact_v1_f55ed976d82d7bd8db6946a7100f0930d83a0a726c01d9d1cdcbaa702e240a2b"
+  }
+]

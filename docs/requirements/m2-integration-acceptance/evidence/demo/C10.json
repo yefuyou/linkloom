@@ -1,0 +1,280 @@
+{
+  "discovery": {
+    "candidates": [],
+    "rejected": [],
+    "eligible_observations": 2,
+    "considered_candidates": 0,
+    "returned_candidates": 0,
+    "truncated": false,
+    "limits": {
+      "max_observations": 128,
+      "max_artifacts": 64,
+      "max_source_chars": 500000,
+      "max_candidates": 100,
+      "max_per_observation": 10,
+      "max_context_signals": 128,
+      "max_generated_candidates": 1000
+    },
+    "input_counts": {
+      "observation_rows": 2,
+      "artifact_rows": 2,
+      "source_characters": 50,
+      "current_workspace_artifacts": 2,
+      "context_signals": 0
+    },
+    "generated_candidates": 0,
+    "endpoint_fanout": {
+      "task_observation_v1_a60bfd0301269eda7bae9280ec6d7e4984de19ed5b47ed49d5bfc99176578bc4": 0,
+      "task_observation_v1_df555de5aecac1fdf4cd881aeec337e00cc3e9060b8957bd10648ec402e480b1": 0
+    },
+    "max_endpoint_fanout": 0,
+    "truncation_reasons": []
+  },
+  "fixed_pair": {
+    "assessment_id": "task_assessment_v1_2241063eab6aa414ae2faff2f8e6ca1a0ff6de1b780e2772ff8fc87a32033491",
+    "schema_version": "task-relation-assessment/v1",
+    "rule_version": "same-task-rules/v1",
+    "predicate": "SAME_TASK",
+    "phase": "ASSESSED",
+    "authority": "SUPPORTING_ONLY",
+    "subject": {
+      "workspace_id": "discovery-c10",
+      "observation_id": "task_observation_v1_df555de5aecac1fdf4cd881aeec337e00cc3e9060b8957bd10648ec402e480b1",
+      "artifact_id": "old.md",
+      "artifact_version_id": "artifact_v1_1d71180b860f1f69d6ed87ae673f2ac3d5ec7b322d1849dbed8e90e387c523bb",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+      "content_hash": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829",
+      "payload_hash": "ddcecbabc1b405e9a97fb7295d44c6a1de8c8e62de9dc239ba05c34fcaf8350b"
+    },
+    "object": {
+      "workspace_id": "discovery-c10",
+      "observation_id": "task_observation_v1_a60bfd0301269eda7bae9280ec6d7e4984de19ed5b47ed49d5bfc99176578bc4",
+      "artifact_id": "narrow.md",
+      "artifact_version_id": "artifact_v1_4bcd7bb97630b064419a122fb21f1a1fe91df2ebde93fe80843197dda163294d",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+      "content_hash": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4",
+      "payload_hash": "26126e2a06bc6e0dc7b850ad0b2576723866a4f0a1bb7bc88b371b487c6a5623"
+    },
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "lifecycle": "ACTIVE",
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_df555de5aecac1fdf4cd881aeec337e00cc3e9060b8957bd10648ec402e480b1",
+        "provenance": {
+          "workspace_id": "discovery-c10",
+          "artifact_id": "old.md",
+          "artifact_version_id": "artifact_v1_1d71180b860f1f69d6ed87ae673f2ac3d5ec7b322d1849dbed8e90e387c523bb",
+          "source_ref": "artifact://discovery-c10/old.md",
+          "content_hash": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829",
+          "ordinal": 0,
+          "message_id": "message_v1_11c6d01650e126db26842b14c10674f8eed97765230280cf476bfb949b028359",
+          "segment_id": "segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "char_start": 0,
+          "char_end": 16,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "任务 QA-22：完成回执校验。",
+          "quote_sha256": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829"
+        },
+        "raw_text": "任务 QA-22：完成回执校验。",
+        "description": "完成回执校验",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "任务 QA-22：完成回执校验。",
+            "char_start": 0,
+            "char_end": 16,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成回执校验",
+            "char_start": 9,
+            "char_end": 15,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      {
+        "observation_id": "task_observation_v1_a60bfd0301269eda7bae9280ec6d7e4984de19ed5b47ed49d5bfc99176578bc4",
+        "provenance": {
+          "workspace_id": "discovery-c10",
+          "artifact_id": "narrow.md",
+          "artifact_version_id": "artifact_v1_4bcd7bb97630b064419a122fb21f1a1fe91df2ebde93fe80843197dda163294d",
+          "source_ref": "artifact://discovery-c10/narrow.md",
+          "content_hash": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4",
+          "ordinal": 0,
+          "message_id": "message_v1_de9f7cf885a725bb01ec555087beddad2e661b3a156445323289ce3de39edcdd",
+          "segment_id": "segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+          "char_start": 0,
+          "char_end": 34,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "完成审计输出。\n本任务与old.md的任务 QA-22 有工作联系。",
+          "quote_sha256": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4"
+        },
+        "raw_text": "完成审计输出。",
+        "description": "完成审计输出",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "完成审计输出。",
+            "char_start": 0,
+            "char_end": 7,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成审计输出",
+            "char_start": 0,
+            "char_end": 6,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2026-10-18T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "dependencies": [
+      {
+        "observation": {
+          "workspace_id": "discovery-c10",
+          "observation_id": "task_observation_v1_a60bfd0301269eda7bae9280ec6d7e4984de19ed5b47ed49d5bfc99176578bc4",
+          "artifact_id": "narrow.md",
+          "artifact_version_id": "artifact_v1_4bcd7bb97630b064419a122fb21f1a1fe91df2ebde93fe80843197dda163294d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+          "content_hash": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4",
+          "payload_hash": "26126e2a06bc6e0dc7b850ad0b2576723866a4f0a1bb7bc88b371b487c6a5623"
+        },
+        "span": {
+          "workspace_id": "discovery-c10",
+          "artifact_id": "narrow.md",
+          "artifact_version_id": "artifact_v1_4bcd7bb97630b064419a122fb21f1a1fe91df2ebde93fe80843197dda163294d",
+          "source_ref": "artifact://discovery-c10/narrow.md",
+          "content_hash": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4",
+          "ordinal": 0,
+          "message_id": "message_v1_de9f7cf885a725bb01ec555087beddad2e661b3a156445323289ce3de39edcdd",
+          "segment_id": "segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5faf3e6103c0b8d46a32bf9767362eb756991bcf6dd63c0b385b1e83043300e2",
+          "char_start": 0,
+          "char_end": 34,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "完成审计输出。\n本任务与old.md的任务 QA-22 有工作联系。",
+          "quote_sha256": "175428aa27c4f25280624691faa937f575c3349993c70ff11b0f0d59f50c9eb4"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      },
+      {
+        "observation": {
+          "workspace_id": "discovery-c10",
+          "observation_id": "task_observation_v1_df555de5aecac1fdf4cd881aeec337e00cc3e9060b8957bd10648ec402e480b1",
+          "artifact_id": "old.md",
+          "artifact_version_id": "artifact_v1_1d71180b860f1f69d6ed87ae673f2ac3d5ec7b322d1849dbed8e90e387c523bb",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "content_hash": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829",
+          "payload_hash": "ddcecbabc1b405e9a97fb7295d44c6a1de8c8e62de9dc239ba05c34fcaf8350b"
+        },
+        "span": {
+          "workspace_id": "discovery-c10",
+          "artifact_id": "old.md",
+          "artifact_version_id": "artifact_v1_1d71180b860f1f69d6ed87ae673f2ac3d5ec7b322d1849dbed8e90e387c523bb",
+          "source_ref": "artifact://discovery-c10/old.md",
+          "content_hash": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829",
+          "ordinal": 0,
+          "message_id": "message_v1_11c6d01650e126db26842b14c10674f8eed97765230280cf476bfb949b028359",
+          "segment_id": "segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "char_start": 0,
+          "char_end": 16,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "任务 QA-22：完成回执校验。",
+          "quote_sha256": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829"
+        },
+        "source_status": "CURRENT",
+        "readback_ok": true,
+        "observation_valid": true
+      }
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "context_evidence": [
+      {
+        "span": {
+          "workspace_id": "discovery-c10",
+          "artifact_id": "old.md",
+          "artifact_version_id": "artifact_v1_1d71180b860f1f69d6ed87ae673f2ac3d5ec7b322d1849dbed8e90e387c523bb",
+          "source_ref": "artifact://discovery-c10/old.md",
+          "content_hash": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829",
+          "ordinal": 0,
+          "message_id": "message_v1_11c6d01650e126db26842b14c10674f8eed97765230280cf476bfb949b028359",
+          "segment_id": "segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4628767bd9715eaba9c63155f9d6646cd32583c43405f76e8fcc6a4ea5af5f83",
+          "char_start": 0,
+          "char_end": 16,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "任务 QA-22：完成回执校验。",
+          "quote_sha256": "9140156548ebed4359abbbfe6fcd44027f9774daabf93f921671abed80553829"
+        },
+        "char_start": 0,
+        "char_end": 8,
+        "quote": "任务 QA-22",
+        "role": "TASK_KEY"
+      }
+    ],
+    "evidence_validity": true,
+    "missing_evidence": [
+      "需要作用域明确且无冲突的任务编号，或唯一指向另一观察的明确同一任务声明；不会补写项目、负责人或日期。"
+    ],
+    "assessed_at": "2026-10-18T14:07:28.665500+00:00"
+  },
+  "interpretation": "NO_CANDIDATE_IS_NOT_A_NEGATIVE_RELATION; extraction excerpt omits the reference"
+}
