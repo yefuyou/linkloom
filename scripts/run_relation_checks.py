@@ -10,12 +10,13 @@ stage = 'p2'
 if arguments[:1] == ['--stage']:
     stage = arguments[1]
     arguments = arguments[2:]
-if stage not in {'p2', 'p3'}:
+if stage not in {'p2', 'p3', 'p4'}:
     raise ValueError('unsupported relation milestone')
 label = arguments[0]
 if not label.replace('-', '').isalnum():
     raise ValueError('invalid evidence label')
-out = root / ('work/m2-p2-task-relations' if stage == 'p2' else 'work/m2-p3-task-revisions') / 'acceptance-local'
+folders = {'p2': 'm2-p2-task-relations', 'p3': 'm2-p3-task-revisions', 'p4': 'm2-p4-task-relations'}
+out = root / 'work' / folders[stage] / 'acceptance-local'
 out.mkdir(parents=True, exist_ok=True)
 log = out / (label + '.txt')
 if log.exists() or (out / ('tmp-' + label)).exists():

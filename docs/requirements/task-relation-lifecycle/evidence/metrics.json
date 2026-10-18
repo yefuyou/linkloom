@@ -1,0 +1,356 @@
+{
+  "schema_version": "task-relation-lifecycle-metrics/v1",
+  "split": "dev",
+  "checks": {
+    "D04-plus-four.identity_verdict": true,
+    "D04-plus-four.comparison_status": true,
+    "D04-plus-four.comparison_delta": true,
+    "D04-plus-four.revision_verdict": true,
+    "D04-plus-four.after.identity_lifecycle": true,
+    "D04-plus-four.after.identity_current_supported": true,
+    "D04-plus-four.after.comparison_current_valid": true,
+    "D04-plus-four.after.comparison_current_status": true,
+    "D04-plus-four.after.comparison_current_delta": true,
+    "D04-plus-four.after.comparison_historical_delta": true,
+    "D04-plus-four.after.blocking_reasons_present": true,
+    "D07-unknown.identity_verdict": true,
+    "D07-unknown.revision_verdict": true,
+    "D07-unknown.comparison_status": true,
+    "D07-unknown.comparison_delta": true,
+    "D07-unknown.current_supported": true,
+    "D07-unknown.blocking_reason_contains": true,
+    "D08-derived-project.alias_verdict": true,
+    "D08-derived-project.derived_project_verdict": true,
+    "D08-derived-project.wrong_context_verdict": true,
+    "D08-derived-project.project_query_contains_derived": true,
+    "D08-derived-project.project_query_current_supported": true,
+    "D08-derived-project.after.project_not_published": true,
+    "D08-derived-project.after.alias_lifecycle": true,
+    "D08-derived-project.after.derived_current_supported": true,
+    "D08-derived-project.after.historical_contains_derived": true,
+    "REDWOOD-version-retraction.s0.identity_verdict": true,
+    "REDWOOD-version-retraction.s0.revision_verdict": true,
+    "REDWOOD-version-retraction.s0.comparison_status": true,
+    "REDWOOD-version-retraction.s0.comparison_delta": true,
+    "REDWOOD-version-retraction.s0.identity_current_supported": true,
+    "REDWOOD-version-retraction.s0.revision_current_supported": true,
+    "REDWOOD-version-retraction.s0.comparison_current_valid": true,
+    "REDWOOD-version-retraction.s0.current_comparison_computable": true,
+    "REDWOOD-version-retraction.s1.old_identity_lifecycle": true,
+    "REDWOOD-version-retraction.s1.old_identity_evidence_state": true,
+    "REDWOOD-version-retraction.s1.old_revision_lifecycle": true,
+    "REDWOOD-version-retraction.s1.old_revision_evidence_state": true,
+    "REDWOOD-version-retraction.s1.old_comparison_current_valid": true,
+    "REDWOOD-version-retraction.s1.old_comparison_historical_delta": true,
+    "REDWOOD-version-retraction.s1.new_identity_verdict": true,
+    "REDWOOD-version-retraction.s1.new_revision_verdict": true,
+    "REDWOOD-version-retraction.s1.new_comparison_status": true,
+    "REDWOOD-version-retraction.s1.new_comparison_delta": true,
+    "REDWOOD-version-retraction.s1.new_identity_current_supported": true,
+    "REDWOOD-version-retraction.s1.new_comparison_current_not_applicable": true,
+    "REDWOOD-version-retraction.s2.old_identity_lifecycle": true,
+    "REDWOOD-version-retraction.s2.old_revision_lifecycle": true,
+    "REDWOOD-version-retraction.s2.old_revision_evidence_state": true,
+    "REDWOOD-version-retraction.s2.new_identity_lifecycle": true,
+    "REDWOOD-version-retraction.s2.new_identity_current_supported": true,
+    "REDWOOD-version-retraction.s2.old_comparison_current_valid": true,
+    "REDWOOD-version-retraction.s2.old_comparison_historical_delta": true
+  },
+  "atomic_checks": [
+    {
+      "family": "D04-plus-four",
+      "name": "identity_verdict",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "comparison_status",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "comparison_delta",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "revision_verdict",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.identity_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.identity_current_supported",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.comparison_current_valid",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.comparison_current_status",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.comparison_current_delta",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.comparison_historical_delta",
+      "passed": true
+    },
+    {
+      "family": "D04-plus-four",
+      "name": "after.blocking_reasons_present",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "identity_verdict",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "revision_verdict",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "comparison_status",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "comparison_delta",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "current_supported",
+      "passed": true
+    },
+    {
+      "family": "D07-unknown",
+      "name": "blocking_reason_contains",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "alias_verdict",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "derived_project_verdict",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "wrong_context_verdict",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "project_query_contains_derived",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "project_query_current_supported",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "after.project_not_published",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "after.alias_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "after.derived_current_supported",
+      "passed": true
+    },
+    {
+      "family": "D08-derived-project",
+      "name": "after.historical_contains_derived",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.identity_verdict",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.revision_verdict",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.comparison_status",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.comparison_delta",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.identity_current_supported",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.revision_current_supported",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.comparison_current_valid",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s0.current_comparison_computable",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_identity_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_identity_evidence_state",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_revision_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_revision_evidence_state",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_comparison_current_valid",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.old_comparison_historical_delta",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_identity_verdict",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_revision_verdict",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_comparison_status",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_comparison_delta",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_identity_current_supported",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s1.new_comparison_current_not_applicable",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.old_identity_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.old_revision_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.old_revision_evidence_state",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.new_identity_lifecycle",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.new_identity_current_supported",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.old_comparison_current_valid",
+      "passed": true
+    },
+    {
+      "family": "REDWOOD-version-retraction",
+      "name": "s2.old_comparison_historical_delta",
+      "passed": true
+    }
+  ],
+  "families": {
+    "D04-plus-four": {
+      "passed": 11,
+      "total": 11,
+      "all_passed": true
+    },
+    "D07-unknown": {
+      "passed": 6,
+      "total": 6,
+      "all_passed": true
+    },
+    "D08-derived-project": {
+      "passed": 9,
+      "total": 9,
+      "all_passed": true
+    },
+    "REDWOOD-version-retraction": {
+      "passed": 27,
+      "total": 27,
+      "all_passed": true
+    }
+  },
+  "passed": 53,
+  "total": 53,
+  "input_sha256": "11c0c2ec6a2f3c5e2e5bb3a2b583d7257879fffdde2d3eb1e89e9f6ac4cc66f5",
+  "expected_sha256": "cc0bd36f118895db39a333f7a37da974a5a0cdea0381cd32950868630b8235ae",
+  "provider_calls": 0,
+  "holdout_executed": false,
+  "real_sqlite": true,
+  "scope": "M2-P4 Dev lifecycle only; actual SQLite reads; no old Gold, Provider, or holdout"
+}

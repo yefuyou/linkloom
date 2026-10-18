@@ -1,0 +1,72 @@
+{
+  "schema_version": "task-relation-lifecycle-expected/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D04-plus-four",
+      "identity_verdict": "SUPPORTED",
+      "revision_verdict": "SUPPORTED",
+      "comparison_status": "COMPUTABLE",
+      "comparison_delta": 4,
+      "after_identity_retraction": {
+        "identity_lifecycle": "RETRACTED",
+        "identity_current_supported": false,
+        "comparison_current_valid": false,
+        "comparison_current_status": "BLOCKED",
+        "comparison_current_delta": null,
+        "comparison_historical_delta": 4
+      }
+    },
+    {
+      "case_id": "D07-unknown",
+      "identity_verdict": "UNKNOWN",
+      "revision_verdict": "UNKNOWN",
+      "comparison_status": "BLOCKED",
+      "comparison_delta": null,
+      "current_supported": false,
+      "blocking_reason_contains": "SAME_TASK_NOT_SUPPORTED"
+    },
+    {
+      "case_id": "D08-derived-project",
+      "alias_verdict": "SUPPORTED",
+      "derived_project_verdict": "SUPPORTED",
+      "wrong_context_verdict": "REFUTED",
+      "project_query_contains_derived": true,
+      "after_alias_retraction": {
+        "alias_lifecycle": "RETRACTED",
+        "derived_project_current_supported": false,
+        "historical_relation_contains_derived": true
+      }
+    },
+    {
+      "case_id": "REDWOOD-version-retraction",
+      "s0": {
+        "identity_verdict": "SUPPORTED",
+        "revision_verdict": "SUPPORTED",
+        "comparison_status": "COMPUTABLE",
+        "comparison_delta": 2
+      },
+      "s1": {
+        "old_identity_lifecycle": "ACTIVE",
+        "old_identity_evidence_state": "STALE",
+        "old_revision_lifecycle": "ACTIVE",
+        "old_revision_evidence_state": "STALE",
+        "old_comparison_current_valid": false,
+        "old_comparison_historical_delta": 2,
+        "new_identity_verdict": "SUPPORTED",
+        "new_revision_verdict": "REFUTED",
+        "new_comparison_status": "NOT_APPLICABLE",
+        "new_comparison_delta": null
+      },
+      "s2": {
+        "old_identity_lifecycle": "RETRACTED",
+        "old_revision_lifecycle": "ACTIVE",
+        "old_revision_evidence_state": "STALE",
+        "new_identity_lifecycle": "ACTIVE",
+        "new_identity_current_supported": true,
+        "old_comparison_current_valid": false,
+        "old_comparison_historical_delta": 2
+      }
+    }
+  ]
+}

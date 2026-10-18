@@ -1,0 +1,94 @@
+{
+  "initial_context": {
+    "probe": "external_competitor_context",
+    "query_current_supported": true,
+    "query_verdict": "SUPPORTED",
+    "query_blocking_reasons": [],
+    "independent_with_current_extra_observation": "UNKNOWN",
+    "independent_reasons": [
+      "AMBIGUOUS_TASK_KEY",
+      "INSUFFICIENT_IDENTITY"
+    ],
+    "expected_query_to_fail_closed": true
+  },
+  "rechecked_context": {
+    "probe": "external_competitor_context",
+    "query_current_supported": false,
+    "query_verdict": "SUPPORTED",
+    "query_blocking_reasons": [
+      "AMBIGUOUS_TASK_KEY",
+      "CURRENT_CONTEXT_CHANGED_REASSESSMENT_REQUIRED",
+      "INSUFFICIENT_IDENTITY"
+    ],
+    "independent_with_current_extra_observation": "UNKNOWN",
+    "independent_reasons": [
+      "AMBIGUOUS_TASK_KEY",
+      "INSUFFICIENT_IDENTITY"
+    ],
+    "expected_query_to_fail_closed": true
+  },
+  "initial_unrelated_replacement": {
+    "probe": "replacement_endpoint_scope",
+    "append_unrelated_same_predicate": "ACCEPTED",
+    "old_lifecycle": "REPLACED",
+    "old_current_supported": false,
+    "replacement_current_supported": true,
+    "expected_append_to_fail": true
+  },
+  "rechecked_replacement": {
+    "probe": "replacement_endpoint_scope",
+    "append_unrelated_same_predicate": "ValueError: replacement endpoint lineage mismatch",
+    "old_lifecycle": "ACTIVE",
+    "old_current_supported": true,
+    "replacement_current_supported": true,
+    "expected_append_to_fail": true
+  },
+  "lifecycle_and_tamper": {
+    "probe": "lifecycle_and_sql_tamper",
+    "terminal_lifecycle": "RETRACTED",
+    "query_current_supported": false,
+    "resurrection_append": "ValueError: invalid lifecycle chain",
+    "direct_sql_tamper": "IntegrityError: append-only relation sidecar"
+  },
+  "source_and_readonly": {
+    "probe": "m1_source_revision_and_readonly",
+    "missing_observations": {
+      "current_supported": false,
+      "persistent_lifecycle": "ACTIVE",
+      "evidence_state": "UNVERIFIABLE",
+      "category": "HISTORICAL",
+      "blocking_reasons": [
+        "M1_OBSERVATION_MISSING_OR_CHANGED",
+        "REPLAY_CONTEXT_INCOMPLETE"
+      ]
+    },
+    "registry_points_to_new_version": {
+      "current_supported": false,
+      "persistent_lifecycle": "ACTIVE",
+      "evidence_state": "STALE",
+      "category": "HISTORICAL",
+      "blocking_reasons": [
+        "ASSESSMENT_REPLAY_MISMATCH",
+        "STALE_EVIDENCE"
+      ]
+    },
+    "artifact_bytes_are_new_version_without_old_readback": {
+      "current_supported": false,
+      "persistent_lifecycle": "ACTIVE",
+      "evidence_state": "UNVERIFIABLE",
+      "category": "HISTORICAL",
+      "blocking_reasons": [
+        "ASSESSMENT_REPLAY_MISMATCH",
+        "OBSERVATION_VERIFICATION_FAILED",
+        "SOURCE_VERSION_OR_HASH_MISMATCH"
+      ]
+    },
+    "readonly_query_only": 1,
+    "readonly_total_changes": 0,
+    "normal_current_supported": true,
+    "sidecar_unchanged_after_missing_read": true,
+    "sidecar_unchanged_after_registry_revision": true,
+    "sidecar_unchanged_after_byte_revision": true
+  },
+  "projection_note": "Actual reviewer probe fields; large duplicated query_record omitted. Original files retained locally."
+}

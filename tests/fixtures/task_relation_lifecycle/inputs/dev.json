@@ -1,0 +1,87 @@
+{
+  "schema_version": "task-relation-lifecycle-input/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D04-plus-four",
+      "source_fixture": "task_revisions/inputs/dev.json",
+      "source_case_id": "D04",
+      "operation": "persist_revision_and_comparison_then_retract_identity"
+    },
+    {
+      "case_id": "D07-unknown",
+      "source_fixture": "task_revisions/inputs/dev.json",
+      "source_case_id": "D07",
+      "operation": "persist_unknown_revision_and_blocked_comparison"
+    },
+    {
+      "case_id": "D08-derived-project",
+      "source_fixture": "task_relations_p2/inputs/dev.json",
+      "source_case_id": "D08",
+      "operation": "persist_alias_and_derived_project_then_retract_alias"
+    },
+    {
+      "case_id": "REDWOOD-version-retraction",
+      "operation": "version_invalidation_then_manual_retraction",
+      "workspace_id": "m2-task-lifecycle-dev-redwood",
+      "sources": [
+        {
+          "artifact_id": "redwood-plan.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 林悦: 我负责红杉项目任务 RW-11 的回执校验，计划在2026年10月20日前完成。\n"
+        },
+        {
+          "artifact_id": "redwood-update.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-11T09:00:00+08:00] 赵宁: 我负责红杉项目任务 RW-11；本条就是redwood-plan.md的同一任务，现修订其计划，将原定2026年10月20日前完成改为2026年10月22日前完成，本计划替代原计划。\n"
+        },
+        {
+          "artifact_id": "redwood-update.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-12T09:00:00+08:00] 赵宁: 我负责红杉项目任务 RW-11；本条是redwood-plan.md的同一任务，资料更正，任务计划未曾修订，仍在2026年10月20日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A0",
+          "source_index": 0,
+          "segment_index": 0,
+          "task": {
+            "text": "我负责红杉项目任务 RW-11 的回执校验，计划在2026年10月20日前完成。",
+            "description_parts": ["我负责红杉项目任务 RW-11 的回执校验，计划在2026年10月20日前完成。"],
+            "owner": "林悦",
+            "deadline_text": "2026年10月20日",
+            "project": "红杉项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B0",
+          "source_index": 1,
+          "segment_index": 0,
+          "task": {
+            "text": "我负责红杉项目任务 RW-11；本条就是redwood-plan.md的同一任务，现修订其计划，将原定2026年10月20日前完成改为2026年10月22日前完成，本计划替代原计划。",
+            "description_parts": ["我负责红杉项目任务 RW-11；本条就是redwood-plan.md的同一任务，现修订其计划，将原定2026年10月20日前完成改为2026年10月22日前完成，本计划替代原计划。"],
+            "owner": "赵宁",
+            "deadline_text": "2026年10月22日",
+            "project": "红杉项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B1",
+          "source_index": 2,
+          "segment_index": 0,
+          "task": {
+            "text": "我负责红杉项目任务 RW-11；本条是redwood-plan.md的同一任务，资料更正，任务计划未曾修订，仍在2026年10月20日前完成。",
+            "description_parts": ["我负责红杉项目任务 RW-11；本条是redwood-plan.md的同一任务，资料更正，任务计划未曾修订，仍在2026年10月20日前完成。"],
+            "owner": "赵宁",
+            "deadline_text": "2026年10月20日",
+            "project": "红杉项目",
+            "vendor": null
+          }
+        }
+      ]
+    }
+  ]
+}

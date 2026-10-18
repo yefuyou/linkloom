@@ -1,0 +1,8 @@
+{
+  "protected_files": 72,
+  "changed_protected_files": [],
+  "unrelated_tracked_diff_unchanged": true,
+  "base_commit": "af001a4d968676c30979254ac70dfb750e8f9ad6",
+  "input_sha256": "11c0c2ec6a2f3c5e2e5bb3a2b583d7257879fffdde2d3eb1e89e9f6ac4cc66f5",
+  "independent_expected_sha256": "cc0bd36f118895db39a333f7a37da974a5a0cdea0381cd32950868630b8235ae"
+}

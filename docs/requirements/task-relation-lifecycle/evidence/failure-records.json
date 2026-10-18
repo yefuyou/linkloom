@@ -1,0 +1,67 @@
+[
+  {
+    "phase": "red-store / red-query",
+    "observed": "new modules absent",
+    "result": "expected RED; implemented minimal writer/query"
+  },
+  {
+    "phase": "red-correction",
+    "observed": "REPLACED history incorrectly blocked valid correction",
+    "fixed": "only current verified edges participate in plan selection; retain original record as history"
+  },
+  {
+    "phase": "red-correction",
+    "observed": "explicit as_of bypassed stored comparison replay check",
+    "fixed": "replay original reference date and compare full ID before deriving another date"
+  },
+  {
+    "phase": "red-correction fixture setup",
+    "observed": "RawArtifact has no source_version argument",
+    "fixed": "new source version is derived from changed content, unchanged production contract"
+  },
+  {
+    "phase": "red-state-semantics",
+    "observed": "valid REFUTED revision comparison became BLOCKED",
+    "fixed": "preserve P3 NOT_APPLICABLE and NOT_COMPARABLE while lifecycle or evidence failures force BLOCKED"
+  },
+  {
+    "phase": "red-competing-effective",
+    "observed": "same endpoints with conflicting effective dates selected by ID",
+    "fixed": "explicit endpoint-group conflict; no last-write/ID selection"
+  },
+  {
+    "phase": "review initial external_competitor_context / red-review-context",
+    "observed": "stored bounded context hid new current task-key reuse counter evidence",
+    "fixed": "exact recipe replay plus verified current M1 context semantic guard; diagnostic-only temporary assessment"
+  },
+  {
+    "phase": "red-m1-adapter",
+    "observed": "M1 TaskObservationRead currentness/conflict flags were discarded",
+    "fixed": "preserve reader source/extraction status; fail closed independently of embedded snapshot"
+  },
+  {
+    "phase": "red-stale-plan",
+    "observed": "historical STALE edge poisoned separately revalidated source-version plan",
+    "fixed": "historical edges visible without expanding/competing with current verified chain"
+  },
+  {
+    "phase": "independent Dev initial harness",
+    "observed": "s0 registered both source versions and assertions examined historical payload instead of current result",
+    "fixed": "per-phase registry; frozen expected unchanged; all 53 atomic checks consume actual current and historical fields",
+    "initial_artifacts_preserved_locally": [
+      "work/p4-lifecycle-run-20261018-04",
+      "work/p4-lifecycle-run-20261018-05"
+    ]
+  },
+  {
+    "phase": "independent review replacement_endpoint_scope / red-review-replacement",
+    "observed": "an unrelated same-workspace/same-predicate assessment was accepted as a REPLACED correction",
+    "fixed": "version-independent endpoint source anchors must match; symmetric SAME_TASK direction is accepted; unrelated tasks are rejected",
+    "initial_evidence": "reviewer/recheck-output-r2-20261018.json and acceptance-local/red-review-replacement.txt retained locally"
+  },
+  {
+    "phase": "publication diff check",
+    "observed": "git diff --cached --check rejected extra blank EOF lines in three new test/evaluator files",
+    "fixed": "removed only the extra EOF newline; no behavior change or acceptance-label change; staged check repeated"
+  }
+]

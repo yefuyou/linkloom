@@ -1,0 +1,25 @@
+{
+  "baseline_commit": "af001a4d968676c30979254ac70dfb750e8f9ad6",
+  "related_regression": {"passed": 285, "exit_code": 0},
+  "P4_first_complete_focused_run": {"passed": 27, "exit_code": 0},
+  "P4_final_focused": {"passed": 29, "seconds": 132.21, "exit_code": 0},
+  "unique_tests_passed": 314,
+  "independent_review": "PASS; two initial Required findings reproduced and fixed, failure evidence retained",
+  "final_targeted_plan_checks": {"passed": 6, "exit_code": 0},
+  "final_targeted_replacement_checks": {"passed": 2, "exit_code": 0},
+  "dev_semantic_acceptance": {"passed": 53, "total": 53, "families_passed": 4, "families_total": 4},
+  "isolated_publication_reproduction": {
+    "base_commit": "af001a4d968676c30979254ac70dfb750e8f9ad6",
+    "P4_focused_passed": 29,
+    "seconds": 109.91,
+    "exit_code": 0,
+    "dev_atomic_passed": 53,
+    "dev_atomic_total": 53,
+    "dev_metrics_identical": true
+  },
+  "real_provider_calls": 0,
+  "holdout_executed": false,
+  "CI_verified": false,
+  "deployed": false,
+  "failure_evidence": "New P4 acceptance-local and reviewer directories preserve initial failures and follow-up outputs; no old ledger overwritten"
+}

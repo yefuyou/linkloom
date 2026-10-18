@@ -1,0 +1,2917 @@
+{
+  "before_retraction": {
+    "project": [
+      {
+        "assessment": {
+          "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+          "schema_version": "task-relation-assessment/v2",
+          "rule_version": "direct-relations-rules/v1",
+          "predicate": "IN_PROJECT",
+          "phase": "ASSESSED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+          },
+          "object": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "星河项目"
+          },
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "EXPLICIT_PROJECT_SCOPE"
+          ],
+          "lifecycle": "ACTIVE",
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+              "provenance": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "raw_text": "我负责签名参数适配，计划在2026年10月18日前完成。",
+              "description": "我负责签名参数适配，计划在2026年10月18日前完成。",
+              "owner": "陈晨",
+              "deadline": "2026-10-18",
+              "deadline_text": "2026年10月18日",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                  "char_start": 52,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                  "char_start": 52,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 52,
+                  "char_end": 55,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "陈晨",
+                  "char_start": 48,
+                  "char_end": 50,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "2026年10月18日前完成",
+                  "char_start": 65,
+                  "char_end": 79,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "event_time": "2026-10-16T01:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            null
+          ],
+          "dependencies": [
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            }
+          ],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 0,
+              "char_end": 4,
+              "quote": "# 银梭",
+              "role": "PROJECT_BINDING"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "char_start": 0,
+              "char_end": 45,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "role": "PROJECT_ALIAS"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 5,
+              "char_end": 19,
+              "quote": "本节短信接入任务仅属于银梭。",
+              "role": "PROJECT_BINDING"
+            }
+          ],
+          "counter_evidence": [],
+          "context_evidence": [],
+          "evidence_validity": true,
+          "missing_evidence": [],
+          "assessed_at": "2026-10-18T12:22:56.777838+00:00",
+          "relation_detail": null,
+          "premise_ids": [
+            "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be"
+          ],
+          "authority_checks": []
+        },
+        "persistent_lifecycle": "ACTIVE",
+        "evidence_state": "VERIFIED",
+        "current_supported": true,
+        "category": "CURRENT_CONFIRMED",
+        "blocking_reasons": [],
+        "premise_states": [
+          {
+            "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+            "persistent_lifecycle": "ACTIVE",
+            "verdict": "SUPPORTED",
+            "evidence_state": "VERIFIED",
+            "current_supported": true,
+            "blocking_reasons": []
+          }
+        ],
+        "source_checks": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "events": [
+          {
+            "event_id": "relation_event_v1_ad3d06a05ebdf42eee61fd1f04aec8f32f511512644a21598083435aa456c121",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+            "event_type": "ACTIVE",
+            "reason": "IMMUTABLE_RECORD_CAPTURED",
+            "actor": "system:relation-store",
+            "previous_event_id": null,
+            "recorded_at": "2026-10-18T12:22:56.777838+00:00",
+            "evidence": [],
+            "replacement_id": null
+          }
+        ],
+        "context_recheck": null,
+        "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+      },
+      {
+        "assessment": {
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "schema_version": "task-relation-assessment/v2",
+          "rule_version": "direct-relations-rules/v1",
+          "predicate": "PROJECT_ALIAS",
+          "phase": "ASSESSED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "银梭"
+          },
+          "object": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "星河项目"
+          },
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "EXPLICIT_PROJECT_ALIAS"
+          ],
+          "lifecycle": "ACTIVE",
+          "observations": [
+            null,
+            null
+          ],
+          "dependencies": [
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            }
+          ],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "char_start": 0,
+              "char_end": 45,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "role": "PROJECT_ALIAS"
+            }
+          ],
+          "counter_evidence": [],
+          "context_evidence": [],
+          "evidence_validity": true,
+          "missing_evidence": [],
+          "assessed_at": "2026-10-18T12:22:56.680216+00:00",
+          "relation_detail": "ALIAS_SCOPE:短信接入",
+          "premise_ids": [],
+          "authority_checks": []
+        },
+        "persistent_lifecycle": "ACTIVE",
+        "evidence_state": "VERIFIED",
+        "current_supported": true,
+        "category": "CURRENT_CONFIRMED",
+        "blocking_reasons": [],
+        "premise_states": [],
+        "source_checks": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "events": [
+          {
+            "event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+            "event_type": "ACTIVE",
+            "reason": "IMMUTABLE_RECORD_CAPTURED",
+            "actor": "system:relation-store",
+            "previous_event_id": null,
+            "recorded_at": "2026-10-18T12:22:56.680216+00:00",
+            "evidence": [],
+            "replacement_id": null
+          }
+        ],
+        "context_recheck": null,
+        "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+      }
+    ],
+    "alias": {
+      "assessment": {
+        "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "PROJECT_ALIAS",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "endpoint_type": "PROJECT",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "name": "银梭"
+        },
+        "object": {
+          "endpoint_type": "PROJECT",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "name": "星河项目"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_PROJECT_ALIAS"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          null,
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "char_start": 0,
+            "char_end": 45,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "role": "PROJECT_ALIAS"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T12:22:56.680216+00:00",
+        "relation_detail": "ALIAS_SCOPE:短信接入",
+        "premise_ids": [],
+        "authority_checks": []
+      },
+      "persistent_lifecycle": "ACTIVE",
+      "evidence_state": "VERIFIED",
+      "current_supported": true,
+      "category": "CURRENT_CONFIRMED",
+      "blocking_reasons": [],
+      "premise_states": [],
+      "source_checks": [
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "A.md",
+            "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+            "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+            "ordinal": 0,
+            "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+            "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "char_start": 0,
+            "char_end": 45,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 0,
+            "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+            "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "char_start": 52,
+            "char_end": 100,
+            "line_start": 3,
+            "line_end": 5,
+            "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+            "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 1,
+            "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+            "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "char_start": 133,
+            "char_end": 161,
+            "line_start": 6,
+            "line_end": 6,
+            "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+            "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "events": [
+        {
+          "event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "event_type": "ACTIVE",
+          "reason": "IMMUTABLE_RECORD_CAPTURED",
+          "actor": "system:relation-store",
+          "previous_event_id": null,
+          "recorded_at": "2026-10-18T12:22:56.680216+00:00",
+          "evidence": [],
+          "replacement_id": null
+        }
+      ],
+      "context_recheck": null,
+      "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+    }
+  },
+  "after_retraction": {
+    "project": [],
+    "history": [
+      {
+        "assessment": {
+          "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+          "schema_version": "task-relation-assessment/v2",
+          "rule_version": "direct-relations-rules/v1",
+          "predicate": "IN_PROJECT",
+          "phase": "ASSESSED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+          },
+          "object": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "星河项目"
+          },
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "EXPLICIT_PROJECT_SCOPE"
+          ],
+          "lifecycle": "ACTIVE",
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+              "provenance": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "raw_text": "我负责签名参数适配，计划在2026年10月18日前完成。",
+              "description": "我负责签名参数适配，计划在2026年10月18日前完成。",
+              "owner": "陈晨",
+              "deadline": "2026-10-18",
+              "deadline_text": "2026年10月18日",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                  "char_start": 52,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                  "char_start": 52,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 52,
+                  "char_end": 55,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "陈晨",
+                  "char_start": 48,
+                  "char_end": 50,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "2026年10月18日前完成",
+                  "char_start": 65,
+                  "char_end": 79,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "event_time": "2026-10-16T01:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            null
+          ],
+          "dependencies": [
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            }
+          ],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 0,
+              "char_end": 4,
+              "quote": "# 银梭",
+              "role": "PROJECT_BINDING"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "char_start": 0,
+              "char_end": 45,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "role": "PROJECT_ALIAS"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 5,
+              "char_end": 19,
+              "quote": "本节短信接入任务仅属于银梭。",
+              "role": "PROJECT_BINDING"
+            }
+          ],
+          "counter_evidence": [],
+          "context_evidence": [],
+          "evidence_validity": true,
+          "missing_evidence": [],
+          "assessed_at": "2026-10-18T12:22:56.777838+00:00",
+          "relation_detail": null,
+          "premise_ids": [
+            "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be"
+          ],
+          "authority_checks": []
+        },
+        "persistent_lifecycle": "ACTIVE",
+        "evidence_state": "UNVERIFIABLE",
+        "current_supported": false,
+        "category": "HISTORICAL",
+        "blocking_reasons": [
+          "DEPENDENCY_NOT_CURRENT",
+          "PREMISE_NOT_SUPPORTED"
+        ],
+        "premise_states": [
+          {
+            "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+            "persistent_lifecycle": "RETRACTED",
+            "verdict": "SUPPORTED",
+            "evidence_state": "VERIFIED",
+            "current_supported": false,
+            "blocking_reasons": [
+              "LIFECYCLE_RETRACTED"
+            ]
+          }
+        ],
+        "source_checks": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "events": [
+          {
+            "event_id": "relation_event_v1_ad3d06a05ebdf42eee61fd1f04aec8f32f511512644a21598083435aa456c121",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+            "event_type": "ACTIVE",
+            "reason": "IMMUTABLE_RECORD_CAPTURED",
+            "actor": "system:relation-store",
+            "previous_event_id": null,
+            "recorded_at": "2026-10-18T12:22:56.777838+00:00",
+            "evidence": [],
+            "replacement_id": null
+          }
+        ],
+        "context_recheck": null,
+        "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+      },
+      {
+        "assessment": {
+          "assessment_id": "task_assessment_v2_9963f8a2f65c05659ef298f265c32a0e4074cf46bfe08c7fc91a41b5b3b36c55",
+          "schema_version": "task-relation-assessment/v2",
+          "rule_version": "direct-relations-rules/v1",
+          "predicate": "IN_PROJECT",
+          "phase": "ASSESSED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+          },
+          "object": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "星河项目"
+          },
+          "verdict": "REFUTED",
+          "reason_codes": [
+            "EXPLICIT_PROJECT_SCOPE"
+          ],
+          "lifecycle": "ACTIVE",
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+              "provenance": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "raw_text": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "description": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "owner": "陈晨",
+              "deadline": "2026-10-19",
+              "deadline_text": "2026年10月19日",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                  "char_start": 133,
+                  "char_end": 161,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                  "char_start": 133,
+                  "char_end": 161,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 133,
+                  "char_end": 136,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "陈晨",
+                  "char_start": 129,
+                  "char_end": 131,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "2026年10月19日前完成",
+                  "char_start": 146,
+                  "char_end": 160,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "event_time": "2026-10-16T01:10:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            null
+          ],
+          "dependencies": [
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            }
+          ],
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 81,
+              "char_end": 87,
+              "quote": "# 天河项目",
+              "role": "PROJECT_BINDING"
+            },
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+                "char_start": 0,
+                "char_end": 162,
+                "line_start": 1,
+                "line_end": 6,
+                "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+                "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+              },
+              "char_start": 88,
+              "char_end": 100,
+              "quote": "本节任务仅属于天河项目。",
+              "role": "PROJECT_BINDING"
+            }
+          ],
+          "context_evidence": [],
+          "evidence_validity": true,
+          "missing_evidence": [],
+          "assessed_at": "2026-10-18T12:22:56.877357+00:00",
+          "relation_detail": null,
+          "premise_ids": [],
+          "authority_checks": []
+        },
+        "persistent_lifecycle": "ACTIVE",
+        "evidence_state": "UNVERIFIABLE",
+        "current_supported": false,
+        "category": "HISTORICAL",
+        "blocking_reasons": [
+          "ASSESSMENT_REPLAY_MISMATCH"
+        ],
+        "premise_states": [],
+        "source_checks": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "events": [
+          {
+            "event_id": "relation_event_v1_4b26b346ebcec75b2e3517c10522f26c1218a486cae3ac050b4932966b410b9c",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_9963f8a2f65c05659ef298f265c32a0e4074cf46bfe08c7fc91a41b5b3b36c55",
+            "event_type": "ACTIVE",
+            "reason": "IMMUTABLE_RECORD_CAPTURED",
+            "actor": "system:relation-store",
+            "previous_event_id": null,
+            "recorded_at": "2026-10-18T12:22:56.877357+00:00",
+            "evidence": [],
+            "replacement_id": null
+          }
+        ],
+        "context_recheck": null,
+        "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+      },
+      {
+        "assessment": {
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "schema_version": "task-relation-assessment/v2",
+          "rule_version": "direct-relations-rules/v1",
+          "predicate": "PROJECT_ALIAS",
+          "phase": "ASSESSED",
+          "authority": "SUPPORTING_ONLY",
+          "subject": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "银梭"
+          },
+          "object": {
+            "endpoint_type": "PROJECT",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "name": "星河项目"
+          },
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "EXPLICIT_PROJECT_ALIAS"
+          ],
+          "lifecycle": "ACTIVE",
+          "observations": [
+            null,
+            null
+          ],
+          "dependencies": [
+            {
+              "observation": null,
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 0,
+                "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+                "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+                "char_start": 52,
+                "char_end": 100,
+                "line_start": 3,
+                "line_end": 5,
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+                "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            },
+            {
+              "observation": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+              },
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "B.md",
+                "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+                "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+                "ordinal": 1,
+                "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+                "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+                "char_start": 133,
+                "char_end": 161,
+                "line_start": 6,
+                "line_end": 6,
+                "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+                "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+              },
+              "source_status": "CURRENT",
+              "readback_ok": true,
+              "observation_valid": true
+            }
+          ],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "char_start": 0,
+              "char_end": 45,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "role": "PROJECT_ALIAS"
+            }
+          ],
+          "counter_evidence": [],
+          "context_evidence": [],
+          "evidence_validity": true,
+          "missing_evidence": [],
+          "assessed_at": "2026-10-18T12:22:56.680216+00:00",
+          "relation_detail": "ALIAS_SCOPE:短信接入",
+          "premise_ids": [],
+          "authority_checks": []
+        },
+        "persistent_lifecycle": "RETRACTED",
+        "evidence_state": "VERIFIED",
+        "current_supported": false,
+        "category": "HISTORICAL",
+        "blocking_reasons": [
+          "LIFECYCLE_RETRACTED"
+        ],
+        "premise_states": [],
+        "source_checks": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "events": [
+          {
+            "event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+            "event_type": "ACTIVE",
+            "reason": "IMMUTABLE_RECORD_CAPTURED",
+            "actor": "system:relation-store",
+            "previous_event_id": null,
+            "recorded_at": "2026-10-18T12:22:56.680216+00:00",
+            "evidence": [],
+            "replacement_id": null
+          },
+          {
+            "event_id": "relation_event_v1_efcd59704ee4317e1c34d56e51ad4bf15c20c3597d62a2221a15e26a1e5f44b2",
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+            "event_type": "RETRACTED",
+            "reason": "manual alias correction",
+            "actor": "dev-reviewer",
+            "previous_event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+            "recorded_at": "2026-10-18T12:22:57.680216+00:00",
+            "evidence": [
+              {
+                "span": {
+                  "workspace_id": "m2-task-relations-p2-dev-d08",
+                  "artifact_id": "A.md",
+                  "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                  "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                  "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                  "ordinal": 0,
+                  "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                  "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                  "char_start": 0,
+                  "char_end": 45,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                  "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+                },
+                "char_start": 10,
+                "char_end": 44,
+                "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目",
+                "role": "RELATION_PROPOSAL"
+              }
+            ],
+            "replacement_id": null
+          }
+        ],
+        "context_recheck": null,
+        "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+      }
+    ],
+    "alias": {
+      "assessment": {
+        "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "PROJECT_ALIAS",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "endpoint_type": "PROJECT",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "name": "银梭"
+        },
+        "object": {
+          "endpoint_type": "PROJECT",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "name": "星河项目"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_PROJECT_ALIAS"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          null,
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "char_start": 0,
+            "char_end": 45,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "role": "PROJECT_ALIAS"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T12:22:56.680216+00:00",
+        "relation_detail": "ALIAS_SCOPE:短信接入",
+        "premise_ids": [],
+        "authority_checks": []
+      },
+      "persistent_lifecycle": "RETRACTED",
+      "evidence_state": "VERIFIED",
+      "current_supported": false,
+      "category": "HISTORICAL",
+      "blocking_reasons": [
+        "LIFECYCLE_RETRACTED"
+      ],
+      "premise_states": [],
+      "source_checks": [
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "A.md",
+            "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+            "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+            "ordinal": 0,
+            "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+            "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "char_start": 0,
+            "char_end": 45,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 0,
+            "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+            "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "char_start": 52,
+            "char_end": 100,
+            "line_start": 3,
+            "line_end": 5,
+            "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+            "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 1,
+            "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+            "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "char_start": 133,
+            "char_end": 161,
+            "line_start": 6,
+            "line_end": 6,
+            "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+            "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "events": [
+        {
+          "event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "event_type": "ACTIVE",
+          "reason": "IMMUTABLE_RECORD_CAPTURED",
+          "actor": "system:relation-store",
+          "previous_event_id": null,
+          "recorded_at": "2026-10-18T12:22:56.680216+00:00",
+          "evidence": [],
+          "replacement_id": null
+        },
+        {
+          "event_id": "relation_event_v1_efcd59704ee4317e1c34d56e51ad4bf15c20c3597d62a2221a15e26a1e5f44b2",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "event_type": "RETRACTED",
+          "reason": "manual alias correction",
+          "actor": "dev-reviewer",
+          "previous_event_id": "relation_event_v1_62c6dbf966efac3e10ef349863f4fa41d613a1c0ba33ff78b104a33fa4b86965",
+          "recorded_at": "2026-10-18T12:22:57.680216+00:00",
+          "evidence": [
+            {
+              "span": {
+                "workspace_id": "m2-task-relations-p2-dev-d08",
+                "artifact_id": "A.md",
+                "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+                "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+                "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+                "ordinal": 0,
+                "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+                "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+                "char_start": 0,
+                "char_end": 45,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+                "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+              },
+              "char_start": 10,
+              "char_end": 44,
+              "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "replacement_id": null
+        }
+      ],
+      "context_recheck": null,
+      "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+    },
+    "derived": {
+      "assessment": {
+        "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "IN_PROJECT",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+          "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+          "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+        },
+        "object": {
+          "endpoint_type": "PROJECT",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "name": "星河项目"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_PROJECT_SCOPE"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "raw_text": "我负责签名参数适配，计划在2026年10月18日前完成。",
+            "description": "我负责签名参数适配，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                "char_start": 52,
+                "char_end": 80,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责签名参数适配，计划在2026年10月18日前完成。",
+                "char_start": 52,
+                "char_end": 80,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 52,
+                "char_end": 55,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 48,
+                "char_end": 50,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 65,
+                "char_end": 79,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-16T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+              "char_start": 52,
+              "char_end": 100,
+              "line_start": 3,
+              "line_end": 5,
+              "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+              "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 1,
+              "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+              "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+              "char_start": 133,
+              "char_end": 161,
+              "line_start": 6,
+              "line_end": 6,
+              "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+              "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "char_start": 0,
+            "char_end": 4,
+            "quote": "# 银梭",
+            "role": "PROJECT_BINDING"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+              "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+              "ordinal": 0,
+              "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+              "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+              "char_start": 0,
+              "char_end": 45,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+              "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+            },
+            "char_start": 0,
+            "char_end": 45,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "role": "PROJECT_ALIAS"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d08",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+              "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+              "ordinal": 0,
+              "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+              "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+              "char_start": 0,
+              "char_end": 162,
+              "line_start": 1,
+              "line_end": 6,
+              "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+              "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+            },
+            "char_start": 5,
+            "char_end": 19,
+            "quote": "本节短信接入任务仅属于银梭。",
+            "role": "PROJECT_BINDING"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T12:22:56.777838+00:00",
+        "relation_detail": null,
+        "premise_ids": [
+          "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be"
+        ],
+        "authority_checks": []
+      },
+      "persistent_lifecycle": "ACTIVE",
+      "evidence_state": "UNVERIFIABLE",
+      "current_supported": false,
+      "category": "HISTORICAL",
+      "blocking_reasons": [
+        "DEPENDENCY_NOT_CURRENT",
+        "PREMISE_NOT_SUPPORTED"
+      ],
+      "premise_states": [
+        {
+          "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+          "persistent_lifecycle": "RETRACTED",
+          "verdict": "SUPPORTED",
+          "evidence_state": "VERIFIED",
+          "current_supported": false,
+          "blocking_reasons": [
+            "LIFECYCLE_RETRACTED"
+          ]
+        }
+      ],
+      "source_checks": [
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "A.md",
+            "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+            "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+            "ordinal": 0,
+            "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+            "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+            "char_start": 0,
+            "char_end": 45,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+            "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 0,
+            "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+            "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "char_start": 52,
+            "char_end": 100,
+            "line_start": 3,
+            "line_end": 5,
+            "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+            "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 0,
+            "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+            "segment_id": "segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+            "char_start": 52,
+            "char_end": 100,
+            "line_start": 3,
+            "line_end": 5,
+            "quote": "我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。",
+            "quote_sha256": "76c27dffecf9ddfbb2d1cbed2b962522e72c2accbc91b4e8933b43cec4a5ebfd"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 1,
+            "message_id": "message_v1_76914cc3e6aef79f9adf01b5cb66f932b4ffa8d5fc9275b39601101dae510a79",
+            "segment_id": "segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+            "char_start": 133,
+            "char_end": 161,
+            "line_start": 6,
+            "line_end": 6,
+            "quote": "我负责重试参数适配，计划在2026年10月19日前完成。",
+            "quote_sha256": "b3db6f54696ee21663e7dc6eebdbb29ff12d83322988d24ff3047d20e8a285b5"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        },
+        {
+          "observation": null,
+          "span": {
+            "workspace_id": "m2-task-relations-p2-dev-d08",
+            "artifact_id": "B.md",
+            "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+            "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+            "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+            "ordinal": 0,
+            "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+            "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+            "char_start": 0,
+            "char_end": 162,
+            "line_start": 1,
+            "line_end": 6,
+            "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+            "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+          },
+          "source_status": "CURRENT",
+          "readback_ok": true,
+          "observation_valid": true
+        }
+      ],
+      "events": [
+        {
+          "event_id": "relation_event_v1_ad3d06a05ebdf42eee61fd1f04aec8f32f511512644a21598083435aa456c121",
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+          "event_type": "ACTIVE",
+          "reason": "IMMUTABLE_RECORD_CAPTURED",
+          "actor": "system:relation-store",
+          "previous_event_id": null,
+          "recorded_at": "2026-10-18T12:22:56.777838+00:00",
+          "evidence": [],
+          "replacement_id": null
+        }
+      ],
+      "context_recheck": null,
+      "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION"
+    }
+  }
+}
