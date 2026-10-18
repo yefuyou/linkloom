@@ -1,0 +1,820 @@
+{
+  "schema": "task-candidate-evaluation/v1",
+  "queries": 12,
+  "metric": "micro endpoint Candidate Recall@K; candidates consume hint-specific slots",
+  "scope": "synthetic discovery relevance only; not relation truth or end-to-end Agent success",
+  "real_provider_calls": 0,
+  "old_heldout_executed": false,
+  "hash_encoding": "UTF-8 with LF newlines",
+  "input_sha256": "b4953f4706fae98089b4c9c24747c78ee577fcea0887d5bc21172b828c204e81",
+  "prediction_sha256": "e60ea00a4f81472595b261907e712d6b297fbd9b4dae81709303e6c52655561d",
+  "gold_sha256": "84981d8d2b93f98a9af7d90dda78102cf765b70f564e5f3a6040546c19cf19ae",
+  "comparisons": {
+    "1": {
+      "baseline": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 1,
+          "candidates": 2,
+          "unique_targets": 2,
+          "noise": 1,
+          "explicit_total": 4,
+          "explicit_missed": 4,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.1111111111111111,
+        "noise_rate": 0.5,
+        "mean_candidates": 0.16666666666666666,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [],
+            "missed": [
+              "O:plan"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [],
+            "missed": [
+              "O:export"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:export"
+            ]
+          },
+          {
+            "case_id": "C03",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [],
+            "missed": [
+              "C:vendor.md"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [
+              "O:task-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:task-b"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C08",
+            "returned": [],
+            "missed": [
+              "O:check"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [],
+            "missed": [
+              "O:receipt"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:receipt"
+            ]
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          }
+        ]
+      },
+      "discovery": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 8,
+          "candidates": 9,
+          "unique_targets": 9,
+          "noise": 1,
+          "explicit_total": 4,
+          "explicit_missed": 1,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.8888888888888888,
+        "noise_rate": 0.1111111111111111,
+        "mean_candidates": 0.75,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [
+              "O:plan"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [
+              "O:export"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C03",
+            "returned": [
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [
+              "C:vendor.md"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C08",
+            "returned": [
+              "O:check"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [
+              "O:receipt"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [
+              "O:disconnected-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:disconnected-b"
+            ],
+            "explicit_missed": []
+          }
+        ]
+      }
+    },
+    "3": {
+      "baseline": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 1,
+          "candidates": 2,
+          "unique_targets": 2,
+          "noise": 1,
+          "explicit_total": 4,
+          "explicit_missed": 4,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.1111111111111111,
+        "noise_rate": 0.5,
+        "mean_candidates": 0.16666666666666666,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [],
+            "missed": [
+              "O:plan"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [],
+            "missed": [
+              "O:export"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:export"
+            ]
+          },
+          {
+            "case_id": "C03",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [],
+            "missed": [
+              "C:vendor.md"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [
+              "O:task-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:task-b"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C08",
+            "returned": [],
+            "missed": [
+              "O:check"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [],
+            "missed": [
+              "O:receipt"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:receipt"
+            ]
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          }
+        ]
+      },
+      "discovery": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 8,
+          "candidates": 16,
+          "unique_targets": 12,
+          "noise": 4,
+          "explicit_total": 4,
+          "explicit_missed": 1,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.8888888888888888,
+        "noise_rate": 0.25,
+        "mean_candidates": 1.3333333333333333,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [
+              "O:plan",
+              "O:noise",
+              "O:plan"
+            ],
+            "missed": [],
+            "noise": [
+              "O:noise"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [
+              "O:export"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C03",
+            "returned": [
+              "O:old",
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [
+              "C:vendor.md",
+              "O:chairs"
+            ],
+            "missed": [],
+            "noise": [
+              "O:chairs"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [
+              "O:old",
+              "O:old",
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C08",
+            "returned": [
+              "O:check",
+              "O:room"
+            ],
+            "missed": [],
+            "noise": [
+              "O:room"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [
+              "O:receipt"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [
+              "O:disconnected-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:disconnected-b"
+            ],
+            "explicit_missed": []
+          }
+        ]
+      }
+    },
+    "5": {
+      "baseline": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 1,
+          "candidates": 2,
+          "unique_targets": 2,
+          "noise": 1,
+          "explicit_total": 4,
+          "explicit_missed": 4,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.1111111111111111,
+        "noise_rate": 0.5,
+        "mean_candidates": 0.16666666666666666,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [],
+            "missed": [
+              "O:plan"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [],
+            "missed": [
+              "O:export"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:export"
+            ]
+          },
+          {
+            "case_id": "C03",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [],
+            "missed": [
+              "C:vendor.md"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [
+              "O:task-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:task-b"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C08",
+            "returned": [],
+            "missed": [
+              "O:check"
+            ],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [],
+            "missed": [
+              "O:receipt"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:receipt"
+            ]
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          }
+        ]
+      },
+      "discovery": {
+        "counts": {
+          "gold_targets": 9,
+          "retrieved_gold": 8,
+          "candidates": 16,
+          "unique_targets": 12,
+          "noise": 4,
+          "explicit_total": 4,
+          "explicit_missed": 1,
+          "empty_queries": 3,
+          "contaminated_empty_queries": 1
+        },
+        "recall_at_k": 0.8888888888888888,
+        "noise_rate": 0.25,
+        "mean_candidates": 1.3333333333333333,
+        "cases": [
+          {
+            "case_id": "C01",
+            "returned": [
+              "O:plan",
+              "O:noise",
+              "O:plan"
+            ],
+            "missed": [],
+            "noise": [
+              "O:noise"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C02",
+            "returned": [
+              "O:export"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C03",
+            "returned": [
+              "O:old",
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C04",
+            "returned": [
+              "C:vendor.md",
+              "O:chairs"
+            ],
+            "missed": [],
+            "noise": [
+              "O:chairs"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C05",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C06",
+            "returned": [],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C07",
+            "returned": [
+              "O:old",
+              "O:old",
+              "O:old"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C08",
+            "returned": [
+              "O:check",
+              "O:room"
+            ],
+            "missed": [],
+            "noise": [
+              "O:room"
+            ],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C09",
+            "returned": [
+              "O:receipt"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C10",
+            "returned": [],
+            "missed": [
+              "O:old"
+            ],
+            "noise": [],
+            "explicit_missed": [
+              "O:old"
+            ]
+          },
+          {
+            "case_id": "C11",
+            "returned": [
+              "O:equal-b"
+            ],
+            "missed": [],
+            "noise": [],
+            "explicit_missed": []
+          },
+          {
+            "case_id": "C12",
+            "returned": [
+              "O:disconnected-b"
+            ],
+            "missed": [],
+            "noise": [
+              "O:disconnected-b"
+            ],
+            "explicit_missed": []
+          }
+        ]
+      }
+    }
+  }
+}

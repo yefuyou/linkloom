@@ -1,0 +1,17 @@
+{
+  "definition": "Investigation-worthy endpoint recall, not supported-relation truth. O labels observation tasks; C labels source-claimed change files. Gold is evaluator-only.",
+  "cases": {
+    "C01": {"targets": ["O:plan"], "explicit_references": []},
+    "C02": {"targets": ["O:export"], "explicit_references": ["O:export"]},
+    "C03": {"targets": ["O:old"], "explicit_references": []},
+    "C04": {"targets": ["C:vendor.md"], "explicit_references": []},
+    "C05": {"targets": [], "explicit_references": []},
+    "C06": {"targets": [], "explicit_references": []},
+    "C07": {"targets": ["O:old"], "explicit_references": ["O:old"]},
+    "C08": {"targets": ["O:check"], "explicit_references": []},
+    "C09": {"targets": ["O:receipt"], "explicit_references": ["O:receipt"]},
+    "C10": {"targets": ["O:old"], "explicit_references": ["O:old"]},
+    "C11": {"targets": ["O:equal-b"], "explicit_references": []},
+    "C12": {"targets": [], "explicit_references": []}
+  }
+}

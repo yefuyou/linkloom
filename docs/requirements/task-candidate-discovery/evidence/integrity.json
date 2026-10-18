@@ -1,0 +1,8 @@
+{
+  "bad-cases.json": "c86bca1b055322379b071fe1c832506abb2e43e77fecbcc369933d17103917c5",
+  "metrics.json": "8c3dab2e5cd120916e7321c8ee8e07fa77a58edaff688285bb637a4863f9a181",
+  "original-five-lines.json": "8e594153713fa0d1e8f38607597d16925eca4248e9b3654950f3c31424eed7ec",
+  "predictions.json": "e60ea00a4f81472595b261907e712d6b297fbd9b4dae81709303e6c52655561d",
+  "verification.json": "62fe7c4d8504e4dcbb9c34c8393bff241f08193cfc8b8de81d7eca9422a08581",
+  "version-trials.json": "8f0231da8144f75f5a84b27c82b176f71c82b079cb831af121a7851ae5aff9a5"
+}

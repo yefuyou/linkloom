@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-18",
+  "checks": [
+    {
+      "check": "discovery-and-evaluation",
+      "status": "PASS",
+      "tests": 30,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    {
+      "check": "m1-p1-p2-p3-source-regression",
+      "status": "PASS",
+      "tests": 185,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "real_provider_calls": 0,
+  "old_heldout_executed": false,
+  "ci_verified": false,
+  "deployed": false,
+  "integrated_with_p4": false,
+  "commands": [
+    "python -m pytest tests/unit/test_task_relation_candidates.py tests/unit/test_task_candidate_evaluation.py -q -p scripts.evaluation_offline_plugin -o cache_dir=work/pytest-cache",
+    "python -m pytest tests/unit/test_task_observation.py tests/unit/test_task_identity_resolution.py tests/unit/test_task_relations_p2.py tests/unit/test_task_change_authority.py tests/unit/test_task_plan_revision.py tests/unit/test_task_revision_comparison.py tests/unit/test_task_revision_compatibility.py tests/unit/test_semantic_ingestion_artifacts.py tests/unit/test_source_identity_contract.py -q -p scripts.evaluation_offline_plugin -p scripts.pytest_windows_tempdir --basetemp work/regression-tmp-new -o cache_dir=work/pytest-cache",
+    "python scripts/evaluate_task_candidates.py --output work/discovery-eval-new"
+  ],
+  "environment": {
+    "python": "3.13",
+    "pytest": "8.3.4",
+    "PYTHONPATH": "src",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "LINKLOOM_PYTEST_BASETEMP": "<worktree>/work/regression-tmp-new"
+  }
+}
