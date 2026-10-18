@@ -31,11 +31,12 @@ from linkloom.semantic_ingestion.candidate_models import (
     extraction_fingerprint_for,
 )
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
-from linkloom.semantic_ingestion.timestamped_text import TimestampedTextSegment
+from linkloom.semantic_ingestion.document_text import DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES
+from linkloom.semantic_ingestion.task_observation import TaskProposal
 from linkloom.tools.contracts import ToolCall, ToolDefinition
 
 
-SEMANTIC_EXTRACTION_SCHEMA_VERSION = "semantic-candidate/v1"
+SEMANTIC_EXTRACTION_SCHEMA_VERSION = "semantic-candidate/v2"
 SEMANTIC_EXTRACTOR_VERSION = "provider-neutral-extractor/v1"
 TEMPORAL_POLICY_VERSION = "explicit-time-only/v1"
 SEMANTIC_EXTRACTION_TOOL_ID = "emit_semantic_candidates"
@@ -117,6 +118,16 @@ def _extraction_schema() -> dict[str, Any]:
             "type": "object",
             "properties": confidence_properties,
             "required": list(confidence_properties),
+            "additionalProperties": False,
+        },
+        "task": {
+            "type": ["object", "null"],
+            "properties": {
+                "text": {"type": "string", "minLength": 1, "maxLength": 2048},
+                "description_parts": {"type": "array", "maxItems": 8, "items": {"type": "string", "minLength": 1, "maxLength": 2048}},
+                **{name: nullable_string for name in ("owner", "deadline_text", "project", "vendor")},
+            },
+            "required": ["text", "description_parts", "owner", "deadline_text", "project", "vendor"],
             "additionalProperties": False,
         },
     }
@@ -206,13 +217,13 @@ class SemanticExtractor(Protocol):
 
     def extract(
         self,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         context: SemanticExtractionContext,
     ) -> SemanticExtractionResult:
         ...
 
 
-def _prompt(segment: TimestampedTextSegment, context: SemanticExtractionContext, version: str) -> str:
+def _prompt(segment: SourceSegment, context: SemanticExtractionContext, version: str) -> str:
     instructions = {
         "prompt_version": version,
         "schema_version": SEMANTIC_EXTRACTION_SCHEMA_VERSION,
@@ -222,12 +233,37 @@ def _prompt(segment: TimestampedTextSegment, context: SemanticExtractionContext,
         "relation_aliases": dict(context.relation_resolver.aliases),
         "source_segment": {
             "speaker": segment.speaker,
-            "event_time": segment.event_time.isoformat(),
+            "event_time": segment.event_time.isoformat() if segment.event_time else None,
             "text": segment.body_text,
         },
     }
+    if isinstance(segment, DocumentTextSegment):
+        instructions["source_segment"].update({
+            "source_format": "document_text",
+            "document_date": segment.document_date.isoformat() if segment.document_date else None,
+            "event_date": segment.event_date.isoformat() if segment.event_date else None,
+            "date_policy": "Date-only metadata is not a speech timestamp or effective time. Missing times stay null. Return an empty claims list when there is no supported claim.",
+        })
     return (
         "Extract only source-supported semantic claims from the supplied segment. "
+        "Organize each complete business choice as one claim, not as isolated words. "
+        "Keep selection reasons, comparisons, and approval qualifiers attached to the "
+        "business conclusion in its source evidence; do not emit separate FACT claims "
+        "for each reason, adjective, or unapproved status. One unapproved proposal is "
+        "one PROPOSAL, not a proposal plus duplicate status facts. Use a stable, "
+        "source-named project or business entity as subject, not a possessive role "
+        "description (such as the project's supplier). Keep the same canonical "
+        "relation for initial selection and replacement. Distinguish effective dates "
+        "from speech times and action deadlines. Explicit written Chinese dates may "
+        "be normalized to ISO dates. PLAN/ACTION deadlines are not decision validity: "
+        "keep them in source evidence and return NOT_STATED with null valid bounds. "
+        "For each PLAN/ACTION, emit a task object for ONE task statement: text is an exact unique "
+        "source excerpt and description_parts are verbatim task-work excerpts inside that text. "
+        "Copy deadline_text literally, including its year if explicitly stated; never normalize or fill "
+        "a missing year from metadata. owner must be explicitly assigned; a first-person responsibility "
+        "statement may name only the supplied speaker. project and vendor must be explicitly mentioned "
+        "inside this task text. Missing fields remain null. Do not carry fields from other segments, "
+        "merge tasks, infer revisions or infer deadline delays. For other claim types return task=null. "
         "Return one structured tool call matching the schema. Preserve the distinction "
         "between DECISION, FACT, PROPOSAL, QUESTION, REJECTED_OPTION, PLAN, ACTION, "
         "OPINION, and SPECULATION. A DECISION is an explicit team choice, approval, "
@@ -329,7 +365,8 @@ def _parse_claim(data: Any) -> ExtractedClaim:
         "valid_to",
         "confidence",
     }
-    if set(data) != expected_keys:
+    # The v2 model-facing contract requires task; historical recordings can omit it.
+    if set(data) not in (expected_keys, expected_keys | {"task"}):
         raise ValueError("claim has missing or unsupported fields")
     try:
         claim_type = ClaimType(data["claim_type"])
@@ -370,6 +407,7 @@ def _parse_claim(data: Any) -> ExtractedClaim:
         valid_from_raw=valid_from,
         valid_to_raw=valid_to,
         confidence=confidence,
+        task=TaskProposal.from_dict(data["task"]) if data.get("task") is not None else None,
     )
 
 
@@ -441,11 +479,11 @@ class ProviderNeutralSemanticExtractor:
 
     def extract(
         self,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         context: SemanticExtractionContext,
     ) -> SemanticExtractionResult:
-        if not isinstance(segment, TimestampedTextSegment):
-            raise TypeError("segment must be a Step 1 TimestampedTextSegment")
+        if not isinstance(segment, SOURCE_SEGMENT_TYPES):
+            raise TypeError("segment must be a parsed source segment")
         if not isinstance(context, SemanticExtractionContext):
             raise TypeError("context must be SemanticExtractionContext")
 

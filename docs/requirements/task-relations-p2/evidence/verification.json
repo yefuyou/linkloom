@@ -1,0 +1,30 @@
+{
+  "local_focused_and_P1": {
+    "passed": 108,
+    "exit_code": 0,
+    "log": "local acceptance-local/green-review.txt"
+  },
+  "related_regression": {
+    "passed": 188,
+    "exit_code": 0,
+    "log": "local acceptance-local/regression-core.txt",
+    "includes_P1": true
+  },
+  "independent_review_reproductions": {
+    "red_failures": 3,
+    "fixed_by": "test_review_*"
+  },
+  "clean_publication_reproduction": {
+    "baseline": "d2961892d816af7b7058a7f143c93d4e388b4112",
+    "explicit_delivery_file_count": 53,
+    "passed": 241,
+    "exit_code": 0,
+    "dev_atomic_questions_correct": 20,
+    "dev_atomic_questions_total": 20,
+    "construction": "git archive HEAD plus explicit allowlist; unrelated worktree changes excluded"
+  },
+  "real_provider_calls": 0,
+  "holdout_executed": false,
+  "CI_verified": false,
+  "deployed": false
+}

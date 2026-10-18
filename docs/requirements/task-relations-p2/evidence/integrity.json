@@ -1,0 +1,16 @@
+{
+  "baseline_files_checked": 31,
+  "changed_only_allowed_P1_extensions": [
+    "src/linkloom/semantic_ingestion/task_relation_models.py",
+    "src/linkloom/semantic_ingestion/task_relation_validation.py"
+  ],
+  "M1_sources_and_P1_history_unchanged": true,
+  "P1_v1_assessments_roundtrip_unchanged": [
+    "D01",
+    "D02",
+    "D03",
+    "D04",
+    "D05",
+    "D07"
+  ]
+}

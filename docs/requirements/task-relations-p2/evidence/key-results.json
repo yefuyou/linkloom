@@ -1,0 +1,660 @@
+[
+  {
+    "case_id": "D03",
+    "question_id": "D03-same-task",
+    "assessment_id": "task_assessment_v1_ae259bb6dca04925081084f09614ea465eeef849e45cb56d6488749a6791b367",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+      "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+      "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+    },
+    "object": {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+      "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+      "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+    },
+    "predicate": "SAME_TASK",
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_IDENTITY"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "missing_evidence": [
+      "需要作用域明确且无冲突的任务编号，或唯一指向另一观察的明确同一任务声明；不会补写项目、负责人或日期。"
+    ],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D03",
+    "question_id": "D03-related-work-link",
+    "assessment_id": "task_assessment_v2_85dafd8c0d340128ca87b9ee1a2bbdb7498c2c2d07df9eb1a4c298766e2fc5c6",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+      "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+      "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+    },
+    "object": {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+      "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+      "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+    },
+    "predicate": "RELATED_TO",
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_WORK_LINK"
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d03",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+          "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+          "ordinal": 0,
+          "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+          "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+          "char_start": 32,
+          "char_end": 103,
+          "line_start": 1,
+          "line_end": 2,
+          "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+          "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+        },
+        "char_start": 65,
+        "char_end": 87,
+        "quote": "说明：B1的接口调整与A.md的联调工作相关",
+        "role": "WORK_LINK"
+      }
+    ],
+    "counter_evidence": [],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": "WORK_LINK",
+    "authority_checks": []
+  },
+  {
+    "case_id": "D06",
+    "question_id": "D06-affected-by-reviewed-change",
+    "assessment_id": "task_assessment_v2_6417c6b83b1956ab8dd0f01c6c0322ee6e5cbd19f56f411c974727e217f795b5",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d06",
+      "observation_id": "task_observation_v1_db5f448be450ca91138a0609e709aff2fe873b7f117e1d24390bee778448a454",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+      "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+      "payload_hash": "da4182bddf25bd4b4fa5c73ae5a520d4177331c84c75a9e69b8099f90034653c"
+    },
+    "object": {
+      "endpoint_type": "CHANGE",
+      "workspace_id": "m2-task-relations-p2-dev-d06",
+      "project": "星河项目",
+      "before_vendor": "云桥科技",
+      "after_vendor": "星帆通信",
+      "evidence": {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d06",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+          "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+          "ordinal": 1,
+          "message_id": "message_v1_e5eca3282db68d6d5b0f1082434804e9264822d7d3cda3a4aa3f3165eaae338e",
+          "segment_id": "segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+          "char_start": 100,
+          "char_end": 143,
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+          "quote_sha256": "c9956e1e7c29cdc75ff52c0d979046b6ab0b150071540e756c48f6a83f77ed14"
+        },
+        "char_start": 100,
+        "char_end": 143,
+        "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+        "role": "CHANGE_CLAIM"
+      },
+      "kind": "REVIEWED_DECISION",
+      "decision_id": "decision_semantic_v1_fed919eed5a33f3c357d328029b2aff1f5ed4051cb8c934c7d2715ce5a22aaee",
+      "candidate_id": "candidate_v1_5b98107a38f3e4658b0b8848df6c1b6872fd7bd345167acf5e119b140dda9c59",
+      "receipt_id": "semantic_receipt_v1_5f785343ae40e890620e8a5a4b43c51b41cc63f9de690c23e95cda1f23a2f837"
+    },
+    "predicate": "AFFECTED_BY",
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_DIRECT_CHANGE_IMPACT"
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d06",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d06/B.md",
+          "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+          "ordinal": 0,
+          "message_id": "message_v1_4ad510fa9c168d63952cdcbff4fe6ecf3ee0440bb50a287832fee578436032bc",
+          "segment_id": "segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+          "char_start": 32,
+          "char_end": 109,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+          "quote_sha256": "84d2e27ce54f68cf40580d87841492901502631d5d5c87f6f19775c7975f8fd8"
+        },
+        "char_start": 58,
+        "char_end": 109,
+        "quote": "因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+        "role": "DIRECT_IMPACT"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d06",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+          "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+          "ordinal": 1,
+          "message_id": "message_v1_e5eca3282db68d6d5b0f1082434804e9264822d7d3cda3a4aa3f3165eaae338e",
+          "segment_id": "segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+          "char_start": 100,
+          "char_end": 143,
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+          "quote_sha256": "c9956e1e7c29cdc75ff52c0d979046b6ab0b150071540e756c48f6a83f77ed14"
+        },
+        "char_start": 100,
+        "char_end": 143,
+        "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+        "role": "CHANGE_CLAIM"
+      }
+    ],
+    "counter_evidence": [],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": "DIRECT_ADAPTATION",
+    "authority_checks": [
+      "CHANGE_FIELDS_MATCHED",
+      "CURRENT_DECISION_READ",
+      "DECISION_SOURCE_EVIDENCE_VERIFIED",
+      "HUMAN_APPROVAL_BOUND",
+      "PRIOR_DECISION_READ",
+      "PRIOR_RECEIPT_BOUND",
+      "REVIEWED_DECISION_CHAIN_REQUIRED"
+    ]
+  },
+  {
+    "case_id": "D07",
+    "question_id": "D07-a2-in-project",
+    "assessment_id": "task_assessment_v2_496b5df16f935b296f9fc41a14348f4e5de26d1d09606cd394c4b77f16ee445c",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_16ae3d3b0bb140fb786137a5719e91ec50c8c2fc0d43105c7e79dd19bae8e6a6",
+      "artifact_id": "A.txt",
+      "artifact_version_id": "artifact_v1_874d8115b6625456c652931eb4edb7415f5e4cce7e9f4719f855268c275f5973",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d4d6c45e1204f096235a9375f75b0946e28d9f6a4be2b0b1a6b1e2e6830220",
+      "content_hash": "a8ea56b3f56c00d524b289b4eb5f5b3cb9a7c5d04411ad0afc53e6f532881662",
+      "payload_hash": "95a1f44234a5db23673f8487eeea5c7d0db9afe862c1d009ba08d69f65e9f1b1"
+    },
+    "object": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "name": "星河项目"
+    },
+    "predicate": "IN_PROJECT",
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_PROJECT_SCOPE"
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d07",
+          "artifact_id": "A.txt",
+          "artifact_version_id": "artifact_v1_874d8115b6625456c652931eb4edb7415f5e4cce7e9f4719f855268c275f5973",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d07/A.txt",
+          "content_hash": "a8ea56b3f56c00d524b289b4eb5f5b3cb9a7c5d04411ad0afc53e6f532881662",
+          "ordinal": 1,
+          "message_id": "message_v1_b0e55cb0cddcf5aea409d48ebeb6c894246520a2a8060e75adf2bee029abc988",
+          "segment_id": "segment_v1_80d4d6c45e1204f096235a9375f75b0946e28d9f6a4be2b0b1a6b1e2e6830220",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d4d6c45e1204f096235a9375f75b0946e28d9f6a4be2b0b1a6b1e2e6830220",
+          "char_start": 126,
+          "char_end": 161,
+          "line_start": 2,
+          "line_end": 2,
+          "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+          "quote_sha256": "1b1aa6927b45c5e8c95dd92d770f42d7d62ab495e6ce1b90bb623a632eb821af"
+        },
+        "char_start": 126,
+        "char_end": 161,
+        "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+        "role": "PROJECT_BINDING"
+      }
+    ],
+    "counter_evidence": [],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D07",
+    "question_id": "D07-b2-in-project",
+    "assessment_id": "task_assessment_v2_09f242967aff353eb8a746a577731ce1a0ec3c6af01e481701339db1ff395e88",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_867666d78bfa4c5ae2f42500527fe4c2df380ef5e4883eedd4cc7133091c9c11",
+      "artifact_id": "B.txt",
+      "artifact_version_id": "artifact_v1_5081bb8baa344a274f0f5b5dbcc2d6c5250c5066ec8ade159859d2cdf3429842",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_061bddc47996edeeab85138c3b0795e66c57a3328347d61be183b9559c483b19",
+      "content_hash": "7857add46076081cb6ecd2058d20d523ffb2800c7ae7821c229da23a77de505c",
+      "payload_hash": "0592fee33320fe35411f52cf021823216f4caa372e4e22f3ff9b967e5892b89e"
+    },
+    "object": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "name": "星河项目"
+    },
+    "predicate": "IN_PROJECT",
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_RELATION_EVIDENCE"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "missing_evidence": [
+      "需要唯一绑定端点、作用域及该关系命题的明确原文证据。"
+    ],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D07",
+    "question_id": "D07-same-task",
+    "assessment_id": "task_assessment_v1_b353e0adc6b55605489ee3f09eff106a57921a5244df36118a50977b7c303aff",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_867666d78bfa4c5ae2f42500527fe4c2df380ef5e4883eedd4cc7133091c9c11",
+      "artifact_id": "B.txt",
+      "artifact_version_id": "artifact_v1_5081bb8baa344a274f0f5b5dbcc2d6c5250c5066ec8ade159859d2cdf3429842",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_061bddc47996edeeab85138c3b0795e66c57a3328347d61be183b9559c483b19",
+      "content_hash": "7857add46076081cb6ecd2058d20d523ffb2800c7ae7821c229da23a77de505c",
+      "payload_hash": "0592fee33320fe35411f52cf021823216f4caa372e4e22f3ff9b967e5892b89e"
+    },
+    "object": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_16ae3d3b0bb140fb786137a5719e91ec50c8c2fc0d43105c7e79dd19bae8e6a6",
+      "artifact_id": "A.txt",
+      "artifact_version_id": "artifact_v1_874d8115b6625456c652931eb4edb7415f5e4cce7e9f4719f855268c275f5973",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d4d6c45e1204f096235a9375f75b0946e28d9f6a4be2b0b1a6b1e2e6830220",
+      "content_hash": "a8ea56b3f56c00d524b289b4eb5f5b3cb9a7c5d04411ad0afc53e6f532881662",
+      "payload_hash": "95a1f44234a5db23673f8487eeea5c7d0db9afe862c1d009ba08d69f65e9f1b1"
+    },
+    "predicate": "SAME_TASK",
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "missing_evidence": [
+      "需要作用域明确且无冲突的任务编号，或唯一指向另一观察的明确同一任务声明；不会补写项目、负责人或日期。"
+    ],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D07",
+    "question_id": "D07-related",
+    "assessment_id": "task_assessment_v2_24e0e505baa6ea033afbe2e888ef6e0fb5f49a6d923b77efb2d1486d1d052f31",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_867666d78bfa4c5ae2f42500527fe4c2df380ef5e4883eedd4cc7133091c9c11",
+      "artifact_id": "B.txt",
+      "artifact_version_id": "artifact_v1_5081bb8baa344a274f0f5b5dbcc2d6c5250c5066ec8ade159859d2cdf3429842",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_061bddc47996edeeab85138c3b0795e66c57a3328347d61be183b9559c483b19",
+      "content_hash": "7857add46076081cb6ecd2058d20d523ffb2800c7ae7821c229da23a77de505c",
+      "payload_hash": "0592fee33320fe35411f52cf021823216f4caa372e4e22f3ff9b967e5892b89e"
+    },
+    "object": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_16ae3d3b0bb140fb786137a5719e91ec50c8c2fc0d43105c7e79dd19bae8e6a6",
+      "artifact_id": "A.txt",
+      "artifact_version_id": "artifact_v1_874d8115b6625456c652931eb4edb7415f5e4cce7e9f4719f855268c275f5973",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_80d4d6c45e1204f096235a9375f75b0946e28d9f6a4be2b0b1a6b1e2e6830220",
+      "content_hash": "a8ea56b3f56c00d524b289b4eb5f5b3cb9a7c5d04411ad0afc53e6f532881662",
+      "payload_hash": "95a1f44234a5db23673f8487eeea5c7d0db9afe862c1d009ba08d69f65e9f1b1"
+    },
+    "predicate": "RELATED_TO",
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "INSUFFICIENT_RELATION_EVIDENCE"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "missing_evidence": [
+      "需要唯一绑定端点、作用域及该关系命题的明确原文证据。"
+    ],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D07",
+    "question_id": "D07-affected-by-source-claim",
+    "assessment_id": "task_assessment_v2_b4888a5ee912dd0b8475f3fe2e70515fefd0be95ca67060c634d792cc918859f",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "observation_id": "task_observation_v1_867666d78bfa4c5ae2f42500527fe4c2df380ef5e4883eedd4cc7133091c9c11",
+      "artifact_id": "B.txt",
+      "artifact_version_id": "artifact_v1_5081bb8baa344a274f0f5b5dbcc2d6c5250c5066ec8ade159859d2cdf3429842",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_061bddc47996edeeab85138c3b0795e66c57a3328347d61be183b9559c483b19",
+      "content_hash": "7857add46076081cb6ecd2058d20d523ffb2800c7ae7821c229da23a77de505c",
+      "payload_hash": "0592fee33320fe35411f52cf021823216f4caa372e4e22f3ff9b967e5892b89e"
+    },
+    "object": {
+      "endpoint_type": "CHANGE",
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "project": "星河项目",
+      "before_vendor": "云桥科技",
+      "after_vendor": "星帆通信",
+      "evidence": {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d07",
+          "artifact_id": "B.txt",
+          "artifact_version_id": "artifact_v1_5081bb8baa344a274f0f5b5dbcc2d6c5250c5066ec8ade159859d2cdf3429842",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d07/B.txt",
+          "content_hash": "7857add46076081cb6ecd2058d20d523ffb2800c7ae7821c229da23a77de505c",
+          "ordinal": 0,
+          "message_id": "message_v1_20fd24f8dd0665330657539a898d261dcf847aec318f6e52288b20e05fe413ca",
+          "segment_id": "segment_v1_645a027bbb735876e5efb5b7e5b68b8050a897445f31302a08f885e56c4bf207",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_645a027bbb735876e5efb5b7e5b68b8050a897445f31302a08f885e56c4bf207",
+          "char_start": 32,
+          "char_end": 121,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "星河项目的短信服务供应商现正式改为星帆通信，自2026年10月15日起生效，替代2026年10月10日选择云桥科技的决定。原因是云桥科技在联调中多次延迟，星帆通信的到达率更稳定。",
+          "quote_sha256": "4bdb92e62504dd30daaa0166209e035ea04d206ec04aec51fe183ff3b08aaac1"
+        },
+        "char_start": 32,
+        "char_end": 121,
+        "quote": "星河项目的短信服务供应商现正式改为星帆通信，自2026年10月15日起生效，替代2026年10月10日选择云桥科技的决定。原因是云桥科技在联调中多次延迟，星帆通信的到达率更稳定。",
+        "role": "CHANGE_CLAIM"
+      },
+      "kind": "SOURCE_CLAIM",
+      "decision_id": null,
+      "candidate_id": null,
+      "receipt_id": null
+    },
+    "predicate": "AFFECTED_BY",
+    "verdict": "UNKNOWN",
+    "reason_codes": [
+      "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [],
+    "missing_evidence": [
+      "需要将本任务明确连接到这一来源的具体供应商变更；供应商、时间及项目共现不足。"
+    ],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": [
+      "FORMAL_AUTHORITY_NOT_ESTABLISHED",
+      "SOURCE_CLAIM_ONLY"
+    ]
+  },
+  {
+    "case_id": "D08",
+    "question_id": "D08-project-alias",
+    "assessment_id": "task_assessment_v2_e7e129c505258bf3dd5e01b6262c9d3b5952d2d4fdfad73a0b8169f9b5ad24be",
+    "subject": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "name": "银梭"
+    },
+    "object": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "name": "星河项目"
+    },
+    "predicate": "PROJECT_ALIAS",
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_PROJECT_ALIAS"
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+          "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+          "ordinal": 0,
+          "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+          "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+          "char_start": 0,
+          "char_end": 45,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+          "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+        },
+        "char_start": 0,
+        "char_end": 45,
+        "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+        "role": "PROJECT_ALIAS"
+      }
+    ],
+    "counter_evidence": [],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": "ALIAS_SCOPE:短信接入",
+    "authority_checks": []
+  },
+  {
+    "case_id": "D08",
+    "question_id": "D08-b3-in-project",
+    "assessment_id": "task_assessment_v2_0642454c0fb6636b1372cbe2df861b6ac1cb3cb7f8fcbc57b16b82248a6fdde4",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "observation_id": "task_observation_v1_d510e6fd3f283f44a8eca620258643a936cf1615daf785f1cb155bf0fa204207",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f377401434634feea51f18c35ff576e3c739365859da1581519c020ab4016635",
+      "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+      "payload_hash": "15b6a3eb729eed0614b863bd3de95a98bd53ab34e30858ba447013325332484c"
+    },
+    "object": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "name": "星河项目"
+    },
+    "predicate": "IN_PROJECT",
+    "verdict": "SUPPORTED",
+    "reason_codes": [
+      "EXPLICIT_PROJECT_SCOPE"
+    ],
+    "supporting_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+          "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+          "ordinal": 0,
+          "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+          "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "char_start": 0,
+          "char_end": 162,
+          "line_start": 1,
+          "line_end": 6,
+          "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+          "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+        },
+        "char_start": 0,
+        "char_end": 4,
+        "quote": "# 银梭",
+        "role": "PROJECT_BINDING"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_6e3cb14c643262e3aa78d447afe96e2a086df71f92b7a41b890444cceb31e7d1",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/A.md",
+          "content_hash": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d",
+          "ordinal": 0,
+          "message_id": "message_v1_0b46571484bce6ee514596291faa25808d94d3b3623199324e73f481573234cb",
+          "segment_id": "segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f2603cede9099cdabb2660881a285b27fea3036bf75ebef3c69af89a23edeb9",
+          "char_start": 0,
+          "char_end": 45,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+          "quote_sha256": "d9519dc68ade83e60ce8535d6d8d2f44d47c21f8d9513043d11b7fb34fe8db1d"
+        },
+        "char_start": 0,
+        "char_end": 45,
+        "quote": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。",
+        "role": "PROJECT_ALIAS"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+          "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+          "ordinal": 0,
+          "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+          "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "char_start": 0,
+          "char_end": 162,
+          "line_start": 1,
+          "line_end": 6,
+          "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+          "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+        },
+        "char_start": 5,
+        "char_end": 19,
+        "quote": "本节短信接入任务仅属于银梭。",
+        "role": "PROJECT_BINDING"
+      }
+    ],
+    "counter_evidence": [],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  },
+  {
+    "case_id": "D08",
+    "question_id": "D08-b6-in-project",
+    "assessment_id": "task_assessment_v2_9963f8a2f65c05659ef298f265c32a0e4074cf46bfe08c7fc91a41b5b3b36c55",
+    "subject": {
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "observation_id": "task_observation_v1_c22322a1d9e9358a1978f8d32ae0e4f2fe62497b639424effd86597cf181c765",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_458be7d34c4786fc9304373d4c5df4ba48bf93201e635ae4ff621016b641982a",
+      "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+      "payload_hash": "32d7a891e02be7cb4861eeccdc76fa1343946a08b475e68692fe60d5093b2fa1"
+    },
+    "object": {
+      "endpoint_type": "PROJECT",
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "name": "星河项目"
+    },
+    "predicate": "IN_PROJECT",
+    "verdict": "REFUTED",
+    "reason_codes": [
+      "EXPLICIT_PROJECT_SCOPE"
+    ],
+    "supporting_evidence": [],
+    "counter_evidence": [
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+          "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+          "ordinal": 0,
+          "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+          "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "char_start": 0,
+          "char_end": 162,
+          "line_start": 1,
+          "line_end": 6,
+          "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+          "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+        },
+        "char_start": 81,
+        "char_end": 87,
+        "quote": "# 天河项目",
+        "role": "PROJECT_BINDING"
+      },
+      {
+        "span": {
+          "workspace_id": "m2-task-relations-p2-dev-d08",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_407249173b2bb07799946444ded35569b5feff41edf0106dd503894660520482",
+          "source_ref": "artifact://m2-task-relations-p2-dev-d08/B.md",
+          "content_hash": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f",
+          "ordinal": 0,
+          "message_id": "message_v1_78d397489b510a25c3e9fd8f3de0b6031634c9da5534828df9af06a4934337dd",
+          "segment_id": "segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3f2fe1aa87124e76e4ccd7b573207551dbf6b3f9f414bb06b0377bb1bd7bfef8",
+          "char_start": 0,
+          "char_end": 162,
+          "line_start": 1,
+          "line_end": 6,
+          "quote": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n",
+          "quote_sha256": "883bcf2da858ac6c954c2dee1f3b87a1b2d4838655a1e0d35e72dd6e82f8b87f"
+        },
+        "char_start": 88,
+        "char_end": 100,
+        "quote": "本节任务仅属于天河项目。",
+        "role": "PROJECT_BINDING"
+      }
+    ],
+    "missing_evidence": [],
+    "evidence_validity": true,
+    "relation_detail": null,
+    "authority_checks": []
+  }
+]

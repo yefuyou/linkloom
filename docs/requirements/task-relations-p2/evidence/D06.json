@@ -1,0 +1,434 @@
+{
+  "case_id": "D06",
+  "predictions": [
+    {
+      "question_id": "D06-affected-by-reviewed-change",
+      "assessment": {
+        "assessment_id": "task_assessment_v2_6417c6b83b1956ab8dd0f01c6c0322ee6e5cbd19f56f411c974727e217f795b5",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "AFFECTED_BY",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-relations-p2-dev-d06",
+          "observation_id": "task_observation_v1_db5f448be450ca91138a0609e709aff2fe873b7f117e1d24390bee778448a454",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+          "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+          "payload_hash": "da4182bddf25bd4b4fa5c73ae5a520d4177331c84c75a9e69b8099f90034653c"
+        },
+        "object": {
+          "endpoint_type": "CHANGE",
+          "workspace_id": "m2-task-relations-p2-dev-d06",
+          "project": "星河项目",
+          "before_vendor": "云桥科技",
+          "after_vendor": "星帆通信",
+          "evidence": {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+              "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+              "ordinal": 1,
+              "message_id": "message_v1_e5eca3282db68d6d5b0f1082434804e9264822d7d3cda3a4aa3f3165eaae338e",
+              "segment_id": "segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "char_start": 100,
+              "char_end": 143,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+              "quote_sha256": "c9956e1e7c29cdc75ff52c0d979046b6ab0b150071540e756c48f6a83f77ed14"
+            },
+            "char_start": 100,
+            "char_end": 143,
+            "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+            "role": "CHANGE_CLAIM"
+          },
+          "kind": "REVIEWED_DECISION",
+          "decision_id": "decision_semantic_v1_fed919eed5a33f3c357d328029b2aff1f5ed4051cb8c934c7d2715ce5a22aaee",
+          "candidate_id": "candidate_v1_5b98107a38f3e4658b0b8848df6c1b6872fd7bd345167acf5e119b140dda9c59",
+          "receipt_id": "semantic_receipt_v1_5f785343ae40e890620e8a5a4b43c51b41cc63f9de690c23e95cda1f23a2f837"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_DIRECT_CHANGE_IMPACT"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_db5f448be450ca91138a0609e709aff2fe873b7f117e1d24390bee778448a454",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/B.md",
+              "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+              "ordinal": 0,
+              "message_id": "message_v1_4ad510fa9c168d63952cdcbff4fe6ecf3ee0440bb50a287832fee578436032bc",
+              "segment_id": "segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "char_start": 32,
+              "char_end": 109,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+              "quote_sha256": "84d2e27ce54f68cf40580d87841492901502631d5d5c87f6f19775c7975f8fd8"
+            },
+            "raw_text": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 109,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 109,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 94,
+                "char_end": 108,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-15T02:05:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          null
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "observation_id": "task_observation_v1_db5f448be450ca91138a0609e709aff2fe873b7f117e1d24390bee778448a454",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+              "payload_hash": "da4182bddf25bd4b4fa5c73ae5a520d4177331c84c75a9e69b8099f90034653c"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/B.md",
+              "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+              "ordinal": 0,
+              "message_id": "message_v1_4ad510fa9c168d63952cdcbff4fe6ecf3ee0440bb50a287832fee578436032bc",
+              "segment_id": "segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "char_start": 32,
+              "char_end": 109,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+              "quote_sha256": "84d2e27ce54f68cf40580d87841492901502631d5d5c87f6f19775c7975f8fd8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+              "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+              "ordinal": 0,
+              "message_id": "message_v1_15c596f47dc2bbdc3adc2d516bab01aa4433e86109bbbf6f29ae97559d148e6f",
+              "segment_id": "segment_v1_4d4cd8c7611b68cc88bd6929b4fbd30f914038fbb23d1a71dbf328664a5f97aa",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4d4cd8c7611b68cc88bd6929b4fbd30f914038fbb23d1a71dbf328664a5f97aa",
+              "char_start": 32,
+              "char_end": 67,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "星河项目正式选择云桥科技为短信供应商，自2026年10月10日起生效。",
+              "quote_sha256": "e385995866cb2b51218ade41b246d312a3d7fdaa39b015d40dba4d7ed24f1031"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+              "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+              "ordinal": 1,
+              "message_id": "message_v1_e5eca3282db68d6d5b0f1082434804e9264822d7d3cda3a4aa3f3165eaae338e",
+              "segment_id": "segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "char_start": 100,
+              "char_end": 143,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+              "quote_sha256": "c9956e1e7c29cdc75ff52c0d979046b6ab0b150071540e756c48f6a83f77ed14"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/B.md",
+              "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+              "ordinal": 0,
+              "message_id": "message_v1_4ad510fa9c168d63952cdcbff4fe6ecf3ee0440bb50a287832fee578436032bc",
+              "segment_id": "segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "char_start": 32,
+              "char_end": 109,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+              "quote_sha256": "84d2e27ce54f68cf40580d87841492901502631d5d5c87f6f19775c7975f8fd8"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/B.md",
+              "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+              "ordinal": 0,
+              "message_id": "message_v1_4ad510fa9c168d63952cdcbff4fe6ecf3ee0440bb50a287832fee578436032bc",
+              "segment_id": "segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2039c13698310bcc71e7c2e01e6805b5af338c2429ec14d2326c33c1ee14b9ad",
+              "char_start": 32,
+              "char_end": 109,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+              "quote_sha256": "84d2e27ce54f68cf40580d87841492901502631d5d5c87f6f19775c7975f8fd8"
+            },
+            "char_start": 58,
+            "char_end": 109,
+            "quote": "因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+            "role": "DIRECT_IMPACT"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d06",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d06/A.md",
+              "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+              "ordinal": 1,
+              "message_id": "message_v1_e5eca3282db68d6d5b0f1082434804e9264822d7d3cda3a4aa3f3165eaae338e",
+              "segment_id": "segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ec486aadfd2cd04df2b99464c6cf0c0472f3cd40597007a7ba59c86b9adb7aa6",
+              "char_start": 100,
+              "char_end": 143,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+              "quote_sha256": "c9956e1e7c29cdc75ff52c0d979046b6ab0b150071540e756c48f6a83f77ed14"
+            },
+            "char_start": 100,
+            "char_end": 143,
+            "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。",
+            "role": "CHANGE_CLAIM"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T08:47:21.212079+00:00",
+        "relation_detail": "DIRECT_ADAPTATION",
+        "premise_ids": [],
+        "authority_checks": [
+          "CHANGE_FIELDS_MATCHED",
+          "CURRENT_DECISION_READ",
+          "DECISION_SOURCE_EVIDENCE_VERIFIED",
+          "HUMAN_APPROVAL_BOUND",
+          "PRIOR_DECISION_READ",
+          "PRIOR_RECEIPT_BOUND",
+          "REVIEWED_DECISION_CHAIN_REQUIRED"
+        ]
+      }
+    }
+  ],
+  "excluded": [],
+  "observations_unchanged": true,
+  "source_parse_status": {
+    "A.md": "COMPLETE",
+    "B.md": "COMPLETE"
+  },
+  "evidence_input_failures": [],
+  "authority_audit": {
+    "formal_before_review": 0,
+    "blocked_before_review": 2,
+    "old_decision_id": "decision_semantic_v1_07fc7915226ff325242e8a7b78e7acf74d57a20eadd1c264b2fbfd1ee025773c",
+    "new_decision_id": "decision_semantic_v1_fed919eed5a33f3c357d328029b2aff1f5ed4051cb8c934c7d2715ce5a22aaee",
+    "supersedes_id": "decision_semantic_v1_07fc7915226ff325242e8a7b78e7acf74d57a20eadd1c264b2fbfd1ee025773c",
+    "before_vendor": "云桥科技",
+    "after_vendor": "星帆通信",
+    "receipts": [
+      {
+        "receipt_id": "semantic_receipt_v1_1b824a211898231f78c50dfca0b455612b38dcf81a996c29485f0c124421c30e",
+        "workspace_id": "m2-task-relations-p2-dev-d06",
+        "candidate_id": "candidate_v1_aabf8133ee8d9ac73e17f19764c8afa7aeeba0e9be554d576b0dbc38bca6f403",
+        "candidate_fingerprint": "1f16729aaf8adeb7f92843e3b44268f940da7443777b1813aa143dd89e8273be",
+        "authorization_type": "HUMAN_APPROVAL",
+        "authorization_id": "offline-human",
+        "policy_id": null,
+        "policy_version": null,
+        "policy_fingerprint": null,
+        "authorization_reason": "Synthetic D06 source checked",
+        "authorized_at": "2026-10-18T08:47:21.083775+00:00",
+        "decision_id": "decision_semantic_v1_07fc7915226ff325242e8a7b78e7acf74d57a20eadd1c264b2fbfd1ee025773c",
+        "supersedes_id": null,
+        "correction_of_candidate_id": null,
+        "correction_of_decision_id": null,
+        "effective_at": "2026-10-10T00:00:00.000000+00:00",
+        "materialized_at": "2026-10-18T08:47:21.096051+00:00",
+        "result_state": "MATERIALIZED",
+        "materialization_key": "521d1042da494ca9eab84ef77b8768d3a5fa28f49e3576eb8107da4e1f470b73",
+        "review_resolution_fingerprint": null,
+        "receipt_fingerprint": "65afb2816498fef850d0098c1eb7a3ca32ce10e2db4cdbfdb93b0475b834709f",
+        "candidate_source_kind": "SOURCE_INGESTION",
+        "action_dispositions_json": "[]"
+      },
+      {
+        "receipt_id": "semantic_receipt_v1_5f785343ae40e890620e8a5a4b43c51b41cc63f9de690c23e95cda1f23a2f837",
+        "workspace_id": "m2-task-relations-p2-dev-d06",
+        "candidate_id": "candidate_v1_5b98107a38f3e4658b0b8848df6c1b6872fd7bd345167acf5e119b140dda9c59",
+        "candidate_fingerprint": "7ac6ce250448fb36cb99b7fe6c1037e06c6a536f36ac190f623f622912316446",
+        "authorization_type": "HUMAN_APPROVAL",
+        "authorization_id": "offline-human",
+        "policy_id": null,
+        "policy_version": null,
+        "policy_fingerprint": null,
+        "authorization_reason": "Synthetic D06 source checked",
+        "authorized_at": "2026-10-18T08:47:21.133417+00:00",
+        "decision_id": "decision_semantic_v1_fed919eed5a33f3c357d328029b2aff1f5ed4051cb8c934c7d2715ce5a22aaee",
+        "supersedes_id": "decision_semantic_v1_07fc7915226ff325242e8a7b78e7acf74d57a20eadd1c264b2fbfd1ee025773c",
+        "correction_of_candidate_id": null,
+        "correction_of_decision_id": null,
+        "effective_at": "2026-10-15T00:00:00.000000+00:00",
+        "materialized_at": "2026-10-18T08:47:21.146686+00:00",
+        "result_state": "MATERIALIZED",
+        "materialization_key": "9bee4da51d4f58785571372a37f025761627cbd29ca495cbc8c4fe791f52e108",
+        "review_resolution_fingerprint": null,
+        "receipt_fingerprint": "431db2c2f70df5ba0f2ae3dd3ece964aea1eb4fe0901d2f9b9aaafd1e3b8a5c2",
+        "candidate_source_kind": "SOURCE_INGESTION",
+        "action_dispositions_json": "[]"
+      }
+    ],
+    "approval_events": [
+      {
+        "event_id": "semantic_event_v1_3b53e788cebd49229a871dd69d29e0fe",
+        "workspace_id": "m2-task-relations-p2-dev-d06",
+        "candidate_id": "candidate_v1_aabf8133ee8d9ac73e17f19764c8afa7aeeba0e9be554d576b0dbc38bca6f403",
+        "event_type": "HUMAN_APPROVAL",
+        "actor_type": "HUMAN",
+        "actor_id": "offline-human",
+        "event_at": "2026-10-18T08:47:21.083775+00:00",
+        "candidate_fingerprint": "1f16729aaf8adeb7f92843e3b44268f940da7443777b1813aa143dd89e8273be",
+        "reason_code": "CALIBRATION_NOT_AVAILABLE",
+        "reason": "Synthetic D06 source checked",
+        "metadata_json": "{\"candidate_source_kind\":\"SOURCE_INGESTION\",\"policy_fingerprint\":\"2df81c2775f35b7c2304e3552fbf0680e8b2332430994135c248274198f91ea9\",\"policy_id\":\"semantic-materialization\",\"policy_version\":\"v1\",\"review_resolution\":null,\"review_resolution_fingerprint\":null,\"risk_level\":\"LOW\"}",
+        "candidate_source_kind": "SOURCE_INGESTION"
+      },
+      {
+        "event_id": "semantic_event_v1_d85160cb1bae41809c2d13af50b590ee",
+        "workspace_id": "m2-task-relations-p2-dev-d06",
+        "candidate_id": "candidate_v1_5b98107a38f3e4658b0b8848df6c1b6872fd7bd345167acf5e119b140dda9c59",
+        "event_type": "HUMAN_APPROVAL",
+        "actor_type": "HUMAN",
+        "actor_id": "offline-human",
+        "event_at": "2026-10-18T08:47:21.133417+00:00",
+        "candidate_fingerprint": "7ac6ce250448fb36cb99b7fe6c1037e06c6a536f36ac190f623f622912316446",
+        "reason_code": "SUPERSESSION_REQUIRES_REVIEW",
+        "reason": "Synthetic D06 source checked",
+        "metadata_json": "{\"candidate_source_kind\":\"SOURCE_INGESTION\",\"policy_fingerprint\":\"2df81c2775f35b7c2304e3552fbf0680e8b2332430994135c248274198f91ea9\",\"policy_id\":\"semantic-materialization\",\"policy_version\":\"v1\",\"review_resolution\":null,\"review_resolution_fingerprint\":null,\"risk_level\":\"HIGH\"}",
+        "candidate_source_kind": "SOURCE_INGESTION"
+      }
+    ],
+    "scripted_provider_calls": 2,
+    "real_provider_calls": 0,
+    "decisions_after_assessment": 2,
+    "database_writes_during_assessment": 0
+  },
+  "sources": [
+    {
+      "workspace_id": "m2-task-relations-p2-dev-d06",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_545bd97bae3a991c514ef8240ce9efd2fd10f73b8b9e801d0726e167ac496646",
+      "content_hash": "96cf55e253ef797bd8ca9f50aca805cd21f55e2cdf962223eb81797ddc6e4f92",
+      "content": "[2026-10-10T10:00:00+08:00] 林悦: 星河项目正式选择云桥科技为短信供应商，自2026年10月10日起生效。\n[2026-10-15T10:00:00+08:00] 林悦: 星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。\n"
+    },
+    {
+      "workspace_id": "m2-task-relations-p2-dev-d06",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_58e7212c66ca6f2843e14a1c0ec831737fc47052a962405f80d0c47e4825fcf6",
+      "content_hash": "692ed9244563c52b44a7ea07401ec9ad9553e8361d7b6daa345d4e28765cf8a4",
+      "content": "[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。\n"
+    }
+  ]
+}

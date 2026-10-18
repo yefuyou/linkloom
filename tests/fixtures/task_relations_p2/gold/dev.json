@@ -1,0 +1,285 @@
+{
+  "schema_version": "task-relations-p2-gold/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D03",
+      "questions": [
+        {
+          "question_id": "D03-same-task",
+          "verdict": "UNKNOWN",
+          "explanation": "B1 与 A1 都描述星河项目的接口工作，但 B1 后的说明只确认工作相关，并明确表示是否属于同一业务任务尚待核对；工作关联不能升级为任务身份相同。",
+          "reason_codes": ["EXPLICIT_WORK_LINK", "INSUFFICIENT_IDENTITY"],
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "星河项目的短信接口联调，计划在2026年10月14日前完成。", "role": "context"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "星河项目的新接口调整，计划在2026年10月18日前完成。", "role": "context"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。", "role": "counter_or_gap"}
+          ]
+        },
+        {
+          "question_id": "D03-related-work-link",
+          "verdict": "SUPPORTED",
+          "relation_detail": "WORK_LINK",
+          "explanation": "B1 的接口调整被 B.md 明确说明与 A.md 的联调工作相关，因此 B1→A1 的工作关联成立；该结论不确认两者是同一任务。",
+          "reason_codes": ["EXPLICIT_WORK_LINK"],
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "星河项目的短信接口联调，计划在2026年10月14日前完成。", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "星河项目的新接口调整，计划在2026年10月18日前完成。", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "B1的接口调整与A.md的联调工作相关", "role": "supporting"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D06",
+      "questions": [
+        {
+          "question_id": "D06-affected-by-reviewed-change",
+          "verdict": "SUPPORTED",
+          "explanation": "A.md 的 A1 明确记录星河项目短信供应商由云桥科技替代为星帆通信；B1 明确说明该变更导致 ADAPT-2 必须调整签名参数。正式审核权威须由现有审批流生成并回读 A0→A1 的合法替代链，不能用 fixture 字段伪造。",
+          "reason_codes": ["DIRECT_CHANGE_DEPENDENCY", "REVIEWED_DECISION_CHAIN_REQUIRED"],
+          "authority_expectation": "REVIEWED_DECISION",
+          "required_premises": ["supplier_replacement", "direct_task_cause", "reviewed_decision_chain"],
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "星河项目正式选择云桥科技为短信供应商，自2026年10月10日起生效。", "role": "authority_chain"},
+            {"source_id": "A.md", "segment_index": 1, "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数", "role": "supporting"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D07",
+      "questions": [
+        {
+          "question_id": "D07-a2-in-project",
+          "verdict": "SUPPORTED",
+          "explanation": "A2 的原文直接写明星河项目，故 A2→星河项目的显式项目归属成立。",
+          "reason_codes": ["EXPLICIT_PROJECT"],
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。", "role": "supporting"}
+          ]
+        },
+        {
+          "question_id": "D07-b2-in-project",
+          "verdict": "UNKNOWN",
+          "explanation": "B2 的 M1 project 必须保持为空。B 文档相邻的供应商变更写了星河项目，但没有把 B2 唯一桥接到该项目；不能从相邻文本或供应商名称补齐项目。",
+          "reason_codes": ["AMBIGUOUS_PROJECT", "MISSING_PROJECT_BRIDGE"],
+          "evidence": [
+            {"source_id": "B.txt", "segment_index": 0, "quote": "星河项目的短信服务供应商现正式改为星帆通信", "role": "context"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。", "role": "context"}
+          ]
+        },
+        {
+          "question_id": "D07-same-task",
+          "verdict": "UNKNOWN",
+          "explanation": "A2 和 B2 负责人及接口主题相似，但 B2 没有明确回指 A2，也没有唯一的项目桥；相似描述和相邻来源不足以确认身份。",
+          "reason_codes": ["INSUFFICIENT_IDENTITY", "AMBIGUOUS_PROJECT"],
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。", "role": "context"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。", "role": "context"}
+          ]
+        },
+        {
+          "question_id": "D07-related",
+          "verdict": "UNKNOWN",
+          "explanation": "B2 的‘继续负责’提供调查线索，但未给出对 A2 的明确工作关联或跨文档指代；不能把主题相似当作 RELATED_TO。",
+          "reason_codes": ["INSUFFICIENT_RELATION_BRIDGE"],
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入", "role": "context"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入", "role": "context"}
+          ]
+        },
+        {
+          "question_id": "D07-revises-plan",
+          "verdict": "UNKNOWN",
+          "explanation": "A2 与 B2 的截止日期不同，但没有同一任务证据，也没有修改、替代、纠错或新旧计划顺序说明；修订关系和日期比较均被阻断。",
+          "reason_codes": ["INSUFFICIENT_IDENTITY", "NO_REVISION_EVIDENCE"],
+          "comparison": {"status": "BLOCKED", "reason_code": "NO_SAME_TASK_OR_REVISION_EVIDENCE", "delta_calendar_days": null},
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "计划在2026年10月14日前完成联调", "role": "context"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "计划在2026年10月18日前完成", "role": "context"}
+          ]
+        },
+        {
+          "question_id": "D07-affected-by-source-claim",
+          "verdict": "UNKNOWN",
+          "explanation": "B2 提到按星帆通信接口调整，但没有明确说该任务因 B1 的具体供应商变更而调整，也没有可回读的正式决策；同一供应商和相邻变更不足以成立 AFFECTED_BY。",
+          "reason_codes": ["MISSING_DIRECT_CAUSAL_LINK", "AUTHORITY_NOT_ESTABLISHED"],
+          "authority_expectation": "SOURCE_CLAIM_ONLY",
+          "evidence": [
+            {"source_id": "B.txt", "segment_index": 0, "quote": "星河项目的短信服务供应商现正式改为星帆通信", "role": "context"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "将按新供应商星帆通信的接口调整", "role": "context"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D08",
+      "questions": [
+        {
+          "question_id": "D08-project-alias",
+          "verdict": "SUPPORTED",
+          "explanation": "A.md 明确说明‘银梭’是‘星河项目’的内部代号，并限定在本期短信接入资料作用域内；别名关系成立。",
+          "reason_codes": ["EXPLICIT_PROJECT_ALIAS"],
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。", "role": "supporting"}
+          ]
+        },
+        {
+          "question_id": "D08-b3-in-project",
+          "verdict": "SUPPORTED",
+          "explanation": "B3 位于‘银梭’标题及‘本节短信接入任务仅属于银梭’的有界上下文中，A.md 又提供银梭到星河项目的显式别名桥，因此 B3 可派生归属星河项目；M1 project 仍为空。",
+          "reason_codes": ["EXPLICIT_PROJECT_ALIAS", "PROJECT_CONTEXT_BOUND"],
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "# 银梭", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "本节短信接入任务仅属于银梭。", "role": "supporting"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "我负责签名参数适配，计划在2026年10月18日前完成。", "role": "supporting"}
+          ]
+        },
+        {
+          "question_id": "D08-b6-in-project",
+          "verdict": "REFUTED",
+          "explanation": "B6 位于‘天河项目’标题及其独占上下文中；标题作用域在下一个同级标题处切换，不能把前面的银梭别名泄漏到 B6。",
+          "reason_codes": ["EXCLUSIVE_PROJECT_CONTEXT", "PROJECT_SCOPE_MISMATCH"],
+          "evidence": [
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "# 天河项目", "role": "counter"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "本节任务仅属于天河项目。", "role": "counter"},
+            {"source_id": "B.md", "segment_index": 1, "quote": "我负责重试参数适配，计划在2026年10月19日前完成。", "role": "counter"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V01",
+      "questions": [
+        {
+          "question_id": "V01-a-in-project",
+          "verdict": "SUPPORTED",
+          "explanation": "A 位于星河项目标题及明确的本节独占说明下，项目归属可由同一文档的有界上下文派生。",
+          "reason_codes": ["PROJECT_CONTEXT_BOUND"],
+          "evidence": [
+            {"source_id": "projects.md", "segment_index": 0, "quote": "# 星河项目", "role": "supporting"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "本节短信接入任务仅属于星河项目。", "role": "supporting"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "签名参数适配任务，计划在2026年10月18日前完成。", "role": "supporting"}
+          ]
+        },
+        {
+          "question_id": "V01-b-in-project",
+          "verdict": "REFUTED",
+          "explanation": "B 位于天河项目标题及明确的本节独占说明下，因此不能归入星河项目。",
+          "reason_codes": ["EXCLUSIVE_PROJECT_CONTEXT", "PROJECT_SCOPE_MISMATCH"],
+          "evidence": [
+            {"source_id": "projects.md", "segment_index": 0, "quote": "# 天河项目", "role": "counter"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "本节任务仅属于天河项目。", "role": "counter"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "重试参数适配任务，计划在2026年10月19日前完成。", "role": "counter"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V02",
+      "questions": [
+        {
+          "question_id": "V02-alias-local",
+          "verdict": "SUPPORTED",
+          "explanation": "同一 workspace 的来源明确声明银梭是星河项目的内部代号，别名关系成立且只在该 workspace 内有效。",
+          "reason_codes": ["EXPLICIT_PROJECT_ALIAS"],
+          "evidence": [
+            {"source_id": "alias.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。", "role": "supporting"}
+          ]
+        },
+        {
+          "question_id": "V02-alias-cross-workspace",
+          "verdict": "NOT_ASSESSABLE",
+          "explanation": "别名声明限定为本 workspace；问题端点跨 workspace，来源和项目证据不能跨 workspace 绑定。",
+          "reason_codes": ["CROSS_WORKSPACE_SCOPE"],
+          "evidence": [
+            {"source_id": "alias.md", "segment_index": 0, "quote": "本工作区的“银梭”是“星河项目”的内部代号", "role": "context"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V03",
+      "questions": [
+        {
+          "question_id": "V03-explicit-no-impact",
+          "verdict": "REFUTED",
+          "explanation": "B1 明确说 AUTH-4 无需因本次供应商更换做任何调整，因此不能发布 B1 受该变更影响。",
+          "reason_codes": ["EXPLICIT_NO_IMPACT"],
+          "authority_expectation": "SOURCE_CLAIM_ONLY",
+          "evidence": [
+            {"source_id": "no-impact.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信", "role": "context"},
+            {"source_id": "no-impact.md", "segment_index": 1, "quote": "AUTH-4无需因本次供应商更换做任何调整", "role": "counter"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V04",
+      "questions": [
+        {
+          "question_id": "V04-stale-change-evidence",
+          "verdict": "NOT_ASSESSABLE",
+          "explanation": "候选证据引用了当前来源中不存在的旧版本供应商替换句；即使 B1 提到供应商变化，也不能把失效的旧证据绑定为该具体 ChangeRef。",
+          "reason_codes": ["STALE_EVIDENCE", "SOURCE_PROOF_MISMATCH"],
+          "authority_expectation": "SOURCE_CLAIM_ONLY",
+          "evidence": [
+            {"source_id": "current.md", "segment_index": 0, "quote": "星河项目供应商现为星帆通信，自2026年10月15日起生效。", "role": "current_source"},
+            {"source_id": "current.md", "segment_index": 1, "quote": "因供应商变化需要调整测试", "role": "context"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V05",
+      "questions": [
+        {
+          "question_id": "V05-same-supplier-no-cause",
+          "verdict": "UNKNOWN",
+          "explanation": "B1 只说明当前使用星帆通信，与供应商变更共享供应商名称；没有说明该任务因该变更而调整，不能从同供应商或时间相邻推出 AFFECTED_BY。",
+          "reason_codes": ["MISSING_DIRECT_CAUSAL_LINK"],
+          "authority_expectation": "SOURCE_CLAIM_ONLY",
+          "evidence": [
+            {"source_id": "same-supplier.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信", "role": "context"},
+            {"source_id": "same-supplier.md", "segment_index": 1, "quote": "目前使用星帆通信", "role": "context"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V06",
+      "questions": [
+        {
+          "question_id": "V06-direct-cause-source-claim",
+          "verdict": "SUPPORTED",
+          "explanation": "B1 明确说明该供应商更换使 CLAIM-1 必须调整签名参数，因此来源事实支持 AFFECTED_BY；本案例没有正式审核回执，关系权威只能标为 SOURCE_CLAIM_ONLY。",
+          "reason_codes": ["DIRECT_CHANGE_DEPENDENCY", "AUTHORITY_NOT_ESTABLISHED"],
+          "authority_expectation": "SOURCE_CLAIM_ONLY",
+          "evidence": [
+            {"source_id": "source-claim.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信", "role": "supporting"},
+            {"source_id": "source-claim.md", "segment_index": 1, "quote": "因为该供应商更换，此任务必须调整签名参数", "role": "supporting"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V07",
+      "questions": [
+        {
+          "question_id": "V07-explicit-cross-document-project-bridge",
+          "verdict": "SUPPORTED",
+          "explanation": "task.md 明确指向 project-register.md 登记的星河项目，且登记来源给出该项目归属；这是显式的跨文档项目桥，B1 可派生归属星河项目，M1 project 仍为空。",
+          "reason_codes": ["EXPLICIT_CROSS_DOCUMENT_PROJECT_BRIDGE"],
+          "evidence": [
+            {"source_id": "project-register.md", "segment_index": 0, "quote": "短信适配事项归属星河项目", "role": "supporting"},
+            {"source_id": "task.md", "segment_index": 0, "quote": "本任务所属项目为 project-register.md 登记的星河项目", "role": "supporting"},
+            {"source_id": "task.md", "segment_index": 0, "quote": "签名参数适配任务，计划在2026年10月18日前完成。", "role": "supporting"}
+          ]
+        }
+      ]
+    }
+  ]
+}

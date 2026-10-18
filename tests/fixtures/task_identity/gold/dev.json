@@ -1,0 +1,136 @@
+{
+  "schema_version": "task-identity-gold/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D01",
+      "verdict": "SUPPORTED",
+      "reason": "A 与 B 均指向星河项目的 SMS-17，B 明确回指 A.md 并说明是同一个任务，因此 SAME_TASK 得到支持；B 没有写出新的截止日期。",
+      "required_evidence": [
+        {
+          "source_id": "A.md",
+          "quote": "星河项目任务 SMS-17 的短信接口接入"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "本条对应A.md的SMS-17，是同一个任务"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能因为名称从短信接口接入变为通知网关接入就否定已有的任务身份确认。",
+        "不能把 A 的 2026年10月14日前复制为 B 的计划日期。",
+        "不能把身份确认扩展为计划已修订或实际延期。"
+      ]
+    },
+    {
+      "case_id": "D02",
+      "verdict": "REFUTED",
+      "reason": "A 是 SMS-21 生产联调，B 是 SMS-22 沙箱联调；B 明确说明这是独立任务且不是 A.md 的 SMS-21，因此 B 与 A 不构成 SAME_TASK。",
+      "required_evidence": [
+        {
+          "source_id": "A.md",
+          "quote": "任务 SMS-21 的生产短信接口联调"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "任务 SMS-22 的沙箱短信接口联调"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "这是独立任务，不是A.md的SMS-21"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能仅因负责人相同、项目相同或描述相似就合并两个任务。",
+        "不能把 2026年10月14日前 到 2026年10月18日前 的日期差异输出为 A 任务延期。"
+      ]
+    },
+    {
+      "case_id": "D03",
+      "verdict": "UNKNOWN",
+      "reason": "B2 只确认 B1 的接口调整与 A 的联调工作相关，并明确说是否属于同一业务任务尚待核对；现有资料不足以确认或否定 SAME_TASK。",
+      "required_evidence": [
+        {
+          "source_id": "A.md",
+          "quote": "星河项目的短信接口联调，计划在2026年10月14日前完成"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "星河项目的新接口调整，计划在2026年10月18日前完成"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "与A.md的联调工作相关，是否属于同一业务任务尚待核对"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能把已确认的工作关联升级为 SAME_TASK。",
+        "不能因为负责人、项目和接口主题相同就忽略 B2 的待核对声明。",
+        "不能把 2026年10月14日前 到 2026年10月18日前 的差异当作已有修订或延期证据。"
+      ]
+    },
+    {
+      "case_id": "D04",
+      "verdict": "SUPPORTED",
+      "reason": "A 与 B 都指向星河项目任务 API-4，B 明确称本条是 A.md 的同一任务，因此仅就 B→A 的任务身份判定 SAME_TASK 为支持。",
+      "required_evidence": [
+        {
+          "source_id": "A.md",
+          "quote": "星河项目任务 API-4 的签名接口联调"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "本条就是A.md的同一任务"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能把身份确认直接扩展为实际延期或已生效的计划变更。",
+        "不能因为本例包含计划修订就把 SAME_TASK 判定替换成其他关系。"
+      ]
+    },
+    {
+      "case_id": "D05",
+      "verdict": "SUPPORTED",
+      "reason": "A 与 B 都指向星河项目任务 API-5，任务描述一致，支持 B 与 A 是同一任务；两条日期虽不同，但没有修订、纠错、替代或新旧计划顺序的说明，不足以否定身份。",
+      "required_evidence": [
+        {
+          "source_id": "A.md",
+          "quote": "星河项目任务 API-5 的接口联调"
+        },
+        {
+          "source_id": "B.md",
+          "quote": "星河项目任务 API-5 的接口联调"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能把两条截止日期的不同自动解释为计划修订或延期。",
+        "不能因为缺少修订依据就否定由同一项目、同一编号和一致任务描述支持的身份。"
+      ]
+    },
+    {
+      "case_id": "D07",
+      "verdict": "UNKNOWN",
+      "reason": "A2 明确属于星河项目，B2 明确继续短信接口接入并改用星帆通信，但 B2 没有明确项目归属或回指 A2；B 文档中的相邻供应商变更也不能唯一建立 B2 与 A2 的任务身份，因此 SAME_TASK 只能判为未知。",
+      "required_evidence": [
+        {
+          "source_id": "A.txt",
+          "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调"
+        },
+        {
+          "source_id": "B.txt",
+          "quote": "星河项目的短信服务供应商现正式改为星帆通信"
+        },
+        {
+          "source_id": "B.txt",
+          "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成"
+        }
+      ],
+      "forbidden_inferences": [
+        "不能仅因 A/B 来源相邻、负责人相同或任务措辞相似，就为 B2 补齐星河项目归属。",
+        "不能把 B1 的供应商变更自动绑定为 B2 对 A2 的同一任务证明。",
+        "不能把 2026年10月14日前 到 2026年10月18日前 的差异直接判为修订或延期。",
+        "不能把 B3 的未批准建议当作已批准的任务或计划证据。"
+      ]
+    }
+  ]
+}

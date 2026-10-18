@@ -1,0 +1,695 @@
+{
+  "case_id": "D03",
+  "predictions": [
+    {
+      "question_id": "D03-same-task",
+      "assessment": {
+        "assessment_id": "task_assessment_v1_ae259bb6dca04925081084f09614ea465eeef849e45cb56d6488749a6791b367",
+        "schema_version": "task-relation-assessment/v1",
+        "rule_version": "same-task-rules/v1",
+        "predicate": "SAME_TASK",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-relations-p2-dev-d03",
+          "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+          "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+          "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+        },
+        "object": {
+          "workspace_id": "m2-task-relations-p2-dev-d03",
+          "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+          "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+          "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+        },
+        "verdict": "UNKNOWN",
+        "reason_codes": [
+          "INSUFFICIENT_IDENTITY"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "raw_text": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+            "description": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-14",
+            "deadline_text": "2026年10月14日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 65,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 65,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月14日前完成",
+                "char_start": 50,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-10T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "raw_text": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 49,
+                "char_end": 63,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-15T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [],
+        "counter_evidence": [],
+        "context_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "char_start": 35,
+            "char_end": 39,
+            "quote": "星河项目",
+            "role": "PROJECT_SCOPE"
+          },
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "char_start": 35,
+            "char_end": 39,
+            "quote": "星河项目",
+            "role": "PROJECT_SCOPE"
+          }
+        ],
+        "evidence_validity": true,
+        "missing_evidence": [
+          "需要作用域明确且无冲突的任务编号，或唯一指向另一观察的明确同一任务声明；不会补写项目、负责人或日期。"
+        ],
+        "assessed_at": "2026-10-18T08:47:20.030257+00:00"
+      }
+    },
+    {
+      "question_id": "D03-related-work-link",
+      "assessment": {
+        "assessment_id": "task_assessment_v2_85dafd8c0d340128ca87b9ee1a2bbdb7498c2c2d07df9eb1a4c298766e2fc5c6",
+        "schema_version": "task-relation-assessment/v2",
+        "rule_version": "direct-relations-rules/v1",
+        "predicate": "RELATED_TO",
+        "phase": "ASSESSED",
+        "authority": "SUPPORTING_ONLY",
+        "subject": {
+          "workspace_id": "m2-task-relations-p2-dev-d03",
+          "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+          "artifact_id": "B.md",
+          "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+          "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+          "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+        },
+        "object": {
+          "workspace_id": "m2-task-relations-p2-dev-d03",
+          "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+          "artifact_id": "A.md",
+          "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+          "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+          "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+        },
+        "verdict": "SUPPORTED",
+        "reason_codes": [
+          "EXPLICIT_WORK_LINK"
+        ],
+        "lifecycle": "ACTIVE",
+        "observations": [
+          {
+            "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "raw_text": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+            "description": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-18",
+            "deadline_text": "2026年10月18日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+                "char_start": 32,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月18日前完成",
+                "char_start": 49,
+                "char_end": 63,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-15T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+            "provenance": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "raw_text": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+            "description": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+            "owner": "陈晨",
+            "deadline": "2026-10-14",
+            "deadline_text": "2026年10月14日",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "星河项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 65,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+                "char_start": 32,
+                "char_end": 65,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 32,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "陈晨",
+                "char_start": 28,
+                "char_end": 30,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "星河项目",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "2026年10月14日前完成",
+                "char_start": 50,
+                "char_end": 64,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-18T00:00:00+00:00",
+            "event_time": "2026-10-10T01:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "dependencies": [
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "observation_id": "task_observation_v1_2cd16b5c160519861bab896b1e8558ca549e215ff96a52db46a4e79b2928d8c0",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "payload_hash": "453e95ec600dde9112577d4f67d1d07add0caaa0e98d6f56237f06647fb745e3"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "observation_id": "task_observation_v1_f58e857b6ff3474e592fc2ad6b017ded488cbdfb37f12e5abb284915f7091c90",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "payload_hash": "17794887af0608bc2cc12eebd7842f2a7a2160e4ce7f44050fd40d3c0a5a54e5"
+            },
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          },
+          {
+            "observation": null,
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "A.md",
+              "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/A.md",
+              "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+              "ordinal": 0,
+              "message_id": "message_v1_f294243d46fb6546c3d5f4cba2c1a0ddde6c945408aba5bb6b1c08bfbad3bba1",
+              "segment_id": "segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_990d0443b62c5f81ee238e7864ce1f9220cc07e8d2040489f2470cda0f6c5f15",
+              "char_start": 32,
+              "char_end": 65,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+              "quote_sha256": "d2d6003c231c507fa6ee2195e32a68e594f2ef610b8244f9f0ee970c6ea84c74"
+            },
+            "source_status": "CURRENT",
+            "readback_ok": true,
+            "observation_valid": true
+          }
+        ],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m2-task-relations-p2-dev-d03",
+              "artifact_id": "B.md",
+              "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+              "source_ref": "artifact://m2-task-relations-p2-dev-d03/B.md",
+              "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+              "ordinal": 0,
+              "message_id": "message_v1_216e0605f3b6494eb37bf769b8254730f2df26c794c8a13c1f374b45f16f944d",
+              "segment_id": "segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f5fbd959151f9b6d03a5a0962f49cdd4d3249589e7346f560d8a0aea133491e2",
+              "char_start": 32,
+              "char_end": 103,
+              "line_start": 1,
+              "line_end": 2,
+              "quote": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。",
+              "quote_sha256": "1daff36fcc79fecaafe13008922c9a9d8e47d2423c28c956a76a1f1fe9658830"
+            },
+            "char_start": 65,
+            "char_end": 87,
+            "quote": "说明：B1的接口调整与A.md的联调工作相关",
+            "role": "WORK_LINK"
+          }
+        ],
+        "counter_evidence": [],
+        "context_evidence": [],
+        "evidence_validity": true,
+        "missing_evidence": [],
+        "assessed_at": "2026-10-18T08:47:20.036492+00:00",
+        "relation_detail": "WORK_LINK",
+        "premise_ids": [],
+        "authority_checks": []
+      }
+    }
+  ],
+  "excluded": [],
+  "observations_unchanged": true,
+  "source_parse_status": {
+    "A.md": "COMPLETE",
+    "B.md": "COMPLETE"
+  },
+  "evidence_input_failures": [],
+  "authority_audit": {},
+  "sources": [
+    {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "artifact_id": "A.md",
+      "artifact_version_id": "artifact_v1_e4d07ff6549c89e355f81fcb3ad52dc3f32b2d03e06e0b8319df668d5b97c929",
+      "content_hash": "ec28a40585b6391f319ff165548f19e1dc2693b8671403884be878431dccb74e",
+      "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目的短信接口联调，计划在2026年10月14日前完成。\n"
+    },
+    {
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "artifact_id": "B.md",
+      "artifact_version_id": "artifact_v1_8d6816c2d5067010cdd77464c45eb738a315382d71d269fea113087ca8b455b3",
+      "content_hash": "bb1d725124b781a4edde7f38a292b95f32a157b4b8d10776327480ca0c40937a",
+      "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。\n"
+    }
+  ]
+}

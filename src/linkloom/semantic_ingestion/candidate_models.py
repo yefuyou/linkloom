@@ -14,6 +14,7 @@ from typing import Literal
 from linkloom.agents.model_adapter import ModelUsage
 from linkloom.decision_memory.models import decision_slot_key_for
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan
+from linkloom.semantic_ingestion.task_observation import TaskObservation, TaskProposal
 
 
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -150,6 +151,7 @@ class ExtractedClaim:
     valid_from_raw: str | None
     valid_to_raw: str | None
     confidence: CandidateConfidence
+    task: TaskProposal | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.claim_type, ClaimType):
@@ -176,6 +178,10 @@ class ExtractedClaim:
                 raise ValueError(f"{name} must be a bounded date/time string or null")
         if not isinstance(self.confidence, CandidateConfidence):
             raise ValueError("confidence must be CandidateConfidence")
+        if self.task is not None and (
+            not isinstance(self.task, TaskProposal) or self.claim_type not in {ClaimType.PLAN, ClaimType.ACTION}
+        ):
+            raise ValueError("task proposals are only valid for PLAN/ACTION")
         if self.temporal_status in {TemporalResolution.UNRESOLVED, TemporalResolution.NOT_STATED} and (
             self.valid_from_raw is not None or self.valid_to_raw is not None
         ):
@@ -184,11 +190,12 @@ class ExtractedClaim:
             self.valid_from_raw is not None or self.valid_to_raw is not None
         ):
             raise ValueError("source-event time must not carry model-provided valid dates")
-        if self.temporal_status is TemporalResolution.EXPLICIT and self.valid_from_raw is None:
+        if (self.temporal_status is TemporalResolution.EXPLICIT and self.valid_from_raw is None
+            and not (self.claim_type in {ClaimType.PLAN, ClaimType.ACTION} and self.valid_to_raw is not None)):
             raise ValueError("explicit temporal status requires valid_from")
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        payload = {
             "claim_type": self.claim_type.value,
             "subject": self.subject,
             "relation_phrase": self.relation_phrase,
@@ -198,6 +205,10 @@ class ExtractedClaim:
             "valid_to_raw": self.valid_to_raw,
             "confidence": self.confidence.to_dict(),
         }
+        # Preserve the canonical hash of historical extraction receipts.
+        if self.task is not None:
+            payload["task"] = self.task.to_dict()
+        return payload
 
 
 def claims_sha256_for(claims: tuple[ExtractedClaim, ...]) -> str:
@@ -566,7 +577,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
         "valid_to_raw",
         "confidence",
     }
-    if not isinstance(data, dict) or set(data) != expected:
+    if not isinstance(data, dict) or set(data) not in (expected, expected | {"task"}):
         raise ValueError("ExtractedClaim has missing or unsupported fields")
     raw_confidence = data["confidence"]
     if not isinstance(raw_confidence, dict) or set(raw_confidence) != {
@@ -601,6 +612,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
             temporal=raw_confidence["temporal"],
             overall=raw_confidence["overall"],
         ),
+        task=TaskProposal.from_dict(data["task"]) if data.get("task") is not None else None,
     )
 
 
@@ -627,7 +639,7 @@ class CandidateDecisionFact:
     value: str | None
     relation_resolution: RelationResolution
     entity_resolution: EntityResolution
-    event_time: datetime
+    event_time: datetime | None
     ingestion_time: datetime
     valid_from: date | datetime | None
     valid_to: date | datetime | None
@@ -639,6 +651,10 @@ class CandidateDecisionFact:
     review_reasons: tuple[CandidateReasonCode, ...] = ()
     candidate_status: Literal["CANDIDATE"] = "CANDIDATE"
     authority: Literal["NON_AUTHORITATIVE"] = "NON_AUTHORITATIVE"
+    source_format: Literal["timestamped_text", "document_text"] = "timestamped_text"
+    document_date: date | None = None
+    event_date: date | None = None
+    task_observation: TaskObservation | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -704,6 +720,14 @@ class CandidateDecisionFact:
             raise ValueError("Semantic Ingestion candidates must remain non-authoritative")
         if self.candidate_status != "CANDIDATE":
             raise ValueError("Semantic Ingestion candidates must remain CANDIDATE")
+        if self.task_observation is not None and (
+            not isinstance(self.task_observation, TaskObservation)
+            or self.claim_type not in {ClaimType.PLAN, ClaimType.ACTION}
+            or self.task_observation.provenance != self.provenance
+            or self.task_observation.recorded_at != self.ingestion_time
+            or self.task_observation.event_time != self.event_time
+        ):
+            raise ValueError("task observation must match its supporting source candidate")
         if self.temporal_basis is TemporalBasis.EXPLICIT and (
             self.temporal_resolution is not TemporalResolution.EXPLICIT
             or self.valid_from is None
@@ -740,7 +764,24 @@ class CandidateDecisionFact:
             raise ValueError("candidate identity does not match its provenance")
         if self.extraction_fingerprint != self.extraction_receipt.extraction_fingerprint:
             raise ValueError("candidate extraction fingerprint does not match its receipt")
+        if self.source_format not in {"timestamped_text", "document_text"}:
+            raise ValueError("unsupported source format")
+        if self.source_format == "timestamped_text" and (self.document_date is not None or self.event_date is not None):
+            raise ValueError("transcript metadata must retain its original timestamp contract")
+        if self.source_format == "document_text":
+            from linkloom.semantic_ingestion.document_text import _labelled_date, document_valid_time_is_grounded
+            if (self.event_time is not None
+                or self.document_date != _labelled_date(self.provenance.quote, "文档日期|Document date")
+                or self.event_date != _labelled_date(self.provenance.quote, "会议日期|事件日期|Meeting date|Event date")):
+                raise ValueError("document dates must match exact source metadata; speech time is unknown")
+            if self.temporal_basis is TemporalBasis.EXPLICIT and (
+                not document_valid_time_is_grounded(self.provenance.quote, self.valid_from)
+                or (self.valid_to is not None and not document_valid_time_is_grounded(self.provenance.quote, self.valid_to, end=True))
+            ):
+                raise ValueError("document valid time lacks an explicit effective-time role")
         for name in ("event_time", "ingestion_time"):
+            if name == "event_time" and self.source_format == "document_text" and self.event_time is None:
+                continue
             value = getattr(self, name)
             if not isinstance(value, datetime) or value.tzinfo is None or value.utcoffset() is None:
                 raise ValueError(f"{name} must be timezone-aware")
