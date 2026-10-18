@@ -20,7 +20,7 @@ tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m2-integration-acce
         directions = [assess_relation('RELATED_TO', a, b, **args) for a, b in ((left, right), (right, left))]
 >       assert sorted(r.verdict for r in directions) == ['SUPPORTED', 'UNKNOWN']
 E       AssertionError: assert ['UNKNOWN', 'UNKNOWN'] == ['SUPPORTED', 'UNKNOWN']
-E         
+E
 E         At index 0 diff: 'UNKNOWN' != 'SUPPORTED'
 E         Use -v to get more diff
 
