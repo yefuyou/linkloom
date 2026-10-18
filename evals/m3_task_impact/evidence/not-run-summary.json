@@ -1,0 +1,17 @@
+{
+  "schema": "m3-score/v1",
+  "split": "dev",
+  "summary": {
+    "cases": 12,
+    "evaluated_cases": 0,
+    "statuses": {
+      "NOT_EVALUATED": 12
+    },
+    "failure_stages": {
+      "capability_gap": 12
+    },
+    "by_scope": {}
+  },
+  "model_evaluation": "NOT_RUN",
+  "holdout_evaluation": "NOT_RUN"
+}

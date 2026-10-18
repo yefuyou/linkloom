@@ -1,0 +1,1685 @@
+{
+  "schema": "m3-gold/v1",
+  "split": "dev",
+  "provenance": "synthetic; author-visible; not external blind test",
+  "cases": [
+    {
+      "case_id": "D01",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "回调接入",
+          "owner": "许澄",
+          "project": "青岚项目",
+          "deadline": {
+            "value": "2026-11-12",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        }
+      ],
+      "relations": [],
+      "revisions": [],
+      "answer_status": "COMPLETE",
+      "abstentions": [],
+      "rationale": "直接恢复唯一承诺；负责人来自可信发言头。我负责绑定说话人，不推导任何影响或修订。",
+      "tags": [
+        "direct_fact"
+      ],
+      "project_names": [
+        "青岚项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d01",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2",
+            "source_ref": "artifact://m3-d01/a",
+            "content_hash": "1249544efad7e17992f1763e373028a10804425e6fd607583fc171fadaa389b2",
+            "ordinal": 0,
+            "message_id": "message_v1_005bbaab12d5c109bc1e07d37391c48706bfa6390d37449092b88095566f2445",
+            "segment_id": "segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a68db2a87dd8267b2c6414685d028b212c207c6fe6f64912460c885bdebb5b19",
+            "char_start": 32,
+            "char_end": 72,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责青岚项目任务 QL-11 的回调接入，计划在2026年11月12日前完成。",
+            "quote_sha256": "0870b5f75764cb55e44cb8684de2438b4fac29454d3fc03fe7d240e1867dbc50"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D02",
+      "tasks": [
+        {
+          "ref": "b:1",
+          "task": "签名迁移",
+          "owner": "唐禾",
+          "project": "远帆项目",
+          "deadline": {
+            "value": "2026-11-14",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        },
+        {
+          "ref": "c:1",
+          "task": "回执补测",
+          "owner": "沈舟",
+          "project": "远帆项目",
+          "deadline": {
+            "value": "2026-11-15",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "c:1"
+          ]
+        },
+        {
+          "ref": "c:2",
+          "task": "日志归档",
+          "owner": "沈舟",
+          "project": "远帆项目",
+          "deadline": {
+            "value": "2026-11-16",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "c:2"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:1",
+          "object": "change:a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "c:1",
+          "object": "change:a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "c:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "c:2",
+          "object": "change:a:1",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "c:2"
+          ],
+          "reason": "NO_DIRECT_IMPACT_EVIDENCE"
+        }
+      ],
+      "revisions": [],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "NO_DIRECT_IMPACT_EVIDENCE"
+      ],
+      "rationale": "两个不同文件各有明确因果，第三个任务仅同项目；需发现全部三条观察并区分支持与未知。无旧计划，不计算修订。",
+      "tags": [
+        "cross_document",
+        "discovery",
+        "direct_impact"
+      ],
+      "project_names": [
+        "远帆项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d02",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_ff1b43be967c7521e1b38591e2521d769c13fd0cdd664abc82ddece706c958f4",
+            "source_ref": "artifact://m3-d02/a",
+            "content_hash": "63f160e9a1e95ef6c20daad7729af70bdcfe36db741791b06f8f5b6c04d9e503",
+            "ordinal": 0,
+            "message_id": "message_v1_c0afcb5d76f30fe33a793f4d9d176d233af157c7f1e04119e7a764869f6d07ac",
+            "segment_id": "segment_v1_f33c28a03a6173d9eaae11266a4bebcbec5ac3a2beb3904f06437dccbd08048f",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f33c28a03a6173d9eaae11266a4bebcbec5ac3a2beb3904f06437dccbd08048f",
+            "char_start": 32,
+            "char_end": 65,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "远帆项目短信供应商从岚讯改为海声。此处仅记录来源声明，未提交审批。",
+            "quote_sha256": "45fe331c5e3a17a6535b5b25b41a286bdb9ba68286e036b9538e47aaa08b3bd3"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d02",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_aed429f9ce52d649fdda49922d76bd1cee39af9116a234543ea1ba5928423c73",
+            "source_ref": "artifact://m3-d02/b",
+            "content_hash": "107e019dfa1f5645eea496ee563f90b7f7c083eff8a26969bcb03eccfb70c9d5",
+            "ordinal": 0,
+            "message_id": "message_v1_8ab36711298172b1ae6279eb41be5466925daa0a5a0d238606ac9141a6cd1c20",
+            "segment_id": "segment_v1_82e08a9c9fe3ee0fa19a7740f37b8d499bda3ea355172694a5a42467f174ca56",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_82e08a9c9fe3ee0fa19a7740f37b8d499bda3ea355172694a5a42467f174ca56",
+            "char_start": 32,
+            "char_end": 96,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责远帆项目任务 YF-21 的签名迁移；因为a记载的岚讯改为海声，本任务必须改签名参数，计划在2026年11月14日前完成。",
+            "quote_sha256": "84d44970fcfecf93cc9b45a9152639b520fbb55f660ecee5a1e9ba8ef6f67aeb"
+          }
+        },
+        "c:1": {
+          "ref": "c:1",
+          "span": {
+            "workspace_id": "m3-d02",
+            "artifact_id": "c",
+            "artifact_version_id": "artifact_v1_16db849ff22d295ae3e70ffe81395b038a2b507e9877da4db5494bae005dfdb2",
+            "source_ref": "artifact://m3-d02/c",
+            "content_hash": "7cc7c72955d91faa62ec55d80ae0654cc137862e5c58b6076c2804c6815ddcd3",
+            "ordinal": 0,
+            "message_id": "message_v1_d0c3b2526b2ae730b7f35fce88deb1b38acc6c8cf6bd139e80141093d52bce3a",
+            "segment_id": "segment_v1_1162bcd7bbca5f311245364d7e330ed0e8ab1012c1c13f6b000f5988789ef1b6",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1162bcd7bbca5f311245364d7e330ed0e8ab1012c1c13f6b000f5988789ef1b6",
+            "char_start": 32,
+            "char_end": 93,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责远帆项目任务 YF-22 的回执补测；由于a的岚讯改为海声，本任务必须补测回执，计划在2026年11月15日前完成。",
+            "quote_sha256": "ea8858a6ae9e0d3d7b4d79b040430532264c88c769be456917024622a162b3f9"
+          }
+        },
+        "c:2": {
+          "ref": "c:2",
+          "span": {
+            "workspace_id": "m3-d02",
+            "artifact_id": "c",
+            "artifact_version_id": "artifact_v1_16db849ff22d295ae3e70ffe81395b038a2b507e9877da4db5494bae005dfdb2",
+            "source_ref": "artifact://m3-d02/c",
+            "content_hash": "7cc7c72955d91faa62ec55d80ae0654cc137862e5c58b6076c2804c6815ddcd3",
+            "ordinal": 1,
+            "message_id": "message_v1_3e63fade9d5646aabbf7496e73f678a9a35061cf2c2927f133564d39cb3588e3",
+            "segment_id": "segment_v1_4bb44cc2ac919e4e5d4e891b8df27c427caf7c6b9ad8ff207b6a8c20f79d5a2e",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4bb44cc2ac919e4e5d4e891b8df27c427caf7c6b9ad8ff207b6a8c20f79d5a2e",
+            "char_start": 126,
+            "char_end": 166,
+            "line_start": 2,
+            "line_end": 2,
+            "quote": "我负责远帆项目任务 YF-23 的日志归档，计划在2026年11月16日前完成。",
+            "quote_sha256": "9d53e5649b877d01593ec20b32ac405fe59d443c294fab26d80acf4d0e09d717"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D03",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "证书接入",
+          "owner": "温珂",
+          "project": "松露项目",
+          "deadline": {
+            "value": "2026-11-10",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "证书接入",
+          "owner": "温珂",
+          "project": "松露项目",
+          "deadline": {
+            "value": "2026-11-10",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": "NO_REVISION_EVIDENCE"
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:1",
+          "status": "BLOCKED",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "NO_REVISION_EVIDENCE",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "changed_fields": []
+        }
+      ],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "rationale": "明确同一身份；复述相同日期不等于修订，不能拿 delta=0 代替未知。",
+      "tags": [
+        "same_task",
+        "no_revision"
+      ],
+      "project_names": [
+        "松露项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d03",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_c099b45d2ccccf27c267ba039c12ae2ad7fa4e877f4c7f8e7320fd5e7460f1ca",
+            "source_ref": "artifact://m3-d03/a",
+            "content_hash": "bc525c987c27433f68d9a99afd7d5fd0674316a84032fd047a24435d568042f7",
+            "ordinal": 0,
+            "message_id": "message_v1_f563496b079a3206c75d6b5d338ee9d321290dbef08e9639295a43ed9633a015",
+            "segment_id": "segment_v1_c9e1468440bb92f922954ed66a9979385578cc62d3c001ba88f3fab06bd45210",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c9e1468440bb92f922954ed66a9979385578cc62d3c001ba88f3fab06bd45210",
+            "char_start": 32,
+            "char_end": 72,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责松露项目任务 SL-31 的证书接入，计划在2026年11月10日前完成。",
+            "quote_sha256": "da07c9e257e72f64353b2bd2e2fd964bcd065dbeb63264ef935da453f76a3710"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d03",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_25f39b27b71c8d9d5db06244eadb7bfe83175f8d6ffb4703df64606b3c1916cb",
+            "source_ref": "artifact://m3-d03/b",
+            "content_hash": "c77be5bd33e8cff1e90dfc55d73e40e0c7b89d9b72f3c3e6284f17368acc5eab",
+            "ordinal": 0,
+            "message_id": "message_v1_b5701234c69721aea945c2270930d872c634d3132d6487cab5ea95fc473f0492",
+            "segment_id": "segment_v1_c897dbb28c6e591a1541f8a72608aad6172820ce9304e7df43d178a2375171d3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c897dbb28c6e591a1541f8a72608aad6172820ce9304e7df43d178a2375171d3",
+            "char_start": 32,
+            "char_end": 84,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我负责松露项目任务 SL-31 的证书接入，与a记载的是同一个任务，计划在2026年11月10日前完成。",
+            "quote_sha256": "7a43ff8f7e7a7d640fbae81a2e74118f43f8ce181cd8ce9ad767da815d584721"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D04",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "接口适配",
+          "owner": "林砚",
+          "project": "白榆项目",
+          "deadline": {
+            "value": "2026-11-11",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "接口验收",
+          "owner": "林砚",
+          "project": "白榆项目",
+          "deadline": {
+            "value": "2026-11-13",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "REFUTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": "EXPLICIT_DIFFERENT_TASK"
+        }
+      ],
+      "revisions": [],
+      "answer_status": "COMPLETE",
+      "abstentions": [],
+      "rationale": "同负责人同项目不等于同任务；来源明确否认身份合并。",
+      "tags": [
+        "different_task",
+        "false_merge"
+      ],
+      "project_names": [
+        "白榆项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d04",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_4d4310e46f8594971e87e2e53fb343004541dd68cddff93c513ff6da5d304cea",
+            "source_ref": "artifact://m3-d04/a",
+            "content_hash": "6a193893eb306884671c3b2141f6de7dc6f4cb1aeb9b03f2f995fed3e4d15109",
+            "ordinal": 0,
+            "message_id": "message_v1_ab5334037ef19b7d5ba6bec7928bf6fc509eb9ad186a7448fa7c8d32bde71999",
+            "segment_id": "segment_v1_b88dc068afe0785a7a2cd469083893ea8934415a9e52a6979554787117e650f4",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b88dc068afe0785a7a2cd469083893ea8934415a9e52a6979554787117e650f4",
+            "char_start": 33,
+            "char_end": 75,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "白榆项目任务 BY-41 的接口适配由林砚负责，计划在2026年11月11日前完成。",
+            "quote_sha256": "33166856133c6abf2064ea210b35d0e275374537b35a67faa345ad9e83f5624d"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d04",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_a37d157eda97c3f0e94ef70869547f0824d6a9e6a71d7ecdc4a8958221fa4bef",
+            "source_ref": "artifact://m3-d04/b",
+            "content_hash": "1279d41a298708b318cc52e7123a62e4213146560021a137bc1b248022f1fddd",
+            "ordinal": 0,
+            "message_id": "message_v1_c1a72cb68cb95dc7ca2f89d5899fd08be2fa5bacc46ad76725d79bb18baadab7",
+            "segment_id": "segment_v1_4dfa8edebc5b54dedced0d1d45ae67ed1eca57f59d780b9b841e82847b6ad3f3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4dfa8edebc5b54dedced0d1d45ae67ed1eca57f59d780b9b841e82847b6ad3f3",
+            "char_start": 33,
+            "char_end": 99,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "白榆项目任务 BY-42 的接口验收由林砚负责，计划在2026年11月13日前完成；BY-42与a的BY-41是不同任务，不能合并。",
+            "quote_sha256": "a7b2764ba8cdd3b0964816b959f543c359d44a213f1ec17104c79ae4aa86bae6"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D05",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "回执校验",
+          "owner": "夏宁",
+          "project": "照川项目",
+          "deadline": {
+            "value": "2026-11-12",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "回执校验",
+          "owner": "夏宁",
+          "project": "照川项目",
+          "deadline": {
+            "value": "2026-11-17",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:1",
+          "object": "change:b:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:1",
+          "status": "COMPUTABLE",
+          "old": {
+            "date": "2026-11-12",
+            "bound": "BEFORE"
+          },
+          "new": {
+            "date": "2026-11-17",
+            "bound": "BEFORE"
+          },
+          "delta": 5,
+          "reason": null,
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "changed_fields": [
+            "deadline"
+          ]
+        }
+      ],
+      "answer_status": "COMPLETE",
+      "abstentions": [],
+      "rationale": "身份、直接影响和计划替代各有明文；边界均为日前，后移5个日历日，不推断实际延期。b:1同时包含任务观察与来源变更声明，角色由predicate区分。",
+      "tags": [
+        "revision",
+        "direct_impact"
+      ],
+      "project_names": [
+        "照川项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d05",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_81288d6ec19ee763c1dcf929af0b7a9801fa5120dc02b30678459e6f4c90b2c1",
+            "source_ref": "artifact://m3-d05/a",
+            "content_hash": "41ecb3020380b4ade09e5345438e97a686a421f4051e8c7e42998d55eda6abaf",
+            "ordinal": 0,
+            "message_id": "message_v1_0d8480f7a8989b4b5e098908fa400194b8f8ca092d404cc7b55e6aade6c16820",
+            "segment_id": "segment_v1_c07d8059432176882c281a87695f268c4be2a06cc6b0f749cf8b79f47694ca63",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c07d8059432176882c281a87695f268c4be2a06cc6b0f749cf8b79f47694ca63",
+            "char_start": 33,
+            "char_end": 76,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "照川项目任务 ZC-51 的回执校验由夏宁负责，原计划在2026年11月12日前完成。",
+            "quote_sha256": "415312de5dca4d011a941f915224f57f206e0f2eb7f8a07d34a08b84d2a60f64"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d05",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_dbee0598342b0c95dc4d675cf4b2cf719fa6684c71ff464fc26557e8b1d041a4",
+            "source_ref": "artifact://m3-d05/b",
+            "content_hash": "4220f43229ce838a89c10fe26853524e492bb9cd670a9665c9acf5187e50adfb",
+            "ordinal": 0,
+            "message_id": "message_v1_ce82e2d5e03cb6d1004672cc3b06383eba4368699ece68518a7652e46452b65a",
+            "segment_id": "segment_v1_a6ebddd4acb4fe0e2e462d2ff440c15d3bf44667795ffc697fa8f5ddf0b10b75",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a6ebddd4acb4fe0e2e462d2ff440c15d3bf44667795ffc697fa8f5ddf0b10b75",
+            "char_start": 33,
+            "char_end": 116,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "照川项目供应商从森语改为鲸信；因这次变更，任务 ZC-51 的回执校验必须重做适配，由夏宁负责，与a为同一任务；本条替代a的原计划，改为2026年11月17日前完成。",
+            "quote_sha256": "719f2f2bb198ea26482718ae49348266fb64da82a2f5e8f6a4b38004ac11e8e5"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D06",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "重试验证",
+          "owner": "穆青",
+          "project": "清岳项目",
+          "deadline": {
+            "value": "2026-11-10",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "重试验证",
+          "owner": "穆青",
+          "project": "清岳项目",
+          "deadline": {
+            "value": "2026-11-16",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": "NO_REVISION_EVIDENCE"
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:1",
+          "status": "BLOCKED",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "NO_REVISION_EVIDENCE",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "changed_fields": []
+        }
+      ],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "NO_REVISION_EVIDENCE"
+      ],
+      "rationale": "限定项目内同一唯一编号支持身份；两个日期本身不能判断计划替代、纠错还是并行记载。",
+      "tags": [
+        "different_dates",
+        "false_revision"
+      ],
+      "project_names": [
+        "清岳项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d06",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_e08f4ea7c9c3aa827301dfb62476232ccd531e63554d70803f668ae1a8145a54",
+            "source_ref": "artifact://m3-d06/a",
+            "content_hash": "a4dff009db212f54a2da9f8d0ea2c02921186653283ffbf32e66edc01579cfcc",
+            "ordinal": 0,
+            "message_id": "message_v1_8d5ec6b92998353d675e9d9cf2895735c87104da8f6b8537cfa9e29bba4f0c68",
+            "segment_id": "segment_v1_0558fff8d52242929fa62abfdaa0ab09d71ec0a802e43af2fdd037cfd944085e",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0558fff8d52242929fa62abfdaa0ab09d71ec0a802e43af2fdd037cfd944085e",
+            "char_start": 33,
+            "char_end": 75,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "清岳项目任务 QY-61 的重试验证由穆青负责，计划在2026年11月10日前完成。",
+            "quote_sha256": "6eeffee37adabc6d70b0082df87a9b9b923e70f556cbee0909e2fbe16ed12062"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d06",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_a9d2ce7aeddb78607fa69ae251414d21fd5fe8493451dde7ea347cc2e4c9adbe",
+            "source_ref": "artifact://m3-d06/b",
+            "content_hash": "fb7d666907f893f79faffd585a517c0d7e23c7d069521cd771b21988b4d86f44",
+            "ordinal": 0,
+            "message_id": "message_v1_ca4e451228fcf230684499c37705fe15b3062cc7a57b6b133a79af1a4a6fbc01",
+            "segment_id": "segment_v1_05518d0274073d5c06fb130425005554e8b513aaa18b6c877229f585406322e1",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_05518d0274073d5c06fb130425005554e8b513aaa18b6c877229f585406322e1",
+            "char_start": 33,
+            "char_end": 75,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "清岳项目任务 QY-61 的重试验证由穆青负责，计划在2026年11月16日前完成。",
+            "quote_sha256": "e4dacb5c3bcb69326e1a6b5e0eaee379bd0424d7cef23dc05ca47459fc18d52e"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D07",
+      "tasks": [
+        {
+          "ref": "a:2",
+          "task": "短信接入",
+          "owner": "方知",
+          "project": "墨港项目",
+          "deadline": {
+            "value": "2026-11-13",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:2"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "短信接入",
+          "owner": "方知",
+          "project": null,
+          "deadline": {
+            "value": "2026-11-19",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "IN_PROJECT",
+          "subject": "b:1",
+          "object": "墨港项目",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "a:2",
+            "b:1"
+          ],
+          "reason": "AMBIGUOUS_PROJECT"
+        },
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:2",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:2",
+            "b:1"
+          ],
+          "reason": "INSUFFICIENT_IDENTITY"
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:1",
+          "object": "change:a:1",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": "AMBIGUOUS_PROJECT"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:2",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:2",
+            "b:1"
+          ],
+          "reason": "INSUFFICIENT_IDENTITY"
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:2",
+          "status": "BLOCKED",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "INSUFFICIENT_IDENTITY",
+          "evidence": [
+            "a:2",
+            "b:1"
+          ],
+          "changed_fields": []
+        }
+      ],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "AMBIGUOUS_PROJECT",
+        "INSUFFICIENT_IDENTITY"
+      ],
+      "rationale": "同人、同供应商和泛称继续负责不构成唯一跨文档桥接；b的project保持null，不制造+6。",
+      "tags": [
+        "ambiguous_project",
+        "ambiguous_identity"
+      ],
+      "project_names": [
+        "墨港项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d07",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_ecb3d66778a230704ce8a36d502712c1355ff60bfaed24fbfae0bf82da456963",
+            "source_ref": "artifact://m3-d07/a",
+            "content_hash": "9d98ff1c2acb16023a30aa620675a81152d27b278b31836ace08abf6bde8c233",
+            "ordinal": 0,
+            "message_id": "message_v1_2a2217077e73c0be2af05c054bd8f406d9eaa7840dd953f94289f300240b601f",
+            "segment_id": "segment_v1_56ab72ed18f6c48597101b7286879cdc2e9f16ca7c7d7a40e74ccbf414787bfc",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_56ab72ed18f6c48597101b7286879cdc2e9f16ca7c7d7a40e74ccbf414787bfc",
+            "char_start": 33,
+            "char_end": 50,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "墨港项目短信供应商从云浦改为晴声。",
+            "quote_sha256": "855a03fb761e6eb8ab619f0e8891d4363ebc5de93df28a5a82df4379d8233e98"
+          }
+        },
+        "a:2": {
+          "ref": "a:2",
+          "span": {
+            "workspace_id": "m3-d07",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_ecb3d66778a230704ce8a36d502712c1355ff60bfaed24fbfae0bf82da456963",
+            "source_ref": "artifact://m3-d07/a",
+            "content_hash": "9d98ff1c2acb16023a30aa620675a81152d27b278b31836ace08abf6bde8c233",
+            "ordinal": 1,
+            "message_id": "message_v1_01205159d1ba2997b899621aa91683283e80388e9a9491b3ee0ef9470476ec5a",
+            "segment_id": "segment_v1_b529678cea8984d56f413f2472f125cf07e577b109681c6f5f97088dac5f956a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b529678cea8984d56f413f2472f125cf07e577b109681c6f5f97088dac5f956a",
+            "char_start": 84,
+            "char_end": 117,
+            "line_start": 2,
+            "line_end": 2,
+            "quote": "墨港项目的短信接入由方知负责，计划在2026年11月13日前完成。",
+            "quote_sha256": "a4dc62dd61d58fb4f1368460b58df58cafe73b90736f0d3f35042efcd8e2c48d"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d07",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_fad754fcf97158d9b1c62be56ed4fecc6a74080b2ebe36db25819e417cde1627",
+            "source_ref": "artifact://m3-d07/b",
+            "content_hash": "545dd4c0ac67e449433f801be2e062985adee4f03863f823b03cd1fc391aff6c",
+            "ordinal": 0,
+            "message_id": "message_v1_e509251664ef8bc2536f3191a6da9cb2395fb053140f2beb92c2c3fb42a7c456",
+            "segment_id": "segment_v1_6408d3479af49b809c9c2cfd6f3d21274f367e8b6455aa9f20d654466f869756",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6408d3479af49b809c9c2cfd6f3d21274f367e8b6455aa9f20d654466f869756",
+            "char_start": 32,
+            "char_end": 69,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "我继续负责短信接入，将按晴声接口调整，计划在2026年11月19日前完成。",
+            "quote_sha256": "f6ba9854be8c621a4d9980dcbad93c80b2142c605ba504b45557e040de0ada8f"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D08",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "回调联调",
+          "owner": "程也",
+          "project": "檐雨项目",
+          "deadline": {
+            "value": "2026-11-14",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "回调联调",
+          "owner": "程也",
+          "project": "檐雨项目",
+          "deadline": {
+            "value": "2026-11-18",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "CONFLICT",
+          "evidence": [
+            "a:1",
+            "a:2",
+            "b:1"
+          ],
+          "reason": "CONFLICTING_SOURCE"
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:1",
+          "status": "BLOCKED",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "CONFLICTING_SOURCE",
+          "evidence": [
+            "a:1",
+            "a:2",
+            "b:1"
+          ],
+          "changed_fields": []
+        }
+      ],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "CONFLICTING_SOURCE"
+      ],
+      "rationale": "两个当前来源同等权威，一正一反；只确认身份，不按读入顺序选择日期。冲突需保留两端和反证。",
+      "tags": [
+        "source_conflict"
+      ],
+      "project_names": [
+        "檐雨项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d08",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_7be9d0b7d974718f6ffde4af40336f70af4339ed7a9f6d6970e8d9db9084cc1d",
+            "source_ref": "artifact://m3-d08/a",
+            "content_hash": "7935f527e2e52910e2f077e8bac37f0cfafea5d84e37ad3b036f65c20958e707",
+            "ordinal": 0,
+            "message_id": "message_v1_5f5d06bcc452f9d8e5fb0c816433cef6ce653f380f2d1d8c59562c317d732192",
+            "segment_id": "segment_v1_d966716ea9c1c7b1957d617718ebd477be8a7ddcc55f30f9d9205226358c525a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d966716ea9c1c7b1957d617718ebd477be8a7ddcc55f30f9d9205226358c525a",
+            "char_start": 33,
+            "char_end": 75,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "檐雨项目任务 YY-81 的回调联调由程也负责，计划在2026年11月14日前完成。",
+            "quote_sha256": "4bf9dddcb4594d90b6e14ba561378aeb4ed08feb7daf9ad45db6813ad90cc007"
+          }
+        },
+        "a:2": {
+          "ref": "a:2",
+          "span": {
+            "workspace_id": "m3-d08",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_7be9d0b7d974718f6ffde4af40336f70af4339ed7a9f6d6970e8d9db9084cc1d",
+            "source_ref": "artifact://m3-d08/a",
+            "content_hash": "7935f527e2e52910e2f077e8bac37f0cfafea5d84e37ad3b036f65c20958e707",
+            "ordinal": 1,
+            "message_id": "message_v1_35a651a18d71d4e2780631aebc01a4ea354c36a88e55c2526dcfff3e36c049aa",
+            "segment_id": "segment_v1_6230a527f44b83816d8bc3dce6014ba7c7b5c013033ef28213fba981f28701ba",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6230a527f44b83816d8bc3dce6014ba7c7b5c013033ef28213fba981f28701ba",
+            "char_start": 109,
+            "char_end": 132,
+            "line_start": 2,
+            "line_end": 2,
+            "quote": "b的18日记录是草稿，不能替代本条14日计划。",
+            "quote_sha256": "af885173f0e919bf2f0416b0e9c5ade19637b1fe19612043d4b0e98c0a3d15b1"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d08",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_c841eaf3d85a63c1080e34b071ba9e92521474d422d9e5ccf7b466a92fe8b84c",
+            "source_ref": "artifact://m3-d08/b",
+            "content_hash": "bc1e6c29bf9cc25a1e31f22923c8966ec7540b5bfe8b3f777e294af286382a65",
+            "ordinal": 0,
+            "message_id": "message_v1_16ae10038f8f9c7950762186b1997001ae00c51c94f7c3135c5d2620418879ce",
+            "segment_id": "segment_v1_fce31fd1d891da468466e774b880daa78435433a935a6ce85a089f2ad7ed0fe7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fce31fd1d891da468466e774b880daa78435433a935a6ce85a089f2ad7ed0fe7",
+            "char_start": 33,
+            "char_end": 94,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "檐雨项目任务 YY-81 的回调联调由程也负责，与a为同一任务；本条为执行计划，替代a，改为2026年11月18日前完成。",
+            "quote_sha256": "267a7a8b5e53ccea2e37a9bdb5fea57a79d78277c56bba71d4d5428f2ea9c653"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D09",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "消息适配",
+          "owner": "简舟",
+          "project": "竹汀项目",
+          "deadline": {
+            "value": "2026-11-20",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b2:1",
+          "task": "消息适配",
+          "owner": "简舟",
+          "project": "竹汀项目",
+          "deadline": {
+            "value": "2026-11-20",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b2:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b1:1",
+          "object": "a:1",
+          "verdict": "NOT_ASSESSABLE",
+          "evidence": [
+            "a:1",
+            "b1:1",
+            "b2:1"
+          ],
+          "reason": "STALE_EVIDENCE"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b1:1",
+          "object": "a:1",
+          "verdict": "NOT_ASSESSABLE",
+          "evidence": [
+            "a:1",
+            "b1:1",
+            "b2:1"
+          ],
+          "reason": "STALE_EVIDENCE"
+        },
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b2:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b2:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b2:1",
+          "object": "a:1",
+          "verdict": "REFUTED",
+          "evidence": [
+            "a:1",
+            "b2:1"
+          ],
+          "reason": "SOURCE_CORRECTION"
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b1:1",
+          "object": "a:1",
+          "status": "BLOCKED",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "STALE_EVIDENCE",
+          "evidence": [
+            "a:1",
+            "b1:1",
+            "b2:1"
+          ],
+          "changed_fields": []
+        },
+        {
+          "subject": "b2:1",
+          "object": "a:1",
+          "status": "NOT_APPLICABLE",
+          "old": null,
+          "new": null,
+          "delta": null,
+          "reason": "SOURCE_CORRECTION",
+          "evidence": [
+            "a:1",
+            "b2:1"
+          ],
+          "changed_fields": []
+        }
+      ],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "STALE_EVIDENCE"
+      ],
+      "rationale": "b1可读不代表当前有效；不要求删除历史。b2是资料纠错而非新业务计划，delta=null。",
+      "tags": [
+        "stale_version",
+        "source_correction"
+      ],
+      "project_names": [
+        "竹汀项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [
+        "b1:1"
+      ],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d09",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_20717ab0560af6a2a0407d8cb57127b1103f1250bc749ad6f7b12edae88eab6c",
+            "source_ref": "artifact://m3-d09/a",
+            "content_hash": "420f50b55fd52c9ee1a1b25b74a473294ead6c809b6fe2621c87a68664e2db9c",
+            "ordinal": 0,
+            "message_id": "message_v1_8055ce66c3bf8cd334b0144a94c83fe922c8a7834243413a3cff6118c3008405",
+            "segment_id": "segment_v1_75e43238b9235904cd3c92449db266c053199b2d8d1d31fe3cc28f9f4151764b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_75e43238b9235904cd3c92449db266c053199b2d8d1d31fe3cc28f9f4151764b",
+            "char_start": 33,
+            "char_end": 75,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "竹汀项目任务 ZT-91 的消息适配由简舟负责，计划在2026年11月20日前完成。",
+            "quote_sha256": "c1726aef7a0eb816b7bafde56c205b71c9147b2399290690b7534588fbc99e76"
+          }
+        },
+        "b1:1": {
+          "ref": "b1:1",
+          "span": {
+            "workspace_id": "m3-d09",
+            "artifact_id": "plan-b",
+            "artifact_version_id": "artifact_v1_3a37ad44efb8aac0820018a3377a57cf1dd24c431ee81fcc7d694e901a094987",
+            "source_ref": "artifact://m3-d09/plan-b",
+            "content_hash": "7385ef4072f33e0ee7ca8c838da6756bb2513459491639e30cff12d6833be55e",
+            "ordinal": 0,
+            "message_id": "message_v1_fcbb498f8cd027a4d51916cb56cbe9cac1a79ae4aeffab1a1902f49d14a15eaa",
+            "segment_id": "segment_v1_9d6f3738e214c6e4abdfad0dd5e5716a09aed311eaac5c359858e7b2b2d5f1a2",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9d6f3738e214c6e4abdfad0dd5e5716a09aed311eaac5c359858e7b2b2d5f1a2",
+            "char_start": 33,
+            "char_end": 87,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "竹汀项目任务 ZT-91 的消息适配由简舟负责，与a同一任务；替代原计划，改为2026年11月23日前完成。",
+            "quote_sha256": "b21ae6727d755dd2b508258732f40f52a3dd102207af399a83019fc56733b35b"
+          }
+        },
+        "b2:1": {
+          "ref": "b2:1",
+          "span": {
+            "workspace_id": "m3-d09",
+            "artifact_id": "plan-b",
+            "artifact_version_id": "artifact_v1_b999fdc8bf2bf289ee03da29bb866c79cdae08811c34f33a70985b17defeded5",
+            "source_ref": "artifact://m3-d09/plan-b",
+            "content_hash": "e3edeaff40f89942614f9994acd25578a6f5de828fc7ef6a0261f1a0885c070d",
+            "ordinal": 0,
+            "message_id": "message_v1_54fb9c78485eb62898b4f3e0654ad7e5239c564de6c7765601b88eaba2125b92",
+            "segment_id": "segment_v1_e3fb686cb49df9232513b05b4211a07d64c7d394c485b411aa2136f395a035dd",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3fb686cb49df9232513b05b4211a07d64c7d394c485b411aa2136f395a035dd",
+            "char_start": 33,
+            "char_end": 108,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "竹汀项目任务 ZT-91 的消息适配由简舟负责，与a同一任务；更正b1：23日是资料更新时间误录，任务计划从未修订，仍在2026年11月20日前完成。",
+            "quote_sha256": "2e61020b47134eb66c601f6cfc8337da775d4bd947b1181b768672411dccb709"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D10",
+      "tasks": [
+        {
+          "ref": "b:1",
+          "task": "签名兼容",
+          "owner": "秦霁",
+          "project": "云栈项目",
+          "deadline": {
+            "value": "2026-11-18",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:1",
+          "object": "change:a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        }
+      ],
+      "revisions": [],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "AUTHORITY_NOT_ESTABLISHED"
+      ],
+      "rationale": "可以报告来源声明支持的影响；缺真实审批回执必须拒绝称为已批准。原文正式决定不授予权威。",
+      "tags": [
+        "authority",
+        "abstention"
+      ],
+      "project_names": [
+        "云栈项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d10",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_850dd25bd01b6890b5a5a1e869a3443bb738d4f7ee4bf2e6fc8a640a2d2a7538",
+            "source_ref": "artifact://m3-d10/a",
+            "content_hash": "9c00b7df3b8a4d34e466ea75cc587686f5e6a64eba1c0f52ce3d72e90ecceb73",
+            "ordinal": 0,
+            "message_id": "message_v1_64822478320f24a6baab8978a8da4607ffd73b5de1150b632409004862bbf852",
+            "segment_id": "segment_v1_7d53d5fc9cab31cb5281247eeb7edb967a49bc4793e7148b85fc867ef911754d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7d53d5fc9cab31cb5281247eeb7edb967a49bc4793e7148b85fc867ef911754d",
+            "char_start": 33,
+            "char_end": 67,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "云栈项目正式决定短信供应商从小溪改为明潮。本工作区尚无人工审核回执。",
+            "quote_sha256": "b987b3f0d75d3f9888c837b4fb1a8676888d1f07b21975778aa75e316d9d8107"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d10",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_e4e1f84813f5cd16e3a45a29d87f14584a403ae4b89fa8497073ba0143a38c02",
+            "source_ref": "artifact://m3-d10/b",
+            "content_hash": "9792c40922185790005b58024c48d7969382e6b2318e12e9d258076abd294a54",
+            "ordinal": 0,
+            "message_id": "message_v1_9c1e3ae2685a6448e5d7f8c1cb48084172c530d62677e2fe9ffbbd494c1230be",
+            "segment_id": "segment_v1_50ef188ed5c695b79a125953516ea86903ff7042f2b2b7e260dc9e05daf43246",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_50ef188ed5c695b79a125953516ea86903ff7042f2b2b7e260dc9e05daf43246",
+            "char_start": 33,
+            "char_end": 99,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "云栈项目任务 YZ-101 的签名兼容由秦霁负责；由于a记载的小溪改为明潮，本任务必须补测兼容，计划在2026年11月18日前完成。",
+            "quote_sha256": "2439a71066401a16fe4ae3c9294a666ba9a06fcc90f2ffb3b85e13bf8ae92af6"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D11",
+      "tasks": [
+        {
+          "ref": "b:1",
+          "task": "签名调整",
+          "owner": "陆遥",
+          "project": "桥南项目",
+          "deadline": {
+            "value": "2026-11-14",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        },
+        {
+          "ref": "b:2",
+          "task": "数据导出",
+          "owner": "陆遥",
+          "project": "桥南项目",
+          "deadline": {
+            "value": "2026-11-15",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:2"
+          ]
+        },
+        {
+          "ref": "b:3",
+          "task": "缓存压测",
+          "owner": "周岑",
+          "project": "桥南项目",
+          "deadline": {
+            "value": "2026-11-16",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:3"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:1",
+          "object": "change:a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:2",
+          "object": "change:a:1",
+          "verdict": "REFUTED",
+          "evidence": [
+            "a:1",
+            "b:2"
+          ],
+          "reason": "EXPLICIT_NO_IMPACT"
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "b:3",
+          "object": "change:a:1",
+          "verdict": "UNKNOWN",
+          "evidence": [
+            "a:1",
+            "b:3"
+          ],
+          "reason": "NO_DIRECT_IMPACT_EVIDENCE"
+        }
+      ],
+      "revisions": [],
+      "answer_status": "PARTIAL",
+      "abstentions": [
+        "NO_DIRECT_IMPACT_EVIDENCE"
+      ],
+      "rationale": "明确无影响与缺证据是两个不同状态；不能把unknown变成refuted。",
+      "tags": [
+        "negative_vs_unknown",
+        "direct_impact"
+      ],
+      "project_names": [
+        "桥南项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d11",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_a06e6c0ce16149a6ce0ee560ebb0d11a5fa552d506c918b84aa18a78b53c8f9b",
+            "source_ref": "artifact://m3-d11/a",
+            "content_hash": "2c5497a5f0960dd82ce3f431dcf9d64ca04e42d5c72c27b3029036a2a6be7618",
+            "ordinal": 0,
+            "message_id": "message_v1_89bde6e2d7a2969057f6cba49a1fe314128406d3082848b891ab7478e8fbe892",
+            "segment_id": "segment_v1_376e4a6d091f93fe1b244d573b8d435bb101b926cae42713312eda43257e5b07",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_376e4a6d091f93fe1b244d573b8d435bb101b926cae42713312eda43257e5b07",
+            "char_start": 33,
+            "char_end": 50,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "桥南项目短信供应商从望川改为北桥。",
+            "quote_sha256": "3189e37f104496e4c8915cae530011880eb6ca23f537ed2ea458c9d4ba37fe7e"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d11",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_9ff69a049d7ffe9fa3ffc06b57264a7a3cd3f08555fe8ca52976af6a2ee083f9",
+            "source_ref": "artifact://m3-d11/b",
+            "content_hash": "51fdd4f4ba283da66d3b949ddef33310f9e3163982deacad094605eb80af91ad",
+            "ordinal": 0,
+            "message_id": "message_v1_33642fac225379a496151941f759baba2e2e97f17271ffcc5db3a5838bf1cce1",
+            "segment_id": "segment_v1_b93c6761e6dc8223c9c1c5dce0f3c04c333f1cdac2de6f7d36cd3750bfbd89d1",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b93c6761e6dc8223c9c1c5dce0f3c04c333f1cdac2de6f7d36cd3750bfbd89d1",
+            "char_start": 33,
+            "char_end": 94,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "桥南项目任务 QN-111 的签名调整由陆遥负责；因为a中的供应商更换必须适配新签名，计划在2026年11月14日前完成。",
+            "quote_sha256": "e7d8a50acf47b464d23c1bd8ce30377fcbb44d092eec15d0ba12137d5257bbcc"
+          }
+        },
+        "b:2": {
+          "ref": "b:2",
+          "span": {
+            "workspace_id": "m3-d11",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_9ff69a049d7ffe9fa3ffc06b57264a7a3cd3f08555fe8ca52976af6a2ee083f9",
+            "source_ref": "artifact://m3-d11/b",
+            "content_hash": "51fdd4f4ba283da66d3b949ddef33310f9e3163982deacad094605eb80af91ad",
+            "ordinal": 1,
+            "message_id": "message_v1_99f90bab3c9210d73488bb79567f39cb3adc0b4d40134e768fee77d1f1e9691e",
+            "segment_id": "segment_v1_ee286416457fa02ed9c17530d50d468d78d63c0eedb3856eb7e6c218b49e43b3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_ee286416457fa02ed9c17530d50d468d78d63c0eedb3856eb7e6c218b49e43b3",
+            "char_start": 128,
+            "char_end": 188,
+            "line_start": 2,
+            "line_end": 2,
+            "quote": "桥南项目任务 QN-112 的数据导出由陆遥负责，计划在2026年11月15日前完成；本任务明确不受a的供应商更换影响。",
+            "quote_sha256": "19e5289414a7a3fd77b3babb73de83aa39b8710ac08b28cd8d4189ce3878d2b8"
+          }
+        },
+        "b:3": {
+          "ref": "b:3",
+          "span": {
+            "workspace_id": "m3-d11",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_9ff69a049d7ffe9fa3ffc06b57264a7a3cd3f08555fe8ca52976af6a2ee083f9",
+            "source_ref": "artifact://m3-d11/b",
+            "content_hash": "51fdd4f4ba283da66d3b949ddef33310f9e3163982deacad094605eb80af91ad",
+            "ordinal": 2,
+            "message_id": "message_v1_7b0b7ed5cf4cad3a84255ad4d4bf07bb9a3831776b327fb45a51af8c1504df54",
+            "segment_id": "segment_v1_48e052dd638468a2feb1810def127631b036028af452551a81a1af5e336607a1",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_48e052dd638468a2feb1810def127631b036028af452551a81a1af5e336607a1",
+            "char_start": 222,
+            "char_end": 265,
+            "line_start": 3,
+            "line_end": 3,
+            "quote": "桥南项目任务 QN-113 的缓存压测由周岑负责，计划在2026年11月16日前完成。",
+            "quote_sha256": "a218fe05dccbcf1bd46cfa39f321084645f3c975a2ab925c8fd36c455f99ab0b"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "D12",
+      "tasks": [
+        {
+          "ref": "a:1",
+          "task": "回执测试",
+          "owner": "宋溪",
+          "project": "鹿鸣项目",
+          "deadline": {
+            "value": "2026-11-18",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "a:1"
+          ]
+        },
+        {
+          "ref": "b:1",
+          "task": "回执测试",
+          "owner": "宋溪",
+          "project": "鹿鸣项目",
+          "deadline": {
+            "value": "2026-11-18",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "evidence": [
+            "b:1"
+          ]
+        }
+      ],
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "b:1",
+          "object": "a:1",
+          "verdict": "SUPPORTED",
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "reason": null
+        }
+      ],
+      "revisions": [
+        {
+          "subject": "b:1",
+          "object": "a:1",
+          "status": "COMPUTABLE",
+          "old": {
+            "date": "2026-11-18",
+            "bound": "BEFORE"
+          },
+          "new": {
+            "date": "2026-11-18",
+            "bound": "BEFORE"
+          },
+          "delta": 0,
+          "reason": null,
+          "evidence": [
+            "a:1",
+            "b:1"
+          ],
+          "changed_fields": [
+            "scope"
+          ]
+        }
+      ],
+      "answer_status": "COMPLETE",
+      "abstentions": [],
+      "rationale": "明确计划替代，即使日期不变仍有修订；可比且相同才是delta=0。",
+      "tags": [
+        "scope_revision",
+        "zero_delta"
+      ],
+      "project_names": [
+        "鹿鸣项目"
+      ],
+      "discovery_scope": "CURRENT_OBSERVATIONS",
+      "discovery_exclusions": [],
+      "evidence_catalog": {
+        "a:1": {
+          "ref": "a:1",
+          "span": {
+            "workspace_id": "m3-d12",
+            "artifact_id": "a",
+            "artifact_version_id": "artifact_v1_f998696bbb03fa4113680ac4cfa34956262bd9e28b8423be7bfac461c2e92130",
+            "source_ref": "artifact://m3-d12/a",
+            "content_hash": "8fe9fe5b78a4e005e3185bacc7cd4a055340485efb7223c6ee7cc57dde48e0e0",
+            "ordinal": 0,
+            "message_id": "message_v1_1cfff5f86e1a8920b5542c77efec97a3495698fc2d113a0e2de4151f6cf1f800",
+            "segment_id": "segment_v1_0037ef8148d4ae736fbc4f8b15a206750014bae0ac37da514bfddc89e26e782d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0037ef8148d4ae736fbc4f8b15a206750014bae0ac37da514bfddc89e26e782d",
+            "char_start": 33,
+            "char_end": 76,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "鹿鸣项目任务 LM-121 的回执测试由宋溪负责，计划在2026年11月18日前完成。",
+            "quote_sha256": "d0b6f71fae7778d05c3b2b5982b095aab8e8a925efa8aea71dcfaf61d6d3a8a4"
+          }
+        },
+        "b:1": {
+          "ref": "b:1",
+          "span": {
+            "workspace_id": "m3-d12",
+            "artifact_id": "b",
+            "artifact_version_id": "artifact_v1_86524e633a2fae154cba17d41ed80bb7e047c4dfe144e5e0cc3fa20a50a6dcbb",
+            "source_ref": "artifact://m3-d12/b",
+            "content_hash": "07a829541ee5fc171416c87ca20b7aefbb414faec7c12c90d5a7568a595c5f82",
+            "ordinal": 0,
+            "message_id": "message_v1_b7a3568d40d0c4f3adbb6bd0f99405c12b227f91c9dd57f3c3454fb29ca79dfd",
+            "segment_id": "segment_v1_bf1619e01d69ca849233a0d2cf7e3c5c9fd43c4d7c2fb50b331215bb9bc2e0bb",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf1619e01d69ca849233a0d2cf7e3c5c9fd43c4d7c2fb50b331215bb9bc2e0bb",
+            "char_start": 33,
+            "char_end": 105,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "鹿鸣项目任务 LM-121 的回执测试由宋溪负责，与a是同一任务；本条替代a的计划，测试范围增加失败重试，截止仍在2026年11月18日前完成。",
+            "quote_sha256": "bcfe7c361934882460bdbc33dac7dbf6363add07c69e1255f35552c7208d7c2c"
+          }
+        }
+      }
+    }
+  ]
+}
