@@ -1,0 +1,47 @@
+{
+  "scope": "Offline synthetic M1-P4 and B/C integration; no CI, deployment or Provider claim",
+  "checks": [
+    {
+      "label": "integration-green",
+      "passed": 102,
+      "exit_code": 0
+    },
+    {
+      "label": "integration-regression",
+      "passed": 269,
+      "exit_code": 0
+    },
+    {
+      "label": "prefreeze-harness-final",
+      "passed": 7,
+      "exit_code": 0
+    }
+  ],
+  "unique_passing_tests": 378,
+  "failures": [
+    {
+      "stage": "C02 B-to-P2 interface compatibility",
+      "first_run": "integration-red",
+      "result": "1 failed, 1 passed",
+      "cause": "reference target fragment retained trailing whitespace; both proving directions UNKNOWN",
+      "repair": "one production line fragment.strip()",
+      "final": "SUPPORTED in the real proving direction; reverse UNKNOWN"
+    },
+    {
+      "stage": "M3 local module launch",
+      "cause": "without an explicit checkout PYTHONPATH, Python resolves the old editable main checkout",
+      "repair": "set PYTHONPATH to integration src and root before python -m evals.m3_task_impact",
+      "final": "12 NOT_RUN/NOT_EVALUATED; scripted D01 separated"
+    }
+  ],
+  "environment_warning": "pyreadline3 Console destructor prints a Windows handle warning after pytest; final exit codes are 0",
+  "provider_calls": 0,
+  "m3_holdout_executed": false,
+  "dev_semantics": {
+    "original_revision": "5/5",
+    "original_computable": "2/2",
+    "p4_atomic_checks": "53/53",
+    "candidate_recall": "8/9; C10 remains missed",
+    "scripted": "SCRIPTED_WIRING_ONLY, never production Agent score"
+  }
+}

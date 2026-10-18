@@ -1,0 +1,34 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+___________ test_c02_space_reference_is_verified_in_both_directions ___________
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m2-integration-acceptance/work/m2-p4-task-relations/acceptance-local/tmp-integration-red/test_c02_space_reference_is_ve0')
+
+    def test_c02_space_reference_is_verified_in_both_directions(tmp_path):
+        case = next(c for c in public_cases() if c['case_id'] == 'C02')
+        artifacts, observations, registry, _, anchor = load_case(case)
+        candidates = discover_candidates(case['workspace_id'], observations=observations,
+            artifacts=artifacts, source_registry=registry, anchor_ids=(anchor.observation_id,))
+        candidate = next(c for c in candidates.candidates if c.predicate_hint == 'RELATED_TO')
+        assert candidate.to_dict()['relation_status'] == 'UNCONFIRMED'
+        assert revalidate_candidate(candidate, case['workspace_id'], observations=observations,
+            artifacts=artifacts, source_registry=registry)
+        endpoints = {ObservationRef.from_observation(o): o for o in observations}
+        left, right = endpoints[candidate.subject], endpoints[candidate.object]
+        args = dict(artifacts=artifacts, source_registry=registry,
+            context_observations=observations, evidence=candidate.evidence)
+        directions = [assess_relation('RELATED_TO', a, b, **args) for a, b in ((left, right), (right, left))]
+>       assert sorted(r.verdict for r in directions) == ['SUPPORTED', 'UNKNOWN']
+E       AssertionError: assert ['UNKNOWN', 'UNKNOWN'] == ['SUPPORTED', 'UNKNOWN']
+E         
+E         At index 0 diff: 'UNKNOWN' != 'SUPPORTED'
+E         Use -v to get more diff
+
+tests\integration\test_m2_candidate_contract.py:24: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/integration/test_m2_candidate_contract.py::test_c02_space_reference_is_verified_in_both_directions
+1 failed, 1 passed in 8.11s
+Exception ignored in: <function Console.__del__ at 0x00000276473353A0>
+Traceback (most recent call last):
+  File "<PYTHON_SITE_PACKAGES>\pyreadline3\console\console.py", line 254, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008

@@ -116,6 +116,7 @@ def score(folder):
     revisions, atoms, failures = [], [], []
     checks = {}
     safety = Counter()
+    published_merges = {}
     snapshots_path = ROOT/'docs/requirements/m2-integration-acceptance/evidence/holdout-snapshots.json'
     snapshots = {c['case_id']:c for c in read(snapshots_path)}
 
@@ -134,9 +135,10 @@ def score(folder):
             states[expected+'_correct'] += actual['verdict']==expected and valid
         safety['unsupported_negative_count'] += expected=='UNKNOWN' and actual['verdict']=='REFUTED'
         if predicate=='SAME_TASK' and published:
-            safety['published_same_task'] += 1
-            safety['hard_false_merge'] += expected=='REFUTED'
-            safety['unsupported_merge'] += not true and expected!='REFUTED'
+            pair=tuple(sorted(json.dumps(actual[k],sort_keys=True) for k in ('subject','object')))
+            prior=published_merges.setdefault(pair,[False,False])
+            prior[0] = prior[0] or expected=='REFUTED'
+            prior[1] = prior[1] or (not true and expected!='REFUTED')
         if predicate=='AFFECTED_BY':
             safety['unsupported_causal_confirmation'] += published and not true
         atoms.append(dict(case_id=case_id,snapshot=snapshot,predicate=predicate,gold=expected,
@@ -249,10 +251,15 @@ def score(folder):
     for count in counts.values():
         totals.update(count)
     computable = [r for r in revisions if r['gold']['comparison']=='COMPUTABLE']
+    supported_revisions=[r for r in revisions if r['gold']['verdict']=='SUPPORTED']
+    safety['published_same_task']=len(published_merges)
+    safety['hard_false_merge']=sum(v[0] for v in published_merges.values())
+    safety['unsupported_merge']=sum(v[1] and not v[0] for v in published_merges.values())
     failures.extend(safety_failures(safety))
     return dict(protocol='AUTHOR_VISIBLE_HOLDOUT; NOT_EXTERNAL_BLIND',relation_scores=relation,
         micro_precision=fraction(totals['tp'],totals['tp']+totals['fp']),micro_recall=fraction(totals['tp'],totals['tp']+totals['fn']),
         revision_accuracy=fraction(sum(r['correct'] for r in revisions),len(revisions)),
+        supported_revision_accuracy=fraction(sum(r['correct'] for r in supported_revisions),len(supported_revisions)),
         computable_revision_accuracy=fraction(sum(r['correct'] for r in computable),len(computable)),
         date_delta_accuracy=fraction(sum(r['date_delta_correct'] for r in computable),len(computable)),
         state_accuracy=dict(states),safety=dict(safety),false_merge=fraction(safety['hard_false_merge']+safety['unsupported_merge'],safety['published_same_task']),
