@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="165" time="431.126" timestamp="2026-10-19T21:50:19.374444+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_zh]" time="2.122" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_en]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_mix]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_zh]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_en]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_mix]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_zh]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_en]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_mix]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_current_mislead]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_owner_mislead]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_supplier_mislead]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[unscoped_implicit]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[unscoped_time]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[legacy_task]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_rules]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_zh]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_en]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_mix]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_no_hint]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_en]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_zh]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_exact]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_context]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_unfamiliar]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_unknown]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_scope_conflict]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello_context]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello_zh_context]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[weather]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[math]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_task]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_deadline]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_owner]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_now]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_formal]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[ambiguous]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[ambiguous_decisions]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_write]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_foreign]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_prompt]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_secret]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[missing_capability]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[missing_relation_capability]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[stale_context]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[date_scope]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[foreign_workspace]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_scoped_paraphrase_uses_existing_chain_without_classifier[implicit_zh]" time="3.147" /><testcase classname="tests.integration.test_m3m_admission" name="test_scoped_paraphrase_uses_existing_chain_without_classifier[time_mix]" time="2.584" /><testcase classname="tests.integration.test_m3m_admission" name="test_scoped_paraphrase_uses_existing_chain_without_classifier[task_owner_mislead]" time="2.889" /><testcase classname="tests.integration.test_m3m_admission" name="test_g_refusal_keeps_original_goal_and_never_starts_runtime" time="0.408" /><testcase classname="tests.integration.test_m3m_admission" name="test_http_scope_choice_binds_host_snapshot_and_preserves_limits" time="0.767"><failure message="assert 3 == 2&#10; +  where 3 = PlanningLimits(max_subgoals=12, max_relation_queries=8, max_fanout=4, max_dependency_depth=6, max_relation_hops=3, max...okens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288).max_provider_calls&#10; +    where PlanningLimits(max_subgoals=12, max_relation_queries=8, max_fanout=4, max_dependency_depth=6, max_relation_hops=3, max...okens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288) = TaskInvestigationModels(discovery=&lt;tests.m3i_support.ScriptedStage object at 0x00000187CC67AB10&gt;, planner=&lt;tests.m3i_s...kens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288)).planning_limits&#10; +      where TaskInvestigationModels(discovery=&lt;tests.m3i_support.ScriptedStage object at 0x00000187CC67AB10&gt;, planner=&lt;tests.m3i_s...kens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288)) = &lt;linkloom.ui.investigation.ProductInvestigationService object at 0x00000187CC7A7890&gt;.task_models">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_http_scope_choice_binds_h0')
+
+    def test_http_scope_choice_binds_host_snapshot_and_preserves_limits(tmp_path):
+        from threading import Thread
+        from time import monotonic, sleep
+        from tests.integration.test_product_application_flow import _UnusedRunBackend, _client
+        from linkloom.ui.server import create_http_server
+        app, service, ask, stages, workspace = product_case(tmp_path)
+        server = create_http_server(_UnusedRunBackend(), product_app=app, investigation_service=service, port=0)
+        worker = Thread(target=server.serve_forever, daemon=True)
+        worker.start()
+        base = f'http://127.0.0.1:{server.server_port}'
+        try:
+            status, config = _client(base, '/api/product/ask/config')
+            context = dict(domain='tasks', snapshot_hash=config['investigation_context']['snapshot_hash'])
+            payload = dict(query='后面那条还能接上吗？', workspace_id=workspace,
+                investigation_context=context, max_requests=9999, provider='arbitrary', tools=['write'])
+            status, body = _client(base, '/api/product/ask', method='POST', data=payload)
+            assert status == 202, body
+            assert body['result']['route']['admission']['context'] == context
+            # F and G run synchronously before the existing Runtime starts.
+            assert [len(s.requests) for s in stages][:2] == [2, 1]
+&gt;           assert service.task_models.planning_limits.max_provider_calls == 2
+E           assert 3 == 2
+E            +  where 3 = PlanningLimits(max_subgoals=12, max_relation_queries=8, max_fanout=4, max_dependency_depth=6, max_relation_hops=3, max...okens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288).max_provider_calls
+E            +    where PlanningLimits(max_subgoals=12, max_relation_queries=8, max_fanout=4, max_dependency_depth=6, max_relation_hops=3, max...okens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288) = TaskInvestigationModels(discovery=&lt;tests.m3i_support.ScriptedStage object at 0x00000187CC67AB10&gt;, planner=&lt;tests.m3i_s...kens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288)).planning_limits
+E            +      where TaskInvestigationModels(discovery=&lt;tests.m3i_support.ScriptedStage object at 0x00000187CC67AB10&gt;, planner=&lt;tests.m3i_s...kens=24576, max_output_tokens=4096, max_provider_calls=3, max_total_input_tokens=73728, max_total_output_tokens=12288)) = &lt;linkloom.ui.investigation.ProductInvestigationService object at 0x00000187CC7A7890&gt;.task_models
+
+tests\integration\test_m3m_admission.py:88: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3l_http" name="test_normal_http_cannot_change_canary_provider_or_budget" time="4.498" /><testcase classname="tests.integration.test_m3l_canary" name="test_closed_host_uses_normal_ask_all_stages_and_preserves_authority[C1]" time="3.502" /><testcase classname="tests.integration.test_m3l_canary" name="test_closed_host_uses_normal_ask_all_stages_and_preserves_authority[C2]" time="3.976" /><testcase classname="tests.integration.test_m3l_canary" name="test_closed_host_uses_normal_ask_all_stages_and_preserves_authority[C3]" time="4.338" /><testcase classname="tests.integration.test_m3l_canary" name="test_sdk_wire_retry_is_stopped_before_a_second_send" time="0.444" /><testcase classname="tests.integration.test_m3l_canary" name="test_source_revoked_during_response_stops_before_next_stage" time="0.453" /><testcase classname="tests.integration.test_m3l_canary" name="test_canary_fast_path_does_not_spend_any_provider_requests" time="0.333" /><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[timeout]" time="0.495" /><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[usage]" time="0.456" /><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[usage_shape]" time="0.523" /><testcase classname="tests.integration.test_m3l_canary" name="test_foreign_workspace_or_changed_question_cannot_use_grant" time="0.402" /><testcase classname="tests.integration.test_m3l_canary" name="test_usage_must_fit_actual_stage_output_cap_including_thinking" time="0.611" /><testcase classname="tests.integration.test_m3l_canary" name="test_first_preparation_source_race_permanently_stops_campaign[1]" time="0.528" /><testcase classname="tests.integration.test_m3l_canary" name="test_first_preparation_source_race_permanently_stops_campaign[2]" time="0.505" /><testcase classname="tests.integration.test_m3l_canary" name="test_admitted_source_versions_survive_new_host_and_reject_rebinding" time="0.486" /><testcase classname="tests.integration.test_m3l_canary" name="test_source_id_cannot_be_reassigned_another_frozen_sources_text" time="0.483" /><testcase classname="tests.integration.test_m3l_canary" name="test_offline_task_chain_cannot_inject_known_live_outer_adapter" time="0.365" /><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[schema]" time="0.627" /><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[citation]" time="4.820" /><testcase classname="tests.integration.test_m3i_http" name="test_existing_product_http_route_uses_the_real_task_chain" time="7.738" /><testcase classname="tests.integration.test_m3i_http" name="test_existing_deterministic_lookup_skips_all_task_stage_adapters" time="1.064" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_natural_question_uses_f_g_existing_runtime_context_and_reviewer" time="3.538" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[missing]" time="1.878" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[conflict]" time="3.774" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[replan]" time="3.275" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_completed_product_run_cannot_publish_stale_or_withdrawn_sources[update]" time="3.085" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_completed_product_run_cannot_publish_stale_or_withdrawn_sources[remove]" time="3.678" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_source_changed_during_projection_is_rejected_before_publication" time="3.779" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_planning_budget_blocks_before_runtime_and_retains_stage_failure" time="0.668" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_unconfigured_and_external_task_chain_never_calls_models" time="0.362" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_advanced_date_is_never_silently_ignored_by_task_route" time="0.344" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_invalid_semantic_citation_is_explicitly_blocked_not_a_publishable_partial" time="5.728" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_g_plan_never_triggers_the_generic_runtime_planner" time="4.901" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_product_context_pressure_recovers_originals_or_stops_before_model[compact]" time="3.971" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_product_context_pressure_recovers_originals_or_stops_before_model[stop]" time="1.293" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_checkpoint_resume_after_prepared_product_tools_does_not_repeat_confirmed_actions" time="3.645" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_original_document_and_unexamined_source_budget_are_explicit[missing_document]" time="2.750" /><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_original_document_and_unexamined_source_budget_are_explicit[discovery_budget]" time="2.582" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests" time="1.650" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion" time="1.144" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_unknown_task_and_date_mismatch_request_scope_without_starting_agent" time="1.150" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit" time="1.227" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown" time="4.805" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_investigation_without_as_of_uses_observed_current_scope" time="3.609" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_historical_investigation_uses_observed_state_without_fake_predecessor" time="2.484" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_unconfigured_agent_returns_safe_configuration_failure" time="1.157" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN]" time="1.751" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_provider_failure_never_exposes_a_final[fail-FAILED]" time="2.100" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt]" time="4.164" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence]" time="3.996" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission" time="3.553" /><testcase classname="tests.integration.test_unified_ask_flow" name="test_legacy_api_and_legacy_page_keep_their_existing_semantics" time="1.383" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Orion \u9879\u76ee\u8d1f\u8d23\u4eba\u7684\u76f4\u5c5e\u9886\u5bfc\u662f\u8c01\uff1f-none-\u9648\u5b81]" time="6.309" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who owns the project behind Copper Meadow and who leads that owner?-none-Owen Brook]" time="8.139" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[As of 2026-10-06, Who is the direct leader of the owner of Mariner Field?-conflicting_evidence-None]" time="6.964" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_product_ask_executes_real_source_runtime[Who is the direct leader of the owner of Harbor Gap?-insufficient_evidence-None]" time="7.415" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_permission_uncertain_budget_and_unsupported" time="2.930"><failure message="AssertionError: assert (200 == 200 and 'INVESTIGATIO...MAIN_REQUIRED' == 'UNSUPPORTED_QUERY'&#10;  &#10;  - UNSUPPORTED_QUERY&#10;  + INVESTIGATION_DOMAIN_REQUIRED)">demo = UnifiedInvestigationFixture(database_path=WindowsPath('D:/webproject/Linkloom/work/mi1/test_source_permission_uncerta0...f2c206d'}, service=&lt;linkloom.ui.investigation.ProductInvestigationService object at 0x00000187CD10B120&gt;, transports=[])
+
+    def test_source_permission_uncertain_budget_and_unsupported(demo):
+        for query in ("谁负责琥珀线路？其直属领导是谁？",
+                      "哪个项目对应 Copper Meadow 这个别名、谁负责该项目，以及负责人的直属领导是谁？",
+                      "Who is the direct leader of the owner of " + "A" * 550 + "?"):
+            status, body = ask(demo, query)
+&gt;           assert status == 200 and body["result"]["error"]["code"] == "UNSUPPORTED_QUERY"
+E           AssertionError: assert (200 == 200 and 'INVESTIGATIO...MAIN_REQUIRED' == 'UNSUPPORTED_QUERY'
+E             
+E             - UNSUPPORTED_QUERY
+E             + INVESTIGATION_DOMAIN_REQUIRED)
+
+tests\integration\test_unified_investigation_flow.py:52: AssertionError</failure></testcase><testcase classname="tests.integration.test_unified_investigation_flow" name="test_exposed_hold_g_conflict_regression" time="48.644"><failure message="AssertionError: assert 'refused' == 'partial'&#10;  &#10;  - partial&#10;  + refused">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_exposed_hold_g_conflict_r0')
+
+    def test_exposed_hold_g_conflict_regression(tmp_path):
+        """Known defect regression, never a new independent generalization score."""
+        cases = json.loads(Path("tests/fixtures/bounded_multihop/heldout.json").read_text(encoding="utf-8"))["cases"]
+        case = next(c for c in cases if c["id"] == "HOLD-G")
+        result = run_case({key: value for key, value in case.items() if key != "expected"}, tmp_path)
+&gt;       assert result["outcome"] == "partial"
+E       AssertionError: assert 'refused' == 'partial'
+E         
+E         - partial
+E         + refused
+
+tests\integration\test_unified_investigation_flow.py:77: AssertionError</failure></testcase><testcase classname="tests.integration.test_unified_investigation_flow" name="test_actual_three_hop_ledger_binds_only_previous_verified_reads" time="10.321" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_relation_date_scope_and_explicit_decision_do_not_silently_change_path" time="6.928" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_three_hop_conflict_preserves_alias_and_owner_and_source_change_invalidates_final" time="10.014" /><testcase classname="tests.integration.test_unified_investigation_flow" name="test_source_policy_excludes_decision_memory_reads_and_candidate_capture" time="6.350" /><testcase classname="tests.integration.test_product_transport_http" name="test_formal_http_runtime_payload_and_ledger_are_unchanged" time="14.952" /><testcase classname="tests.integration.test_product_transport_http" name="test_formal_http_fourth_request_failure_stage_and_no_resend[headers-http11.receive_response_headers.failed]" time="7.130" /><testcase classname="tests.integration.test_product_transport_http" name="test_formal_http_fourth_request_failure_stage_and_no_resend[body-http11.receive_response_body.failed]" time="7.894" /><testcase classname="tests.integration.test_product_transport_http" name="test_formal_http_diagnostics_failure_does_not_pollute_business_ledger" time="16.781" /><testcase classname="tests.integration.test_product_application_flow" name="test_agent_run_failure_http_status_is_not_success[provider_outcome_uncertain-503]" time="0.745" /><testcase classname="tests.integration.test_product_application_flow" name="test_agent_run_failure_http_status_is_not_success[provider_failure-502]" time="0.989" /><testcase classname="tests.integration.test_product_application_flow" name="test_agent_run_failure_http_status_is_not_success[tool_policy_denied-403]" time="0.783" /><testcase classname="tests.integration.test_product_application_flow" name="test_agent_run_failure_http_status_is_not_success[runtime_failure-500]" time="0.666" /><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[1]" time="1.301" /><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[3]" time="1.269"><failure message="AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}&#10;assert 500 == 503">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_temporal_http_provider_un1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000187CD21A200&gt;
+fail_at = 3
+
+    @pytest.mark.parametrize("fail_at", [1, 3, 4])
+    def test_temporal_http_provider_unknown_keeps_read_source_without_verified_final(
+        tmp_path, monkeypatch, fail_at,
+    ):
+        monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+        base, server, worker, app = _start_product_server(tmp_path, [_claim("Birchline")])
+        try:
+            _, created = _client(base, "/api/workspaces", method="POST", data={"name": "Atlas"})
+            workspace_id = created["workspace"]["workspace_id"]
+            _, imported = _client(base, "/api/sources/import", method="POST", data={
+                "name": "decision.md",
+                "content": "[2026-10-01T10:00:00Z] Alice: We decided to use Birchline as the supplier for Launch.",
+            })
+            _wait_source(base, imported["source"]["source_id"])
+            _, inbox = _client(base, "/api/review/candidates")
+            _client(base, f"/api/review/candidates/{inbox['candidates'][0]['candidate_id']}/approve",
+                    method="POST", data={"reviewer_id": "local-user", "reason": "Reviewed"})
+    
+            class InterruptedProvider:
+                def __init__(self):
+                    self.calls = 0
+    
+                def complete(self, request):
+                    self.calls += 1
+                    if self.calls == fail_at:
+                        return ModelResponse(error=ModelProviderError(
+                            code="MODEL_UNKNOWN_FAILURE", category="unknown_provider_error",
+                            message="Synthetic provider outcome unknown.",
+                            outcome="unknown_provider_outcome",
+                        ))
+                    if self.calls == 1:
+                        return ModelResponse(action=ModelAction.tool(ToolCall(
+                            call_id="find-source", tool_id="search_notes",
+                            arguments={"query": "Launch Birchline", "limit": 5, "source_context": {}},
+                        )))
+                    if self.calls == 2:
+                        return ModelResponse(action=ModelAction.tool(ToolCall(
+                            call_id="read-source", tool_id="read_verified_note",
+                            arguments={"note_ref": request.observation.value[0]["evidence_id"]},
+                        )))
+                    return ModelResponse(action=ModelAction.tool(ToolCall(
+                        call_id="check-reviewed-memory", tool_id="search_decision_memory",
+                        arguments={"query": "Launch supplier", "limit": 5},
+                    )))
+    
+            model = InterruptedProvider()
+            server.investigation_service = ProductInvestigationService(
+                app, model_factory=lambda _query: model, max_steps=6,
+            )
+            status, started = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "Which supplier is effective?", "workspace_id": workspace_id,
+                "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
+            })
+            assert status == 202
+            deadline = monotonic() + 30
+            snapshot = started
+            while snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                status, snapshot = _client(base, f"/api/agent/decisions/runs/{started['run']['id']}")
+&gt;           assert status == 503, snapshot
+E           AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}
+E           assert 500 == 503
+
+tests\integration\test_product_application_flow.py:236: AssertionError</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[4]" time="1.363"><failure message="AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}&#10;assert 500 == 503">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_temporal_http_provider_un2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000187E469BB60&gt;
+fail_at = 4
+
+    @pytest.mark.parametrize("fail_at", [1, 3, 4])
+    def test_temporal_http_provider_unknown_keeps_read_source_without_verified_final(
+        tmp_path, monkeypatch, fail_at,
+    ):
+        monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+        base, server, worker, app = _start_product_server(tmp_path, [_claim("Birchline")])
+        try:
+            _, created = _client(base, "/api/workspaces", method="POST", data={"name": "Atlas"})
+            workspace_id = created["workspace"]["workspace_id"]
+            _, imported = _client(base, "/api/sources/import", method="POST", data={
+                "name": "decision.md",
+                "content": "[2026-10-01T10:00:00Z] Alice: We decided to use Birchline as the supplier for Launch.",
+            })
+            _wait_source(base, imported["source"]["source_id"])
+            _, inbox = _client(base, "/api/review/candidates")
+            _client(base, f"/api/review/candidates/{inbox['candidates'][0]['candidate_id']}/approve",
+                    method="POST", data={"reviewer_id": "local-user", "reason": "Reviewed"})
+    
+            class InterruptedProvider:
+                def __init__(self):
+                    self.calls = 0
+    
+                def complete(self, request):
+                    self.calls += 1
+                    if self.calls == fail_at:
+                        return ModelResponse(error=ModelProviderError(
+                            code="MODEL_UNKNOWN_FAILURE", category="unknown_provider_error",
+                            message="Synthetic provider outcome unknown.",
+                            outcome="unknown_provider_outcome",
+                        ))
+                    if self.calls == 1:
+                        return ModelResponse(action=ModelAction.tool(ToolCall(
+                            call_id="find-source", tool_id="search_notes",
+                            arguments={"query": "Launch Birchline", "limit": 5, "source_context": {}},
+                        )))
+                    if self.calls == 2:
+                        return ModelResponse(action=ModelAction.tool(ToolCall(
+                            call_id="read-source", tool_id="read_verified_note",
+                            arguments={"note_ref": request.observation.value[0]["evidence_id"]},
+                        )))
+                    return ModelResponse(action=ModelAction.tool(ToolCall(
+                        call_id="check-reviewed-memory", tool_id="search_decision_memory",
+                        arguments={"query": "Launch supplier", "limit": 5},
+                    )))
+    
+            model = InterruptedProvider()
+            server.investigation_service = ProductInvestigationService(
+                app, model_factory=lambda _query: model, max_steps=6,
+            )
+            status, started = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "Which supplier is effective?", "workspace_id": workspace_id,
+                "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
+            })
+            assert status == 202
+            deadline = monotonic() + 30
+            snapshot = started
+            while snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                status, snapshot = _client(base, f"/api/agent/decisions/runs/{started['run']['id']}")
+&gt;           assert status == 503, snapshot
+E           AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}
+E           assert 500 == 503
+
+tests\integration\test_product_application_flow.py:236: AssertionError</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_product_http_flow_imports_reviews_materializes_and_asks_with_history" time="1.235" /><testcase classname="tests.integration.test_product_application_flow" name="test_recovery_keeps_later_unapproved_proposal_out_of_current_answer" time="1.353" /><testcase classname="tests.integration.test_product_application_flow" name="test_recovery_exposes_equal_time_source_conflict_without_promoting_either_claim[Wrenwell]" time="1.210" /><testcase classname="tests.integration.test_product_application_flow" name="test_recovery_exposes_equal_time_source_conflict_without_promoting_either_claim[Birchline]" time="0.916" /><testcase classname="tests.integration.test_product_application_flow" name="test_product_investigation_runtime_reads_only_selected_workspace_memory" time="0.805" /><testcase classname="tests.integration.test_product_application_flow" name="test_recovery_separates_source_event_from_review_and_explicit_effective_date" time="1.493" /><testcase classname="tests.integration.test_product_application_flow" name="test_investigation_runtime_reads_replacement_source_before_final" time="2.558" /><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason" time="13.159"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\GOLD.json'">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_temporal_agent_http_entry0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000187E469B850&gt;
+
+    def test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason(tmp_path, monkeypatch):
+        monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+        replacement = _claim("Wrenwell")
+        replacement.update(temporal_status="EXPLICIT", valid_from="2026-10-07")
+        base, server, worker, app = _start_product_server(
+            tmp_path, [_claim("Birchline"), replacement, _claim("Cedar", claim_type="PROPOSAL")],
+        )
+        try:
+            _, created = _client(base, "/api/workspaces", method="POST", data={"name": "Atlas"})
+            workspace_id = created["workspace"]["workspace_id"]
+            for day, value, statement, approved_source in (
+                ("01", "Birchline", "We decided to use Birchline as the supplier for launch.", True),
+                ("07", "Wrenwell", "Wrenwell replaced Birchline on 2026-10-07 as the current supplier for the launch.", True),
+                ("09", "Cedar", "Someone proposes Cedar as a replacement.", False),
+            ):
+                _, imported = _client(base, "/api/sources/import", method="POST", data={
+                    "name": f"decision-{day}.md",
+                    "content": f"[2026-10-{day}T10:00:00Z] Alice: {statement}",
+                })
+                _wait_source(base, imported["source"]["source_id"])
+                if not approved_source:
+                    continue
+                _, inbox = _client(base, "/api/review/candidates")
+                candidate_id = next(item["candidate_id"] for item in inbox["candidates"]
+                                    if item["proposed_value"] == value)
+                status, approved = _client(
+                    base, f"/api/review/candidates/{candidate_id}/approve",
+                    method="POST", data={"reviewer_id": "local-user", "reason": "Reviewed"},
+                )
+                assert status == 200, approved
+    
+            observed: dict[str, object] = {}
+            def reviewed_memory(request):
+                assert '"temporal_decision"' in request.user_input
+                assert "ANSWERED_CORRECT" not in request.user_input
+                memory_tool = next(tool for tool in request.available_tools
+                                   if tool.tool_id == "search_decision_memory")
+                assert {"subject", "relation"} &lt;= set(memory_tool.input_schema["properties"])
+                return ModelAction.tool(ToolCall(
+                    call_id="temporal-view", tool_id="search_decision_memory",
+                    arguments={"query": "current reviewed supplier decision", "limit": 5},
+                ))
+            def source_search(request):
+                observed["view"] = request.observation.value[0]["view"]
+                context = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["source_context"]
+                return ModelAction.tool(ToolCall(
+                    call_id="source-search", tool_id="search_notes",
+                    arguments={"query": "Birchline Wrenwell supplier launch",
+                               "source_context": context, "limit": 5},
+                ))
+            def first_read(request):
+                found = request.observation.value
+                observed["search"] = found
+                current = next(item for item in found if "Wrenwell replaced Birchline" in item["quote"])
+                return ModelAction.tool(ToolCall(
+                    call_id="read-current", tool_id="read_verified_note",
+                    arguments={"note_ref": current["evidence_id"]},
+                ))
+            def second_read(request):
+                observed["current_read"] = request.observation.value
+                old = next(item for item in observed["search"] if "use Birchline" in item["quote"])
+                return ModelAction.tool(ToolCall(
+                    call_id="read-prior", tool_id="read_verified_note",
+                    arguments={"note_ref": old["evidence_id"]},
+                ))
+            def typed_final(request):
+                observed["prior_read"] = request.observation.value
+                view = observed["view"]
+                current = observed["current_read"]
+                prior = observed["prior_read"]
+                temporal_claim = {
+                    "subject": "Launch", "relation": "uses supplier", "as_of": view["as_of"],
+                    "decision_id": view["effective"]["decision_id"],
+                    "receipt_id": view["effective"]["review_receipt"]["receipt_id"],
+                    "value": "Wrenwell", "supersedes_id": view["effective"]["supersedes_id"],
+                    "evidence_ids": [current["evidence_id"]],
+                    "prior_evidence_ids": [prior["evidence_id"]],
+                }
+                observed["temporal_claim"] = temporal_claim
+                return ModelAction.final(json.dumps({
+                    "schema_version": "claim-proposal/v1", "claims": [],
+                    "temporal_decision": temporal_claim,
+                    "uncertainty": {"status": "insufficient_evidence",
+                                    "unknown_fields": ["replacement_reason"]},
+                }))
+            service = ProductInvestigationService(
+                app, model_factory=lambda _query: FakeModelAdapter([
+                    reviewed_memory, source_search, first_read, second_read, typed_final,
+                ]), max_steps=8,
+            )
+            server.investigation_service = service
+            status, started = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "为什么从 Birchline 换成 Wrenwell？现在执行什么方案？",
+                "workspace_id": workspace_id, "subject": "Launch",
+                "relation": "uses supplier", "as_of": "2026-10-10",
+            })
+            assert status == 202, started
+            run_id = started["run"]["id"]
+            deadline = monotonic() + 60
+            snapshot = started
+            while snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                _, snapshot = _client(base, f"/api/agent/decisions/runs/{run_id}")
+            assert snapshot["kind"] in {"success", "insufficient"}, snapshot
+            assert snapshot["temporal_decision"]["effective"]["value"] == "Wrenwell"
+            effective = snapshot["temporal_decision"]["effective"]
+            assert effective["authorization"]["receipt_id"] == observed["view"]["effective"]["review_receipt"]["receipt_id"]
+            assert effective["authorization"]["authorized_at"]
+            assert effective["authorization"]["effective_at"]
+            assert effective["source_event_at"] and effective["source_ingested_at"]
+            assert effective["valid_from"] and effective["evidence"][0]["verified"] is True
+            assert snapshot["temporal_decision"]["transitions"][0]["from_value"] == "Birchline"
+            assert snapshot["temporal_decision"]["transitions"][0]["reason_status"] == "NOT_SOURCE_VERIFIED"
+            assert [item["value"] for item in snapshot["temporal_decision"]["proposals"]] == ["Cedar"]
+            assert snapshot["metrics"]["read_count"] == 2
+            assert snapshot["run"]["status"] == "completed"
+            assert snapshot["decision"]["status"] == "partial"
+            assert snapshot["uncertainty"]["unknown_fields"] == ["replacement_reason"]
+            scored_snapshots = {"TD-03": snapshot}
+            backend = service._jobs[run_id].backend
+            status_record = backend.engine.inspect(snapshot["run"]["thread_id"])
+            artifact = backend._safe_result_artifact(status_record)
+            assert artifact["result"]["review_decision"] == "evidence_sufficient"
+            claim = observed["temporal_claim"]
+            evidence = {item["evidence_id"]: item for item in (
+                observed["current_read"], observed["prior_read"],
+            )}
+            read_ids = set(evidence)
+            assert app.verify_temporal_claim(workspace_id, claim, evidence, read_ids)["status"] == "FOUND"
+            for changed in (
+                {**claim, "receipt_id": "untrusted-receipt"},
+                {**claim, "value": "Cedar"},
+                {**claim, "decision_id": claim["supersedes_id"]},
+                {**claim, "as_of": "2026-10-06T00:00:00+00:00"},
+                {**claim, "prior_evidence_ids": []},
+                {**claim, "evidence_ids": claim["prior_evidence_ids"]},
+            ):
+                with pytest.raises(ValidationError):
+                    app.verify_temporal_claim(workspace_id, changed, evidence, read_ids)
+            with pytest.raises(ValidationError):
+                app.verify_temporal_claim("other-workspace", claim, evidence, read_ids)
+    
+            for case_id, question in (
+                ("TD-02", "Launch 现在执行什么供应商方案？它替代了哪个旧方案？"),
+                ("TD-04", "有人提出 Cedar，它已经是 Launch 的现行方案了吗？"),
+            ):
+                status, extra_start = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                    "query": question, "workspace_id": workspace_id,
+                    "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
+                })
+                assert status == 202
+                extra_run = extra_start["run"]["id"]
+                extra_snapshot = extra_start
+                deadline = monotonic() + 60
+                while extra_snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                    sleep(0.01)
+                    _, extra_snapshot = _client(base, f"/api/agent/decisions/runs/{extra_run}")
+                assert extra_snapshot["kind"] in {"success", "insufficient"}, extra_snapshot
+                assert extra_snapshot["temporal_decision"]["effective"]["value"] == "Wrenwell"
+                assert extra_snapshot["temporal_decision"]["transitions"][0]["from_value"] == "Birchline"
+                assert extra_snapshot["temporal_decision"]["proposals"][0]["value"] == "Cedar"
+                assert extra_snapshot["temporal_decision"]["proposals"][0]["status"] == "PROPOSED_NOT_APPROVED"
+                extra_status = service._jobs[extra_run].backend.engine.inspect(extra_snapshot["run"]["thread_id"])
+                assert service._jobs[extra_run].backend._safe_result_artifact(extra_status)["result"]["review_decision"] == "evidence_sufficient"
+                scored_snapshots[case_id] = extra_snapshot
+    
+            historical: dict[str, object] = {}
+            def historical_search(request):
+                historical["view"] = request.observation.value[0]["view"]
+                context = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["source_context"]
+                return ModelAction.tool(ToolCall(
+                    call_id="historic-search", tool_id="search_notes",
+                    arguments={"query": "Birchline supplier launch", "source_context": context, "limit": 5},
+                ))
+            def historical_read(request):
+                old = next(item for item in request.observation.value if "use Birchline" in item["quote"])
+                return ModelAction.tool(ToolCall(
+                    call_id="historic-read", tool_id="read_verified_note",
+                    arguments={"note_ref": old["evidence_id"]},
+                ))
+            def historical_final(request):
+                view = historical["view"]
+                source = request.observation.value
+                return ModelAction.final(json.dumps({
+                    "schema_version": "claim-proposal/v1", "claims": [],
+                    "temporal_decision": {
+                        "subject": "Launch", "relation": "uses supplier", "as_of": view["as_of"],
+                        "decision_id": view["effective"]["decision_id"],
+                        "receipt_id": view["effective"]["review_receipt"]["receipt_id"],
+                        "value": "Birchline", "supersedes_id": None,
+                        "evidence_ids": [source["evidence_id"]], "prior_evidence_ids": [],
+                    },
+                }))
+            historical_service = ProductInvestigationService(
+                app, model_factory=lambda _query: FakeModelAdapter([
+                    reviewed_memory, historical_search, historical_read, historical_final,
+                ]), max_steps=7,
+            )
+            server.investigation_service = historical_service
+            status, historical_start = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "10月6日 Launch 采用什么供应商方案？",
+                "workspace_id": workspace_id, "subject": "Launch",
+                "relation": "uses supplier", "as_of": "2026-10-06",
+            })
+            assert status == 202
+            historic_run = historical_start["run"]["id"]
+            historic_snapshot = historical_start
+            deadline = monotonic() + 60
+            while historic_snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                _, historic_snapshot = _client(base, f"/api/agent/decisions/runs/{historic_run}")
+            assert historic_snapshot["kind"] == "success", historic_snapshot
+            assert historic_snapshot["temporal_decision"]["effective"]["value"] == "Birchline"
+            assert historic_snapshot["temporal_decision"]["transitions"] == []
+            assert historic_snapshot["decision"]["status"] == "approved"
+            scored_snapshots["TD-01"] = historic_snapshot
+    
+            status, not_yet_start = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "10月6日是否已经改为 Wrenwell？",
+                "workspace_id": workspace_id, "subject": "Launch",
+                "relation": "uses supplier", "as_of": "2026-10-06",
+            })
+            assert status == 202
+            not_yet_run = not_yet_start["run"]["id"]
+            not_yet_snapshot = not_yet_start
+            deadline = monotonic() + 60
+            while not_yet_snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                _, not_yet_snapshot = _client(base, f"/api/agent/decisions/runs/{not_yet_run}")
+            assert not_yet_snapshot["kind"] == "success", not_yet_snapshot
+            assert not_yet_snapshot["temporal_decision"]["effective"]["value"] == "Birchline"
+            assert "Wrenwell" not in not_yet_snapshot["decision"]["value"]
+    
+            def forged_receipt_final(request):
+                view = observed["view"]
+                return ModelAction.final(json.dumps({
+                    "schema_version": "claim-proposal/v1", "claims": [],
+                    "temporal_decision": {
+                        "subject": "Launch", "relation": "uses supplier", "as_of": view["as_of"],
+                        "decision_id": view["effective"]["decision_id"],
+                        "receipt_id": "forged-receipt", "value": "Wrenwell",
+                        "supersedes_id": view["effective"]["supersedes_id"],
+                        "evidence_ids": [observed["current_read"]["evidence_id"]],
+                        "prior_evidence_ids": [request.observation.value["evidence_id"]],
+                    },
+                }))
+            bad_service = ProductInvestigationService(
+                app, model_factory=lambda _query: FakeModelAdapter([
+                    reviewed_memory, source_search, first_read, second_read, forged_receipt_final,
+                ]), max_steps=8,
+            )
+            server.investigation_service = bad_service
+            status, bad_start = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "现在是否采用 Wrenwell？", "workspace_id": workspace_id,
+                "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
+            })
+            assert status == 202
+            bad_run = bad_start["run"]["id"]
+            bad_snapshot = bad_start
+            deadline = monotonic() + 60
+            while bad_snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                _, bad_snapshot = _client(base, f"/api/agent/decisions/runs/{bad_run}")
+            assert bad_snapshot["kind"] == "error", bad_snapshot
+            assert bad_snapshot["error"]["code"] == "TEMPORAL_DECISION_UNSUPPORTED"
+            assert "temporal_decision" not in bad_snapshot
+    
+            refusal_service = ProductInvestigationService(
+                app, model_factory=lambda _query: FakeModelAdapter([
+                    reviewed_memory, source_search,
+                    lambda _request: ModelAction.final(json.dumps({
+                        "schema_version": "claim-proposal/v1", "claims": [],
+                        "uncertainty": {"status": "insufficient_evidence",
+                                        "unknown_fields": ["decision"]},
+                    })),
+                ]), max_steps=5,
+            )
+            server.investigation_service = refusal_service
+            status, refusal_start = _client(base, "/api/agent/decisions/ask", method="POST", data={
+                "query": "Is Wrenwell the current supplier?", "workspace_id": workspace_id,
+                "subject": "Launch", "relation": "uses supplier", "as_of": "2026-10-10",
+            })
+            assert status == 202
+            refusal_run = refusal_start["run"]["id"]
+            refusal_snapshot = refusal_start
+            deadline = monotonic() + 60
+            while refusal_snapshot["kind"] == "running" and monotonic() &lt; deadline:
+                sleep(0.01)
+                _, refusal_snapshot = _client(base, f"/api/agent/decisions/runs/{refusal_run}")
+            assert refusal_snapshot["kind"] == "error", refusal_snapshot
+            assert refusal_snapshot["error"]["code"] == "TEMPORAL_DECISION_MISSING"
+            gold_path = Path(__file__).resolve().parents[2] / "work" / "temporal_decision_eval" / "GOLD.json"
+&gt;           gold_cases = json.loads(gold_path.read_text(encoding="utf-8"))["cases"]
+
+tests\integration\test_product_application_flow.py:993: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-m-admission/work/temporal_decision_eval/GOLD.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\GOLD.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\CASES.json'">tmp_path = WindowsPath('D:/webproject/Linkloom/work/mi1/test_temporal_agent_frozen_oth0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000187E4C30520&gt;
+
+    def test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold(tmp_path, monkeypatch):
+        monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+        frozen_root = Path(__file__).resolve().parents[2] / "work" / "temporal_decision_eval"
+&gt;       cases = json.loads((frozen_root / "CASES.json").read_text(encoding="utf-8"))
+
+tests\integration\test_product_application_flow.py:1016: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-m-admission/work/temporal_decision_eval/CASES.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\CASES.json'
+
+D:\Anaconda\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_agent_rejects_out_of_scope_lookup_but_accepts_independently_verified_final" time="3.605" /><testcase classname="tests.integration.test_product_application_flow" name="test_source_updates_and_deletes_reconcile_exact_versioned_evidence" time="1.172" /><testcase classname="tests.integration.test_product_application_flow" name="test_review_requires_explicit_effective_time_for_unresolved_candidates" time="0.693"><failure message="AssertionError: assert 'ENTITY_UNRESOLVED' == 'TEMPORAL_UNRESOLVED'&#10;  &#10;  - TEMPORAL_UNRESOLVED&#10;  + ENTITY_UNRESOLVED">undated_product_server = 'http://127.0.0.1:14567'
+
+    def test_review_requires_explicit_effective_time_for_unresolved_candidates(undated_product_server):
+        base = undated_product_server
+        _, _ = _client(base, "/api/workspaces", method="POST", data={"name": "Temporal"})
+        status, imported = _client(
+            base,
+            "/api/sources/import",
+            method="POST",
+            data={
+                "name": "undated.md",
+                "content": "[2026-10-01T10:00:00Z] Alice: This supplier works for launch.",
+            },
+        )
+        assert status == 202
+        source = _wait_source(base, imported["source"]["source_id"])
+        assert source["ingestion_status"] == "COMPLETE"
+        # The API never substitutes wall-clock time for an unresolved valid_from.
+        status, inbox = _client(base, "/api/review/candidates")
+        assert status == 200 and len(inbox["candidates"]) == 1
+        candidate = inbox["candidates"][0]
+        assert candidate["valid_from"] is None
+        status, result = _client(
+            base,
+            f"/api/review/candidates/{candidate['candidate_id']}/approve",
+            method="POST",
+            data={
+                "reviewer_id": "local-user",
+                "reason": "Reviewed",
+                "subject": "Launch",
+                "relation": "uses supplier",
+            },
+        )
+        assert status == 409
+&gt;       assert result["error"]["code"] == "TEMPORAL_UNRESOLVED"
+E       AssertionError: assert 'ENTITY_UNRESOLVED' == 'TEMPORAL_UNRESOLVED'
+E         
+E         - TEMPORAL_UNRESOLVED
+E         + ENTITY_UNRESOLVED
+
+tests\integration\test_product_application_flow.py:1339: AssertionError</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_provider_must_be_explicitly_configured_and_failure_is_actionable" time="0.805" /><testcase classname="tests.integration.test_product_application_flow" name="test_workspaces_keep_sources_and_decisions_isolated" time="0.824" /><testcase classname="tests.integration.test_ui_http_server" name="test_local_server_serves_assets_and_demo_product_states" time="0.526" /><testcase classname="tests.integration.test_ui_http_server" name="test_mobile_action_rows_keep_visible_field_labels" time="0.523" /><testcase classname="tests.integration.test_ui_http_server" name="test_frontend_retry_and_mobile_inspector_keep_safe_state_boundaries" time="0.511" /><testcase classname="tests.integration.test_ui_http_server" name="test_frontend_uses_one_localized_renderer_and_preserves_source_truth" time="0.541" /><testcase classname="tests.integration.test_ui_http_server" name="test_local_server_validates_start_payload_and_exposes_run_resource" time="0.529" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_current_historical_and_permission_construct_zero_sdk" time="1.167" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_runtime_through_sdk_diagnostics_and_identical_payload" time="18.782" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_fourth_disconnect_is_uncertain_no_final_or_resend[headers-http11.receive_response_headers.failed]" time="9.348" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_fourth_disconnect_is_uncertain_no_final_or_resend[body-http11.receive_response_body.failed]" time="10.581" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_sink_failure_keeps_business_ledger_success" time="9.723" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_transport_cannot_authorize_invalid_final[forged_receipt]" time="10.395" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_unified_transport_cannot_authorize_invalid_final[wrong_evidence]" time="9.227" /><testcase classname="tests.integration.test_unified_transport_flow" name="test_startup_diagnostic_failure_blocks_sdk_and_consumes_runtime_permission" time="1.186" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_durable_runtime_inspect_query_final_and_reviewer" time="4.818" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_p4_diagnostics_preserved_through_real_runtime[stale]" time="2.508" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_p4_diagnostics_preserved_through_real_runtime[revoked]" time="3.632" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_p4_diagnostics_preserved_through_real_runtime[insufficient]" time="2.713" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_reviewer_rejects_source_change_after_model_read" time="3.581" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_runtime_rejects_illegal_business_arguments_before_executor[arguments0]" time="0.401" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_runtime_rejects_illegal_business_arguments_before_executor[arguments1]" time="0.542" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_runtime_rejects_illegal_business_arguments_before_executor[arguments2]" time="0.597" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_runtime_rejects_illegal_business_arguments_before_executor[arguments3]" time="0.477" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_tool_budget_and_permission_are_enforced" time="0.398" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_missing_provider_and_model_step_budget" time="0.642" /><testcase classname="tests.integration.test_task_relation_runtime" name="test_default_workflows_do_not_gain_task_capabilities" time="0.004" /></testsuite></testsuites>

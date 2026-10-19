@@ -73,6 +73,16 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### M3-M Unified Ask admission — 2026-10-19
+
+The authorized isolated follow-up separates deterministic shortcuts from Agent
+admission. Unfamiliar wording can use an explicit investigation domain bound to
+the current workspace source snapshot, reusing existing F/G and Runtime. Unknown
+unscoped input asks for clarification. Reviewed Fast Path, source authority and
+M3-L frozen Canary/budgets remain unchanged. [Scope and evidence](requirements/m3-m-unified-admission/SPEC.md)
+distinguish offline routing contracts from unmeasured real-model semantics;
+automatic semantic domain selection remains an interface limitation.
+
 ### M3-I Product Investigation Integration — 2026-10-19
 
 The authorized isolated branch connects current product source snapshots, F

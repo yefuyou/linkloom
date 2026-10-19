@@ -1,0 +1,164 @@
+{
+  "schema": "m3m-accepted-checks/v1",
+  "baseline": "2d8a21673f27804559b084e42c9ff828f3a9cac0",
+  "branch": "codex/linkloom-m3-m-admission",
+  "route_evidence": "accepted-routing.json",
+  "protected_paths": [
+    "src/linkloom/runtime",
+    "src/linkloom/semantic_ingestion",
+    "src/linkloom/ui/investigation.py",
+    "src/linkloom/ui/task_investigation.py",
+    "src/linkloom/ui/canary*",
+    "docs/requirements/m3-l-live-canary",
+    "docs/evaluation"
+  ],
+  "protected_changed_paths": [],
+  "final_fingerprints_match": true,
+  "cases_unchanged": true,
+  "route_counts": {
+    "cases": 48,
+    "false_rejection": 0,
+    "misroute": 0,
+    "fast_path_preserved": 4,
+    "capability_limits": 3,
+    "reasonable_clarification": 24,
+    "start_boundaries": 17,
+    "unnecessary_start_boundaries": 0,
+    "classifier_model_calls": 0,
+    "actual_model_calls": 0
+  },
+  "xml": {
+    "admission-green1.xml": {
+      "tests": 48,
+      "failures": 0,
+      "errors": 0
+    },
+    "admission-red.xml": {
+      "tests": 48,
+      "failures": 34,
+      "errors": 0
+    },
+    "admission-reviewed.xml": {
+      "tests": 66,
+      "failures": 0,
+      "errors": 0
+    },
+    "baseline-known-failures.xml": {
+      "tests": 6,
+      "failures": 6,
+      "errors": 0
+    },
+    "baseline-regression.xml": {
+      "tests": 88,
+      "failures": 4,
+      "errors": 0
+    },
+    "baseline-short.xml": {
+      "tests": 18,
+      "failures": 0,
+      "errors": 0
+    },
+    "canary-scope.xml": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    "full-collection.xml": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 4
+    },
+    "host-chain.xml": {
+      "tests": 75,
+      "failures": 0,
+      "errors": 0
+    },
+    "http-product-regression.xml": {
+      "tests": 165,
+      "failures": 8,
+      "errors": 0
+    },
+    "review-p2-green.xml": {
+      "tests": 164,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-p2-green2.xml": {
+      "tests": 174,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-p2-green3.xml": {
+      "tests": 185,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-p2-green4.xml": {
+      "tests": 191,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-p2-green5.xml": {
+      "tests": 198,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-p2-red.xml": {
+      "tests": 23,
+      "failures": 10,
+      "errors": 0
+    },
+    "review-p2-red2.xml": {
+      "tests": 33,
+      "failures": 10,
+      "errors": 0
+    },
+    "review-p2-red3.xml": {
+      "tests": 44,
+      "failures": 11,
+      "errors": 0
+    },
+    "review-p2-red4.xml": {
+      "tests": 50,
+      "failures": 6,
+      "errors": 0
+    },
+    "review-p2-red5.xml": {
+      "tests": 57,
+      "failures": 5,
+      "errors": 0
+    },
+    "scoped-integration.xml": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0
+    },
+    "unit-environment-fixed.xml": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0
+    },
+    "unit-regression.xml": {
+      "tests": 672,
+      "failures": 2,
+      "errors": 0
+    }
+  },
+  "counts_overlap": true,
+  "independent_review": "REPORTED_IN_SCOPE_P1_P2_CLOSED",
+  "general_semantic_completeness": "NOT_CLAIMED",
+  "real_model_semantics": "NOT_EVALUATED",
+  "actual_live_requests": 0,
+  "actual_paid_requests": 0,
+  "actual_paid_cost_usd": 0,
+  "browser_checks": [
+    "domain selector and translated options",
+    "unscoped question preserved with actionable clarification",
+    "task-domain selection does not steal reviewed Fast Path; 0 model calls"
+  ],
+  "test_source_hashes": {
+    "tests/unit/test_ask_admission.py": "10578fd0b6429202e149807ec5d0ffd888f0c53d25b478b344415fa3af207f36",
+    "tests/integration/test_m3m_admission.py": "1062b4f09ec4e50ce3c5bd4a9f8248ac887d32326eb6579e3620f187227217c6",
+    "tests/ui/unified_ask_dom_test.cjs": "a7b79a0ffc0e0c7264bd4652cd0c7266796247a3e4aa509c08d7eaa7b1b1786e"
+  }
+}

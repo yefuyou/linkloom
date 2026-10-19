@@ -1,0 +1,378 @@
+{
+  "schema_version": "linkloom-canary-ledger/v1",
+  "campaign_id": "m3-product-canary-v1",
+  "manifest_hash": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+  "ledger_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\l-dda8ca\\m3-product-canary-v1\\ledger.jsonl",
+  "marker_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\l-dda8ca\\m3-product-canary-v1\\initialized.json",
+  "status": "ACTIVE",
+  "stopped": false,
+  "stop_reason": null,
+  "request_count": 25,
+  "total_count": 25,
+  "max_requests": 34,
+  "pending_request_count": 0,
+  "pending": [],
+  "reservation_usd": 0.079872,
+  "committed_cost_usd": 0.0015,
+  "used_cost_usd": 0.0015,
+  "reserved_cost_usd": 0.0,
+  "remaining_cost_usd": 2.9985,
+  "max_total_cost_usd": 3.0,
+  "input_tokens": 500,
+  "output_tokens": 300,
+  "reserved_input_tokens": 0,
+  "reserved_output_tokens": 0,
+  "input_token_cap": 65536,
+  "output_token_cap": 8192,
+  "stage_caps": {
+    "discovery": {
+      "per_case": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 3
+      },
+      "total": 7
+    },
+    "planning": {
+      "per_case": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 2
+      },
+      "total": 6
+    },
+    "semantic": {
+      "per_case": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1
+      },
+      "total": 3
+    },
+    "runtime": {
+      "per_case": {
+        "C1": 6,
+        "C2": 6,
+        "C3": 6
+      },
+      "total": 18
+    }
+  },
+  "case_caps": {
+    "C1": 11,
+    "C2": 11,
+    "C3": 12
+  },
+  "stages": {
+    "discovery": {
+      "count": 7,
+      "completed_count": 7,
+      "pending_count": 0,
+      "max_count": 7,
+      "input_tokens": 140,
+      "output_tokens": 84,
+      "cost_usd": 0.00042,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "max_input_tokens": 458752,
+      "max_output_tokens": 57344,
+      "max_cost_usd": 0.559104
+    },
+    "planning": {
+      "count": 3,
+      "completed_count": 3,
+      "pending_count": 0,
+      "max_count": 6,
+      "input_tokens": 60,
+      "output_tokens": 36,
+      "cost_usd": 0.00018,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "max_input_tokens": 393216,
+      "max_output_tokens": 49152,
+      "max_cost_usd": 0.479232
+    },
+    "semantic": {
+      "count": 3,
+      "completed_count": 3,
+      "pending_count": 0,
+      "max_count": 3,
+      "input_tokens": 60,
+      "output_tokens": 36,
+      "cost_usd": 0.00018,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "max_input_tokens": 196608,
+      "max_output_tokens": 24576,
+      "max_cost_usd": 0.239616
+    },
+    "runtime": {
+      "count": 12,
+      "completed_count": 12,
+      "pending_count": 0,
+      "max_count": 18,
+      "input_tokens": 240,
+      "output_tokens": 144,
+      "cost_usd": 0.00072,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "max_input_tokens": 1179648,
+      "max_output_tokens": 147456,
+      "max_cost_usd": 1.437696
+    }
+  },
+  "cases": {
+    "C1": {
+      "count": 8,
+      "completed_count": 8,
+      "pending_count": 0,
+      "max_count": 11,
+      "input_tokens": 160,
+      "output_tokens": 96,
+      "cost_usd": 0.00048,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "stages": {
+        "discovery": {
+          "count": 2,
+          "max_count": 2,
+          "input_tokens": 40,
+          "output_tokens": 24,
+          "cost_usd": 0.00012
+        },
+        "planning": {
+          "count": 1,
+          "max_count": 2,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "semantic": {
+          "count": 1,
+          "max_count": 1,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "runtime": {
+          "count": 4,
+          "max_count": 6,
+          "input_tokens": 80,
+          "output_tokens": 48,
+          "cost_usd": 0.00024
+        }
+      }
+    },
+    "C2": {
+      "count": 8,
+      "completed_count": 8,
+      "pending_count": 0,
+      "max_count": 11,
+      "input_tokens": 160,
+      "output_tokens": 96,
+      "cost_usd": 0.00048,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "stages": {
+        "discovery": {
+          "count": 2,
+          "max_count": 2,
+          "input_tokens": 40,
+          "output_tokens": 24,
+          "cost_usd": 0.00012
+        },
+        "planning": {
+          "count": 1,
+          "max_count": 2,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "semantic": {
+          "count": 1,
+          "max_count": 1,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "runtime": {
+          "count": 4,
+          "max_count": 6,
+          "input_tokens": 80,
+          "output_tokens": 48,
+          "cost_usd": 0.00024
+        }
+      }
+    },
+    "C3": {
+      "count": 9,
+      "completed_count": 9,
+      "pending_count": 0,
+      "max_count": 12,
+      "input_tokens": 180,
+      "output_tokens": 108,
+      "cost_usd": 0.00054,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "reserved_cost_usd": 0.0,
+      "stages": {
+        "discovery": {
+          "count": 3,
+          "max_count": 3,
+          "input_tokens": 60,
+          "output_tokens": 36,
+          "cost_usd": 0.00018
+        },
+        "planning": {
+          "count": 1,
+          "max_count": 2,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "semantic": {
+          "count": 1,
+          "max_count": 1,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05
+        },
+        "runtime": {
+          "count": 4,
+          "max_count": 6,
+          "input_tokens": 80,
+          "output_tokens": 48,
+          "cost_usd": 0.00024
+        }
+      }
+    }
+  },
+  "campaign_started_at": "2026-10-19T13:49:02.220784+00:00",
+  "case_started_at": {
+    "C1": "2026-10-19T13:49:03.016055+00:00",
+    "C2": "2026-10-19T13:49:10.210706+00:00",
+    "C3": "2026-10-19T13:49:18.015037+00:00"
+  },
+  "campaign_total_seconds": 1800,
+  "case_total_seconds": 600,
+  "request_timeout_seconds": 130,
+  "config": {
+    "input_token_cap": 65536,
+    "output_token_cap": 8192,
+    "input_price_usd_per_million": 0.75,
+    "output_price_usd_per_million": 3.75,
+    "reservation_usd": 0.079872,
+    "max_total_requests": 34,
+    "max_total_cost_usd": 3.0,
+    "campaign_total_seconds": 1800,
+    "case_total_seconds": 600,
+    "request_timeout_seconds": 130,
+    "case_total_caps": {
+      "C1": 11,
+      "C2": 11,
+      "C3": 12
+    },
+    "stage_per_case_caps": {
+      "discovery": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 3
+      },
+      "planning": {
+        "C1": 2,
+        "C2": 2,
+        "C3": 2
+      },
+      "semantic": {
+        "C1": 1,
+        "C2": 1,
+        "C3": 1
+      },
+      "runtime": {
+        "C1": 6,
+        "C2": 6,
+        "C3": 6
+      }
+    },
+    "stage_total_caps": {
+      "discovery": 7,
+      "planning": 6,
+      "semantic": 3,
+      "runtime": 18
+    }
+  },
+  "source_bindings": {
+    "C1": {
+      "snapshot_sha256": "685f7211890fba98bd4d5bf87567816cd64cd133c4e17f28559c61aaf07db8bc",
+      "sources": [
+        {
+          "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+          "source_id": "src_361992da1c73bab7f1636e9de567ee0a",
+          "source_version": "artifact_v1_dac3276a562300da398fd44bbbfa34656d9f5c1e187fa322a491fa178787f9e9"
+        },
+        {
+          "content_sha256": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+          "source_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+          "source_version": "artifact_v1_b6040c3f5a4fee2c214a30e80702947a6e16f88b51a3e2522ff17742ea1ec598"
+        }
+      ],
+      "workspace_id": "ws_0171f007833348e8b6f2c46e748b05f9"
+    },
+    "C2": {
+      "snapshot_sha256": "3078545cc63acb08388715080a7f347797fcb60de7af6151a9d5e8da9570a160",
+      "sources": [
+        {
+          "content_sha256": "69c2ab3cc6559ccbb0de98202d920af9182606aabc1877209f851a5455e764ea",
+          "source_id": "src_583b9b20631d14fa6731cfaf12a9f81f",
+          "source_version": "artifact_v1_cb346bccccc69a74404b3338e6fc5f5419326d557d823d3708e74b0912e31b5f"
+        },
+        {
+          "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+          "source_id": "src_ed28f71815f8923fee7499d709864d10",
+          "source_version": "artifact_v1_8d943303094c2e07b907286a26004919bc4b52a309cc82ecb39b107981e33d08"
+        }
+      ],
+      "workspace_id": "ws_92c006982ff64ac584fb7620c9742813"
+    },
+    "C3": {
+      "snapshot_sha256": "4ade3dd7e5e4808582acf767f734a2284d8ee2b1bcf7554eb2c090387b05c55b",
+      "sources": [
+        {
+          "content_sha256": "69c2ab3cc6559ccbb0de98202d920af9182606aabc1877209f851a5455e764ea",
+          "source_id": "src_2e68c4b8873610253cef2685d34d0cda",
+          "source_version": "artifact_v1_53de9d5ae358e921b94f33010f761f2983ccd39dfcdc5fe55eb83c786ce49336"
+        },
+        {
+          "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+          "source_id": "src_300dd61a5006a5930bd08ed91c507de0",
+          "source_version": "artifact_v1_c2a9e1ce6a3cbb592916ec4fa4d986bf7cd24bea1e41528721c7434496a428bf"
+        },
+        {
+          "content_sha256": "16b9d7f70c30ac6594839355d0ef505a2a185fd7c54d3a3550c2dbd86fdb20fa",
+          "source_id": "src_abd3d12759fe9226da02a95a9b56294c",
+          "source_version": "artifact_v1_7f14c97451910a44c8b9e399b4302aaf6bfca814af920786ff02e93fc902aa5c"
+        }
+      ],
+      "workspace_id": "ws_e62e242074ac477daa0a99af192ec51a"
+    }
+  },
+  "unknown_usage_count": 0,
+  "estimated_cost_usd": 0.0015,
+  "thinking_tokens": 50,
+  "global": {
+    "count": 25,
+    "max_count": 34,
+    "input_tokens": 500,
+    "output_tokens": 300,
+    "cost_usd": 0.0015,
+    "pending_count": 0,
+    "reserved_cost_usd": 0.0,
+    "max_cost_usd": 3.0
+  }
+}

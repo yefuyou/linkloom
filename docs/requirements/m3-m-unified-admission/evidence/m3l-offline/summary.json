@@ -1,0 +1,107 @@
+{
+  "evidence_layer": "OFFLINE_MOCKED_SDK_PRODUCT_INTEGRATION",
+  "actual_live_network_requests": 0,
+  "actual_paid_requests": 0,
+  "actual_paid_cost_usd": 0,
+  "real_model_semantics": "NOT_EVALUATED",
+  "real_business_completion": "NOT_EVALUATED",
+  "cases": {
+    "C1": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_8fd0d7a3",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T13:49:09.618877+00:00",
+        "accepted": true
+      },
+      "mocked_sdk_sends": 8,
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ]
+    },
+    "C2": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_f3f223a9",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T13:49:17.267570+00:00",
+        "accepted": true
+      },
+      "mocked_sdk_sends": 8,
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ]
+    },
+    "C3": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_9a6b65b9",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T13:49:27.667842+00:00",
+        "accepted": true
+      },
+      "mocked_sdk_sends": 9,
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ]
+    }
+  },
+  "freeze_sha256": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8"
+}

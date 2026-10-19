@@ -45,7 +45,7 @@ async function setup() {
       : path === "/api/workspaces/current" ? {workspace: workspaces.find(w => w.workspace_id === current)}
       : path === "/api/status" ? {ready: false}
       : path === "/api/sources" ? {sources: []}
-      : path === "/api/product/ask/config" ? {workspace_id: current, scopes: [{subject: "Launch", relation: "uses supplier"}], agent: {available: false}}
+      : path === "/api/product/ask/config" ? {workspace_id: current, scopes: [{subject: "Launch", relation: "uses supplier"}], agent: {available: false}, investigation_context: {snapshot_hash: "a".repeat(64)}}
       : {candidates: []};
     return response(payload);
   }
@@ -56,6 +56,7 @@ async function setup() {
   await tick(); await tick();
   await element("ask").listeners.click(); await tick();
   assert.match(element("page").innerHTML, /id="ask-slot"/);
+  assert.match(element("page").innerHTML, /id="ask-domain"/);
   assert.doesNotMatch(element("page").innerHTML, /id="ask-slot" required/);
   assert.match(element("page").innerHTML, /Discover automatically from my question/);
   element("ask-slot").value = "0";
@@ -65,7 +66,18 @@ async function setup() {
 }
 
 (async () => {
-  for (const field of ["ask-date", "ask-query", "ask-slot"]) {
+  const scopedUi = await setup();
+  scopedUi.element("ask-slot").value = "";
+  scopedUi.element("ask-form").fields = {query: "后面那条还能接上吗？", as_of: "", investigation_domain: "tasks"};
+  const scopedOperation = scopedUi.submit(); await tick();
+  assert.deepEqual(scopedUi.submittedBodies[0].investigation_context, {domain: "tasks", snapshot_hash: "a".repeat(64)});
+  assert.equal(scopedUi.submittedBodies[0].query, "后面那条还能接上吗？");
+  const needsDomain = result("");
+  Object.assign(needsDomain.result, {status: "NEEDS_SCOPE", path: null, conclusions: [],
+    error: {code: "INVESTIGATION_DOMAIN_REQUIRED"}, discovery: {status: "NO_MATCH"}});
+  scopedUi.pending[0](needsDomain); await scopedOperation;
+  assert.match(scopedUi.element("ask-result").innerHTML, /Choose an investigation scope/);
+  for (const field of ["ask-date", "ask-query", "ask-slot", "ask-domain"]) {
     const {element, pending, submit} = await setup();
     const operation = submit(); await tick();
     await element("page").listeners.input({target: element(field)});

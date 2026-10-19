@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="34" skipped="0" tests="48" time="4.099" timestamp="2026-10-19T21:42:49.514307+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_zh]" time="1.440"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'implicit_zh', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_en]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'implicit_en', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[implicit_mix]" time="0.001"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'implicit_mix', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_zh]" time="0.001"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'time_zh', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_en]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'DATE_SCOPE_REQUIRED', ...}&#10;assert 'CLARIFY' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + CLARIFY">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'time_en', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'DATE_SCOPE_REQUIRED', ...}
+E       assert 'CLARIFY' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + CLARIFY
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[time_mix]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'DATE_SCOPE_REQUIRED', ...}&#10;assert 'CLARIFY' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + CLARIFY">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'time_mix', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'DATE_SCOPE_REQUIRED', ...}
+E       assert 'CLARIFY' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + CLARIFY
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_zh]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'identity_zh', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_en]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'identity_en', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[identity_mix]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'identity_mix', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_current_mislead]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'task_current_mislead', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_owner_mislead]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'task_owner_mislead', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[task_supplier_mislead]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'&#10;  &#10;  - TASK_INVESTIGATION&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'TASK_INVESTIGATION', 'id': 'task_supplier_mislead', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'TASK_INVESTIGATION'
+E         
+E         - TASK_INVESTIGATION
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[unscoped_implicit]" time="0.001"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'unscoped_implicit', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[unscoped_time]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[legacy_task]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_rules]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_zh]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_en]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_mix]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[relation_no_hint]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'relation_no_hint', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_en]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_zh]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_exact]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_context]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_unfamiliar]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'formal_unfamiliar', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_unknown]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[formal_scope_conflict]" time="0.002" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'hello', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello_context]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'hello_context', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[hello_zh_context]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'hello_zh_context', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[weather]" time="0.001" /><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[math]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'math', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_task]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'TASK_INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + TASK_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'keyword_task', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'TASK_INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + TASK_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_deadline]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'TASK_INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + TASK_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'keyword_deadline', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'TASK_INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + TASK_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_owner]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'keyword_owner', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_now]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'keyword_now', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[keyword_formal]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'keyword_formal', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[ambiguous]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'ambiguous', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[ambiguous_decisions]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': None, 'expected': 'CLARIFY', 'id': 'ambiguous_decisions', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_write]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'TASK_INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + TASK_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'malicious_write', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'TASK_INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + TASK_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_foreign]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'TASK_INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + TASK_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'malicious_foreign', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'TASK_INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + TASK_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_prompt]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'malicious_prompt', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[malicious_secret]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'malicious_secret', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[missing_capability]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CAPABILITY'&#10;  &#10;  - CAPABILITY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {'task_investigation': False}, 'domain': 'tasks', 'expected': 'CAPABILITY', 'id': 'missing_capability', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CAPABILITY'
+E         
+E         - CAPABILITY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[missing_relation_capability]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'source_relations', 'error': 'DECISION_SCOPE_NO_MATCH', ...}&#10;assert 'CLARIFY' == 'CAPABILITY'&#10;  &#10;  - CAPABILITY&#10;  + CLARIFY">case = {'config': {'adaptive_planning': False}, 'domain': 'source_relations', 'expected': 'CAPABILITY', 'id': 'missing_relation_capability', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'source_relations', 'error': 'DECISION_SCOPE_NO_MATCH', ...}
+E       assert 'CLARIFY' == 'CAPABILITY'
+E         
+E         - CAPABILITY
+E         + CLARIFY
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[stale_context]" time="0.002"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'&#10;  &#10;  - CLARIFY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CLARIFY', 'id': 'stale_context', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CLARIFY'
+E         
+E         - CLARIFY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[date_scope]" time="0.003"><failure message="AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}&#10;assert 'SOURCE_RELAT...INVESTIGATION' == 'CAPABILITY'&#10;  &#10;  - CAPABILITY&#10;  + SOURCE_RELATION_INVESTIGATION">case = {'config': {}, 'domain': 'tasks', 'expected': 'CAPABILITY', 'id': 'date_scope', ...}
+observed = {'ambiguous': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': None, 'error': None, ...}, 'ambiguous_d...e': {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': 'WORKSPACE_MISMATCH', ...}, ...}
+
+    @pytest.mark.parametrize('case', CASES, ids=lambda c: c['id'])
+    def test_frozen_multilingual_route_contract(case, observed):
+        row = observed[case['id']]
+&gt;       assert row['observed'] == case['expected'], row
+E       AssertionError: {'actual_model_calls': 0, 'classifier_model_calls': 0, 'domain': 'tasks', 'error': None, ...}
+E       assert 'SOURCE_RELAT...INVESTIGATION' == 'CAPABILITY'
+E         
+E         - CAPABILITY
+E         + SOURCE_RELATION_INVESTIGATION
+
+tests\integration\test_m3m_admission.py:14: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3m_admission" name="test_frozen_multilingual_route_contract[foreign_workspace]" time="0.002" /></testsuite></testsuites>

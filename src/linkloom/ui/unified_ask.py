@@ -15,10 +15,12 @@ from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.runtime.adaptive_planning import source_scope_violation
+from linkloom.ui.ask_admission import (admission_restriction, parse_context,
+    source_context, validate_context, refers_to_records)
 
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
-# Supported task families, not general intent understanding. Investigation wins
+# Legacy shortcuts only. Explicit source-bound domains bypass intent vocabulary.
 _TASK_QUESTION = re.compile(r'\b(tasks?|deadlines?|deliverables?)\b|任务|交付|截止', re.I)
 
 # Supported task families, not general intent understanding. Investigation wins
@@ -46,7 +48,7 @@ def classify_task(query: str) -> dict[str, str]:
         return {"intent": "DECISION", "code": "REVIEWED_STATE_LOOKUP",
                 "reason": "Reviewed state, validity and receipts can be queried directly."}
     return {"intent": "UNKNOWN", "code": "TASK_UNCLASSIFIED",
-            "reason": "This bounded router cannot reliably classify the task. Ask for a reviewed decision, effective date, receipt, reason or source conflict."}
+            "reason": "Select a reviewed decision or an investigation domain and current sources. Unrecognized wording does not establish that no task exists."}
 
 
 @dataclass(frozen=True)
@@ -89,7 +91,9 @@ class UnifiedAskService:
         with self.app._store_lock:
             workspace_id = self.app._workspace_id()
             slots = self._trusted_slots(workspace_id)
+            context = source_context(self.app, workspace_id)
         return {"workspace_id": workspace_id,
+                "investigation_context": context,
                 "scopes": [{"subject": slot["subject"], "relation": slot["relation"]} for slot in slots],
                 "agent": service.config() if service else {
             "available": False, "external_provider": False, "run_mode": "MODEL_NOT_CONFIGURED",
@@ -168,8 +172,18 @@ class UnifiedAskService:
             # Keep the current-workspace check and setup atomic with workspace selection.
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
+                context = parse_context(payload.get('investigation_context'))
+                restriction = admission_restriction(run.query)
+                if restriction:
+                    result['path'] = None
+                    return self._failure(result, *restriction, status='NEEDS_SCOPE'), 200
                 plan = plan_relation_investigation(run.query)
                 if plan is not None:
+                    if context:
+                        validate_context(self.app, run.workspace_id, context)
+                        if context['domain'] != 'source_relations':
+                            return self._failure(result, 'INVESTIGATION_DOMAIN_CONFLICT',
+                                'This question requests a source relationship chain; select that domain.', status='NEEDS_SCOPE'), 200
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
                 resolver, memory = self.app.relation_resolver, None
@@ -184,22 +198,49 @@ class UnifiedAskService:
                         discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0,
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                 result["discovery"] = discovery
-                if (not (values['subject'] or values['relation']) and _TASK_QUESTION.search(run.query)
-                        and (discovery['status'] == 'NO_MATCH' or run.route['intent'] == 'INVESTIGATION')):
-                    return self._task_request(run)
-                if discovery["scope"] is None:
+                explicit = bool(values['subject'] or values['relation'])
+                if discovery['status'] == 'AMBIGUOUS':
+                    result['path'] = None
+                    return self._failure(result, 'DECISION_SCOPE_AMBIGUOUS', discovery['reason'], status='NEEDS_SCOPE'), 200
+                # A selected capability cannot override an identity-bound formal
+                # lookup. Unknown lexical terms still cannot bind an identity.
+                fast_path = discovery['scope'] is not None and run.route['intent'] == 'DECISION'
+                if context and not fast_path:
+                    if explicit:
+                        result['path'] = None
+                        return self._failure(result, 'TASK_SCOPE_CONFLICT',
+                            'Clear the advanced decision selection before investigating source records.', status='NEEDS_SCOPE'), 200
+                    validate_context(self.app, run.workspace_id, context)
+                    if context['domain'] == 'tasks':
+                        return self._task_request(run, context=context)
                     service = self.investigation()
-                    if discovery["status"] == "NO_MATCH" and _RELATION_QUESTION.search(run.query):
-                        return self._source_request(run, payload, None)
-                    if (discovery["status"] == "NO_MATCH" and not (values["subject"] or values["relation"])
-                            and service is not None and service.config().get("adaptive_planning")):
+                    if not service or not service.config().get('adaptive_planning'):
+                        result['path'] = None
+                        return self._failure(result, 'INVESTIGATION_CAPABILITY_UNAVAILABLE',
+                            'Source relationship planning is unavailable. No alternate investigation was started.', status='BLOCKED'), 200
+                    return self._source_request(run, payload, None)
+                if (not explicit and _TASK_QUESTION.search(run.query)
+                        and run.route['intent'] == 'INVESTIGATION' and refers_to_records(run.query)):
+                    return self._task_request(run)
+                relation_shortcut = False
+                if not explicit and _RELATION_QUESTION.search(run.query):
+                    service = self.investigation()
+                    # Preserve the existing deterministic capability refusal
+                    # even when no record reference permits adaptive planning.
+                    relation_shortcut = (refers_to_records(run.query, relationships=True)
+                        or service is None or not service.config().get('adaptive_planning'))
+                if discovery["scope"] is None:
+                    if discovery["status"] == "NO_MATCH" and relation_shortcut:
                         return self._source_request(run, payload, None)
                     result["path"] = None
-                    return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
-                                         discovery["reason"], status="NEEDS_SCOPE"), 200
+                    code = 'DECISION_SCOPE_' + discovery['status'] if explicit else 'INVESTIGATION_DOMAIN_REQUIRED'
+                    return self._failure(result, code,
+                        discovery['reason'] if explicit else
+                        'Select a reviewed decision or an investigation domain bound to the current sources; no investigation was started.',
+                        status='NEEDS_SCOPE'), 200
                 values.update(discovery["scope"])
                 result["scope"].update(discovery["scope"])
-                if _RELATION_QUESTION.search(run.query) and run.route["intent"] != "DECISION":
+                if relation_shortcut and run.route["intent"] != "DECISION":
                     return self._source_request(run, payload, None)
                 as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                 if date_error:
@@ -232,9 +273,11 @@ class UnifiedAskService:
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
 
-    def _task_request(self, run):
+    def _task_request(self, run, *, context=None):
         route = dict(intent='TASK_INVESTIGATION', code='SOURCE_TASK_INVESTIGATION',
                      reason='Bounded task investigation; observations and plans remain unconfirmed.')
+        route['admission'] = dict(origin='USER_SCOPED' if context else 'RECORD_SHORTCUT',
+                                  context=deepcopy(context))
         run = _AskRun(run.query, run.workspace_id, run.scope, route)
         result = self._base(run)
         result['path'] = 'TASK_INVESTIGATION'

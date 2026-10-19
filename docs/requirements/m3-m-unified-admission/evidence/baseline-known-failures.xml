@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="87.108" timestamp="2026-10-19T21:58:20.951064+08:00" hostname="beagle"><testcase classname="tests.integration.test_unified_investigation_flow" name="test_exposed_hold_g_conflict_regression" time="62.933"><failure message="AssertionError: assert 'refused' == 'partial'&#10;  &#10;  - partial&#10;  + refused">tests\integration\test_unified_investigation_flow.py:77: in test_exposed_hold_g_conflict_regression
+    assert result["outcome"] == "partial"
+E   AssertionError: assert 'refused' == 'partial'
+E     
+E     - partial
+E     + refused</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[3]" time="1.795"><failure message="AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}&#10;assert 500 == 503">tests\integration\test_product_application_flow.py:236: in test_temporal_http_provider_unknown_keeps_read_source_without_verified_final
+    assert status == 503, snapshot
+E   AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}
+E   assert 500 == 503</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[4]" time="1.899"><failure message="AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}&#10;assert 500 == 503">tests\integration\test_product_application_flow.py:236: in test_temporal_http_provider_unknown_keeps_read_source_without_verified_final
+    assert status == 503, snapshot
+E   AssertionError: {'actions': [], 'decision': None, 'error': {'classification': 'runtime_failure', 'code': 'TOOL_INVALID_ARGUMENTS', 'me...nswer could be verified.', 'technical_message': 'No additional safe details are available.', ...}, 'evidence': [], ...}
+E   assert 500 == 503</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason" time="18.755"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\GOLD.json'">tests\integration\test_product_application_flow.py:993: in test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason
+    gold_cases = json.loads(gold_path.read_text(encoding="utf-8"))["cases"]
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\GOLD.json'</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\CASES.json'">tests\integration\test_product_application_flow.py:1016: in test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold
+    cases = json.loads((frozen_root / "CASES.json").read_text(encoding="utf-8"))
+D:\Anaconda\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+D:\Anaconda\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+D:\Anaconda\Lib\pathlib\_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-m-admission\\work\\temporal_decision_eval\\CASES.json'</failure></testcase><testcase classname="tests.integration.test_product_application_flow" name="test_review_requires_explicit_effective_time_for_unresolved_candidates" time="0.717"><failure message="AssertionError: assert 'ENTITY_UNRESOLVED' == 'TEMPORAL_UNRESOLVED'&#10;  &#10;  - TEMPORAL_UNRESOLVED&#10;  + ENTITY_UNRESOLVED">tests\integration\test_product_application_flow.py:1339: in test_review_requires_explicit_effective_time_for_unresolved_candidates
+    assert result["error"]["code"] == "TEMPORAL_UNRESOLVED"
+E   AssertionError: assert 'ENTITY_UNRESOLVED' == 'TEMPORAL_UNRESOLVED'
+E     
+E     - TEMPORAL_UNRESOLVED
+E     + ENTITY_UNRESOLVED</failure></testcase></testsuite></testsuites>
