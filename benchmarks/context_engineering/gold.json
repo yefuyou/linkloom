@@ -1,0 +1,10 @@
+{
+  "two_hop": {"goals": {"owner": ["owner"], "leader": ["leader"]}, "counter": []},
+  "three_hop": {"goals": {"owner": ["owner"], "leader": ["leader"], "budget": ["budget"]}, "counter": []},
+  "scattered_same_file": {"goals": {"owner": ["owner"], "leader": ["leader"], "budget": ["budget"]}, "counter": []},
+  "cross_document_conflict": {"goals": {"supplier": ["support", "counter"]}, "counter": ["counter"]},
+  "supplier_and_plan_revision": {"goals": {"supplier": ["new-supplier"], "plan": ["new-plan"]}, "counter": ["new-plan"]},
+  "large_irrelevant_pool": {"goals": {"owner": ["needle"]}, "counter": []},
+  "long_history_short_context": {"goals": {"owner": ["archived-owner"], "leader": ["archived-leader"]}, "counter": []},
+  "source_update_and_invalidation": {"goals": {"supplier": ["unavailable-current-supplier"], "plan": ["unavailable-current-plan"]}, "counter": []}
+}

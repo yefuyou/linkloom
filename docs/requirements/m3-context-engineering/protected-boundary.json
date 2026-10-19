@@ -1,0 +1,30 @@
+{
+  "baseline": "26392432dcef70692461e6f2f50bc1bd5528f69a",
+  "protected_files": [
+    {
+      "path": "src/linkloom/runtime/model_loop.py",
+      "baseline_blob": "ba06f18fefff45983e81d7ffede226ba6310668d",
+      "worktree_blob": "ba06f18fefff45983e81d7ffede226ba6310668d",
+      "unchanged": true
+    },
+    {
+      "path": "src/linkloom/agents/runtime_adapter.py",
+      "baseline_blob": "8241b5694af5971d4726422fa1f969257fc433b3",
+      "worktree_blob": "8241b5694af5971d4726422fa1f969257fc433b3",
+      "unchanged": true
+    },
+    {
+      "path": "src/linkloom/agents/coordinator.py",
+      "baseline_blob": "df7e394fe6193d59b8b1e90b659467cdb67f7993",
+      "worktree_blob": "df7e394fe6193d59b8b1e90b659467cdb67f7993",
+      "unchanged": true
+    },
+    {
+      "path": "src/linkloom/tools/runtime.py",
+      "baseline_blob": "9f7c0add8241bb7813f64fd91973b38e9bcd9bc2",
+      "worktree_blob": "9f7c0add8241bb7813f64fd91973b38e9bcd9bc2",
+      "unchanged": true
+    }
+  ],
+  "protected_tree_diff": []
+}

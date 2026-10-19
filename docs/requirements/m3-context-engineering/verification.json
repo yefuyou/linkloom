@@ -1,0 +1,62 @@
+{
+  "baseline": "26392432dcef70692461e6f2f50bc1bd5528f69a",
+  "branch": "codex/linkloom-m3-context-engineering",
+  "final_affected": {
+    "tests": 176,
+    "passed": 174,
+    "failures": [
+      "tests.unit.test_m11_verified_evidence_context::test_gemini_request_serializes_verified_context_into_model_visible_input",
+      "tests.integration.test_retrieval_v2_agent_integration::test_mps001_retrieved_evidence_ids_round_trip_to_same_source_and_version"
+    ],
+    "errors": []
+  },
+  "baseline_reproduction": {
+    "tests": 2,
+    "passed": 0,
+    "failures": [
+      "tests.unit.test_m11_verified_evidence_context::test_gemini_request_serializes_verified_context_into_model_visible_input",
+      "tests.integration.test_retrieval_v2_agent_integration::test_mps001_retrieved_evidence_ids_round_trip_to_same_source_and_version"
+    ],
+    "errors": []
+  },
+  "affected_failure_ids_match_baseline": true,
+  "new_tests": {
+    "tests": 51,
+    "passed": 51
+  },
+  "canonical_regression": {
+    "tests": 4,
+    "passed": 0,
+    "failures": [],
+    "errors": [
+      "::tests.unit.test_memoryagentbench_g3_pilot",
+      "::tests.unit.test_memoryagentbench_g31_fixed50",
+      "::tests.unit.test_memoryagentbench_g32_heldout",
+      "::tests.integration.test_stage_c_end_to_end_loop"
+    ]
+  },
+  "full_suite_attempts": {
+    "current": "stopped after >53%; incomplete, unclassified broader failures",
+    "baseline": "stopped after >42%; incomplete, unclassified broader failures",
+    "full_suite_pass_claimed": false
+  },
+  "checks": {
+    "diff_check": "passed",
+    "protected_boundary": "see protected-boundary.json",
+    "live_model_calls": 0,
+    "real_vault_mutation": false,
+    "PR_or_merge_requested_or_created": false
+  },
+  "artifact_sha256": {
+    "experiment.json": "b70d676556f086cf4652130cdd927076b85321f49fd0760b0e61ad3a801396eb",
+    "final-affected-tests.xml": "f5db64d6c9e0de0f9778fdf4b5e180e4741982e48a3e1d06f469be1e7eb24cbd",
+    "baseline-affected-tests.xml": "85bd259f19db07ea3ac5230da5180c6cfb5022abcf9bc96fb568636cbc341b6c",
+    "canonical-regression.xml": "9763f9205ab89b47dd54d36ad98ec3657fc7246cdf5b7a4f8cb4ee64e258abaa",
+    "protected-boundary.json": "08317629badfef7da8ff76564ec3e7b35721eb2b7c952f164b8020d03603480a"
+  },
+  "commands": {
+    "affected": "python -m pytest tests/unit/test_context_assembler.py tests/unit/test_context_selection_v1.py tests/unit/test_context_recovery_v1.py tests/unit/test_working_context_v1.py tests/unit/test_context_engineering_experiment.py tests/unit/test_m11_verified_evidence_context.py tests/unit/test_product_evidence_context_scope.py tests/unit/test_p84_durable_model_loop.py tests/unit/test_p83_fake_model_loop.py tests/unit/test_tool_ledger_runtime.py tests/integration/test_retrieval_tool_runtime.py tests/unit/test_retrieval_v2.py tests/unit/test_agent_retrieval_v2_integration.py tests/integration/test_retrieval_v2_agent_integration.py tests/unit/test_temporal_decision_memory.py tests/unit/test_decision_memory_reconciliation.py tests/unit/test_decision_memory_write_policy.py tests/unit/test_context_manifest.py tests/unit/test_context_indexes.py -p pytest_windows_tempdir -p no:cacheprovider -q --tb=short --basetemp=work/<fresh-path> --junitxml=docs/requirements/m3-context-engineering/final-affected-tests.xml",
+    "baseline_reproduction": "Same offline/current/plugin environment; PYTHONPATH=<unchanged baseline worktree>/src;scripts; pytest the two final affected failure node IDs",
+    "experiment": "python -m benchmarks.context_engineering.run --output docs/requirements/m3-context-engineering/experiment.json"
+  }
+}
