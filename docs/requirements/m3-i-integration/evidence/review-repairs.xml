@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="4.240" timestamp="2026-10-19T19:17:44.213390+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[missing]" time="0.676"><failure message="AssertionError: {'agent_run_id': 'ui-06b28946bec3', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_96698fd6ba8d'}, ...}, ...}&#10;assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}">tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-i-integration/work/pytest-m3i-review-repair1/test_missing_conflict_and_host0')
+case = 'missing'
+
+    @pytest.mark.parametrize('case', ['missing', 'conflict', 'replan'])
+    def test_missing_conflict_and_host_verified_unknown_replanning_are_visible(tmp_path, case):
+        app, service, ask, stages, workspace = product_case(tmp_path, **{case: True})
+        result, _ = ask.ask(dict(query=QUESTION, workspace_id=workspace))
+        result = finish(ask, workspace, result)
+&gt;       assert result['status'] in {'UNKNOWN', 'PARTIAL'}, result
+E       AssertionError: {'agent_run_id': 'ui-06b28946bec3', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_96698fd6ba8d'}, ...}, ...}
+E       assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}
+
+tests\integration\test_m3i_product_chain.py:30: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[conflict]" time="0.595"><failure message="AssertionError: {'agent_run_id': 'ui-6f59ddb677ae', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_97b4c28219dd'}, ...}, ...}&#10;assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}">tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-i-integration/work/pytest-m3i-review-repair1/test_missing_conflict_and_host1')
+case = 'conflict'
+
+    @pytest.mark.parametrize('case', ['missing', 'conflict', 'replan'])
+    def test_missing_conflict_and_host_verified_unknown_replanning_are_visible(tmp_path, case):
+        app, service, ask, stages, workspace = product_case(tmp_path, **{case: True})
+        result, _ = ask.ask(dict(query=QUESTION, workspace_id=workspace))
+        result = finish(ask, workspace, result)
+&gt;       assert result['status'] in {'UNKNOWN', 'PARTIAL'}, result
+E       AssertionError: {'agent_run_id': 'ui-6f59ddb677ae', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_97b4c28219dd'}, ...}, ...}
+E       assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}
+
+tests\integration\test_m3i_product_chain.py:30: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3i_product_chain" name="test_missing_conflict_and_host_verified_unknown_replanning_are_visible[replan]" time="0.516"><failure message="AssertionError: {'agent_run_id': 'ui-d7d02c9e820b', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_38d376c21b39'}, ...}, ...}&#10;assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}">tmp_path = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-i-integration/work/pytest-m3i-review-repair1/test_missing_conflict_and_host2')
+case = 'replan'
+
+    @pytest.mark.parametrize('case', ['missing', 'conflict', 'replan'])
+    def test_missing_conflict_and_host_verified_unknown_replanning_are_visible(tmp_path, case):
+        app, service, ask, stages, workspace = product_case(tmp_path, **{case: True})
+        result, _ = ask.ask(dict(query=QUESTION, workspace_id=workspace))
+        result = finish(ask, workspace, result)
+&gt;       assert result['status'] in {'UNKNOWN', 'PARTIAL'}, result
+E       AssertionError: {'agent_run_id': 'ui-d7d02c9e820b', 'conclusions': [], 'discovery': None, 'error': {'affected_refs': [], 'category': '...DEL_ARTIFACT_WRITE_FAILED', 'details': {'reason': 'artifact_write_failed', 'run_id': 'run_p4_38d376c21b39'}, ...}, ...}
+E       assert 'BLOCKED' in {'PARTIAL', 'UNKNOWN'}
+
+tests\integration\test_m3i_product_chain.py:30: AssertionError</failure></testcase></testsuite></testsuites>

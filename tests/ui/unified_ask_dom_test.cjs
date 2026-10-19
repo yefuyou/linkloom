@@ -136,6 +136,18 @@ async function setup() {
     if (kind === "escaping") { assert.doesNotMatch(output, /<img |<script>/); assert.match(output, /&lt;img /); }
   }
   const automatic = await setup();
+  for (const status of ["PARTIAL", "UNKNOWN", "BLOCKED"]) {
+    const taskUi = await setup(); const request = taskUi.submit(); await tick();
+    const payload = result("");
+    Object.assign(payload.result, {path: "TASK_INVESTIGATION", status, query: "调查任务如何延续", conclusions: [],
+      reviewer: {accepted: true}, preparation: {gaps: ["BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE"], planning: [{plan: {steps: [{question: '<script>unsafe</script>'}]}}]},
+      evidence: [{source_name: "原始会议", quote: "原始会议摘录", source_version: "v1"}]});
+    taskUi.pending[0](payload); await request;
+    const output = taskUi.element("ask-result").innerHTML;
+    assert.match(output, status === "BLOCKED" ? /任务调查已停止/ : /任务调查：仍需确认/);
+    assert.doesNotMatch(output, /<script>unsafe/);
+    if (status !== "BLOCKED") { assert.match(output, /原始会议摘录/); assert.match(output, /真实模型业务验收尚未评估/); assert.match(output, /不能证明任务不存在/); }
+  }
   automatic.element("ask-slot").value = "";
   automatic.element("ask-external").checked = true;
   const firstQuestion = automatic.submit(); await tick();

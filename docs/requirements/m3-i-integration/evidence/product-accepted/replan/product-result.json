@@ -1,0 +1,2594 @@
+{
+  "schema_version": "product-ask/v1",
+  "query": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+  "scope": {
+    "subject": "",
+    "relation": "",
+    "as_of": null
+  },
+  "path": "TASK_INVESTIGATION",
+  "route": {
+    "intent": "TASK_INVESTIGATION",
+    "code": "SOURCE_TASK_INVESTIGATION",
+    "reason": "Bounded task investigation; observations and plans remain unconfirmed."
+  },
+  "status": "PARTIAL",
+  "conclusions": [],
+  "discovery": null,
+  "evidence": [
+    {
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+      "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+      "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+      "content_sha256": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+      "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+      "verified": true,
+      "authority": "ORIGINAL_SOURCE_ONLY",
+      "source_id": "src_41fab6338b324fb59f2e3637187eda85",
+      "source_version": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+      "source_name": "meeting-1.txt"
+    },
+    {
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+      "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+      "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+      "content_sha256": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+      "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+      "verified": true,
+      "authority": "ORIGINAL_SOURCE_ONLY",
+      "source_id": "src_e851d77daff84eab8b62f73d3ff33077",
+      "source_version": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+      "source_name": "meeting-2.txt"
+    }
+  ],
+  "receipts": [],
+  "uncertainty": {
+    "unknown_fields": [
+      "semantic_acceptance"
+    ],
+    "statement": "Task observations and model analyses are unconfirmed; semantic and business acceptance are NOT_EVALUATED.",
+    "model_reported_gaps": [],
+    "stage_errors": []
+  },
+  "agent_run_id": "ui-2d5bb046a05e",
+  "reviewer": {
+    "performed": true,
+    "review_id": "review_d20c073f",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-19T11:51:57.094053+00:00",
+    "accepted": true
+  },
+  "timeline": null,
+  "progress": null,
+  "error": null,
+  "metrics": {
+    "model_turns": 4,
+    "tool_calls": 3,
+    "tool_errors": 0,
+    "max_model_turns": 12,
+    "max_provider_requests": 12
+  },
+  "trace": [
+    {
+      "sequence": 1,
+      "call_id": "run_p4_33511c9211eb:turn:1:tool",
+      "tool": "inspect_task_context",
+      "status": "completed",
+      "arguments": {
+        "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_33511c9211eb:turn:1:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "inspect_task_context",
+        "value": {
+          "discovery": {
+            "candidates": [
+              {
+                "authority": "SUPPORTING_ONLY",
+                "candidate_id": "task_relation_candidate_v1_5c71f940ee68aacfa087a44250d6d8df9b63fb2804faa19f6a28513c184f9c9e",
+                "evidence": [
+                  {
+                    "char_end": 70,
+                    "char_start": 27,
+                    "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                      "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                      "char_end": 70,
+                      "char_start": 27,
+                      "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                      "line_end": 1,
+                      "line_start": 1,
+                      "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+                      "ordinal": 0,
+                      "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                      "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+                      "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                      "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+                      "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                    }
+                  },
+                  {
+                    "char_end": 63,
+                    "char_start": 27,
+                    "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                      "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                      "char_end": 63,
+                      "char_start": 27,
+                      "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                      "line_end": 1,
+                      "line_start": 1,
+                      "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+                      "ordinal": 0,
+                      "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                      "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+                      "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                      "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+                      "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                    }
+                  }
+                ],
+                "object": {
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                  "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                },
+                "phase": "DISCOVERED",
+                "predicate_hint": "RELATED_TO",
+                "priority": 40,
+                "reason_codes": [
+                  "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                  "PROJECT_SCOPE"
+                ],
+                "relation_status": "UNCONFIRMED",
+                "rule_version": "candidate-discovery/v1",
+                "schema_version": "task-relation-candidate/v1",
+                "subject": {
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                  "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                },
+                "uncertainty": [
+                  "PROJECT_COOCCURRENCE_ONLY",
+                  "VERIFIER_REQUIRED"
+                ]
+              }
+            ],
+            "considered_candidates": 1,
+            "eligible_observations": 2,
+            "endpoint_fanout": {
+              "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722": 1,
+              "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17": 1
+            },
+            "generated_candidates": 1,
+            "input_counts": {
+              "artifact_rows": 2,
+              "context_signals": 0,
+              "current_workspace_artifacts": 2,
+              "observation_rows": 2,
+              "source_characters": 133
+            },
+            "limits": {
+              "max_artifacts": 64,
+              "max_candidates": 20,
+              "max_context_signals": 128,
+              "max_generated_candidates": 1000,
+              "max_observations": 128,
+              "max_per_observation": 10,
+              "max_source_chars": 500000
+            },
+            "max_endpoint_fanout": 1,
+            "rejected": [],
+            "returned_candidates": 1,
+            "truncated": false,
+            "truncation_reasons": []
+          },
+          "max_output_bytes": 32768,
+          "missing_context": [],
+          "observations": [
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": "2029-06-20",
+                "deadline_precision": "DAY",
+                "deadline_role": "TASK_DEADLINE",
+                "deadline_text": "2029-06-20",
+                "description": "完成日志迁移",
+                "event_time": "2029-06-01T09:00:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 63,
+                    "char_start": 27,
+                    "field": "raw_text",
+                    "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 46,
+                    "char_start": 40,
+                    "field": "description",
+                    "quote": "完成日志迁移"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 39,
+                    "char_start": 33,
+                    "field": "owner",
+                    "quote": "负责人：林枫"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 32,
+                    "char_start": 30,
+                    "field": "project",
+                    "quote": "青竹"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 62,
+                    "char_start": 47,
+                    "field": "deadline",
+                    "quote": "截止日期：2029-06-20"
+                  }
+                ],
+                "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                "owner": "林枫",
+                "project": "青竹",
+                "provenance": {
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "char_end": 63,
+                  "char_start": 27,
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+                  "ordinal": 0,
+                  "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                  "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+                  "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                },
+                "raw_text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                "recorded_at": "2026-10-19T11:51:55.661743+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+                "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+              }
+            },
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": null,
+                "deadline_precision": "UNKNOWN",
+                "deadline_role": "UNKNOWN",
+                "deadline_text": null,
+                "description": "完成日志迁移",
+                "event_time": "2029-06-04T09:00:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 70,
+                    "char_start": 27,
+                    "field": "raw_text",
+                    "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 38,
+                    "char_start": 32,
+                    "field": "description",
+                    "quote": "完成日志迁移"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 69,
+                    "char_start": 63,
+                    "field": "owner",
+                    "quote": "负责人：林枫"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 62,
+                    "char_start": 60,
+                    "field": "project",
+                    "quote": "青竹"
+                  }
+                ],
+                "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                "owner": "林枫",
+                "project": "青竹",
+                "provenance": {
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "char_end": 70,
+                  "char_start": 27,
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+                  "ordinal": 0,
+                  "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                  "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+                  "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                },
+                "raw_text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                "recorded_at": "2026-10-19T11:51:55.671254+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "deadline",
+                  "vendor"
+                ],
+                "validation_issues": [
+                  "DEADLINE_ROLE_UNRESOLVED"
+                ],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+                "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+              }
+            }
+          ],
+          "observations_truncated": false,
+          "schema_version": "task-context/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        }
+      },
+      "error": null
+    },
+    {
+      "sequence": 2,
+      "call_id": "run_p4_33511c9211eb:turn:2:tool",
+      "tool": "query_task_relations",
+      "status": "completed",
+      "arguments": {
+        "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_33511c9211eb:turn:2:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "query_task_relations",
+        "value": {
+          "as_of": null,
+          "current_supported_in_snapshot": 0,
+          "evidence_spans": {},
+          "include_history": false,
+          "max_output_bytes": 49152,
+          "max_plans": 4,
+          "max_relations": 64,
+          "missing_context": [
+            "NO_RELATION_RECORDS"
+          ],
+          "observation_refs": {},
+          "observation_snapshots": {},
+          "plans": [],
+          "relations": [],
+          "returned_relations": 0,
+          "schema_version": "task-relations-query/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "status": "NO_VERIFIED_RELATIONS",
+          "total_matching_relations": 0,
+          "truncated": false,
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        }
+      },
+      "error": null
+    },
+    {
+      "sequence": 3,
+      "call_id": "run_p4_33511c9211eb:turn:3:tool",
+      "tool": "analyze_task_semantics",
+      "status": "completed",
+      "arguments": {
+        "investigation_id": "product-investigation",
+        "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_33511c9211eb:turn:3:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "analyze_task_semantics",
+        "value": {
+          "analysis_status": "EXECUTED",
+          "cache_hit": false,
+          "context_manifest": {
+            "errors": [],
+            "input_inventory": {
+              "display_lists_truncated": false,
+              "expected_observation_payloads": [
+                "053d389a13d772d7a1c28491781f9238114cd86567cad5f5d97e0136da198bf4",
+                "0eaa6999cb548e6007a2f64fc4be84f973ef4a50bb33e3d7f82afe25ec8d197a"
+              ],
+              "expected_source_versions": [
+                "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+              ],
+              "inventory_complete": true,
+              "inventory_sha256": "fb6a2385ddd5e6fb291598c6ca5518ace3d647271859b106681942cb9accba2c",
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 2,
+              "observation_payloads": [
+                "053d389a13d772d7a1c28491781f9238114cd86567cad5f5d97e0136da198bf4",
+                "0eaa6999cb548e6007a2f64fc4be84f973ef4a50bb33e3d7f82afe25ec8d197a"
+              ],
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "source_characters": 133,
+              "source_count": 2,
+              "source_parsing": [
+                {
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                },
+                {
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                }
+              ],
+              "source_versions": [
+                "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+              ],
+              "truncated": false,
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "inventory_complete": true,
+            "limits": {
+              "max_allowed_chars": 12000,
+              "max_artifacts": 32,
+              "max_endpoints": 80,
+              "max_input_bytes": 24000,
+              "max_input_tokens": 32768,
+              "max_observations": 64,
+              "max_output_tokens": 8192,
+              "max_proposals": 24
+            },
+            "observation_count": 2,
+            "revoked_evidence_refs": [],
+            "revoked_observation_ids": [],
+            "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+            "source_count": 2,
+            "source_snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+            "source_versions": [
+              "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+            ],
+            "status": "READY",
+            "truncated": false,
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          },
+          "errors": [],
+          "evidence_spans": {
+            "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda": {
+              "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+              "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+              "char_end": 70,
+              "char_start": 27,
+              "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+              "ordinal": 0,
+              "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+              "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+              "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab": {
+              "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+              "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "char_end": 63,
+              "char_start": 27,
+              "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+              "ordinal": 0,
+              "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+              "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+              "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+              "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            }
+          },
+          "execution": {
+            "adapter_requests": 1,
+            "cost_usd": null,
+            "kind": "FAKE",
+            "new_billable_cost_usd": 0.0,
+            "new_live_provider_requests": 0,
+            "original_receipt": null,
+            "provider_request_id": null,
+            "provider_response_id": null,
+            "request_sha256": "ef60fdeb42fb8e320a949cec77665ee42ff3d96dff49975d43a3685d45f853fb",
+            "reserved_requests": 1,
+            "response_sha256": "3ce34a431487f8732b863bd627728be538d8b2e58f86b6a4b276c2af82ec9ccb",
+            "simulated_usage": {
+              "duration_ms": null,
+              "input_tokens": 20,
+              "output_tokens": 10,
+              "total_tokens": 30
+            }
+          },
+          "investigation_id": "product-investigation",
+          "invocation_id": "semantic_6246212b591b67dc42588db72459b724d910b6810074e1a163dcb13a8149eeb5",
+          "origin_tool_call_id": "run_p4_33511c9211eb:turn:3:tool",
+          "outer_call_id": "run_p4_33511c9211eb:turn:3:tool",
+          "proposals": [
+            {
+              "actual_model_version": null,
+              "authority": "SUPPORTING_ONLY",
+              "changed_fields": [],
+              "counter_evidence": [],
+              "coverage": {
+                "cited_evidence_refs": [
+                  "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46"
+                ],
+                "cited_source_versions": [
+                  "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+                ],
+                "missing_source_versions": [],
+                "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                "required_source_versions": [
+                  "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+                ],
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "status": "COMPLETE"
+              },
+              "displayable_as_model_analysis": true,
+              "evidence_status": "EVIDENCE_VALID",
+              "execution_status": "EXECUTED",
+              "missing_evidence": [],
+              "model_id": "offline-task-investigation",
+              "object": {
+                "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+                "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+              },
+              "predicate": "SAME_TASK",
+              "prompt_version": "task-relation-semantics/v1",
+              "proposal_id": "semantic_proposal_v1_45ada4e1ff2942753e1011b4608eda0e1dc5ca43747d2328bd217f3426a6806f",
+              "proposed_verdict": "SUPPORTED",
+              "publishable": false,
+              "reason_codes": [
+                "SCRIPTED_WIRING_ONLY"
+              ],
+              "release_status": "PENDING_SEMANTIC_REVIEW",
+              "schema": "task-semantic-proposal/v1",
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "source_snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+              "source_validation": {
+                "authority": "SUPPORTING_ONLY",
+                "counter_evidence": [],
+                "errors": [],
+                "proposal_id": "semantic_proposal_v1_45ada4e1ff2942753e1011b4608eda0e1dc5ca43747d2328bd217f3426a6806f",
+                "publishable": false,
+                "semantic_status": "NOT_EVALUATED",
+                "stage": "EVIDENCE_VALID",
+                "supporting_evidence": [
+                  {
+                    "char_end": 63,
+                    "char_start": 27,
+                    "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                    }
+                  },
+                  {
+                    "char_end": 70,
+                    "char_start": 27,
+                    "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                    }
+                  }
+                ],
+                "validator_version": "task-semantic-evidence/v1"
+              },
+              "stage": "MODEL_PROPOSED",
+              "subject": {
+                "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+                "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+              },
+              "supporting_evidence": [
+                {
+                  "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                  "span": {
+                    "span_ref": "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                  }
+                },
+                {
+                  "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                  "span": {
+                    "span_ref": "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                  }
+                }
+              ]
+            }
+          ],
+          "publishable": false,
+          "result_artifact": {
+            "kind": "tool_result",
+            "ref": "semantic/6b07443de89de5e2702d0ce8/result.json",
+            "sha256": "aa7dd19bbe081bf7c3e788d088a36567c4dac1b7445ff3483f3930b1cfc307b5",
+            "size_bytes": 6194
+          },
+          "schema_version": "task-semantic-analysis/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        }
+      },
+      "error": null
+    }
+  ],
+  "preparation": {
+    "schema": "product-task-preparation/v1",
+    "question": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+    "status": "PARTIAL",
+    "execution_kind": "FAKE",
+    "authority": "MODEL_PROPOSED_ONLY",
+    "discovery": {
+      "coverage_policy": "bounded-document-single-pass/v1",
+      "coverage_complete": true,
+      "semantic_exhaustive": false,
+      "valid_observations": [],
+      "partial_observations": [
+        {
+          "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+          "provenance": {
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+            "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+            "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "ordinal": 0,
+            "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+            "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "char_start": 27,
+            "char_end": 63,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+            "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8"
+          },
+          "raw_text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "description": "完成日志迁移",
+          "owner": "林枫",
+          "deadline": "2029-06-20",
+          "deadline_text": "2029-06-20",
+          "deadline_precision": "DAY",
+          "deadline_role": "TASK_DEADLINE",
+          "project": "青竹",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+              "char_start": 27,
+              "char_end": 63,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成日志迁移",
+              "char_start": 40,
+              "char_end": 46,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "owner",
+              "quote": "负责人：林枫",
+              "char_start": 33,
+              "char_end": 39,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "青竹",
+              "char_start": 30,
+              "char_end": 32,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "deadline",
+              "quote": "截止日期：2029-06-20",
+              "char_start": 47,
+              "char_end": 62,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-19T11:51:55.661743+00:00",
+          "event_time": "2029-06-01T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+          "provenance": {
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+            "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+            "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+            "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "ordinal": 0,
+            "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+            "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "char_start": 27,
+            "char_end": 70,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+            "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5"
+          },
+          "raw_text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "description": "完成日志迁移",
+          "owner": "林枫",
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "青竹",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [
+            "DEADLINE_ROLE_UNRESOLVED"
+          ],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+              "char_start": 27,
+              "char_end": 70,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成日志迁移",
+              "char_start": 32,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "owner",
+              "quote": "负责人：林枫",
+              "char_start": 63,
+              "char_end": 69,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "青竹",
+              "char_start": 60,
+              "char_end": 62,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-19T11:51:55.671254+00:00",
+          "event_time": "2029-06-04T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "failures": [],
+      "sources": [
+        {
+          "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+          "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        },
+        {
+          "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+          "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        }
+      ],
+      "unprocessed_sources": [],
+      "groups": [
+        {
+          "group_id": "task_discovery_group_7a3a052aba42273cb3edbf923672fcf68c4c525c6dff5319b48b7513258045c2",
+          "observation_ids": [
+            "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46"
+          ],
+          "unbound_fields": [],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        },
+        {
+          "group_id": "task_discovery_group_9ab501dc85f74b4dff9d8c2e7182e93fba4831d2bcc15dac1691d9a60a03b334",
+          "observation_ids": [
+            "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a"
+          ],
+          "unbound_fields": [
+            "deadline_text"
+          ],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        }
+      ],
+      "extractions": [
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                "description_parts": [
+                  "完成日志迁移"
+                ],
+                "owner": "林枫",
+                "deadline_text": "2029-06-20",
+                "project": "青竹",
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "FAKE",
+            "model_id": "offline-task-investigation",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+            "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "a3eae1c1df212a55010448b41221e0f7cc9fec3d8906032b9a7f729f438e2ce7",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+            "extraction_fingerprint": "6d1edc1b3aa79d3ffa6bf3675d9de9c7902d5034d8715e921324900d0e67603d",
+            "claims_sha256": "77c0df6b74ee4af3c85e8b6564a35facf1d8e78dbc9ce74a66da53c2fa925ee5",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "36ba4df4945757fba6a8e617b96c477d7b76cc8846ad517c0fc0a057206af1d8",
+                "response_sha256": "d736973f2a6775042566f6fb5a5946fd0487f8e424df2a28b1101e5cc7afd592",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 30,
+                  "duration_ms": null
+                },
+                "latency_ms": 12.47210000292398,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "36ba4df4945757fba6a8e617b96c477d7b76cc8846ad517c0fc0a057206af1d8",
+                "estimated_cost_upper_bound_usd": 0
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        },
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                "description_parts": [
+                  "完成日志迁移"
+                ],
+                "owner": "林枫",
+                "deadline_text": "2029-06-24",
+                "project": "青竹",
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "FAKE",
+            "model_id": "offline-task-investigation",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+            "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+            "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "243570e8f27a811cc22fe37dec5b1f6c9c8168ae14de9c05de7d788797cac223",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+            "extraction_fingerprint": "df614d77d4af9e300ef07b5afeac3603dfc96d404a3434d72c0d624cbbdd8986",
+            "claims_sha256": "3415dba3848dfa6042ed79cc64ca37aee1dd7edf5ef340d251fb49c29e7592ec",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "52f4b63bf2408c0ffabe79d2c930f516ebd291e5d419ec70a652cbbbf879618a",
+                "response_sha256": "d08ec0270ef082f010372af2e363c1b8511a844efa339d5b7ae3ba16f2fcb34e",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 30,
+                  "duration_ms": null
+                },
+                "latency_ms": 12.206700004753657,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "52f4b63bf2408c0ffabe79d2c930f516ebd291e5d419ec70a652cbbbf879618a",
+                "estimated_cost_upper_bound_usd": 0
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        }
+      ],
+      "receipts": [
+        {
+          "provider_id": "FAKE",
+          "model_id": "offline-task-investigation",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+          "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+          "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+          "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "a3eae1c1df212a55010448b41221e0f7cc9fec3d8906032b9a7f729f438e2ce7",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+          "extraction_fingerprint": "6d1edc1b3aa79d3ffa6bf3675d9de9c7902d5034d8715e921324900d0e67603d",
+          "claims_sha256": "77c0df6b74ee4af3c85e8b6564a35facf1d8e78dbc9ce74a66da53c2fa925ee5",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "36ba4df4945757fba6a8e617b96c477d7b76cc8846ad517c0fc0a057206af1d8",
+              "response_sha256": "d736973f2a6775042566f6fb5a5946fd0487f8e424df2a28b1101e5cc7afd592",
+              "provider_request_id": null,
+              "provider_response_id": null,
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 30,
+                "duration_ms": null
+              },
+              "latency_ms": 12.47210000292398,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "36ba4df4945757fba6a8e617b96c477d7b76cc8846ad517c0fc0a057206af1d8",
+              "estimated_cost_upper_bound_usd": 0
+            }
+          ],
+          "terminal_reason": null
+        },
+        {
+          "provider_id": "FAKE",
+          "model_id": "offline-task-investigation",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+          "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+          "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+          "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "243570e8f27a811cc22fe37dec5b1f6c9c8168ae14de9c05de7d788797cac223",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+          "extraction_fingerprint": "df614d77d4af9e300ef07b5afeac3603dfc96d404a3434d72c0d624cbbdd8986",
+          "claims_sha256": "3415dba3848dfa6042ed79cc64ca37aee1dd7edf5ef340d251fb49c29e7592ec",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "52f4b63bf2408c0ffabe79d2c930f516ebd291e5d419ec70a652cbbbf879618a",
+              "response_sha256": "d08ec0270ef082f010372af2e363c1b8511a844efa339d5b7ae3ba16f2fcb34e",
+              "provider_request_id": null,
+              "provider_response_id": null,
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 30,
+                "duration_ms": null
+              },
+              "latency_ms": 12.206700004753657,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "52f4b63bf2408c0ffabe79d2c930f516ebd291e5d419ec70a652cbbbf879618a",
+              "estimated_cost_upper_bound_usd": 0
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "candidate_coverage": [
+        {
+          "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+          "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+          "verified_description_parts": [
+            "完成日志迁移"
+          ]
+        },
+        {
+          "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+          "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+          "verified_description_parts": [
+            "完成日志迁移"
+          ]
+        }
+      ]
+    },
+    "planning": [
+      {
+        "schema": "task-investigation-result/v1",
+        "status": "PLANNED",
+        "plan": {
+          "plan_id": "investigation_v2_3345a1e43527276ccce82d9e273a517a3bb4f92ed9c86ac58402d8dcb15585b3",
+          "needs_more_investigation": true,
+          "ready_step_ids": [
+            "locate"
+          ],
+          "schema": "task-investigation-plan/v2",
+          "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+          "snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+          "steps": [
+            {
+              "id": "locate",
+              "kind": "discover",
+              "question": "还有哪份原始会议能确认任务身份？",
+              "handles": [],
+              "endpoints": [],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "",
+              "field": "",
+              "target_kind": "task",
+              "missing_entities": [
+                "交付任务的已确认身份"
+              ],
+              "execution_key": "cce9b9fc4b36539f205d1a33ed8907dfd4b5edcf72a5c6cb34f2601a99c0d19b",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": "当前候选无法确认跨消息身份。"
+            }
+          ],
+          "uncertainties": [
+            "需要核对原文及语义审查。"
+          ],
+          "refusal_reasons": [],
+          "verified_results": [],
+          "parent_plan_id": null,
+          "gaps": [],
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24000,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          },
+          "authority": "ACTION_SUGGESTION_ONLY",
+          "publishable": false,
+          "conclusion_policy": "Evidence and independent Reviewer required."
+        },
+        "errors": [],
+        "provider_calls": 1,
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 30,
+          "duration_ms": null
+        },
+        "request_sha256": "10a33a5f17d1cdb052d092d5e591f10a32f0f56c198897994865882591130188",
+        "response_sha256": "4df6b2806d7e44103549dfb26cf6f1fdea00b1b647687b9ec758c551eed89c5b",
+        "model_id": "offline-task-investigation",
+        "actual_model_version": null,
+        "budget": {
+          "calls_reserved": 1,
+          "input_tokens_reserved": 13102,
+          "output_tokens_reserved": 4096,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "untrusted_output": {
+          "kind": "tool_call",
+          "tool_calls": [
+            {
+              "tool_id": "emit_investigation_plan",
+              "arguments": {
+                "steps": [
+                  {
+                    "id": "locate",
+                    "kind": "discover",
+                    "question": "还有哪份原始会议能确认任务身份？",
+                    "handles": [],
+                    "source_handles": [],
+                    "depends_on": [],
+                    "predicate": "",
+                    "field": "",
+                    "target_kind": "task",
+                    "missing_entities": [
+                      "交付任务的已确认身份"
+                    ],
+                    "evidence_gap": "当前候选无法确认跨消息身份。"
+                  }
+                ],
+                "uncertainties": [
+                  "需要核对原文及语义审查。"
+                ],
+                "refusal_reasons": []
+              }
+            }
+          ]
+        },
+        "diagnostics": {
+          "proposed_steps": 1,
+          "accepted_steps": 1,
+          "excess_steps": 0,
+          "validation_issues": [],
+          "proposed_by_kind": {
+            "discover": 1
+          },
+          "ready_steps": 1
+        }
+      },
+      {
+        "schema": "task-investigation-result/v1",
+        "status": "PLANNED",
+        "plan": {
+          "plan_id": "investigation_v2_73f7d073cdcdccb5ffb079fa1d81dbbf5dcf41780a8dedc7af43da5fe9d0958f",
+          "needs_more_investigation": true,
+          "ready_step_ids": [
+            "identity"
+          ],
+          "schema": "task-investigation-plan/v2",
+          "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+          "snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+          "steps": [
+            {
+              "id": "locate",
+              "kind": "discover",
+              "question": "还有哪份原始会议能确认任务身份？",
+              "handles": [],
+              "endpoints": [],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "",
+              "field": "",
+              "target_kind": "task",
+              "missing_entities": [
+                "交付任务的已确认身份"
+              ],
+              "execution_key": "cce9b9fc4b36539f205d1a33ed8907dfd4b5edcf72a5c6cb34f2601a99c0d19b",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": "当前候选无法确认跨消息身份。"
+            },
+            {
+              "id": "identity",
+              "kind": "relation",
+              "question": "两次会议是否延续同一交付任务？",
+              "handles": [
+                "task_0",
+                "task_1"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "SAME_TASK",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "3eb873ba9d403b165b3cfae2041be946d331b5349e33e09e6ff36a5985ae6a82",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": ""
+            },
+            {
+              "id": "revision",
+              "kind": "relation",
+              "question": "后一次会议是否修订前一计划？",
+              "handles": [
+                "task_1",
+                "task_0"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [
+                "identity"
+              ],
+              "predicate": "REVISES_PLAN",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "9c6345944b349532d6283be6153fa5906c50dc9e65de593ba617c3811bdc911e",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                },
+                {
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae",
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [
+                "3eb873ba9d403b165b3cfae2041be946d331b5349e33e09e6ff36a5985ae6a82"
+              ],
+              "evidence_gap": ""
+            }
+          ],
+          "uncertainties": [
+            "需要核对原文及语义审查。"
+          ],
+          "refusal_reasons": [],
+          "verified_results": [
+            {
+              "plan_id": "investigation_v2_3345a1e43527276ccce82d9e273a517a3bb4f92ed9c86ac58402d8dcb15585b3",
+              "step_id": "locate",
+              "receipt_id": "host_cce9b9fc4b36539f205d1a33ed8907dfd4b5edcf72a5c6cb34f2601a99c0d19b",
+              "result_sha256": "985437689ba48beaa0fe3ce855975697165fd20655c8f65c7718d6c1080100cb",
+              "summary": "Bounded Discovery examined; missing entities remain unknown.",
+              "outcome": "UNKNOWN"
+            }
+          ],
+          "parent_plan_id": "investigation_v2_3345a1e43527276ccce82d9e273a517a3bb4f92ed9c86ac58402d8dcb15585b3",
+          "gaps": [
+            "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE"
+          ],
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24000,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          },
+          "authority": "ACTION_SUGGESTION_ONLY",
+          "publishable": false,
+          "conclusion_policy": "Evidence and independent Reviewer required."
+        },
+        "errors": [],
+        "provider_calls": 1,
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 30,
+          "duration_ms": null
+        },
+        "request_sha256": "2e645ec814231278bcc6aca76daf64b21fa38e5a48cfa6e55b79c47c26e8cd38",
+        "response_sha256": "3c0b0d203721f789918182a85606c9392392c4e6fd616817b772ba6b4ddb3367",
+        "model_id": "offline-task-investigation",
+        "actual_model_version": null,
+        "budget": {
+          "calls_reserved": 2,
+          "input_tokens_reserved": 29441,
+          "output_tokens_reserved": 8192,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "untrusted_output": {
+          "kind": "tool_call",
+          "tool_calls": [
+            {
+              "tool_id": "emit_investigation_plan",
+              "arguments": {
+                "steps": [
+                  {
+                    "id": "identity",
+                    "kind": "relation",
+                    "question": "两次会议是否延续同一交付任务？",
+                    "handles": [
+                      "task_0",
+                      "task_1"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [],
+                    "predicate": "SAME_TASK",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  },
+                  {
+                    "id": "revision",
+                    "kind": "relation",
+                    "question": "后一次会议是否修订前一计划？",
+                    "handles": [
+                      "task_1",
+                      "task_0"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [
+                      "identity"
+                    ],
+                    "predicate": "REVISES_PLAN",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  }
+                ],
+                "uncertainties": [
+                  "需要核对原文及语义审查。"
+                ],
+                "refusal_reasons": []
+              }
+            }
+          ]
+        },
+        "diagnostics": {
+          "proposed_steps": 2,
+          "accepted_steps": 2,
+          "excess_steps": 0,
+          "validation_issues": [],
+          "proposed_by_kind": {
+            "relation": 2
+          },
+          "ready_steps": 1
+        }
+      }
+    ],
+    "source_mapping": {
+      "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f": {
+        "source_id": "src_41fab6338b324fb59f2e3637187eda85",
+        "source_version": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+        "source_name": "meeting-1.txt",
+        "content_sha256": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41"
+      },
+      "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96": {
+        "source_id": "src_e851d77daff84eab8b62f73d3ff33077",
+        "source_version": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+        "source_name": "meeting-2.txt",
+        "content_sha256": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807"
+      }
+    },
+    "source_snapshot_hash": "7ce93eaa409b041a2abf6bf431342cff489f376553cfa6b2fa4adbc9daeb96cc",
+    "gaps": [
+      "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE",
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "stage_budget": {
+      "discovery_calls_reserved": 2,
+      "discovery_call_limit": 3,
+      "discovery_input_tokens_reserved_upper_bound": 19045,
+      "discovery_output_tokens_reserved": 3072,
+      "discovery_max_request_bytes": 49152,
+      "planning": {
+        "calls_reserved": 2,
+        "input_tokens_reserved": 29441,
+        "output_tokens_reserved": 8192,
+        "limits": {
+          "max_subgoals": 12,
+          "max_relation_queries": 8,
+          "max_fanout": 4,
+          "max_dependency_depth": 6,
+          "max_relation_hops": 3,
+          "max_input_tokens": 24576,
+          "max_output_tokens": 4096,
+          "max_provider_calls": 3,
+          "max_total_input_tokens": 73728,
+          "max_total_output_tokens": 12288
+        }
+      },
+      "semantic_call_limit": 1,
+      "new_billable_cost_usd": 0.0
+    },
+    "evidence_layers": {
+      "component": "SEPARATE_TEST_EVIDENCE",
+      "integration": "FAKE",
+      "real_model_semantics": "NOT_EVALUATED",
+      "real_product_business_task": "NOT_EVALUATED"
+    }
+  },
+  "working_context_audit": {
+    "authorized_snapshot_id": "292dd0bda0ec0bd414dc79a1685ee5f9ef00906234a3ac4f3c509fbbfa6b03c4",
+    "base_instruction_sha256": "8f7e9c929edf5e1da55ebef008cb22d03808dd149bc9f36678043be71adb84eb",
+    "before_working_ref": {
+      "kind": "observation",
+      "ref": "working/6b07443de89de5e2702d/4-70468bf6f2044038/before.json",
+      "sha256": "c0c39f6bd446b7f762121ff4d9fa1f31ad4a47b98fefb7a367ffe5f7e51b8321",
+      "size_bytes": 3777
+    },
+    "budget": {
+      "actual_provider_tokens": false,
+      "context_window_tokens": 65536,
+      "input_bytes": 32866,
+      "input_tokens": 8729,
+      "max_request_bytes": 98304,
+      "normalized_request_bytes": 32610,
+      "output_reserve_tokens": 2048,
+      "segments": {
+        "compaction_summary": {
+          "bytes": 673,
+          "tokens": 169
+        },
+        "existing_verified_context": {
+          "bytes": 2,
+          "tokens": 1
+        },
+        "history": {
+          "bytes": 12539,
+          "tokens": 3396
+        },
+        "instruction": {
+          "bytes": 800,
+          "tokens": 225
+        },
+        "latest_result": {
+          "bytes": 9737,
+          "tokens": 2567
+        },
+        "request_envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "tools": {
+          "bytes": 1917,
+          "tokens": 480
+        },
+        "verified_evidence": {
+          "bytes": 4060,
+          "tokens": 1084
+        },
+        "working_context": {
+          "bytes": 1706,
+          "tokens": 452
+        }
+      },
+      "serialization_overhead_bytes": 1176,
+      "token_count_kind": "MULTILINGUAL_HEURISTIC_V1",
+      "user_input_bytes": 7343
+    },
+    "compaction": null,
+    "config": {
+      "compactor_id": "DETERMINISTIC_FAKE_V1",
+      "envelope": {
+        "bytes": 256,
+        "tokens": 64
+      },
+      "history_soft_bytes": 24576,
+      "local_budget": {
+        "max_chars": 12000,
+        "max_evidence": 5,
+        "max_experience": 2,
+        "max_memory": 3,
+        "max_tokens": 3000
+      },
+      "policy": {
+        "context_window_tokens": 65536,
+        "max_candidates": 256,
+        "max_request_bytes": 98304,
+        "model_id": "offline-task-context",
+        "output_reserve_tokens": 2048,
+        "token_count_kind": "MULTILINGUAL_HEURISTIC_V1"
+      },
+      "tokenizer_id": "LINKLOOM_MULTILINGUAL_HEURISTIC_V1",
+      "tokenizer_probe": [
+        3,
+        11,
+        10
+      ],
+      "working_max_tokens": 4096
+    },
+    "coverage": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "coverage_before_compaction": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "errors": [],
+    "groups": [
+      {
+        "conflict": false,
+        "evidence_ids": [
+          "context_ev_v1_4f4af81c1f6fcdd7f3238065456dadcad3e035a6c3b74814dd15c1750afc2e1a",
+          "context_ev_v1_becbac6487e7f66b9884e20333b26d9e4aecbd05decf9f5fa0fdb5b9113a5334"
+        ],
+        "group_id": "observed_support_only",
+        "subgoal_ids": [
+          "sources_current",
+          "relation_0",
+          "relations_pending"
+        ]
+      }
+    ],
+    "mapping_ref": {
+      "kind": "observation",
+      "ref": "working/6b07443de89de5e2702d/4-70468bf6f2044038/mapping.json",
+      "sha256": "b40066ea43ac79b49ef79246e2b0dfe3d48c76535fe127bb5e22af43a37aacb9",
+      "size_bytes": 3356
+    },
+    "prepared_request_sha256": "cd38caaa255caee63ef38a69ddd7497477bb2081b17fe0acc9d079f362e177cd",
+    "recovery": {
+      "evidence": [
+        {
+          "historical": false,
+          "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "ref": {
+            "char_end": 63,
+            "char_start": 27,
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "document_id": "src_41fab6338b324fb59f2e3637187eda85",
+            "evidence_id": "context_ev_v1_4f4af81c1f6fcdd7f3238065456dadcad3e035a6c3b74814dd15c1750afc2e1a",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_41fab6338b324fb59f2e3637187eda85",
+            "quote_hash": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+            "resource_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+            "source_version": 1,
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          }
+        },
+        {
+          "historical": false,
+          "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "ref": {
+            "char_end": 70,
+            "char_start": 27,
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "document_id": "src_e851d77daff84eab8b62f73d3ff33077",
+            "evidence_id": "context_ev_v1_becbac6487e7f66b9884e20333b26d9e4aecbd05decf9f5fa0fdb5b9113a5334",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_e851d77daff84eab8b62f73d3ff33077",
+            "quote_hash": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+            "resource_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+            "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+            "source_version": 1,
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          }
+        }
+      ],
+      "failures": [],
+      "status": "complete"
+    },
+    "request_usage": {
+      "bytes": 32141,
+      "tokens": 8479
+    },
+    "run_id": "run_p4_33511c9211eb",
+    "status": "COMPLETE",
+    "task_plan": {
+      "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+      "subgoals": [
+        {
+          "depends_on": [],
+          "question": "Recover every declared authorized source and competing observation.",
+          "subgoal_id": "sources_current"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Investigate SAME_TASK: task_0 -> task_1; semantics not accepted.",
+          "subgoal_id": "relation_0"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Independent semantic acceptance and unresolved evidence gaps.",
+          "subgoal_id": "relations_pending"
+        }
+      ]
+    },
+    "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+    "turn_id": "run_p4_33511c9211eb:turn:4",
+    "working_ref": {
+      "kind": "observation",
+      "ref": "working/6b07443de89de5e2702d/4-70468bf6f2044038/state.json",
+      "sha256": "c0c39f6bd446b7f762121ff4d9fa1f31ad4a47b98fefb7a367ffe5f7e51b8321",
+      "size_bytes": 3777
+    }
+  },
+  "task_investigation": {
+    "answer_status": "PARTIAL",
+    "context": {
+      "discovery": {
+        "candidates": [
+          {
+            "authority": "SUPPORTING_ONLY",
+            "candidate_id": "task_relation_candidate_v1_5c71f940ee68aacfa087a44250d6d8df9b63fb2804faa19f6a28513c184f9c9e",
+            "evidence": [
+              {
+                "char_end": 70,
+                "char_start": 27,
+                "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+                  "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+                  "char_end": 70,
+                  "char_start": 27,
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+                  "ordinal": 0,
+                  "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                  "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+                  "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+                  "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                }
+              },
+              {
+                "char_end": 63,
+                "char_start": 27,
+                "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+                  "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+                  "char_end": 63,
+                  "char_start": 27,
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+                  "ordinal": 0,
+                  "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                  "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+                  "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+                  "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+                  "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+                }
+              }
+            ],
+            "object": {
+              "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+              "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+              "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+              "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "phase": "DISCOVERED",
+            "predicate_hint": "RELATED_TO",
+            "priority": 40,
+            "reason_codes": [
+              "LEXICAL_OVERLAP_WITHIN_PROJECT",
+              "PROJECT_SCOPE"
+            ],
+            "relation_status": "UNCONFIRMED",
+            "rule_version": "candidate-discovery/v1",
+            "schema_version": "task-relation-candidate/v1",
+            "subject": {
+              "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+              "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+              "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+              "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "uncertainty": [
+              "PROJECT_COOCCURRENCE_ONLY",
+              "VERIFIER_REQUIRED"
+            ]
+          }
+        ],
+        "considered_candidates": 1,
+        "eligible_observations": 2,
+        "endpoint_fanout": {
+          "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722": 1,
+          "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17": 1
+        },
+        "generated_candidates": 1,
+        "input_counts": {
+          "artifact_rows": 2,
+          "context_signals": 0,
+          "current_workspace_artifacts": 2,
+          "observation_rows": 2,
+          "source_characters": 133
+        },
+        "limits": {
+          "max_artifacts": 64,
+          "max_candidates": 20,
+          "max_context_signals": 128,
+          "max_generated_candidates": 1000,
+          "max_observations": 128,
+          "max_per_observation": 10,
+          "max_source_chars": 500000
+        },
+        "max_endpoint_fanout": 1,
+        "rejected": [],
+        "returned_candidates": 1,
+        "truncated": false,
+        "truncation_reasons": []
+      },
+      "max_output_bytes": 32768,
+      "missing_context": [],
+      "observations": [
+        {
+          "observation": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": "2029-06-20",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "deadline_text": "2029-06-20",
+            "description": "完成日志迁移",
+            "event_time": "2029-06-01T09:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 63,
+                "char_start": 27,
+                "field": "raw_text",
+                "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 46,
+                "char_start": 40,
+                "field": "description",
+                "quote": "完成日志迁移"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 39,
+                "char_start": 33,
+                "field": "owner",
+                "quote": "负责人：林枫"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 32,
+                "char_start": 30,
+                "field": "project",
+                "quote": "青竹"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 62,
+                "char_start": 47,
+                "field": "deadline",
+                "quote": "截止日期：2029-06-20"
+              }
+            ],
+            "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+            "owner": "林枫",
+            "project": "青竹",
+            "provenance": {
+              "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+              "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "char_end": 63,
+              "char_start": 27,
+              "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+              "ordinal": 0,
+              "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+              "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+              "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+              "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "raw_text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+            "recorded_at": "2026-10-19T11:51:55.661743+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          },
+          "ref": {
+            "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+            "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+            "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          }
+        },
+        {
+          "observation": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "deadline_text": null,
+            "description": "完成日志迁移",
+            "event_time": "2029-06-04T09:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 70,
+                "char_start": 27,
+                "field": "raw_text",
+                "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 38,
+                "char_start": 32,
+                "field": "description",
+                "quote": "完成日志迁移"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 69,
+                "char_start": 63,
+                "field": "owner",
+                "quote": "负责人：林枫"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 62,
+                "char_start": 60,
+                "field": "project",
+                "quote": "青竹"
+              }
+            ],
+            "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+            "owner": "林枫",
+            "project": "青竹",
+            "provenance": {
+              "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+              "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+              "char_end": 70,
+              "char_start": 27,
+              "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+              "ordinal": 0,
+              "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+              "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+              "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+              "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+            },
+            "raw_text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+            "recorded_at": "2026-10-19T11:51:55.671254+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "deadline",
+              "vendor"
+            ],
+            "validation_issues": [
+              "DEADLINE_ROLE_UNRESOLVED"
+            ],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          },
+          "ref": {
+            "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+            "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+            "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          }
+        }
+      ],
+      "observations_truncated": false,
+      "schema_version": "task-context/v1",
+      "semantic_proposals": {
+        "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+        "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+        "limitations": [
+          "DISCOVERY_IS_NOT_PROOF",
+          "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+          "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+          "NO_AUTOMATIC_PERSISTENCE"
+        ],
+        "publishable": false,
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+      },
+      "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+    },
+    "investigation_status": "PENDING_SEMANTIC_REVIEW",
+    "limitations": [
+      "BOUNDED_TOOL_RECEIPT_PROJECTION",
+      "UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+      "MODEL_PROPOSED_ONLY",
+      "SEMANTIC_NOT_EVALUATED",
+      "NO_P4_PROMOTION"
+    ],
+    "receipts": [
+      {
+        "arguments": {
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        },
+        "call_id": "run_p4_33511c9211eb:turn:1:tool",
+        "sequence": 1,
+        "tool_id": "inspect_task_context"
+      },
+      {
+        "arguments": {
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        },
+        "call_id": "run_p4_33511c9211eb:turn:2:tool",
+        "sequence": 2,
+        "tool_id": "query_task_relations"
+      },
+      {
+        "arguments": {
+          "investigation_id": "product-investigation",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        },
+        "call_id": "run_p4_33511c9211eb:turn:3:tool",
+        "sequence": 3,
+        "tool_id": "analyze_task_semantics"
+      }
+    ],
+    "relation_query": {
+      "as_of": null,
+      "current_supported_in_snapshot": 0,
+      "evidence_spans": {},
+      "include_history": false,
+      "max_output_bytes": 49152,
+      "max_plans": 4,
+      "max_relations": 64,
+      "missing_context": [
+        "NO_RELATION_RECORDS"
+      ],
+      "observation_refs": {},
+      "observation_snapshots": {},
+      "plans": [],
+      "relations": [],
+      "returned_relations": 0,
+      "schema_version": "task-relations-query/v1",
+      "semantic_proposals": {
+        "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+        "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+        "limitations": [
+          "DISCOVERY_IS_NOT_PROOF",
+          "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+          "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+          "NO_AUTOMATIC_PERSISTENCE"
+        ],
+        "publishable": false,
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+      },
+      "status": "NO_VERIFIED_RELATIONS",
+      "total_matching_relations": 0,
+      "truncated": false,
+      "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+    },
+    "schema_version": "task-relations-result/v1",
+    "semantic_analysis": {
+      "analysis_status": "EXECUTED",
+      "cache_hit": false,
+      "context_manifest": {
+        "errors": [],
+        "input_inventory": {
+          "display_lists_truncated": false,
+          "expected_observation_payloads": [
+            "053d389a13d772d7a1c28491781f9238114cd86567cad5f5d97e0136da198bf4",
+            "0eaa6999cb548e6007a2f64fc4be84f973ef4a50bb33e3d7f82afe25ec8d197a"
+          ],
+          "expected_source_versions": [
+            "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+          ],
+          "inventory_complete": true,
+          "inventory_sha256": "fb6a2385ddd5e6fb291598c6ca5518ace3d647271859b106681942cb9accba2c",
+          "limits": {
+            "max_allowed_chars": 12000,
+            "max_artifacts": 32,
+            "max_endpoints": 80,
+            "max_input_bytes": 24000,
+            "max_input_tokens": 32768,
+            "max_observations": 64,
+            "max_output_tokens": 8192,
+            "max_proposals": 24
+          },
+          "observation_count": 2,
+          "observation_payloads": [
+            "053d389a13d772d7a1c28491781f9238114cd86567cad5f5d97e0136da198bf4",
+            "0eaa6999cb548e6007a2f64fc4be84f973ef4a50bb33e3d7f82afe25ec8d197a"
+          ],
+          "revoked_evidence_refs": [],
+          "revoked_observation_ids": [],
+          "source_characters": 133,
+          "source_count": 2,
+          "source_parsing": [
+            {
+              "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "issue_count": 0,
+              "issues": [],
+              "issues_truncated": false,
+              "status": "COMPLETE"
+            },
+            {
+              "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+              "issue_count": 0,
+              "issues": [],
+              "issues_truncated": false,
+              "status": "COMPLETE"
+            }
+          ],
+          "source_versions": [
+            "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+          ],
+          "truncated": false,
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        },
+        "inventory_complete": true,
+        "limits": {
+          "max_allowed_chars": 12000,
+          "max_artifacts": 32,
+          "max_endpoints": 80,
+          "max_input_bytes": 24000,
+          "max_input_tokens": 32768,
+          "max_observations": 64,
+          "max_output_tokens": 8192,
+          "max_proposals": 24
+        },
+        "observation_count": 2,
+        "revoked_evidence_refs": [],
+        "revoked_observation_ids": [],
+        "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+        "source_count": 2,
+        "source_snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+        "source_versions": [
+          "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+          "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+        ],
+        "status": "READY",
+        "truncated": false,
+        "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+      },
+      "errors": [],
+      "evidence_spans": {
+        "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda": {
+          "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+          "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+          "char_end": 70,
+          "char_start": 27,
+          "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+          "line_end": 1,
+          "line_start": 1,
+          "message_id": "message_v1_0f894b0f5ff9f9c97558413d5fa2991a50f609db544c5542290cedb1edbb20e5",
+          "ordinal": 0,
+          "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+          "segment_id": "segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+          "source_ref": "product://src_e851d77daff84eab8b62f73d3ff33077",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        },
+        "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab": {
+          "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+          "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+          "char_end": 63,
+          "char_start": 27,
+          "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+          "line_end": 1,
+          "line_start": 1,
+          "message_id": "message_v1_18669e69366e8a91cc37d83931716bdcb68e013f7a8f87b1b4e278486ccef5eb",
+          "ordinal": 0,
+          "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+          "segment_id": "segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+          "source_ref": "product://src_41fab6338b324fb59f2e3637187eda85",
+          "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+        }
+      },
+      "execution": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "kind": "FAKE",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "request_sha256": "ef60fdeb42fb8e320a949cec77665ee42ff3d96dff49975d43a3685d45f853fb",
+        "reserved_requests": 1,
+        "response_sha256": "3ce34a431487f8732b863bd627728be538d8b2e58f86b6a4b276c2af82ec9ccb",
+        "simulated_usage": {
+          "duration_ms": null,
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 30
+        }
+      },
+      "investigation_id": "product-investigation",
+      "invocation_id": "semantic_6246212b591b67dc42588db72459b724d910b6810074e1a163dcb13a8149eeb5",
+      "origin_tool_call_id": "run_p4_33511c9211eb:turn:3:tool",
+      "outer_call_id": "run_p4_33511c9211eb:turn:3:tool",
+      "proposals": [
+        {
+          "actual_model_version": null,
+          "authority": "SUPPORTING_ONLY",
+          "changed_fields": [],
+          "counter_evidence": [],
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+              "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+              "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "displayable_as_model_analysis": true,
+          "evidence_status": "EVIDENCE_VALID",
+          "execution_status": "EXECUTED",
+          "missing_evidence": [],
+          "model_id": "offline-task-investigation",
+          "object": {
+            "artifact_id": "src_e851d77daff84eab8b62f73d3ff33077",
+            "artifact_version_id": "artifact_v1_bd5dc3fe1b43a0fdb4197b23b196b026a58be046558e7e6bd029435a5b0fde96",
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_24756c82965b8792437f755b7d396c67bdc266946c7e47964e85775bd960762a",
+            "observation_id": "task_observation_v1_704e630c94f118b5f10effc2c6721f9d37c717633d6ea6b290ee54a6bf5a5722",
+            "payload_hash": "a09e3f64239e5b53c0890a5bf13a561381f3c0f2d5ca54fbf3bda320a6cb3ae8",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          },
+          "predicate": "SAME_TASK",
+          "prompt_version": "task-relation-semantics/v1",
+          "proposal_id": "semantic_proposal_v1_45ada4e1ff2942753e1011b4608eda0e1dc5ca43747d2328bd217f3426a6806f",
+          "proposed_verdict": "SUPPORTED",
+          "publishable": false,
+          "reason_codes": [
+            "SCRIPTED_WIRING_ONLY"
+          ],
+          "release_status": "PENDING_SEMANTIC_REVIEW",
+          "schema": "task-semantic-proposal/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "source_snapshot_hash": "e63c93c9f5f4437d0c0e21d2d20968ba1bc66b44d1b1e1fff658c9e01b4c2f08",
+          "source_validation": {
+            "authority": "SUPPORTING_ONLY",
+            "counter_evidence": [],
+            "errors": [],
+            "proposal_id": "semantic_proposal_v1_45ada4e1ff2942753e1011b4608eda0e1dc5ca43747d2328bd217f3426a6806f",
+            "publishable": false,
+            "semantic_status": "NOT_EVALUATED",
+            "stage": "EVIDENCE_VALID",
+            "supporting_evidence": [
+              {
+                "char_end": 63,
+                "char_start": 27,
+                "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "span_ref": "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+                }
+              },
+              {
+                "char_end": 70,
+                "char_start": 27,
+                "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "span_ref": "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+                }
+              }
+            ],
+            "validator_version": "task-semantic-evidence/v1"
+          },
+          "stage": "MODEL_PROPOSED",
+          "subject": {
+            "artifact_id": "src_41fab6338b324fb59f2e3637187eda85",
+            "artifact_version_id": "artifact_v1_8fed26b8a3fae0eb11c603578e6b32130f3a3060b8aec2ccb433869963aa253f",
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6f3b8b9578241f2e4125a8b77517f8e946d32c8e8315078025425a3cd282fb46",
+            "observation_id": "task_observation_v1_71da9b4d6213a423be136dd36a4faa5324849c9665bda72b8335743184184f17",
+            "payload_hash": "f7fd974bea7f1d9ae0e6cbc63c6f86cca268c8f28194876858a70c79d155cfd4",
+            "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+          },
+          "supporting_evidence": [
+            {
+              "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+              "span": {
+                "span_ref": "span_976825dfc671e3faaf5d41656056e908fbd9a62e875dc941a0e96dff70640aab"
+              }
+            },
+            {
+              "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+              "span": {
+                "span_ref": "span_36e40253fa9d231e17ab8b7b83bf00518f0712723da46050c2b98884e3d82bda"
+              }
+            }
+          ]
+        }
+      ],
+      "publishable": false,
+      "result_artifact": {
+        "kind": "tool_result",
+        "ref": "semantic/6b07443de89de5e2702d0ce8/result.json",
+        "sha256": "aa7dd19bbe081bf7c3e788d088a36567c4dac1b7445ff3483f3930b1cfc307b5",
+        "size_bytes": 6194
+      },
+      "schema_version": "task-semantic-analysis/v1",
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+    },
+    "workspace_id": "ws_95b59f86763049fb85c1b8b30ca522ae"
+  }
+}

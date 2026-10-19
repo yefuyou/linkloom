@@ -1,0 +1,1254 @@
+{
+  "schema_version": "product-ask/v1",
+  "query": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+  "scope": {
+    "subject": "",
+    "relation": "",
+    "as_of": null
+  },
+  "path": "TASK_INVESTIGATION",
+  "route": {
+    "intent": "TASK_INVESTIGATION",
+    "code": "SOURCE_TASK_INVESTIGATION",
+    "reason": "Bounded task investigation; observations and plans remain unconfirmed."
+  },
+  "status": "BLOCKED",
+  "conclusions": [],
+  "discovery": null,
+  "evidence": [],
+  "receipts": [],
+  "uncertainty": {
+    "unknown_fields": [],
+    "statement": ""
+  },
+  "agent_run_id": "ui-9e531523d2c4",
+  "reviewer": {
+    "performed": false,
+    "decision": null,
+    "accepted": false
+  },
+  "timeline": null,
+  "progress": null,
+  "error": {
+    "affected_refs": [],
+    "category": "runtime",
+    "code": "MODEL_ARTIFACT_WRITE_FAILED",
+    "details": {
+      "reason": "artifact_write_failed",
+      "run_id": "run_p4_165c14676135"
+    },
+    "message": "The durable model artifact could not be written.",
+    "retryable": false,
+    "safe_to_expose": true
+  },
+  "metrics": {
+    "model_turns": 0,
+    "tool_calls": 0,
+    "tool_errors": 0,
+    "max_model_turns": 12,
+    "max_provider_requests": 12
+  },
+  "trace": [],
+  "preparation": {
+    "schema": "product-task-preparation/v1",
+    "question": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+    "status": "PARTIAL",
+    "execution_kind": "FAKE",
+    "authority": "MODEL_PROPOSED_ONLY",
+    "discovery": {
+      "coverage_policy": "bounded-document-single-pass/v1",
+      "coverage_complete": true,
+      "semantic_exhaustive": false,
+      "valid_observations": [],
+      "partial_observations": [
+        {
+          "observation_id": "task_observation_v1_d48c3cdf2f057ce8f778a5f370e9bb57cbf530b79be730dc4df13fd9566b72a2",
+          "provenance": {
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+            "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+            "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+            "source_ref": "product://src_959a1d4fac6d463397e0f83af779118d",
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "ordinal": 0,
+            "message_id": "message_v1_f40d80f71923ddb4954a350aa7fd0e148e0a326b4f7308bbe5563241c37684f6",
+            "segment_id": "segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+            "char_start": 27,
+            "char_end": 63,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+            "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8"
+          },
+          "raw_text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "description": "完成日志迁移",
+          "owner": "林枫",
+          "deadline": "2029-06-20",
+          "deadline_text": "2029-06-20",
+          "deadline_precision": "DAY",
+          "deadline_role": "TASK_DEADLINE",
+          "project": "青竹",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+              "char_start": 27,
+              "char_end": 63,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成日志迁移",
+              "char_start": 40,
+              "char_end": 46,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "owner",
+              "quote": "负责人：林枫",
+              "char_start": 33,
+              "char_end": 39,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "青竹",
+              "char_start": 30,
+              "char_end": 32,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "deadline",
+              "quote": "截止日期：2029-06-20",
+              "char_start": 47,
+              "char_end": 62,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2000-01-01T00:00:00+00:00",
+          "event_time": "2029-06-01T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_5269e384a4f0415516cc598ce259bbae127ae68d25d364f5bdb7cf64c96077c4",
+          "provenance": {
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+            "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+            "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+            "source_ref": "product://src_2d88e78d071f43b8a41da0dfcc59b1c3",
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "ordinal": 0,
+            "message_id": "message_v1_7a87fbc5715e21e536ef38a69e90f1b97e36d9c1cf6916bf4cfb168bff9d553c",
+            "segment_id": "segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+            "char_start": 27,
+            "char_end": 70,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+            "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5"
+          },
+          "raw_text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "description": "完成日志迁移",
+          "owner": "林枫",
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": "青竹",
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "deadline",
+            "vendor"
+          ],
+          "validation_issues": [
+            "DEADLINE_ROLE_UNRESOLVED"
+          ],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+              "char_start": 27,
+              "char_end": 70,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "完成日志迁移",
+              "char_start": 32,
+              "char_end": 38,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "owner",
+              "quote": "负责人：林枫",
+              "char_start": 63,
+              "char_end": 69,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "project",
+              "quote": "青竹",
+              "char_start": 60,
+              "char_end": 62,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2000-01-01T00:00:00+00:00",
+          "event_time": "2029-06-04T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "failures": [],
+      "sources": [
+        {
+          "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+          "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        },
+        {
+          "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+          "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        }
+      ],
+      "unprocessed_sources": [],
+      "groups": [
+        {
+          "group_id": "task_discovery_group_507fc8df41e587cd7819094c4b4becc77fc0cf2f771b65184071642dd9bc4095",
+          "observation_ids": [
+            "task_observation_v1_d48c3cdf2f057ce8f778a5f370e9bb57cbf530b79be730dc4df13fd9566b72a2"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba"
+          ],
+          "unbound_fields": [],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        },
+        {
+          "group_id": "task_discovery_group_36cf91ce6897ef9ba4ffb7edff3bce4e107d7db8d5af03ef8b82d375f212481c",
+          "observation_ids": [
+            "task_observation_v1_5269e384a4f0415516cc598ce259bbae127ae68d25d364f5bdb7cf64c96077c4"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e"
+          ],
+          "unbound_fields": [
+            "deadline_text"
+          ],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        }
+      ],
+      "extractions": [
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+                "description_parts": [
+                  "完成日志迁移"
+                ],
+                "owner": "林枫",
+                "deadline_text": "2029-06-20",
+                "project": "青竹",
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "FAKE",
+            "model_id": "offline-task-investigation",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+            "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+            "segment_id": "segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+            "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "a3eae1c1df212a55010448b41221e0f7cc9fec3d8906032b9a7f729f438e2ce7",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+            "extraction_fingerprint": "49230e27e0c8408ea77ce06cae29dc8fdf642f9e2f472d62919f7e68e77abd0d",
+            "claims_sha256": "77c0df6b74ee4af3c85e8b6564a35facf1d8e78dbc9ce74a66da53c2fa925ee5",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "0be21b02ae2c5b56b10d8c38b94a1b6e5895b68c4176a12d058f1167c634ecc0",
+                "response_sha256": "d736973f2a6775042566f6fb5a5946fd0487f8e424df2a28b1101e5cc7afd592",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 30,
+                  "duration_ms": null
+                },
+                "latency_ms": 17.128699997556396,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "0be21b02ae2c5b56b10d8c38b94a1b6e5895b68c4176a12d058f1167c634ecc0",
+                "estimated_cost_upper_bound_usd": 0
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        },
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+                "description_parts": [
+                  "完成日志迁移"
+                ],
+                "owner": "林枫",
+                "deadline_text": "2029-06-24",
+                "project": "青竹",
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "FAKE",
+            "model_id": "offline-task-investigation",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+            "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+            "segment_id": "segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+            "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "243570e8f27a811cc22fe37dec5b1f6c9c8168ae14de9c05de7d788797cac223",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+            "extraction_fingerprint": "be0675e181aeb6aedeb4442cab26c49d90a7deda140e7f224372e28ae38be09d",
+            "claims_sha256": "3415dba3848dfa6042ed79cc64ca37aee1dd7edf5ef340d251fb49c29e7592ec",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "c01aad86d470f7ce290a9581c9bbd5de3cfe9838cf32339baec180eb836cb2c1",
+                "response_sha256": "d08ec0270ef082f010372af2e363c1b8511a844efa339d5b7ae3ba16f2fcb34e",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 30,
+                  "duration_ms": null
+                },
+                "latency_ms": 15.407999999297317,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "c01aad86d470f7ce290a9581c9bbd5de3cfe9838cf32339baec180eb836cb2c1",
+                "estimated_cost_upper_bound_usd": 0
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        }
+      ],
+      "receipts": [
+        {
+          "provider_id": "FAKE",
+          "model_id": "offline-task-investigation",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+          "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+          "segment_id": "segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+          "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "a3eae1c1df212a55010448b41221e0f7cc9fec3d8906032b9a7f729f438e2ce7",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+          "extraction_fingerprint": "49230e27e0c8408ea77ce06cae29dc8fdf642f9e2f472d62919f7e68e77abd0d",
+          "claims_sha256": "77c0df6b74ee4af3c85e8b6564a35facf1d8e78dbc9ce74a66da53c2fa925ee5",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "0be21b02ae2c5b56b10d8c38b94a1b6e5895b68c4176a12d058f1167c634ecc0",
+              "response_sha256": "d736973f2a6775042566f6fb5a5946fd0487f8e424df2a28b1101e5cc7afd592",
+              "provider_request_id": null,
+              "provider_response_id": null,
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 30,
+                "duration_ms": null
+              },
+              "latency_ms": 17.128699997556396,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "0be21b02ae2c5b56b10d8c38b94a1b6e5895b68c4176a12d058f1167c634ecc0",
+              "estimated_cost_upper_bound_usd": 0
+            }
+          ],
+          "terminal_reason": null
+        },
+        {
+          "provider_id": "FAKE",
+          "model_id": "offline-task-investigation",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+          "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+          "segment_id": "segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+          "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "243570e8f27a811cc22fe37dec5b1f6c9c8168ae14de9c05de7d788797cac223",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "756e62cb6cb8696cfef01dc784be812eb473965392b796a6384e29183a7ddd98",
+          "extraction_fingerprint": "be0675e181aeb6aedeb4442cab26c49d90a7deda140e7f224372e28ae38be09d",
+          "claims_sha256": "3415dba3848dfa6042ed79cc64ca37aee1dd7edf5ef340d251fb49c29e7592ec",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "c01aad86d470f7ce290a9581c9bbd5de3cfe9838cf32339baec180eb836cb2c1",
+              "response_sha256": "d08ec0270ef082f010372af2e363c1b8511a844efa339d5b7ae3ba16f2fcb34e",
+              "provider_request_id": null,
+              "provider_response_id": null,
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 30,
+                "duration_ms": null
+              },
+              "latency_ms": 15.407999999297317,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "c01aad86d470f7ce290a9581c9bbd5de3cfe9838cf32339baec180eb836cb2c1",
+              "estimated_cost_upper_bound_usd": 0
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "candidate_coverage": [
+        {
+          "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+          "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+          "verified_description_parts": [
+            "完成日志迁移"
+          ]
+        },
+        {
+          "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+          "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+          "verified_description_parts": [
+            "完成日志迁移"
+          ]
+        }
+      ]
+    },
+    "planning": [
+      {
+        "schema": "task-investigation-result/v1",
+        "status": "PLANNED",
+        "plan": {
+          "plan_id": "investigation_v2_d7a52762ed928886ea50c619d541d5581fe128020b8afebdb40913b885972d63",
+          "needs_more_investigation": true,
+          "ready_step_ids": [
+            "locate"
+          ],
+          "schema": "task-investigation-plan/v2",
+          "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+          "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+          "snapshot_hash": "223de6103a5ca47e9dab76c06caf81d5275e362cd831614a4f29471c164056dd",
+          "steps": [
+            {
+              "id": "locate",
+              "kind": "discover",
+              "question": "还有哪份原始会议能确认任务身份？",
+              "handles": [],
+              "endpoints": [],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "",
+              "field": "",
+              "target_kind": "task",
+              "missing_entities": [
+                "交付任务的已确认身份"
+              ],
+              "execution_key": "9e7dbf35a7153b8a9d2b9352d366bd575d0c5a03b21e5ba8c93de8b369b41af9",
+              "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "0776f9143d834d7ec3e0bc9a05738a8d44473e263095d3509aa7fc2ffcc827bc"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "c5370e37f62bd913036d0f0d12d207e16f5b4f2ba52954b5a3bf990bfcc1d29f"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": "当前候选无法确认跨消息身份。"
+            }
+          ],
+          "uncertainties": [
+            "需要核对原文及语义审查。"
+          ],
+          "refusal_reasons": [],
+          "verified_results": [],
+          "parent_plan_id": null,
+          "gaps": [],
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24000,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          },
+          "authority": "ACTION_SUGGESTION_ONLY",
+          "publishable": false,
+          "conclusion_policy": "Evidence and independent Reviewer required."
+        },
+        "errors": [],
+        "provider_calls": 1,
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 30,
+          "duration_ms": null
+        },
+        "request_sha256": "7273e64ccacdef4c61feb5d5c5f2dfee2a4c69743fdfbaada6e5ef1a9813dbdb",
+        "response_sha256": "4df6b2806d7e44103549dfb26cf6f1fdea00b1b647687b9ec758c551eed89c5b",
+        "model_id": "offline-task-investigation",
+        "actual_model_version": null,
+        "budget": {
+          "calls_reserved": 1,
+          "input_tokens_reserved": 13102,
+          "output_tokens_reserved": 4096,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "untrusted_output": {
+          "kind": "tool_call",
+          "tool_calls": [
+            {
+              "tool_id": "emit_investigation_plan",
+              "arguments": {
+                "steps": [
+                  {
+                    "id": "locate",
+                    "kind": "discover",
+                    "question": "还有哪份原始会议能确认任务身份？",
+                    "handles": [],
+                    "source_handles": [],
+                    "depends_on": [],
+                    "predicate": "",
+                    "field": "",
+                    "target_kind": "task",
+                    "missing_entities": [
+                      "交付任务的已确认身份"
+                    ],
+                    "evidence_gap": "当前候选无法确认跨消息身份。"
+                  }
+                ],
+                "uncertainties": [
+                  "需要核对原文及语义审查。"
+                ],
+                "refusal_reasons": []
+              }
+            }
+          ]
+        },
+        "diagnostics": {
+          "proposed_steps": 1,
+          "accepted_steps": 1,
+          "excess_steps": 0,
+          "validation_issues": [],
+          "proposed_by_kind": {
+            "discover": 1
+          },
+          "ready_steps": 1
+        }
+      },
+      {
+        "schema": "task-investigation-result/v1",
+        "status": "PLANNED",
+        "plan": {
+          "plan_id": "investigation_v2_e382ea826f2bd3d8eae6ddd40844a112555157438b1571fe69d39afc802c01e7",
+          "needs_more_investigation": true,
+          "ready_step_ids": [
+            "identity"
+          ],
+          "schema": "task-investigation-plan/v2",
+          "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+          "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+          "snapshot_hash": "223de6103a5ca47e9dab76c06caf81d5275e362cd831614a4f29471c164056dd",
+          "steps": [
+            {
+              "id": "locate",
+              "kind": "discover",
+              "question": "还有哪份原始会议能确认任务身份？",
+              "handles": [],
+              "endpoints": [],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "",
+              "field": "",
+              "target_kind": "task",
+              "missing_entities": [
+                "交付任务的已确认身份"
+              ],
+              "execution_key": "9e7dbf35a7153b8a9d2b9352d366bd575d0c5a03b21e5ba8c93de8b369b41af9",
+              "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "0776f9143d834d7ec3e0bc9a05738a8d44473e263095d3509aa7fc2ffcc827bc"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "c5370e37f62bd913036d0f0d12d207e16f5b4f2ba52954b5a3bf990bfcc1d29f"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": "当前候选无法确认跨消息身份。"
+            },
+            {
+              "id": "identity",
+              "kind": "relation",
+              "question": "两次会议是否延续同一交付任务？",
+              "handles": [
+                "task_0",
+                "task_1"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "observation_id": "task_observation_v1_d48c3cdf2f057ce8f778a5f370e9bb57cbf530b79be730dc4df13fd9566b72a2",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "payload_hash": "ab1731755e60f6a714705306e3359d5d95b00b4b77f4a5508f0ea70039e7bc16"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "observation_id": "task_observation_v1_5269e384a4f0415516cc598ce259bbae127ae68d25d364f5bdb7cf64c96077c4",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "payload_hash": "5b6a0828daf1ba3b750b993f64246e9439be4dadad98bc1cc0376ce24227d8dd"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "SAME_TASK",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "fdde3b4f8a1a63b7e68615a96321d120dbae8f7dbd26f18ac4cad75794df97c0",
+              "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "0776f9143d834d7ec3e0bc9a05738a8d44473e263095d3509aa7fc2ffcc827bc"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "c5370e37f62bd913036d0f0d12d207e16f5b4f2ba52954b5a3bf990bfcc1d29f"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": ""
+            },
+            {
+              "id": "revision",
+              "kind": "relation",
+              "question": "后一次会议是否修订前一计划？",
+              "handles": [
+                "task_1",
+                "task_0"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "observation_id": "task_observation_v1_5269e384a4f0415516cc598ce259bbae127ae68d25d364f5bdb7cf64c96077c4",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "payload_hash": "5b6a0828daf1ba3b750b993f64246e9439be4dadad98bc1cc0376ce24227d8dd"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "observation_id": "task_observation_v1_d48c3cdf2f057ce8f778a5f370e9bb57cbf530b79be730dc4df13fd9566b72a2",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "payload_hash": "ab1731755e60f6a714705306e3359d5d95b00b4b77f4a5508f0ea70039e7bc16"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [
+                "identity"
+              ],
+              "predicate": "REVISES_PLAN",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "9b9d560d8ad8b2a4b0bb25c33e1dcb5a5fdc6742623c1cbd2e415a8e68c148b6",
+              "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_959a1d4fac6d463397e0f83af779118d",
+                  "artifact_version_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9161112da35b7294033b018648fd965a7e320da355261a25645519f7cbe3bdba",
+                  "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+                  "span_sha256": "0776f9143d834d7ec3e0bc9a05738a8d44473e263095d3509aa7fc2ffcc827bc"
+                },
+                {
+                  "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a",
+                  "artifact_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+                  "artifact_version_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_06485d199bf5dd428bdbcf881682d6bdacb7abfd728a10104d198e9cb67c187e",
+                  "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+                  "span_sha256": "c5370e37f62bd913036d0f0d12d207e16f5b4f2ba52954b5a3bf990bfcc1d29f"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [
+                "fdde3b4f8a1a63b7e68615a96321d120dbae8f7dbd26f18ac4cad75794df97c0"
+              ],
+              "evidence_gap": ""
+            }
+          ],
+          "uncertainties": [
+            "需要核对原文及语义审查。"
+          ],
+          "refusal_reasons": [],
+          "verified_results": [
+            {
+              "plan_id": "investigation_v2_d7a52762ed928886ea50c619d541d5581fe128020b8afebdb40913b885972d63",
+              "step_id": "locate",
+              "receipt_id": "host_9e7dbf35a7153b8a9d2b9352d366bd575d0c5a03b21e5ba8c93de8b369b41af9",
+              "result_sha256": "15aa7bb272a3167755d405c881fe52769a4e10c4782c181320e1e5c085c95223",
+              "summary": "Bounded Discovery examined; missing entities remain unknown.",
+              "outcome": "UNKNOWN"
+            }
+          ],
+          "parent_plan_id": "investigation_v2_d7a52762ed928886ea50c619d541d5581fe128020b8afebdb40913b885972d63",
+          "gaps": [
+            "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE"
+          ],
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24000,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          },
+          "authority": "ACTION_SUGGESTION_ONLY",
+          "publishable": false,
+          "conclusion_policy": "Evidence and independent Reviewer required."
+        },
+        "errors": [],
+        "provider_calls": 1,
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 30,
+          "duration_ms": null
+        },
+        "request_sha256": "a7ebcb781308031055921a7b2a64c7bb244c3608a61f60bbbcac6d297fd9154d",
+        "response_sha256": "3c0b0d203721f789918182a85606c9392392c4e6fd616817b772ba6b4ddb3367",
+        "model_id": "offline-task-investigation",
+        "actual_model_version": null,
+        "budget": {
+          "calls_reserved": 2,
+          "input_tokens_reserved": 29441,
+          "output_tokens_reserved": 8192,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "untrusted_output": {
+          "kind": "tool_call",
+          "tool_calls": [
+            {
+              "tool_id": "emit_investigation_plan",
+              "arguments": {
+                "steps": [
+                  {
+                    "id": "identity",
+                    "kind": "relation",
+                    "question": "两次会议是否延续同一交付任务？",
+                    "handles": [
+                      "task_0",
+                      "task_1"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [],
+                    "predicate": "SAME_TASK",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  },
+                  {
+                    "id": "revision",
+                    "kind": "relation",
+                    "question": "后一次会议是否修订前一计划？",
+                    "handles": [
+                      "task_1",
+                      "task_0"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [
+                      "identity"
+                    ],
+                    "predicate": "REVISES_PLAN",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  }
+                ],
+                "uncertainties": [
+                  "需要核对原文及语义审查。"
+                ],
+                "refusal_reasons": []
+              }
+            }
+          ]
+        },
+        "diagnostics": {
+          "proposed_steps": 2,
+          "accepted_steps": 2,
+          "excess_steps": 0,
+          "validation_issues": [],
+          "proposed_by_kind": {
+            "relation": 2
+          },
+          "ready_steps": 1
+        }
+      }
+    ],
+    "source_mapping": {
+      "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea": {
+        "source_id": "src_959a1d4fac6d463397e0f83af779118d",
+        "source_version": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+        "source_name": "meeting-1.txt",
+        "content_sha256": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41"
+      },
+      "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65": {
+        "source_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+        "source_version": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+        "source_name": "meeting-2.txt",
+        "content_sha256": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807"
+      }
+    },
+    "source_snapshot_hash": "3838498307eec2aaaf30dbad94bd62f1da414a971798c001b3d6a9ef0beebbc9",
+    "gaps": [
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "stage_budget": {
+      "discovery_calls_reserved": 2,
+      "discovery_call_limit": 3,
+      "discovery_input_tokens_reserved_upper_bound": 19045,
+      "discovery_output_tokens_reserved": 3072,
+      "discovery_max_request_bytes": 49152,
+      "planning": {
+        "calls_reserved": 2,
+        "input_tokens_reserved": 29441,
+        "output_tokens_reserved": 8192,
+        "limits": {
+          "max_subgoals": 12,
+          "max_relation_queries": 8,
+          "max_fanout": 4,
+          "max_dependency_depth": 6,
+          "max_relation_hops": 3,
+          "max_input_tokens": 24576,
+          "max_output_tokens": 4096,
+          "max_provider_calls": 3,
+          "max_total_input_tokens": 73728,
+          "max_total_output_tokens": 12288
+        }
+      },
+      "semantic_call_limit": 1,
+      "new_billable_cost_usd": 0.0
+    },
+    "evidence_layers": {
+      "component": "SEPARATE_TEST_EVIDENCE",
+      "integration": "FAKE",
+      "real_model_semantics": "NOT_EVALUATED",
+      "real_product_business_task": "NOT_EVALUATED"
+    }
+  },
+  "working_context_audit": {
+    "audit_ref": {
+      "kind": "observation",
+      "ref": "working/8b75dfcfc34f3cd7b7e0/1-7abe718b02a4a52b/audit.json",
+      "sha256": "7bb0f2aa04f84d259dfb91564257f079a5b0a78cd836b0cb1bc40cf076bd58b2",
+      "size_bytes": 5465
+    },
+    "authorized_snapshot_id": "10708e092224a290cea2843b7e6af551efbe8c9273976b98cf6c85d5b75e03c8",
+    "base_instruction_sha256": "b0231ca79c130be526fe0f364dc2f2a35db8d713897eb58af3eca07a79875476",
+    "before_working_ref": {
+      "kind": "observation",
+      "ref": "working/8b75dfcfc34f3cd7b7e0/1-7abe718b02a4a52b/before.json",
+      "sha256": "d4b5d22273e5b281bf2d535c3eca990a2f06045a22b8e456a19d3d5f1f6bab3c",
+      "size_bytes": 2798
+    },
+    "budget": {
+      "actual_provider_tokens": false,
+      "context_window_tokens": 65536,
+      "input_bytes": 9316,
+      "input_tokens": 2448,
+      "max_request_bytes": 98304,
+      "normalized_request_bytes": 9060,
+      "output_reserve_tokens": 2048,
+      "segments": {
+        "compaction_summary": {
+          "bytes": 2,
+          "tokens": 1
+        },
+        "existing_verified_context": {
+          "bytes": 2,
+          "tokens": 1
+        },
+        "history": {
+          "bytes": 4,
+          "tokens": 1
+        },
+        "instruction": {
+          "bytes": 800,
+          "tokens": 225
+        },
+        "latest_result": {
+          "bytes": 4,
+          "tokens": 1
+        },
+        "request_envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "tools": {
+          "bytes": 1917,
+          "tokens": 480
+        },
+        "verified_evidence": {
+          "bytes": 4060,
+          "tokens": 1084
+        },
+        "working_context": {
+          "bytes": 1528,
+          "tokens": 407
+        }
+      },
+      "serialization_overhead_bytes": 743,
+      "token_count_kind": "MULTILINGUAL_HEURISTIC_V1",
+      "user_input_bytes": 6494
+    },
+    "compaction": null,
+    "config": {
+      "compactor_id": "DETERMINISTIC_FAKE_V1",
+      "envelope": {
+        "bytes": 256,
+        "tokens": 64
+      },
+      "history_soft_bytes": 24576,
+      "local_budget": {
+        "max_chars": 12000,
+        "max_evidence": 5,
+        "max_experience": 2,
+        "max_memory": 3,
+        "max_tokens": 3000
+      },
+      "policy": {
+        "context_window_tokens": 65536,
+        "max_candidates": 256,
+        "max_request_bytes": 98304,
+        "model_id": "offline-task-context",
+        "output_reserve_tokens": 2048,
+        "token_count_kind": "MULTILINGUAL_HEURISTIC_V1"
+      },
+      "tokenizer_id": "LINKLOOM_MULTILINGUAL_HEURISTIC_V1",
+      "tokenizer_probe": [
+        3,
+        11,
+        10
+      ],
+      "working_max_tokens": 4096
+    },
+    "coverage": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "coverage_before_compaction": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "errors": [],
+    "groups": [
+      {
+        "conflict": false,
+        "evidence_ids": [
+          "context_ev_v1_1a7de427912a070fa13bb8f0044569ce979d55b91d2a645123c82da1699c3064",
+          "context_ev_v1_e5d1e4f1fd4faf35e149741aa4e6d34a02f1312c38760c1a0761f88612335a28"
+        ],
+        "group_id": "unclassified_investigation",
+        "subgoal_ids": [
+          "sources_current",
+          "relation_0",
+          "relations_pending"
+        ]
+      }
+    ],
+    "mapping_ref": {
+      "kind": "observation",
+      "ref": "working/8b75dfcfc34f3cd7b7e0/1-7abe718b02a4a52b/mapping.json",
+      "sha256": "d5f400f9712517c015f9191b275203d60252b3f5a6ba0e9d602e764f7280889d",
+      "size_bytes": 3356
+    },
+    "prepared_request_sha256": "fb1ac38bb86f267d35edd523498b0879ff8136b3c3e105a41023a6f398fc5b01",
+    "recovery": {
+      "evidence": [
+        {
+          "historical": false,
+          "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "ref": {
+            "char_end": 63,
+            "char_start": 27,
+            "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+            "document_id": "src_959a1d4fac6d463397e0f83af779118d",
+            "evidence_id": "context_ev_v1_1a7de427912a070fa13bb8f0044569ce979d55b91d2a645123c82da1699c3064",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_959a1d4fac6d463397e0f83af779118d",
+            "quote_hash": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+            "resource_id": "artifact_v1_f3f5fff4e36bfaba518280d1ad4ddc7ff100fff1330316b3537568a27f2d46ea",
+            "source_ref": "product://src_959a1d4fac6d463397e0f83af779118d",
+            "source_version": 1,
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a"
+          }
+        },
+        {
+          "historical": false,
+          "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "ref": {
+            "char_end": 70,
+            "char_start": 27,
+            "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+            "document_id": "src_2d88e78d071f43b8a41da0dfcc59b1c3",
+            "evidence_id": "context_ev_v1_e5d1e4f1fd4faf35e149741aa4e6d34a02f1312c38760c1a0761f88612335a28",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_2d88e78d071f43b8a41da0dfcc59b1c3",
+            "quote_hash": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+            "resource_id": "artifact_v1_4c2f1fd9701684e6487615168bd66c7864f53c13ec3679566a9f9e9dccfdaf65",
+            "source_ref": "product://src_2d88e78d071f43b8a41da0dfcc59b1c3",
+            "source_version": 1,
+            "workspace_id": "ws_b44ef0ab82374e609e9a7f78a4190c7a"
+          }
+        }
+      ],
+      "failures": [],
+      "status": "complete"
+    },
+    "request_usage": {
+      "bytes": 8591,
+      "tokens": 2198
+    },
+    "run_id": "run_p4_165c14676135",
+    "status": "COMPLETE",
+    "task_plan": {
+      "goal": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+      "subgoals": [
+        {
+          "depends_on": [],
+          "question": "Recover every declared authorized source and competing observation.",
+          "subgoal_id": "sources_current"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Investigate SAME_TASK: task_0 -> task_1; semantics not accepted.",
+          "subgoal_id": "relation_0"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Independent semantic acceptance and unresolved evidence gaps.",
+          "subgoal_id": "relations_pending"
+        }
+      ]
+    },
+    "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+    "turn_id": "run_p4_165c14676135:turn:1",
+    "working_ref": {
+      "kind": "observation",
+      "ref": "working/8b75dfcfc34f3cd7b7e0/1-7abe718b02a4a52b/state.json",
+      "sha256": "d4b5d22273e5b281bf2d535c3eca990a2f06045a22b8e456a19d3d5f1f6bab3c",
+      "size_bytes": 2798
+    }
+  }
+}

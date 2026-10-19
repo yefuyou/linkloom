@@ -9,8 +9,10 @@ import re
 from tempfile import TemporaryDirectory
 from threading import Lock
 from typing import Any, Callable
+from uuid import uuid4
 
 from linkloom.runtime.graph import RuntimeEngine
+from linkloom.runtime.context_engineering import ContextRuntimeConfig
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
 from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
@@ -26,7 +28,7 @@ from linkloom.ui.projection import WorkspacePresentationContext
 
 @dataclass
 class _InvestigationJob:
-    temporary_root: TemporaryDirectory[str]
+    temporary_root: TemporaryDirectory[str] | None
     backend: RuntimeRunBackend
     source_names: dict[str, str]
     source_versions: dict[str, dict[str, str]]
@@ -34,6 +36,7 @@ class _InvestigationJob:
     temporal_scope: tuple[str, str, str] | None = None
     temporal_view_holder: dict[str, Any] | None = None
     task_plan: TaskPlan | None = None
+    task_preparation: Any = None
 
 
 class ProductInvestigationService:
@@ -49,9 +52,11 @@ class ProductInvestigationService:
         external_provider: bool = True,
         relation_max_steps: int = 12,
         adaptive_planning: bool = False,
+        task_models: Any = None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
+        self.task_models = task_models
         self.run_mode = run_mode
         self.max_steps = max_steps
         self.external_provider = external_provider
@@ -71,6 +76,7 @@ class ProductInvestigationService:
             "run_mode": self.run_mode,
             "relation_max_model_turns": self.relation_max_steps,
             "adaptive_planning": self.adaptive_planning,
+            "task_investigation": self.task_models is not None,
             "message": (
                 "Agent model is not configured. Start the explicit offline demo to inspect a synthetic run."
                 if self.model_factory is None
@@ -83,6 +89,7 @@ class ProductInvestigationService:
         temporal_scope: tuple[str, str, str] | None = None,
         task_plan: TaskPlan | None = None,
         adaptive: bool = False,
+        task_investigation: bool = False,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
@@ -99,6 +106,9 @@ class ProductInvestigationService:
             if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
                 raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
         source_run = task_plan is not None or adaptive
+        if task_investigation and (self.task_models is None or self.external_provider or source_run or temporal_scope is not None):
+            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task investigation requires explicitly configured offline stage adapters.", status=409)
+        source_run = source_run or task_investigation
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
         temporal_view_holder: dict[str, Any] | None = None
@@ -151,9 +161,21 @@ class ProductInvestigationService:
             raise ProductApplicationError(
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
-        temporary_root = TemporaryDirectory(prefix="linkloom-investigate-")
+        temporary_root = None if task_investigation else TemporaryDirectory(prefix="linkloom-investigate-")
         try:
-            root = Path(temporary_root.name)
+            root = (Path(temporary_root.name) if temporary_root else
+                    Path(self.product_app.repository.database_path).parent / 'work' / 'investigations' / uuid4().hex[:12])
+            root.mkdir(parents=True, exist_ok=temporary_root is not None)
+            preparation = None
+            if task_investigation:
+                from linkloom.ui.task_investigation import ProductTaskSources, prepare_task_investigation
+                preparation = prepare_task_investigation(query.strip(), ProductTaskSources(workspace_id, sources,
+                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1]), self.task_models, root / "preparation")
+                if preparation.manifest['status'] == 'BLOCKED':
+                    return dict(kind='error', run={'id': 'blocked-' + root.name}, evidence=[],
+                        reviewer={'performed': False}, preparation=preparation.manifest,
+                        error=dict(code='TASK_PLAN_BLOCKED', classification='validation',
+                                   message='The investigation plan did not pass Host admission.'))
             vault = root / "vault"
             vault.mkdir()
             source_names: dict[str, str] = {}
@@ -181,6 +203,8 @@ class ProductInvestigationService:
                 temporal_decision_lookup=temporal_lookup,
                 temporal_claim_validator=temporal_validator,
                 model_plan_profile=SOURCE_RELATION_PROFILE if adaptive else None,
+                task_relation_tools=preparation.tools if preparation else None,
+                context_runtime_config=ContextRuntimeConfig() if preparation else None,
             )
             backend = RuntimeRunBackend(
                 engine=engine,
@@ -195,15 +219,18 @@ class ProductInvestigationService:
                 # projects, not approved business-decision slots. The model
                 # still chooses read-only tools; no incompatible plan is sent.
                 planning_mode="model" if adaptive else "template" if temporal_scope is not None or task_plan is not None else None,
+                workflow="task_relations" if preparation else "team_decision",
             )
             snapshot = backend.start(query.strip(), task_plan=task_plan.to_dict() if task_plan else None)
         except Exception:
-            temporary_root.cleanup()
+            if temporary_root is not None:
+                temporary_root.cleanup()
             raise
         with self._lock:
             self._jobs[snapshot["run"]["id"]] = _InvestigationJob(
                 temporary_root, backend, source_names, source_versions, workspace_id,
                 temporal_scope, temporal_view_holder, task_plan,
+                preparation,
             )
         return self._decorate(snapshot, None, task_plan=task_plan, max_steps=max_steps)
 
@@ -212,6 +239,29 @@ class ProductInvestigationService:
             job = self._jobs.get(run_id)
         if job is None:
             return None
+        if job.task_preparation is not None:
+            with self.product_app._store_lock:
+                if self.product_app._workspace_id() != job.workspace_id:
+                    return None
+                try:
+                    job.task_preparation.sources.validate_current()
+                    try:
+                        snapshot = job.backend.inspect(run_id)
+                    except Exception:
+                        return {"kind": "error", "run": {"id": run_id}, "reviewer": {"performed": False},
+                            "evidence": [], "error": {"code": "TASK_PROJECTION_FAILED", "classification": "runtime",
+                            "message": "The task Runtime result could not be projected."}}
+                    job.task_preparation.sources.validate_current()
+                except Exception:
+                    return {"kind": "error", "run": {"id": run_id}, "reviewer": {"performed": False},
+                        "evidence": [], "error": {"code": "SOURCE_SNAPSHOT_CHANGED", "classification": "validation",
+                        "message": "The authorized source snapshot changed; ask again."}}
+                if snapshot is None:
+                    return None
+                snapshot['preparation'] = job.task_preparation.manifest
+                for evidence in snapshot['evidence']:
+                    evidence.update(job.task_preparation.sources.mapping[evidence['artifact_version_id']])
+                return snapshot
         with self.product_app._store_lock:
             if self.product_app._workspace_id() != job.workspace_id:
                 return None

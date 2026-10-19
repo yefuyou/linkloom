@@ -1,0 +1,6 @@
+# Retain intermediate M3-I runs locally. The delivery names the accepted run;
+# the first failed run's portable JSON/ZIP evidence is still versioned.
+evidence/product-run-v1/**/work/
+evidence/product-run-v2/
+evidence/product-run-final/
+evidence/product-reviewed/

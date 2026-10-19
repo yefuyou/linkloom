@@ -1,0 +1,2 @@
+# Preserve machine evidence byte hashes across platforms and Git autocrlf.
+* -text -whitespace

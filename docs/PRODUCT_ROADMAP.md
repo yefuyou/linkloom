@@ -73,6 +73,17 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### M3-I Product Investigation Integration — 2026-10-19
+
+The authorized isolated branch connects current product source snapshots, F
+Task Discovery and G Investigation Planning to the existing task Runtime,
+ToolRuntime/Ledger, E context recovery and Reviewer through Unified Ask. The
+deterministic Fast Path remains intact. [Delivery and evidence](requirements/m3-i-integration/DELIVERY.md)
+separate locally verified FakeModel integration from real-model semantics and
+real business acceptance, both NOT_EVALUATED. Unconfirmed relation premises,
+missing sources, unsupported scope and budget failures remain visible. No new
+paid Provider request, real-vault mutation, master merge or PR is authorized.
+
 ### Adaptive source-relation planning — 2026-10-16
 
 The user-authorized isolated Linkloom B work adds optional model translation of

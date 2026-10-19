@@ -1,0 +1,113 @@
+{
+  "evidence_level": "FAKE_MODEL_PRODUCT_INTEGRATION",
+  "real_model_semantic_test": "NOT_EVALUATED",
+  "real_product_business_task": "NOT_EVALUATED",
+  "new_paid_provider_requests": 0,
+  "cases": {
+    "continuity": {
+      "status": "BLOCKED",
+      "reviewer": {
+        "performed": false,
+        "decision": null,
+        "accepted": false
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 0
+      },
+      "metrics": {
+        "model_turns": 0,
+        "tool_calls": 0,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "conflict": {
+      "status": "BLOCKED",
+      "reviewer": {
+        "performed": false,
+        "decision": null,
+        "accepted": false
+      },
+      "stage_calls": {
+        "discovery": 3,
+        "planning": 1,
+        "semantics": 0
+      },
+      "metrics": {
+        "model_turns": 0,
+        "tool_calls": 0,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 3,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "missing": {
+      "status": "BLOCKED",
+      "reviewer": {
+        "performed": false,
+        "decision": null,
+        "accepted": false
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 0
+      },
+      "metrics": {
+        "model_turns": 0,
+        "tool_calls": 0,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN",
+        "UNRESOLVED_CLARIFY:clarify"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "replan": {
+      "status": "BLOCKED",
+      "reviewer": {
+        "performed": false,
+        "decision": null,
+        "accepted": false
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 0
+      },
+      "metrics": {
+        "model_turns": 0,
+        "tool_calls": 0,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    }
+  }
+}

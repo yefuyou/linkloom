@@ -19,6 +19,9 @@ from linkloom.runtime.adaptive_planning import source_scope_violation
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
 # Supported task families, not general intent understanding. Investigation wins
+_TASK_QUESTION = re.compile(r'\b(tasks?|deadlines?|deliverables?)\b|任务|交付|截止', re.I)
+
+# Supported task families, not general intent understanding. Investigation wins
 # for mixed questions so a current-state lookup cannot masquerade as an explanation.
 _INVESTIGATION = re.compile(
     r"\b(why|reason|rationale|explain|investigat\w*|conflict\w*|contradict\w*|"
@@ -181,6 +184,9 @@ class UnifiedAskService:
                         discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0,
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                 result["discovery"] = discovery
+                if (not (values['subject'] or values['relation']) and _TASK_QUESTION.search(run.query)
+                        and (discovery['status'] == 'NO_MATCH' or run.route['intent'] == 'INVESTIGATION')):
+                    return self._task_request(run)
                 if discovery["scope"] is None:
                     service = self.investigation()
                     if discovery["status"] == "NO_MATCH" and _RELATION_QUESTION.search(run.query):
@@ -225,6 +231,34 @@ class UnifiedAskService:
                 return self._from_snapshot(pinned, snapshot), 202
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
+
+    def _task_request(self, run):
+        route = dict(intent='TASK_INVESTIGATION', code='SOURCE_TASK_INVESTIGATION',
+                     reason='Bounded task investigation; observations and plans remain unconfirmed.')
+        run = _AskRun(run.query, run.workspace_id, run.scope, route)
+        result = self._base(run)
+        result['path'] = 'TASK_INVESTIGATION'
+        if run.scope.get('as_of') is not None:
+            return self._failure(result, 'TASK_DATE_SCOPE_UNSUPPORTED',
+                'Task investigation cannot bind the advanced decision date. Clear it and state the investigation period in the question.',
+                category='validation', status='BLOCKED'), 200
+        service = self.investigation()
+        config = service.config() if service else {}
+        if not config.get('available') or not config.get('task_investigation') or config.get('external_provider'):
+            return self._failure(result, 'TASK_INVESTIGATION_UNAVAILABLE',
+                'Task investigation needs explicit offline stage adapters. New live Provider execution is disabled.',
+                category='configuration', status='BLOCKED'), 200
+        try:
+            snapshot = service.start(run.query, run.workspace_id, task_investigation=True)
+        except Exception as exc:
+            code = str(exc) if isinstance(exc, ValueError) else getattr(exc, 'code', 'TASK_PREPARATION_FAILED')
+            return self._failure(result, code, 'Task preparation stopped; no result is publishable.',
+                category='validation', status='BLOCKED'), 200
+        with self._lock:
+            if snapshot['kind'] == 'error':
+                return self._from_snapshot(run, snapshot), 200
+            self._runs[snapshot['run']['id']] = (run, service)
+        return self._from_snapshot(run, snapshot), 202
 
     def _source_request(self, run, payload, plan):
         service = self.investigation()
@@ -298,6 +332,21 @@ class UnifiedAskService:
 
     def _from_snapshot(self, run: _AskRun, snapshot: dict[str, Any]) -> dict[str, Any]:
         result = self._base(run)
+        if run.route['intent'] == 'TASK_INVESTIGATION':
+            result.update(path='TASK_INVESTIGATION', agent_run_id=snapshot['run']['id'],
+                status='INVESTIGATING' if snapshot['kind'] == 'running' else 'BLOCKED',
+                metrics=deepcopy(snapshot.get('metrics', {})), trace=deepcopy(snapshot.get('trace', [])),
+                preparation=deepcopy(snapshot.get('preparation')), error=deepcopy(snapshot.get('error')),
+                working_context_audit=deepcopy(snapshot.get('working_context_audit')))
+            review = snapshot.get('reviewer', {})
+            result['reviewer'] = dict(review, accepted=review.get('decision') == 'evidence_sufficient')
+            if snapshot.get('task_investigation') and result['reviewer']['accepted']:
+                task_result = snapshot['task_investigation']
+                release_status = ('BLOCKED' if task_result.get('investigation_status') == 'BLOCKED'
+                                  else (snapshot.get('preparation') or {}).get('status', 'PARTIAL'))
+                result.update(status=release_status, task_investigation=deepcopy(task_result),
+                    evidence=deepcopy(snapshot['evidence']), uncertainty=deepcopy(snapshot['uncertainty']))
+            return result
         result["agent_run_id"] = snapshot["run"]["id"]
         result["progress"] = snapshot.get("progress")
         result["metrics"] = snapshot.get("metrics", {})

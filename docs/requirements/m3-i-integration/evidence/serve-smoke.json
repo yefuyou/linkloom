@@ -1,0 +1,34 @@
+{
+  "launcher": "run_m3i_product_acceptance.py --serve-case continuity",
+  "normal_product_page": true,
+  "endpoint": "/api/product/ask",
+  "status": "PARTIAL",
+  "reviewer": {
+    "performed": true,
+    "review_id": "review_eed4cbda",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-19T11:49:36.231933+00:00",
+    "accepted": true
+  },
+  "evidence_count": 2,
+  "model_mode": "FAKE",
+  "real_model_semantics": "NOT_EVALUATED"
+}

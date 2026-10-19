@@ -435,6 +435,28 @@
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
+    if (result.path === "TASK_INVESTIGATION" && ["PARTIAL", "UNKNOWN"].includes(result.status) && result.reviewer?.accepted === true) {
+      const prep = result.preparation || {};
+      const plan = (prep.planning || []).at(-1)?.plan;
+      const gapMessage = gap => gap === "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE" || gap.startsWith("NO_TASK_CANDIDATES")
+        ? t("Only authorized materials were checked. A missing candidate does not prove that the task does not exist.", "本次只检查已授权资料；没有召回任务候选，不能证明任务不存在。")
+        : gap.startsWith("UNSATISFIED_PREMISE") ? t("A later investigation step depends on an unconfirmed task relationship.", "后续调查步骤依赖尚未确认的任务关系。")
+        : gap === "DISCOVERY_COVERAGE_INCOMPLETE" ? t("Some source material could not be fully examined within this investigation.", "部分来源资料尚未在本次调查范围内完整检查。")
+        : t("Some investigation steps still lack supporting evidence. See the investigation trace for details.", "部分调查步骤仍缺少支持证据，详情见调查轨迹。");
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice"><h2>${t("Task investigation: confirmation still required", "任务调查：仍需确认")}</h2>
+        <p>${t("Source checks passed. Task identity and plan changes remain unconfirmed model suggestions; real-model business acceptance has not been evaluated.", "来源核验已通过。任务身份与计划变更仍是待确认的模型建议，真实模型业务验收尚未评估。")}</p>
+        ${(plan?.steps || []).map(step => `<p>${escapeHtml(step.question)}</p>`).join("")}
+        <div class="ask-unknown"><strong>${t("Unresolved evidence", "尚未解决的证据缺口")}</strong><p>${escapeHtml(result.uncertainty?.statement || "")}</p>
+        ${(prep.gaps || []).map(gap => `<p>${escapeHtml(gapMessage(gap))}</p>`).join("")}</div>
+        ${(result.uncertainty?.model_reported_gaps || []).map(gap => `<p>${t("Model-reported evidence gap", "模型报告的证据缺口")}: ${escapeHtml(gap)}</p>`).join("")}
+        ${(result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("")}
+        <details><summary>${t("Investigation trace and review", "调查轨迹与审查结果")}</summary><pre>${escapeHtml(JSON.stringify({preparation: prep, trace: result.trace, reviewer: result.reviewer, working_context: result.working_context_audit}, null, 2))}</pre></details></section>`;
+      return;
+    }
+    if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="status"><h2>${t("Task investigation stopped", "任务调查已停止")}</h2><p>${t("The configuration, source evidence or investigation budget did not pass the required checks. No verified conclusion is available.", "运行配置、来源证据或调查预算尚未通过必要检查，本次没有可核验的最终结论。")}</p><details><summary>${t("Reason and review", "停止原因与审查记录")}</summary><pre>${escapeHtml(JSON.stringify({error: result.error, preparation: result.preparation, uncertainty: result.uncertainty, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      return;
+    }
     if (source && ["COMPLETED", "INSUFFICIENT"].includes(result.status) && result.reviewer?.accepted === true && result.source_investigation) {
       renderSourceInvestigation(target, result, locale); return;
     }

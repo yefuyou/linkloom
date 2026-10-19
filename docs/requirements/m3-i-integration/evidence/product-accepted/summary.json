@@ -1,0 +1,190 @@
+{
+  "evidence_level": "FAKE_MODEL_PRODUCT_INTEGRATION",
+  "real_model_semantic_test": "NOT_EVALUATED",
+  "real_product_business_task": "NOT_EVALUATED",
+  "new_paid_provider_requests": 0,
+  "cases": {
+    "continuity": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_06e55699",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T11:51:52.439764+00:00",
+        "accepted": true
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 1
+      },
+      "metrics": {
+        "model_turns": 4,
+        "tool_calls": 3,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "conflict": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_81f6e4c3",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T11:51:54.365869+00:00",
+        "accepted": true
+      },
+      "stage_calls": {
+        "discovery": 3,
+        "planning": 1,
+        "semantics": 1
+      },
+      "metrics": {
+        "model_turns": 4,
+        "tool_calls": 3,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 3,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "missing": {
+      "status": "UNKNOWN",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_d7473a93",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T11:51:55.444475+00:00",
+        "accepted": true
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 0
+      },
+      "metrics": {
+        "model_turns": 3,
+        "tool_calls": 2,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE",
+        "NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN",
+        "UNRESOLVED_CLARIFY:clarify"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    },
+    "replan": {
+      "status": "PARTIAL",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_d20c073f",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-19T11:51:57.094053+00:00",
+        "accepted": true
+      },
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 1
+      },
+      "metrics": {
+        "model_turns": 4,
+        "tool_calls": 3,
+        "tool_errors": 0,
+        "max_model_turns": 12,
+        "max_provider_requests": 12
+      },
+      "gaps": [
+        "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE",
+        "UNSATISFIED_PREMISE:revision"
+      ],
+      "source_count": 2,
+      "trace": "product-result.json",
+      "durable_audit": "runtime-audit.zip"
+    }
+  }
+}
