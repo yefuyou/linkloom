@@ -1,0 +1,81 @@
+{
+  "ordinal": 0,
+  "question": "传感器联调这摊事目前该找哪位同事？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_3b84e71324fa8151e288ec13ec1e1dc3a27a2a5d6b89be619adc1e7414207392",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "传感器联调这摊事目前该找哪位同事？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "d2eb0d095b74e532ed8eef8e3a9792e2bc13e1e1cf952c9d9816f2b0fc5a01d7",
+      "steps": [
+        {
+          "id": "owner",
+          "kind": "inspect",
+          "question": "联调工作的负责人是谁？",
+          "handles": [
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "",
+          "field": "owner",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "5963dcda8bb3002736ddaf6f825101b6d2a169579904d8b20ed4542838f80bca"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "a966598752bfe49f94e63f074aa0959ffdf48c716c8a24d792bb0133441470d5",
+    "response_sha256": "8ec25a31acbe5c9b516c19c1ef6df7cfe2e76205cd2a93514731867e61b531c7",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 12673,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "mode": "fake",
+  "semantic_quality_claim": false,
+  "coverage": 1.0,
+  "covered_goals": 20,
+  "required_goals": 20,
+  "wrong_endpoints": 0,
+  "accepted_endpoint_bindings": 32,
+  "wrong_endpoint_rate": 0.0,
+  "endpoint_error_definition": "Accepted unknown/type/workspace bindings; semantic relevance is not measured.",
+  "rejected_endpoint_outputs": 0,
+  "invalid_model_outputs": 0,
+  "duplicate_subquestions": 0,
+  "missed_decomposition_questions": 0,
+  "provider_calls": 12,
+  "per_question": [
+    {
+      "ordinal": 0,
+      "status": "PLANNED",
+      "required": [
+        "inspect:owner"
+      ],
+      "observed": [
+        "inspect:owner"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 1,
+      "status": "PLANNED",
+      "required": [
+        "relation:IN_PROJECT"
+      ],
+      "observed": [
+        "relation:IN_PROJECT"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 2,
+      "status": "PLANNED",
+      "required": [
+        "relation:AFFECTED_BY"
+      ],
+      "observed": [
+        "relation:AFFECTED_BY"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 3,
+      "status": "PLANNED",
+      "required": [
+        "relation:SAME_TASK"
+      ],
+      "observed": [
+        "relation:SAME_TASK"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 4,
+      "status": "PLANNED",
+      "required": [
+        "compare_dates",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "observed": [
+        "compare_dates",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 5,
+      "status": "PLANNED",
+      "required": [
+        "conflict_check",
+        "relation:AFFECTED_BY"
+      ],
+      "observed": [
+        "conflict_check",
+        "relation:AFFECTED_BY"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 6,
+      "status": "PLANNED",
+      "required": [
+        "clarify",
+        "relation:IN_PROJECT"
+      ],
+      "observed": [
+        "clarify",
+        "relation:IN_PROJECT"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 7,
+      "status": "PLANNED",
+      "required": [
+        "relation:SAME_TASK"
+      ],
+      "observed": [
+        "relation:SAME_TASK"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 8,
+      "status": "PLANNED",
+      "required": [
+        "compare_dates",
+        "inspect:owner",
+        "relation:AFFECTED_BY",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "observed": [
+        "compare_dates",
+        "inspect:owner",
+        "relation:AFFECTED_BY",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 9,
+      "status": "PLANNED",
+      "required": [
+        "clarify"
+      ],
+      "observed": [
+        "clarify"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 10,
+      "status": "REFUSED",
+      "required": [
+        "refuse"
+      ],
+      "observed": [
+        "refuse"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 11,
+      "status": "PLANNED",
+      "required": [
+        "discover:change"
+      ],
+      "observed": [
+        "discover:change"
+      ],
+      "missing": [],
+      "calls": 1
+    }
+  ],
+  "remote_provider_calls": 0,
+  "limitations": "Category coverage only; live subset is not a generalization benchmark. Rejected malformed plans are not evidence of no relationships."
+}

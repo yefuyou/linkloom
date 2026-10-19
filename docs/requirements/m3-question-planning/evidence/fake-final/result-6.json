@@ -1,0 +1,179 @@
+{
+  "ordinal": 6,
+  "question": "曙光项目里那个核验任务归哪边？别把两个同名项目混在一起。",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_49beac79cd41ed9c2f5cad51576b4a1fe17b9ec4a8ce59e41aefad96bdcb7719",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "曙光项目里那个核验任务归哪边？别把两个同名项目混在一起。",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "f5b40d7a5962849325192f0c61a3ba8d45d7ae3e24b48e2a932705357967808d",
+      "steps": [
+        {
+          "id": "clarify",
+          "kind": "clarify",
+          "question": "核对曙光所指项目的完整身份。",
+          "handles": [
+            "delivery",
+            "purchasing"
+          ],
+          "endpoints": [
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/交付组"
+            },
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/采购组"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [
+            "同名项目的唯一范围"
+          ],
+          "execution_key": "2d34fa11dee3bc99e4e55b4c7edf77627070f9cae2efd5b57cb21a597ce7a6f6"
+        },
+        {
+          "id": "membership",
+          "kind": "relation",
+          "question": "核验任务是否归属采购组？",
+          "handles": [
+            "other",
+            "purchasing"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_c401d60cb940436a30b1a3acb0fb32c5307030c5faaa55fbc5bd6c48486dc3af",
+              "artifact_id": "public-s_other",
+              "artifact_version_id": "artifact_v1_915e552aad49ae31086f9396ce4152f170785e110aeab7337cbffbe12927f4c3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4695ba9f5bc3a3fa998320231c277b6ef244cd235343fee932954e9bfd0e2314",
+              "content_hash": "1f1bf1cf27f5da0b8fee03c4973ef238032ec7172ffd57b2c3d4de3be208cdd2",
+              "payload_hash": "40eed1b44c64662746a68ef5da7ab89fcfefb52ca612d6d80b6c84a922a986d8"
+            },
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/采购组"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [
+            "clarify"
+          ],
+          "predicate": "IN_PROJECT",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "9b3a039e7cbc97375d29e7b50ba0029976a1d03b07ff77350ec2b397018281ee"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      },
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "acec95b1c435595831157b9878b0e7aada6d46ede208191ca2e45842bf4cbadf",
+    "response_sha256": "d2f031ac2065b2c0f3216f636c8366d11989861aad01778529766ded595d4e7c",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 13890,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    },
+    "untrusted_output": {
+      "kind": "tool_call",
+      "tool_calls": [
+        {
+          "tool_id": "emit_investigation_plan",
+          "arguments": {
+            "steps": [
+              {
+                "id": "clarify",
+                "kind": "clarify",
+                "question": "核对曙光所指项目的完整身份。",
+                "handles": [
+                  "delivery",
+                  "purchasing"
+                ],
+                "source_handles": [],
+                "depends_on": [],
+                "predicate": "",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [
+                  "同名项目的唯一范围"
+                ]
+              },
+              {
+                "id": "membership",
+                "kind": "relation",
+                "question": "核验任务是否归属采购组？",
+                "handles": [
+                  "other",
+                  "purchasing"
+                ],
+                "source_handles": [],
+                "depends_on": [
+                  "clarify"
+                ],
+                "predicate": "IN_PROJECT",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": []
+              }
+            ],
+            "uncertainties": [],
+            "refusal_reasons": []
+          }
+        }
+      ]
+    }
+  }
+}

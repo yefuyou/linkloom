@@ -1,0 +1,69 @@
+{
+  "mode": "smoke",
+  "semantic_quality_claim": false,
+  "coverage": 0.8571428571428571,
+  "covered_goals": 6,
+  "required_goals": 7,
+  "wrong_endpoints": 0,
+  "accepted_endpoint_bindings": 16,
+  "wrong_endpoint_rate": 0.0,
+  "endpoint_error_definition": "Accepted unknown/type/workspace bindings; semantic relevance is not measured.",
+  "rejected_endpoint_outputs": 1,
+  "invalid_model_outputs": 1,
+  "duplicate_subquestions": 0,
+  "missed_decomposition_questions": 1,
+  "provider_calls": 3,
+  "per_question": [
+    {
+      "ordinal": 0,
+      "status": "PLANNED",
+      "required": [
+        "inspect:owner"
+      ],
+      "observed": [
+        "conflict_check",
+        "discover:change",
+        "discover:task",
+        "inspect:owner"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 8,
+      "status": "PLANNED",
+      "required": [
+        "compare_dates",
+        "inspect:owner",
+        "relation:AFFECTED_BY",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "observed": [
+        "compare_dates",
+        "conflict_check",
+        "inspect:owner",
+        "relation:AFFECTED_BY",
+        "relation:IN_PROJECT",
+        "relation:REVISES_PLAN",
+        "relation:SAME_TASK"
+      ],
+      "missing": [],
+      "calls": 1
+    },
+    {
+      "ordinal": 11,
+      "status": "OUTPUT_INVALID",
+      "required": [
+        "discover:change"
+      ],
+      "observed": [],
+      "missing": [
+        "discover:change"
+      ],
+      "calls": 1
+    }
+  ],
+  "remote_provider_calls": 3,
+  "limitations": "Category coverage only; live subset is not a generalization benchmark. Rejected malformed plans are not evidence of no relationships."
+}

@@ -1,0 +1,45 @@
+{
+  "stage": "FINAL_AFTER_INDEPENDENT_REVIEW",
+  "baseline": "167a46694048e9ae6dd26879c2c6986fed8c0a15",
+  "branch": "codex/linkloom-m3-k-planner-quality",
+  "independent_review": "PASS_AFTER_THREE_REQUIRED_REPAIRS",
+  "protected_scope_changed": false,
+  "checks": {
+    "review-repairs": {
+      "tests": 79,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "related-complete": {
+      "tests": 157,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "offline": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 4,
+      "skipped": 0
+    },
+    "baseline-p85": {
+      "tests": 4,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "file_sha256": {
+    "src/linkloom/semantic_ingestion/task_relation_question_models.py": "100836ae04be06008cf4b4230d89db95e344bf0428a796b82eb0684f62053348",
+    "src/linkloom/semantic_ingestion/task_relation_question_planner.py": "d4479665a2ebcae02531fbacfaf849b754ea3e441257e69f2ad064ac9f3e2800",
+    "tests/unit/test_task_relation_question_planner.py": "b79179e048fd115af104af37572b03af0c5c8954230fd5c1e7f51d986cfb0c98",
+    "tests/unit/test_investigation_planner_quality.py": "122c33ea203af6538199ce03abf3259f5e057200f1e06b24d1469c32a7a4fe3e",
+    "scripts/evaluate_planner_quality.py": "979eebe586e77e818f789d17928cc2a987f1f8f7568efcb9b6af0b4f20b9f357"
+  },
+  "new_paid_provider_calls": 0,
+  "new_paid_provider_cost_usd": 0,
+  "real_vault_touched": false,
+  "runtime_registered": false,
+  "historical_live_quality_improvement_claim": false
+}

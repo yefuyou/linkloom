@@ -1,0 +1,7 @@
+{
+  "full_collection": "4 pre-existing missing-script import errors; offline.xml",
+  "continued_run": "Interrupted after repeat local HTTP permission errors, not counted as product failures",
+  "diagnostic": "tests/integration/test_adaptive_ask_flow.py -x",
+  "error": "urllib.error.URLError: WinError 10013 connecting to 127.0.0.1:6773",
+  "next": "Offline regression outside network sandbox, Provider credentials disabled"
+}

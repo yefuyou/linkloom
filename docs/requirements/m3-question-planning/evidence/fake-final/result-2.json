@@ -1,0 +1,157 @@
+{
+  "ordinal": 2,
+  "question": "换成星港后，哪些工作受到牵连？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_cc0bc84f5a2c4d2309e062f29233ecb1df54d6dd98189443245f0eee007ee231",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "换成星港后，哪些工作受到牵连？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "19cfabcd395d66d108dd584e87f3a90b048370409c55fc065a8031f000063acf",
+      "steps": [
+        {
+          "id": "impact",
+          "kind": "relation",
+          "question": "这次切换是否直接影响联调？",
+          "handles": [
+            "old",
+            "change"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            },
+            {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "lab-east",
+              "project": "曙光/交付组",
+              "before_vendor": "海帆",
+              "after_vendor": "星港",
+              "evidence": {
+                "span": {
+                  "workspace_id": "lab-east",
+                  "artifact_id": "public-s_change",
+                  "artifact_version_id": "artifact_v1_7ea44095e0d41008209a51916a407d92c18fad27bd69ac4aced979da0272d30e",
+                  "source_ref": "artifact://lab-east/public-s_change",
+                  "content_hash": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501",
+                  "ordinal": 0,
+                  "message_id": "message_v1_feae70cc63c10fafdadbebab518bba718e3d0da5ebc17ef07d60e7b594188a54",
+                  "segment_id": "segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "char_start": 0,
+                  "char_end": 42,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                  "quote_sha256": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501"
+                },
+                "char_start": 0,
+                "char_end": 42,
+                "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "AFFECTED_BY",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c2945ed271d5800210ae556f1330fc7c385f2be0a53cb676972921d75107d2fd"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      },
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "c29aa2428d8f9f7f6522d0ace965ea698e3040691a25495b43aaf8350d2806ef",
+    "response_sha256": "eab3803a57977098e1a4c50fc47a545f6154d5212d80012f1efd5e9cdc9f5803",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 16492,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    },
+    "untrusted_output": {
+      "kind": "tool_call",
+      "tool_calls": [
+        {
+          "tool_id": "emit_investigation_plan",
+          "arguments": {
+            "steps": [
+              {
+                "id": "impact",
+                "kind": "relation",
+                "question": "这次切换是否直接影响联调？",
+                "handles": [
+                  "old",
+                  "change"
+                ],
+                "source_handles": [],
+                "depends_on": [],
+                "predicate": "AFFECTED_BY",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": []
+              }
+            ],
+            "uncertainties": [],
+            "refusal_reasons": []
+          }
+        }
+      ]
+    }
+  }
+}

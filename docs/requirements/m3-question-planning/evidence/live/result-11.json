@@ -1,0 +1,40 @@
+{
+  "ordinal": 11,
+  "question": "没有召回供应商线索就等于没影响吗？先找出具体切换，再查联调安排。",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "OUTPUT_INVALID",
+    "plan": null,
+    "errors": [
+      "INVALID_INSPECTION"
+    ],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 5170,
+      "output_tokens": 667,
+      "total_tokens": 5837,
+      "duration_ms": 6753.396
+    },
+    "request_sha256": "0659df98401f98aff7923752079a0775c07a9773826af9d0cb0c3d8dbb167297",
+    "response_sha256": "7d7deb76bbd0f6175081e96913c9d541e94550cbd69c629fc259b7835af88bb1",
+    "model_id": "gemini-3.8-flash",
+    "actual_model_version": "gemini-3.8-flash",
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 13879,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}

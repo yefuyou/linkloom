@@ -1,0 +1,36 @@
+{
+  "mode": "fake",
+  "selected_question_ordinals": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "input_sha256": "ca9f6cb24ce023e2ba11a0c74d402a172630bb4f2ab11689344b7d636966ff65",
+  "limits": {
+    "max_subgoals": 12,
+    "max_relation_queries": 8,
+    "max_fanout": 4,
+    "max_dependency_depth": 6,
+    "max_relation_hops": 3,
+    "max_input_tokens": 24576,
+    "max_output_tokens": 4096,
+    "max_provider_calls": 1,
+    "max_total_input_tokens": 73728,
+    "max_total_output_tokens": 12288
+  },
+  "max_generation_calls": 0,
+  "max_live_input_tokens": 73728,
+  "max_live_output_tokens": 12288,
+  "estimated_usd_reservation_per_call": 0,
+  "retry_policy": "NONE; SDK transport attempts=1",
+  "input_file": "tests\\fixtures\\question_planning\\inputs.json"
+}

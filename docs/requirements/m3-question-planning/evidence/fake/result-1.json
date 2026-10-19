@@ -1,0 +1,87 @@
+{
+  "ordinal": 1,
+  "question": "联调任务究竟挂在哪个项目下面？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_ecdad88557a697935c211179cff5f4f1b2a0b57c5b91b23643822dd962c883eb",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "联调任务究竟挂在哪个项目下面？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "d2eb0d095b74e532ed8eef8e3a9792e2bc13e1e1cf952c9d9816f2b0fc5a01d7",
+      "steps": [
+        {
+          "id": "project",
+          "kind": "relation",
+          "question": "联调是否归属交付组项目？",
+          "handles": [
+            "old",
+            "delivery"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            },
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/交付组"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "IN_PROJECT",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "0373ac57cf873166be583fe6a5d26d34b01aa0ebc51175467f1d75997f8ba124"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "85e717204c31d8f1b4aed32b1f1fe2bea30765f06fd8fa6c208d528241ba5e06",
+    "response_sha256": "67677933183a4d16ec95ed89beea8b3614047c2b38336516abc432ecccc1f513",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 12667,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}
