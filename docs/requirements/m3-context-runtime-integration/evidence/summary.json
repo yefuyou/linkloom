@@ -1,0 +1,198 @@
+{
+  "schema": "m3e-runtime-evidence/v1",
+  "cases": [
+    {
+      "case_id": "revision-replay",
+      "status": "completed",
+      "outer_fake_calls": 4,
+      "inner_adapter_requests": 1,
+      "compaction_events": 0,
+      "dropped_history": 0,
+      "min_required_coverage": 1.0,
+      "recovery_failures": [],
+      "archive": {
+        "path": "revision-replay.zip",
+        "sha256": "1a49e51554edc49c69a3c5aba9b5349063328313faee217e3a25b786dae96a06",
+        "exact_model_artifact_count": 43,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "causality-replay",
+      "status": "completed",
+      "outer_fake_calls": 4,
+      "inner_adapter_requests": 1,
+      "compaction_events": 1,
+      "dropped_history": 0,
+      "min_required_coverage": 1.0,
+      "recovery_failures": [],
+      "archive": {
+        "path": "causality-replay.zip",
+        "sha256": "dafd7c1dfa337470b0edbc1051b77db8b74205a2a9a1a8341fe577bd4f91a951",
+        "exact_model_artifact_count": 43,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "conflict-replay",
+      "status": "completed",
+      "outer_fake_calls": 4,
+      "inner_adapter_requests": 1,
+      "compaction_events": 0,
+      "dropped_history": 0,
+      "min_required_coverage": 1.0,
+      "recovery_failures": [],
+      "archive": {
+        "path": "conflict-replay.zip",
+        "sha256": "719b3c2839c49171d4ef256e9d7e272633f7544c4ad60ebf4c108a2309f17442",
+        "exact_model_artifact_count": 43,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "long-history",
+      "status": "completed",
+      "outer_fake_calls": 9,
+      "inner_adapter_requests": 1,
+      "compaction_events": 7,
+      "dropped_history": 25,
+      "min_required_coverage": 1.0,
+      "recovery_failures": [],
+      "archive": {
+        "path": "long-history.zip",
+        "sha256": "3b829b9dc03116625955576975f152c3c7799b058f99051237ae6ff97e5a1846",
+        "exact_model_artifact_count": 93,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "source-stale",
+      "status": "failed",
+      "outer_fake_calls": 2,
+      "inner_adapter_requests": 0,
+      "compaction_events": 0,
+      "dropped_history": 0,
+      "min_required_coverage": 0.0,
+      "recovery_failures": [
+        [
+          "CONTEXT_SOURCE_INCOMPLETE"
+        ]
+      ],
+      "archive": {
+        "path": "source-stale.zip",
+        "sha256": "5a5cb5590548330c81127bd8a34584553f13e6418457f90435dea25084222134",
+        "exact_model_artifact_count": 24,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "budget-blocked",
+      "status": "failed",
+      "outer_fake_calls": 0,
+      "inner_adapter_requests": 0,
+      "compaction_events": 0,
+      "dropped_history": 0,
+      "min_required_coverage": 0.0,
+      "recovery_failures": [
+        [
+          "CONTEXT_COVERAGE_INCOMPLETE"
+        ]
+      ],
+      "archive": {
+        "path": "budget-blocked.zip",
+        "sha256": "be963be6431a37681a38825c1f077fb4fd571410d4086036edbda91ce04fece8",
+        "exact_model_artifact_count": 5,
+        "hash_validation": "PASS"
+      }
+    },
+    {
+      "case_id": "cold-final",
+      "status": "completed",
+      "outer_fake_calls": 4,
+      "inner_adapter_requests": 1,
+      "compaction_events": 0,
+      "dropped_history": 0,
+      "min_required_coverage": 1.0,
+      "recovery_failures": [],
+      "archive": {
+        "path": "cold-final.zip",
+        "sha256": "f989299d9a2cb8ec04ec6568976cc21ab8a23ce19faf591727d7b90457182074",
+        "exact_model_artifact_count": 43,
+        "hash_validation": "PASS"
+      }
+    }
+  ],
+  "live_provider_requests": 0,
+  "business_success_rate": "NOT_EVALUATED",
+  "token_counter": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+  "protected_frozen_files_unchanged": true,
+  "protected_hashes": {
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\evaluation-freeze.json": "05e0d462c1f653927a7b5306ed2ee01bf2145510b76366b15dd0fd5edff93be0",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\freeze.json": "9f010aaade7eef1d001eb4474f5f8ce4e688db88b6114b1736c2b73fefb7d85b",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\m3-dev-not-evaluated.json": "46ca9b765d3bb52b9a9a1c753bb4a5adec95763efb0cbf3e2ed5b2489dae3f22",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\m3-dev-not-run.json": "bac4015f262513c91fc768150dfc893b32c72b1929a9b34b56f12edc5c050d3e",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\predictions.json": "4c9e53b3bd54651bb78b034931356656237a12e1fa48896d33240f3c3285546a",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\provenance.json": "b4daa76bc051e5c8ba1655a1a286cf135e776371bc211179b72d2e4a9cce3a0e",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\provider-preflight.json": "ffe7edd27a0d3c90ce23494387c863c735c8fe419b0763eae6a6e3d16a29a05f",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\regex-diagnostic.json": "aaee8aa183446d06721ba8d1e9000aa5cf43bcb3c9eceb53eb242191bc102fca",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\semantic-score.json": "2e8415cab7ab8a386263a1a234009e00458a14fc29dd063c5852387843218419",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\usage-accounting.json": "566855f5354d38236aaca99516be11fcca06c1bd900cdad855e6d98950aa7690",
+    "docs\\requirements\\m3-llm-semantics\\artifacts\\verification.json": "8bb6656117bb5f0b48b69c00998cad6d4601ba06399dc4ee896c2c3d3568ecd2",
+    "docs\\requirements\\m3-context-engineering\\affected-tests.xml": "d59233b1ea0bd8efd19dd7734d0b727e8c74dbf1695ef063b18d6cb77db0d824",
+    "docs\\requirements\\m3-context-engineering\\AUDIT.md": "ae8bfc2f688ae06cd0fdafaae5abdf7446c8aeac9f7b38d32e0d5de643e63d3c",
+    "docs\\requirements\\m3-context-engineering\\baseline-affected-tests.xml": "85bd259f19db07ea3ac5230da5180c6cfb5022abcf9bc96fb568636cbc341b6c",
+    "docs\\requirements\\m3-context-engineering\\canonical-regression.xml": "9763f9205ab89b47dd54d36ad98ec3657fc7246cdf5b7a4f8cb4ee64e258abaa",
+    "docs\\requirements\\m3-context-engineering\\DELIVERY.md": "9ff4dcc572db8c6070db4e7a949365b1e0144dfb1116d368a2501f7057842de5",
+    "docs\\requirements\\m3-context-engineering\\experiment.json": "b70d676556f086cf4652130cdd927076b85321f49fd0760b0e61ad3a801396eb",
+    "docs\\requirements\\m3-context-engineering\\final-affected-tests.xml": "f5db64d6c9e0de0f9778fdf4b5e180e4741982e48a3e1d06f469be1e7eb24cbd",
+    "docs\\requirements\\m3-context-engineering\\new-tests.xml": "af221e4506bc609138e7cca752eac9e5cb641344f8fa1e7a50c35f964af0fbfd",
+    "docs\\requirements\\m3-context-engineering\\protected-boundary.json": "08317629badfef7da8ff76564ec3e7b35721eb2b7c952f164b8020d03603480a",
+    "docs\\requirements\\m3-context-engineering\\REVIEW.md": "a1b4371520518382208f8df26be05b99631dbe4152b676b3172aca987f0ebcf2",
+    "docs\\requirements\\m3-context-engineering\\SPEC.md": "b6f5489212884a6a5c5c9eb9b9ac4fae3cc7aae038faeecb5b8a74be6379b6b4",
+    "docs\\requirements\\m3-context-engineering\\verification.json": "94cfa9b5bbe161c510517f08d30a0bf2c9f1fc1f53acb0c59e6dbb25989b48d6",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\.gitattributes": "97c308489f2e011fd87c7fe8b5bb179bfd07f33b267c1d0f42444d5cafd10698",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\checks.json": "fd7253ec93b575efe9a2660122fd5f530f99d61079f4b94a3913e86aaf6fedca",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\dev-contract.json": "0d9336c42eb60f4a6fd8e9a1aaf188c10c3049d64600ee30dbd15f65ee357056",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\failure-attribution.json": "63ee3a13b5985d543f5c84dc0b365a9b8389018a8eee793300fa68c2c9c32044",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\reviewed-focused.xml": "3fd7cbdfe89a4a6000540f1ce7587e02ea4a2b2ebc4afc77e5b0a4bf3b7fbc34",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\reviewed-regression.xml": "ee3e65ba35783a1403991b2ddc460bf06821d4b6209bcf28907d15491ecd0587",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\summary.json": "1d5f887f264fdf9036abaf59899a5e72fdcc790b831c0454728f8d685e06f171",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\result.json": "63d8445ca3e2964085b0a40f97c3785e86aaf005793fee4ca776fff9140a26df",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\runtime.json": "17b620dd12e87ef6e8cf499077288bb2ecc875d63b395e4f61397c86950c372f",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\result.json": "fc30dd8129ce1a2a549d1a0ee2d2985c881372836f03b82256593ba39421f1f3",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\runtime.json": "9947c386a511652595a33c7cae71dc9a97398801dca32d7bd00fa11a13b5afc7",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\result.json": "4e701738351b69681f2af90f024bc922ff70375517a39017981538f481082fda",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\runtime.json": "393826b272d2245c20d70a0eec65d076989d135180ba1f06a3507187e751d9c0",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\result.json": "c8d6f5bc1b6ae0109e44ba676e5934e29db7c0681f8edc16806a5088b255c07b",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\runtime.json": "f9ff90b91f9eb35b455f2b4844937522afa887c4bf60792cf9aa6f3ff5440368",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\result.json": "d9fafe2c94563409bf59a2a423346385472a9c52c0c534c273e284b0f8007917",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\runtime.json": "0bbbc8084558482a57b5f74ff4e088167bda866299abc8c175560dcc5f9d27f9",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\result.json": "22f2e46d53631fe10903c2a3b531288308a57943d025a4010c6d9029460d8c81",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\runtime.json": "345549bd72c19e711312085403e0c6cc5ba350cfa4a2f0a35b7893d8d18ba11a",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\models\\semantic\\3154cfd9572a0079e2456bb2\\request.json": "1313af857b8f1d6a0005c4261877efeba004a7a4ecc3e979c861a9884e967c17",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\models\\semantic\\3154cfd9572a0079e2456bb2\\reservation.json": "b7d66c5d3ee5ff75539362c26d6a4354ed31b657bedf7c1b780d706d78952f11",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\models\\semantic\\3154cfd9572a0079e2456bb2\\response.json": "2509c2e30f2bf8f7f8749cec20357e59d0c697102379654cd8da682554029d36",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-unknown\\models\\semantic\\3154cfd9572a0079e2456bb2\\result.json": "f9d70b1c7ec7dcea9942f6e31fec9f659bb1cd3d243facfa7f6296e600bd473a",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\models\\semantic\\ade9bf277a05be83da67b3e8\\request.json": "7dba3823c872d8b51da91850a688be75b12fa93328d6d940849ee4a6e18615e2",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\models\\semantic\\ade9bf277a05be83da67b3e8\\reservation.json": "c4b2b34affc68064fb3eb882db283574d724634f5b8053a842302ba2e9338496",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\models\\semantic\\ade9bf277a05be83da67b3e8\\response.json": "f0cdd3232a0c5a1b77b012758e7b9b00b84d5827a079b9fe2bcacf36ce796c1a",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-missing-refuted\\models\\semantic\\ade9bf277a05be83da67b3e8\\result.json": "c2055c8785abfd36454c1563f310b9ee0db75f25afdaec1b8354b5917dd936c2",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\models\\semantic\\758e9a6b5caffb310554ccda\\request.json": "985322ac4dbfcd85796525160c2d56b6ac65dbacd4ae20b661c4cc02a2ebef14",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\models\\semantic\\758e9a6b5caffb310554ccda\\reservation.json": "5e9c42ed46f1fa613cff6a10e41b8caf2aa49e96818586614339e50ea48c9f85",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\models\\semantic\\758e9a6b5caffb310554ccda\\response.json": "311bf4b730d9967f552c5a3e62999bf2750946af361f86bc556046dd0d9189c6",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\variant-complete\\models\\semantic\\758e9a6b5caffb310554ccda\\result.json": "8643c506db92780a542ed077d28a65bf5888af0cda6f197b7bd5e819ce92235a",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\models\\semantic\\b0942db1b1e934e88ffbd913\\request.json": "5a235be1c2844f3effda13c499ae869bb6128b5d79d5af39710f39af80028bc7",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\models\\semantic\\b0942db1b1e934e88ffbd913\\reservation.json": "8056a50a714a6fadd88b9051246e0b671e948262c767e38ace211b6903d9b23a",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\models\\semantic\\b0942db1b1e934e88ffbd913\\response.json": "e022490f70e1fcb089a8ce022bdbc755663cef434049921a3e984a0114a793a8",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\revision\\models\\semantic\\b0942db1b1e934e88ffbd913\\result.json": "96c2cdda8afa78f4d0e18c4d1ac05fc9bec5ac685217fd17b7ae150e4167df99",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\models\\semantic\\586a3e2409d10f0ccc53992f\\request.json": "96abac5ba05549d5fbf5a64a5a7b65eff3457be3ade1e53aeaba0e5bdc7aab15",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\models\\semantic\\586a3e2409d10f0ccc53992f\\reservation.json": "202b21869a0199995714723226356982aafab5b9bf1b164aedc4cfbe71f013cf",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\models\\semantic\\586a3e2409d10f0ccc53992f\\response.json": "c586ec9aeb2423230c1c5bae56840a8cb32a1e6a5e20b0c3dc1164f1fde0cfb8",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\conflict\\models\\semantic\\586a3e2409d10f0ccc53992f\\result.json": "c38bd4cbb81f1a7a2377b1cb3d15cb97d3ce7d5a76332f6bd84e95a9115f4fe5",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\models\\semantic\\bd1442ed48176877a3ee9b0a\\request.json": "74a024e1bc35eebe04558d8cb188238013cfe9c2d81b3bef68681174934ddadb",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\models\\semantic\\bd1442ed48176877a3ee9b0a\\reservation.json": "cc35197d640081db2d9af192b1b4c145f301fb1f0abafbbe3051e1ece21ac91f",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\models\\semantic\\bd1442ed48176877a3ee9b0a\\response.json": "e2bea2694fec394473d117a267aa11b9f0c7c1fc37b7bca00ade774bae3e3b91",
+    "docs\\requirements\\m3-semantic-integration\\evidence\\causality\\models\\semantic\\bd1442ed48176877a3ee9b0a\\result.json": "505cdd813200b2b7ddbd1cd2d733c0a78f1ea2d976fea4f7f045ca1267f40f26"
+  },
+  "data": "PUBLIC_SYNTHETIC_ONLY; exact audit ZIPs contain only isolated synthetic source/checkpoint paths"
+}

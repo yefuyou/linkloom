@@ -170,6 +170,7 @@ class RuntimeEngine:
         decision_memory_enabled: bool = True,
         model_plan_profile: str | None = None,
         task_relation_tools: Any = None,
+        context_runtime_config: Any = None,
     ) -> None:
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
@@ -206,6 +207,7 @@ class RuntimeEngine:
         self.fail_once = fail_once
         self.model = model
         self._task_relation_tools = task_relation_tools
+        self._context_runtime_config = context_runtime_config
         from linkloom.runtime.adaptive_planning import SOURCE_RELATION_PROFILE
         if model_plan_profile not in (None, SOURCE_RELATION_PROFILE):
             raise ValidationError("Unsupported model plan profile.")
@@ -252,7 +254,7 @@ class RuntimeEngine:
                 raise ValidationError("Task relation tools are not configured.")
             return RuntimeAgentAdapter(self.vault_root, self.index_path,
                 workspace_id=self._task_relation_tools.workspace_id, decision_memory_enabled=False,
-                task_relation_tools=self._task_relation_tools)
+                task_relation_tools=self._task_relation_tools, context_runtime_config=self._context_runtime_config)
 
         if not self.decision_memory_enabled:
             return RuntimeAgentAdapter(self.vault_root, self.index_path,

@@ -1,0 +1,220 @@
+{
+  "case_id": "budget-blocked",
+  "expected": "failed",
+  "actual_runtime_status": "failed",
+  "outer_fake_calls": 0,
+  "inner_adapter_requests": 0,
+  "inner_execution": null,
+  "new_live_provider_requests": 0,
+  "business_semantic_acceptance": "NOT_EVALUATED",
+  "publishable": false,
+  "reviewer": null,
+  "error": {
+    "affected_refs": [],
+    "category": "budget",
+    "code": "CONTEXT_INCOMPLETE",
+    "details": {
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/624c1e4df2959f6309c2/1-3c016dff0f9298eb/blocked-audit.json",
+        "sha256": "a864e2a9363dcf7371022cc7a7c38fefb055800cc48cbaaafc0ef0451a345a2a",
+        "size_bytes": 5060
+      },
+      "code": "CONTEXT_INCOMPLETE"
+    },
+    "message": "Required original context cannot fit or be recovered; no model request sent.",
+    "retryable": false,
+    "safe_to_expose": true
+  },
+  "audits": [
+    {
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/624c1e4df2959f6309c2/1-3c016dff0f9298eb/blocked-audit.json",
+        "sha256": "a864e2a9363dcf7371022cc7a7c38fefb055800cc48cbaaafc0ef0451a345a2a",
+        "size_bytes": 5060
+      },
+      "base_instruction_sha256": "da939e8744f962bf3f0cc967089afae6e3ac1eb8ea260bd46271bed10dee406a",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/624c1e4df2959f6309c2/1-3c016dff0f9298eb/before.json",
+        "sha256": "7a652f07d38e11543fd841a186fd91c63c4dbd838fb352a67661ac80bce4d1e7",
+        "size_bytes": 2740
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 1024,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": false,
+          "missing_evidence_ids": [
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65"
+          ],
+          "reason": "NO_REQUEST_ALLOCATION",
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [
+        "CONTEXT_COVERAGE_INCOMPLETE"
+      ],
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "document_id": "plan.md",
+              "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/plan.md",
+              "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+              "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "source_ref": "artifact://semantic-dev-revision/plan.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+            "ref": {
+              "char_end": 123,
+              "char_start": 32,
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "document_id": "update.md",
+              "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/update.md",
+              "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+              "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "source_ref": "artifact://semantic-dev-revision/update.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 8359,
+        "tokens": 2090
+      },
+      "run_id": "run_p4_ca9db2eda6a1",
+      "status": "BLOCKED",
+      "turn_id": "run_p4_ca9db2eda6a1:turn:1",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/624c1e4df2959f6309c2/1-3c016dff0f9298eb/blocked-state.json",
+        "sha256": "7a652f07d38e11543fd841a186fd91c63c4dbd838fb352a67661ac80bce4d1e7",
+        "size_bytes": 2740
+      }
+    }
+  ],
+  "archive": {
+    "path": "budget-blocked.zip",
+    "sha256": "be963be6431a37681a38825c1f077fb4fd571410d4086036edbda91ce04fece8",
+    "exact_model_artifact_count": 5,
+    "hash_validation": "PASS"
+  },
+  "frozen_metrics": "A/C/D HISTORICAL ONLY; NOT RERUN_OR_OVERWRITTEN; NO_NEW_BUSINESS_SCORE"
+}

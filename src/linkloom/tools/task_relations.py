@@ -106,6 +106,13 @@ class TaskRelationTools:
         return TaskRelationTools(self.workspace_id, self._snapshot_provider, relation_path=self._relation_path,
             semantic_analysis=self.semantic_analysis.bind(run_id, artifact_store, question))
 
+    def context_sources(self):
+        """Host-only current source read; no model paths or cached currentness."""
+        raw = self._snapshot(self.workspace_id)
+        semantics = self.semantic_analysis
+        owner = getattr(semantics, "owner", semantics)
+        return raw, owner.snapshot_provider() if owner is not None else None
+
     def _semantic_boundary(self):
         if self.semantic_analysis is None:
             return dict(SEMANTIC_BOUNDARY)

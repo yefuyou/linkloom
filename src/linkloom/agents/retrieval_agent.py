@@ -129,6 +129,7 @@ class RetrievalAgent:
         memory_hints: tuple[dict[str, Any], ...] = (),
         final_protocol: str = SCHEMA_VERSION,
         temporal_claim_validator: Any | None = None,
+        context_runtime: Any | None = None,
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -144,6 +145,7 @@ class RetrievalAgent:
             raise ValidationError("Unsupported Team Decision Final protocol.")
         self.final_protocol = final_protocol
         self.temporal_claim_validator = temporal_claim_validator
+        self.context_runtime = context_runtime
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -1373,6 +1375,7 @@ class RetrievalAgent:
                 ),
                 task_plan=self.task_plan if task.workflow == "team_decision" else None,
                 workspace_id=self.expected_workspace_id,
+                context_runtime=self.context_runtime,
                 final_shape_validator=(
                     _validate_final_shape
                     if task.workflow == "team_decision" and self.final_protocol == SCHEMA_VERSION

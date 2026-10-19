@@ -1,0 +1,1750 @@
+{
+  "case_id": "cold-final",
+  "expected": "completed",
+  "actual_runtime_status": "completed",
+  "outer_fake_calls": 4,
+  "inner_adapter_requests": 1,
+  "inner_execution": {
+    "adapter_requests": 1,
+    "cost_usd": null,
+    "kind": "FAKE",
+    "new_billable_cost_usd": 0.0,
+    "new_live_provider_requests": 0,
+    "original_receipt": null,
+    "provider_request_id": null,
+    "provider_response_id": null,
+    "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+    "reserved_requests": 1,
+    "response_sha256": "43ac6a6f43ee897e2981652b383b9e8cbb0ff8c436cb1bf0612b08665415345b",
+    "simulated_usage": {
+      "duration_ms": null,
+      "input_tokens": 80,
+      "output_tokens": 40,
+      "total_tokens": 120
+    }
+  },
+  "new_live_provider_requests": 0,
+  "business_semantic_acceptance": "NOT_EVALUATED",
+  "publishable": false,
+  "reviewer": {
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "created_at": "2026-10-19T05:39:38.275360+00:00",
+    "decision": "evidence_sufficient",
+    "human_approval_required": false,
+    "reason": "All validation passed",
+    "review_id": "review_d45e93f2",
+    "reviewer_agent_id": "reviewer_agent",
+    "subject_refs": []
+  },
+  "error": null,
+  "audits": [
+    {
+      "sequence": 1,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/audit.json",
+        "sha256": "7cd6de6a896ad39282b1d07f4b22d7ba164fe824f485ccbc02e80aea63039af5",
+        "size_bytes": 5829
+      },
+      "authorized_snapshot_id": "cee54e04e5f6cca2f8b1af258e00588b900e263443cbf5be0ae3964d1f6bc8e6",
+      "base_instruction_sha256": "da939e8744f962bf3f0cc967089afae6e3ac1eb8ea260bd46271bed10dee406a",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/before.json",
+        "sha256": "7cf067005b113bc2de841837b20d112386bd90fb9929109209f000d178ed2d2f",
+        "size_bytes": 2740
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 9189,
+        "input_tokens": 2298,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 8933,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "instruction": {
+            "bytes": 825,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1867,
+            "tokens": 467
+          },
+          "verified_evidence": {
+            "bytes": 3867,
+            "tokens": 967
+          },
+          "working_context": {
+            "bytes": 1615,
+            "tokens": 404
+          }
+        },
+        "serialization_overhead_bytes": 747,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 6413
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/mapping.json",
+        "sha256": "e64f61523db4b33620e802f5075cb9b08b24e341ed650bd3607f58da9e2ab5fc",
+        "size_bytes": 3058
+      },
+      "prepared_request_sha256": "508b78674f26da6142dbffdfed53492500500d4fa3b0a1227ab02822c0bd8d21",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "document_id": "plan.md",
+              "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/plan.md",
+              "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+              "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "source_ref": "artifact://semantic-dev-revision/plan.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+            "ref": {
+              "char_end": 123,
+              "char_start": 32,
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "document_id": "update.md",
+              "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/update.md",
+              "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+              "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "source_ref": "artifact://semantic-dev-revision/update.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 8359,
+        "tokens": 2090
+      },
+      "run_id": "run_p4_d57a23f82d2c",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate SAME_TASK: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_d57a23f82d2c:turn:1",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/state.json",
+        "sha256": "7cf067005b113bc2de841837b20d112386bd90fb9929109209f000d178ed2d2f",
+        "size_bytes": 2740
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "611a0baa22d8dc1ea88410ec90a3b7eae14e0c30004be917fda13ef44ac9eee2",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": null,
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "99ab522159e37240ca466664bc2d09700328f9e5189fa67dedc7699f21d6c3bd",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "611a0baa22d8dc1ea88410ec90a3b7eae14e0c30004be917fda13ef44ac9eee2",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": null,
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/1-15fc55fafa98bca5/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "99ab522159e37240ca466664bc2d09700328f9e5189fa67dedc7699f21d6c3bd",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 2,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/audit.json",
+        "sha256": "7ef95bd771bb47e97f1eb547535b68bfd871757528f5c98c71e16621ece51811",
+        "size_bytes": 5843
+      },
+      "authorized_snapshot_id": "cee54e04e5f6cca2f8b1af258e00588b900e263443cbf5be0ae3964d1f6bc8e6",
+      "base_instruction_sha256": "da939e8744f962bf3f0cc967089afae6e3ac1eb8ea260bd46271bed10dee406a",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/before.json",
+        "sha256": "6c3a69c99861bdd4a82597f391b7f8c9403811e947cbb322955b1e74a64ad990",
+        "size_bytes": 3125
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 26977,
+        "input_tokens": 6745,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 26721,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 225,
+            "tokens": 57
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "instruction": {
+            "bytes": 825,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 17182,
+            "tokens": 4296
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1867,
+            "tokens": 467
+          },
+          "verified_evidence": {
+            "bytes": 3866,
+            "tokens": 967
+          },
+          "working_context": {
+            "bytes": 1727,
+            "tokens": 432
+          }
+        },
+        "serialization_overhead_bytes": 1023,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 6747
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/mapping.json",
+        "sha256": "e64f61523db4b33620e802f5075cb9b08b24e341ed650bd3607f58da9e2ab5fc",
+        "size_bytes": 3058
+      },
+      "prepared_request_sha256": "a0d0806c601455bb88ba4f66cf15474915f7cda5639732e04e2d65f11b0fee7b",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "document_id": "plan.md",
+              "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/plan.md",
+              "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+              "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "source_ref": "artifact://semantic-dev-revision/plan.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+            "ref": {
+              "char_end": 123,
+              "char_start": 32,
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "document_id": "update.md",
+              "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/update.md",
+              "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+              "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "source_ref": "artifact://semantic-dev-revision/update.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 26148,
+        "tokens": 6537
+      },
+      "run_id": "run_p4_d57a23f82d2c",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate SAME_TASK: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_d57a23f82d2c:turn:2",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/state.json",
+        "sha256": "6c3a69c99861bdd4a82597f391b7f8c9403811e947cbb322955b1e74a64ad990",
+        "size_bytes": 3125
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "971ab4c0416cd6db9032709291e20e07c581e65060a513a761f87a288136d46f",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:1:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "f6c5abceb4182505d33550cf2e25f51f3f8eeacbed07c5f42c055eff2abf024b",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "971ab4c0416cd6db9032709291e20e07c581e65060a513a761f87a288136d46f",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:1:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/2-59c4e44a30688b5d/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "f6c5abceb4182505d33550cf2e25f51f3f8eeacbed07c5f42c055eff2abf024b",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 3,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/audit.json",
+        "sha256": "33b60b1b9dd1bf7a38a87694ae238dd5fda6d0e50dd02bf37a9e178fca00ac44",
+        "size_bytes": 5849
+      },
+      "authorized_snapshot_id": "cee54e04e5f6cca2f8b1af258e00588b900e263443cbf5be0ae3964d1f6bc8e6",
+      "base_instruction_sha256": "da939e8744f962bf3f0cc967089afae6e3ac1eb8ea260bd46271bed10dee406a",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/before.json",
+        "sha256": "8992de884a10d7dc2beeb3b1d4b99755968016636ad0ca15188cf61dc5ac17ef",
+        "size_bytes": 3420
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 28597,
+        "input_tokens": 7150,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 28341,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 448,
+            "tokens": 112
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 17445,
+            "tokens": 4362
+          },
+          "instruction": {
+            "bytes": 825,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 1024,
+            "tokens": 256
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1867,
+            "tokens": 467
+          },
+          "verified_evidence": {
+            "bytes": 3867,
+            "tokens": 967
+          },
+          "working_context": {
+            "bytes": 1759,
+            "tokens": 440
+          }
+        },
+        "serialization_overhead_bytes": 1104,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 7003
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/mapping.json",
+        "sha256": "e64f61523db4b33620e802f5075cb9b08b24e341ed650bd3607f58da9e2ab5fc",
+        "size_bytes": 3058
+      },
+      "prepared_request_sha256": "9da760d44e0e64dd8b14c8205e810bc3ea611b4723a47bd8af1d71af89d9cb79",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "document_id": "plan.md",
+              "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/plan.md",
+              "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+              "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "source_ref": "artifact://semantic-dev-revision/plan.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+            "ref": {
+              "char_end": 123,
+              "char_start": 32,
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "document_id": "update.md",
+              "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/update.md",
+              "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+              "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "source_ref": "artifact://semantic-dev-revision/update.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 27767,
+        "tokens": 6942
+      },
+      "run_id": "run_p4_d57a23f82d2c",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate SAME_TASK: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_d57a23f82d2c:turn:3",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/state.json",
+        "sha256": "8992de884a10d7dc2beeb3b1d4b99755968016636ad0ca15188cf61dc5ac17ef",
+        "size_bytes": 3420
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "b89654ffd3e6ab375e0cb63073c6d11ec96d3c83b12e5b95f44ecac6458dd30a",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:2:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "cdf5c6c0ca0154c05c7ada6aa1db7be9e29217a52eb0d3233343e1f1220c5d51",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"00f362702bb9ea990abeee2aa3892e4cb64a4593ac132b1cfe8dd64b1c2dffa4\",\"call_id\":\"run_p4_d57a23f82d2c:turn:2:tool\",\"result_bytes\":1024,\"status\":\"completed\",\"tool\":\"query_task_relations\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "b89654ffd3e6ab375e0cb63073c6d11ec96d3c83b12e5b95f44ecac6458dd30a",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:2:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/3-2c756f4f91f28993/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "cdf5c6c0ca0154c05c7ada6aa1db7be9e29217a52eb0d3233343e1f1220c5d51",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"00f362702bb9ea990abeee2aa3892e4cb64a4593ac132b1cfe8dd64b1c2dffa4\",\"call_id\":\"run_p4_d57a23f82d2c:turn:2:tool\",\"result_bytes\":1024,\"status\":\"completed\",\"tool\":\"query_task_relations\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 4,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/audit.json",
+        "sha256": "084001abec9179d2e82e773e35933d4e7e7e311b73d68fadbf5639ab946e34db",
+        "size_bytes": 5848
+      },
+      "authorized_snapshot_id": "cee54e04e5f6cca2f8b1af258e00588b900e263443cbf5be0ae3964d1f6bc8e6",
+      "base_instruction_sha256": "da939e8744f962bf3f0cc967089afae6e3ac1eb8ea260bd46271bed10dee406a",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/before.json",
+        "sha256": "dcc0f1c5d81b2db9f976ee1f074a479007935c5deab53daec42c57c9a855e3bd",
+        "size_bytes": 3720
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 43905,
+        "input_tokens": 10977,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 43649,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 674,
+            "tokens": 169
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 18752,
+            "tokens": 4688
+          },
+          "instruction": {
+            "bytes": 825,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 14711,
+            "tokens": 3678
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1867,
+            "tokens": 467
+          },
+          "verified_evidence": {
+            "bytes": 3867,
+            "tokens": 967
+          },
+          "working_context": {
+            "bytes": 1793,
+            "tokens": 449
+          }
+        },
+        "serialization_overhead_bytes": 1158,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 7263
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b"
+          ],
+          "group_id": "observed_support_only",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/mapping.json",
+        "sha256": "e64f61523db4b33620e802f5075cb9b08b24e341ed650bd3607f58da9e2ab5fc",
+        "size_bytes": 3058
+      },
+      "prepared_request_sha256": "3f18cf61ceb4d0fd62e50fd92effe1c51cd493dfe11dc3e618daeb957ec26ca9",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "document_id": "plan.md",
+              "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/plan.md",
+              "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+              "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "source_ref": "artifact://semantic-dev-revision/plan.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+            "ref": {
+              "char_end": 123,
+              "char_start": 32,
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "document_id": "update.md",
+              "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/update.md",
+              "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+              "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "source_ref": "artifact://semantic-dev-revision/update.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-revision"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 43075,
+        "tokens": 10769
+      },
+      "run_id": "run_p4_d57a23f82d2c",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate SAME_TASK: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_d57a23f82d2c:turn:4",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/state.json",
+        "sha256": "dcc0f1c5d81b2db9f976ee1f074a479007935c5deab53daec42c57c9a855e3bd",
+        "size_bytes": 3720
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "f6bf2533c97046378922ce59ed520379a1e3f6ab1ef5a0fe434be16dcf546a75",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations",
+          "observed_analyze_task_semantics"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:3:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "e597d53faafbb8d70692ee7f5a8cf4cb2f2e93440c70e20b6a823eea7741c827",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"00f362702bb9ea990abeee2aa3892e4cb64a4593ac132b1cfe8dd64b1c2dffa4\",\"call_id\":\"run_p4_d57a23f82d2c:turn:2:tool\",\"result_bytes\":1024,\"status\":\"completed\",\"tool\":\"query_task_relations\"}",
+          "{\"arguments_sha256\":\"2a015f305254484d657df4035d9c86955a350736acffdfebd415db2feac779dd\",\"call_id\":\"run_p4_d57a23f82d2c:turn:3:tool\",\"result_bytes\":14711,\"status\":\"completed\",\"tool\":\"analyze_task_semantics\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/checkpoint.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "f6bf2533c97046378922ce59ed520379a1e3f6ab1ef5a0fe434be16dcf546a75",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations",
+          "observed_analyze_task_semantics"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+            "document_id": "plan.md",
+            "evidence_id": "context_ev_v1_f96e38a97dd43f6bdae69469de2d1bee4099f58d4847e12cd2faf735f4df844b",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/plan.md",
+            "quote_hash": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+            "resource_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+            "source_ref": "artifact://semantic-dev-revision/plan.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          },
+          {
+            "char_end": 123,
+            "char_start": 32,
+            "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+            "document_id": "update.md",
+            "evidence_id": "context_ev_v1_2043879fc23127a3dcf1adbb377e24f805dec41b1b5218a7ec43f738ccf90c65",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/update.md",
+            "quote_hash": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+            "resource_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+            "source_ref": "artifact://semantic-dev-revision/update.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-revision"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_d57a23f82d2c:turn:3:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/4b06319955fbbd18b6ed/4-26424f4daa1768cb/ledger.json",
+          "run_id": "run_p4_d57a23f82d2c",
+          "sha256": "e597d53faafbb8d70692ee7f5a8cf4cb2f2e93440c70e20b6a823eea7741c827",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"17e9ba32390f74312fd912ff03ec0dedd9dd65cbd9211c3e876794ab625f5a03\",\"call_id\":\"run_p4_d57a23f82d2c:turn:1:tool\",\"result_bytes\":17182,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"00f362702bb9ea990abeee2aa3892e4cb64a4593ac132b1cfe8dd64b1c2dffa4\",\"call_id\":\"run_p4_d57a23f82d2c:turn:2:tool\",\"result_bytes\":1024,\"status\":\"completed\",\"tool\":\"query_task_relations\"}",
+          "{\"arguments_sha256\":\"2a015f305254484d657df4035d9c86955a350736acffdfebd415db2feac779dd\",\"call_id\":\"run_p4_d57a23f82d2c:turn:3:tool\",\"result_bytes\":14711,\"status\":\"completed\",\"tool\":\"analyze_task_semantics\"}"
+        ],
+        "run_id": "run_p4_d57a23f82d2c",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate SAME_TASK: new -> old; semantics not accepted.",
+          "Investigate REVISES_PLAN: new -> old; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted SAME_TASK: new -> old",
+          "Unaccepted REVISES_PLAN: new -> old"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-revision"
+      },
+      "protected_state_unchanged": true
+    }
+  ],
+  "archive": {
+    "path": "cold-final.zip",
+    "sha256": "f989299d9a2cb8ec04ec6568976cc21ab8a23ce19faf591727d7b90457182074",
+    "exact_model_artifact_count": 43,
+    "hash_validation": "PASS"
+  },
+  "frozen_metrics": "A/C/D HISTORICAL ONLY; NOT RERUN_OR_OVERWRITTEN; NO_NEW_BUSINESS_SCORE"
+}

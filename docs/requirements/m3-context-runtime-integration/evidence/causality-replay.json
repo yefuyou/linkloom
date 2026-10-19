@@ -1,0 +1,2347 @@
+{
+  "case_id": "causality-replay",
+  "expected": "completed",
+  "actual_runtime_status": "completed",
+  "outer_fake_calls": 4,
+  "inner_adapter_requests": 1,
+  "inner_execution": {
+    "adapter_requests": 1,
+    "cost_usd": null,
+    "imported_usage": {
+      "duration_ms": 3975.318,
+      "input_tokens": 5697,
+      "output_tokens": 415,
+      "total_tokens": 6112
+    },
+    "kind": "REPLAY",
+    "new_billable_cost_usd": 0.0,
+    "new_live_provider_requests": 0,
+    "original_receipt": {
+      "execution_kind": "REPLAY",
+      "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+      "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+      "original_case_id": "causality",
+      "original_request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+      "original_response_sha256_imported": "3a4d5586a955df8d3fe5e3cfe205c79e67bacd0405f854d01596c3ea9d2186c6",
+      "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+      "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+      "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+    },
+    "provider_request_id": null,
+    "provider_response_id": "NfLUaqyKG7viytMP5K6Z-Qo",
+    "request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+    "reserved_requests": 1,
+    "response_sha256": "e8e5dae7b0a9b814188f4c1045584cc20bba33c7aaa2486d8b0f16ac8953e00a"
+  },
+  "new_live_provider_requests": 0,
+  "business_semantic_acceptance": "NOT_EVALUATED",
+  "publishable": false,
+  "reviewer": {
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "created_at": "2026-10-19T05:39:21.947078+00:00",
+    "decision": "evidence_sufficient",
+    "human_approval_required": false,
+    "reason": "All validation passed",
+    "review_id": "review_4489ec2a",
+    "reviewer_agent_id": "reviewer_agent",
+    "subject_refs": []
+  },
+  "error": null,
+  "audits": [
+    {
+      "sequence": 1,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/audit.json",
+        "sha256": "0076741e8c23c9407455b0f1ae43d8a513e40dff840750549e213f542bb3047c",
+        "size_bytes": 7852
+      },
+      "authorized_snapshot_id": "b54355a14a73f230d7eef92cb669118c5071df3fce472e48174d9d1a3fedbd13",
+      "base_instruction_sha256": "bc9871dd81840c9741b6f5618d7e9d34bea94af5eb143945a5c55c000c206072",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/before.json",
+        "sha256": "a7dbdba388b0f550c69625cd84fc8f7b8afb463e0c9e53600ccff85a98760881",
+        "size_bytes": 4153
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 13274,
+        "input_tokens": 3319,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 13018,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "instruction": {
+            "bytes": 826,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1870,
+            "tokens": 468
+          },
+          "verified_evidence": {
+            "bytes": 7429,
+            "tokens": 1858
+          },
+          "working_context": {
+            "bytes": 1916,
+            "tokens": 479
+          }
+        },
+        "serialization_overhead_bytes": 965,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 10277
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/mapping.json",
+        "sha256": "bec223f8ab52755b7a2b7beca52e47877942432bbe0acce9867ffb6f4b4d8e71",
+        "size_bytes": 6112
+      },
+      "prepared_request_sha256": "3aa8ab02cb24f3e928639e2140773dba29d89b2929e270508361263d1f38efc6",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+              "document_id": "choice.md",
+              "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/choice.md",
+              "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+              "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+              "source_ref": "artifact://semantic-dev-causality/choice.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+            "ref": {
+              "char_end": 111,
+              "char_start": 32,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+            "ref": {
+              "char_end": 220,
+              "char_start": 144,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+              "line_end": 2,
+              "line_start": 2,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+            "ref": {
+              "char_end": 293,
+              "char_start": 253,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+              "line_end": 3,
+              "line_start": 3,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 11930,
+        "tokens": 2983
+      },
+      "run_id": "run_p4_8198cea0c78e",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+            "subgoal_id": "relation_2"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_8198cea0c78e:turn:1",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/state.json",
+        "sha256": "a7dbdba388b0f550c69625cd84fc8f7b8afb463e0c9e53600ccff85a98760881",
+        "size_bytes": 4153
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "e021a50dda93925ded766cc253d409b6b402b7751937e51ef0184952b67e2c59",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": null,
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "978ba8f283982ac9eed8bfa375fbc2075c9708758f84ea561dbdd60bea8917d4",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "e021a50dda93925ded766cc253d409b6b402b7751937e51ef0184952b67e2c59",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": null,
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/1-8f50a37eadcfb9e0/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "978ba8f283982ac9eed8bfa375fbc2075c9708758f84ea561dbdd60bea8917d4",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 2,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/2-210506b973465b61/audit.json",
+        "sha256": "b72a0e58506c08f62c0576beaf4162ebb4e4cadcfaccce976b253c87eaee97be",
+        "size_bytes": 7863
+      },
+      "authorized_snapshot_id": "b54355a14a73f230d7eef92cb669118c5071df3fce472e48174d9d1a3fedbd13",
+      "base_instruction_sha256": "bc9871dd81840c9741b6f5618d7e9d34bea94af5eb143945a5c55c000c206072",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/2-210506b973465b61/before.json",
+        "sha256": "712e808430d4be9ff460bf327bf6be2c3f4a2f2d982e23b49f6ab4ca0cba81c6",
+        "size_bytes": 4538
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 37062,
+        "input_tokens": 9266,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 36806,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 225,
+            "tokens": 57
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "instruction": {
+            "bytes": 826,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 23181,
+            "tokens": 5796
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1870,
+            "tokens": 468
+          },
+          "verified_evidence": {
+            "bytes": 7428,
+            "tokens": 1857
+          },
+          "working_context": {
+            "bytes": 2028,
+            "tokens": 507
+          }
+        },
+        "serialization_overhead_bytes": 1242,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 10611
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/2-210506b973465b61/mapping.json",
+        "sha256": "bec223f8ab52755b7a2b7beca52e47877942432bbe0acce9867ffb6f4b4d8e71",
+        "size_bytes": 6112
+      },
+      "prepared_request_sha256": "4bc9327a929c54a00b16180256ea99f78da45e02a49627e7f293e2d93b63c80a",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+              "document_id": "choice.md",
+              "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/choice.md",
+              "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+              "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+              "source_ref": "artifact://semantic-dev-causality/choice.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+            "ref": {
+              "char_end": 111,
+              "char_start": 32,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+            "ref": {
+              "char_end": 220,
+              "char_start": 144,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+              "line_end": 2,
+              "line_start": 2,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+            "ref": {
+              "char_end": 293,
+              "char_start": 253,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+              "line_end": 3,
+              "line_start": 3,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 35719,
+        "tokens": 8930
+      },
+      "run_id": "run_p4_8198cea0c78e",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+            "subgoal_id": "relation_2"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_8198cea0c78e:turn:2",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/2-210506b973465b61/state.json",
+        "sha256": "712e808430d4be9ff460bf327bf6be2c3f4a2f2d982e23b49f6ab4ca0cba81c6",
+        "size_bytes": 4538
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/2-210506b973465b61/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "432206d9649862544bf7736c6fcdce519450eae9f5375d239010280195ef3f00",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:1:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/2-210506b973465b61/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "7328a91b252963d160460a3f20a4d6df874167d6ee44143e6b6f354314069c45",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"e6bb6a92c08bdd775e7d1aedb42c7d12fa536c9ce45e0eb6f4a594aed4b5f3d4\",\"call_id\":\"run_p4_8198cea0c78e:turn:1:tool\",\"result_bytes\":23181,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}"
+        ],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/2-210506b973465b61/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "432206d9649862544bf7736c6fcdce519450eae9f5375d239010280195ef3f00",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:1:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/2-210506b973465b61/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "7328a91b252963d160460a3f20a4d6df874167d6ee44143e6b6f354314069c45",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"e6bb6a92c08bdd775e7d1aedb42c7d12fa536c9ce45e0eb6f4a594aed4b5f3d4\",\"call_id\":\"run_p4_8198cea0c78e:turn:1:tool\",\"result_bytes\":23181,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}"
+        ],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 3,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/audit.json",
+        "sha256": "fda570857d4995468e36c1b56dbbdd0adfc992586d21adfee5a869e51f611571",
+        "size_bytes": 7869
+      },
+      "authorized_snapshot_id": "b54355a14a73f230d7eef92cb669118c5071df3fce472e48174d9d1a3fedbd13",
+      "base_instruction_sha256": "bc9871dd81840c9741b6f5618d7e9d34bea94af5eb143945a5c55c000c206072",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/before.json",
+        "sha256": "baeaa23381398905a24c3fa72f0abaaad7ee94af818a39e91922e4ba3c6e6755",
+        "size_bytes": 4833
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 38684,
+        "input_tokens": 9671,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 38428,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 448,
+            "tokens": 112
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 23445,
+            "tokens": 5862
+          },
+          "instruction": {
+            "bytes": 826,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 1025,
+            "tokens": 257
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1870,
+            "tokens": 468
+          },
+          "verified_evidence": {
+            "bytes": 7429,
+            "tokens": 1858
+          },
+          "working_context": {
+            "bytes": 2060,
+            "tokens": 515
+          }
+        },
+        "serialization_overhead_bytes": 1323,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 10867
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/mapping.json",
+        "sha256": "bec223f8ab52755b7a2b7beca52e47877942432bbe0acce9867ffb6f4b4d8e71",
+        "size_bytes": 6112
+      },
+      "prepared_request_sha256": "33808036c9a953de698bd467d7980cad75f81d3aaaab960720dc5dba7b8687a8",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+              "document_id": "choice.md",
+              "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/choice.md",
+              "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+              "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+              "source_ref": "artifact://semantic-dev-causality/choice.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+            "ref": {
+              "char_end": 111,
+              "char_start": 32,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+            "ref": {
+              "char_end": 220,
+              "char_start": 144,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+              "line_end": 2,
+              "line_start": 2,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+            "ref": {
+              "char_end": 293,
+              "char_start": 253,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+              "line_end": 3,
+              "line_start": 3,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 37340,
+        "tokens": 9335
+      },
+      "run_id": "run_p4_8198cea0c78e",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+            "subgoal_id": "relation_2"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_8198cea0c78e:turn:3",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/state.json",
+        "sha256": "baeaa23381398905a24c3fa72f0abaaad7ee94af818a39e91922e4ba3c6e6755",
+        "size_bytes": 4833
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "c7013cf343fe067a131f227a14cfea009c49b1de2c6452c027d641e60be1a23b",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:2:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "9a2b518dc643c1e2fb13982ef194b499b4f1b9a1d67497066d91709a48578ea6",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"e6bb6a92c08bdd775e7d1aedb42c7d12fa536c9ce45e0eb6f4a594aed4b5f3d4\",\"call_id\":\"run_p4_8198cea0c78e:turn:1:tool\",\"result_bytes\":23181,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"d30101457d5f6a3591adb33beb8e85a70fbdf18690b4950737a6b9633f3e7560\",\"call_id\":\"run_p4_8198cea0c78e:turn:2:tool\",\"result_bytes\":1025,\"status\":\"completed\",\"tool\":\"query_task_relations\"}"
+        ],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "c7013cf343fe067a131f227a14cfea009c49b1de2c6452c027d641e60be1a23b",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:2:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/3-1489b3c829d7bef4/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "9a2b518dc643c1e2fb13982ef194b499b4f1b9a1d67497066d91709a48578ea6",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"e6bb6a92c08bdd775e7d1aedb42c7d12fa536c9ce45e0eb6f4a594aed4b5f3d4\",\"call_id\":\"run_p4_8198cea0c78e:turn:1:tool\",\"result_bytes\":23181,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"d30101457d5f6a3591adb33beb8e85a70fbdf18690b4950737a6b9633f3e7560\",\"call_id\":\"run_p4_8198cea0c78e:turn:2:tool\",\"result_bytes\":1025,\"status\":\"completed\",\"tool\":\"query_task_relations\"}"
+        ],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "protected_state_unchanged": true
+    },
+    {
+      "sequence": 4,
+      "audit_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/audit.json",
+        "sha256": "afdd6df60f197956493205a3c63c725ef4079087262c7b82703017b5d54d1a1d",
+        "size_bytes": 9158
+      },
+      "authorized_snapshot_id": "b54355a14a73f230d7eef92cb669118c5071df3fce472e48174d9d1a3fedbd13",
+      "base_instruction_sha256": "bc9871dd81840c9741b6f5618d7e9d34bea94af5eb143945a5c55c000c206072",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/before.json",
+        "sha256": "c9da2ff9cc52ac8dc82b42fdab56a588410bf8e59c70477e03b84eaa90f91571",
+        "size_bytes": 5215
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 56805,
+        "input_tokens": 14202,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 56549,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 215,
+            "tokens": 54
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 24754,
+            "tokens": 6189
+          },
+          "instruction": {
+            "bytes": 826,
+            "tokens": 207
+          },
+          "latest_result": {
+            "bytes": 18014,
+            "tokens": 4504
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1870,
+            "tokens": 468
+          },
+          "verified_evidence": {
+            "bytes": 7429,
+            "tokens": 1858
+          },
+          "working_context": {
+            "bytes": 2174,
+            "tokens": 544
+          }
+        },
+        "serialization_overhead_bytes": 1265,
+        "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+        "user_input_bytes": 10748
+      },
+      "compaction": {
+        "after_bytes": 4661,
+        "after_tokens": 678,
+        "before_budget": {
+          "actual_provider_tokens": false,
+          "context_window_tokens": 65536,
+          "input_bytes": 57378,
+          "input_tokens": 14345,
+          "max_request_bytes": 98304,
+          "normalized_request_bytes": 57122,
+          "output_reserve_tokens": 2048,
+          "segments": {
+            "compaction_summary": {
+              "bytes": 674,
+              "tokens": 169
+            },
+            "existing_verified_context": {
+              "bytes": 2,
+              "tokens": 1
+            },
+            "history": {
+              "bytes": 24754,
+              "tokens": 6189
+            },
+            "instruction": {
+              "bytes": 826,
+              "tokens": 207
+            },
+            "latest_result": {
+              "bytes": 18014,
+              "tokens": 4504
+            },
+            "request_envelope": {
+              "bytes": 256,
+              "tokens": 64
+            },
+            "tools": {
+              "bytes": 1870,
+              "tokens": 468
+            },
+            "verified_evidence": {
+              "bytes": 7429,
+              "tokens": 1858
+            },
+            "working_context": {
+              "bytes": 2174,
+              "tokens": 544
+            }
+          },
+          "serialization_overhead_bytes": 1379,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING",
+          "user_input_bytes": 11207
+        },
+        "before_bytes": 4795,
+        "before_tokens": 712,
+        "dropped_history": 0,
+        "dropped_tool_turns": 0,
+        "kind": "DETERMINISTIC_FAKE_V1",
+        "status": "complete",
+        "trigger": "HISTORY_ALLOCATION"
+      },
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "OFFLINE_REFERENCE_ONLY",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "INJECTED_UTF8_QUADS_REFERENCE; NOT_GEMINI_OR_BILLING"
+        },
+        "tokenizer_id": "OFFLINE_UTF8_QUADS_V1",
+        "tokenizer_probe": [
+          3,
+          6,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_0"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_1"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relation_2"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96"
+          ],
+          "group_id": "observed_support_only",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        },
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+          ],
+          "group_id": "observed_counter_only",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        },
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relation_0",
+            "relation_1",
+            "relation_2",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/mapping.json",
+        "sha256": "bec223f8ab52755b7a2b7beca52e47877942432bbe0acce9867ffb6f4b4d8e71",
+        "size_bytes": 6112
+      },
+      "prepared_request_sha256": "3ad484e4066de29dd717614ae79d076a5418bb6c3b4b94e9a51025b5e332cad5",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+            "ref": {
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+              "document_id": "choice.md",
+              "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/choice.md",
+              "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+              "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+              "source_ref": "artifact://semantic-dev-causality/choice.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+            "ref": {
+              "char_end": 111,
+              "char_start": 32,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+            "ref": {
+              "char_end": 220,
+              "char_start": 144,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+              "line_end": 2,
+              "line_start": 2,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "historical": false,
+            "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+            "ref": {
+              "char_end": 293,
+              "char_start": 253,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "document_id": "work.md",
+              "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+              "line_end": 3,
+              "line_start": 3,
+              "logical_path": "/task-sources/work.md",
+              "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+              "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "source_version": 1,
+              "workspace_id": "semantic-dev-causality"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 55461,
+        "tokens": 13866
+      },
+      "run_id": "run_p4_8198cea0c78e",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover every declared authorized source and competing observation.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+            "subgoal_id": "relation_0"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+            "subgoal_id": "relation_1"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+            "subgoal_id": "relation_2"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Independent semantic acceptance and unresolved evidence gaps.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_8198cea0c78e:turn:4",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/state.json",
+        "sha256": "cfc24b639bd8d772510a2e53aacade2ed52497f6945372dcfbda8dc9cf216637",
+        "size_bytes": 4975
+      },
+      "before_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "a4414ad7f86d41af3bfe7cebbb723630d3da477d67f294caf6d33fbdf5d3cea3",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations",
+          "observed_analyze_task_semantics"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:3:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "f28a21052d7a9eb9bcd2571f61b0db6b8fc6b74d251e59d65c32aed4a0fd1bd3",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [
+          "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+        ],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [
+          "{\"arguments_sha256\":\"e6bb6a92c08bdd775e7d1aedb42c7d12fa536c9ce45e0eb6f4a594aed4b5f3d4\",\"call_id\":\"run_p4_8198cea0c78e:turn:1:tool\",\"result_bytes\":23181,\"status\":\"completed\",\"tool\":\"inspect_task_context\"}",
+          "{\"arguments_sha256\":\"d30101457d5f6a3591adb33beb8e85a70fbdf18690b4950737a6b9633f3e7560\",\"call_id\":\"run_p4_8198cea0c78e:turn:2:tool\",\"result_bytes\":1025,\"status\":\"completed\",\"tool\":\"query_task_relations\"}",
+          "{\"arguments_sha256\":\"d5ea8b8a272e1c0e7e49df56699f50d36860e6215f597ef0797d64806e5f3c65\",\"call_id\":\"run_p4_8198cea0c78e:turn:3:tool\",\"result_bytes\":18014,\"status\":\"completed\",\"tool\":\"analyze_task_semantics\"}"
+        ],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [],
+        "summary_text": "",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "after_working": {
+        "checkpoint_ref": {
+          "kind": "checkpoint",
+          "locator": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/checkpoint.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "a4414ad7f86d41af3bfe7cebbb723630d3da477d67f294caf6d33fbdf5d3cea3",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "completed_subgoals": [
+          "sources_current",
+          "observed_inspect_task_context",
+          "observed_query_task_relations",
+          "observed_analyze_task_semantics"
+        ],
+        "conflicts": [],
+        "evidence_refs": [
+          {
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "document_id": "choice.md",
+            "evidence_id": "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/choice.md",
+            "quote_hash": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "resource_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+            "line_end": 2,
+            "line_start": 2,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          },
+          {
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "document_id": "work.md",
+            "evidence_id": "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f",
+            "line_end": 3,
+            "line_start": 3,
+            "logical_path": "/task-sources/work.md",
+            "quote_hash": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "resource_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "source_version": 1,
+            "workspace_id": "semantic-dev-causality"
+          }
+        ],
+        "failed_tools": [],
+        "last_tool": {
+          "call_id": "run_p4_8198cea0c78e:turn:3:tool",
+          "error_code": null,
+          "status": "completed"
+        },
+        "ledger_ref": {
+          "kind": "ledger",
+          "locator": "working/e7ea530907ff36eb07d9/4-e4aee6ba68131a0e/ledger.json",
+          "run_id": "run_p4_8198cea0c78e",
+          "sha256": "f28a21052d7a9eb9bcd2571f61b0db6b8fc6b74d251e59d65c32aed4a0fd1bd3",
+          "workspace_id": "semantic-dev-causality"
+        },
+        "negative_evidence_ids": [
+          "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1"
+        ],
+        "next_investigations": [
+          "Re-read original sources and current relation receipts; independent semantic acceptance pending."
+        ],
+        "operations": [],
+        "run_id": "run_p4_8198cea0c78e",
+        "schema_version": 1,
+        "summary_evidence_ids": [
+          "context_ev_v1_03e814424eeec50902a9b3601933e35f98a3891e9912258978a465fa542f75ab",
+          "context_ev_v1_16cd31e56d086609b238e60d7c99a2d48c379bd838f0f5a208634da523929f96",
+          "context_ev_v1_cff0ef63da96fcb479a8362541c76308bb021e78a108e610d21eeb8e60c781f1",
+          "context_ev_v1_c2118070497f5af764edac9c2b8a4322a14de378da65b54eae91d94fb920ed3f"
+        ],
+        "summary_text": "Archived 3 operational interactions. Read the immutable ledger reference for details. Protected goal, unresolved questions and failures remain in WorkingContext. Only freshly recovered originals support conclusions.",
+        "unresolved_questions": [
+          "Investigate AFFECTED_BY: adapt -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: archive -> change; semantics not accepted.",
+          "Investigate AFFECTED_BY: cache -> change; semantics not accepted.",
+          "Independent semantic acceptance and unresolved evidence gaps.",
+          "Unaccepted AFFECTED_BY: adapt -> change",
+          "Unaccepted AFFECTED_BY: archive -> change",
+          "Unaccepted AFFECTED_BY: cache -> change"
+        ],
+        "user_goal": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "protected_state_unchanged": true
+    }
+  ],
+  "archive": {
+    "path": "causality-replay.zip",
+    "sha256": "dafd7c1dfa337470b0edbc1051b77db8b74205a2a9a1a8341fe577bd4f91a951",
+    "exact_model_artifact_count": 43,
+    "hash_validation": "PASS"
+  },
+  "frozen_metrics": "A/C/D HISTORICAL ONLY; NOT RERUN_OR_OVERWRITTEN; NO_NEW_BUSINESS_SCORE"
+}

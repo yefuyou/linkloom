@@ -1,0 +1,64 @@
+{
+  "status": "PASS",
+  "checks": [
+    "EXACT_ZIP_BYTES",
+    "MODEL_ARTIFACT_HASHES",
+    "ACTUAL_REQUEST_AUDIT_BINDING",
+    "RUN_TASK_TURN_IDENTITIES",
+    "RAW_LEDGER_CHECKPOINT_REFERENCES",
+    "PROTECTED_STATE_UNCHANGED",
+    "FULL_NORMALIZED_REQUEST_BUDGETS",
+    "EVIDENCE_MAPPING_IDENTITIES"
+  ],
+  "cases": [
+    {
+      "archive": "revision-replay.zip",
+      "status": "PASS",
+      "model_artifacts": 43,
+      "outer_records": 4,
+      "tool_records": 3
+    },
+    {
+      "archive": "causality-replay.zip",
+      "status": "PASS",
+      "model_artifacts": 43,
+      "outer_records": 4,
+      "tool_records": 3
+    },
+    {
+      "archive": "conflict-replay.zip",
+      "status": "PASS",
+      "model_artifacts": 43,
+      "outer_records": 4,
+      "tool_records": 3
+    },
+    {
+      "archive": "long-history.zip",
+      "status": "PASS",
+      "model_artifacts": 93,
+      "outer_records": 9,
+      "tool_records": 8
+    },
+    {
+      "archive": "source-stale.zip",
+      "status": "PASS",
+      "model_artifacts": 24,
+      "outer_records": 2,
+      "tool_records": 2
+    },
+    {
+      "archive": "budget-blocked.zip",
+      "status": "PASS",
+      "model_artifacts": 5,
+      "outer_records": 0,
+      "tool_records": 0
+    },
+    {
+      "archive": "cold-final.zip",
+      "status": "PASS",
+      "model_artifacts": 43,
+      "outer_records": 4,
+      "tool_records": 3
+    }
+  ]
+}

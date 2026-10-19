@@ -205,6 +205,7 @@ class SingleAgentModelLoop:
         task_plan: TaskPlan | None = None,
         workspace_id: str | None = None,
         final_shape_validator: Callable[[str], None] | None = None,
+        context_runtime: Any | None = None,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -238,6 +239,7 @@ class SingleAgentModelLoop:
         self.verified_evidence_context_limit = verified_evidence_context_limit
         self.task_plan = task_plan
         self.final_shape_validator = final_shape_validator
+        self.context_runtime = context_runtime
         if workspace_id is not None and (not isinstance(workspace_id, str) or not workspace_id.strip()):
             raise ValidationError("Model loop workspace_id must be non-empty text or None.")
         self.workspace_id = workspace_id
@@ -2377,6 +2379,13 @@ class SingleAgentModelLoop:
                             else []
                         ),
                     )
+                    if self.context_runtime is not None:
+                        try:
+                            request, engineering_audit = self.context_runtime.prepare(request, current_state)
+                        except ValidationError as error:
+                            return failed_result(self._error("CONTEXT_INCOMPLETE", "budget",
+                                "Required original context cannot fit or be recovered; no model request sent.", error.details))
+                        context_audit["engineering"] = engineering_audit
                     request, request_budget_audit = _bounded_model_request(request)
                     context_audit.update(request_budget_audit)
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
@@ -2409,6 +2418,8 @@ class SingleAgentModelLoop:
                         return blocked_result(checkpoint_error)
                 else:
                     request = load_request(record)
+                    if self.context_runtime is not None:
+                        self.context_runtime.restore(current_state)
                 record = replace(record, status="request_sent")
                 upsert_record(record)
                 checkpoint_error = publish_model_boundary("request_sent")
