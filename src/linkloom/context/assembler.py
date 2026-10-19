@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import StrEnum
 from typing import TYPE_CHECKING, Mapping, Sequence
 
@@ -14,6 +13,9 @@ from linkloom.experience.models import ExperienceContextSection, ExperienceSelec
 from linkloom.runtime.models import RuntimeState
 
 from .models import normalize_logical_path
+from .policy import (ContextPolicy, ContextBudgetReport, EvidenceGroup,
+                     EvidenceSelectionResult, RequestUsage, estimate_tokens)
+from .selection import select_evidence
 
 if TYPE_CHECKING:
     from linkloom.retrieval_v2.models import RetrievedEvidence
@@ -34,6 +36,8 @@ class ContextDropReason(StrEnum):
     DUPLICATE = "DUPLICATE"
     STALE = "STALE"
     INVALID_PROVENANCE = "INVALID_PROVENANCE"
+    GROUP_INCOMPLETE = "GROUP_INCOMPLETE"
+    CANDIDATE_LIMIT = "CANDIDATE_LIMIT"
 
 
 @dataclass(frozen=True, slots=True)
@@ -80,6 +84,8 @@ class ContextBundle:
     dropped: tuple[DroppedContextItem, ...]
     rendered_text: str
     estimated_tokens: int
+    selection: EvidenceSelectionResult | None = None
+    budget_report: ContextBudgetReport | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,8 +104,7 @@ _TEMPORAL_QUERY_RE = re.compile(
 
 
 def _estimate_tokens(text: str) -> int:
-    """Return a stable rough estimate (not a provider tokenizer result)."""
-    return math.ceil(len(text) / 4) if text else 0
+    return estimate_tokens(text)
 
 
 def _render(items: Sequence[SelectedContextItem | _Candidate]) -> str:
@@ -122,9 +127,11 @@ class ContextAssembler:
         *,
         budget: ContextBudget | None = None,
         experience_builder: ExperienceContextBuilder | None = None,
+        policy: ContextPolicy | None = None,
     ) -> None:
         self.budget = budget or ContextBudget()
         self._experience_builder = experience_builder
+        self.policy = policy or ContextPolicy()
 
     def assemble(
         self,
@@ -138,13 +145,39 @@ class ContextAssembler:
         scope_path: str | None = None,
         temporal_query: bool | None = None,
         decision_memory_states: Mapping[str, str] | None = None,
+        evidence_groups: Sequence[EvidenceGroup] = (),
+        task_subgoals: Sequence[str] = (),
+        request_usage: RequestUsage | None = None,
     ) -> ContextBundle:
+        """Inspect a bounded prefix of caller-ranked evidence, never its tail."""
         if not isinstance(workspace_id, str) or not workspace_id.strip():
             raise ValueError("workspace_id is required")
         if not isinstance(query, str) or not query.strip():
             raise ValueError("query is required")
         workspace_id = workspace_id.strip()
         query = query.strip()
+        usage = request_usage or RequestUsage()
+        if len(evidence_groups) > self.policy.max_candidates or len(task_subgoals) > self.policy.max_candidates:
+            raise ValueError('selection hint limit exceeded')
+        if sum(len(g.evidence_ids) for g in evidence_groups) > self.policy.max_candidates:
+            raise ValueError('group member limit exceeded')
+        if sum(len(g.subgoal_ids) for g in evidence_groups) > self.policy.max_candidates:
+            raise ValueError('group subgoal hint limit exceeded')
+        if any(not isinstance(s, str) or not s.strip() or len(s) > 256 for s in task_subgoals):
+            raise ValueError('subgoal hint IDs must be nonempty text of at most 256 characters')
+        if len(set(task_subgoals).union(s for g in evidence_groups for s in g.subgoal_ids)) > self.policy.max_candidates:
+            raise ValueError('total subgoal hint limit exceeded')
+        available_tokens = min(self.budget.max_tokens,
+            self.policy.context_window_tokens - self.policy.output_reserve_tokens - usage.tokens)
+        available_bytes = self.policy.max_request_bytes - usage.bytes
+        if available_tokens <= 0 or available_bytes <= 0:
+            raise ValueError('no remaining model context allocation')
+
+        def fits(items):
+            rendered = _render(items)
+            return (len(rendered) <= self.budget.max_chars
+                    and len(rendered.encode('utf-8')) <= available_bytes
+                    and self.policy.count(rendered) <= available_tokens)
         if scope_path is not None:
             scope_path = normalize_logical_path(scope_path)
         is_temporal = (
@@ -167,29 +200,44 @@ class ContextAssembler:
         # Re-retrieved documents are already ranked and workspace-filtered by
         # the retriever. Recheck optional metadata/scope before model exposure.
         seen_evidence: set[str] = set()
-        evidence_count = 0
-        for evidence in sorted(retrieved_evidence, key=lambda item: (item.rank, item.evidence_id)):
+        omitted = max(0, len(retrieved_evidence) - self.policy.max_candidates)
+        if omitted:
+            # Keep tail reporting bounded too: exact declared subgoal gaps are
+            # still computed from group IDs, without reading omitted records.
+            dropped.append(DroppedContextItem(
+                f'candidate_pool_tail[{self.policy.max_candidates}:{len(retrieved_evidence)}]',
+                ContextSourceType.EVIDENCE, ContextDropReason.CANDIDATE_LIMIT, 0))
+        for evidence in sorted(retrieved_evidence[:self.policy.max_candidates], key=lambda item: (item.rank, item.evidence_id)):
             item_id = evidence.evidence_id
             candidate = _evidence_candidate(evidence)
+            if any(flag in evidence.metadata and type(evidence.metadata[flag]) is not bool
+                   for flag in ('active', 'current', 'authorized')):
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.INVALID_PROVENANCE, candidate.text))
+                continue
             metadata_workspace = evidence.metadata.get("workspace_id")
             if metadata_workspace is not None and metadata_workspace != workspace_id:
-                dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
                 continue
             if scope_path is not None and not _path_is_under(evidence.logical_path, scope_path):
-                dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
                 continue
             # A source may contain several independently addressable passages.
             # Only the same evidence identity is a duplicate, not its file.
             identity = evidence.evidence_id
             if identity in seen_evidence:
-                dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.DUPLICATE, candidate.text))
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.DUPLICATE, candidate.text))
                 continue
             seen_evidence.add(identity)
-            if evidence_count >= self.budget.max_evidence:
-                dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.LOW_RANK, candidate.text))
+            if evidence.metadata.get('active') is False or evidence.metadata.get('current') is False:
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.STALE, candidate.text))
+                continue
+            if evidence.metadata.get('authorized') is False:
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
+                continue
+            if evidence.metadata.get('status', 'verified') != 'verified':
+                dropped.append(self._drop(item_id, ContextSourceType.EVIDENCE, ContextDropReason.INVALID_PROVENANCE, candidate.text))
                 continue
             candidates.append(candidate)
-            evidence_count += 1
 
         if runtime_state is not None:
             if not isinstance(runtime_state, RuntimeState):
@@ -221,11 +269,11 @@ class ContextAssembler:
             item_id = decision.decision_id
             memory_text = _decision_memory_text(decision)
             if item_id in seen_decisions:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.DUPLICATE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.DUPLICATE, memory_text))
                 continue
             seen_decisions.add(item_id)
             if decision.workspace_id != workspace_id:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.OUT_OF_SCOPE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.OUT_OF_SCOPE, memory_text))
                 continue
             persisted_state = decision.memory_state or (
                 DecisionMemoryState.SUPERSEDED
@@ -247,17 +295,17 @@ class ContextAssembler:
             ):
                 memory_state = DecisionMemoryState.SUPERSEDED.value
             if memory_state in {"STALE"}:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.STALE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.STALE, memory_text))
                 continue
             if memory_state in {"INVALIDATED", "NEEDS_REVALIDATION", "INVALID_PROVENANCE"}:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.INVALID_PROVENANCE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.INVALID_PROVENANCE, memory_text))
                 continue
             is_historical = decision.status is DecisionStatus.SUPERSEDED or memory_state == "SUPERSEDED"
             if is_historical and not is_temporal:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.OUT_OF_SCOPE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.OUT_OF_SCOPE, memory_text))
                 continue
             if not decision.source_evidence_refs:
-                dropped.append(_dropped(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.INVALID_PROVENANCE, memory_text))
+                dropped.append(self._drop(item_id, ContextSourceType.DECISION_MEMORY, ContextDropReason.INVALID_PROVENANCE, memory_text))
                 continue
             candidates.append(
                 _Candidate(
@@ -273,11 +321,21 @@ class ContextAssembler:
         candidates.extend(experience_candidates)
 
         query_candidate = candidates[0]
-        if not _fits((query_candidate,), self.budget):
+        if not fits((query_candidate,)):
             raise ValueError("query exceeds context budget")
 
-        selected: list[SelectedContextItem] = []
-        selected_source_refs: set[str] = set()
+        evidence_candidates = {c.item_id: c for c in candidates if c.source_type is ContextSourceType.EVIDENCE}
+        selection, rejected = select_evidence(tuple(evidence_candidates), groups=evidence_groups,
+            subgoals=task_subgoals, max_evidence=self.budget.max_evidence,
+            fits=lambda ids: fits((query_candidate, *(evidence_candidates[i] for i in ids))),
+            inspected=min(len(retrieved_evidence), self.policy.max_candidates),
+            omitted=max(0, len(retrieved_evidence) - self.policy.max_candidates))
+        dropped.extend(self._drop(i, ContextSourceType.EVIDENCE, ContextDropReason(reason), evidence_candidates[i].text)
+                       for i, reason in rejected.items())
+        chosen = [query_candidate, *(evidence_candidates[i] for i in selection.selected_ids)]
+        candidates = [c for c in candidates[1:] if c.source_type is not ContextSourceType.EVIDENCE]
+        selected = [replace(_selected(c), estimated_tokens=self.policy.count(c.text)) for c in chosen]
+        selected_source_refs = {r for c in chosen for r in c.source_refs}
         memory_count = 0
         for candidate in candidates:
             if candidate.source_type is ContextSourceType.DECISION_MEMORY:
@@ -289,7 +347,7 @@ class ContextAssembler:
                             item_id=candidate.item_id,
                             source_type=candidate.source_type,
                             reason=ContextDropReason.DUPLICATE,
-                            estimated_tokens=_estimate_tokens(candidate.text),
+                            estimated_tokens=self.policy.count(candidate.text),
                         )
                     )
                     continue
@@ -299,12 +357,12 @@ class ContextAssembler:
                             item_id=candidate.item_id,
                             source_type=candidate.source_type,
                             reason=ContextDropReason.LOW_RANK,
-                            estimated_tokens=_estimate_tokens(candidate.text),
+                            estimated_tokens=self.policy.count(candidate.text),
                         )
                     )
                     continue
-            proposed = _selected(candidate)
-            if _fits((*selected, proposed), self.budget):
+            proposed = replace(_selected(candidate), estimated_tokens=self.policy.count(candidate.text))
+            if fits((*selected, proposed)):
                 selected.append(proposed)
                 if candidate.source_type is ContextSourceType.EVIDENCE:
                     selected_source_refs.update(candidate.source_refs)
@@ -327,8 +385,15 @@ class ContextAssembler:
             selected=tuple(selected),
             dropped=tuple(dropped),
             rendered_text=rendered,
-            estimated_tokens=_estimate_tokens(rendered),
+            estimated_tokens=self.policy.count(rendered),
+            selection=selection,
+            budget_report=ContextBudgetReport(self.policy.model_id, self.policy.token_count_kind,
+                available_tokens, available_bytes, usage.tokens, usage.bytes,
+                self.policy.output_reserve_tokens, self.policy.count(rendered), len(rendered.encode('utf-8'))),
         )
+
+    def _drop(self, item_id, source_type, reason, text) -> DroppedContextItem:
+        return DroppedContextItem(item_id, source_type, reason, self.policy.count(text))
 
     def _experience_candidates(
         self,
@@ -346,7 +411,7 @@ class ContextAssembler:
                     item_id=experience_id,
                     source_type=ContextSourceType.EXPERIENCE,
                     reason=ContextDropReason.INVALID_PROVENANCE,
-                    estimated_tokens=_estimate_tokens(accepted_experience.model_text),
+                    estimated_tokens=self.policy.count(accepted_experience.model_text),
                 )
                 for experience_id in ids
             ]
@@ -361,7 +426,7 @@ class ContextAssembler:
                     item_id=record.experience_id,
                     source_type=ContextSourceType.EXPERIENCE,
                     reason=ContextDropReason.INVALID_PROVENANCE,
-                    estimated_tokens=_estimate_tokens(render_record(record)),
+                    estimated_tokens=self.policy.count(render_record(record)),
                 )
                 for record in records
             ]
@@ -373,7 +438,7 @@ class ContextAssembler:
                 item_id=record.experience_id,
                 source_type=ContextSourceType.EXPERIENCE,
                 reason=ContextDropReason.LOW_RANK,
-                estimated_tokens=_estimate_tokens(render_record(record)),
+                estimated_tokens=self.policy.count(render_record(record)),
             )
             for record in excess
         ]
@@ -395,7 +460,7 @@ class ContextAssembler:
                     item_id=record.experience_id,
                     source_type=ContextSourceType.EXPERIENCE,
                     reason=ContextDropReason.INVALID_PROVENANCE,
-                    estimated_tokens=_estimate_tokens(render_record(record)),
+                    estimated_tokens=self.policy.count(render_record(record)),
                 )
                 for record in included
             )
@@ -407,7 +472,7 @@ class ContextAssembler:
                         item_id=record.experience_id,
                         source_type=ContextSourceType.EXPERIENCE,
                         reason=ContextDropReason.BUDGET,
-                        estimated_tokens=_estimate_tokens(render_record(record)),
+                        estimated_tokens=self.policy.count(render_record(record)),
                     )
                 )
         return [
@@ -452,20 +517,6 @@ def _decision_memory_text(decision: DecisionRecord) -> str:
     )
 
 
-def _dropped(
-    item_id: str,
-    source_type: ContextSourceType,
-    reason: ContextDropReason,
-    text: str,
-) -> DroppedContextItem:
-    return DroppedContextItem(
-        item_id=item_id,
-        source_type=source_type,
-        reason=reason,
-        estimated_tokens=_estimate_tokens(text),
-    )
-
-
 def _selected(candidate: _Candidate) -> SelectedContextItem:
     return SelectedContextItem(
         item_id=candidate.item_id,
@@ -474,11 +525,6 @@ def _selected(candidate: _Candidate) -> SelectedContextItem:
         estimated_tokens=_estimate_tokens(candidate.text),
         source_refs=candidate.source_refs,
     )
-
-
-def _fits(items: Sequence[SelectedContextItem | _Candidate], budget: ContextBudget) -> bool:
-    rendered = _render(items)
-    return len(rendered) <= budget.max_chars and _estimate_tokens(rendered) <= budget.max_tokens
 
 
 __all__ = [
