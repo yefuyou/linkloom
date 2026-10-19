@@ -1,0 +1,79 @@
+{
+  "baseline": "e75728796d9d280b8ae6c0d8355598cc32d9edbf",
+  "branch": "codex/linkloom-m3-n-task-discovery",
+  "real_provider_requests": 0,
+  "real_model_semantic_quality": "NOT_EVALUATED",
+  "tests": {
+    "focused": {
+      "tests": 157,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "related": {
+      "tests": 608,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "critical": {
+      "tests": 215,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "final-context-freeze": {
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "full-collection": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 4,
+      "skipped": 0
+    },
+    "review-fix": {
+      "tests": 159,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "implementation_sha256": {
+    "src/linkloom/semantic_ingestion/extraction.py": "3bc187c5a7614522fb3b2f2f318b21ebbe119b15bf03e25a5fe8c5a00609e87f",
+    "src/linkloom/semantic_ingestion/task_observation_discovery.py": "7c94927019657c0b1e2d1be6f9957b0a580fe0364b6ab63a4fea27e383af614b",
+    "scripts/evaluate_m3n_contracts.py": "7dc4a7e78c30fae02174f860baf44a00a38ea56d54e98cca3e6181f66b463d28",
+    "scripts/diagnose_m3n_extraction.py": "a8e17b476ac06b834bf6fd382c346d9a98bd2322b2be6b0cd2f6f951e71e81e3",
+    "tests/m3n_contract_support.py": "4230e91c0ce6061f510d013d4b1695ed782f67ae84c3e49d419b40d87fa42877",
+    "tests/unit/test_task_discovery_m3n.py": "0e0b5a3fe6b868a1a6a5f2db9dbb2add0d5462dca4fecb071ef9822f1920ff06",
+    "src/linkloom/semantic_ingestion/__init__.py": "564625007d3ea14d7366be5b285d9ef89b4ded64248a93f1521b68271b47c120"
+  },
+  "protected_paths_unchanged": true,
+  "protected_paths": [
+    "docs/requirements/m3-l-live-canary",
+    "docs/requirements/m3-task-discovery",
+    "tests/fixtures/task_discovery",
+    "evals",
+    "src/linkloom/runtime",
+    "src/linkloom/ui",
+    "src/linkloom/semantic_ingestion/artifacts.py",
+    "src/linkloom/semantic_ingestion/document_text.py",
+    "src/linkloom/semantic_ingestion/timestamped_text.py",
+    "src/linkloom/semantic_ingestion/task_observation.py",
+    "src/linkloom/semantic_ingestion/task_discovery_veto.py"
+  ],
+  "same_scripted_output_metrics": true,
+  "new_profile_all_request_fingerprints_differ": true,
+  "baseline_missing_scripts": {
+    "scripts/run_memoryagentbench_g3_pilot.py": true,
+    "scripts/run_stage_c_context_memory_loop.py": true
+  },
+  "diff_check_exit": 0,
+  "independent_review": {
+    "p1": 0,
+    "p2_found": 1,
+    "p2_fixed": "package-root exports; RED reproduced; public API plus affected checks 159 passed"
+  }
+}

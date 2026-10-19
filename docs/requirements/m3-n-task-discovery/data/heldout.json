@@ -1,0 +1,333 @@
+{
+  "dataset_version": "m3n-heldout/v1",
+  "purpose": "PUBLIC_SYNTHETIC_CONTRACT_HOLDOUT",
+  "cases": [
+    {
+      "id": "m3n-cross-message-supplement",
+      "category": "cross_message_supplement",
+      "messages": [
+        {
+          "speaker": "顾遥",
+          "text": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。"
+        },
+        {
+          "speaker": "程墨",
+          "text": "安排夜间告警演练。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。",
+          "description_parts": ["完成支付回归"],
+          "owner": "顾遥",
+          "deadline_text": "2031-05-12",
+          "project": "霁海项目",
+          "vendor": "岚桥"
+        },
+        {
+          "text": "安排夜间告警演练。",
+          "description_parts": ["夜间告警演练"],
+          "owner": null,
+          "deadline_text": null,
+          "project": null,
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "第二条消息是新增动作，只能保留自己的原文证据；不得从上一条消息继承负责人、项目、供应商或日期。"
+    },
+    {
+      "id": "m3n-same-name-different-projects",
+      "category": "same_name_different_tasks",
+      "messages": [
+        {
+          "speaker": "苏禾",
+          "text": "项目：潮生项目；负责人：苏禾；发布月报，截止日期：2031-06-03。"
+        },
+        {
+          "speaker": "苏禾",
+          "text": "项目：栖云项目；负责人：苏禾；发布月报，截止日期：2031-06-04。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：潮生项目；负责人：苏禾；发布月报，截止日期：2031-06-03。",
+          "description_parts": ["发布月报"],
+          "owner": "苏禾",
+          "deadline_text": "2031-06-03",
+          "project": "潮生项目",
+          "vendor": null
+        },
+        {
+          "text": "项目：栖云项目；负责人：苏禾；发布月报，截止日期：2031-06-04。",
+          "description_parts": ["发布月报"],
+          "owner": "苏禾",
+          "deadline_text": "2031-06-04",
+          "project": "栖云项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "相同任务名在不同项目和日期下是两个候选，不能按描述文字合并。"
+    },
+    {
+      "id": "m3n-same-owner-multiple-projects",
+      "category": "same_owner_multiple_projects",
+      "messages": [
+        {
+          "speaker": "乔闻",
+          "text": "项目：云杉项目；负责人：乔闻；完成 webhook 验证，截止日期：2031-06-17。"
+        },
+        {
+          "speaker": "乔闻",
+          "text": "项目：澄湾项目；负责人：乔闻；整理上线清单，截止日期：2031-06-19。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：云杉项目；负责人：乔闻；完成 webhook 验证，截止日期：2031-06-17。",
+          "description_parts": ["完成 webhook 验证"],
+          "owner": "乔闻",
+          "deadline_text": "2031-06-17",
+          "project": "云杉项目",
+          "vendor": null
+        },
+        {
+          "text": "项目：澄湾项目；负责人：乔闻；整理上线清单，截止日期：2031-06-19。",
+          "description_parts": ["整理上线清单"],
+          "owner": "乔闻",
+          "deadline_text": "2031-06-19",
+          "project": "澄湾项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "同一负责人可以同时负责多个项目；项目字段必须逐候选绑定。"
+    },
+    {
+      "id": "m3n-quoted-task",
+      "category": "quoted_task",
+      "messages": [
+        {
+          "speaker": "白妍",
+          "text": "会议引用：“完成权限盘点”。当前没有新增安排。"
+        }
+      ],
+      "expected": [],
+      "rejected_descriptions": ["完成权限盘点"],
+      "notes": "引用中的任务文字只是被提及，现有 F veto 应拒绝，不因引用内容看起来像动作就创建任务。"
+    },
+    {
+      "id": "m3n-real-cancellation",
+      "category": "real_cancellation",
+      "messages": [
+        {
+          "speaker": "陆衡",
+          "text": "项目：棠舟项目；负责人：陆衡；完成库存盘点，截止日期：2031-07-09。"
+        },
+        {
+          "speaker": "陆衡",
+          "text": "取消上述任务，今天停止执行。"
+        }
+      ],
+      "expected": [],
+      "rejected_descriptions": ["完成库存盘点"],
+      "notes": "后续消息明确撤回前一任务；这是实际取消，不应释放第一条消息中的候选。"
+    },
+    {
+      "id": "m3n-discussion-only-cancellation",
+      "category": "discussion_cancellation",
+      "messages": [
+        {
+          "speaker": "程岚",
+          "text": "项目：绛云项目；负责人：程岚；完成风险回放，截止日期：2031-07-14。"
+        },
+        {
+          "speaker": "顾言",
+          "text": "会议仅讨论是否取消上述任务，尚未作出变更。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：绛云项目；负责人：程岚；完成风险回放，截止日期：2031-07-14。",
+          "description_parts": ["完成风险回放"],
+          "owner": "程岚",
+          "deadline_text": "2031-07-14",
+          "project": "绛云项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "仅讨论是否取消且明确尚未变更，不等于真实取消；讨论消息本身也不是任务。"
+    },
+    {
+      "id": "m3n-conditional-task",
+      "category": "conditional_task",
+      "messages": [
+        {
+          "speaker": "魏宁",
+          "text": "若审批通过，才执行密钥轮换。"
+        }
+      ],
+      "expected": [],
+      "rejected_descriptions": ["密钥轮换"],
+      "notes": "这是带前提的计划；按当前 F veto 保守拒绝，不把条件动作当作已确认任务。"
+    },
+    {
+      "id": "m3n-missing-owner",
+      "category": "missing_owner",
+      "messages": [
+        {
+          "speaker": "叶澄",
+          "text": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。",
+          "description_parts": ["完成终端盘点"],
+          "owner": null,
+          "deadline_text": "2031-08-14",
+          "project": "珊瑚项目",
+          "vendor": "远岑"
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "消息 speaker 不是负责人声明；不得把当前说话人自动填入 owner。"
+    },
+    {
+      "id": "m3n-missing-date",
+      "category": "missing_date",
+      "messages": [
+        {
+          "speaker": "闻溪",
+          "text": "项目：白榆项目；负责人：闻溪；完成审批回执归档。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：白榆项目；负责人：闻溪；完成审批回执归档。",
+          "description_parts": ["完成审批回执归档"],
+          "owner": "闻溪",
+          "deadline_text": null,
+          "project": "白榆项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "任务成立但没有截止日期；不得从消息时间或其他消息补造 deadline。"
+    },
+    {
+      "id": "m3n-message-order-reversed",
+      "category": "message_order_change",
+      "messages": [
+        {
+          "speaker": "宋宁",
+          "text": "安排灰度回滚演练。"
+        },
+        {
+          "speaker": "陆扬",
+          "text": "项目：临川项目；负责人：陆扬；完成支付对账，截止日期：2031-09-18。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "安排灰度回滚演练。",
+          "description_parts": ["灰度回滚演练"],
+          "owner": null,
+          "deadline_text": null,
+          "project": null,
+          "vendor": null
+        },
+        {
+          "text": "项目：临川项目；负责人：陆扬；完成支付对账，截止日期：2031-09-18。",
+          "description_parts": ["完成支付对账"],
+          "owner": "陆扬",
+          "deadline_text": "2031-09-18",
+          "project": "临川项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "先出现的无字段动作与后出现的有字段任务顺序相反；后续字段不能回填到前一候选。"
+    },
+    {
+      "id": "m3n-mixed-zh-en",
+      "category": "mixed_language",
+      "messages": [
+        {
+          "speaker": "Mira",
+          "text": "我负责 project Atlas 的 API smoke test，vendor: Northstar，deadline: 2031-10-02。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "我负责 project Atlas 的 API smoke test，vendor: Northstar，deadline: 2031-10-02。",
+          "description_parts": ["API smoke test"],
+          "owner": "Mira",
+          "deadline_text": "2031-10-02",
+          "project": "Atlas",
+          "vendor": "Northstar"
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "中文第一人称与 English project/vendor/deadline 同时出现；owner 只能由当前 speaker 证据绑定。"
+    },
+    {
+      "id": "m3n-multiple-tasks-shared-context",
+      "category": "multiple_tasks_shared_context",
+      "messages": [
+        {
+          "speaker": "任川",
+          "text": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。"
+        }
+      ],
+      "expected": [
+        {
+          "text": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。",
+          "description_parts": ["完成导出报表"],
+          "owner": "任川",
+          "deadline_text": "2031-10-11",
+          "project": "白鹭项目",
+          "vendor": null
+        },
+        {
+          "text": "项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。",
+          "description_parts": ["安排清理临时桶"],
+          "owner": "任川",
+          "deadline_text": "2031-10-13",
+          "project": "白鹭项目",
+          "vendor": null
+        }
+      ],
+      "rejected_descriptions": [],
+      "notes": "同一消息中共享负责人和项目的两个动作仍是两个候选，日期也必须分别绑定。"
+    },
+    {
+      "id": "m3n-quoted-english-task",
+      "category": "quoted_task_mixed_language",
+      "messages": [
+        {
+          "speaker": "韩露",
+          "text": "引用记录：“Finish the audit export.”，本周没有执行安排。"
+        }
+      ],
+      "expected": [],
+      "rejected_descriptions": ["Finish the audit export"],
+      "notes": "English task phrase remains quoted and has no current assignment，引用不能成为任务来源。"
+    },
+    {
+      "id": "m3n-suggested-unapproved",
+      "category": "suggested_task",
+      "messages": [
+        {
+          "speaker": "周谨",
+          "text": "建议下周重做数据回滚，尚未批准，也没有排期。"
+        }
+      ],
+      "expected": [],
+      "rejected_descriptions": ["重做数据回滚"],
+      "notes": "建议且未批准的工作不是已确认任务；保留为拒绝样本以检验非承诺范围。"
+    }
+  ]
+}

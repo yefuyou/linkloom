@@ -1,0 +1,2620 @@
+{
+  "execution": "OFFLINE_ORACLE_AND_ADVERSARIAL_SCRIPTED_OUTPUTS",
+  "profile": "legacy",
+  "real_model_semantic_quality": "NOT_EVALUATED",
+  "real_provider_requests": 0,
+  "interpretation": "Gold supplies positive proposals; metrics measure Host contracts, not model inference.",
+  "datasets": {
+    "dev": {
+      "sha256": "a9de93c474d7294df99a506f5e44dacdd94dee55fe35fa3ca30a2b086e23182d",
+      "totals": {
+        "expected": 13,
+        "accepted": 13,
+        "matched": 13,
+        "false_rejections": 0,
+        "false_acceptances": 0,
+        "erroneous_groups": 0,
+        "fields_correct": 65,
+        "fields_total": 65,
+        "evidence_valid": 13,
+        "evidence_total": 13,
+        "calls": 12,
+        "recall": 1.0,
+        "precision": 1.0,
+        "field_accuracy": 1.0,
+        "evidence_validity": 1.0
+      },
+      "cases": [
+        {
+          "id": "D01",
+          "category": "cross_message_addition",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "b3e66231a411adc2067683c3ca0a0ca4e975f642abb6c09b0801acfeadded0e1"
+          ],
+          "prompt_sha256": [
+            "d3f1120f2b5cc23913a4c078696a36a0f40aa6545dd01c07657086a0ea38d6dc"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_7d57f117c7a7c6bb2abaf3ccf10579bedcb7360ed2ea68fbfa97c0f1b74e3a47",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D01",
+                "artifact_version_id": "artifact_v1_9269bf13833f652886ce65c68bd9b6118e2b0f5deaaaa93a135d3a8a55f377cc",
+                "source_ref": "artifact://m3n-public/D01",
+                "content_hash": "34399d9fc91caf5e05fbe70585cc7e135cee30957b8ad86a5ec570e61f380e9d",
+                "ordinal": 0,
+                "message_id": "message_v1_14d9ee94e9e8c19c5667732d67bc6be72a55f8f0905a9abb1eef37b88301e12f",
+                "segment_id": "segment_v1_8ff17f0e06784d089054a71151357bdba568b34dfa9d57a96691f44c324b7890",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8ff17f0e06784d089054a71151357bdba568b34dfa9d57a96691f44c324b7890",
+                "char_start": 27,
+                "char_end": 65,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责松柏项目的修订告警手册，供应商：星河；截止日期：2031-03-20。",
+                "quote_sha256": "135dcc3fabae7b59b049e6bf13b4c2f603af04b9c0dbb9220cda7ece77b1eb97"
+              },
+              "raw_text": "我负责松柏项目的修订告警手册，供应商：星河；截止日期：2031-03-20。",
+              "description": "修订告警手册",
+              "owner": "夏宁",
+              "deadline": "2031-03-20",
+              "deadline_text": "2031-03-20",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "松柏项目",
+              "vendor": "星河",
+              "extraction_status": "EXTRACTED",
+              "validation_status": "VALID",
+              "unknown_fields": [],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责松柏项目的修订告警手册，供应商：星河；截止日期：2031-03-20。",
+                  "char_start": 27,
+                  "char_end": 65,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "修订告警手册",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 27,
+                  "char_end": 30,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "夏宁",
+                  "char_start": 23,
+                  "char_end": 25,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "project",
+                  "quote": "松柏项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "vendor",
+                  "quote": "星河",
+                  "char_start": 46,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-03-20",
+                  "char_start": 49,
+                  "char_end": 64,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_a23d7810fd1b245722b4e17d7329e23dcfb0a386d8725f5ffeacfaef0724166f",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D01",
+                "artifact_version_id": "artifact_v1_9269bf13833f652886ce65c68bd9b6118e2b0f5deaaaa93a135d3a8a55f377cc",
+                "source_ref": "artifact://m3n-public/D01",
+                "content_hash": "34399d9fc91caf5e05fbe70585cc7e135cee30957b8ad86a5ec570e61f380e9d",
+                "ordinal": 1,
+                "message_id": "message_v1_ab55346dc1d0df9a262ccadb081e5a190d232dc2c4482bda28da5a48ed5c0662",
+                "segment_id": "segment_v1_6d3b7fac71bd9da8bd23850917ed33220535e4a70b500745e83da20df2be2755",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6d3b7fac71bd9da8bd23850917ed33220535e4a70b500745e83da20df2be2755",
+                "char_start": 93,
+                "char_end": 109,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "修订告警手册还包括录制排障演示。",
+                "quote_sha256": "64e41009489412e6cd88f22d04406a12103c671b14e0be2fcff8b2f3ca2ab07c"
+              },
+              "raw_text": "修订告警手册还包括录制排障演示。",
+              "description": "录制排障演示",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "修订告警手册还包括录制排障演示。",
+                  "char_start": 93,
+                  "char_end": 109,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "录制排障演示",
+                  "char_start": 102,
+                  "char_end": 108,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D02",
+          "category": "same_name_distinct_tasks",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "ad8c1cfd6b0f7cfacdeb803004fb33c8e120713e2a5b67c079c844723974fb7c"
+          ],
+          "prompt_sha256": [
+            "5cb56dd62f6f6974af299e840283cde239a9bd692bf8710f5b43bbebcbe0b21b"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_09c5fff38fe9e2627a8954bcd2328335df1d832563e3fad240c8effa78d4e0d4",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D02",
+                "artifact_version_id": "artifact_v1_876d7191317c0753f12c4f55d9916980d5c9edec3e494eeb9836070f86c2bdb0",
+                "source_ref": "artifact://m3n-public/D02",
+                "content_hash": "72b78150386e209ffb21bfd34d27ac5448fbaeaffe69ead478656116a8700ff1",
+                "ordinal": 0,
+                "message_id": "message_v1_fb0bbf38640ae36a837768a973b0c54c5d97f6eba5168ea4f489e5f831a881ef",
+                "segment_id": "segment_v1_14192c12f497552a3c6eb2dbaea56a4816fa72ad6cd3a5390a2789f532988a9e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_14192c12f497552a3c6eb2dbaea56a4816fa72ad6cd3a5390a2789f532988a9e",
+                "char_start": 27,
+                "char_end": 63,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：松柏；负责人：夏宁；整理发布清单；截止日期：2031-03-21。",
+                "quote_sha256": "5e9e95c59b89a9759214e966a973ce94d56f3f45e82226bcc84197fd9ba423b2"
+              },
+              "raw_text": "项目：松柏；负责人：夏宁；整理发布清单；截止日期：2031-03-21。",
+              "description": "整理发布清单",
+              "owner": "夏宁",
+              "deadline": "2031-03-21",
+              "deadline_text": "2031-03-21",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "松柏",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：松柏；负责人：夏宁；整理发布清单；截止日期：2031-03-21。",
+                  "char_start": 27,
+                  "char_end": 63,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "整理发布清单",
+                  "char_start": 40,
+                  "char_end": 46,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：夏宁",
+                  "char_start": 33,
+                  "char_end": 39,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "松柏",
+                  "char_start": 30,
+                  "char_end": 32,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-03-21",
+                  "char_start": 47,
+                  "char_end": 62,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_f075099c272809f77988bf5c42fbc80f90b91a330fd9ad9a6c52178fa8fd4e95",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D02",
+                "artifact_version_id": "artifact_v1_876d7191317c0753f12c4f55d9916980d5c9edec3e494eeb9836070f86c2bdb0",
+                "source_ref": "artifact://m3n-public/D02",
+                "content_hash": "72b78150386e209ffb21bfd34d27ac5448fbaeaffe69ead478656116a8700ff1",
+                "ordinal": 1,
+                "message_id": "message_v1_67a4ecaec793876a27e1691465fe9e432f0ab9e292c1e2e4731564c92396830a",
+                "segment_id": "segment_v1_b55e41b01d2ac77b6ac86d1c730de424ceb4047ad26d909e81a30c1188800c0f",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b55e41b01d2ac77b6ac86d1c730de424ceb4047ad26d909e81a30c1188800c0f",
+                "char_start": 91,
+                "char_end": 127,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "项目：海棠；负责人：何川；整理发布清单；截止日期：2031-03-22。",
+                "quote_sha256": "4371e1fb39cc3be90823e979b7e7b8cee254ac006725782dcdec856c50b58278"
+              },
+              "raw_text": "项目：海棠；负责人：何川；整理发布清单；截止日期：2031-03-22。",
+              "description": "整理发布清单",
+              "owner": "何川",
+              "deadline": "2031-03-22",
+              "deadline_text": "2031-03-22",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "海棠",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：海棠；负责人：何川；整理发布清单；截止日期：2031-03-22。",
+                  "char_start": 91,
+                  "char_end": 127,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "整理发布清单",
+                  "char_start": 104,
+                  "char_end": 110,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：何川",
+                  "char_start": 97,
+                  "char_end": 103,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "海棠",
+                  "char_start": 94,
+                  "char_end": 96,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-03-22",
+                  "char_start": 111,
+                  "char_end": 126,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D03",
+          "category": "same_owner_multiple_projects",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "15ac912999df9269b0ecb9c8a061ad45f9ecb77735b1620cc02c4a104e7639fe"
+          ],
+          "prompt_sha256": [
+            "4dc6ed762f75fc8d436c4214aac09eb8d5b8bcef18c14dc4075c07ff71633e5d"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_46f8cc45d4767e29aae8bba6feab7e3a3b1f3b7ce53d3a46b5c905b1c7a0bd53",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D03",
+                "artifact_version_id": "artifact_v1_a071d738a7b4413a225c7dced32914b09d2945d52daaf12b22a056edb5baf852",
+                "source_ref": "artifact://m3n-public/D03",
+                "content_hash": "7d1e0a289160079fcb84115712af86a6297a5219eccf5cd5a711c15b91565e84",
+                "ordinal": 0,
+                "message_id": "message_v1_de5e09db5ddc64a48a456b667e1c3ec0f97833e47595a632eafd9c442950d7b8",
+                "segment_id": "segment_v1_c375c2d92f0008951788660b631e050e9eb5d99585f03810fe3394cbf9915cb3",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c375c2d92f0008951788660b631e050e9eb5d99585f03810fe3394cbf9915cb3",
+                "char_start": 27,
+                "char_end": 47,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：银杏；负责人：叶岑；编写容量预案。",
+                "quote_sha256": "686ec7acec3cc60af0d9e1f338a9b500b92c69818102f6fe3d73502f506440f7"
+              },
+              "raw_text": "项目：银杏；负责人：叶岑；编写容量预案。",
+              "description": "编写容量预案",
+              "owner": "叶岑",
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": "银杏",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "deadline",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：银杏；负责人：叶岑；编写容量预案。",
+                  "char_start": 27,
+                  "char_end": 47,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "编写容量预案",
+                  "char_start": 40,
+                  "char_end": 46,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：叶岑",
+                  "char_start": 33,
+                  "char_end": 39,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "银杏",
+                  "char_start": 30,
+                  "char_end": 32,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_6b20445e7730317bcc5deb4fc9580bebb8d5462876ceef5939b357367d1ed331",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D03",
+                "artifact_version_id": "artifact_v1_a071d738a7b4413a225c7dced32914b09d2945d52daaf12b22a056edb5baf852",
+                "source_ref": "artifact://m3n-public/D03",
+                "content_hash": "7d1e0a289160079fcb84115712af86a6297a5219eccf5cd5a711c15b91565e84",
+                "ordinal": 1,
+                "message_id": "message_v1_ecb5de7063823d46a94a07e871fdb888c65608e8ab41958712c0eb5cc017de7d",
+                "segment_id": "segment_v1_a0b497a196bb313e83a9947e62ae41e17de41ea3a9a4eb8aa82f8d0b532a9f02",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a0b497a196bb313e83a9947e62ae41e17de41ea3a9a4eb8aa82f8d0b532a9f02",
+                "char_start": 75,
+                "char_end": 95,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "项目：木棉；负责人：叶岑；校验审计导出。",
+                "quote_sha256": "6a88fe86c9771adfca8f30a466a3460403bb7d28d6556ba3e446d8a4aa9ea709"
+              },
+              "raw_text": "项目：木棉；负责人：叶岑；校验审计导出。",
+              "description": "校验审计导出",
+              "owner": "叶岑",
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": "木棉",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "deadline",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：木棉；负责人：叶岑；校验审计导出。",
+                  "char_start": 75,
+                  "char_end": 95,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "校验审计导出",
+                  "char_start": 88,
+                  "char_end": 94,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：叶岑",
+                  "char_start": 81,
+                  "char_end": 87,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "木棉",
+                  "char_start": 78,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D04",
+          "category": "quoted_work",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "7729d531837fd5d22f60ff0a1eeae70cba4623a3834e319044a5b4ecccc3363e"
+          ],
+          "prompt_sha256": [
+            "d023957960ea82a3181a58cce5e0756babae1a331ca1120dbc7b2a5bee308888"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "D05",
+          "category": "actual_cancel",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "061e37287d3eae091171f3ac7af1b274c4a4508ad3ec327346354240746c96af"
+          ],
+          "prompt_sha256": [
+            "998b72572a330067bb569fcf55f140a82ffb291fe230b428cfa699b5ce9e6c5b"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "D06",
+          "category": "discussed_cancel",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "16d3341dce4381fa3af8d97d247747f1ee8831e1ba472f1e802a9be1355a5a0d"
+          ],
+          "prompt_sha256": [
+            "1e1b4c9ce3509032ccc062af435d5afb984fd6968d955e4329be17e0cd877eea"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_3ca7ad314bc3da6d674e83cfed1a5858a95cdbb6d78fa2c60d76a40335f6098c",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D06",
+                "artifact_version_id": "artifact_v1_f8407ca0a6df6a6aee73cde8d91a37532daf883f26ede82fe9dd99e7d2b17f55",
+                "source_ref": "artifact://m3n-public/D06",
+                "content_hash": "b5bc69b910ecdb13c50cb9ed231f3ba630d2043d8504617fd883f301f516f53b",
+                "ordinal": 0,
+                "message_id": "message_v1_00764236e6c17e389e09189f2c1ee23eb3be493632b0942b98634c55f8cfec64",
+                "segment_id": "segment_v1_b5454ad520f78a2c47408e0318c42e1149d6242f24adadd859344cb1d0f8c8a5",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b5454ad520f78a2c47408e0318c42e1149d6242f24adadd859344cb1d0f8c8a5",
+                "char_start": 27,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "安排汇总设备清单。",
+                "quote_sha256": "3dd016a56b9b1345a02b9e2c8519a227ccc32f5f486b6d008c39ccaf3509b3db"
+              },
+              "raw_text": "安排汇总设备清单。",
+              "description": "汇总设备清单",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "安排汇总设备清单。",
+                  "char_start": 27,
+                  "char_end": 36,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "汇总设备清单",
+                  "char_start": 29,
+                  "char_end": 35,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D07",
+          "category": "conditional_work",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "7fd94dac89b7e5f8647baafd6b525defd38fee40d62e1cad72e60b2071017dbb"
+          ],
+          "prompt_sha256": [
+            "01d5a63a2b79212c57c56940062723f6411b661381ddb164a1d1aa0b1941b3c7"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "D08",
+          "category": "missing_fields",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "8a5fc1b5352d71c3fe346e3188cdf24530d348453e542d098b040f734b359013"
+          ],
+          "prompt_sha256": [
+            "848fe66fba2b2534de2b9e5a7a47ec00829269c1cc2b5cfebbcad336aaa0b33a"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_fd4b90bcfeed35f632bc50296d343ee53124874baf878374f1fbcdfd29f65892",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D08",
+                "artifact_version_id": "artifact_v1_0c1661e7c356225a87175b39a8f25ff40a04f545ecda9a30e0a8f64d8d020e75",
+                "source_ref": "artifact://m3n-public/D08",
+                "content_hash": "180e9827ef71cb95f2c660942f7a253a3925f3ecdc5a70020c959333df12eb91",
+                "ordinal": 0,
+                "message_id": "message_v1_29bb23d2b3cf89c29659e1c562f4416d43f70111feda77203111c7de88932608",
+                "segment_id": "segment_v1_6c1775c6456463b0f99ab6f666447d2e8abd7e0c3d0c476f1b3a5031252837ae",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6c1775c6456463b0f99ab6f666447d2e8abd7e0c3d0c476f1b3a5031252837ae",
+                "char_start": 27,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "安排补录访问样例。",
+                "quote_sha256": "cb8310bd20f25dea7e7e4a5876b4231c83d7f786bc230efef36484e59b2b74ca"
+              },
+              "raw_text": "安排补录访问样例。",
+              "description": "补录访问样例",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "安排补录访问样例。",
+                  "char_start": 27,
+                  "char_end": 36,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "补录访问样例",
+                  "char_start": 29,
+                  "char_end": 35,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D09",
+          "category": "reordered_messages",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "c987b7ebf0d469d48279ca3d1ca5bfa4b206ad0afdc40e2578c2695095964b5e"
+          ],
+          "prompt_sha256": [
+            "32046a83d34b78a26c9b01eb34ebe2b5abb98a66ab36e45552ffea8ea151b45f"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_88200eb52070c51f906222b96be45a57ecf92af72888fae78e2417829ae91574",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D09",
+                "artifact_version_id": "artifact_v1_902fe82751a86b2637b1ccec95ea59f12b7f07a47e067abc7ec5bad63df00caa",
+                "source_ref": "artifact://m3n-public/D09",
+                "content_hash": "c94f76c40aa6ee4462db3461b9888ef68e4d488066a959edc3cbb56c145fa47c",
+                "ordinal": 0,
+                "message_id": "message_v1_8285401622d3ae97eff39270cef804964ed62b62e961b859774a9eb063142a29",
+                "segment_id": "segment_v1_7eae52836cf06a27defc2c2c712fe8316f8bdfda4340e01986bf6dd1019754ef",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7eae52836cf06a27defc2c2c712fe8316f8bdfda4340e01986bf6dd1019754ef",
+                "char_start": 27,
+                "char_end": 43,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "打包离线工具还包括附上使用说明。",
+                "quote_sha256": "293b9e9b16d77638d0cc233b17fd5a00cc8d25d5b6fda229dd771396976edbee"
+              },
+              "raw_text": "打包离线工具还包括附上使用说明。",
+              "description": "附上使用说明",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "打包离线工具还包括附上使用说明。",
+                  "char_start": 27,
+                  "char_end": 43,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "附上使用说明",
+                  "char_start": 36,
+                  "char_end": 42,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_4750683a1064bd4e262e557317e2e2a38ce4e07ea88a5068b78e964d2241cc5c",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D09",
+                "artifact_version_id": "artifact_v1_902fe82751a86b2637b1ccec95ea59f12b7f07a47e067abc7ec5bad63df00caa",
+                "source_ref": "artifact://m3n-public/D09",
+                "content_hash": "c94f76c40aa6ee4462db3461b9888ef68e4d488066a959edc3cbb56c145fa47c",
+                "ordinal": 1,
+                "message_id": "message_v1_33670a60f0350b20dd15189fe8379ff1d473e6b1984c71ec33c7c4a84f9da2fb",
+                "segment_id": "segment_v1_81594dfa18c6848a52eab72ad0886f9ecca43e790e796041654d09d740e4c1d4",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81594dfa18c6848a52eab72ad0886f9ecca43e790e796041654d09d740e4c1d4",
+                "char_start": 71,
+                "char_end": 81,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "我负责打包离线工具。",
+                "quote_sha256": "8571b64fae625d24b43d65a7489151315b90f1bf9186ccbaeac0b750817d156b"
+              },
+              "raw_text": "我负责打包离线工具。",
+              "description": "打包离线工具",
+              "owner": "夏宁",
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责打包离线工具。",
+                  "char_start": 71,
+                  "char_end": 81,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "打包离线工具",
+                  "char_start": 74,
+                  "char_end": 80,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 71,
+                  "char_end": 74,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "夏宁",
+                  "char_start": 67,
+                  "char_end": 69,
+                  "basis": "SPEAKER"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D10",
+          "category": "mixed_languages",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "898d6a437a06c8e5ba3f8b2ab9e1af2488a814b6d64b96a4174b68d1b6aae0d2"
+          ],
+          "prompt_sha256": [
+            "05deef4112cc95c34a310e63ed016c8e7f59677b56951919dc7818e5c3fb07ef"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_afe99530fdbea8048f5172a8e560dd66ab5ab9577e33b98aed4708f17103341a",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D10",
+                "artifact_version_id": "artifact_v1_e5786ea38b73351738d5031365ea576d010f5686b64258946efee335e90e85e6",
+                "source_ref": "artifact://m3n-public/D10",
+                "content_hash": "6876325c627a5680c76237e6760bf3de3f5db484c78207252957026d3d3eccfc",
+                "ordinal": 0,
+                "message_id": "message_v1_f5e3947b2cf0b242e1b3539a3dfe4dbb886dfa95eff7ed005dbaa76722e552d1",
+                "segment_id": "segment_v1_c7c12873f7dd0871800fc54886fa6c64cbb2cf65729a9da9047c9a1928d0277f",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c7c12873f7dd0871800fc54886fa6c64cbb2cf65729a9da9047c9a1928d0277f",
+                "char_start": 28,
+                "char_end": 87,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "I will handle 更新部署说明; project: Cedar; deadline: 2031-03-24.",
+                "quote_sha256": "136e206c8c141590bcaf7e2b74c07bd5e7c202caf9092dc71664e24de3728661"
+              },
+              "raw_text": "I will handle 更新部署说明; project: Cedar; deadline: 2031-03-24.",
+              "description": "更新部署说明",
+              "owner": "Ada",
+              "deadline": "2031-03-24",
+              "deadline_text": "2031-03-24",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "Cedar",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "I will handle 更新部署说明; project: Cedar; deadline: 2031-03-24.",
+                  "char_start": 28,
+                  "char_end": 87,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "更新部署说明",
+                  "char_start": 42,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "I will handle",
+                  "char_start": 28,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "Ada",
+                  "char_start": 23,
+                  "char_end": 26,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "project",
+                  "quote": "Cedar",
+                  "char_start": 59,
+                  "char_end": 64,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "deadline: 2031-03-24",
+                  "char_start": 66,
+                  "char_end": 86,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_bd1d628d38ee68a2788aebbe624d6203274d473dcc3ec4b2cd578713aedcdc83",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D10",
+                "artifact_version_id": "artifact_v1_e5786ea38b73351738d5031365ea576d010f5686b64258946efee335e90e85e6",
+                "source_ref": "artifact://m3n-public/D10",
+                "content_hash": "6876325c627a5680c76237e6760bf3de3f5db484c78207252957026d3d3eccfc",
+                "ordinal": 1,
+                "message_id": "message_v1_08cc2e31dde913503d3f77254dca32ef7bff4a8087de527d88f7cfc000098713",
+                "segment_id": "segment_v1_74c6af19a97424686a46379f7951b8399bc1260f4d7779895af88cb673a406d6",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_74c6af19a97424686a46379f7951b8399bc1260f4d7779895af88cb673a406d6",
+                "char_start": 115,
+                "char_end": 166,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "更新部署说明 also includes record a rollback walkthrough.",
+                "quote_sha256": "41ff3a611525ddefa35031630a676a4524a3ed382ddfbfc0dc2ffda3c5fb7006"
+              },
+              "raw_text": "更新部署说明 also includes record a rollback walkthrough.",
+              "description": "record a rollback walkthrough",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "更新部署说明 also includes record a rollback walkthrough.",
+                  "char_start": 115,
+                  "char_end": 166,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "record a rollback walkthrough",
+                  "char_start": 136,
+                  "char_end": 165,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D11",
+          "category": "missing_deadline_year",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "ed790bd34ae085667b16e24385c5d5cbb1dd536f7f8ea4cec6701c75d0f51d26"
+          ],
+          "prompt_sha256": [
+            "cd508fb6e3234877f5e1cce66bd0fa3ed73da8c48ea4d90aac82204f29044313"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_2e67736dfa1415e8c6179a131659c8375346f02067a5802ebfeb34f248c2590e",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "D11",
+                "artifact_version_id": "artifact_v1_32e386d6079347591fc5296b90f72e3c32f751cbc6c0ef9118a7c7a7cb862f4e",
+                "source_ref": "artifact://m3n-public/D11",
+                "content_hash": "28ef56060790499c9f0b3427322befbceed06ddc132ba6b2085d225ba97d9613",
+                "ordinal": 0,
+                "message_id": "message_v1_4c3d635293aa3303101b6626a20afc14f5377c75d2a7438c22d2a12956de92b3",
+                "segment_id": "segment_v1_e1df5c0fd7881d194aa0b162dfb6bd4f02cf274a012bdf63e722bc6a0f5d30a7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1df5c0fd7881d194aa0b162dfb6bd4f02cf274a012bdf63e722bc6a0f5d30a7",
+                "char_start": 27,
+                "char_end": 54,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "负责人：夏宁；安排检查恢复手册；截止日期：3月25日。",
+                "quote_sha256": "59355a0f7d68e8f1220b5dabc5b1b062d11c822adab3febf53a640ab43918455"
+              },
+              "raw_text": "负责人：夏宁；安排检查恢复手册；截止日期：3月25日。",
+              "description": "检查恢复手册",
+              "owner": "夏宁",
+              "deadline": null,
+              "deadline_text": "3月25日",
+              "deadline_precision": "MONTH_DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [
+                "DEADLINE_YEAR_MISSING"
+              ],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "负责人：夏宁；安排检查恢复手册；截止日期：3月25日。",
+                  "char_start": 27,
+                  "char_end": 54,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "检查恢复手册",
+                  "char_start": 36,
+                  "char_end": 42,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：夏宁",
+                  "char_start": 27,
+                  "char_end": 33,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：3月25日",
+                  "char_start": 43,
+                  "char_end": 53,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "D12",
+          "category": "irrelevant_source_instruction",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "686b14717c135d9661f6e24ee9be423d6f1d96d542d6d93238a00bb75339bdf4"
+          ],
+          "prompt_sha256": [
+            "c3b6b08ead78ca9229caed68f74f864d00e934be77c2e6865d079bb69d33a26b"
+          ],
+          "observations": [],
+          "failures": []
+        }
+      ]
+    },
+    "heldout": {
+      "sha256": "35b4a2efd5f75f39b8e606a3f81e5acea7745d9fc9d4e05f7e983bcf62da4816",
+      "totals": {
+        "expected": 14,
+        "accepted": 14,
+        "matched": 14,
+        "false_rejections": 0,
+        "false_acceptances": 0,
+        "erroneous_groups": 0,
+        "fields_correct": 70,
+        "fields_total": 70,
+        "evidence_valid": 14,
+        "evidence_total": 14,
+        "calls": 14,
+        "recall": 1.0,
+        "precision": 1.0,
+        "field_accuracy": 1.0,
+        "evidence_validity": 1.0
+      },
+      "cases": [
+        {
+          "id": "m3n-cross-message-supplement",
+          "category": "cross_message_supplement",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "3ada5553d7532b83e8417d9df23eff4f5cc282b857d7d0e159e329c29d478319"
+          ],
+          "prompt_sha256": [
+            "27504a71900a9f79823a919c814b265f179d465e86142ae6a6fca84aec70b339"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_98e5fa177fd41facc6f20ab4a99fb5f5786ab97bbfb77f6fe66a045a7c3c08f2",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-cross-message-supplement",
+                "artifact_version_id": "artifact_v1_c3871e77e9f3c15753562245d1d85480acd7e39ff1381ca85b9658dfaf2cadf1",
+                "source_ref": "artifact://m3n-public/m3n-cross-message-supplement",
+                "content_hash": "380e50ef47f674cda07b21de4da85b847a31764460f76cb4c94233b657b5ae6f",
+                "ordinal": 0,
+                "message_id": "message_v1_41ef4081b03e825158569986114bb84d8e1bc9269bcf25afa13af22c29fb666b",
+                "segment_id": "segment_v1_0713dfe0ca1454a825e1beee256ef8a5bafb937ff575346638076501b3236d81",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0713dfe0ca1454a825e1beee256ef8a5bafb937ff575346638076501b3236d81",
+                "char_start": 27,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。",
+                "quote_sha256": "ce24fc42dc37253d54e960fdb6a2b259b3eeab8807a82119834075cc28c4cd6e"
+              },
+              "raw_text": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。",
+              "description": "完成支付回归",
+              "owner": "顾遥",
+              "deadline": "2031-05-12",
+              "deadline_text": "2031-05-12",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "霁海项目",
+              "vendor": "岚桥",
+              "extraction_status": "EXTRACTED",
+              "validation_status": "VALID",
+              "unknown_fields": [],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。",
+                  "char_start": 27,
+                  "char_end": 72,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成支付回归",
+                  "char_start": 49,
+                  "char_end": 55,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：顾遥",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "霁海项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "vendor",
+                  "quote": "岚桥",
+                  "char_start": 46,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-05-12",
+                  "char_start": 56,
+                  "char_end": 71,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_4b7d8f3faca95a73a291aef049ce43bb1652910ccd9a388e36a53787702f1cbc",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-cross-message-supplement",
+                "artifact_version_id": "artifact_v1_c3871e77e9f3c15753562245d1d85480acd7e39ff1381ca85b9658dfaf2cadf1",
+                "source_ref": "artifact://m3n-public/m3n-cross-message-supplement",
+                "content_hash": "380e50ef47f674cda07b21de4da85b847a31764460f76cb4c94233b657b5ae6f",
+                "ordinal": 1,
+                "message_id": "message_v1_3ed31a7f16424f6f50bd7f64225b850c278ff299137ac58fc2c5db7db8bc0944",
+                "segment_id": "segment_v1_18ba4cd393f8c77b4f83754f46bf9f9b5664a8dd87a3c1822d11da617133ea38",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_18ba4cd393f8c77b4f83754f46bf9f9b5664a8dd87a3c1822d11da617133ea38",
+                "char_start": 100,
+                "char_end": 109,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "安排夜间告警演练。",
+                "quote_sha256": "6083baa4a6c44224f18ab2628026449533eae37e37b40b3cbc5fd21a9b9e39d2"
+              },
+              "raw_text": "安排夜间告警演练。",
+              "description": "夜间告警演练",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "安排夜间告警演练。",
+                  "char_start": 100,
+                  "char_end": 109,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "夜间告警演练",
+                  "char_start": 102,
+                  "char_end": 108,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-same-name-different-projects",
+          "category": "same_name_different_tasks",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "5b872ae4c847fdb0ed13dd753cb9a77a4b25c2e67e5a7e38400d02d6f181a47e"
+          ],
+          "prompt_sha256": [
+            "002c7fbcefccd961eb21adbd38be6acbce69719e8910ff8782b719e9d1149a02"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_da8d5864fe70797485bf3c264ee57d33761ab96a3003cdcba7037767a1b61d69",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-same-name-different-projects",
+                "artifact_version_id": "artifact_v1_2e3d942e6ac89d52a6419aa9b439aa2ef418296d70226cb98e3c8bc200e7ab0f",
+                "source_ref": "artifact://m3n-public/m3n-same-name-different-projects",
+                "content_hash": "46882f0500236048e2c359eb5df09faa9990711be942ef740c8ddaae849458be",
+                "ordinal": 0,
+                "message_id": "message_v1_985f6ff4d52e7a0c29295dc2bccdc37e1419bcfca8e8285bdade7326433631e2",
+                "segment_id": "segment_v1_bd1909929d9acc59ceca9c4749de848184ce653663f418685a8df0dd18eabc95",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bd1909929d9acc59ceca9c4749de848184ce653663f418685a8df0dd18eabc95",
+                "char_start": 27,
+                "char_end": 63,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：潮生项目；负责人：苏禾；发布月报，截止日期：2031-06-03。",
+                "quote_sha256": "3218f62d97e3fcf8b28564f29c6a5972d0df87bd09e90de1791240d76a04e421"
+              },
+              "raw_text": "项目：潮生项目；负责人：苏禾；发布月报，截止日期：2031-06-03。",
+              "description": "发布月报",
+              "owner": "苏禾",
+              "deadline": "2031-06-03",
+              "deadline_text": "2031-06-03",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "潮生项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：潮生项目；负责人：苏禾；发布月报，截止日期：2031-06-03。",
+                  "char_start": 27,
+                  "char_end": 63,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "发布月报",
+                  "char_start": 42,
+                  "char_end": 46,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：苏禾",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "潮生项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-06-03",
+                  "char_start": 47,
+                  "char_end": 62,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_2e8a6d91ab9fb3f0ae84f78290c448b380bec50a4281686c2fdab462139c8455",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-same-name-different-projects",
+                "artifact_version_id": "artifact_v1_2e3d942e6ac89d52a6419aa9b439aa2ef418296d70226cb98e3c8bc200e7ab0f",
+                "source_ref": "artifact://m3n-public/m3n-same-name-different-projects",
+                "content_hash": "46882f0500236048e2c359eb5df09faa9990711be942ef740c8ddaae849458be",
+                "ordinal": 1,
+                "message_id": "message_v1_42ecdcdff22d9ec32bb6a8ac07414c8cae9187fbd39401abde41101685d90994",
+                "segment_id": "segment_v1_7acc6e1a5b481a270f9a9b378f52a56a86757bafcd178743e697f3e6cb168778",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7acc6e1a5b481a270f9a9b378f52a56a86757bafcd178743e697f3e6cb168778",
+                "char_start": 91,
+                "char_end": 127,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "项目：栖云项目；负责人：苏禾；发布月报，截止日期：2031-06-04。",
+                "quote_sha256": "8c0ecbea91a4af14194548192ca38d48c630915b6900ae326f80796d5fb46a91"
+              },
+              "raw_text": "项目：栖云项目；负责人：苏禾；发布月报，截止日期：2031-06-04。",
+              "description": "发布月报",
+              "owner": "苏禾",
+              "deadline": "2031-06-04",
+              "deadline_text": "2031-06-04",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "栖云项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：栖云项目；负责人：苏禾；发布月报，截止日期：2031-06-04。",
+                  "char_start": 91,
+                  "char_end": 127,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "发布月报",
+                  "char_start": 106,
+                  "char_end": 110,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：苏禾",
+                  "char_start": 99,
+                  "char_end": 105,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "栖云项目",
+                  "char_start": 94,
+                  "char_end": 98,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-06-04",
+                  "char_start": 111,
+                  "char_end": 126,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-same-owner-multiple-projects",
+          "category": "same_owner_multiple_projects",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "2ca14560291ffeca84e868660afa97435609a2b11ddc06cb6c13346c0e2b0622"
+          ],
+          "prompt_sha256": [
+            "750047728f6ce5cb5536ad8ba42a8006cf5281b4636635312cbfc7ab904a83ed"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_9bc0284df23b732966b14114a1ce700473e91e238113bc1c73d53770de87e343",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-same-owner-multiple-projects",
+                "artifact_version_id": "artifact_v1_6ad53dbd89a5ed3f12790d7558ed05ba38a78742c0d0f08cff29483e45d8fec9",
+                "source_ref": "artifact://m3n-public/m3n-same-owner-multiple-projects",
+                "content_hash": "668855de674bbf66b6e0b8eb43bfc624a94ba5a48d4ed49f68f7fd024dd8fd87",
+                "ordinal": 0,
+                "message_id": "message_v1_926958b471cbc491aea48a248c9d69d8c65e1c4b59d51e0ca7de6a41e6b02bb1",
+                "segment_id": "segment_v1_e1cd171b75e591d67ee13e2e93e2985108d3ffc0023ccafc194bd42dbd4954e9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1cd171b75e591d67ee13e2e93e2985108d3ffc0023ccafc194bd42dbd4954e9",
+                "char_start": 27,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：云杉项目；负责人：乔闻；完成 webhook 验证，截止日期：2031-06-17。",
+                "quote_sha256": "ba97fc119e25d3157b580b0a322ab7195d4345a0aa6c86d930fb934558a7204b"
+              },
+              "raw_text": "项目：云杉项目；负责人：乔闻；完成 webhook 验证，截止日期：2031-06-17。",
+              "description": "完成 webhook 验证",
+              "owner": "乔闻",
+              "deadline": "2031-06-17",
+              "deadline_text": "2031-06-17",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "云杉项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：云杉项目；负责人：乔闻；完成 webhook 验证，截止日期：2031-06-17。",
+                  "char_start": 27,
+                  "char_end": 72,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成 webhook 验证",
+                  "char_start": 42,
+                  "char_end": 55,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：乔闻",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "云杉项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-06-17",
+                  "char_start": 56,
+                  "char_end": 71,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_a31e62f1bb787d1ba03d96d13721cdd21595589627e8a3178d15fa56cd0dcce2",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-same-owner-multiple-projects",
+                "artifact_version_id": "artifact_v1_6ad53dbd89a5ed3f12790d7558ed05ba38a78742c0d0f08cff29483e45d8fec9",
+                "source_ref": "artifact://m3n-public/m3n-same-owner-multiple-projects",
+                "content_hash": "668855de674bbf66b6e0b8eb43bfc624a94ba5a48d4ed49f68f7fd024dd8fd87",
+                "ordinal": 1,
+                "message_id": "message_v1_115690ab222110a1d024739e054f2356976bc7f39255cfa41cac6f3a01c8d8fd",
+                "segment_id": "segment_v1_f973d63a9e1557e316afc20dfaff8db75df7d368144575e5abba21a19b9b3751",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f973d63a9e1557e316afc20dfaff8db75df7d368144575e5abba21a19b9b3751",
+                "char_start": 100,
+                "char_end": 138,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "项目：澄湾项目；负责人：乔闻；整理上线清单，截止日期：2031-06-19。",
+                "quote_sha256": "d3bee1b4695caedfc93f3e33b94a8f921b319e16051e3a2fae9d537b37eb6c2a"
+              },
+              "raw_text": "项目：澄湾项目；负责人：乔闻；整理上线清单，截止日期：2031-06-19。",
+              "description": "整理上线清单",
+              "owner": "乔闻",
+              "deadline": "2031-06-19",
+              "deadline_text": "2031-06-19",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "澄湾项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：澄湾项目；负责人：乔闻；整理上线清单，截止日期：2031-06-19。",
+                  "char_start": 100,
+                  "char_end": 138,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "整理上线清单",
+                  "char_start": 115,
+                  "char_end": 121,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：乔闻",
+                  "char_start": 108,
+                  "char_end": 114,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "澄湾项目",
+                  "char_start": 103,
+                  "char_end": 107,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-06-19",
+                  "char_start": 122,
+                  "char_end": 137,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-quoted-task",
+          "category": "quoted_task",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "8bc61f6deac51420ff6be213ff78b12f94e04c8593d998b3500ac7204beb025c"
+          ],
+          "prompt_sha256": [
+            "dbd07eb29f2ba84be66113c125eab07cba744b0983ac122115e51b092ba8de2f"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "m3n-real-cancellation",
+          "category": "real_cancellation",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "4945b63c1dc99fbbd4846fcd414b41b66d214991f252c2d869af2d395d82a114"
+          ],
+          "prompt_sha256": [
+            "647e4c1ee51a30978ef27afcffa4e24c1bdefe2750b34dbea4e07ecc19e5776e"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "m3n-discussion-only-cancellation",
+          "category": "discussion_cancellation",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "bd2e012db27f86edfe7d7429c1cb1be101fcd46939f36681e1bb4e717fb2174f"
+          ],
+          "prompt_sha256": [
+            "94181aa56575e65bf16b8f7e40b5d799923341fbd9701dfbe5f970d953633fe5"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_5c5573d6cb5914ff62bc34bb597a22b12ed630674a197094c0dd1b7725af120f",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-discussion-only-cancellation",
+                "artifact_version_id": "artifact_v1_c6ac1cc5ecb2842357b9d6a0f559cb55c5cc864e619b7c0cb91f55c3eab42a97",
+                "source_ref": "artifact://m3n-public/m3n-discussion-only-cancellation",
+                "content_hash": "e3d0498a4bb27d9880954c584c4c180ce80bca5f471b412542899952ebd7173b",
+                "ordinal": 0,
+                "message_id": "message_v1_3eff9ecd553092fc76d98c2373bade5e14e77b2282e5265c1cfec39c7907df02",
+                "segment_id": "segment_v1_e602d5e16fe1d56dcdb17a64dc52a47042ef7e93f233e9247a65a693e657b9d2",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e602d5e16fe1d56dcdb17a64dc52a47042ef7e93f233e9247a65a693e657b9d2",
+                "char_start": 27,
+                "char_end": 65,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：绛云项目；负责人：程岚；完成风险回放，截止日期：2031-07-14。",
+                "quote_sha256": "e39885e9b381dbfba3165993fc2617f561792a0d240b7473979774949242f949"
+              },
+              "raw_text": "项目：绛云项目；负责人：程岚；完成风险回放，截止日期：2031-07-14。",
+              "description": "完成风险回放",
+              "owner": "程岚",
+              "deadline": "2031-07-14",
+              "deadline_text": "2031-07-14",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "绛云项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：绛云项目；负责人：程岚；完成风险回放，截止日期：2031-07-14。",
+                  "char_start": 27,
+                  "char_end": 65,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成风险回放",
+                  "char_start": 42,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：程岚",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "绛云项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-07-14",
+                  "char_start": 49,
+                  "char_end": 64,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-conditional-task",
+          "category": "conditional_task",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "519e6d01f97f43ecb076279b9995dcf8d4f1dfb4eb13f4c3aa52dec50ac497a1"
+          ],
+          "prompt_sha256": [
+            "a942e884d1cafc9273301d0e9bd0aec6bb2c35e73e1b6953ef603ee980dccaf8"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "m3n-missing-owner",
+          "category": "missing_owner",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "b554dd51a36cefea0c858f9fc40266353340b1f20abb7a1bce3c8f62442823f9"
+          ],
+          "prompt_sha256": [
+            "dc4dfcd2f977e3d0483afc23d68c8acb5842480447d4ddfe1f95661904a9f025"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_15508b4555aa8226fc013acc4915440e26af9417b19b9787392affe8b873751b",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-missing-owner",
+                "artifact_version_id": "artifact_v1_8ce98edca51b87849a8bf4230e9b845110fa234a069a337ec85025a9c9d8585d",
+                "source_ref": "artifact://m3n-public/m3n-missing-owner",
+                "content_hash": "f2343b29ec39ed9664b1714518b416d87cedc58c9ab7b8b1d84beb54f54e7c3d",
+                "ordinal": 0,
+                "message_id": "message_v1_bb571baf67d3e9c0363368a0d6eae2a551b2315e2898c5716f7e4e2dc1b52171",
+                "segment_id": "segment_v1_959dfa3edc052a0b54963d8f782b4ef7f088af32110a8d395f46ad0be8dbb633",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_959dfa3edc052a0b54963d8f782b4ef7f088af32110a8d395f46ad0be8dbb633",
+                "char_start": 27,
+                "char_end": 65,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。",
+                "quote_sha256": "ad6d959e4910a93d6f88f8f0193badad416c90d1f8e9dbd215786f9c710eb392"
+              },
+              "raw_text": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。",
+              "description": "完成终端盘点",
+              "owner": null,
+              "deadline": "2031-08-14",
+              "deadline_text": "2031-08-14",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "珊瑚项目",
+              "vendor": "远岑",
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。",
+                  "char_start": 27,
+                  "char_end": 65,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成终端盘点",
+                  "char_start": 42,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "珊瑚项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "vendor",
+                  "quote": "远岑",
+                  "char_start": 39,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-08-14",
+                  "char_start": 49,
+                  "char_end": 64,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-missing-date",
+          "category": "missing_date",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "1cb29ccf85156825e56476e087f6971a69d67bebff615a89942c2d1e38c5fc58"
+          ],
+          "prompt_sha256": [
+            "449426e47d7030e43f8f6d1839d24c5d64d1127c42b985cf96f6b4e944a2c9ae"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_b015d8c3c37e3b6784d1fa094380f8c06f11da27d83b152b819670ed8c4c8796",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-missing-date",
+                "artifact_version_id": "artifact_v1_77eff6c0c8f92f3ceda70be3f5161154799c36370c5218485359f06e450bcc59",
+                "source_ref": "artifact://m3n-public/m3n-missing-date",
+                "content_hash": "b54565a463b14e2270fca19a498595917fd7f6b6cc10d80d2f5682ddf4a80898",
+                "ordinal": 0,
+                "message_id": "message_v1_95d9548bdd9bc6540da18564071f1a763e2075db717e1cc9767a7b11ce8e837e",
+                "segment_id": "segment_v1_6b28842fc88eed719ce723811cc410b0cb4b31528e742c8560693cf4863d0a13",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6b28842fc88eed719ce723811cc410b0cb4b31528e742c8560693cf4863d0a13",
+                "char_start": 27,
+                "char_end": 51,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：白榆项目；负责人：闻溪；完成审批回执归档。",
+                "quote_sha256": "f656c2b5468e2b746748cbb73cf70794041903e1bd4487a542d2de4831ace59e"
+              },
+              "raw_text": "项目：白榆项目；负责人：闻溪；完成审批回执归档。",
+              "description": "完成审批回执归档",
+              "owner": "闻溪",
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": "白榆项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "deadline",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：白榆项目；负责人：闻溪；完成审批回执归档。",
+                  "char_start": 27,
+                  "char_end": 51,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成审批回执归档",
+                  "char_start": 42,
+                  "char_end": 50,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：闻溪",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "白榆项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-message-order-reversed",
+          "category": "message_order_change",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "11eb02d787fc3a9a98aeb37954cc1b00b5b650ecd1facb331ba74bfe4c047c5f"
+          ],
+          "prompt_sha256": [
+            "2f4dff2ff6d627a75ac36bd0bae368c0bfc1022214afa8aa4c3c788dc55fb208"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_90c9e6405f778fe36e6abf7e137644ae619e924c871f8b50bab3bf06a8e4ce87",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-message-order-reversed",
+                "artifact_version_id": "artifact_v1_49a5cf9dedc36906a1fa1b4cba0406d1f7a01e35fb2a8f0443f511de92b0ddd4",
+                "source_ref": "artifact://m3n-public/m3n-message-order-reversed",
+                "content_hash": "828a07a6a8fab301e051dd6f44090e1f10dfc183b8c36564ae7ce3dedbea5a42",
+                "ordinal": 0,
+                "message_id": "message_v1_4a07422ed6664d756f9b0ca0d58248567c7e15a26e79171da0586d6db963304e",
+                "segment_id": "segment_v1_4230e4e1fb8e46bb150cb2197c9320d1827ff2f95e3f7fa1c62000284dc27159",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4230e4e1fb8e46bb150cb2197c9320d1827ff2f95e3f7fa1c62000284dc27159",
+                "char_start": 27,
+                "char_end": 36,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "安排灰度回滚演练。",
+                "quote_sha256": "1afa5d71a1132ae7a5c186129a6a5ed78b2f936d0ecfac6baaab342b1b3eaefb"
+              },
+              "raw_text": "安排灰度回滚演练。",
+              "description": "灰度回滚演练",
+              "owner": null,
+              "deadline": null,
+              "deadline_text": null,
+              "deadline_precision": "UNKNOWN",
+              "deadline_role": "UNKNOWN",
+              "project": null,
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "owner",
+                "deadline",
+                "project",
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "安排灰度回滚演练。",
+                  "char_start": 27,
+                  "char_end": 36,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "灰度回滚演练",
+                  "char_start": 29,
+                  "char_end": 35,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_aac47fc0fc62ae0923a60ca14d8c468b6a7e86b8d94fa63c08b8d5c99ac46dde",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-message-order-reversed",
+                "artifact_version_id": "artifact_v1_49a5cf9dedc36906a1fa1b4cba0406d1f7a01e35fb2a8f0443f511de92b0ddd4",
+                "source_ref": "artifact://m3n-public/m3n-message-order-reversed",
+                "content_hash": "828a07a6a8fab301e051dd6f44090e1f10dfc183b8c36564ae7ce3dedbea5a42",
+                "ordinal": 1,
+                "message_id": "message_v1_e16e719debf742b0a3db14b2d59cc35ff3f14773b7d3ffa4d9f4ce84c25861b5",
+                "segment_id": "segment_v1_6d94f304422bcfb4bc77e3d4e0ff4e69bd970173366e018a5b379958f8121a73",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6d94f304422bcfb4bc77e3d4e0ff4e69bd970173366e018a5b379958f8121a73",
+                "char_start": 64,
+                "char_end": 102,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "项目：临川项目；负责人：陆扬；完成支付对账，截止日期：2031-09-18。",
+                "quote_sha256": "c1d19723cc96db9459b5f05e61aa727b400ddc16cc397b59eff7c624dedd161c"
+              },
+              "raw_text": "项目：临川项目；负责人：陆扬；完成支付对账，截止日期：2031-09-18。",
+              "description": "完成支付对账",
+              "owner": "陆扬",
+              "deadline": "2031-09-18",
+              "deadline_text": "2031-09-18",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "临川项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：临川项目；负责人：陆扬；完成支付对账，截止日期：2031-09-18。",
+                  "char_start": 64,
+                  "char_end": 102,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成支付对账",
+                  "char_start": 79,
+                  "char_end": 85,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：陆扬",
+                  "char_start": 72,
+                  "char_end": 78,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "临川项目",
+                  "char_start": 67,
+                  "char_end": 71,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-09-18",
+                  "char_start": 86,
+                  "char_end": 101,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:01:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-mixed-zh-en",
+          "category": "mixed_language",
+          "expected": 1,
+          "accepted": 1,
+          "matched": 1,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 5,
+          "fields_total": 5,
+          "evidence_valid": 1,
+          "evidence_total": 1,
+          "calls": 1,
+          "request_sha256": [
+            "719928416e51cacdbce05c9c782d56bb6417e6df5867dc8ba05492cd6a4e15b3"
+          ],
+          "prompt_sha256": [
+            "d3206060833c20078c93d60e416107135204158ab093b27785c5bd7d7a2d78c7"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_c1358bfca9e1f6285bbcab42419dc38b1a3c55d8c5f6c7acf95b25fbf8bc0806",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-mixed-zh-en",
+                "artifact_version_id": "artifact_v1_6e57d261508ff25d0a1eaf3e6efda3848b48c638b9d70c24c50cbdea23794684",
+                "source_ref": "artifact://m3n-public/m3n-mixed-zh-en",
+                "content_hash": "cd236b2f0a368ac7ef3907ab36a921bb45a9fb52817469b0ca29dfef6424b8ec",
+                "ordinal": 0,
+                "message_id": "message_v1_b50d85c5e1331cd82e76e2fbba0a280d3b85e86e1707dc0ff6453b8912cdb224",
+                "segment_id": "segment_v1_f0c4c90267d07d0505f71a016802c8289fcffed0c302583b647f52fdd0bb1f94",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f0c4c90267d07d0505f71a016802c8289fcffed0c302583b647f52fdd0bb1f94",
+                "char_start": 29,
+                "char_end": 103,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责 project Atlas 的 API smoke test，vendor: Northstar，deadline: 2031-10-02。",
+                "quote_sha256": "7713e181a1d6eee728a3c0e24d8dbd5919eac8496d0a3d1e88ad95332f281cbb"
+              },
+              "raw_text": "我负责 project Atlas 的 API smoke test，vendor: Northstar，deadline: 2031-10-02。",
+              "description": "API smoke test",
+              "owner": "Mira",
+              "deadline": "2031-10-02",
+              "deadline_text": "2031-10-02",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "Atlas",
+              "vendor": "Northstar",
+              "extraction_status": "EXTRACTED",
+              "validation_status": "VALID",
+              "unknown_fields": [],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "我负责 project Atlas 的 API smoke test，vendor: Northstar，deadline: 2031-10-02。",
+                  "char_start": 29,
+                  "char_end": 103,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "API smoke test",
+                  "char_start": 49,
+                  "char_end": 63,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "我负责",
+                  "char_start": 29,
+                  "char_end": 32,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "Mira",
+                  "char_start": 23,
+                  "char_end": 27,
+                  "basis": "SPEAKER"
+                },
+                {
+                  "field": "project",
+                  "quote": "Atlas",
+                  "char_start": 41,
+                  "char_end": 46,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "vendor",
+                  "quote": "Northstar",
+                  "char_start": 72,
+                  "char_end": 81,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "deadline: 2031-10-02",
+                  "char_start": 82,
+                  "char_end": 102,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-multiple-tasks-shared-context",
+          "category": "multiple_tasks_shared_context",
+          "expected": 2,
+          "accepted": 2,
+          "matched": 2,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 10,
+          "fields_total": 10,
+          "evidence_valid": 2,
+          "evidence_total": 2,
+          "calls": 1,
+          "request_sha256": [
+            "765a8bb6e447b5d664fb7a2b96cb01521e0dd8f5147b7703edfbb95899bd6166"
+          ],
+          "prompt_sha256": [
+            "b0a05bbe77e48d37e26b1f8fd5c5d4f91f06cb6b15843a6eb9c2b27e2bef9366"
+          ],
+          "observations": [
+            {
+              "observation_id": "task_observation_v1_027b1e486351c3a06f091079bad940c71a1944aaf3ce8556f044ce2d88530b94",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-multiple-tasks-shared-context",
+                "artifact_version_id": "artifact_v1_d39a265a1a48c14f6f8ebc1c8156fa11b90832e759353a66b929b0cd343f4076",
+                "source_ref": "artifact://m3n-public/m3n-multiple-tasks-shared-context",
+                "content_hash": "db34e2ff5e7e4dabc4402e5d3aba335f924a7dccae06b2cc338ddadaa38b30c5",
+                "ordinal": 0,
+                "message_id": "message_v1_84796d0d312dc4226baac4a0086e9224e1166f90128ca004509d9e3bce3bf85a",
+                "segment_id": "segment_v1_f4f3bfed4f66bd1c144fbe15411a21ddb9ea45acd8624ee22764c653cf3788d9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f4f3bfed4f66bd1c144fbe15411a21ddb9ea45acd8624ee22764c653cf3788d9",
+                "char_start": 27,
+                "char_end": 104,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。",
+                "quote_sha256": "8555011c659afb010d620a619bae29756dbb73f1ab95d11692f6caa3766adce8"
+              },
+              "raw_text": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。",
+              "description": "完成导出报表",
+              "owner": "任川",
+              "deadline": "2031-10-11",
+              "deadline_text": "2031-10-11",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "白鹭项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。",
+                  "char_start": 27,
+                  "char_end": 65,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "完成导出报表",
+                  "char_start": 42,
+                  "char_end": 48,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：任川",
+                  "char_start": 35,
+                  "char_end": 41,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "白鹭项目",
+                  "char_start": 30,
+                  "char_end": 34,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-10-11",
+                  "char_start": 49,
+                  "char_end": 64,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            },
+            {
+              "observation_id": "task_observation_v1_8c3378f6c0c24219350ed3ff9ed8868a9140341c4e14546fd72641152b575c4c",
+              "provenance": {
+                "workspace_id": "m3n-public",
+                "artifact_id": "m3n-multiple-tasks-shared-context",
+                "artifact_version_id": "artifact_v1_d39a265a1a48c14f6f8ebc1c8156fa11b90832e759353a66b929b0cd343f4076",
+                "source_ref": "artifact://m3n-public/m3n-multiple-tasks-shared-context",
+                "content_hash": "db34e2ff5e7e4dabc4402e5d3aba335f924a7dccae06b2cc338ddadaa38b30c5",
+                "ordinal": 0,
+                "message_id": "message_v1_84796d0d312dc4226baac4a0086e9224e1166f90128ca004509d9e3bce3bf85a",
+                "segment_id": "segment_v1_f4f3bfed4f66bd1c144fbe15411a21ddb9ea45acd8624ee22764c653cf3788d9",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f4f3bfed4f66bd1c144fbe15411a21ddb9ea45acd8624ee22764c653cf3788d9",
+                "char_start": 27,
+                "char_end": 104,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "项目：白鹭项目；负责人：任川；完成导出报表，截止日期：2031-10-11。项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。",
+                "quote_sha256": "8555011c659afb010d620a619bae29756dbb73f1ab95d11692f6caa3766adce8"
+              },
+              "raw_text": "项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。",
+              "description": "安排清理临时桶",
+              "owner": "任川",
+              "deadline": "2031-10-13",
+              "deadline_text": "2031-10-13",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "project": "白鹭项目",
+              "vendor": null,
+              "extraction_status": "EXTRACTED",
+              "validation_status": "PARTIAL",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "field_evidence": [
+                {
+                  "field": "raw_text",
+                  "quote": "项目：白鹭项目；负责人：任川；安排清理临时桶，截止日期：2031-10-13。",
+                  "char_start": 65,
+                  "char_end": 104,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "description",
+                  "quote": "安排清理临时桶",
+                  "char_start": 80,
+                  "char_end": 87,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "owner",
+                  "quote": "负责人：任川",
+                  "char_start": 73,
+                  "char_end": 79,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "project",
+                  "quote": "白鹭项目",
+                  "char_start": 68,
+                  "char_end": 72,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "quote": "截止日期：2031-10-13",
+                  "char_start": 88,
+                  "char_end": 103,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "recorded_at": "2031-03-01T00:00:00+00:00",
+              "event_time": "2031-03-01T09:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "authority": "SUPPORTING_ONLY"
+            }
+          ],
+          "failures": []
+        },
+        {
+          "id": "m3n-quoted-english-task",
+          "category": "quoted_task_mixed_language",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "bcf241e7b2c605c23fe05e6e92defb7e259a556bdb6fcc62c34d486d17ec2895"
+          ],
+          "prompt_sha256": [
+            "b4e40afbcfb7d025832b9a5a1ceae9be2a7fc4f5799033322e2f70b862816197"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        },
+        {
+          "id": "m3n-suggested-unapproved",
+          "category": "suggested_task",
+          "expected": 0,
+          "accepted": 0,
+          "matched": 0,
+          "false_rejections": 0,
+          "false_acceptances": 0,
+          "erroneous_groups": 0,
+          "fields_correct": 0,
+          "fields_total": 0,
+          "evidence_valid": 0,
+          "evidence_total": 0,
+          "calls": 1,
+          "request_sha256": [
+            "a34cfcae0204330dd39a6ad227710e344252b7422667324bb9d4cfc625affd39"
+          ],
+          "prompt_sha256": [
+            "cb0daa22cac89db2513cbf66acc01309c46ca0dfbece51f1c366cb1dc28ceed2"
+          ],
+          "observations": [],
+          "failures": [
+            "NON_ASSERTED_TASK"
+          ]
+        }
+      ]
+    }
+  }
+}

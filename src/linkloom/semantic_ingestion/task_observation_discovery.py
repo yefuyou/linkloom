@@ -14,7 +14,9 @@ from linkloom.decision_memory.sources import SourceReferenceRegistry
 from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.candidate_models import SemanticExtractionResult
 from linkloom.semantic_ingestion.document_text import DocumentTextSegment, _labelled_date, parse_source_text
-from linkloom.semantic_ingestion.extraction import ProviderNeutralSemanticExtractor, SemanticExtractionContext
+from linkloom.semantic_ingestion.extraction import (
+    ProviderNeutralSemanticExtractor, SemanticExtractionContext, TaskDiscoveryContext, TaskDiscoveryProfile,
+)
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.task_observation import TaskObservation, TaskProposal, build_task_observation
 from linkloom.semantic_ingestion.timestamped_text import ParseStatus
@@ -137,14 +139,19 @@ class TaskObservationDiscoveryService:
     def __init__(self, extractor: ProviderNeutralSemanticExtractor, *,
                  source_registry: SourceReferenceRegistry,
                  current_source: Callable[[str, str], RawArtifact | None],
-                 limits: DiscoveryLimits = DiscoveryLimits()):
+                 limits: DiscoveryLimits = DiscoveryLimits(),
+                 task_profile: TaskDiscoveryProfile | None = None):
         if not isinstance(extractor, ProviderNeutralSemanticExtractor) or extractor.max_attempts != 1:
             raise ValueError("discovery requires the existing extractor with exactly one attempt")
         if not isinstance(source_registry, SourceReferenceRegistry) or not callable(current_source):
             raise TypeError("host registry and current-source loader are required")
         if not isinstance(limits, DiscoveryLimits):
             raise TypeError("limits must be DiscoveryLimits")
+        if task_profile is not None and not isinstance(task_profile, TaskDiscoveryProfile):
+            raise TypeError("task_profile must be TaskDiscoveryProfile or None")
         self.extractor, self.registry, self.current_source, self.limits = extractor, source_registry, current_source, limits
+        # Explicit opt-in preserves frozen REPLAY and closed Canary requests.
+        self.task_profile = task_profile
 
     def _current(self, artifact, segments):
         try:
@@ -199,7 +206,9 @@ class TaskObservationDiscoveryService:
                 complete = False
                 continue
             window = parsed.segments[0] if len(parsed.segments) == 1 else _window(artifact)
-            result = self.extractor.extract(window, context)
+            source_context = (replace(context, task_discovery=TaskDiscoveryContext(artifact, self.task_profile))
+                              if self.task_profile is not None else context)
+            result = self.extractor.extract(window, source_context)
             extractions.append(result)
             if not self._current(artifact, parsed.segments):
                 reason = "SOURCE_CHANGED_OR_UNAVAILABLE"

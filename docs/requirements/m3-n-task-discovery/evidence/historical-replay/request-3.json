@@ -1,0 +1,395 @@
+{
+  "run_id": "semrun_6f315b37ba4989e76fb73b4d",
+  "turn_id": "semturn_6f315b37ba4989e76fb7_1",
+  "task_id": "semtask_6f315b37ba4989e76fb7",
+  "agent_id": "semantic-extractor-v1",
+  "sequence": 1,
+  "user_input": "Extract only source-supported semantic claims from the supplied segment. Organize each complete business choice as one claim, not as isolated words. Keep selection reasons, comparisons, and approval qualifiers attached to the business conclusion in its source evidence; do not emit separate FACT claims for each reason, adjective, or unapproved status. One unapproved proposal is one PROPOSAL, not a proposal plus duplicate status facts. Use a stable, source-named project or business entity as subject, not a possessive role description (such as the project's supplier). Keep the same canonical relation for initial selection and replacement. Distinguish effective dates from speech times and action deadlines. Explicit written Chinese dates may be normalized to ISO dates. PLAN/ACTION deadlines are not decision validity: keep them in source evidence and return NOT_STATED with null valid bounds. For each PLAN/ACTION, emit a task object for ONE task statement: text is an exact unique source excerpt and description_parts are verbatim task-work excerpts inside that text. Copy deadline_text literally, including its year if explicitly stated; never normalize or fill a missing year from metadata. owner must be explicitly assigned; a first-person responsibility statement may name only the supplied speaker. project and vendor must be explicitly mentioned inside this task text. Missing fields remain null. Do not carry fields from other segments, merge tasks, infer revisions or infer deadline delays. For other claim types return task=null. Return one structured tool call matching the schema. Preserve the distinction between DECISION, FACT, PROPOSAL, QUESTION, REJECTED_OPTION, PLAN, ACTION, OPINION, and SPECULATION. A DECISION is an explicit team choice, approval, adoption, switch, replacement, cancellation, or commitment that determines what the team will do. A FACT is an observation or state that does not itself represent a team choice or commitment. When the source explicitly states that the team replaces, supersedes, switches, adopts, approves, or changes a prior choice to another option, classify that expressed choice or change as DECISION, including when it is phrased as a replacement rather than with the words \"we decided\". Do not infer a decision solely from a changed state or from historical reporting alone: reporting that another person or team changed something, without the current source speaker or team selecting or committing to it, remains FACT. A current state without decision language remains FACT. Statements merely considering or proposing an option remain PROPOSAL. A question, rejected option, plan, action, opinion, or speculation is not a decision. Do not invent a subject, value, relation, effective date, entity, workspace, artifact identity, or evidence reference. Output null for unknown fields. SOURCE_EVENT_TIME means the source event time is explicitly the effective time. For SOURCE_EVENT_TIME, return null for valid_from and valid_to; the local temporal policy derives the source event time. EXPLICIT means valid_from/valid_to is copied from an explicit source date or timestamp; use UNRESOLVED for relative or ambiguous time and NOT_STATED when no effective-time claim is made. Relation phrases may be canonical, an explicit alias, or a new relation proposal. Confidence values are informational and never override local validation. Input:\n{\"allowed_claim_types\":[\"DECISION\",\"FACT\",\"PROPOSAL\",\"QUESTION\",\"REJECTED_OPTION\",\"PLAN\",\"ACTION\",\"OPINION\",\"SPECULATION\"],\"canonical_relations\":[],\"prompt_version\":\"semantic-extraction/v1\",\"relation_aliases\":{},\"schema_version\":\"semantic-candidate/v2\",\"source_segment\":{\"date_policy\":\"Date-only metadata is not a speech timestamp or effective time. Missing times stay null. Return an empty claims list when there is no supported claim.\",\"document_date\":null,\"event_date\":null,\"event_time\":null,\"source_format\":\"document_text\",\"speaker\":null,\"text\":\"今天仅讨论了日志格式的历史。假设以后增加仪表盘，大家可能会喜欢。\\n建议林枫完成界面换肤，目前没有采纳。\\n旧邮件引用：“周岚负责提交审计报告。”\\n任务取消：许舟完成归档迁移，不需要继续执行。\\n数据库今天响应正常，没有新增工作安排。\"},\"temporal_statuses\":[\"SOURCE_EVENT_TIME\",\"EXPLICIT\",\"UNRESOLVED\",\"NOT_STATED\"]}",
+  "observation": null,
+  "available_tools": [
+    {
+      "tool_id": "emit_semantic_candidates",
+      "version": "semantic-candidate/v2",
+      "description": "Return structured source-grounded claim proposals; never write memory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "claim_type": {
+                  "type": "string",
+                  "enum": [
+                    "DECISION",
+                    "FACT",
+                    "PROPOSAL",
+                    "QUESTION",
+                    "REJECTED_OPTION",
+                    "PLAN",
+                    "ACTION",
+                    "OPINION",
+                    "SPECULATION"
+                  ]
+                },
+                "subject": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "relation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "temporal_status": {
+                  "type": "string",
+                  "enum": [
+                    "SOURCE_EVENT_TIME",
+                    "EXPLICIT",
+                    "UNRESOLVED",
+                    "NOT_STATED"
+                  ]
+                },
+                "valid_from": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "valid_to": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "confidence": {
+                  "type": "object",
+                  "properties": {
+                    "claim_type": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "entity": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "relation": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "temporal": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "overall": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "claim_type",
+                    "entity",
+                    "relation",
+                    "temporal",
+                    "overall"
+                  ],
+                  "additionalProperties": false
+                },
+                "task": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2048
+                    },
+                    "description_parts": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2048
+                      }
+                    },
+                    "owner": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "deadline_text": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "project": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "vendor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    }
+                  },
+                  "required": [
+                    "text",
+                    "description_parts",
+                    "owner",
+                    "deadline_text",
+                    "project",
+                    "vendor"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "claim_type",
+                "subject",
+                "relation",
+                "value",
+                "temporal_status",
+                "valid_from",
+                "valid_to",
+                "confidence",
+                "task"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "claims"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "claim_type": {
+                  "type": "string",
+                  "enum": [
+                    "DECISION",
+                    "FACT",
+                    "PROPOSAL",
+                    "QUESTION",
+                    "REJECTED_OPTION",
+                    "PLAN",
+                    "ACTION",
+                    "OPINION",
+                    "SPECULATION"
+                  ]
+                },
+                "subject": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "relation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 512
+                },
+                "temporal_status": {
+                  "type": "string",
+                  "enum": [
+                    "SOURCE_EVENT_TIME",
+                    "EXPLICIT",
+                    "UNRESOLVED",
+                    "NOT_STATED"
+                  ]
+                },
+                "valid_from": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "valid_to": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "maxLength": 40
+                },
+                "confidence": {
+                  "type": "object",
+                  "properties": {
+                    "claim_type": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "entity": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "relation": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "temporal": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "overall": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  },
+                  "required": [
+                    "claim_type",
+                    "entity",
+                    "relation",
+                    "temporal",
+                    "overall"
+                  ],
+                  "additionalProperties": false
+                },
+                "task": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2048
+                    },
+                    "description_parts": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2048
+                      }
+                    },
+                    "owner": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "deadline_text": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "project": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    },
+                    "vendor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 512
+                    }
+                  },
+                  "required": [
+                    "text",
+                    "description_parts",
+                    "owner",
+                    "deadline_text",
+                    "project",
+                    "vendor"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "claim_type",
+                "subject",
+                "relation",
+                "value",
+                "temporal_status",
+                "valid_from",
+                "valid_to",
+                "confidence",
+                "task"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 20
+          }
+        },
+        "required": [
+          "claims"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "previous_tool_call": null,
+  "model_id": "gemini-3.8-flash",
+  "generation_options": {
+    "max_output_tokens": 3072,
+    "temperature": null,
+    "require_tool_call": true,
+    "thinking_level": "low"
+  },
+  "evidence_context": []
+}

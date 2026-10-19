@@ -40,6 +40,8 @@ from linkloom.semantic_ingestion.extraction import (
     ProviderRequestAuthorization,
     SemanticExtractionContext,
     SemanticExtractor,
+    TaskDiscoveryContext,
+    TaskDiscoveryProfile,
 )
 from linkloom.semantic_ingestion.metrics import (
     SemanticEvaluationCase,
@@ -98,6 +100,8 @@ __all__ = [
     "SemanticExtractionContext",
     "SemanticExtractionResult",
     "SemanticExtractor",
+    "TaskDiscoveryContext",
+    "TaskDiscoveryProfile",
     "SemanticIngestionPipeline",
     "SemanticIngestionResult",
     "SemanticDecisionMaterializer",

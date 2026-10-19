@@ -21,3 +21,7 @@ tests/fixtures/evaluation_qualification/core_nodes.json -whitespace
 # M3-L freeze and offline audit records retain their SHA-256 byte identities.
 docs/requirements/m3-l-live-canary/canary-v*/** -text -whitespace
 docs/requirements/m3-l-live-canary/evidence/** -text -whitespace
+
+# M3-N public data freeze and new offline evidence preserve exact byte hashes.
+docs/requirements/m3-n-task-discovery/data/** -text -whitespace
+docs/requirements/m3-n-task-discovery/evidence/** -text -whitespace

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="6" time="2.212" timestamp="2026-10-19T22:40:49.738059+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_discovery_m3n" name="test_optional_context_is_typed_immutable_and_source_bound_before_guard" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3n" name="test_task_input_uses_unchanged_source_and_canonical_message_map" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3n" name="test_legacy_prompt_and_normalized_request_remain_byte_equivalent_to_baseline" time="0.131"><failure message="ValueError: task context must match the exact extraction window">def test_legacy_prompt_and_normalized_request_remain_byte_equivalent_to_baseline():
+        # Compile only the frozen extractor in memory; no checkout/file rewrites.
+        source = subprocess.run(["git", "show", "e757287:src/linkloom/semantic_ingestion/extraction.py"],
+            cwd=ROOT, check=True, capture_output=True).stdout.decode("utf-8")
+        spec = importlib.util.spec_from_loader("m3n_legacy_extraction", loader=None)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        exec(compile(source, "&lt;e757287-extraction&gt;", "exec"), module.__dict__)
+        for case in load(DATA / "dev.json")["cases"]:
+            artifact = artifact_for(case)
+            service, provider, _, _ = setup(artifact)
+            segment = _window(artifact)
+            context = SemanticExtractionContext(artifact.workspace_id, FrozenRelationResolver(()))
+            old_context = module.SemanticExtractionContext(artifact.workspace_id, context.relation_resolver)
+            assert _prompt(segment, context, "semantic-extraction/v1") == module._prompt(segment, old_context, "semantic-extraction/v1")
+            extractor = service.extractor
+            old = module.ProviderNeutralSemanticExtractor(provider, provider_id=extractor.provider_id,
+                model_id=extractor.model_id, request_guard_id=extractor.request_guard_id,
+                request_guard=lambda request: module.ProviderRequestAuthorization.approve(request,
+                    guard_id=extractor.request_guard_id, reservation_id="old", estimated_cost_upper_bound_usd=0))
+            before = old.extract(segment, old_context)
+            after = extractor.extract(segment, context)
+            assert provider.requests[-2].to_dict() == provider.requests[-1].to_dict()
+            assert before.receipt.config_sha256 == after.receipt.config_sha256
+            assert before.receipt.extraction_fingerprint == after.receipt.extraction_fingerprint
+            task_context = replace(context, task_discovery=TaskDiscoveryContext(artifact))
+&gt;           new = extractor.extract(segment, task_context)
+
+tests\unit\test_task_discovery_m3n.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\linkloom\semantic_ingestion\extraction.py:595: in extract
+    task_input = (context.task_discovery.input_for(segment, context.expected_workspace_id)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = TaskDiscoveryContext(artifact=RawArtifact(workspace_id='m3n-public', artifact_id='D04', source_type='timestamped_text'...e_ref='artifact://m3n-public/D04'), profile=&lt;TaskDiscoveryProfile.CROSS_MESSAGE_V1: 'task-discovery-cross-message/v1'&gt;)
+window = DocumentTextSegment(ordinal=0, message_id='message_v1_b0afe2017893cfc5aa7bf70f04f7fe6ea43226648a1934d2a2ec7ec6324bb5be...a26758734df8fe963b3495d3ba825db138ea6cf05df772b2'), document_date=None, event_date=None, speaker=None, event_time=None)
+workspace_id = 'm3n-public'
+
+    def input_for(self, window: SourceSegment, workspace_id: str) -&gt; dict[str, Any]:
+        artifact = self.artifact
+        span = window.evidence_span
+        if (workspace_id != artifact.workspace_id or not span.verify(artifact)
+            or (len(self.segments) == 1 and window != self.segments[0])
+            or (len(self.segments) &gt; 1 and (not isinstance(window, DocumentTextSegment)
+                or span.char_start != 0 or span.char_end != len(artifact.content)))):
+&gt;           raise ValueError("task context must match the exact extraction window")
+E           ValueError: task context must match the exact extraction window
+
+src\linkloom\semantic_ingestion\extraction.py:243: ValueError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3n" name="test_explicit_continuation_retains_per_message_evidence_and_no_field_migration" time="0.018" /><testcase classname="tests.unit.test_task_discovery_m3n" name="test_frozen_public_oracle_contracts[dev]" time="0.108" /><testcase classname="tests.unit.test_task_discovery_m3n" name="test_frozen_public_oracle_contracts[heldout]" time="0.112" /></testsuite></testsuites>

@@ -1,0 +1,1688 @@
+{
+  "execution": "OFFLINE_SCRIPTED_PROVIDER",
+  "paid_calls": 0,
+  "scope": "F veto contracts only; NOT semantic model quality or held-out evaluation",
+  "baseline_ref": "4b58ddac03f347941339a05cfaa7f73a0028cbb9",
+  "before": {
+    "cases": [
+      {
+        "case": 0,
+        "text": "安排完成日志迁移。Task cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 1,
+        "text": "安排完成日志迁移。任务取消：整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 2,
+        "text": "安排完成日志迁移。不要执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 3,
+        "text": "安排完成日志迁移。取消执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 4,
+        "text": "安排完成日志迁移。取消：上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 5,
+        "text": "安排完成日志迁移。停止执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 6,
+        "text": "安排完成日志迁移。Do not execute the above task.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 7,
+        "text": "安排完成日志迁移。任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 8,
+        "text": "安排完成日志迁移。The task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 9,
+        "text": "只有预算批准，才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 10,
+        "text": "一旦预算批准，就安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 11,
+        "text": "当预算批准时，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 12,
+        "text": "在预算批准的前提下，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 13,
+        "text": "预算批准后再安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 14,
+        "text": "预算批准才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 15,
+        "text": "安排完成日志迁移。讨论取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 16,
+        "text": "安排完成日志迁移。探讨终止上述任务。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 17,
+        "text": "安排完成日志迁移。取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 18,
+        "text": "安排完成日志迁移；取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 19,
+        "text": "安排完成日志迁移。此任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 20,
+        "text": "安排完成日志迁移。Cancel this task.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 21,
+        "text": "若预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 22,
+        "text": "只要预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 23,
+        "text": "除非预算批准，才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 24,
+        "text": "安排完成日志迁移。若预算批准再执行。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 25,
+        "text": "同事说：'完成日志迁移。'",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 26,
+        "text": "同事说：`完成日志迁移。`",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 27,
+        "text": "安排完成日志迁移。'This task is cancelled.'",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 28,
+        "text": "安排完成日志迁移；安排提交容量报告；这项任务取消。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 29,
+        "text": "安排完成日志迁移；安排提交容量报告；这项任务取消。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 30,
+        "text": "上述任务取消；安排提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 31,
+        "text": "建议以后换肤，同时安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 32,
+        "text": "安排完成日志迁移，同时取消整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 33,
+        "text": "禁止完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 34,
+        "text": "不得完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 35,
+        "text": "不应完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 36,
+        "text": "不安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 37,
+        "text": "不计划完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 38,
+        "text": "任务放弃：完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 39,
+        "text": "撤回完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 40,
+        "text": "作废完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 41,
+        "text": "安排完成日志迁移。无须继续。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 42,
+        "text": "安排完成日志迁移。今天风很大。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 43,
+        "text": "安排完成日志迁移。无须再做日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 44,
+        "text": "安排完成日志迁移。我们不执行日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 45,
+        "text": "安排完成日志迁移；这项任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 46,
+        "text": "任务取消：完成日志迁移；提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 47,
+        "text": "建议完成日志迁移；提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 48,
+        "text": "安排完成日志迁移。讨论仅供记录。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 49,
+        "text": "安排完成日志迁移。建议取消日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 50,
+        "text": "安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 51,
+        "text": "安排提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 52,
+        "text": "安排完成日志迁移。安排提交容量报告。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 53,
+        "text": "安排完成日志迁移。安排提交容量报告。上述任务取消。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 54,
+        "text": "安排完成日志迁移。会议引用：“上述任务取消。”",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 55,
+        "text": "安排完成日志迁移。会议引用：\n> This task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 56,
+        "text": "安排完成日志迁移。会议引用：“日志迁移取消。”",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 57,
+        "text": "建议以后更换配色；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 58,
+        "text": "任务取消：整理旧截图；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 59,
+        "text": "安排完成日志迁移；不再安排整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 60,
+        "text": "安排完成日志迁移。日志迁移取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 61,
+        "text": "安排完成日志迁移。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 62,
+        "text": "安排完成日志迁移。This task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 63,
+        "text": "会议引用：“安排完成日志迁移。”",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 64,
+        "text": "如果预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 65,
+        "text": "如果预算批准；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 66,
+        "text": "建议安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 67,
+        "text": "无需完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      }
+    ],
+    "expected": 18,
+    "accepted": 37,
+    "true_positive": 5,
+    "false_accepts": 32,
+    "false_rejects": 13,
+    "recall": 0.2777777777777778,
+    "precision": 0.13513513513513514,
+    "evidence_valid": true
+  },
+  "after": {
+    "cases": [
+      {
+        "case": 0,
+        "text": "安排完成日志迁移。Task cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 1,
+        "text": "安排完成日志迁移。任务取消：整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 2,
+        "text": "安排完成日志迁移。不要执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 3,
+        "text": "安排完成日志迁移。取消执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 4,
+        "text": "安排完成日志迁移。取消：上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 5,
+        "text": "安排完成日志迁移。停止执行上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 6,
+        "text": "安排完成日志迁移。Do not execute the above task.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 7,
+        "text": "安排完成日志迁移。任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 8,
+        "text": "安排完成日志迁移。The task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 9,
+        "text": "只有预算批准，才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 10,
+        "text": "一旦预算批准，就安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 11,
+        "text": "当预算批准时，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 12,
+        "text": "在预算批准的前提下，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 13,
+        "text": "预算批准后再安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 14,
+        "text": "预算批准才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 15,
+        "text": "安排完成日志迁移。讨论取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 16,
+        "text": "安排完成日志迁移。探讨终止上述任务。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 17,
+        "text": "安排完成日志迁移。取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 18,
+        "text": "安排完成日志迁移；取消上述任务。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 19,
+        "text": "安排完成日志迁移。此任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 20,
+        "text": "安排完成日志迁移。Cancel this task.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 21,
+        "text": "若预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 22,
+        "text": "只要预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 23,
+        "text": "除非预算批准，才安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 24,
+        "text": "安排完成日志迁移。若预算批准再执行。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 25,
+        "text": "同事说：'完成日志迁移。'",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 26,
+        "text": "同事说：`完成日志迁移。`",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 27,
+        "text": "安排完成日志迁移。'This task is cancelled.'",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 28,
+        "text": "安排完成日志迁移；安排提交容量报告；这项任务取消。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 29,
+        "text": "安排完成日志迁移；安排提交容量报告；这项任务取消。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 30,
+        "text": "上述任务取消；安排提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 31,
+        "text": "建议以后换肤，同时安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 32,
+        "text": "安排完成日志迁移，同时取消整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 33,
+        "text": "禁止完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 34,
+        "text": "不得完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 35,
+        "text": "不应完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 36,
+        "text": "不安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 37,
+        "text": "不计划完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 38,
+        "text": "任务放弃：完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 39,
+        "text": "撤回完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 40,
+        "text": "作废完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 41,
+        "text": "安排完成日志迁移。无须继续。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 42,
+        "text": "安排完成日志迁移。今天风很大。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 43,
+        "text": "安排完成日志迁移。无须再做日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 44,
+        "text": "安排完成日志迁移。我们不执行日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 45,
+        "text": "安排完成日志迁移；这项任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 46,
+        "text": "任务取消：完成日志迁移；提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 47,
+        "text": "建议完成日志迁移；提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 48,
+        "text": "安排完成日志迁移。讨论仅供记录。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 49,
+        "text": "安排完成日志迁移。建议取消日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 50,
+        "text": "安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 51,
+        "text": "安排提交容量报告。",
+        "work": "容量报告",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 52,
+        "text": "安排完成日志迁移。安排提交容量报告。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 53,
+        "text": "安排完成日志迁移。安排提交容量报告。上述任务取消。",
+        "work": "容量报告",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 54,
+        "text": "安排完成日志迁移。会议引用：“上述任务取消。”",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 55,
+        "text": "安排完成日志迁移。会议引用：\n> This task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 56,
+        "text": "安排完成日志迁移。会议引用：“日志迁移取消。”",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 57,
+        "text": "建议以后更换配色；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 58,
+        "text": "任务取消：整理旧截图；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 59,
+        "text": "安排完成日志迁移；不再安排整理旧截图。",
+        "work": "日志迁移",
+        "expected_accept": true,
+        "accepted": true,
+        "exact_evidence": true,
+        "groups": 1,
+        "calls": 1,
+        "failures": []
+      },
+      {
+        "case": 60,
+        "text": "安排完成日志迁移。日志迁移取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 61,
+        "text": "安排完成日志迁移。上述任务取消。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 62,
+        "text": "安排完成日志迁移。This task is cancelled.",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 63,
+        "text": "会议引用：“安排完成日志迁移。”",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 64,
+        "text": "如果预算批准，安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 65,
+        "text": "如果预算批准；安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 66,
+        "text": "建议安排完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      },
+      {
+        "case": 67,
+        "text": "无需完成日志迁移。",
+        "work": "日志迁移",
+        "expected_accept": false,
+        "accepted": false,
+        "exact_evidence": true,
+        "groups": 0,
+        "calls": 1,
+        "failures": [
+          "NON_ASSERTED_TASK"
+        ]
+      }
+    ],
+    "expected": 18,
+    "accepted": 18,
+    "true_positive": 18,
+    "false_accepts": 0,
+    "false_rejects": 0,
+    "recall": 1.0,
+    "precision": 1.0,
+    "evidence_valid": true
+  }
+}

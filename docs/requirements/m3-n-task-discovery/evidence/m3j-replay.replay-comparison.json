@@ -1,0 +1,42 @@
+{
+  "five-messages": true,
+  "same-project-distinct-tasks": true,
+  "discussion-and-cancelled": true,
+  "paid_calls": 0,
+  "continuation_candidate_coverage": [
+    {
+      "artifact_id": "five-messages",
+      "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8de207d6655f045d326b868050a7e52a17605e222aa8b0ca1d8a7fd221f47c16",
+      "verified_description_parts": [
+        "索引迁移"
+      ]
+    },
+    {
+      "artifact_id": "five-messages",
+      "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_04f86e3d938e87de96bca27c84d0256fc511260281423f76cc62360842ad6e5d",
+      "verified_description_parts": []
+    },
+    {
+      "artifact_id": "five-messages",
+      "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a6fd1266a0d7b18e334e78eb11979aaed0707bdc523af053180485ae742ed7d5",
+      "verified_description_parts": [
+        "提交容量报告"
+      ]
+    },
+    {
+      "artifact_id": "five-messages",
+      "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_519cb4964afb381317839207ca810970c734bf2876cd0bd71b15d3c0c00a105d",
+      "verified_description_parts": []
+    },
+    {
+      "artifact_id": "five-messages",
+      "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_129786a23a5d8f3d0ee23d4148e65ece2e51313e6d701e16728e2b763bebc9dd",
+      "verified_description_parts": []
+    }
+  ]
+}

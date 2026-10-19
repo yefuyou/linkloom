@@ -1,0 +1,476 @@
+{
+  "case_id": "same-project-distinct-tasks",
+  "result": {
+    "coverage_policy": "bounded-document-single-pass/v1",
+    "coverage_complete": true,
+    "semantic_exhaustive": false,
+    "valid_observations": [
+      {
+        "observation_id": "task_observation_v1_d705768bd7ccaa77576852b016090852442ef5ccf62552dcb2d7ee4244690ce8",
+        "provenance": {
+          "workspace_id": "public-m3f",
+          "artifact_id": "same-project-distinct-tasks",
+          "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+          "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+          "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+          "ordinal": 0,
+          "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+          "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "char_start": 0,
+          "char_end": 140,
+          "line_start": 1,
+          "line_end": 5,
+          "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+          "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+        },
+        "raw_text": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+        "description": "完成备份演练",
+        "owner": "许舟",
+        "deadline": "2029-06-25",
+        "deadline_text": "2029-06-25",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "清泉",
+        "vendor": "远岸",
+        "extraction_status": "EXTRACTED",
+        "validation_status": "VALID",
+        "unknown_fields": [],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+            "char_start": 16,
+            "char_end": 59,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成备份演练",
+            "char_start": 36,
+            "char_end": 42,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "负责人：许舟",
+            "char_start": 22,
+            "char_end": 28,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "清泉",
+            "char_start": 19,
+            "char_end": 21,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "vendor",
+            "quote": "远岸",
+            "char_start": 33,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "截止日期：2029-06-25",
+            "char_start": 43,
+            "char_end": 58,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2029-06-03T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      {
+        "observation_id": "task_observation_v1_370798a54095e76423f492166fd193076571c1082827de6449d94f5e8c7a6406",
+        "provenance": {
+          "workspace_id": "public-m3f",
+          "artifact_id": "same-project-distinct-tasks",
+          "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+          "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+          "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+          "ordinal": 0,
+          "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+          "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "char_start": 0,
+          "char_end": 140,
+          "line_start": 1,
+          "line_end": 5,
+          "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+          "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+        },
+        "raw_text": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+        "description": "交付告警清单",
+        "owner": "许舟",
+        "deadline": "2029-06-25",
+        "deadline_text": "2029-06-25",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": "清泉",
+        "vendor": "远岸",
+        "extraction_status": "EXTRACTED",
+        "validation_status": "VALID",
+        "unknown_fields": [],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+            "char_start": 60,
+            "char_end": 103,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "交付告警清单",
+            "char_start": 80,
+            "char_end": 86,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "负责人：许舟",
+            "char_start": 66,
+            "char_end": 72,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "清泉",
+            "char_start": 63,
+            "char_end": 65,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "vendor",
+            "quote": "远岸",
+            "char_start": 77,
+            "char_end": 79,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "截止日期：2029-06-25",
+            "char_start": 87,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2029-06-03T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "partial_observations": [
+      {
+        "observation_id": "task_observation_v1_f3cb5787a2a18962ae0b6165fb00beb09a809bd85d6e22f6d219f8e7906c3275",
+        "provenance": {
+          "workspace_id": "public-m3f",
+          "artifact_id": "same-project-distinct-tasks",
+          "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+          "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+          "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+          "ordinal": 0,
+          "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+          "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "char_start": 0,
+          "char_end": 140,
+          "line_start": 1,
+          "line_end": 5,
+          "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+          "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+        },
+        "raw_text": "安排完成权限核查，负责人尚未确定。",
+        "description": "完成权限核查",
+        "owner": null,
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "安排完成权限核查，负责人尚未确定。",
+            "char_start": 104,
+            "char_end": 121,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成权限核查",
+            "char_start": 106,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2029-06-03T00:00:00+00:00",
+        "event_time": null,
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      }
+    ],
+    "failures": [],
+    "sources": [
+      {
+        "artifact_id": "same-project-distinct-tasks",
+        "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+        "status": "OBSERVATIONS_FOUND",
+        "reason": null
+      }
+    ],
+    "unprocessed_sources": [],
+    "groups": [
+      {
+        "group_id": "task_discovery_group_bba26d4263df946134ab66256b3e7c2fb353f78c620f0acc2065a9a82f026b92",
+        "observation_ids": [
+          "task_observation_v1_d705768bd7ccaa77576852b016090852442ef5ccf62552dcb2d7ee4244690ce8"
+        ],
+        "source_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+        ],
+        "unbound_fields": [],
+        "status": "MODEL_PROPOSED",
+        "validation_issues": []
+      },
+      {
+        "group_id": "task_discovery_group_cdf436ea2b8f8ad3d4e40d4a37f056ce8f125e0f9b05d501593318f422f76cd0",
+        "observation_ids": [
+          "task_observation_v1_370798a54095e76423f492166fd193076571c1082827de6449d94f5e8c7a6406"
+        ],
+        "source_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+        ],
+        "unbound_fields": [],
+        "status": "MODEL_PROPOSED",
+        "validation_issues": []
+      },
+      {
+        "group_id": "task_discovery_group_f7c411d54d98de965e614705a3d0e984ae2ea28c03600ae4bfc09cc166fce2c2",
+        "observation_ids": [
+          "task_observation_v1_f3cb5787a2a18962ae0b6165fb00beb09a809bd85d6e22f6d219f8e7906c3275"
+        ],
+        "source_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+        ],
+        "unbound_fields": [],
+        "status": "MODEL_PROPOSED",
+        "validation_issues": []
+      }
+    ],
+    "extractions": [
+      {
+        "record_version": "semantic-extraction-result/v2",
+        "claims": [
+          {
+            "claim_type": "PLAN",
+            "subject": "清泉",
+            "relation_phrase": "task_assignment",
+            "value": "完成备份演练",
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.95,
+              "entity": 0.95,
+              "relation": 0.95,
+              "temporal": 0.95,
+              "overall": 0.95
+            },
+            "task": {
+              "text": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+              "description_parts": [
+                "完成备份演练"
+              ],
+              "owner": "许舟",
+              "deadline_text": "2029-06-25",
+              "project": "清泉",
+              "vendor": "远岸"
+            }
+          },
+          {
+            "claim_type": "PLAN",
+            "subject": "清泉",
+            "relation_phrase": "task_assignment",
+            "value": "交付告警清单",
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.95,
+              "entity": 0.95,
+              "relation": 0.95,
+              "temporal": 0.95,
+              "overall": 0.95
+            },
+            "task": {
+              "text": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+              "description_parts": [
+                "交付告警清单"
+              ],
+              "owner": "许舟",
+              "deadline_text": "2029-06-25",
+              "project": "清泉",
+              "vendor": "远岸"
+            }
+          },
+          {
+            "claim_type": "PLAN",
+            "subject": null,
+            "relation_phrase": "task_assignment",
+            "value": "完成权限核查",
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.9,
+              "entity": 0.9,
+              "relation": 0.9,
+              "temporal": 0.9,
+              "overall": 0.9
+            },
+            "task": {
+              "text": "安排完成权限核查，负责人尚未确定。",
+              "description_parts": [
+                "完成权限核查"
+              ],
+              "owner": null,
+              "deadline_text": null,
+              "project": null,
+              "vendor": null
+            }
+          },
+          {
+            "claim_type": "FACT",
+            "subject": "设备",
+            "relation_phrase": "equipment_id",
+            "value": "Q7",
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.95,
+              "entity": 0.95,
+              "relation": 0.95,
+              "temporal": 0.95,
+              "overall": 0.95
+            }
+          }
+        ],
+        "receipt": {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3f-diagnostic/v1",
+          "workspace_id": "public-m3f",
+          "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+          "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+          "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "21f74676648ef2dcfa039ac8263b8136e8c52bb71de0fec34b76f56bc1acef29",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+          "extraction_fingerprint": "3c77851e7a056661ca315c4a6ee9bb764ef468c95794fc8935cef5cc0e4ddea1",
+          "claims_sha256": "83483f48b769fe42d72e1f615b075603b9a4199136bcdf7f6ae6279fa30e7552",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "a0b858b26af7d6c91891afb12aa00ccc532648cc43ca379e0639e964677dbb36",
+              "response_sha256": "2afee4e85a984fb8b7b5d845d0199ae64ef786bb83b7143acc1de7b8bfe13590",
+              "provider_request_id": null,
+              "provider_response_id": "W6rVasfDErvcytMPq_mJ0QM",
+              "usage": {
+                "input_tokens": 1463,
+                "output_tokens": 610,
+                "total_tokens": 2073,
+                "duration_ms": 5055.784
+              },
+              "latency_ms": 6.411000002117362,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3f-semturn_3c77851e7a056661ca31_1",
+              "estimated_cost_upper_bound_usd": 0.05
+            }
+          ],
+          "terminal_reason": null
+        },
+        "failure_code": null
+      }
+    ],
+    "receipts": [
+      {
+        "provider_id": "gemini",
+        "model_id": "gemini-3.8-flash",
+        "extractor_version": "provider-neutral-extractor/v1",
+        "schema_version": "semantic-candidate/v2",
+        "temporal_policy_version": "explicit-time-only/v1",
+        "request_guard_id": "m3f-diagnostic/v1",
+        "workspace_id": "public-m3f",
+        "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+        "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+        "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+        "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+        "prompt_sha256": "21f74676648ef2dcfa039ac8263b8136e8c52bb71de0fec34b76f56bc1acef29",
+        "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+        "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+        "extraction_fingerprint": "3c77851e7a056661ca315c4a6ee9bb764ef468c95794fc8935cef5cc0e4ddea1",
+        "claims_sha256": "83483f48b769fe42d72e1f615b075603b9a4199136bcdf7f6ae6279fa30e7552",
+        "attempts": [
+          {
+            "attempt_number": 1,
+            "request_sha256": "a0b858b26af7d6c91891afb12aa00ccc532648cc43ca379e0639e964677dbb36",
+            "response_sha256": "2afee4e85a984fb8b7b5d845d0199ae64ef786bb83b7143acc1de7b8bfe13590",
+            "provider_request_id": null,
+            "provider_response_id": "W6rVasfDErvcytMPq_mJ0QM",
+            "usage": {
+              "input_tokens": 1463,
+              "output_tokens": 610,
+              "total_tokens": 2073,
+              "duration_ms": 5055.784
+            },
+            "latency_ms": 6.411000002117362,
+            "failure_code": null,
+            "outcome": "accepted_response",
+            "budget_reservation_id": "m3f-semturn_3c77851e7a056661ca31_1",
+            "estimated_cost_upper_bound_usd": 0.05
+          }
+        ],
+        "terminal_reason": null
+      }
+    ],
+    "candidate_coverage": [
+      {
+        "artifact_id": "same-project-distinct-tasks",
+        "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+        "verified_description_parts": [
+          "完成备份演练",
+          "交付告警清单",
+          "完成权限核查"
+        ]
+      }
+    ]
+  }
+}

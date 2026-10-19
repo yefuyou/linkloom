@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.444" timestamp="2026-10-19T23:25:05.148242+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_discovery_m3n" name="test_task_context_is_available_through_the_existing_public_extraction_api" time="0.004"><failure message="ImportError: cannot import name 'TaskDiscoveryContext' from 'linkloom.semantic_ingestion' (D:\webproject\Linkloom\work\linkloom-m3-n-task-discovery\src\linkloom\semantic_ingestion\__init__.py)">def test_task_context_is_available_through_the_existing_public_extraction_api():
+&gt;       from linkloom.semantic_ingestion import TaskDiscoveryContext as PublicContext
+E       ImportError: cannot import name 'TaskDiscoveryContext' from 'linkloom.semantic_ingestion' (D:\webproject\Linkloom\work\linkloom-m3-n-task-discovery\src\linkloom\semantic_ingestion\__init__.py)
+
+tests\unit\test_task_discovery_m3n.py:26: ImportError</failure></testcase></testsuite></testsuites>

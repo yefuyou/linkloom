@@ -1,0 +1,20 @@
+{
+  "version": "m3n-public-contract-freeze/v1",
+  "baseline": "e75728796d9d280b8ae6c0d8355598cc32d9edbf",
+  "frozen_before_production_edits": true,
+  "real_model_semantic_quality": "NOT_EVALUATED",
+  "datasets": {
+    "dev": {
+      "sha256": "a9de93c474d7294df99a506f5e44dacdd94dee55fe35fa3ca30a2b086e23182d",
+      "cases": 12,
+      "expected_candidates": 13,
+      "design": "primary"
+    },
+    "heldout": {
+      "sha256": "35b4a2efd5f75f39b8e606a3f81e5acea7745d9fc9d4e05f7e983bcf62da4816",
+      "cases": 14,
+      "expected_candidates": 14,
+      "design": "independent agent; no implementation access"
+    }
+  }
+}
