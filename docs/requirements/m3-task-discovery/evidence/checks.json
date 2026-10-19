@@ -1,0 +1,20 @@
+{
+  "schema": "m3f-checks/v1",
+  "base": "31dde91f0e9b6015abc5754e995692a2f1db89ec",
+  "branch": "codex/linkloom-m3-task-discovery",
+  "checks": [
+    {"name": "initial focused M1/source contracts", "status": "PASS", "tests": 95, "evidence": "focused.xml"},
+    {"name": "final related task/semantic/source regression", "status": "PASS", "tests": 385, "evidence": "accepted-regression.xml", "selection": "tests/unit/test_(task_|semantic_|source_identity)*.py", "temporary_directory": "work/m3f-review-green"},
+    {"name": "final diagnostic scoring tests including false merge", "status": "PASS", "tests": 3, "evidence": "scoring-final.xml"},
+    {"name": "independent reviewer P1 reproductions", "status": "EXPECTED_RED_THEN_FIXED", "initial_failed": 9, "initial_passed": 6, "initial_evidence": "reviewer-red.xml", "fixed_evidence": "accepted-regression.xml"},
+    {"name": "real public synthetic diagnostic", "status": "EXECUTED", "calls": 3, "retries": 0, "model": "gemini-3.8-flash", "tokens": 6276, "evidence": "live/predictions.json"},
+    {"name": "recorded provider replay after fixes", "status": "PASS", "network_calls": 0, "evidence": "reviewed-replay/predictions.json", "comparison": "observations/groups/sources/failures/coverage equal to original live"},
+    {"name": "separate discovery quality scoring", "status": "SCORED", "task_recall": 0.8, "task_precision": 0.8, "field_accuracy_on_matched_tasks": 1.0, "evidence_validity": 1.0, "evidence": "reviewed-metrics.json"},
+    {"name": "full unit/integration collection", "status": "BASELINE_BLOCKED", "collection_errors": 4, "evidence": "regression.xml", "missing_scripts": ["scripts/run_memoryagentbench_g3_pilot.py", "scripts/run_stage_c_context_memory_loop.py"]},
+    {"name": "broader legacy Provider tests", "status": "BASELINE_FAILURE", "passed_before_first_failure": 46, "evidence": "related-first-failure.xml", "failure": "test_p85_gemini_api_adapter.py:260 model_id_mismatch; unchanged baseline test uses old model ID"},
+    {"name": "default-temp wide run", "status": "INTERRUPTED", "reason": "environment temporary-directory errors; replaced by explicit fresh work/ directories"},
+    {"name": "CI / UI / deployment / real vault", "status": "NOT_RUN", "reason": "outside authorized independent M1 scheduling boundary"}
+  ],
+  "warnings": ["pytest-asyncio default fixture-loop scope deprecation", "pyreadline3 Console destructor OSError after test exit; assertion exit code recorded separately", "raw historical XML tracebacks retain trailing whitespace; source/tests/Markdown/JSON diff check passed"],
+  "limitations": ["single-pass coverage is not semantic exhaustiveness", "real model omitted cross-message regression-script work", "veto-only grammar is conservative and not a universal semantic classifier", "live generation quota exhausted; no additional live calls"]
+}

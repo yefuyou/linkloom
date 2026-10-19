@@ -1,0 +1,1085 @@
+{
+  "execution": "REPLAY",
+  "calls": 3,
+  "cases": [
+    {
+      "case_id": "five-messages",
+      "result": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [
+          {
+            "observation_id": "task_observation_v1_f5c95f694f02c38dc9466065e82665564684005afa89c2cb4766a495d52da2cb",
+            "provenance": {
+              "workspace_id": "public-m3f",
+              "artifact_id": "five-messages",
+              "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+              "source_ref": "artifact://public-m3f/five-messages",
+              "content_hash": "169b4298e62ed5217f31fbcf3df16ca1abc4a11fb69c1011be9cafbf3ca83adf",
+              "ordinal": 0,
+              "message_id": "message_v1_3ede67b08d2655fbf27c548273e7963ea65f875a709351c168bcf1bf7bbdcbbe",
+              "segment_id": "segment_v1_8de207d6655f045d326b868050a7e52a17605e222aa8b0ca1d8a7fd221f47c16",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8de207d6655f045d326b868050a7e52a17605e222aa8b0ca1d8a7fd221f47c16",
+              "char_start": 27,
+              "char_end": 63,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+              "quote_sha256": "30f49ef2d82d98725a7dabd49137d36540aad24c0841aec693725f0f5a2f5559"
+            },
+            "raw_text": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+            "description": "索引迁移",
+            "owner": "林枫",
+            "deadline": "2029-06-20",
+            "deadline_text": "2029-06-20",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "青竹项目",
+            "vendor": "云桥",
+            "extraction_status": "EXTRACTED",
+            "validation_status": "VALID",
+            "unknown_fields": [],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+                "char_start": 27,
+                "char_end": 63,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "索引迁移",
+                "char_start": 35,
+                "char_end": 39,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "我负责",
+                "char_start": 27,
+                "char_end": 30,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "林枫",
+                "char_start": 23,
+                "char_end": 25,
+                "basis": "SPEAKER"
+              },
+              {
+                "field": "project",
+                "quote": "青竹项目",
+                "char_start": 30,
+                "char_end": 34,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "vendor",
+                "quote": "云桥",
+                "char_start": 44,
+                "char_end": 46,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期：2029-06-20",
+                "char_start": 47,
+                "char_end": 62,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2029-06-03T00:00:00+00:00",
+            "event_time": "2029-06-01T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_14ad4be7702fc1184cd2c3b2978e7af346356833d4fd016ceac7a3e0af87f35f",
+            "provenance": {
+              "workspace_id": "public-m3f",
+              "artifact_id": "five-messages",
+              "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+              "source_ref": "artifact://public-m3f/five-messages",
+              "content_hash": "169b4298e62ed5217f31fbcf3df16ca1abc4a11fb69c1011be9cafbf3ca83adf",
+              "ordinal": 2,
+              "message_id": "message_v1_7380c28f43c4a00f6f839f90a3b17c9c6b7bb4ed2683662bd540b6f31c8e7ba4",
+              "segment_id": "segment_v1_a6fd1266a0d7b18e334e78eb11979aaed0707bdc523af053180485ae742ed7d5",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a6fd1266a0d7b18e334e78eb11979aaed0707bdc523af053180485ae742ed7d5",
+              "char_start": 133,
+              "char_end": 166,
+              "line_start": 3,
+              "line_end": 3,
+              "quote": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+              "quote_sha256": "9f250f1c844438bf36c8edd01719b26f636b619718c2d5490f46fe7f155de043"
+            },
+            "raw_text": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+            "description": "提交容量报告",
+            "owner": "周岚",
+            "deadline": null,
+            "deadline_text": "6月22日",
+            "deadline_precision": "MONTH_DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "青竹项目",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "deadline",
+              "vendor"
+            ],
+            "validation_issues": [
+              "DEADLINE_YEAR_MISSING"
+            ],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+                "char_start": 133,
+                "char_end": 166,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "提交容量报告",
+                "char_start": 148,
+                "char_end": 154,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "负责人：周岚",
+                "char_start": 141,
+                "char_end": 147,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "青竹项目",
+                "char_start": 136,
+                "char_end": 140,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期：6月22日",
+                "char_start": 155,
+                "char_end": 165,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2029-06-03T00:00:00+00:00",
+            "event_time": "2029-06-01T09:02:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "five-messages",
+            "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_a702c30aa8a9a683e16acb1451ff2274d1acbbea251177fa40a245f2badf0878",
+            "observation_ids": [
+              "task_observation_v1_f5c95f694f02c38dc9466065e82665564684005afa89c2cb4766a495d52da2cb"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_8de207d6655f045d326b868050a7e52a17605e222aa8b0ca1d8a7fd221f47c16"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_22487a46cbb250f4ea21ae6e59be62401c5e1ba6fbc43f5f229e3ca203bd6ca9",
+            "observation_ids": [
+              "task_observation_v1_14ad4be7702fc1184cd2c3b2978e7af346356833d4fd016ceac7a3e0af87f35f"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_a6fd1266a0d7b18e334e78eb11979aaed0707bdc523af053180485ae742ed7d5"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": "林枫",
+                "relation_phrase": "负责任务",
+                "value": "索引迁移",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+                  "description_parts": [
+                    "索引迁移"
+                  ],
+                  "owner": "林枫",
+                  "deadline_text": "2029-06-20",
+                  "project": "青竹项目",
+                  "vendor": "云桥"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": "周岚",
+                "relation_phrase": "负责任务",
+                "value": "提交容量报告",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+                  "description_parts": [
+                    "提交容量报告"
+                  ],
+                  "owner": "周岚",
+                  "deadline_text": "6月22日",
+                  "project": "青竹项目",
+                  "vendor": null
+                }
+              },
+              {
+                "claim_type": "FACT",
+                "subject": null,
+                "relation_phrase": "缓存大小",
+                "value": "64GB",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.85,
+                  "overall": 0.9
+                }
+              },
+              {
+                "claim_type": "PROPOSAL",
+                "subject": null,
+                "relation_phrase": "建议功能",
+                "value": "做界面换肤",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.8,
+                  "relation": 0.85,
+                  "temporal": 0.85,
+                  "overall": 0.85
+                }
+              },
+              {
+                "claim_type": "DECISION",
+                "subject": "整理旧截图",
+                "relation_phrase": "任务取消",
+                "value": "取消",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.85,
+                  "relation": 0.85,
+                  "temporal": 0.85,
+                  "overall": 0.9
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "m3f-diagnostic/v1",
+              "workspace_id": "public-m3f",
+              "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+              "segment_id": "segment_v1_823510d50b327aeb2745107549e978df924070b528c7706188cbd26e73230a78",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_823510d50b327aeb2745107549e978df924070b528c7706188cbd26e73230a78",
+              "quote_sha256": "169b4298e62ed5217f31fbcf3df16ca1abc4a11fb69c1011be9cafbf3ca83adf",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "567235e7c3d1647d9c6ee610b0e1c8da56d154f5b9cf1fe19e93aa367594faf9",
+              "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+              "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+              "extraction_fingerprint": "c4526873778dbc01c04bf4a83144dfb54d7616b64d5d80ebee6559790ef3ecd3",
+              "claims_sha256": "dee646129f7eded59f6deb8a19160b8a9ce79e1159685349c32a7b60e87f325b",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "165c91e20416a3d8bd0ce502a517408aabb89b77e10c1d38481d6266ec216eb7",
+                  "response_sha256": "3c361b1a655c95e5669b92ab99253e137df4c5ff27d30e19e19c6099116ed881",
+                  "provider_request_id": null,
+                  "provider_response_id": "VqrVaqruIsWKytMPu7-PmAs",
+                  "usage": {
+                    "input_tokens": 1575,
+                    "output_tokens": 625,
+                    "total_tokens": 2200,
+                    "duration_ms": 7677.427
+                  },
+                  "latency_ms": 12.07550000253832,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "m3f-semturn_c4526873778dbc01c04b_1",
+                  "estimated_cost_upper_bound_usd": 0.05
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "m3f-diagnostic/v1",
+            "workspace_id": "public-m3f",
+            "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+            "segment_id": "segment_v1_823510d50b327aeb2745107549e978df924070b528c7706188cbd26e73230a78",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_823510d50b327aeb2745107549e978df924070b528c7706188cbd26e73230a78",
+            "quote_sha256": "169b4298e62ed5217f31fbcf3df16ca1abc4a11fb69c1011be9cafbf3ca83adf",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "567235e7c3d1647d9c6ee610b0e1c8da56d154f5b9cf1fe19e93aa367594faf9",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+            "extraction_fingerprint": "c4526873778dbc01c04bf4a83144dfb54d7616b64d5d80ebee6559790ef3ecd3",
+            "claims_sha256": "dee646129f7eded59f6deb8a19160b8a9ce79e1159685349c32a7b60e87f325b",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "165c91e20416a3d8bd0ce502a517408aabb89b77e10c1d38481d6266ec216eb7",
+                "response_sha256": "3c361b1a655c95e5669b92ab99253e137df4c5ff27d30e19e19c6099116ed881",
+                "provider_request_id": null,
+                "provider_response_id": "VqrVaqruIsWKytMPu7-PmAs",
+                "usage": {
+                  "input_tokens": 1575,
+                  "output_tokens": 625,
+                  "total_tokens": 2200,
+                  "duration_ms": 7677.427
+                },
+                "latency_ms": 12.07550000253832,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "m3f-semturn_c4526873778dbc01c04b_1",
+                "estimated_cost_upper_bound_usd": 0.05
+              }
+            ],
+            "terminal_reason": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "same-project-distinct-tasks",
+      "result": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [
+          {
+            "observation_id": "task_observation_v1_d705768bd7ccaa77576852b016090852442ef5ccf62552dcb2d7ee4244690ce8",
+            "provenance": {
+              "workspace_id": "public-m3f",
+              "artifact_id": "same-project-distinct-tasks",
+              "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+              "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+              "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+              "ordinal": 0,
+              "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+              "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "char_start": 0,
+              "char_end": 140,
+              "line_start": 1,
+              "line_end": 5,
+              "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+              "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+            },
+            "raw_text": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+            "description": "完成备份演练",
+            "owner": "许舟",
+            "deadline": "2029-06-25",
+            "deadline_text": "2029-06-25",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "清泉",
+            "vendor": "远岸",
+            "extraction_status": "EXTRACTED",
+            "validation_status": "VALID",
+            "unknown_fields": [],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+                "char_start": 16,
+                "char_end": 59,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "完成备份演练",
+                "char_start": 36,
+                "char_end": 42,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "负责人：许舟",
+                "char_start": 22,
+                "char_end": 28,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "清泉",
+                "char_start": 19,
+                "char_end": 21,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "vendor",
+                "quote": "远岸",
+                "char_start": 33,
+                "char_end": 35,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期：2029-06-25",
+                "char_start": 43,
+                "char_end": 58,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2029-06-03T00:00:00+00:00",
+            "event_time": null,
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          },
+          {
+            "observation_id": "task_observation_v1_370798a54095e76423f492166fd193076571c1082827de6449d94f5e8c7a6406",
+            "provenance": {
+              "workspace_id": "public-m3f",
+              "artifact_id": "same-project-distinct-tasks",
+              "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+              "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+              "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+              "ordinal": 0,
+              "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+              "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "char_start": 0,
+              "char_end": 140,
+              "line_start": 1,
+              "line_end": 5,
+              "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+              "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+            },
+            "raw_text": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+            "description": "交付告警清单",
+            "owner": "许舟",
+            "deadline": "2029-06-25",
+            "deadline_text": "2029-06-25",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "清泉",
+            "vendor": "远岸",
+            "extraction_status": "EXTRACTED",
+            "validation_status": "VALID",
+            "unknown_fields": [],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+                "char_start": 60,
+                "char_end": 103,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "交付告警清单",
+                "char_start": 80,
+                "char_end": 86,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "负责人：许舟",
+                "char_start": 66,
+                "char_end": 72,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "清泉",
+                "char_start": 63,
+                "char_end": 65,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "vendor",
+                "quote": "远岸",
+                "char_start": 77,
+                "char_end": 79,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "截止日期：2029-06-25",
+                "char_start": 87,
+                "char_end": 102,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2029-06-03T00:00:00+00:00",
+            "event_time": null,
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_f3cb5787a2a18962ae0b6165fb00beb09a809bd85d6e22f6d219f8e7906c3275",
+            "provenance": {
+              "workspace_id": "public-m3f",
+              "artifact_id": "same-project-distinct-tasks",
+              "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+              "source_ref": "artifact://public-m3f/same-project-distinct-tasks",
+              "content_hash": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+              "ordinal": 0,
+              "message_id": "message_v1_fa8aaee2ca1bfe3ed0c153a6eece3f084b8f398fe5230b2326f8a6a9937cd5d6",
+              "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "char_start": 0,
+              "char_end": 140,
+              "line_start": 1,
+              "line_end": 5,
+              "quote": "会议日期：2029-06-02\n项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。\n项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。\n安排完成权限核查，负责人尚未确定。\n资料纠错：设备编号是Q7，不是Q1。",
+              "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5"
+            },
+            "raw_text": "安排完成权限核查，负责人尚未确定。",
+            "description": "完成权限核查",
+            "owner": null,
+            "deadline": null,
+            "deadline_text": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "安排完成权限核查，负责人尚未确定。",
+                "char_start": 104,
+                "char_end": 121,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "完成权限核查",
+                "char_start": 106,
+                "char_end": 112,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2029-06-03T00:00:00+00:00",
+            "event_time": null,
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "same-project-distinct-tasks",
+            "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_bba26d4263df946134ab66256b3e7c2fb353f78c620f0acc2065a9a82f026b92",
+            "observation_ids": [
+              "task_observation_v1_d705768bd7ccaa77576852b016090852442ef5ccf62552dcb2d7ee4244690ce8"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_cdf436ea2b8f8ad3d4e40d4a37f056ce8f125e0f9b05d501593318f422f76cd0",
+            "observation_ids": [
+              "task_observation_v1_370798a54095e76423f492166fd193076571c1082827de6449d94f5e8c7a6406"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_f7c411d54d98de965e614705a3d0e984ae2ea28c03600ae4bfc09cc166fce2c2",
+            "observation_ids": [
+              "task_observation_v1_f3cb5787a2a18962ae0b6165fb00beb09a809bd85d6e22f6d219f8e7906c3275"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": "清泉",
+                "relation_phrase": "task_assignment",
+                "value": "完成备份演练",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.95,
+                  "temporal": 0.95,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "项目：清泉；负责人：许舟；供应商：远岸；完成备份演练；截止日期：2029-06-25。",
+                  "description_parts": [
+                    "完成备份演练"
+                  ],
+                  "owner": "许舟",
+                  "deadline_text": "2029-06-25",
+                  "project": "清泉",
+                  "vendor": "远岸"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": "清泉",
+                "relation_phrase": "task_assignment",
+                "value": "交付告警清单",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.95,
+                  "temporal": 0.95,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "项目：清泉；负责人：许舟；供应商：远岸；交付告警清单；截止日期：2029-06-25。",
+                  "description_parts": [
+                    "交付告警清单"
+                  ],
+                  "owner": "许舟",
+                  "deadline_text": "2029-06-25",
+                  "project": "清泉",
+                  "vendor": "远岸"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": "task_assignment",
+                "value": "完成权限核查",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.9
+                },
+                "task": {
+                  "text": "安排完成权限核查，负责人尚未确定。",
+                  "description_parts": [
+                    "完成权限核查"
+                  ],
+                  "owner": null,
+                  "deadline_text": null,
+                  "project": null,
+                  "vendor": null
+                }
+              },
+              {
+                "claim_type": "FACT",
+                "subject": "设备",
+                "relation_phrase": "equipment_id",
+                "value": "Q7",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.95,
+                  "temporal": 0.95,
+                  "overall": 0.95
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "m3f-diagnostic/v1",
+              "workspace_id": "public-m3f",
+              "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+              "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+              "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "21f74676648ef2dcfa039ac8263b8136e8c52bb71de0fec34b76f56bc1acef29",
+              "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+              "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+              "extraction_fingerprint": "3c77851e7a056661ca315c4a6ee9bb764ef468c95794fc8935cef5cc0e4ddea1",
+              "claims_sha256": "83483f48b769fe42d72e1f615b075603b9a4199136bcdf7f6ae6279fa30e7552",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "a0b858b26af7d6c91891afb12aa00ccc532648cc43ca379e0639e964677dbb36",
+                  "response_sha256": "2afee4e85a984fb8b7b5d845d0199ae64ef786bb83b7143acc1de7b8bfe13590",
+                  "provider_request_id": null,
+                  "provider_response_id": "W6rVasfDErvcytMPq_mJ0QM",
+                  "usage": {
+                    "input_tokens": 1463,
+                    "output_tokens": 610,
+                    "total_tokens": 2073,
+                    "duration_ms": 5055.784
+                  },
+                  "latency_ms": 13.168800000130432,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "m3f-semturn_3c77851e7a056661ca31_1",
+                  "estimated_cost_upper_bound_usd": 0.05
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "m3f-diagnostic/v1",
+            "workspace_id": "public-m3f",
+            "artifact_version_id": "artifact_v1_8f06dc718a24561440481f392ce2a121c4a009ea5362456aa9f4ebf41f40d65f",
+            "segment_id": "segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f2b0fa16c89ea9b3d292c7734d9ce956c68b6f40a8f7a7d0317ad855170e5b61",
+            "quote_sha256": "08018e3fa69d4fd5a86be44156be2f95d8d8d8e8886e2bfa3f9dc073c5e453f5",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "21f74676648ef2dcfa039ac8263b8136e8c52bb71de0fec34b76f56bc1acef29",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+            "extraction_fingerprint": "3c77851e7a056661ca315c4a6ee9bb764ef468c95794fc8935cef5cc0e4ddea1",
+            "claims_sha256": "83483f48b769fe42d72e1f615b075603b9a4199136bcdf7f6ae6279fa30e7552",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "a0b858b26af7d6c91891afb12aa00ccc532648cc43ca379e0639e964677dbb36",
+                "response_sha256": "2afee4e85a984fb8b7b5d845d0199ae64ef786bb83b7143acc1de7b8bfe13590",
+                "provider_request_id": null,
+                "provider_response_id": "W6rVasfDErvcytMPq_mJ0QM",
+                "usage": {
+                  "input_tokens": 1463,
+                  "output_tokens": 610,
+                  "total_tokens": 2073,
+                  "duration_ms": 5055.784
+                },
+                "latency_ms": 13.168800000130432,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "m3f-semturn_3c77851e7a056661ca31_1",
+                "estimated_cost_upper_bound_usd": 0.05
+              }
+            ],
+            "terminal_reason": null
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "discussion-and-cancelled",
+      "result": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "discussion-and-cancelled",
+            "artifact_version_id": "artifact_v1_0c5e4b7845a7447bacd6c1cb4bd83125953e89a3bc05f59fc96c80acf53360f7",
+            "status": "NO_TASKS_DETECTED",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "FACT",
+                "subject": "日志格式的历史",
+                "relation_phrase": "discussed",
+                "value": "今天仅讨论了日志格式的历史",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.85,
+                  "temporal": 0.8,
+                  "overall": 0.9
+                }
+              },
+              {
+                "claim_type": "SPECULATION",
+                "subject": "仪表盘",
+                "relation_phrase": "potential_reception",
+                "value": "大家可能会喜欢",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.85,
+                  "relation": 0.85,
+                  "temporal": 0.8,
+                  "overall": 0.85
+                }
+              },
+              {
+                "claim_type": "PROPOSAL",
+                "subject": "林枫",
+                "relation_phrase": "proposed_task",
+                "value": "完成界面换肤",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.8,
+                  "overall": 0.9
+                }
+              },
+              {
+                "claim_type": "FACT",
+                "subject": "周岚",
+                "relation_phrase": "historical_responsibility",
+                "value": "负责提交审计报告",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.8,
+                  "overall": 0.9
+                }
+              },
+              {
+                "claim_type": "DECISION",
+                "subject": "许舟完成归档迁移",
+                "relation_phrase": "status",
+                "value": "取消，不需要继续执行",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.9,
+                  "temporal": 0.8,
+                  "overall": 0.92
+                }
+              },
+              {
+                "claim_type": "FACT",
+                "subject": "数据库",
+                "relation_phrase": "status",
+                "value": "今天响应正常",
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.8,
+                  "overall": 0.9
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "m3f-diagnostic/v1",
+              "workspace_id": "public-m3f",
+              "artifact_version_id": "artifact_v1_0c5e4b7845a7447bacd6c1cb4bd83125953e89a3bc05f59fc96c80acf53360f7",
+              "segment_id": "segment_v1_3b72039fc5d4e5e579d6cc1661bf25aa7d1eea7b1d6e5469c78bcce5e8a4299d",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3b72039fc5d4e5e579d6cc1661bf25aa7d1eea7b1d6e5469c78bcce5e8a4299d",
+              "quote_sha256": "5c3a3c009df54372e979b9456016d0869b6e93930f97a1c3f0084911adf0049a",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "b1987439525b82e0f9973fa862bc9bb5802a3bdcda01a39c3b1e364ef15ca5cb",
+              "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+              "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+              "extraction_fingerprint": "6f315b37ba4989e76fb73b4d46e2ba9096bf6f6a261e17eae50bd51db50cad82",
+              "claims_sha256": "d0c99d85e273f87cb4764c35a69081e1fad674c9eb47bae27a1c07964741833f",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "4ac1b448c80f1522d9d60663c49050308a8747b75c6451c56279477db6033c28",
+                  "response_sha256": "6d0ba26b631d72195b10346f17a50a236a1316234bde56bfb1225005a66e668d",
+                  "provider_request_id": null,
+                  "provider_response_id": "YKrVavLJGsqEytMPwM_lmQs",
+                  "usage": {
+                    "input_tokens": 1415,
+                    "output_tokens": 588,
+                    "total_tokens": 2003,
+                    "duration_ms": 5482.638
+                  },
+                  "latency_ms": 12.31519999782904,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "m3f-semturn_6f315b37ba4989e76fb7_1",
+                  "estimated_cost_upper_bound_usd": 0.05
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "m3f-diagnostic/v1",
+            "workspace_id": "public-m3f",
+            "artifact_version_id": "artifact_v1_0c5e4b7845a7447bacd6c1cb4bd83125953e89a3bc05f59fc96c80acf53360f7",
+            "segment_id": "segment_v1_3b72039fc5d4e5e579d6cc1661bf25aa7d1eea7b1d6e5469c78bcce5e8a4299d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3b72039fc5d4e5e579d6cc1661bf25aa7d1eea7b1d6e5469c78bcce5e8a4299d",
+            "quote_sha256": "5c3a3c009df54372e979b9456016d0869b6e93930f97a1c3f0084911adf0049a",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "b1987439525b82e0f9973fa862bc9bb5802a3bdcda01a39c3b1e364ef15ca5cb",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "144db3a4d498015e3ef404aafd24c0abbf6b236835504dbc5bae4a852cd75652",
+            "extraction_fingerprint": "6f315b37ba4989e76fb73b4d46e2ba9096bf6f6a261e17eae50bd51db50cad82",
+            "claims_sha256": "d0c99d85e273f87cb4764c35a69081e1fad674c9eb47bae27a1c07964741833f",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "4ac1b448c80f1522d9d60663c49050308a8747b75c6451c56279477db6033c28",
+                "response_sha256": "6d0ba26b631d72195b10346f17a50a236a1316234bde56bfb1225005a66e668d",
+                "provider_request_id": null,
+                "provider_response_id": "YKrVavLJGsqEytMPwM_lmQs",
+                "usage": {
+                  "input_tokens": 1415,
+                  "output_tokens": 588,
+                  "total_tokens": 2003,
+                  "duration_ms": 5482.638
+                },
+                "latency_ms": 12.31519999782904,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "m3f-semturn_6f315b37ba4989e76fb7_1",
+                "estimated_cost_upper_bound_usd": 0.05
+              }
+            ],
+            "terminal_reason": null
+          }
+        ]
+      }
+    }
+  ],
+  "model_id": "gemini-3.8-flash",
+  "cost_usd": null,
+  "cost_note": "No invoice or current price lookup; .05 USD per-call admission estimate only."
+}

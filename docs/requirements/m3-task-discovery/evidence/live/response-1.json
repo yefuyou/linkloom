@@ -1,0 +1,168 @@
+{
+  "action": null,
+  "proposal": {
+    "schema_version": 2,
+    "proposal_id": "semturn_c4526873778dbc01c04b_1:proposal",
+    "kind": "tool_calls",
+    "final_answer": null,
+    "tool_calls": [
+      {
+        "provider_call_id": "call_5733247",
+        "runtime_call": {
+          "call_id": "rtc_30439c3d57aa94b3809e07a02d19d735",
+          "tool_id": "emit_semantic_candidates",
+          "arguments": {
+            "claims": [
+              {
+                "value": "索引迁移",
+                "relation": "负责任务",
+                "valid_from": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "relation": 0.9,
+                  "overall": 0.95,
+                  "temporal": 0.9,
+                  "entity": 0.95
+                },
+                "temporal_status": "NOT_STATED",
+                "claim_type": "PLAN",
+                "valid_to": null,
+                "task": {
+                  "vendor": "云桥",
+                  "description_parts": [
+                    "索引迁移"
+                  ],
+                  "text": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+                  "project": "青竹项目",
+                  "deadline_text": "2029-06-20",
+                  "owner": "林枫"
+                },
+                "subject": "林枫"
+              },
+              {
+                "task": {
+                  "description_parts": [
+                    "提交容量报告"
+                  ],
+                  "text": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+                  "owner": "周岚",
+                  "deadline_text": "6月22日",
+                  "project": "青竹项目",
+                  "vendor": null
+                },
+                "valid_to": null,
+                "relation": "负责任务",
+                "subject": "周岚",
+                "claim_type": "PLAN",
+                "value": "提交容量报告",
+                "confidence": {
+                  "entity": 0.95,
+                  "relation": 0.9,
+                  "claim_type": 0.95,
+                  "overall": 0.95,
+                  "temporal": 0.9
+                },
+                "valid_from": null,
+                "temporal_status": "NOT_STATED"
+              },
+              {
+                "task": null,
+                "claim_type": "FACT",
+                "temporal_status": "NOT_STATED",
+                "valid_from": null,
+                "confidence": {
+                  "relation": 0.9,
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "temporal": 0.85,
+                  "overall": 0.9
+                },
+                "value": "64GB",
+                "valid_to": null,
+                "subject": null,
+                "relation": "缓存大小"
+              },
+              {
+                "temporal_status": "NOT_STATED",
+                "valid_to": null,
+                "claim_type": "PROPOSAL",
+                "subject": null,
+                "confidence": {
+                  "entity": 0.8,
+                  "temporal": 0.85,
+                  "claim_type": 0.9,
+                  "relation": 0.85,
+                  "overall": 0.85
+                },
+                "valid_from": null,
+                "task": null,
+                "relation": "建议功能",
+                "value": "做界面换肤"
+              },
+              {
+                "task": null,
+                "claim_type": "DECISION",
+                "subject": "整理旧截图",
+                "valid_from": null,
+                "confidence": {
+                  "overall": 0.9,
+                  "temporal": 0.85,
+                  "claim_type": 0.9,
+                  "entity": 0.85,
+                  "relation": 0.85
+                },
+                "valid_to": null,
+                "value": "取消",
+                "temporal_status": "NOT_STATED",
+                "relation": "任务取消"
+              }
+            ]
+          },
+          "run_id": "semrun_c4526873778dbc01c04bf4a8",
+          "task_id": "semtask_c4526873778dbc01c04b",
+          "agent_id": "semantic-extractor-v1",
+          "sequence": 1
+        }
+      }
+    ]
+  },
+  "usage": {
+    "input_tokens": 1575,
+    "output_tokens": 625,
+    "total_tokens": 2200,
+    "duration_ms": 7677.427
+  },
+  "provider_request_id": null,
+  "provider_response_id": "VqrVaqruIsWKytMPu7-PmAs",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "provider": "gemini",
+    "model": "gemini-3.8-flash",
+    "model_version": "gemini-3.8-flash"
+  },
+  "error": null,
+  "provider_turn_continuation": {
+    "provider_id": "gemini",
+    "source_turn_id": "semturn_c4526873778dbc01c04b_1",
+    "source_sequence": 1,
+    "proposal_id": "semturn_c4526873778dbc01c04b_1:proposal",
+    "ordered_call_fingerprints": [
+      {
+        "provider_call_id": "call_5733247",
+        "runtime_call_id": "rtc_30439c3d57aa94b3809e07a02d19d735",
+        "tool_id": "emit_semantic_candidates",
+        "arguments_sha256": "8a6cd19adf370b3449b577c3f32480d346d290d2e8a29bb3f05cb5f9c7f2e3b7"
+      }
+    ],
+    "payload": {
+      "format": "gemini-function-call-turn-v2",
+      "parts": [
+        {
+          "provider_call_id": "call_5733247",
+          "encoding": "base64",
+          "data": "EmkKZwFpFH0TBidyt5iKgiwMZDsJ1RDBla+0fc/wipfgN9eXHbFNvdgypRUyqPRBX/qGi3R5k7bQ8iTkCcdc/Jp/Jrxn+BxEolX9s/UKbBszPOf8srmD0pgm41uw+DMtRmfesweYMTZFVBU="
+        }
+      ]
+    }
+  }
+}

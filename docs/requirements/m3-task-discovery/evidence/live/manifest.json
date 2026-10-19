@@ -1,0 +1,12 @@
+{
+  "source_sha256": "12872fc90f9a5e706a322558bfda13c1d4494231b4fb622c32f1a765cb75ec52",
+  "implementation_sha256": "18d4a28cb6fb25ea816314d21c56cb11d74c5dce13851c1a4c32f3759fb5ac97",
+  "extractor_sha256": "33e9e71bb920a5300030943281eb53e33abdb1f54b025d02f7a8a0bb3788fcda",
+  "runner_sha256": "12c56a7a1d805ccb760a316283598280a62868babcea9f886d8e4e5b2587eef6",
+  "model_id": "gemini-3.8-flash",
+  "max_calls": 3,
+  "max_attempts": 1,
+  "max_output_tokens": 3072,
+  "labels_supplied_to_model": false,
+  "scope": "NEW_PUBLIC_SYNTHETIC_DIAGNOSTIC"
+}

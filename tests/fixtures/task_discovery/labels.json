@@ -1,0 +1,16 @@
+{
+  "schema": "task-discovery-labels/v1",
+  "policy": "Author-visible new synthetic diagnostic; labels are read only AFTER predictions. Cross-message parts may form one MODEL_PROPOSED group, not business identity. Null optional fields must remain unknown; missing-year literal/precision is scored separately.",
+  "cases": {
+    "five-messages": [
+      {"work": ["索引迁移", "补齐回归脚本"], "owner": "林枫", "project": "青竹项目", "vendor": "云桥", "deadline": "2029-06-20", "deadline_text": "2029-06-20", "deadline_precision": "DAY"},
+      {"work": ["容量报告"], "owner": "周岚", "project": "青竹项目", "vendor": null, "deadline": null, "deadline_text": "6月22日", "deadline_precision": "MONTH_DAY"}
+    ],
+    "same-project-distinct-tasks": [
+      {"work": ["备份演练"], "owner": "许舟", "project": "清泉", "vendor": "远岸", "deadline": "2029-06-25", "deadline_text": "2029-06-25", "deadline_precision": "DAY"},
+      {"work": ["告警清单"], "owner": "许舟", "project": "清泉", "vendor": "远岸", "deadline": "2029-06-25", "deadline_text": "2029-06-25", "deadline_precision": "DAY"},
+      {"work": ["权限核查"], "owner": null, "project": null, "vendor": null, "deadline": null, "deadline_text": null, "deadline_precision": "UNKNOWN"}
+    ],
+    "discussion-and-cancelled": []
+  }
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="2" failures="0" skipped="0" tests="26" time="4.479" timestamp="2026-10-19T13:31:50.722893+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_observation_discovery" name="test_real_tool_contract_multiple_distinct_tasks_and_exact_fields" time="0.038" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_first_person_missing_owner_year_and_mixed_correction" time="0.019" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u5efa\u8bae\u6797\u67ab\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002]" time="0.009" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u5982\u679c\u9884\u7b97\u6279\u51c6\uff0c\u6797\u67ab\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002]" time="0.012" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u540c\u4e8b\u8bf4\uff1a\u2018\u6797\u67ab\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002\u2019]" time="0.011" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u6797\u67ab\u4e0d\u9700\u8981\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002]" time="0.012" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u4efb\u52a1\u53d6\u6d88\uff1a\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002]" time="0.010" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cropped_model_task_cannot_hide_non_task_sentence[\u5047\u8bbe\u6797\u67ab\u5b8c\u6210\u7d22\u5f15\u6d4b\u8bd5\u3002]" time="0.010" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_empty_success_does_not_assert_absence" time="0.010" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_cross_message_work_stays_separate_exact_partial_observations" time="0.025" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_stale_revoked_or_foreign_inputs_never_reach_provider" time="0.005" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_update_during_call_withholds_all_observations" time="0.009" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_overlong_duplicate_malformed_and_partial_parse_are_explicit" time="0.010" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_missing_fields_hallucinations_and_absent_task_are_not_silent_success" time="0.019" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_current_version_update_requires_new_registration_and_old_unavailable_is_not_current" time="0.011" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_registration_removed_during_call_is_withheld_and_loader_errors_do_not_leak" time="0.010" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_exact_duplicate_task_proposals_are_collapsed_but_conflicting_same_location_is_quarantined" time="0.021" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_whole_document_budget_saturation_and_unicode_size_are_reported" time="0.022" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_invalid_limits_are_rejected[limits0]" time="0.002" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_invalid_limits_are_rejected[limits1]" time="0.002" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_invalid_limits_are_rejected[limits2]" time="0.002" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_invalid_limits_are_rejected[limits3]" time="0.002" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_empty_batch_wrong_type_and_too_many_sources" time="0.003" /><testcase classname="tests.unit.test_task_observation_discovery" name="test_later_call_revoking_an_earlier_source_withholds_the_earlier_observation" time="0.022" /><testcase classname="tests.unit.test_task_discovery_acceptance" name="test_not_run_cannot_report_perfect_recall" time="0.003"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-task-discovery\\work\\m3f-final-tests'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_not_run_cannot_report_perfect_recall&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+
+C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-task-discovery/work/m3f-final-tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-task-discovery\\work\\m3f-final-tests'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.unit.test_task_discovery_acceptance" name="test_recorded_real_diagnostic_is_reproducibly_scored_without_calls" time="0.003"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-task-discovery\\work\\m3f-final-tests'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_recorded_real_diagnostic_is_reproducibly_scored_without_calls&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+
+C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/webproject/Linkloom/work/linkloom-m3-task-discovery/work/m3f-final-tests')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\linkloom-m3-task-discovery\\work\\m3f-final-tests'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase></testsuite></testsuites>
