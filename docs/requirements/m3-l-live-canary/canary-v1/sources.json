@@ -1,0 +1,30 @@
+{
+  "schema_version": "canary-sources/v1",
+  "question": "请调查这些会议中的任务是否延续，以及截止安排发生了什么变化；有哪些结论仍需确认？",
+  "sources": [
+    {
+      "id": "A",
+      "artifact_id": "canary-a",
+      "source_type": "timestamped_text",
+      "text": "[2026-10-01T09:00:00Z] 林岚: 青竹项目的日志迁移由我负责，截止日期为2026-10-20。\n"
+    },
+    {
+      "id": "B",
+      "artifact_id": "canary-b",
+      "source_type": "timestamped_text",
+      "text": "[2026-10-03T09:00:00Z] 林岚: 继续1日那项日志迁移，仍由我负责，截止日期不变。\n"
+    },
+    {
+      "id": "C",
+      "artifact_id": "canary-c",
+      "source_type": "timestamped_text",
+      "text": "[2026-10-03T09:00:00Z] 林岚: 继续1日那项日志迁移，仍由我负责；截止改为2026-10-24，替代2026-10-20。\n"
+    },
+    {
+      "id": "D",
+      "artifact_id": "canary-d",
+      "source_type": "timestamped_text",
+      "text": "[2026-10-05T09:00:00Z] 周宁: 3日提到的是陈默的另一项日志迁移，我仍按2026-10-20安排。\n[2026-10-05T09:01:00Z] 林岚: 不同意，那是我1日的任务，截止已改为2026-10-24。\n[2026-10-05T09:02:00Z] 记录员: 双方对任务归属和有效截止日期尚未达成一致。\n"
+    }
+  ]
+}

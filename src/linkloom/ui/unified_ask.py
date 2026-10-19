@@ -244,7 +244,7 @@ class UnifiedAskService:
                 category='validation', status='BLOCKED'), 200
         service = self.investigation()
         config = service.config() if service else {}
-        if not config.get('available') or not config.get('task_investigation') or config.get('external_provider'):
+        if not config.get('available') or not config.get('task_investigation') or (config.get('external_provider') and not config.get('canary_live')):
             return self._failure(result, 'TASK_INVESTIGATION_UNAVAILABLE',
                 'Task investigation needs explicit offline stage adapters. New live Provider execution is disabled.',
                 category='configuration', status='BLOCKED'), 200
@@ -252,6 +252,8 @@ class UnifiedAskService:
             snapshot = service.start(run.query, run.workspace_id, task_investigation=True)
         except Exception as exc:
             code = str(exc) if isinstance(exc, ValueError) else getattr(exc, 'code', 'TASK_PREPARATION_FAILED')
+            if config.get('canary_live'):
+                result['canary_budget'] = service.canary_host.ledger.snapshot()
             return self._failure(result, code, 'Task preparation stopped; no result is publishable.',
                 category='validation', status='BLOCKED'), 200
         with self._lock:
@@ -338,6 +340,18 @@ class UnifiedAskService:
                 metrics=deepcopy(snapshot.get('metrics', {})), trace=deepcopy(snapshot.get('trace', [])),
                 preparation=deepcopy(snapshot.get('preparation')), error=deepcopy(snapshot.get('error')),
                 working_context_audit=deepcopy(snapshot.get('working_context_audit')))
+            campaign = (snapshot.get('preparation') or {}).get('campaign_budget')
+            if campaign:
+                result['canary_budget'] = deepcopy(campaign)
+                result['metrics'].update(accounting_scope='CANARY_CAMPAIGN_ALL_STAGES',
+                    provider_requests=campaign['request_count'],
+                    provider_input_tokens_accounted=campaign['input_tokens'],
+                    billable_output_tokens_accounted=campaign['output_tokens'],
+                    thinking_tokens=campaign['thinking_tokens'],
+                    estimated_cost_usd=campaign['estimated_cost_usd'],
+                    application_reserved_cost_usd=campaign['reserved_cost_usd'],
+                    application_budget_usd=campaign['max_total_cost_usd'],
+                    provider_final_bill_usd=None)
             review = snapshot.get('reviewer', {})
             result['reviewer'] = dict(review, accepted=review.get('decision') == 'evidence_sufficient')
             if snapshot.get('task_investigation') and result['reviewer']['accepted']:

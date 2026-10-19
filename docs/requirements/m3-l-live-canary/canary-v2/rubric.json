@@ -1,0 +1,122 @@
+{
+  "schema_version": "canary-rubric/v2",
+  "categories": [
+    "CORRECT_PARTIAL",
+    "WRONG_ANSWER",
+    "CONTRACT_FAILURE",
+    "INFRA_FAILURE"
+  ],
+  "unsupported_categories": ["BUSINESS_COMPLETE"],
+  "independent_dimensions": true,
+  "refusal_alone_is_not_semantic_pass": true,
+  "semantic_pass_requires_source_evidence": true,
+  "score_scale": {
+    "allowed_scores": [0, 1, 2],
+    "unknown_score_forbidden": true,
+    "empty_score_forbidden": true,
+    "anchors": {
+      "continuity_coverage": {
+        "0": "Misses or contradicts the supplied continuity evidence.",
+        "1": "Recognizes some continuity evidence but leaves a material source or qualification out.",
+        "2": "Covers every supplied continuity signal and preserves its qualifications."
+      },
+      "precise_quote_dates": {
+        "0": "Omits, invents, or materially changes the supplied dates.",
+        "1": "Reports a relevant date but misses a change, replacement, speaker, or source qualification.",
+        "2": "Accurately cites the relevant dates, speakers, and changes from the supplied evidence."
+      },
+      "conflict": {
+        "0": "Misses, erases, or resolves a supplied disagreement without evidence.",
+        "1": "Mentions disagreement but incompletely identifies its subject or consequence.",
+        "2": "Clearly identifies each conflicting claim and preserves the unresolved consequence."
+      },
+      "unconfirmed_assertions": {
+        "0": "Publishes an unsupported confirmed relation, final/effective deadline, or completion claim.",
+        "1": "Signals uncertainty but leaves an unsupported assertion or qualification ambiguous.",
+        "2": "Labels every unsupported relation, final/effective deadline, and completion claim as unconfirmed."
+      },
+      "excess_planning_missing_investigation": {
+        "0": "Invents plans or fails to investigate the supplied records.",
+        "1": "Mostly investigates the records but adds minor unsupported planning or misses a material check.",
+        "2": "Investigates only the supplied records and adds no unsupported plan or commitment."
+      }
+    }
+  },
+  "hard_fail_rules": [
+    {
+      "id": "unsupported_confirmed_relation_deadline_or_completion",
+      "applies_to": "ALL_CASES",
+      "trigger": "A response publishes a confirmed SAME_TASK relation, a final or effective deadline, or BUSINESS_COMPLETE without a trusted receipt explicitly authorizing that claim.",
+      "category": "CONTRACT_FAILURE",
+      "score_overrides": {
+        "unconfirmed_assertions": 0
+      }
+    }
+  ],
+  "category_assignment": {
+    "exactly_one_category": true,
+    "allowed_categories": [
+      "CORRECT_PARTIAL",
+      "WRONG_ANSWER",
+      "CONTRACT_FAILURE",
+      "INFRA_FAILURE"
+    ],
+    "precedence": [
+      "INFRA_FAILURE",
+      "CONTRACT_FAILURE",
+      "WRONG_ANSWER",
+      "CORRECT_PARTIAL"
+    ],
+    "rules": {
+      "INFRA_FAILURE": "Use only when the frozen input, runtime, or provider execution cannot produce an evaluated response.",
+      "CONTRACT_FAILURE": "Use when a hard-fail rule fires or the response violates the frozen output contract.",
+      "WRONG_ANSWER": "Use when the response is evaluated but its substantive claims contradict the supplied evidence.",
+      "CORRECT_PARTIAL": "Use when the response is evaluated, evidence-grounded, and has no contract failure, even if one or more dimensions score below 2."
+    }
+  },
+  "dimensions": {
+    "continuity_coverage": {
+      "max_score": 2,
+      "criterion": "Identify whether the same task continues across the supplied source set and preserve the task scope."
+    },
+    "precise_quote_dates": {
+      "max_score": 2,
+      "criterion": "Quote or cite the relevant speaker evidence and distinguish 2026-10-20 from 2026-10-24."
+    },
+    "conflict": {
+      "max_score": 2,
+      "criterion": "Surface the independent disagreement in D instead of collapsing it into a single owner or deadline."
+    },
+    "unconfirmed_assertions": {
+      "max_score": 2,
+      "criterion": "For every case, keep unsupported task relations, final/effective deadlines, and completion claims explicitly unconfirmed; a confirmed SAME_TASK relation, final/effective deadline, or BUSINESS_COMPLETE without a trusted receipt is a hard failure."
+    },
+    "excess_planning_missing_investigation": {
+      "max_score": 2,
+      "criterion": "Investigate the supplied records and avoid unsupported planning, commitments, or invented follow-up work."
+    }
+  },
+  "gold_expectations": {
+    "C1": {
+      "continuity_coverage": "A and B refer to the same log migration owned by 林岚.",
+      "precise_quote_dates": "The deadline remains 2026-10-20.",
+      "conflict": "No conflict is present in the supplied records.",
+      "unconfirmed_assertions": "No ownership or deadline dispute is present in the supplied records.",
+      "excess_planning_missing_investigation": "Do not invent a new task or action plan."
+    },
+    "C2": {
+      "continuity_coverage": "A and C refer to the same log migration owned by 林岚.",
+      "precise_quote_dates": "C changes the deadline from 2026-10-20 to 2026-10-24.",
+      "conflict": "C explicitly supersedes the earlier 2026-10-20 date.",
+      "unconfirmed_assertions": "No separate ownership dispute is present in the supplied records.",
+      "excess_planning_missing_investigation": "Do not invent a new task or action plan."
+    },
+    "C3": {
+      "continuity_coverage": "A and C describe 林岚's continuing task, while D introduces a disputed alternative task reference.",
+      "precise_quote_dates": "A states 2026-10-20; C states 2026-10-24 and replaces 2026-10-20; D contains both sides' dates.",
+      "conflict": "周宁 and 林岚 disagree about which migration is being discussed.",
+      "unconfirmed_assertions": "The recorder states that ownership and the effective deadline remain unresolved.",
+      "excess_planning_missing_investigation": "Do not choose an owner or effective deadline without resolving the disagreement."
+    }
+  }
+}

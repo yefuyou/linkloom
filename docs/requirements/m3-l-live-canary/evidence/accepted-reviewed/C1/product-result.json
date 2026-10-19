@@ -1,0 +1,2820 @@
+{
+  "schema_version": "product-ask/v1",
+  "query": "请调查这些会议中的任务是否延续，以及截止安排发生了什么变化；有哪些结论仍需确认？",
+  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+  "scope": {
+    "subject": "",
+    "relation": "",
+    "as_of": null
+  },
+  "path": "TASK_INVESTIGATION",
+  "route": {
+    "intent": "TASK_INVESTIGATION",
+    "code": "SOURCE_TASK_INVESTIGATION",
+    "reason": "Bounded task investigation; observations and plans remain unconfirmed."
+  },
+  "status": "PARTIAL",
+  "conclusions": [],
+  "discovery": null,
+  "evidence": [
+    {
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+      "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+      "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+      "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+      "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+      "verified": true,
+      "authority": "ORIGINAL_SOURCE_ONLY",
+      "source_id": "src_361992da1c73bab7f1636e9de567ee0a",
+      "source_version": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+      "source_name": "A.txt"
+    },
+    {
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+      "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+      "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+      "line_start": 1,
+      "line_end": 1,
+      "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+      "content_sha256": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+      "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+      "verified": true,
+      "authority": "ORIGINAL_SOURCE_ONLY",
+      "source_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+      "source_version": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+      "source_name": "B.txt"
+    }
+  ],
+  "receipts": [],
+  "uncertainty": {
+    "unknown_fields": [
+      "semantic_acceptance"
+    ],
+    "statement": "Task observations and model analyses are unconfirmed; semantic and business acceptance are NOT_EVALUATED.",
+    "model_reported_gaps": [],
+    "stage_errors": []
+  },
+  "agent_run_id": "ui-36ecca780a42",
+  "reviewer": {
+    "performed": true,
+    "review_id": "review_1db758cf",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-19T13:04:46.203456+00:00",
+    "accepted": true
+  },
+  "timeline": null,
+  "progress": null,
+  "error": null,
+  "metrics": {
+    "model_turns": 4,
+    "tool_calls": 3,
+    "tool_errors": 0,
+    "max_model_turns": 6,
+    "max_provider_requests": 6,
+    "accounting_scope": "CANARY_CAMPAIGN_ALL_STAGES",
+    "provider_requests": 8,
+    "provider_input_tokens_accounted": 160,
+    "billable_output_tokens_accounted": 96,
+    "thinking_tokens": 16,
+    "estimated_cost_usd": 0.00048,
+    "application_reserved_cost_usd": 0.0,
+    "application_budget_usd": 3.0,
+    "provider_final_bill_usd": null
+  },
+  "trace": [
+    {
+      "sequence": 1,
+      "call_id": "rtc_241e4ad86beee0f230c03fe3904f92f3",
+      "tool": "inspect_task_context",
+      "status": "completed",
+      "arguments": {
+        "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "rtc_241e4ad86beee0f230c03fe3904f92f3",
+        "error": null,
+        "status": "ok",
+        "tool_id": "inspect_task_context",
+        "value": {
+          "discovery": {
+            "candidates": [],
+            "considered_candidates": 0,
+            "eligible_observations": 2,
+            "endpoint_fanout": {
+              "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7": 0,
+              "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f": 0
+            },
+            "generated_candidates": 0,
+            "input_counts": {
+              "artifact_rows": 2,
+              "context_signals": 0,
+              "current_workspace_artifacts": 2,
+              "observation_rows": 2,
+              "source_characters": 110
+            },
+            "limits": {
+              "max_artifacts": 64,
+              "max_candidates": 20,
+              "max_context_signals": 128,
+              "max_generated_candidates": 1000,
+              "max_observations": 128,
+              "max_per_observation": 10,
+              "max_source_chars": 500000
+            },
+            "max_endpoint_fanout": 0,
+            "rejected": [],
+            "returned_candidates": 0,
+            "truncated": false,
+            "truncation_reasons": []
+          },
+          "max_output_bytes": 32768,
+          "missing_context": [],
+          "observations": [
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": null,
+                "deadline_precision": "UNKNOWN",
+                "deadline_role": "UNKNOWN",
+                "deadline_text": null,
+                "description": "日志迁移",
+                "event_time": "2026-10-01T09:00:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 57,
+                    "char_start": 27,
+                    "field": "raw_text",
+                    "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 36,
+                    "char_start": 32,
+                    "field": "description",
+                    "quote": "日志迁移"
+                  }
+                ],
+                "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+                "owner": null,
+                "project": null,
+                "provenance": {
+                  "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "char_end": 57,
+                  "char_start": 27,
+                  "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_3d4cd2c7fc54772a050b9265a63b3f7527dbb02263aaa739bfc9a446f846fa91",
+                  "ordinal": 0,
+                  "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                  "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+                  "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "source_ref": "canary://C1/A",
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+                },
+                "raw_text": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                "recorded_at": "2026-10-19T13:04:23.657153+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "owner",
+                  "deadline",
+                  "project",
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+                "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c",
+                "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+              }
+            },
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": null,
+                "deadline_precision": "UNKNOWN",
+                "deadline_role": "UNKNOWN",
+                "deadline_text": null,
+                "description": "日志迁移",
+                "event_time": "2026-10-03T09:00:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 51,
+                    "char_start": 27,
+                    "field": "raw_text",
+                    "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 37,
+                    "char_start": 33,
+                    "field": "description",
+                    "quote": "日志迁移"
+                  }
+                ],
+                "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+                "owner": null,
+                "project": null,
+                "provenance": {
+                  "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "char_end": 51,
+                  "char_start": 27,
+                  "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_65556f27a51d57a98c25b0147fedd0cd627a5df985eaaf735b653db0bd035762",
+                  "ordinal": 0,
+                  "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                  "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+                  "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "source_ref": "canary://C1/B",
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+                },
+                "raw_text": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                "recorded_at": "2026-10-19T13:04:23.723823+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "owner",
+                  "deadline",
+                  "project",
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+                "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89",
+                "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+              }
+            }
+          ],
+          "observations_truncated": false,
+          "schema_version": "task-context/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        }
+      },
+      "error": null
+    },
+    {
+      "sequence": 2,
+      "call_id": "rtc_fe6e38b4d4783c8766c15db059f683b0",
+      "tool": "query_task_relations",
+      "status": "completed",
+      "arguments": {
+        "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "rtc_fe6e38b4d4783c8766c15db059f683b0",
+        "error": null,
+        "status": "ok",
+        "tool_id": "query_task_relations",
+        "value": {
+          "as_of": null,
+          "current_supported_in_snapshot": 0,
+          "evidence_spans": {},
+          "include_history": false,
+          "max_output_bytes": 49152,
+          "max_plans": 4,
+          "max_relations": 64,
+          "missing_context": [
+            "NO_RELATION_RECORDS"
+          ],
+          "observation_refs": {},
+          "observation_snapshots": {},
+          "plans": [],
+          "relations": [],
+          "returned_relations": 0,
+          "schema_version": "task-relations-query/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "status": "NO_VERIFIED_RELATIONS",
+          "total_matching_relations": 0,
+          "truncated": false,
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        }
+      },
+      "error": null
+    },
+    {
+      "sequence": 3,
+      "call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+      "tool": "analyze_task_semantics",
+      "status": "completed",
+      "arguments": {
+        "investigation_id": "product-investigation",
+        "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+      },
+      "result": {
+        "business_status": null,
+        "call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+        "error": null,
+        "status": "ok",
+        "tool_id": "analyze_task_semantics",
+        "value": {
+          "analysis_status": "EXECUTED",
+          "cache_hit": false,
+          "context_manifest": {
+            "errors": [],
+            "input_inventory": {
+              "display_lists_truncated": false,
+              "expected_observation_payloads": [
+                "35010145e1bde8883888e943308c4f7faa96c11d8bc0e0d57e2fd993e560bed5",
+                "79404603db91385391d5be0e66d171590e24bd34954e1cad88a1cf352c77e352"
+              ],
+              "expected_source_versions": [
+                "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+              ],
+              "inventory_complete": true,
+              "inventory_sha256": "8b9a588b25fd8e85c7580a4d6ea90df6ce516dea91c2162c7d3007b6517bbd07",
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 2,
+              "observation_payloads": [
+                "35010145e1bde8883888e943308c4f7faa96c11d8bc0e0d57e2fd993e560bed5",
+                "79404603db91385391d5be0e66d171590e24bd34954e1cad88a1cf352c77e352"
+              ],
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "source_characters": 110,
+              "source_count": 2,
+              "source_parsing": [
+                {
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                },
+                {
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                }
+              ],
+              "source_versions": [
+                "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+              ],
+              "truncated": false,
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+            },
+            "inventory_complete": true,
+            "limits": {
+              "max_allowed_chars": 12000,
+              "max_artifacts": 32,
+              "max_endpoints": 80,
+              "max_input_bytes": 24000,
+              "max_input_tokens": 32768,
+              "max_observations": 64,
+              "max_output_tokens": 8192,
+              "max_proposals": 24
+            },
+            "observation_count": 2,
+            "revoked_evidence_refs": [],
+            "revoked_observation_ids": [],
+            "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+            "source_count": 2,
+            "source_snapshot_hash": "433333f439e92ed9d9a95b4d3ea97fc63ffd51be0773d9fcf624ef53462114bc",
+            "source_versions": [
+              "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+            ],
+            "status": "READY",
+            "truncated": false,
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          },
+          "errors": [],
+          "evidence_spans": {
+            "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221": {
+              "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+              "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+              "char_end": 57,
+              "char_start": 27,
+              "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_3d4cd2c7fc54772a050b9265a63b3f7527dbb02263aaa739bfc9a446f846fa91",
+              "ordinal": 0,
+              "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+              "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+              "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+              "source_ref": "canary://C1/A",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+            },
+            "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575": {
+              "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+              "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "char_end": 51,
+              "char_start": 27,
+              "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_65556f27a51d57a98c25b0147fedd0cd627a5df985eaaf735b653db0bd035762",
+              "ordinal": 0,
+              "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+              "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+              "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+              "source_ref": "canary://C1/B",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+            }
+          },
+          "execution": {
+            "adapter_requests": 1,
+            "cost_usd": null,
+            "kind": "LIVE",
+            "new_billable_cost_usd": null,
+            "new_live_provider_requests": 1,
+            "original_receipt": {
+              "campaign_id": "m3-product-canary-v1",
+              "execution_kind": "LIVE",
+              "manifest_sha256": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+              "model_id": "gemini-3.8-flash",
+              "provider_id": "gemini"
+            },
+            "provider_request_id": null,
+            "provider_response_id": "offline-response",
+            "provider_usage": {
+              "duration_ms": 598.4,
+              "input_tokens": 20,
+              "output_tokens": 10,
+              "total_tokens": 32
+            },
+            "request_sha256": "d62336d6f8175bdff31ed346f4f34a95feb9a2dfd75a4b64d54f33dd13877f85",
+            "reserved_requests": 1,
+            "response_sha256": "4596d60ad94c2040ed00d27852111a050afdd491b0e3995d0f080bc4c6da56d9"
+          },
+          "investigation_id": "product-investigation",
+          "invocation_id": "semantic_10eb4f8e25832a0c5c3175fd9c4afc1eb97581609cc7ce48b1696a5cccdcd457",
+          "origin_tool_call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+          "outer_call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+          "proposals": [
+            {
+              "actual_model_version": "gemini-3.8-flash",
+              "authority": "SUPPORTING_ONLY",
+              "changed_fields": [],
+              "counter_evidence": [],
+              "coverage": {
+                "cited_evidence_refs": [
+                  "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5"
+                ],
+                "cited_source_versions": [
+                  "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+                ],
+                "missing_source_versions": [],
+                "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                "required_source_versions": [
+                  "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+                ],
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "status": "COMPLETE"
+              },
+              "displayable_as_model_analysis": true,
+              "evidence_status": "EVIDENCE_VALID",
+              "execution_status": "EXECUTED",
+              "missing_evidence": [],
+              "model_id": "gemini-3.8-flash",
+              "object": {
+                "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+                "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89",
+                "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+              },
+              "predicate": "SAME_TASK",
+              "prompt_version": "task-relation-semantics/v1",
+              "proposal_id": "semantic_proposal_v1_72ad1dacd3ad47a1c33cdb4ac14ef5434ef805cfcace2985fe343695871e5054",
+              "proposed_verdict": "SUPPORTED",
+              "publishable": false,
+              "reason_codes": [
+                "OFFLINE_SCRIPT_ONLY"
+              ],
+              "release_status": "PENDING_SEMANTIC_REVIEW",
+              "schema": "task-semantic-proposal/v1",
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "source_snapshot_hash": "433333f439e92ed9d9a95b4d3ea97fc63ffd51be0773d9fcf624ef53462114bc",
+              "source_validation": {
+                "authority": "SUPPORTING_ONLY",
+                "counter_evidence": [],
+                "errors": [],
+                "proposal_id": "semantic_proposal_v1_72ad1dacd3ad47a1c33cdb4ac14ef5434ef805cfcace2985fe343695871e5054",
+                "publishable": false,
+                "semantic_status": "NOT_EVALUATED",
+                "stage": "EVIDENCE_VALID",
+                "supporting_evidence": [
+                  {
+                    "char_end": 57,
+                    "char_start": 27,
+                    "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+                    }
+                  },
+                  {
+                    "char_end": 51,
+                    "char_start": 27,
+                    "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+                    }
+                  }
+                ],
+                "validator_version": "task-semantic-evidence/v1"
+              },
+              "stage": "MODEL_PROPOSED",
+              "subject": {
+                "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+                "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c",
+                "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+              },
+              "supporting_evidence": [
+                {
+                  "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                  "span": {
+                    "span_ref": "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+                  }
+                },
+                {
+                  "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                  "span": {
+                    "span_ref": "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+                  }
+                }
+              ]
+            }
+          ],
+          "publishable": false,
+          "result_artifact": {
+            "kind": "tool_result",
+            "ref": "semantic/046529c9d5aa3f619eaeb0fb/result.json",
+            "sha256": "86eec4f011831fd46be33550277c3053168ebed89baf837fd22eb0700c24f0f5",
+            "size_bytes": 6180
+          },
+          "schema_version": "task-semantic-analysis/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        }
+      },
+      "error": null
+    }
+  ],
+  "preparation": {
+    "schema": "product-task-preparation/v1",
+    "question": "请调查这些会议中的任务是否延续，以及截止安排发生了什么变化；有哪些结论仍需确认？",
+    "status": "PARTIAL",
+    "execution_kind": "LIVE",
+    "provider_id": "gemini",
+    "model_id": "gemini-3.8-flash",
+    "authority": "MODEL_PROPOSED_ONLY",
+    "discovery": {
+      "coverage_policy": "bounded-document-single-pass/v1",
+      "coverage_complete": true,
+      "semantic_exhaustive": false,
+      "valid_observations": [],
+      "partial_observations": [
+        {
+          "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+          "provenance": {
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+            "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+            "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+            "source_ref": "canary://C1/A",
+            "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+            "ordinal": 0,
+            "message_id": "message_v1_3d4cd2c7fc54772a050b9265a63b3f7527dbb02263aaa739bfc9a446f846fa91",
+            "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "char_start": 27,
+            "char_end": 57,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+            "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a"
+          },
+          "raw_text": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+          "description": "日志迁移",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+              "char_start": 27,
+              "char_end": 57,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "日志迁移",
+              "char_start": 32,
+              "char_end": 36,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-19T13:04:23.657153+00:00",
+          "event_time": "2026-10-01T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        },
+        {
+          "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+          "provenance": {
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+            "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+            "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "source_ref": "canary://C1/B",
+            "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+            "ordinal": 0,
+            "message_id": "message_v1_65556f27a51d57a98c25b0147fedd0cd627a5df985eaaf735b653db0bd035762",
+            "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "char_start": 27,
+            "char_end": 51,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+            "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9"
+          },
+          "raw_text": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+          "description": "日志迁移",
+          "owner": null,
+          "deadline": null,
+          "deadline_text": null,
+          "deadline_precision": "UNKNOWN",
+          "deadline_role": "UNKNOWN",
+          "project": null,
+          "vendor": null,
+          "extraction_status": "EXTRACTED",
+          "validation_status": "PARTIAL",
+          "unknown_fields": [
+            "owner",
+            "deadline",
+            "project",
+            "vendor"
+          ],
+          "validation_issues": [],
+          "field_evidence": [
+            {
+              "field": "raw_text",
+              "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+              "char_start": 27,
+              "char_end": 51,
+              "basis": "SOURCE_TEXT"
+            },
+            {
+              "field": "description",
+              "quote": "日志迁移",
+              "char_start": 33,
+              "char_end": 37,
+              "basis": "SOURCE_TEXT"
+            }
+          ],
+          "recorded_at": "2026-10-19T13:04:23.723823+00:00",
+          "event_time": "2026-10-03T09:00:00+00:00",
+          "relation_status": "UNCONFIRMED",
+          "authority": "SUPPORTING_ONLY"
+        }
+      ],
+      "failures": [],
+      "sources": [
+        {
+          "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+          "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        },
+        {
+          "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+          "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+          "status": "OBSERVATIONS_FOUND",
+          "reason": null
+        }
+      ],
+      "unprocessed_sources": [],
+      "groups": [
+        {
+          "group_id": "task_discovery_group_87a01ec8435db08e96c901e0fd986c32d5e37b740e5bc755e71c1df2c8b440ca",
+          "observation_ids": [
+            "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8"
+          ],
+          "unbound_fields": [],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        },
+        {
+          "group_id": "task_discovery_group_0967684a926c2b231d96d54d140748c308bd98b3518e3cfca210a33e9a3dc1b1",
+          "observation_ids": [
+            "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7"
+          ],
+          "source_evidence_refs": [
+            "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5"
+          ],
+          "unbound_fields": [],
+          "status": "MODEL_PROPOSED",
+          "validation_issues": []
+        }
+      ],
+      "extractions": [
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                "description_parts": [
+                  "日志迁移"
+                ],
+                "owner": null,
+                "deadline_text": null,
+                "project": null,
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+            "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+            "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "f3ef7e08fdc5852935d2d7fa3a49c53d0b0d8e7f7d1032d1430631e54ddfbd59",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "e19f0b824d707b9d8c4b8303d81d7fde22264e7693fc68e2007cb30618e65f6b",
+            "extraction_fingerprint": "cb06e34687a2ccf9a9ce016feac17d6b1c3a6227be35bf590cc1561bb6729d24",
+            "claims_sha256": "2feeb8d849931bf5302acafc6e9762a6038c45cde7eb90300d293f0bf0061c46",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "791f5dbc32da01e76fc22c2d8ee78a5eb960011c1c31c4b9fbe8502baa8c057c",
+                "response_sha256": "59cf71ad630f582b9c702a2a43b6771758432535f5713bbd251f46cce79c980e",
+                "provider_request_id": null,
+                "provider_response_id": "offline-response",
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 32,
+                  "duration_ms": 139.541
+                },
+                "latency_ms": 320.57370000256924,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "791f5dbc32da01e76fc22c2d8ee78a5eb960011c1c31c4b9fbe8502baa8c057c",
+                "estimated_cost_upper_bound_usd": 0.079872
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        },
+        {
+          "record_version": "semantic-extraction-result/v2",
+          "claims": [
+            {
+              "claim_type": "PLAN",
+              "subject": null,
+              "relation_phrase": null,
+              "value": null,
+              "temporal_status": "NOT_STATED",
+              "valid_from_raw": null,
+              "valid_to_raw": null,
+              "confidence": {
+                "claim_type": 0.9,
+                "entity": 0.9,
+                "relation": 0.9,
+                "temporal": 0.9,
+                "overall": 0.9
+              },
+              "task": {
+                "text": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                "description_parts": [
+                  "日志迁移"
+                ],
+                "owner": null,
+                "deadline_text": null,
+                "project": null,
+                "vendor": null
+              }
+            }
+          ],
+          "receipt": {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+            "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "7f8d9f2791dc128f61e6c16a268de90c773df25a98b9955242e3acd66716e554",
+            "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+            "config_sha256": "e19f0b824d707b9d8c4b8303d81d7fde22264e7693fc68e2007cb30618e65f6b",
+            "extraction_fingerprint": "b9e58236ee4fd5da643d445e699e619c5392b8117db5c00f69ea5bf0cb6cfca2",
+            "claims_sha256": "881ec6758ab879ff17f130552e296ba861a943228f3b06e7d1956d13a3b90697",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "b633c8ec8711aa9bed48648d83d2d453b3ecf8529ee5e1033c75defad82f76ae",
+                "response_sha256": "7c233d1be3cd5339775c2a818298b82baea45f193c7f6fce6d173afe093b801d",
+                "provider_request_id": null,
+                "provider_response_id": "offline-response",
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 32,
+                  "duration_ms": 258.172
+                },
+                "latency_ms": 546.8669000038062,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "b633c8ec8711aa9bed48648d83d2d453b3ecf8529ee5e1033c75defad82f76ae",
+                "estimated_cost_upper_bound_usd": 0.079872
+              }
+            ],
+            "terminal_reason": null
+          },
+          "failure_code": null
+        }
+      ],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+          "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+          "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+          "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "f3ef7e08fdc5852935d2d7fa3a49c53d0b0d8e7f7d1032d1430631e54ddfbd59",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "e19f0b824d707b9d8c4b8303d81d7fde22264e7693fc68e2007cb30618e65f6b",
+          "extraction_fingerprint": "cb06e34687a2ccf9a9ce016feac17d6b1c3a6227be35bf590cc1561bb6729d24",
+          "claims_sha256": "2feeb8d849931bf5302acafc6e9762a6038c45cde7eb90300d293f0bf0061c46",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "791f5dbc32da01e76fc22c2d8ee78a5eb960011c1c31c4b9fbe8502baa8c057c",
+              "response_sha256": "59cf71ad630f582b9c702a2a43b6771758432535f5713bbd251f46cce79c980e",
+              "provider_request_id": null,
+              "provider_response_id": "offline-response",
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 32,
+                "duration_ms": 139.541
+              },
+              "latency_ms": 320.57370000256924,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "791f5dbc32da01e76fc22c2d8ee78a5eb960011c1c31c4b9fbe8502baa8c057c",
+              "estimated_cost_upper_bound_usd": 0.079872
+            }
+          ],
+          "terminal_reason": null
+        },
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+          "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+          "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+          "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "7f8d9f2791dc128f61e6c16a268de90c773df25a98b9955242e3acd66716e554",
+          "schema_sha256": "e1833a9cb7f9f892f1246c6cea89d624ec2b6a0c0de916fbd70cb21dd68e8698",
+          "config_sha256": "e19f0b824d707b9d8c4b8303d81d7fde22264e7693fc68e2007cb30618e65f6b",
+          "extraction_fingerprint": "b9e58236ee4fd5da643d445e699e619c5392b8117db5c00f69ea5bf0cb6cfca2",
+          "claims_sha256": "881ec6758ab879ff17f130552e296ba861a943228f3b06e7d1956d13a3b90697",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "b633c8ec8711aa9bed48648d83d2d453b3ecf8529ee5e1033c75defad82f76ae",
+              "response_sha256": "7c233d1be3cd5339775c2a818298b82baea45f193c7f6fce6d173afe093b801d",
+              "provider_request_id": null,
+              "provider_response_id": "offline-response",
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 32,
+                "duration_ms": 258.172
+              },
+              "latency_ms": 546.8669000038062,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "b633c8ec8711aa9bed48648d83d2d453b3ecf8529ee5e1033c75defad82f76ae",
+              "estimated_cost_upper_bound_usd": 0.079872
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "candidate_coverage": [
+        {
+          "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+          "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+          "verified_description_parts": [
+            "日志迁移"
+          ]
+        },
+        {
+          "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+          "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+          "verified_description_parts": [
+            "日志迁移"
+          ]
+        }
+      ]
+    },
+    "planning": [
+      {
+        "schema": "task-investigation-result/v1",
+        "status": "PLANNED",
+        "plan": {
+          "plan_id": "investigation_v2_007626cddb7172bc8e938f1c3d2c3a13a5380be1c62a2d463017428169902352",
+          "needs_more_investigation": true,
+          "ready_step_ids": [
+            "identity"
+          ],
+          "schema": "task-investigation-plan/v2",
+          "goal": "请调查这些会议中的任务是否延续，以及截止安排发生了什么变化；有哪些结论仍需确认？",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+          "snapshot_hash": "433333f439e92ed9d9a95b4d3ea97fc63ffd51be0773d9fcf624ef53462114bc",
+          "steps": [
+            {
+              "id": "identity",
+              "kind": "relation",
+              "question": "这些候选是否延续同一任务？",
+              "handles": [
+                "task_0",
+                "task_1"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+                  "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                  "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c"
+                },
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+                  "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                  "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [],
+              "predicate": "SAME_TASK",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "2989047cbf11ea0469bcfb95d6502b99ea65e9fccdd70598cd62dc947764b540",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                  "span_sha256": "0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+                },
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                  "span_sha256": "2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [],
+              "evidence_gap": ""
+            },
+            {
+              "id": "revision",
+              "kind": "relation",
+              "question": "这些候选是否延续同一任务？",
+              "handles": [
+                "task_1",
+                "task_0"
+              ],
+              "endpoints": [
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+                  "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                  "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89"
+                },
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+                  "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                  "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c"
+                }
+              ],
+              "source_handles": [],
+              "depends_on": [
+                "identity"
+              ],
+              "predicate": "REVISES_PLAN",
+              "field": "",
+              "target_kind": "",
+              "missing_entities": [],
+              "execution_key": "af6cbe1c8aad6bd9083788370a98af04274b7cbdab3dc0c7de8b12feffe355c1",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+              "source_bindings": [
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+                  "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+                  "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+                  "span_sha256": "0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+                },
+                {
+                  "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99",
+                  "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+                  "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+                  "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+                  "span_sha256": "2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+                }
+              ],
+              "time_scope": {
+                "start": "",
+                "end": ""
+              },
+              "premise_keys": [
+                "2989047cbf11ea0469bcfb95d6502b99ea65e9fccdd70598cd62dc947764b540"
+              ],
+              "evidence_gap": ""
+            }
+          ],
+          "uncertainties": [],
+          "refusal_reasons": [],
+          "verified_results": [],
+          "parent_plan_id": null,
+          "gaps": [],
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24000,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 2,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          },
+          "authority": "ACTION_SUGGESTION_ONLY",
+          "publishable": false,
+          "conclusion_policy": "Evidence and independent Reviewer required."
+        },
+        "errors": [],
+        "provider_calls": 1,
+        "usage": {
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 32,
+          "duration_ms": 147.628
+        },
+        "request_sha256": "90802efc2e4204ab51bf5b5989a797781b7eb901160ad646153d563b94c53234",
+        "response_sha256": "e472ac34f4702d6effa0e3fe4b944a65f9d669ac269ea01a68d12bd344b3032b",
+        "model_id": "gemini-3.8-flash",
+        "actual_model_version": "gemini-3.8-flash",
+        "budget": {
+          "calls_reserved": 1,
+          "input_tokens_reserved": 12875,
+          "output_tokens_reserved": 4096,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 2,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "untrusted_output": {
+          "kind": "tool_calls",
+          "tool_calls": [
+            {
+              "tool_id": "emit_investigation_plan",
+              "arguments": {
+                "steps": [
+                  {
+                    "id": "identity",
+                    "kind": "relation",
+                    "question": "这些候选是否延续同一任务？",
+                    "handles": [
+                      "task_0",
+                      "task_1"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [],
+                    "predicate": "SAME_TASK",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  },
+                  {
+                    "id": "revision",
+                    "kind": "relation",
+                    "question": "这些候选是否延续同一任务？",
+                    "handles": [
+                      "task_1",
+                      "task_0"
+                    ],
+                    "source_handles": [],
+                    "depends_on": [
+                      "identity"
+                    ],
+                    "predicate": "REVISES_PLAN",
+                    "field": "",
+                    "target_kind": "",
+                    "missing_entities": []
+                  }
+                ],
+                "uncertainties": [],
+                "refusal_reasons": []
+              }
+            }
+          ]
+        },
+        "diagnostics": {
+          "proposed_steps": 2,
+          "accepted_steps": 2,
+          "excess_steps": 0,
+          "validation_issues": [],
+          "proposed_by_kind": {
+            "relation": 2
+          },
+          "ready_steps": 1
+        }
+      }
+    ],
+    "source_mapping": {
+      "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a": {
+        "source_id": "src_361992da1c73bab7f1636e9de567ee0a",
+        "source_version": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+        "source_name": "A.txt",
+        "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19"
+      },
+      "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4": {
+        "source_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+        "source_version": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+        "source_name": "B.txt",
+        "content_sha256": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee"
+      }
+    },
+    "source_snapshot_hash": "9dfd5ea772a5bf27c26091ad034d7d027c4b00f5fe61e1f3c2ed06d3eea2bfdf",
+    "gaps": [
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "stage_budget": {
+      "discovery_calls_reserved": 2,
+      "discovery_call_limit": 2,
+      "discovery_input_tokens_reserved_upper_bound": 19024,
+      "discovery_output_tokens_reserved": 3072,
+      "discovery_max_request_bytes": 49152,
+      "planning": {
+        "calls_reserved": 1,
+        "input_tokens_reserved": 12875,
+        "output_tokens_reserved": 4096,
+        "limits": {
+          "max_subgoals": 12,
+          "max_relation_queries": 8,
+          "max_fanout": 4,
+          "max_dependency_depth": 6,
+          "max_relation_hops": 3,
+          "max_input_tokens": 24576,
+          "max_output_tokens": 4096,
+          "max_provider_calls": 2,
+          "max_total_input_tokens": 73728,
+          "max_total_output_tokens": 12288
+        }
+      },
+      "semantic_call_limit": 1,
+      "new_billable_cost_usd": null
+    },
+    "evidence_layers": {
+      "component": "SEPARATE_TEST_EVIDENCE",
+      "integration": "LIVE",
+      "real_model_semantics": "NOT_EVALUATED",
+      "real_product_business_task": "NOT_EVALUATED"
+    },
+    "campaign_budget": {
+      "schema_version": "linkloom-canary-ledger/v1",
+      "campaign_id": "m3-product-canary-v1",
+      "manifest_hash": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+      "ledger_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-live-canary\\work\\l-847a6f\\m3-product-canary-v1\\ledger.jsonl",
+      "marker_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-live-canary\\work\\l-847a6f\\m3-product-canary-v1\\initialized.json",
+      "status": "ACTIVE",
+      "stopped": false,
+      "stop_reason": null,
+      "request_count": 8,
+      "total_count": 8,
+      "max_requests": 34,
+      "pending_request_count": 0,
+      "pending": [],
+      "reservation_usd": 0.079872,
+      "committed_cost_usd": 0.00048,
+      "used_cost_usd": 0.00048,
+      "reserved_cost_usd": 0.0,
+      "remaining_cost_usd": 2.99952,
+      "max_total_cost_usd": 3.0,
+      "input_tokens": 160,
+      "output_tokens": 96,
+      "reserved_input_tokens": 0,
+      "reserved_output_tokens": 0,
+      "input_token_cap": 65536,
+      "output_token_cap": 8192,
+      "stage_caps": {
+        "discovery": {
+          "per_case": {
+            "C1": 2,
+            "C2": 2,
+            "C3": 3
+          },
+          "total": 7
+        },
+        "planning": {
+          "per_case": {
+            "C1": 2,
+            "C2": 2,
+            "C3": 2
+          },
+          "total": 6
+        },
+        "semantic": {
+          "per_case": {
+            "C1": 1,
+            "C2": 1,
+            "C3": 1
+          },
+          "total": 3
+        },
+        "runtime": {
+          "per_case": {
+            "C1": 6,
+            "C2": 6,
+            "C3": 6
+          },
+          "total": 18
+        }
+      },
+      "case_caps": {
+        "C1": 11,
+        "C2": 11,
+        "C3": 12
+      },
+      "stages": {
+        "discovery": {
+          "count": 2,
+          "completed_count": 2,
+          "pending_count": 0,
+          "max_count": 7,
+          "input_tokens": 40,
+          "output_tokens": 24,
+          "cost_usd": 0.00012,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "max_input_tokens": 458752,
+          "max_output_tokens": 57344,
+          "max_cost_usd": 0.559104
+        },
+        "planning": {
+          "count": 1,
+          "completed_count": 1,
+          "pending_count": 0,
+          "max_count": 6,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "max_input_tokens": 393216,
+          "max_output_tokens": 49152,
+          "max_cost_usd": 0.479232
+        },
+        "semantic": {
+          "count": 1,
+          "completed_count": 1,
+          "pending_count": 0,
+          "max_count": 3,
+          "input_tokens": 20,
+          "output_tokens": 12,
+          "cost_usd": 6e-05,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "max_input_tokens": 196608,
+          "max_output_tokens": 24576,
+          "max_cost_usd": 0.239616
+        },
+        "runtime": {
+          "count": 4,
+          "completed_count": 4,
+          "pending_count": 0,
+          "max_count": 18,
+          "input_tokens": 80,
+          "output_tokens": 48,
+          "cost_usd": 0.00024,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "max_input_tokens": 1179648,
+          "max_output_tokens": 147456,
+          "max_cost_usd": 1.437696
+        }
+      },
+      "cases": {
+        "C1": {
+          "count": 8,
+          "completed_count": 8,
+          "pending_count": 0,
+          "max_count": 11,
+          "input_tokens": 160,
+          "output_tokens": 96,
+          "cost_usd": 0.00048,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "stages": {
+            "discovery": {
+              "count": 2,
+              "max_count": 2,
+              "input_tokens": 40,
+              "output_tokens": 24,
+              "cost_usd": 0.00012
+            },
+            "planning": {
+              "count": 1,
+              "max_count": 2,
+              "input_tokens": 20,
+              "output_tokens": 12,
+              "cost_usd": 6e-05
+            },
+            "semantic": {
+              "count": 1,
+              "max_count": 1,
+              "input_tokens": 20,
+              "output_tokens": 12,
+              "cost_usd": 6e-05
+            },
+            "runtime": {
+              "count": 4,
+              "max_count": 6,
+              "input_tokens": 80,
+              "output_tokens": 48,
+              "cost_usd": 0.00024
+            }
+          }
+        },
+        "C2": {
+          "count": 0,
+          "completed_count": 0,
+          "pending_count": 0,
+          "max_count": 11,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "stages": {
+            "discovery": {
+              "count": 0,
+              "max_count": 2,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "planning": {
+              "count": 0,
+              "max_count": 2,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "semantic": {
+              "count": 0,
+              "max_count": 1,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "runtime": {
+              "count": 0,
+              "max_count": 6,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            }
+          }
+        },
+        "C3": {
+          "count": 0,
+          "completed_count": 0,
+          "pending_count": 0,
+          "max_count": 12,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "cost_usd": 0.0,
+          "reserved_input_tokens": 0,
+          "reserved_output_tokens": 0,
+          "reserved_cost_usd": 0.0,
+          "stages": {
+            "discovery": {
+              "count": 0,
+              "max_count": 3,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "planning": {
+              "count": 0,
+              "max_count": 2,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "semantic": {
+              "count": 0,
+              "max_count": 1,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            },
+            "runtime": {
+              "count": 0,
+              "max_count": 6,
+              "input_tokens": 0,
+              "output_tokens": 0,
+              "cost_usd": 0.0
+            }
+          }
+        }
+      },
+      "campaign_started_at": "2026-10-19T13:04:22.840513+00:00",
+      "case_started_at": {
+        "C1": "2026-10-19T13:04:24.894415+00:00"
+      },
+      "campaign_total_seconds": 1800,
+      "case_total_seconds": 600,
+      "request_timeout_seconds": 130,
+      "config": {
+        "input_token_cap": 65536,
+        "output_token_cap": 8192,
+        "input_price_usd_per_million": 0.75,
+        "output_price_usd_per_million": 3.75,
+        "reservation_usd": 0.079872,
+        "max_total_requests": 34,
+        "max_total_cost_usd": 3.0,
+        "campaign_total_seconds": 1800,
+        "case_total_seconds": 600,
+        "request_timeout_seconds": 130,
+        "case_total_caps": {
+          "C1": 11,
+          "C2": 11,
+          "C3": 12
+        },
+        "stage_per_case_caps": {
+          "discovery": {
+            "C1": 2,
+            "C2": 2,
+            "C3": 3
+          },
+          "planning": {
+            "C1": 2,
+            "C2": 2,
+            "C3": 2
+          },
+          "semantic": {
+            "C1": 1,
+            "C2": 1,
+            "C3": 1
+          },
+          "runtime": {
+            "C1": 6,
+            "C2": 6,
+            "C3": 6
+          }
+        },
+        "stage_total_caps": {
+          "discovery": 7,
+          "planning": 6,
+          "semantic": 3,
+          "runtime": 18
+        }
+      },
+      "source_bindings": {
+        "C1": {
+          "snapshot_sha256": "9dfd5ea772a5bf27c26091ad034d7d027c4b00f5fe61e1f3c2ed06d3eea2bfdf",
+          "sources": [
+            {
+              "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+              "source_id": "src_361992da1c73bab7f1636e9de567ee0a",
+              "source_version": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+            },
+            {
+              "content_sha256": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+              "source_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+              "source_version": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4"
+            }
+          ],
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        }
+      },
+      "unknown_usage_count": 0,
+      "estimated_cost_usd": 0.00048,
+      "thinking_tokens": 16,
+      "global": {
+        "count": 8,
+        "max_count": 34,
+        "input_tokens": 160,
+        "output_tokens": 96,
+        "cost_usd": 0.00048,
+        "pending_count": 0,
+        "reserved_cost_usd": 0.0,
+        "max_cost_usd": 3.0
+      }
+    }
+  },
+  "working_context_audit": {
+    "authorized_snapshot_id": "7f9d859c684046df12d32d4e13315e1d7c66a200bea992e3fb8adf537141bb8a",
+    "base_instruction_sha256": "570a47618912ece56f54bce03eee0f6f58a77833f6f88bebec0804fa333e8e54",
+    "before_working_ref": {
+      "kind": "observation",
+      "ref": "working/046529c9d5aa3f619eae/4-308c3aa381152a35/before.json",
+      "sha256": "70841afb93d7acd74ec3d9f6778e2b1cc50177d4c50a2deeb1eff1cf1617a1e4",
+      "size_bytes": 3751
+    },
+    "budget": {
+      "actual_provider_tokens": false,
+      "context_window_tokens": 65536,
+      "input_bytes": 29410,
+      "input_tokens": 7681,
+      "max_request_bytes": 98304,
+      "normalized_request_bytes": 29154,
+      "output_reserve_tokens": 2048,
+      "segments": {
+        "compaction_summary": {
+          "bytes": 687,
+          "tokens": 172
+        },
+        "existing_verified_context": {
+          "bytes": 2,
+          "tokens": 1
+        },
+        "history": {
+          "bytes": 19210,
+          "tokens": 5008
+        },
+        "instruction": {
+          "bytes": 821,
+          "tokens": 236
+        },
+        "latest_result": {
+          "bytes": 4,
+          "tokens": 1
+        },
+        "request_envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "tools": {
+          "bytes": 1917,
+          "tokens": 480
+        },
+        "verified_evidence": {
+          "bytes": 3892,
+          "tokens": 1036
+        },
+        "working_context": {
+          "bytes": 1732,
+          "tokens": 463
+        }
+      },
+      "serialization_overhead_bytes": 889,
+      "token_count_kind": "MULTILINGUAL_HEURISTIC_V1",
+      "user_input_bytes": 7236
+    },
+    "compaction": null,
+    "config": {
+      "compactor_id": "DETERMINISTIC_FAKE_V1",
+      "envelope": {
+        "bytes": 256,
+        "tokens": 64
+      },
+      "history_soft_bytes": 24576,
+      "local_budget": {
+        "max_chars": 12000,
+        "max_evidence": 5,
+        "max_experience": 2,
+        "max_memory": 3,
+        "max_tokens": 3000
+      },
+      "policy": {
+        "context_window_tokens": 65536,
+        "max_candidates": 256,
+        "max_request_bytes": 98304,
+        "model_id": "offline-task-context",
+        "output_reserve_tokens": 2048,
+        "token_count_kind": "MULTILINGUAL_HEURISTIC_V1"
+      },
+      "tokenizer_id": "LINKLOOM_MULTILINGUAL_HEURISTIC_V1",
+      "tokenizer_probe": [
+        3,
+        11,
+        10
+      ],
+      "working_max_tokens": 4096
+    },
+    "coverage": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "coverage_before_compaction": [
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "sources_current"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relation_0"
+      },
+      {
+        "complete": true,
+        "missing_evidence_ids": [],
+        "reason": null,
+        "subgoal_id": "relations_pending"
+      }
+    ],
+    "errors": [],
+    "groups": [
+      {
+        "conflict": false,
+        "evidence_ids": [
+          "context_ev_v1_0f79ea1d427bc2141bc0a61d5e8359e5f64c8d93bce622802d0d0278430994ea",
+          "context_ev_v1_11b58fad43045efe77e64547ab31d124d639e4d1bfc4d70158490e27302ce814"
+        ],
+        "group_id": "observed_support_only",
+        "subgoal_ids": [
+          "sources_current",
+          "relation_0",
+          "relations_pending"
+        ]
+      }
+    ],
+    "mapping_ref": {
+      "kind": "observation",
+      "ref": "working/046529c9d5aa3f619eae/4-308c3aa381152a35/mapping.json",
+      "sha256": "4795cf295ca256f29f2dcb5010e6ad23f7baf58dcaf3b34fa3892a7588126f38",
+      "size_bytes": 3224
+    },
+    "prepared_request_sha256": "75f2241331f2f670fda1621ad72aa97a782c79d2552c58f452bf50bdf6e3d842",
+    "recovery": {
+      "evidence": [
+        {
+          "historical": false,
+          "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+          "ref": {
+            "char_end": 57,
+            "char_start": 27,
+            "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+            "document_id": "src_361992da1c73bab7f1636e9de567ee0a",
+            "evidence_id": "context_ev_v1_0f79ea1d427bc2141bc0a61d5e8359e5f64c8d93bce622802d0d0278430994ea",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_361992da1c73bab7f1636e9de567ee0a",
+            "quote_hash": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+            "resource_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+            "source_ref": "canary://C1/A",
+            "source_version": 1,
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          }
+        },
+        {
+          "historical": false,
+          "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+          "ref": {
+            "char_end": 51,
+            "char_start": 27,
+            "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+            "document_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+            "evidence_id": "context_ev_v1_11b58fad43045efe77e64547ab31d124d639e4d1bfc4d70158490e27302ce814",
+            "line_end": 1,
+            "line_start": 1,
+            "logical_path": "/task-sources/src_6668d9f45839aeb8aebf1860e6f46286",
+            "quote_hash": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+            "resource_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "source_ref": "canary://C1/B",
+            "source_version": 1,
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          }
+        }
+      ],
+      "failures": [],
+      "status": "complete"
+    },
+    "request_usage": {
+      "bytes": 28721,
+      "tokens": 7446
+    },
+    "run_id": "run_p4_ef54d33edd07",
+    "status": "COMPLETE",
+    "task_plan": {
+      "goal": "请调查这些会议中的任务是否延续，以及截止安排发生了什么变化；有哪些结论仍需确认？",
+      "subgoals": [
+        {
+          "depends_on": [],
+          "question": "Recover every declared authorized source and competing observation.",
+          "subgoal_id": "sources_current"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Investigate SAME_TASK: task_0 -> task_1; semantics not accepted.",
+          "subgoal_id": "relation_0"
+        },
+        {
+          "depends_on": [
+            "sources_current"
+          ],
+          "question": "Independent semantic acceptance and unresolved evidence gaps.",
+          "subgoal_id": "relations_pending"
+        }
+      ]
+    },
+    "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+    "turn_id": "run_p4_ef54d33edd07:turn:4",
+    "working_ref": {
+      "kind": "observation",
+      "ref": "working/046529c9d5aa3f619eae/4-308c3aa381152a35/state.json",
+      "sha256": "70841afb93d7acd74ec3d9f6778e2b1cc50177d4c50a2deeb1eff1cf1617a1e4",
+      "size_bytes": 3751
+    }
+  },
+  "canary_budget": {
+    "schema_version": "linkloom-canary-ledger/v1",
+    "campaign_id": "m3-product-canary-v1",
+    "manifest_hash": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+    "ledger_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-live-canary\\work\\l-847a6f\\m3-product-canary-v1\\ledger.jsonl",
+    "marker_path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-live-canary\\work\\l-847a6f\\m3-product-canary-v1\\initialized.json",
+    "status": "ACTIVE",
+    "stopped": false,
+    "stop_reason": null,
+    "request_count": 8,
+    "total_count": 8,
+    "max_requests": 34,
+    "pending_request_count": 0,
+    "pending": [],
+    "reservation_usd": 0.079872,
+    "committed_cost_usd": 0.00048,
+    "used_cost_usd": 0.00048,
+    "reserved_cost_usd": 0.0,
+    "remaining_cost_usd": 2.99952,
+    "max_total_cost_usd": 3.0,
+    "input_tokens": 160,
+    "output_tokens": 96,
+    "reserved_input_tokens": 0,
+    "reserved_output_tokens": 0,
+    "input_token_cap": 65536,
+    "output_token_cap": 8192,
+    "stage_caps": {
+      "discovery": {
+        "per_case": {
+          "C1": 2,
+          "C2": 2,
+          "C3": 3
+        },
+        "total": 7
+      },
+      "planning": {
+        "per_case": {
+          "C1": 2,
+          "C2": 2,
+          "C3": 2
+        },
+        "total": 6
+      },
+      "semantic": {
+        "per_case": {
+          "C1": 1,
+          "C2": 1,
+          "C3": 1
+        },
+        "total": 3
+      },
+      "runtime": {
+        "per_case": {
+          "C1": 6,
+          "C2": 6,
+          "C3": 6
+        },
+        "total": 18
+      }
+    },
+    "case_caps": {
+      "C1": 11,
+      "C2": 11,
+      "C3": 12
+    },
+    "stages": {
+      "discovery": {
+        "count": 2,
+        "completed_count": 2,
+        "pending_count": 0,
+        "max_count": 7,
+        "input_tokens": 40,
+        "output_tokens": 24,
+        "cost_usd": 0.00012,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "max_input_tokens": 458752,
+        "max_output_tokens": 57344,
+        "max_cost_usd": 0.559104
+      },
+      "planning": {
+        "count": 1,
+        "completed_count": 1,
+        "pending_count": 0,
+        "max_count": 6,
+        "input_tokens": 20,
+        "output_tokens": 12,
+        "cost_usd": 6e-05,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "max_input_tokens": 393216,
+        "max_output_tokens": 49152,
+        "max_cost_usd": 0.479232
+      },
+      "semantic": {
+        "count": 1,
+        "completed_count": 1,
+        "pending_count": 0,
+        "max_count": 3,
+        "input_tokens": 20,
+        "output_tokens": 12,
+        "cost_usd": 6e-05,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "max_input_tokens": 196608,
+        "max_output_tokens": 24576,
+        "max_cost_usd": 0.239616
+      },
+      "runtime": {
+        "count": 4,
+        "completed_count": 4,
+        "pending_count": 0,
+        "max_count": 18,
+        "input_tokens": 80,
+        "output_tokens": 48,
+        "cost_usd": 0.00024,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "max_input_tokens": 1179648,
+        "max_output_tokens": 147456,
+        "max_cost_usd": 1.437696
+      }
+    },
+    "cases": {
+      "C1": {
+        "count": 8,
+        "completed_count": 8,
+        "pending_count": 0,
+        "max_count": 11,
+        "input_tokens": 160,
+        "output_tokens": 96,
+        "cost_usd": 0.00048,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "stages": {
+          "discovery": {
+            "count": 2,
+            "max_count": 2,
+            "input_tokens": 40,
+            "output_tokens": 24,
+            "cost_usd": 0.00012
+          },
+          "planning": {
+            "count": 1,
+            "max_count": 2,
+            "input_tokens": 20,
+            "output_tokens": 12,
+            "cost_usd": 6e-05
+          },
+          "semantic": {
+            "count": 1,
+            "max_count": 1,
+            "input_tokens": 20,
+            "output_tokens": 12,
+            "cost_usd": 6e-05
+          },
+          "runtime": {
+            "count": 4,
+            "max_count": 6,
+            "input_tokens": 80,
+            "output_tokens": 48,
+            "cost_usd": 0.00024
+          }
+        }
+      },
+      "C2": {
+        "count": 0,
+        "completed_count": 0,
+        "pending_count": 0,
+        "max_count": 11,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "stages": {
+          "discovery": {
+            "count": 0,
+            "max_count": 2,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "planning": {
+            "count": 0,
+            "max_count": 2,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "semantic": {
+            "count": 0,
+            "max_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "runtime": {
+            "count": 0,
+            "max_count": 6,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          }
+        }
+      },
+      "C3": {
+        "count": 0,
+        "completed_count": 0,
+        "pending_count": 0,
+        "max_count": 12,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "reserved_input_tokens": 0,
+        "reserved_output_tokens": 0,
+        "reserved_cost_usd": 0.0,
+        "stages": {
+          "discovery": {
+            "count": 0,
+            "max_count": 3,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "planning": {
+            "count": 0,
+            "max_count": 2,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "semantic": {
+            "count": 0,
+            "max_count": 1,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          },
+          "runtime": {
+            "count": 0,
+            "max_count": 6,
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cost_usd": 0.0
+          }
+        }
+      }
+    },
+    "campaign_started_at": "2026-10-19T13:04:22.840513+00:00",
+    "case_started_at": {
+      "C1": "2026-10-19T13:04:24.894415+00:00"
+    },
+    "campaign_total_seconds": 1800,
+    "case_total_seconds": 600,
+    "request_timeout_seconds": 130,
+    "config": {
+      "input_token_cap": 65536,
+      "output_token_cap": 8192,
+      "input_price_usd_per_million": 0.75,
+      "output_price_usd_per_million": 3.75,
+      "reservation_usd": 0.079872,
+      "max_total_requests": 34,
+      "max_total_cost_usd": 3.0,
+      "campaign_total_seconds": 1800,
+      "case_total_seconds": 600,
+      "request_timeout_seconds": 130,
+      "case_total_caps": {
+        "C1": 11,
+        "C2": 11,
+        "C3": 12
+      },
+      "stage_per_case_caps": {
+        "discovery": {
+          "C1": 2,
+          "C2": 2,
+          "C3": 3
+        },
+        "planning": {
+          "C1": 2,
+          "C2": 2,
+          "C3": 2
+        },
+        "semantic": {
+          "C1": 1,
+          "C2": 1,
+          "C3": 1
+        },
+        "runtime": {
+          "C1": 6,
+          "C2": 6,
+          "C3": 6
+        }
+      },
+      "stage_total_caps": {
+        "discovery": 7,
+        "planning": 6,
+        "semantic": 3,
+        "runtime": 18
+      }
+    },
+    "source_bindings": {
+      "C1": {
+        "snapshot_sha256": "9dfd5ea772a5bf27c26091ad034d7d027c4b00f5fe61e1f3c2ed06d3eea2bfdf",
+        "sources": [
+          {
+            "content_sha256": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+            "source_id": "src_361992da1c73bab7f1636e9de567ee0a",
+            "source_version": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+          },
+          {
+            "content_sha256": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+            "source_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+            "source_version": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4"
+          }
+        ],
+        "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+      }
+    },
+    "unknown_usage_count": 0,
+    "estimated_cost_usd": 0.00048,
+    "thinking_tokens": 16,
+    "global": {
+      "count": 8,
+      "max_count": 34,
+      "input_tokens": 160,
+      "output_tokens": 96,
+      "cost_usd": 0.00048,
+      "pending_count": 0,
+      "reserved_cost_usd": 0.0,
+      "max_cost_usd": 3.0
+    }
+  },
+  "task_investigation": {
+    "answer_status": "PARTIAL",
+    "context": {
+      "discovery": {
+        "candidates": [],
+        "considered_candidates": 0,
+        "eligible_observations": 2,
+        "endpoint_fanout": {
+          "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7": 0,
+          "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f": 0
+        },
+        "generated_candidates": 0,
+        "input_counts": {
+          "artifact_rows": 2,
+          "context_signals": 0,
+          "current_workspace_artifacts": 2,
+          "observation_rows": 2,
+          "source_characters": 110
+        },
+        "limits": {
+          "max_artifacts": 64,
+          "max_candidates": 20,
+          "max_context_signals": 128,
+          "max_generated_candidates": 1000,
+          "max_observations": 128,
+          "max_per_observation": 10,
+          "max_source_chars": 500000
+        },
+        "max_endpoint_fanout": 0,
+        "rejected": [],
+        "returned_candidates": 0,
+        "truncated": false,
+        "truncation_reasons": []
+      },
+      "max_output_bytes": 32768,
+      "missing_context": [],
+      "observations": [
+        {
+          "observation": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "deadline_text": null,
+            "description": "日志迁移",
+            "event_time": "2026-10-01T09:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 57,
+                "char_start": 27,
+                "field": "raw_text",
+                "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 36,
+                "char_start": 32,
+                "field": "description",
+                "quote": "日志迁移"
+              }
+            ],
+            "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+            "owner": null,
+            "project": null,
+            "provenance": {
+              "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+              "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+              "char_end": 57,
+              "char_start": 27,
+              "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_3d4cd2c7fc54772a050b9265a63b3f7527dbb02263aaa739bfc9a446f846fa91",
+              "ordinal": 0,
+              "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+              "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+              "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+              "source_ref": "canary://C1/A",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+            },
+            "raw_text": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+            "recorded_at": "2026-10-19T13:04:23.657153+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          },
+          "ref": {
+            "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+            "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+            "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+            "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          }
+        },
+        {
+          "observation": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "deadline_text": null,
+            "description": "日志迁移",
+            "event_time": "2026-10-03T09:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 51,
+                "char_start": 27,
+                "field": "raw_text",
+                "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 37,
+                "char_start": 33,
+                "field": "description",
+                "quote": "日志迁移"
+              }
+            ],
+            "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+            "owner": null,
+            "project": null,
+            "provenance": {
+              "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+              "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "char_end": 51,
+              "char_start": 27,
+              "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_65556f27a51d57a98c25b0147fedd0cd627a5df985eaaf735b653db0bd035762",
+              "ordinal": 0,
+              "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+              "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+              "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+              "source_ref": "canary://C1/B",
+              "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+            },
+            "raw_text": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+            "recorded_at": "2026-10-19T13:04:23.723823+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          },
+          "ref": {
+            "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+            "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+            "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          }
+        }
+      ],
+      "observations_truncated": false,
+      "schema_version": "task-context/v1",
+      "semantic_proposals": {
+        "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+        "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+        "limitations": [
+          "DISCOVERY_IS_NOT_PROOF",
+          "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+          "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+          "NO_AUTOMATIC_PERSISTENCE"
+        ],
+        "publishable": false,
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+      },
+      "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+    },
+    "investigation_status": "PENDING_SEMANTIC_REVIEW",
+    "limitations": [
+      "BOUNDED_TOOL_RECEIPT_PROJECTION",
+      "UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+      "MODEL_PROPOSED_ONLY",
+      "SEMANTIC_NOT_EVALUATED",
+      "NO_P4_PROMOTION"
+    ],
+    "receipts": [
+      {
+        "arguments": {
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        },
+        "call_id": "rtc_241e4ad86beee0f230c03fe3904f92f3",
+        "sequence": 1,
+        "tool_id": "inspect_task_context"
+      },
+      {
+        "arguments": {
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        },
+        "call_id": "rtc_fe6e38b4d4783c8766c15db059f683b0",
+        "sequence": 2,
+        "tool_id": "query_task_relations"
+      },
+      {
+        "arguments": {
+          "investigation_id": "product-investigation",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        },
+        "call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+        "sequence": 3,
+        "tool_id": "analyze_task_semantics"
+      }
+    ],
+    "relation_query": {
+      "as_of": null,
+      "current_supported_in_snapshot": 0,
+      "evidence_spans": {},
+      "include_history": false,
+      "max_output_bytes": 49152,
+      "max_plans": 4,
+      "max_relations": 64,
+      "missing_context": [
+        "NO_RELATION_RECORDS"
+      ],
+      "observation_refs": {},
+      "observation_snapshots": {},
+      "plans": [],
+      "relations": [],
+      "returned_relations": 0,
+      "schema_version": "task-relations-query/v1",
+      "semantic_proposals": {
+        "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+        "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+        "limitations": [
+          "DISCOVERY_IS_NOT_PROOF",
+          "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+          "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+          "NO_AUTOMATIC_PERSISTENCE"
+        ],
+        "publishable": false,
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+      },
+      "status": "NO_VERIFIED_RELATIONS",
+      "total_matching_relations": 0,
+      "truncated": false,
+      "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+    },
+    "schema_version": "task-relations-result/v1",
+    "semantic_analysis": {
+      "analysis_status": "EXECUTED",
+      "cache_hit": false,
+      "context_manifest": {
+        "errors": [],
+        "input_inventory": {
+          "display_lists_truncated": false,
+          "expected_observation_payloads": [
+            "35010145e1bde8883888e943308c4f7faa96c11d8bc0e0d57e2fd993e560bed5",
+            "79404603db91385391d5be0e66d171590e24bd34954e1cad88a1cf352c77e352"
+          ],
+          "expected_source_versions": [
+            "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+          ],
+          "inventory_complete": true,
+          "inventory_sha256": "8b9a588b25fd8e85c7580a4d6ea90df6ce516dea91c2162c7d3007b6517bbd07",
+          "limits": {
+            "max_allowed_chars": 12000,
+            "max_artifacts": 32,
+            "max_endpoints": 80,
+            "max_input_bytes": 24000,
+            "max_input_tokens": 32768,
+            "max_observations": 64,
+            "max_output_tokens": 8192,
+            "max_proposals": 24
+          },
+          "observation_count": 2,
+          "observation_payloads": [
+            "35010145e1bde8883888e943308c4f7faa96c11d8bc0e0d57e2fd993e560bed5",
+            "79404603db91385391d5be0e66d171590e24bd34954e1cad88a1cf352c77e352"
+          ],
+          "revoked_evidence_refs": [],
+          "revoked_observation_ids": [],
+          "source_characters": 110,
+          "source_count": 2,
+          "source_parsing": [
+            {
+              "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+              "issue_count": 0,
+              "issues": [],
+              "issues_truncated": false,
+              "status": "COMPLETE"
+            },
+            {
+              "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "issue_count": 0,
+              "issues": [],
+              "issues_truncated": false,
+              "status": "COMPLETE"
+            }
+          ],
+          "source_versions": [
+            "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+          ],
+          "truncated": false,
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        },
+        "inventory_complete": true,
+        "limits": {
+          "max_allowed_chars": 12000,
+          "max_artifacts": 32,
+          "max_endpoints": 80,
+          "max_input_bytes": 24000,
+          "max_input_tokens": 32768,
+          "max_observations": 64,
+          "max_output_tokens": 8192,
+          "max_proposals": 24
+        },
+        "observation_count": 2,
+        "revoked_evidence_refs": [],
+        "revoked_observation_ids": [],
+        "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+        "source_count": 2,
+        "source_snapshot_hash": "433333f439e92ed9d9a95b4d3ea97fc63ffd51be0773d9fcf624ef53462114bc",
+        "source_versions": [
+          "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+          "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+        ],
+        "status": "READY",
+        "truncated": false,
+        "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+      },
+      "errors": [],
+      "evidence_spans": {
+        "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221": {
+          "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+          "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+          "char_end": 57,
+          "char_start": 27,
+          "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+          "line_end": 1,
+          "line_start": 1,
+          "message_id": "message_v1_3d4cd2c7fc54772a050b9265a63b3f7527dbb02263aaa739bfc9a446f846fa91",
+          "ordinal": 0,
+          "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+          "quote_sha256": "92679f748dd3a79eb05080186c3b6977b190bcb02eab517c81792036225f2b5a",
+          "segment_id": "segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+          "source_ref": "canary://C1/A",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        },
+        "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575": {
+          "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+          "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+          "char_end": 51,
+          "char_start": 27,
+          "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+          "line_end": 1,
+          "line_start": 1,
+          "message_id": "message_v1_65556f27a51d57a98c25b0147fedd0cd627a5df985eaaf735b653db0bd035762",
+          "ordinal": 0,
+          "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+          "quote_sha256": "494ed117e7767ca1eaf54bd89ee311e0582643673ca6974a98b6760b44167ad9",
+          "segment_id": "segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+          "source_ref": "canary://C1/B",
+          "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+        }
+      },
+      "execution": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "kind": "LIVE",
+        "new_billable_cost_usd": null,
+        "new_live_provider_requests": 1,
+        "original_receipt": {
+          "campaign_id": "m3-product-canary-v1",
+          "execution_kind": "LIVE",
+          "manifest_sha256": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+          "model_id": "gemini-3.8-flash",
+          "provider_id": "gemini"
+        },
+        "provider_request_id": null,
+        "provider_response_id": "offline-response",
+        "provider_usage": {
+          "duration_ms": 598.4,
+          "input_tokens": 20,
+          "output_tokens": 10,
+          "total_tokens": 32
+        },
+        "request_sha256": "d62336d6f8175bdff31ed346f4f34a95feb9a2dfd75a4b64d54f33dd13877f85",
+        "reserved_requests": 1,
+        "response_sha256": "4596d60ad94c2040ed00d27852111a050afdd491b0e3995d0f080bc4c6da56d9"
+      },
+      "investigation_id": "product-investigation",
+      "invocation_id": "semantic_10eb4f8e25832a0c5c3175fd9c4afc1eb97581609cc7ce48b1696a5cccdcd457",
+      "origin_tool_call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+      "outer_call_id": "rtc_7d9de810f52524e660baf1d5e1514ecd",
+      "proposals": [
+        {
+          "actual_model_version": "gemini-3.8-flash",
+          "authority": "SUPPORTING_ONLY",
+          "changed_fields": [],
+          "counter_evidence": [],
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+              "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+              "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "displayable_as_model_analysis": true,
+          "evidence_status": "EVIDENCE_VALID",
+          "execution_status": "EXECUTED",
+          "missing_evidence": [],
+          "model_id": "gemini-3.8-flash",
+          "object": {
+            "artifact_id": "src_6668d9f45839aeb8aebf1860e6f46286",
+            "artifact_version_id": "artifact_v1_4eb29949a49f8f94edca92d8eeddd03fae4d10f23e05e44292d97684f4fafbc4",
+            "content_hash": "8e08920847df8e553142f0d0426465742e39e059fc64228199b499f230cfefee",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f7839c2df7cd6ec2ae30c0df323512a760fab679687c06a7352c2861ae63c7f5",
+            "observation_id": "task_observation_v1_37ce55f42e7773a7a58d30c29f4a4c0963ffb7a8de368e927e775211c2f943a7",
+            "payload_hash": "f052ac5e98db500d93e72c249b95db392dfb9a7238e2e8835b75dead26c8ca89",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          },
+          "predicate": "SAME_TASK",
+          "prompt_version": "task-relation-semantics/v1",
+          "proposal_id": "semantic_proposal_v1_72ad1dacd3ad47a1c33cdb4ac14ef5434ef805cfcace2985fe343695871e5054",
+          "proposed_verdict": "SUPPORTED",
+          "publishable": false,
+          "reason_codes": [
+            "OFFLINE_SCRIPT_ONLY"
+          ],
+          "release_status": "PENDING_SEMANTIC_REVIEW",
+          "schema": "task-semantic-proposal/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "source_snapshot_hash": "433333f439e92ed9d9a95b4d3ea97fc63ffd51be0773d9fcf624ef53462114bc",
+          "source_validation": {
+            "authority": "SUPPORTING_ONLY",
+            "counter_evidence": [],
+            "errors": [],
+            "proposal_id": "semantic_proposal_v1_72ad1dacd3ad47a1c33cdb4ac14ef5434ef805cfcace2985fe343695871e5054",
+            "publishable": false,
+            "semantic_status": "NOT_EVALUATED",
+            "stage": "EVIDENCE_VALID",
+            "supporting_evidence": [
+              {
+                "char_end": 57,
+                "char_start": 27,
+                "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "span_ref": "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+                }
+              },
+              {
+                "char_end": 51,
+                "char_start": 27,
+                "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+                "role": "RELATION_PROPOSAL",
+                "span": {
+                  "span_ref": "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+                }
+              }
+            ],
+            "validator_version": "task-semantic-evidence/v1"
+          },
+          "stage": "MODEL_PROPOSED",
+          "subject": {
+            "artifact_id": "src_361992da1c73bab7f1636e9de567ee0a",
+            "artifact_version_id": "artifact_v1_5af62c576d14138c0ca072c3d772767fe47939eeddf949972c6d2e91e86b288a",
+            "content_hash": "21236c155b8e0440e48c6ff4f32f3477cf282f11613aa0ddb9154a33db76df19",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1bad405578cd4fe026ada98d17c72768141d4a32aada419d9976df0f769983b8",
+            "observation_id": "task_observation_v1_acd98d5fd7b0ece91ed453186d152396d36c8817c098ceacf8979459b364e38f",
+            "payload_hash": "a16f61770e2d418ae874f01189b89722f5e800cc2b61c9b02d3f131e90c1b20c",
+            "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+          },
+          "supporting_evidence": [
+            {
+              "quote": "青竹项目的日志迁移由我负责，截止日期为2026-10-20。",
+              "span": {
+                "span_ref": "span_0581d508955895c55784c1353ec5289cf2e00416a0d51bd7292858e1b2e1b221"
+              }
+            },
+            {
+              "quote": "继续1日那项日志迁移，仍由我负责，截止日期不变。",
+              "span": {
+                "span_ref": "span_2939db8a071f0bdb3726d413e85ce496c920d6ec80137e29542bf3c114ce3575"
+              }
+            }
+          ]
+        }
+      ],
+      "publishable": false,
+      "result_artifact": {
+        "kind": "tool_result",
+        "ref": "semantic/046529c9d5aa3f619eaeb0fb/result.json",
+        "sha256": "86eec4f011831fd46be33550277c3053168ebed89baf837fd22eb0700c24f0f5",
+        "size_bytes": 6180
+      },
+      "schema_version": "task-semantic-analysis/v1",
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+    },
+    "workspace_id": "ws_da93b6d0be4445c0a66cb7227184aa99"
+  }
+}

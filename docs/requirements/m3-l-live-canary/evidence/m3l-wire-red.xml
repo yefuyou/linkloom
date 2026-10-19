@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="6" time="7.042" timestamp="2026-10-19T20:26:49.223713+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3l_canary" name="test_closed_host_uses_normal_ask_all_stages_and_preserves_authority" time="0.997"><failure message="AssertionError: {'agent_run_id': None, 'conclusions': [], 'discovery': None, 'error': {'category': 'validation', 'code': 'PENDING_RESERVATION', 'message': 'Task preparation stopped; no result is publishable.'}, ...}&#10;assert 200 == 202">tests\integration\test_m3l_canary.py:10: in test_closed_host_uses_normal_ask_all_stages_and_preserves_authority
+    assert code == 202, result
+E   AssertionError: {'agent_run_id': None, 'conclusions': [], 'discovery': None, 'error': {'category': 'validation', 'code': 'PENDING_RESERVATION', 'message': 'Task preparation stopped; no result is publishable.'}, ...}
+E   assert 200 == 202</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[timeout]" time="0.626"><failure message="AssertionError: assert 'FAILED' == 'BLOCKED'&#10;  &#10;  - BLOCKED&#10;  + FAILED">tests\integration\test_m3l_canary.py:32: in test_unknown_provider_stops_entire_campaign_before_next_stage
+    assert result['status'] == 'BLOCKED'
+E   AssertionError: assert 'FAILED' == 'BLOCKED'
+E     
+E     - BLOCKED
+E     + FAILED</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[usage]" time="0.529"><failure message="AssertionError: assert 'FAILED' == 'BLOCKED'&#10;  &#10;  - BLOCKED&#10;  + FAILED">tests\integration\test_m3l_canary.py:32: in test_unknown_provider_stops_entire_campaign_before_next_stage
+    assert result['status'] == 'BLOCKED'
+E   AssertionError: assert 'FAILED' == 'BLOCKED'
+E     
+E     - BLOCKED
+E     + FAILED</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_foreign_workspace_or_changed_question_cannot_use_grant" time="0.578" /><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[schema]" time="0.620" /><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[citation]" time="0.535" /></testsuite></testsuites>

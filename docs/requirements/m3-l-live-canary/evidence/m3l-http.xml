@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="3.758" timestamp="2026-10-19T20:37:11.728990+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3l_http" name="test_normal_http_cannot_change_canary_provider_or_budget" time="0.878"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+scripts\evaluation_offline_plugin.py:29: in local_connect
+    return connect(self, address)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3l_http.py:18: in test_normal_http_cannot_change_canary_provider_or_budget
+    status, payload = _client(base, '/api/product/ask', method='POST', data=dict(
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;</failure></testcase></testsuite></testsuites>

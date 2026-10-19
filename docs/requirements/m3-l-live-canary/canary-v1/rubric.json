@@ -1,0 +1,58 @@
+{
+  "schema_version": "canary-rubric/v1",
+  "categories": [
+    "CORRECT_PARTIAL",
+    "WRONG_ANSWER",
+    "CONTRACT_FAILURE",
+    "INFRA_FAILURE"
+  ],
+  "unsupported_categories": ["BUSINESS_COMPLETE"],
+  "independent_dimensions": true,
+  "refusal_alone_is_not_semantic_pass": true,
+  "semantic_pass_requires_source_evidence": true,
+  "dimensions": {
+    "continuity_coverage": {
+      "max_score": 2,
+      "criterion": "Identify whether the same task continues across the supplied source set and preserve the task scope."
+    },
+    "precise_quote_dates": {
+      "max_score": 2,
+      "criterion": "Quote or cite the relevant speaker evidence and distinguish 2026-10-20 from 2026-10-24."
+    },
+    "conflict": {
+      "max_score": 2,
+      "criterion": "Surface the independent disagreement in D instead of collapsing it into a single owner or deadline."
+    },
+    "unconfirmed_assertions": {
+      "max_score": 2,
+      "criterion": "State that task ownership and the effective deadline remain unconfirmed when D is included."
+    },
+    "excess_planning_missing_investigation": {
+      "max_score": 2,
+      "criterion": "Investigate the supplied records and avoid unsupported planning, commitments, or invented follow-up work."
+    }
+  },
+  "gold_expectations": {
+    "C1": {
+      "continuity_coverage": "A and B refer to the same log migration owned by 林岚.",
+      "precise_quote_dates": "The deadline remains 2026-10-20.",
+      "conflict": "No conflict is present in the supplied records.",
+      "unconfirmed_assertions": "No ownership or deadline dispute is present in the supplied records.",
+      "excess_planning_missing_investigation": "Do not invent a new task or action plan."
+    },
+    "C2": {
+      "continuity_coverage": "A and C refer to the same log migration owned by 林岚.",
+      "precise_quote_dates": "C changes the deadline from 2026-10-20 to 2026-10-24.",
+      "conflict": "C explicitly supersedes the earlier 2026-10-20 date.",
+      "unconfirmed_assertions": "No separate ownership dispute is present in the supplied records.",
+      "excess_planning_missing_investigation": "Do not invent a new task or action plan."
+    },
+    "C3": {
+      "continuity_coverage": "A and C describe 林岚's continuing task, while D introduces a disputed alternative task reference.",
+      "precise_quote_dates": "A states 2026-10-20; C states 2026-10-24 and replaces 2026-10-20; D contains both sides' dates.",
+      "conflict": "周宁 and 林岚 disagree about which migration is being discussed.",
+      "unconfirmed_assertions": "The recorder states that ownership and the effective deadline remain unresolved.",
+      "excess_planning_missing_investigation": "Do not choose an owner or effective deadline without resolving the disagreement."
+    }
+  }
+}

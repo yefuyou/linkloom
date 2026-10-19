@@ -1,0 +1,22 @@
+{
+  "evidence_layer": "OFFLINE_MOCKED_SDK_ONLY",
+  "category": null,
+  "semantic_score": "NOT_EVALUATED",
+  "dimensions": {
+    "continuity_coverage": "NOT_EVALUATED",
+    "precise_quote_dates": "NOT_EVALUATED",
+    "conflict": "NOT_EVALUATED",
+    "unconfirmed_assertions": "NOT_EVALUATED",
+    "excess_planning_missing_investigation": "NOT_EVALUATED"
+  },
+  "mechanical_checks": {
+    "status": "INVESTIGATING",
+    "reviewer": {
+      "performed": false,
+      "decision": null,
+      "accepted": false
+    },
+    "formal_conclusions_published": false
+  },
+  "explanation": "Scripted outputs establish wiring only; refusal is not semantic success."
+}

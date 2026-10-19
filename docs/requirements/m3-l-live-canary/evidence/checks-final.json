@@ -1,0 +1,374 @@
+{
+  "schema": "m3l-evidence-checks/v2",
+  "base_commit": "df95bfb15b4af462fec062c218d04f0d84774e00",
+  "freeze_manifest_sha256": "72d8d7b3cce4180d57bde436614d2050f0822f0c4ffe3dc6291173f86f898cf8",
+  "evidence_layer": "OFFLINE_MOCKED_SDK_PRODUCT_INTEGRATION",
+  "actual_live_network_requests": 0,
+  "actual_paid_requests": 0,
+  "actual_paid_cost_usd": 0,
+  "real_model_semantics": "NOT_EVALUATED",
+  "real_business_completion": "NOT_EVALUATED",
+  "ci": "NOT_RUN",
+  "files": {
+    "accepted/budget-snapshot.json": {
+      "sha256": "c0eae5563febff98ebcd501c6feae90bdc8af9c128a916de2ce1d5c324e525b7",
+      "bytes": 8030
+    },
+    "accepted/C1/product-result.json": {
+      "sha256": "81eab7f4cb6d2e9b1a2bd97c95f1b7fd6024b2cc44cc3e88f9d917db6e4ff4c7",
+      "bytes": 115768
+    },
+    "accepted/C1/runtime-audit.zip": {
+      "sha256": "09aeba00a59baebbb8a365a02e23530cb35e0fede9a6224be82ab6489069611a",
+      "bytes": 157193
+    },
+    "accepted/C1/scorecard.json": {
+      "sha256": "dc57c998dc3420fc4fdf4dba9448402f359c3e452761d9c4f97a32f026b578ac",
+      "bytes": 1348
+    },
+    "accepted/C2/product-result.json": {
+      "sha256": "4e59c333009e5dee87a69d598a1c3e98362e165bc779806ea35361963da65e27",
+      "bytes": 116360
+    },
+    "accepted/C2/runtime-audit.zip": {
+      "sha256": "73153dc1dfa2c9de2fe974156e0d40c5dad62cf017365039f2e83372625d1f2e",
+      "bytes": 157678
+    },
+    "accepted/C2/scorecard.json": {
+      "sha256": "4332dbfd50f80dde742d8cb0a9e8339829690db2b1d1185c1c1b04921db6876f",
+      "bytes": 1348
+    },
+    "accepted/C3/product-result.json": {
+      "sha256": "743c69947b988fcdc2a3120eed5e879e379c70499111f9131e01367f5da046bb",
+      "bytes": 161283
+    },
+    "accepted/C3/runtime-audit.zip": {
+      "sha256": "42a9d5da5974317be33ad58d12da33d2b8e38f536af60960083ca68d99ac02bf",
+      "bytes": 219458
+    },
+    "accepted/C3/scorecard.json": {
+      "sha256": "b618684d70fb96ccbd9f2f00c945c60255807125a23a6cf088e9ae44d9830f60",
+      "bytes": 1348
+    },
+    "accepted/provider-ledger.jsonl": {
+      "sha256": "eb3e0e9f4f022f02876bce534e0f19dc1b90a32f345fd67798626f1bdf83ff0e",
+      "bytes": 797416
+    },
+    "accepted/summary.json": {
+      "sha256": "70fd678ddc5108bbcbcd37bb70347eb7ad44a4150cbd4f72aeee3413ab658de2",
+      "bytes": 3300
+    },
+    "accepted-reviewed/budget-snapshot.json": {
+      "sha256": "a8315b7885bf2c69a5f97cfb12ec99b1b1d97bccda135f10755b64d754f94e48",
+      "bytes": 10718
+    },
+    "accepted-reviewed/C1/product-result.json": {
+      "sha256": "41ebf23f6430f731bbd0ff40fbe860e5b48f6c03112b5c023dc18fce5b53ae31",
+      "bytes": 117517
+    },
+    "accepted-reviewed/C1/runtime-audit.zip": {
+      "sha256": "d0c87e9b2d2e8352744d2ea94d45b2721bf8b2fad9b92f4ce27ee924ad10dadd",
+      "bytes": 157142
+    },
+    "accepted-reviewed/C1/scorecard.json": {
+      "sha256": "7d10c32e7d40eee8cd05c066a78064f501c50e2dab477d20007bd0760d300fe7",
+      "bytes": 1348
+    },
+    "accepted-reviewed/C2/product-result.json": {
+      "sha256": "b5f7967af69d9a7b16aa260ac02a70225d901889eb181b213ba5498fd4e37297",
+      "bytes": 119783
+    },
+    "accepted-reviewed/C2/runtime-audit.zip": {
+      "sha256": "6277df083eaf1827a3e4529be2682b6831245519f8a198a5366ac80578bbbea3",
+      "bytes": 158080
+    },
+    "accepted-reviewed/C2/scorecard.json": {
+      "sha256": "0edc3efba1eb94bcd246d0e8b916808a502e7878836951e80a8b0ffc3387369f",
+      "bytes": 1348
+    },
+    "accepted-reviewed/C3/product-result.json": {
+      "sha256": "c73e9cef24859d4c137095bc4754fdd76f7a40a08baf6c129d87ad30b032c655",
+      "bytes": 166990
+    },
+    "accepted-reviewed/C3/runtime-audit.zip": {
+      "sha256": "396dc1d55e1355258f8c7bb47691854c48175c6aacb222923907e3ff2a8d4245",
+      "bytes": 220208
+    },
+    "accepted-reviewed/C3/scorecard.json": {
+      "sha256": "091a991ea8158976798bd76254506984224c032c6a47591ac7ccaecca6d2283e",
+      "bytes": 1348
+    },
+    "accepted-reviewed/provider-ledger.jsonl": {
+      "sha256": "e539594f573c4025385d87cee3fa8b05a3647c4de35ae8b0dd545d7d1cfacffb",
+      "bytes": 800568
+    },
+    "accepted-reviewed/summary.json": {
+      "sha256": "21697d05eeff27e25fa11e800b8e90651aef7ea4cd489cf940646e34067bb824",
+      "bytes": 3300
+    },
+    "accepted-v1/budget-snapshot.json": {
+      "sha256": "da3f9c068a3b76af2ef6bc0cc1d44bda5d447508a7c1a25a3a1c569b64027018",
+      "bytes": 7942
+    },
+    "accepted-v1/C1/product-result.json": {
+      "sha256": "65be499e882aa7ccecf9d2d1cc715db5bc95bf471bf2cb819cc6af28a6007de3",
+      "bytes": 106780
+    },
+    "accepted-v1/C1/runtime-audit.zip": {
+      "sha256": "2886bc3f515cc6defd4ac5e4646099a74c2b7762691eb8769afe07310e9aea0f",
+      "bytes": 157220
+    },
+    "accepted-v1/C1/scorecard.json": {
+      "sha256": "194f07d28fbaf0338c85ff0897f3d674f6677d9ed9cb0fe0641917dc86cb4263",
+      "bytes": 1348
+    },
+    "accepted-v1/C2/product-result.json": {
+      "sha256": "0c95e565bf1d15711be94a527b00307098e9da2747e65c90456606449794a4df",
+      "bytes": 107282
+    },
+    "accepted-v1/C2/runtime-audit.zip": {
+      "sha256": "bac0ec45c5ac66af37cb8ea9a2ee3216f719d695cf55f9641fc0e6401312b736",
+      "bytes": 157743
+    },
+    "accepted-v1/C2/scorecard.json": {
+      "sha256": "e6789086e0921a321a60b76dbc6e149bdef8edbf48343a5e18e49fb7d4062e1c",
+      "bytes": 1348
+    },
+    "accepted-v1/C3/product-result.json": {
+      "sha256": "0a381f543e248a8bb190d671e67468f7a67a8f5ba6b9182a0285f473bac3c81b",
+      "bytes": 152130
+    },
+    "accepted-v1/C3/runtime-audit.zip": {
+      "sha256": "22efba3d6f439f385dcfa882620fe48971c0eb20af3b961178c08717e1a399ab",
+      "bytes": 219777
+    },
+    "accepted-v1/C3/scorecard.json": {
+      "sha256": "b5f0cbb86d7e4f590946da870fe61658ace96895077af21cf404e18a717582de",
+      "bytes": 1348
+    },
+    "accepted-v1/provider-ledger.jsonl": {
+      "sha256": "838a79bd467d8a861a878f83827494aa79c6ef1f814931d7f351f0347c1ab48c",
+      "bytes": 797420
+    },
+    "accepted-v1/summary.json": {
+      "sha256": "1a0af622411a3936923a5faa46081def265487fe60095240a31d2bbf77f6f492",
+      "bytes": 3300
+    },
+    "checks.json": {
+      "sha256": "7247f44a0a767ca95609e7c0f6e5aedfac2880c50d88a12b3d27a8f4c9f0f941",
+      "bytes": 11212
+    },
+    "failed-concurrent/C1/product-result.json": {
+      "sha256": "8c08590584dd8c919e4c5ff5d6cf69c7b07b4cf486859e6fd2f93d92c551ca04",
+      "bytes": 82427
+    },
+    "failed-concurrent/C1/runtime-audit.zip": {
+      "sha256": "b4ad640fe62049e50c251df7f6f7a69faae8193289eac624abd90529bcb74cbe",
+      "bytes": 139802
+    },
+    "failed-concurrent/C1/scorecard.json": {
+      "sha256": "bae0aa85dc7841e885a12ea6e61c30a4028b1cf20fa372c78b7ade3e8d738d47",
+      "bytes": 674
+    },
+    "fault-ledgers/test_bad_schema_and_citation_r0/m3-product-canary-v1/initialized.json": {
+      "sha256": "d50e41453982790625394973c34ce2d1b7d8421914a22feceb5f2a0055b89128",
+      "bytes": 867
+    },
+    "fault-ledgers/test_bad_schema_and_citation_r0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "925125d287d0282693889a2d670cb6ed43d86fc5cacae95904b1982d9ead7cad",
+      "bytes": 59434
+    },
+    "fault-ledgers/test_bad_schema_and_citation_r1/m3-product-canary-v1/initialized.json": {
+      "sha256": "f63b82e9b512ba0874aed1bca205dfd299e13f9aff4744295c76b9d0e008ec2e",
+      "bytes": 867
+    },
+    "fault-ledgers/test_bad_schema_and_citation_r1/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "555652559116d678b35da1734a2bd66cc18afede5c38ee29388a9966cc420d02",
+      "bytes": 218226
+    },
+    "fault-ledgers/test_concurrent_contention_can0/last-slots/initialized.json": {
+      "sha256": "05a2011a4c472460f76b5343e569c0cb47c96ea83a347973284f7ccd3e0e1974",
+      "bytes": 801
+    },
+    "fault-ledgers/test_concurrent_contention_can0/last-slots/ledger.jsonl": {
+      "sha256": "92015e0c93b42f08cbae656b776dfc73ac05f1bdf30eaebfbf223755ac8746ce",
+      "bytes": 3503
+    },
+    "fault-ledgers/test_missing_thinking_or_unkno0/campaign/initialized.json": {
+      "sha256": "4116eeaedacf508a1d08a2bdb33715b012a19b7aecd34b37d9e48af94451b426",
+      "bytes": 799
+    },
+    "fault-ledgers/test_missing_thinking_or_unkno0/campaign/ledger.jsonl": {
+      "sha256": "f185220b7095bc1e270f301f1558a19c5a23bc6fcb2a974b52c27060e332ee23",
+      "bytes": 2354
+    },
+    "fault-ledgers/test_missing_thinking_or_unkno0/outcome/campaign/initialized.json": {
+      "sha256": "28e1fc86dafc1b5a0ea0725432333dd6efc93cd67a7344ab49425c341c4c764d",
+      "bytes": 799
+    },
+    "fault-ledgers/test_missing_thinking_or_unkno0/outcome/campaign/ledger.jsonl": {
+      "sha256": "3dcfca1abef59391acba81021b6557d905b80b6ddb289ecc59ad01876e789b8e",
+      "bytes": 2377
+    },
+    "fault-ledgers/test_missing_usage_charges_ful0/campaign/initialized.json": {
+      "sha256": "553cee81e94bd4095111abaf9561695209580d5b044e9443a2f40a1c0b4e568a",
+      "bytes": 799
+    },
+    "fault-ledgers/test_missing_usage_charges_ful0/campaign/ledger.jsonl": {
+      "sha256": "46c4c21dea2675734ebfd60985d4da08849e0341e838413ef989900b119f5fd2",
+      "bytes": 2245
+    },
+    "fault-ledgers/test_pending_reservation_survi0/campaign/initialized.json": {
+      "sha256": "1de80388bef3712814bc7bd4f69676ac671f5f20fa52ddb0dc9a0b62cd724997",
+      "bytes": 799
+    },
+    "fault-ledgers/test_pending_reservation_survi0/campaign/ledger.jsonl": {
+      "sha256": "7d18b3fa4585bd7862ea40bfd494020b40fee18bbef3556f7490b021324005c8",
+      "bytes": 1663
+    },
+    "fault-ledgers/test_sdk_wire_retry_is_stopped0/m3-product-canary-v1/initialized.json": {
+      "sha256": "dc753eda54afccb9fc8435c177e859864890437c72986c3e05cd7b43fd287d62",
+      "bytes": 867
+    },
+    "fault-ledgers/test_sdk_wire_retry_is_stopped0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "c90ad2177ccc87e5b093419eef7cc2d3db678cd5c662506e474a9a96fb752b90",
+      "bytes": 16807
+    },
+    "fault-ledgers/test_source_revoked_during_res0/m3-product-canary-v1/initialized.json": {
+      "sha256": "da694dd5cbebb1b822c0e987661773fd09f364a90389eed8428baa5925f4a128",
+      "bytes": 867
+    },
+    "fault-ledgers/test_source_revoked_during_res0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "e725fbd570e54b277ff42f2fe228583bef70282e1f4449b39d1244fa0a534712",
+      "bytes": 17702
+    },
+    "fault-ledgers/test_unknown_provider_stops_en0/m3-product-canary-v1/initialized.json": {
+      "sha256": "8189694ab511527fbf8148163e3ba0f3d33fa0e8da1262d6f0289d57198d0802",
+      "bytes": 867
+    },
+    "fault-ledgers/test_unknown_provider_stops_en0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "ca9f0986d5ad2fade82e54b787ee216b62d91b05736bab9e8fc045cc7baba13c",
+      "bytes": 16825
+    },
+    "fault-ledgers/test_unknown_provider_stops_en1/m3-product-canary-v1/initialized.json": {
+      "sha256": "089f50fa0a12ab2beeee2151330cc39578e0fb6fb94c672ed4aad2acfc821a77",
+      "bytes": 867
+    },
+    "fault-ledgers/test_unknown_provider_stops_en1/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "8908f486c13383c5443afb0adea619e6847fd35a1ecbd5de8335db371c3f35e1",
+      "bytes": 17469
+    },
+    "fault-ledgers/test_unknown_provider_stops_en2/m3-product-canary-v1/initialized.json": {
+      "sha256": "f87fe7244da20b113297d422c1fd4b82bb33fb515ec9c39c0ee70ec327ad4f2e",
+      "bytes": 867
+    },
+    "fault-ledgers/test_unknown_provider_stops_en2/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "4d9ace3ac999dc93c762162a5de91aa3f26df47b2563da59a65dfbe39e8daeca",
+      "bytes": 17491
+    },
+    "m3l-final-fixed.xml": {
+      "sha256": "6af90de40b8a20a82e3ee206d895308f157992888b127185628c003c415d0b24",
+      "bytes": 9148
+    },
+    "m3l-final.xml": {
+      "sha256": "9af34ae09fd5b887297632c52b6c85c7d56d51319ad92a4d95c2fa1379e74ac2",
+      "bytes": 9250
+    },
+    "m3l-freeze-host.xml": {
+      "sha256": "36621980370fe165c91b367f997f5fc5541a2290473585e1f921a402ee2dc527",
+      "bytes": 2416
+    },
+    "m3l-http-accepted.xml": {
+      "sha256": "5b041ca50bb7562b3bfa8cf685a165eb51a18d7df8e3c6504e07e4596592b5fb",
+      "bytes": 2876
+    },
+    "m3l-http.xml": {
+      "sha256": "401771f646b201732b62b6c6c97b9c3c0e5fd6917ad0117d8a0ef232ab064dfc",
+      "bytes": 2677
+    },
+    "m3l-increment1.xml": {
+      "sha256": "0fab6049a43b14db2d881ad1bb3c531b610186129b4875db6cc1410b4557e3ba",
+      "bytes": 3078
+    },
+    "m3l-initial-snapshot.xml": {
+      "sha256": "ea6c45f4f088342794d9dda7a634c7efdbace709dcd1f83fc4452d3031ef4250",
+      "bytes": 649
+    },
+    "m3l-new-final1.xml": {
+      "sha256": "1fb30daba623084db4db4b4c34181b1f9ed75ca82d2e0b455c0997acd3b7c059",
+      "bytes": 5610
+    },
+    "m3l-regression-final.xml": {
+      "sha256": "49ec26b36037c440a2597c781731e6bc2008cd45f77a72a63c37efae2c2e7765",
+      "bytes": 54775
+    },
+    "m3l-regression.xml": {
+      "sha256": "983b0e327d75382f11bde7ac5070f65464474d8c95ba8d1cc107f102737d11e3",
+      "bytes": 55215
+    },
+    "m3l-resume-checked.xml": {
+      "sha256": "f83b08133ee649f58c22f3b2d6faeefc363d17407269827e52605fb1d24989c1",
+      "bytes": 2374
+    },
+    "m3l-review-fixed.xml": {
+      "sha256": "80718a5a7d5f2089994d81163bad05b42e15c039922392e0248ef00ed61f3d99",
+      "bytes": 4187
+    },
+    "m3l-review-red.xml": {
+      "sha256": "2e68345faa67288b0eb9acf7ea9f73445c69aae8139aceddeb443cbcd26618b5",
+      "bytes": 1655
+    },
+    "m3l-review-serial.xml": {
+      "sha256": "1b5eb042de2e6e3d039e6277d06c8b101a3a041eb8d7e58884b87b04394e28c7",
+      "bytes": 2966
+    },
+    "m3l-reviewed-final.xml": {
+      "sha256": "7202de7d612549764b2cee254486b3771402326c0ab11d39bc6aa2ce2f5ec56a",
+      "bytes": 10758
+    },
+    "m3l-stage-output.xml": {
+      "sha256": "12f63d358ce5882d211ad51cdf29c625428decc3af20dce2587910dccf70681f",
+      "bytes": 2749
+    },
+    "m3l-wire-fix1.xml": {
+      "sha256": "cb71e9dd421d08984f23d6a9b133f9a3d9d1e408092d560b8382a5bd3a788f91",
+      "bytes": 1799
+    },
+    "m3l-wire-fix2.xml": {
+      "sha256": "e2580760f530ce964d0eaaeedfb7ca127a6d09007b88266635111f6051d0ea7d",
+      "bytes": 6869
+    },
+    "m3l-wire-fix3.xml": {
+      "sha256": "d0f0756b2803ee0ea2852add12e5fdea3768595d1829758962cbb8e71538ad89",
+      "bytes": 2865
+    },
+    "m3l-wire-fix4.xml": {
+      "sha256": "a1cbc897f981847799fe79f139332ec4de9d838fb883158f75086952b13db4f5",
+      "bytes": 4239
+    },
+    "m3l-wire-fix5.xml": {
+      "sha256": "2b5d893312ea3599b22583799b73b0f52e35365ee3b1f3b97fcaff05bf2b09e2",
+      "bytes": 2383
+    },
+    "m3l-wire-red.xml": {
+      "sha256": "4556d9ad75e7895d19b1d57261ce744682349a6db43344201501975d247e516a",
+      "bytes": 2479
+    },
+    "review-repair-ledgers/test_admitted_source_versions_0/m3-product-canary-v1/initialized.json": {
+      "sha256": "0d9030ac375ede45a2781e17ab1381770f4206aac849e795bed14fa4d932ca9c",
+      "bytes": 867
+    },
+    "review-repair-ledgers/test_admitted_source_versions_0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "221aedc05a8a9a50d55f3a90543e4bc9572beb77f2acde88d099d2091dafc58d",
+      "bytes": 2182
+    },
+    "review-repair-ledgers/test_first_preparation_source_0/m3-product-canary-v1/initialized.json": {
+      "sha256": "5db9cc21d7d1589998fd20e8eecca9ec6a1d433642e619b92e8a4b3b23d54edc",
+      "bytes": 867
+    },
+    "review-repair-ledgers/test_first_preparation_source_0/m3-product-canary-v1/ledger.jsonl": {
+      "sha256": "3054d9a53a903928e1c5278810d302716ded304c6ac2bd57f3ba4a3c229e6a2e",
+      "bytes": 2182
+    }
+  }
+}

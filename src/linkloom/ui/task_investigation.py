@@ -10,6 +10,7 @@ from datetime import datetime
 import json
 import re
 from pathlib import Path
+from linkloom.agents.providers import GeminiProviderAdapter
 
 from linkloom.decision_memory.sources import SourceReferenceRegistry
 from linkloom.semantic_ingestion.artifacts import RawArtifact
@@ -32,17 +33,27 @@ class TaskInvestigationModels:
     semantics: object
     execution_kind: str = 'FAKE'
     model_id: str = 'offline-task-investigation'
+    provider_id: str = 'offline'
     discovery_limits: DiscoveryLimits = field(default_factory=DiscoveryLimits)
     planning_limits: PlanningLimits = field(default_factory=PlanningLimits)
 
     def __post_init__(self):
-        if self.execution_kind not in {'FAKE', 'REPLAY'}:
+        from linkloom.ui.canary import is_canary_adapter
+        if self.execution_kind == 'LIVE':
+            if (self.provider_id != 'gemini' or not all(is_canary_adapter(a, s) for a, s in
+                    zip((self.discovery, self.planner, self.semantics), ('discovery', 'planning', 'semantic')))):
+                raise ValueError('UNTRUSTED_CANARY_ADAPTER: arbitrary stages are limited to FAKE/REPLAY')
+        elif any(is_canary_adapter(a) or isinstance(a, GeminiProviderAdapter)
+                 for a in (self.discovery, self.planner, self.semantics)):
+            raise ValueError('LIVE_ADAPTER_CANNOT_BE_FAKE_OR_REPLAY')
+        elif self.execution_kind not in {'FAKE', 'REPLAY'}:
             raise ValueError('Only explicitly injected FAKE/REPLAY task stages are enabled.')
 
 
 class ProductTaskSources:
-    def __init__(self, workspace_id, sources, current_sources):
+    def __init__(self, workspace_id, sources, current_sources, *, on_source_change=None):
         self.workspace_id, self.sources, self.current_sources = workspace_id, sources, current_sources
+        self.on_source_change = on_source_change
         self.registry = SourceReferenceRegistry()
         self.mapping = {}
         artifacts = []
@@ -53,6 +64,8 @@ class ProductTaskSources:
                 source['content'], source_uri=source.get('source_uri'),
                 ingestion_time=datetime.fromisoformat(source.get('version_created_at', source['created_at']).replace('Z', '+00:00')))
             if artifact.artifact_version_id != source['source_version']:
+                if self.on_source_change is not None:
+                    self.on_source_change()
                 raise ValueError('PRODUCT_ARTIFACT_IDENTITY_MISMATCH')
             artifacts.append(artifact)
             self.mapping[artifact.artifact_version_id] = dict(source_id=source['source_id'],
@@ -70,7 +83,15 @@ class ProductTaskSources:
                                       canonical_hash(s['content'])) for s in sources))
 
     def validate_current(self):
-        if self._identity(self.current_sources()) != self.identity:
+        try:
+            current = self._identity(self.current_sources())
+        except Exception:
+            if self.on_source_change is not None:
+                self.on_source_change()
+            raise
+        if current != self.identity:
+            if self.on_source_change is not None:
+                self.on_source_change()
             raise ValueError('SOURCE_SNAPSHOT_CHANGED')
 
     def current(self, workspace, artifact_id):
@@ -98,7 +119,8 @@ class _AuditedAdapter:
         payload = {'request': request.to_dict(), 'request_sha256': canonical_hash(request.to_dict())}
         payload['reservation'] = dict(calls_reserved=self.count, max_calls=self.max_calls,
             input_tokens_upper_bound=size + 1024, output_tokens=output_limit,
-            max_request_bytes=self.max_request_bytes, new_billable_cost_usd=0.0)
+            max_request_bytes=self.max_request_bytes,
+            new_billable_cost_usd=None if getattr(self.adapter, 'execution_kind', None) == 'LIVE' else 0.0)
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf8')
         try:
             response = self.adapter.complete(request)
@@ -132,17 +154,20 @@ def prepare_task_investigation(question, sources, models, root):
     def guard(request):
         sources.validate_current()
         return ProviderRequestAuthorization.approve(request, guard_id=guard_id,
-            reservation_id=canonical_hash(request.to_dict()), estimated_cost_upper_bound_usd=0)
+            reservation_id=canonical_hash(request.to_dict()),
+            estimated_cost_upper_bound_usd=.079872 if models.execution_kind == 'LIVE' else 0)
 
     discovery_adapter = _AuditedAdapter(models.discovery, root, 'discovery', sources.validate_current,
         max_calls=models.discovery_limits.max_calls)
     extractor = ProviderNeutralSemanticExtractor(
         discovery_adapter,
-        provider_id=models.execution_kind, model_id=models.model_id,
+        provider_id=models.provider_id if models.execution_kind == 'LIVE' else models.execution_kind, model_id=models.model_id,
         request_guard=guard, request_guard_id=guard_id, max_attempts=1)
     discovery = TaskObservationDiscoveryService(extractor, source_registry=sources.registry,
         current_source=sources.current, limits=models.discovery_limits).discover(
             sources.artifacts, workspace_id=sources.workspace_id)
+    if models.execution_kind == 'LIVE':
+        models.discovery.host.ledger.check_open()
     observations = (*discovery.valid_observations, *discovery.partial_observations)
     spans = tuple((f'source_{i}:{j}', segment.evidence_span)
         for i, artifact in enumerate(sources.artifacts)
@@ -159,6 +184,8 @@ def prepare_task_investigation(question, sources, models, root):
         model_id=models.model_id, request_guard=guard, guard_id=guard_id, limits=models.planning_limits,
         result_verifier=lambda receipt, current: receipts.get(receipt.receipt_id) == receipt)
     planning = planner.plan(context)
+    if models.execution_kind == 'LIVE':
+        models.planner.host.ledger.check_open()
     plans = [planning.to_dict()]
     # A discover step requests new handles. F already examined this bounded
     # snapshot: the only honest receipt is UNKNOWN, followed by a bounded replan.
@@ -175,6 +202,8 @@ def prepare_task_investigation(question, sources, models, root):
         planning = planner.plan(context, previous=planning.plan, verified_results=tuple(verified),
             gaps=('BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE',))
         plans.append(planning.to_dict())
+        if models.execution_kind == 'LIVE':
+            models.planner.host.ledger.check_open()
     gaps = list(planning.plan.gaps) if planning.plan else []
     if not discovery.coverage_complete:
         gaps.append('DISCOVERY_COVERAGE_INCOMPLETE')
@@ -209,11 +238,14 @@ def prepare_task_investigation(question, sources, models, root):
         semantic_context = replace(context, queries=tuple(queries))
         semantic = SemanticAnalysis('product-investigation', sources.workspace_id,
             lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(semantic_context)),
-            models.semantics, model_id=models.model_id, policy=SemanticCallPolicy(models.execution_kind))
+            models.semantics, model_id=models.model_id, policy=SemanticCallPolicy(models.execution_kind,
+                max_cost_usd=.079872 if models.execution_kind == 'LIVE' else 0,
+                request_cost_upper_bound_usd=.079872 if models.execution_kind == 'LIVE' else 0))
     tools = TaskRelationTools(sources.workspace_id, current_raw, semantic_analysis=semantic)
     manifest = dict(schema='product-task-preparation/v1', question=question,
         status='BLOCKED' if planning.status != 'PLANNED' else 'UNKNOWN' if not observations else 'PARTIAL',
-        execution_kind=models.execution_kind, authority='MODEL_PROPOSED_ONLY',
+        execution_kind=models.execution_kind, provider_id=models.provider_id, model_id=models.model_id,
+        authority='MODEL_PROPOSED_ONLY',
         discovery=discovery.to_dict(), planning=plans, source_mapping=sources.mapping,
         source_snapshot_hash=sources.identity, gaps=gaps, stage_budget=dict(
             discovery_calls_reserved=len(discovery.extractions), discovery_call_limit=models.discovery_limits.max_calls,
@@ -221,9 +253,11 @@ def prepare_task_investigation(question, sources, models, root):
             discovery_output_tokens_reserved=discovery_adapter.output_reserved,
             discovery_max_request_bytes=discovery_adapter.max_request_bytes,
             planning=planning.budget, semantic_call_limit=1 if queries else 0,
-            new_billable_cost_usd=0.0),
+            new_billable_cost_usd=None if models.execution_kind == 'LIVE' else 0.0),
         evidence_layers=dict(component='SEPARATE_TEST_EVIDENCE', integration=models.execution_kind,
             real_model_semantics='NOT_EVALUATED', real_product_business_task='NOT_EVALUATED'))
     sources.validate_current()
+    if models.execution_kind == 'LIVE':
+        manifest['campaign_budget'] = models.discovery.execution_receipt()
     (root / 'preparation.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
     return TaskPreparation(sources, tools, manifest)

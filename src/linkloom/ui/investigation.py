@@ -53,10 +53,18 @@ class ProductInvestigationService:
         relation_max_steps: int = 12,
         adaptive_planning: bool = False,
         task_models: Any = None,
+        canary_host: Any = None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
+        if canary_host is not None:
+            from linkloom.ui.canary import CanaryHost
+            if type(canary_host) is not CanaryHost or model_factory is not None or task_models is not None:
+                raise ValueError('UNTRUSTED_CANARY_COMPOSITION')
+            if external_provider is not True:
+                raise ValueError('LIVE_ADAPTER_CANNOT_BE_FAKE_OR_REPLAY')
+        self.canary_host = canary_host
         self.run_mode = run_mode
         self.max_steps = max_steps
         self.external_provider = external_provider
@@ -71,15 +79,16 @@ class ProductInvestigationService:
 
     def config(self) -> dict[str, Any]:
         return {
-            "available": self.model_factory is not None,
+            "available": self.model_factory is not None or self.canary_host is not None,
             "external_provider": self.external_provider,
             "run_mode": self.run_mode,
             "relation_max_model_turns": self.relation_max_steps,
             "adaptive_planning": self.adaptive_planning,
-            "task_investigation": self.task_models is not None,
+            "task_investigation": self.task_models is not None or self.canary_host is not None,
+            "canary_live": self.canary_host is not None,
             "message": (
                 "Agent model is not configured. Start the explicit offline demo to inspect a synthetic run."
-                if self.model_factory is None
+                if self.model_factory is None and self.canary_host is None
                 else "Investigation reads the selected workspace and never approves Decision Memory."
             ),
         }
@@ -91,7 +100,7 @@ class ProductInvestigationService:
         adaptive: bool = False,
         task_investigation: bool = False,
     ) -> dict[str, Any]:
-        if self.model_factory is None:
+        if self.model_factory is None and self.canary_host is None:
             raise ProductApplicationError(
                 "MODEL_NOT_CONFIGURED", self.config()["message"], status=503
             )
@@ -106,11 +115,18 @@ class ProductInvestigationService:
             if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
                 raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
         source_run = task_plan is not None or adaptive
-        if task_investigation and (self.task_models is None or self.external_provider or source_run or temporal_scope is not None):
+        if self.canary_host is not None and not task_investigation:
+            raise ProductApplicationError('CANARY_SCOPE_REQUIRED', 'Only the frozen task Canary is enabled.', status=409)
+        offline_unavailable = (self.task_models is None or self.external_provider) and self.canary_host is None
+        if task_investigation and (offline_unavailable or source_run or temporal_scope is not None):
             raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task investigation requires explicitly configured offline stage adapters.", status=409)
         source_run = source_run or task_investigation
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
+        task_models, outer_model = self.task_models, None
+        if self.canary_host is not None:
+            task_models, outer_model = self.canary_host.bind(query.strip(), workspace_id, sources,
+                lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1])
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
             if len(temporal_scope) != 3 or not all(
@@ -170,7 +186,9 @@ class ProductInvestigationService:
             if task_investigation:
                 from linkloom.ui.task_investigation import ProductTaskSources, prepare_task_investigation
                 preparation = prepare_task_investigation(query.strip(), ProductTaskSources(workspace_id, sources,
-                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1]), self.task_models, root / "preparation")
+                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
+                    on_source_change=(lambda: self.canary_host.ledger.stop('SOURCE_SNAPSHOT_CHANGED'))
+                        if self.canary_host is not None else None), task_models, root / "preparation")
                 if preparation.manifest['status'] == 'BLOCKED':
                     return dict(kind='error', run={'id': 'blocked-' + root.name}, evidence=[],
                         reviewer={'performed': False}, preparation=preparation.manifest,
@@ -190,12 +208,18 @@ class ProductInvestigationService:
                 source_names[relative_path] = str(source["name"])
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
+            model = outer_model if outer_model is not None else self.model_factory(query.strip())
+            if task_investigation and self.canary_host is None:
+                from linkloom.agents.providers import GeminiProviderAdapter
+                from linkloom.ui.canary import is_canary_adapter
+                if isinstance(model, GeminiProviderAdapter) or is_canary_adapter(model):
+                    raise ValueError('LIVE_ADAPTER_CANNOT_BE_FAKE_OR_REPLAY')
             engine = RuntimeEngine(
                 vault_root=vault,
                 index_path=index,
                 checkpoint_dir=root / "runtime",
                 trace_dir=root / "traces",
-                model=self.model_factory(query.strip()),
+                model=model,
                 decision_memory_store=self.product_app.store if not source_run else None,
                 decision_memory_enabled=not source_run,
                 memory_enabled=not source_run,
@@ -253,12 +277,17 @@ class ProductInvestigationService:
                             "message": "The task Runtime result could not be projected."}}
                     job.task_preparation.sources.validate_current()
                 except Exception:
+                    if self.canary_host is not None:
+                        self.canary_host.ledger.stop('SOURCE_SNAPSHOT_CHANGED')
                     return {"kind": "error", "run": {"id": run_id}, "reviewer": {"performed": False},
                         "evidence": [], "error": {"code": "SOURCE_SNAPSHOT_CHANGED", "classification": "validation",
                         "message": "The authorized source snapshot changed; ask again."}}
                 if snapshot is None:
                     return None
                 snapshot['preparation'] = job.task_preparation.manifest
+                if self.canary_host is not None:
+                    snapshot['preparation'] = dict(snapshot['preparation'],
+                        campaign_budget=self.canary_host.ledger.snapshot())
                 for evidence in snapshot['evidence']:
                     evidence.update(job.task_preparation.sources.mapping[evidence['artifact_version_id']])
                 return snapshot

@@ -1,0 +1,26 @@
+{
+  "schema_version": "canary-runtime-config/v1",
+  "campaign_id": "m3-product-canary-v1",
+  "model_id": "gemini-3.8-flash",
+  "max_requests": 34,
+  "max_cost_usd": 3,
+  "provider_id": "gemini",
+  "campaign_total_seconds": 1800,
+  "case_total_seconds": 600,
+  "request_timeout_seconds": 130,
+  "sdk_attempts": 1,
+  "automatic_function_calling": false,
+  "thinking_level": "LOW",
+  "max_input_bytes": 49152,
+  "per_request": {
+    "max_input_tokens": 65536,
+    "max_output_tokens": 8192
+  },
+  "stage_requests": {
+    "F": {"C1": 2, "C2": 2, "C3": 3},
+    "G": {"C1": 2, "C2": 2, "C3": 2},
+    "Semantic": {"C1": 1, "C2": 1, "C3": 1},
+    "Runtime": {"C1": 6, "C2": 6, "C3": 6}
+  },
+  "provider_requests_are_forbidden_in_offline_checks": true
+}

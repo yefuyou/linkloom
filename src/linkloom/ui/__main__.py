@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import json
 import os
 from pathlib import Path
 from uuid import uuid4
@@ -60,6 +61,10 @@ def main() -> int:
         action="store_true",
         help="Explicitly allow source text to be sent to the configured Gemini provider.",
     )
+    parser.add_argument('--allow-canary-live', action='store_true',
+        help='Enable only the frozen public M3 Canary with a separately approved local grant (default off).')
+    parser.add_argument('--canary-live-grant', type=Path,
+        help='Host-local approval JSON; never accepted from HTTP. Does not itself grant permission.')
     parser.add_argument(
         "--allow-temporal-agent",
         action="store_true",
@@ -81,6 +86,12 @@ def main() -> int:
         help="Audited upper-bound estimate recorded for each provider request.",
     )
     args = parser.parse_args()
+    if bool(args.canary_live_grant) != args.allow_canary_live:
+        parser.error('Canary LIVE requires both --allow-canary-live and --canary-live-grant')
+    if args.allow_canary_live and (args.allow_external_provider or args.allow_temporal_agent or args.adaptive_planning):
+        parser.error('Canary LIVE cannot be combined with ordinary Provider/Agent flags')
+    if args.allow_canary_live and args.database != parser.get_default('database'):
+        parser.error('Canary LIVE uses only its fixed synthetic catalog; --database is not accepted')
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
     if args.model != GEMINI_38_FLASH_MODEL_ID:
@@ -94,6 +105,15 @@ def main() -> int:
 
     extractor = None
     sdk_client = None
+    canary_host = None
+    if args.allow_canary_live:
+        from linkloom.ui.canary import CanaryHost
+        try:
+            grant = json.loads(args.canary_live_grant.read_text(encoding='utf8'))
+            canary_host = CanaryHost.open_live(enabled=True, grant=grant)
+            sdk_client = canary_host._sdk
+        except (OSError, ValueError, ImportError, TypeError) as error:
+            parser.error('Canary admission failed: ' + str(error))
     if args.allow_external_provider:
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
@@ -130,9 +150,11 @@ def main() -> int:
             max_attempts=1,
         )
 
-    product_app = ProductApplication(database_path=args.database, extractor=extractor)
+    product_app = (canary_host.product_application() if canary_host else
+                   ProductApplication(database_path=args.database, extractor=extractor))
     backend = DemoRunBackend(DemoCase.load_mps_001())
-    investigation_service = (
+    investigation_service = (ProductInvestigationService(product_app, canary_host=canary_host,
+        run_mode='LIVE_CANARY_EXPLICIT', relation_max_steps=6) if canary_host else (
         ProductInvestigationService(
             product_app,
             model_factory=lambda _query: GeminiProviderAdapter(
@@ -143,14 +165,16 @@ def main() -> int:
             adaptive_planning=args.adaptive_planning,
         )
         if args.allow_temporal_agent else None
-    )
+    ))
     server = create_http_server(
         backend, product_app=product_app, investigation_service=investigation_service,
         host=args.host, port=args.port,
     )
     print(f"LinkLoom Product UI: http://{args.host}:{server.server_port}")
-    print(f"Local product database: {Path(args.database).expanduser()}")
-    if extractor is None:
+    print(f"Local product database: {product_app.repository.database_path}")
+    if canary_host:
+        print('Public synthetic Canary only; application reservation <= $3, not a cloud billing hard limit.')
+    elif extractor is None:
         print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
     else:
         print(f"Semantic extraction provider enabled: Gemini model {args.model}")

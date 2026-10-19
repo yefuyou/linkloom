@@ -1,0 +1,42 @@
+{
+  "evidence_layer": "OFFLINE_MOCKED_SDK_ONLY",
+  "category": null,
+  "semantic_score": "NOT_EVALUATED",
+  "dimensions": {
+    "continuity_coverage": "NOT_EVALUATED",
+    "precise_quote_dates": "NOT_EVALUATED",
+    "conflict": "NOT_EVALUATED",
+    "unconfirmed_assertions": "NOT_EVALUATED",
+    "excess_planning_missing_investigation": "NOT_EVALUATED"
+  },
+  "mechanical_checks": {
+    "status": "PARTIAL",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_3fef0ca5",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-19T12:36:55.461265+00:00",
+      "accepted": true
+    },
+    "formal_conclusions_published": false
+  },
+  "explanation": "Scripted outputs establish wiring only; refusal is not semantic success."
+}

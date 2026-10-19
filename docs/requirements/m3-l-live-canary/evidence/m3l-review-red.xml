@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="3.563" timestamp="2026-10-19T20:58:58.814805+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3l_canary" name="test_first_preparation_source_race_permanently_stops_campaign" time="0.530"><failure message="AssertionError: assert 'READY' == 'STOPPED'&#10;  &#10;  - STOPPED&#10;  + READY">tests\integration\test_m3l_canary.py:116: in test_first_preparation_source_race_permanently_stops_campaign
+    assert p.host.ledger.snapshot()['status'] == 'STOPPED'
+E   AssertionError: assert 'READY' == 'STOPPED'
+E     
+E     - STOPPED
+E     + READY</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_admitted_source_versions_survive_new_host_and_reject_rebinding" time="0.474"><failure message="Failed: DID NOT RAISE &lt;class 'Exception'&gt;">tests\integration\test_m3l_canary.py:133: in test_admitted_source_versions_survive_new_host_and_reject_rebinding
+    with pytest.raises(Exception, match='SOURCE_SNAPSHOT_CHANGED'):
+E   Failed: DID NOT RAISE &lt;class 'Exception'&gt;</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_source_id_cannot_be_reassigned_another_frozen_sources_text" time="0.377"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tests\integration\test_m3l_canary.py:147: in test_source_id_cannot_be_reassigned_another_frozen_sources_text
+    with pytest.raises(ValueError, match='SOURCE_IDENTITY'):
+E   Failed: DID NOT RAISE &lt;class 'ValueError'&gt;</failure></testcase></testsuite></testsuites>

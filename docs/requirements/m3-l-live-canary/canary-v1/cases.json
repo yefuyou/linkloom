@@ -1,0 +1,24 @@
+{
+  "schema_version": "canary-cases/v1",
+  "question_id": "common",
+  "cases": [
+    {
+      "id": "C1",
+      "sources": ["A", "B"],
+      "stage_requests": {"F": 2, "G": 2, "Semantic": 1, "Runtime": 6},
+      "max_requests": 11
+    },
+    {
+      "id": "C2",
+      "sources": ["A", "C"],
+      "stage_requests": {"F": 2, "G": 2, "Semantic": 1, "Runtime": 6},
+      "max_requests": 11
+    },
+    {
+      "id": "C3",
+      "sources": ["A", "C", "D"],
+      "stage_requests": {"F": 3, "G": 2, "Semantic": 1, "Runtime": 6},
+      "max_requests": 12
+    }
+  ]
+}

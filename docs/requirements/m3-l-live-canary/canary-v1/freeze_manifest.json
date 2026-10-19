@@ -1,0 +1,13 @@
+{
+  "manifest_version": "canary-freeze-manifest/v1",
+  "campaign_id": "m3-product-canary-v1",
+  "spec_version": "canary-v1",
+  "hash_algorithm": "sha256",
+  "files": {
+    "README.md": "ded0140375d08b609af051e1e1003ad58ef96cc8808572f74f9b35df59bb53ab",
+    "sources.json": "c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f",
+    "cases.json": "2643a584b62e08908c6c718f91dce5512322eda4c028844d91c75a00ef2b26a3",
+    "rubric.json": "7c779a3bbda8b8119a27394ac84b26c225ad399bb018a4967ca1d386a8deac63",
+    "runtime_config.json": "e0a751bdb3dd1d23864ecf85f6be8cefa20e78f297c06bec4d7afe76197e10a0"
+  }
+}

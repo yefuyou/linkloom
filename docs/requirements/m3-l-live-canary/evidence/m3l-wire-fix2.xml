@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="4.069" timestamp="2026-10-19T20:28:40.218658+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3l_canary" name="test_closed_host_uses_normal_ask_all_stages_and_preserves_authority" time="0.026"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:7: in test_closed_host_uses_normal_ask_all_stages_and_preserves_authority
+    p = offline_product(tmp_path, monkeypatch)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[timeout]" time="0.026"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:27: in test_unknown_provider_stops_entire_campaign_before_next_stage
+    p = offline_product(tmp_path, monkeypatch, fault=fault)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_unknown_provider_stops_entire_campaign_before_next_stage[usage]" time="0.032"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:27: in test_unknown_provider_stops_entire_campaign_before_next_stage
+    p = offline_product(tmp_path, monkeypatch, fault=fault)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_foreign_workspace_or_changed_question_cannot_use_grant" time="0.032"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:39: in test_foreign_workspace_or_changed_question_cannot_use_grant
+    p = offline_product(tmp_path, monkeypatch)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[schema]" time="0.028"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:49: in test_bad_schema_and_citation_remain_blocked_with_diagnostics
+    p = offline_product(tmp_path, monkeypatch, fault=fault)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase><testcase classname="tests.integration.test_m3l_canary" name="test_bad_schema_and_citation_remain_blocked_with_diagnostics[citation]" time="0.031"><failure message="linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f">tests\integration\test_m3l_canary.py:49: in test_bad_schema_and_citation_remain_blocked_with_diagnostics
+    p = offline_product(tmp_path, monkeypatch, fault=fault)
+tests\m3l_support.py:80: in offline_product
+    spec = load_spec()
+src\linkloom\ui\canary_spec.py:419: in load_spec
+    _, manifest_digest = _validate_manifest(root)
+src\linkloom\ui\canary_spec.py:306: in _validate_manifest
+    raise CanarySpecError(f"{relative_name} SHA256 mismatch: expected {expected}, got {actual}")
+E   linkloom.ui.canary_spec.CanarySpecError: sources.json SHA256 mismatch: expected 2269e48cbd6ef1adb471487e31aaf2f39ce174849a0104f798add8e05ed0374c, got c687a73db490461d92b1832de9d1c51f7a3490bad76925c3d3bb06a58498923f</failure></testcase></testsuite></testsuites>

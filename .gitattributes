@@ -17,3 +17,7 @@ docs/requirements/evaluation-qualification/** text eol=lf
 docs/requirements/evaluation-qualification/evidence/** -text -whitespace
 # Preserve the exact node-manifest bytes recorded by the complete 249 run.
 tests/fixtures/evaluation_qualification/core_nodes.json -whitespace
+
+# M3-L freeze and offline audit records retain their SHA-256 byte identities.
+docs/requirements/m3-l-live-canary/canary-v*/** -text -whitespace
+docs/requirements/m3-l-live-canary/evidence/** -text -whitespace
