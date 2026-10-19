@@ -1,0 +1,407 @@
+{
+  "ordinal": 8,
+  "question": "供应商切换牵连哪些任务、谁负责，交付安排是否改动，截止是否后移？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_dc764f76ddc031a787ab9a63df58856c3a9ed4c72854105e1849780a1d7f4e12",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "供应商切换牵连哪些任务、谁负责，交付安排是否改动，截止是否后移？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "19cfabcd395d66d108dd584e87f3a90b048370409c55fc065a8031f000063acf",
+      "steps": [
+        {
+          "id": "step_old_in_project",
+          "kind": "relation",
+          "question": "任务 old (Q-27) 是否属于项目 delivery (曙光/交付组)？",
+          "handles": [
+            "old",
+            "delivery"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            },
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/交付组"
+            }
+          ],
+          "source_handles": [
+            "s_old"
+          ],
+          "depends_on": [],
+          "predicate": "IN_PROJECT",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "0373ac57cf873166be583fe6a5d26d34b01aa0ebc51175467f1d75997f8ba124"
+        },
+        {
+          "id": "step_other_in_project",
+          "kind": "relation",
+          "question": "任务 other (Q-28) 是否属于项目 purchasing (曙光/采购组)？",
+          "handles": [
+            "other",
+            "purchasing"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_c401d60cb940436a30b1a3acb0fb32c5307030c5faaa55fbc5bd6c48486dc3af",
+              "artifact_id": "public-s_other",
+              "artifact_version_id": "artifact_v1_915e552aad49ae31086f9396ce4152f170785e110aeab7337cbffbe12927f4c3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4695ba9f5bc3a3fa998320231c277b6ef244cd235343fee932954e9bfd0e2314",
+              "content_hash": "1f1bf1cf27f5da0b8fee03c4973ef238032ec7172ffd57b2c3d4de3be208cdd2",
+              "payload_hash": "40eed1b44c64662746a68ef5da7ab89fcfefb52ca612d6d80b6c84a922a986d8"
+            },
+            {
+              "endpoint_type": "PROJECT",
+              "workspace_id": "lab-east",
+              "name": "曙光/采购组"
+            }
+          ],
+          "source_handles": [
+            "s_other"
+          ],
+          "depends_on": [],
+          "predicate": "IN_PROJECT",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "9b3a039e7cbc97375d29e7b50ba0029976a1d03b07ff77350ec2b397018281ee"
+        },
+        {
+          "id": "step_old_affected_change",
+          "kind": "relation",
+          "question": "任务 old 是否受供应商变更 change 直接影响？",
+          "handles": [
+            "old",
+            "change"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            },
+            {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "lab-east",
+              "project": "曙光/交付组",
+              "before_vendor": "海帆",
+              "after_vendor": "星港",
+              "evidence": {
+                "span": {
+                  "workspace_id": "lab-east",
+                  "artifact_id": "public-s_change",
+                  "artifact_version_id": "artifact_v1_7ea44095e0d41008209a51916a407d92c18fad27bd69ac4aced979da0272d30e",
+                  "source_ref": "artifact://lab-east/public-s_change",
+                  "content_hash": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501",
+                  "ordinal": 0,
+                  "message_id": "message_v1_feae70cc63c10fafdadbebab518bba718e3d0da5ebc17ef07d60e7b594188a54",
+                  "segment_id": "segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "char_start": 0,
+                  "char_end": 42,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                  "quote_sha256": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501"
+                },
+                "char_start": 0,
+                "char_end": 42,
+                "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            }
+          ],
+          "source_handles": [
+            "s_change",
+            "s_counter"
+          ],
+          "depends_on": [],
+          "predicate": "AFFECTED_BY",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c2945ed271d5800210ae556f1330fc7c385f2be0a53cb676972921d75107d2fd"
+        },
+        {
+          "id": "step_other_affected_change",
+          "kind": "relation",
+          "question": "任务 other 是否受供应商变更 change 直接影响？",
+          "handles": [
+            "other",
+            "change"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_c401d60cb940436a30b1a3acb0fb32c5307030c5faaa55fbc5bd6c48486dc3af",
+              "artifact_id": "public-s_other",
+              "artifact_version_id": "artifact_v1_915e552aad49ae31086f9396ce4152f170785e110aeab7337cbffbe12927f4c3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_4695ba9f5bc3a3fa998320231c277b6ef244cd235343fee932954e9bfd0e2314",
+              "content_hash": "1f1bf1cf27f5da0b8fee03c4973ef238032ec7172ffd57b2c3d4de3be208cdd2",
+              "payload_hash": "40eed1b44c64662746a68ef5da7ab89fcfefb52ca612d6d80b6c84a922a986d8"
+            },
+            {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "lab-east",
+              "project": "曙光/交付组",
+              "before_vendor": "海帆",
+              "after_vendor": "星港",
+              "evidence": {
+                "span": {
+                  "workspace_id": "lab-east",
+                  "artifact_id": "public-s_change",
+                  "artifact_version_id": "artifact_v1_7ea44095e0d41008209a51916a407d92c18fad27bd69ac4aced979da0272d30e",
+                  "source_ref": "artifact://lab-east/public-s_change",
+                  "content_hash": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501",
+                  "ordinal": 0,
+                  "message_id": "message_v1_feae70cc63c10fafdadbebab518bba718e3d0da5ebc17ef07d60e7b594188a54",
+                  "segment_id": "segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "char_start": 0,
+                  "char_end": 42,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                  "quote_sha256": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501"
+                },
+                "char_start": 0,
+                "char_end": 42,
+                "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            }
+          ],
+          "source_handles": [
+            "s_change",
+            "s_other"
+          ],
+          "depends_on": [],
+          "predicate": "AFFECTED_BY",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "8a9b74884ec1407dd2080f85593510208201a82feddc3e41b269dad45d1f877b"
+        },
+        {
+          "id": "step_same_task",
+          "kind": "relation",
+          "question": "新旧任务观测 new 与 old 是否指向同一任务实体？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [
+            "s_old",
+            "s_new"
+          ],
+          "depends_on": [],
+          "predicate": "SAME_TASK",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c325215a5b1d79f383ebcfdd04205969acadd88fda8ecf1a0eed05f223375d8b"
+        },
+        {
+          "id": "step_revises_plan",
+          "kind": "relation",
+          "question": "新任务观测 new 是否替代或修订了旧观测 old 的计划安排？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [
+            "s_new",
+            "s_old",
+            "s_counter"
+          ],
+          "depends_on": [
+            "step_same_task"
+          ],
+          "predicate": "REVISES_PLAN",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "10ad9aef82b665c66147b40076b348356b26a2629e58772b2b136f407808e802"
+        },
+        {
+          "id": "step_inspect_new_owner",
+          "kind": "inspect",
+          "question": "新观测 new 中该任务的负责人是谁？",
+          "handles": [
+            "new"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            }
+          ],
+          "source_handles": [
+            "s_new"
+          ],
+          "depends_on": [
+            "step_same_task"
+          ],
+          "predicate": "",
+          "field": "owner",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "d312ad8696e8fb127c13ded8ec64e6bf3f829abb8bfa13c67b11e1fe45e64a6e"
+        },
+        {
+          "id": "step_compare_deadline",
+          "kind": "compare_dates",
+          "question": "在修订成立的前提下，新旧观测的截止日期及角色边界如何对比，是否发生后移？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [
+            "s_old",
+            "s_new"
+          ],
+          "depends_on": [
+            "step_same_task",
+            "step_revises_plan"
+          ],
+          "predicate": "",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "9f9436626c23155c63354cd502e75590a28227edc108b9daae7eedba5b82d857"
+        }
+      ],
+      "uncertainties": [
+        "存在关于切换影响与延后安排的反向复核意见 (s_counter)，需检验变更影响与修订事实。",
+        "新观测 new 的结构化 owner 为 null，需从文本及修订关系核对实际负责人。"
+      ],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 6403,
+      "output_tokens": 848,
+      "total_tokens": 7251,
+      "duration_ms": 7639.71
+    },
+    "request_sha256": "5ec1fb6201bd2871f3d32ef64f17b6ba07a86a4a0b4af002a87f899956522c38",
+    "response_sha256": "ed9ea6ee5208d57f308587b2ec8ee934ad30d5456f1c34a838bfc9ab9c692a90",
+    "model_id": "gemini-3.8-flash",
+    "actual_model_version": "gemini-3.8-flash",
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 16547,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "stage": "SMOKE_IMPLEMENTATION_BEFORE_REVIEW_REPAIRS",
+  "files": {
+    "src/linkloom/semantic_ingestion/task_relation_question_planner.py": "1f801982602f9879b976e9c70415277d9ec8983a87d90dfada27ca254f8c049f",
+    "src/linkloom/semantic_ingestion/task_relation_question_models.py": "3c5c907772baefd47a07e4ee384dea2bcdc9d91ac81915598f62bc1c4bf45952",
+    "scripts/run_question_planning.py": "ad76b495e9e7094d000e3da69bf763624f66cfeb69898e8b3de679e1c3fcf139",
+    "tests/question_planning_support.py": "eee7130dc5c693cf3941f3051c294a887215cdd9c9e26556c052888701ca3090",
+    "tests/fixtures/question_planning/inputs.json": "303a5c0346b6623f563e952508ebc4660ec19bc7fbb173439a1536df06ae1366"
+  },
+  "live_attempts": 3,
+  "additional_attempts_allowed": 0,
+  "rejected_output_capture": "Third response has digest, usage and validation error; raw rejected arguments were not retained in this initial runner."
+}

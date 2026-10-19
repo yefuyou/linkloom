@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="4" failures="0" skipped="0" tests="4" time="47.183" timestamp="2026-10-19T13:30:24.430657+08:00" hostname="beagle"><testcase classname="" name="tests.integration.test_stage_c_end_to_end_loop" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\webproject\Linkloom\work\linkloom-m3-question-planning\tests\integration\test_stage_c_end_to_end_loop.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+D:\Anaconda\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests\integration\test_stage_c_end_to_end_loop.py:9: in &lt;module&gt;
+    from scripts.run_stage_c_context_memory_loop import build_stage_c_artifact
+E   ModuleNotFoundError: No module named 'scripts.run_stage_c_context_memory_loop'</error></testcase><testcase classname="" name="tests.unit.test_memoryagentbench_g31_fixed50" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\webproject\Linkloom\work\linkloom-m3-question-planning\tests\unit\test_memoryagentbench_g31_fixed50.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+D:\Anaconda\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests\unit\test_memoryagentbench_g31_fixed50.py:19: in &lt;module&gt;
+    from scripts import run_memoryagentbench_g3_pilot as g3_runner
+E   ImportError: cannot import name 'run_memoryagentbench_g3_pilot' from 'scripts' (unknown location)</error></testcase><testcase classname="" name="tests.unit.test_memoryagentbench_g32_heldout" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\webproject\Linkloom\work\linkloom-m3-question-planning\tests\unit\test_memoryagentbench_g32_heldout.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+D:\Anaconda\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests\unit\test_memoryagentbench_g32_heldout.py:19: in &lt;module&gt;
+    from scripts import run_memoryagentbench_g3_pilot as g3_runner
+E   ImportError: cannot import name 'run_memoryagentbench_g3_pilot' from 'scripts' (unknown location)</error></testcase><testcase classname="" name="tests.unit.test_memoryagentbench_g3_pilot" time="0.000"><error message="collection failure">ImportError while importing test module 'D:\webproject\Linkloom\work\linkloom-m3-question-planning\tests\unit\test_memoryagentbench_g3_pilot.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+D:\Anaconda\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests\unit\test_memoryagentbench_g3_pilot.py:35: in &lt;module&gt;
+    from scripts import run_memoryagentbench_g3_pilot as g3_runner
+E   ImportError: cannot import name 'run_memoryagentbench_g3_pilot' from 'scripts' (unknown location)</error></testcase></testsuite></testsuites>

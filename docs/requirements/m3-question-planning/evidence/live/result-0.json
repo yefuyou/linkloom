@@ -1,0 +1,123 @@
+{
+  "ordinal": 0,
+  "question": "传感器联调这摊事目前该找哪位同事？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_6436b5c7fdee943f495dc17db35566e1a07a2675177c6cff7069df3498a8fdb2",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "传感器联调这摊事目前该找哪位同事？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "d2eb0d095b74e532ed8eef8e3a9792e2bc13e1e1cf952c9d9816f2b0fc5a01d7",
+      "steps": [
+        {
+          "id": "step_1",
+          "kind": "inspect",
+          "question": "核查已知任务 Q-27（handle: old）记录的负责人是谁？",
+          "handles": [
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [
+            "s_old"
+          ],
+          "depends_on": [],
+          "predicate": "",
+          "field": "owner",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "5963dcda8bb3002736ddaf6f825101b6d2a169579904d8b20ed4542838f80bca"
+        },
+        {
+          "id": "step_2",
+          "kind": "discover",
+          "question": "检索并发现是否有关于传感器联调（Q-27）更新状态或新责任人的最新任务观察记录？",
+          "handles": [],
+          "endpoints": [],
+          "source_handles": [
+            "s_new"
+          ],
+          "depends_on": [],
+          "predicate": "",
+          "field": "",
+          "target_kind": "task",
+          "missing_entities": [
+            "sensor_commissioning_updated_task"
+          ],
+          "execution_key": "16dfb95808f2cbdb479e554b192bbd12dfb5536eb9ac033f493f9c0ce876d94f"
+        },
+        {
+          "id": "step_3",
+          "kind": "discover",
+          "question": "检索关于曙光/交付组供应商切换及影响 Q-27 传感器联调的变更事件与复核记录。",
+          "handles": [],
+          "endpoints": [],
+          "source_handles": [
+            "s_change",
+            "s_counter"
+          ],
+          "depends_on": [],
+          "predicate": "",
+          "field": "",
+          "target_kind": "change",
+          "missing_entities": [
+            "supplier_change_event"
+          ],
+          "execution_key": "c2b78a423e4ebafe0320a64adce0b73eee86c421af6c1b0d1bfa44b006dbe183"
+        }
+      ],
+      "uncertainties": [
+        "目前仅有针对 Q-27 的旧观察句柄（old），最新任务观察与变更事件尚未被 Host 转化为对应 typed handles。",
+        "供应商切换对任务 Q-27 的具体影响及改期情况存在相反的复核意见，需进一步核验。"
+      ],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 4601,
+      "output_tokens": 366,
+      "total_tokens": 4967,
+      "duration_ms": 7128.706
+    },
+    "request_sha256": "4a7f49bfcc80e68976afb16098dc62ad244cfe925e8de9a409c8c28336f23e6d",
+    "response_sha256": "ca9115a6d70f4482a7ca277203d6286ec488c661759ee01a900c8bd5b117a7a9",
+    "model_id": "gemini-3.8-flash",
+    "actual_model_version": "gemini-3.8-flash",
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 12677,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}

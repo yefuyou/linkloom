@@ -1,0 +1,132 @@
+{
+  "ordinal": 3,
+  "question": "两段联调记录讲的是同一件任务，还是不同的活？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_2c4be9193c0be0252d2b3af03878428f18d4c09e7e5513c6929888c135f2c92f",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "两段联调记录讲的是同一件任务，还是不同的活？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "ae780ff6c391daed8defd9633972d6367f1c720c8ce6e5e9481954660e69e7b8",
+      "steps": [
+        {
+          "id": "identity",
+          "kind": "relation",
+          "question": "新旧记录是否同一任务？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "SAME_TASK",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c325215a5b1d79f383ebcfdd04205969acadd88fda8ecf1a0eed05f223375d8b"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      },
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "43938c96e8a9162e0a5552a6b38c774030895ea990694bcb5e7a20ae80e84998",
+    "response_sha256": "cfff03066be1ce2aca039e72165d6781fb19f0ec1e993938945996519b70fc6c",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 13846,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    },
+    "untrusted_output": {
+      "kind": "tool_call",
+      "tool_calls": [
+        {
+          "tool_id": "emit_investigation_plan",
+          "arguments": {
+            "steps": [
+              {
+                "id": "identity",
+                "kind": "relation",
+                "question": "新旧记录是否同一任务？",
+                "handles": [
+                  "new",
+                  "old"
+                ],
+                "source_handles": [],
+                "depends_on": [],
+                "predicate": "SAME_TASK",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": []
+              }
+            ],
+            "uncertainties": [],
+            "refusal_reasons": []
+          }
+        }
+      ]
+    }
+  }
+}

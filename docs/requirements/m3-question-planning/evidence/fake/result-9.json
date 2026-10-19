@@ -1,0 +1,71 @@
+{
+  "ordinal": 9,
+  "question": "最近怎么样，给我一个判断。",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_53ede48f69777af735d1b69a3d3824f0ec50d23d5d16849d6b517cdf0d69c0b5",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "最近怎么样，给我一个判断。",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "c87110f8c08da004c142618ec11942a0059afe12fed175a6d4ecca684ea77c53",
+      "steps": [
+        {
+          "id": "clarify",
+          "kind": "clarify",
+          "question": "请说明要调查的业务对象和范围。",
+          "handles": [],
+          "endpoints": [],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [
+            "具体业务对象"
+          ],
+          "execution_key": "c522002186348548a12ae1acf02b613e1f28f17bad36fb82ba76c38123c9d3a2"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "27c647d5b3f04f93301fa75a1f5066664e542645f95e0809bda35f762e0f46ae",
+    "response_sha256": "cce90f23fd42eef5254277f9ab357ac825b52496976d4c14a96350fcee02bad5",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 6210,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}

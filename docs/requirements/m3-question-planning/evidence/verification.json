@@ -1,0 +1,31 @@
+{
+  "scope": "STANDALONE_API_ONLY",
+  "protected_existing_files_changed": false,
+  "real_provider_attempts": 3,
+  "additional_live_attempts": 0,
+  "independent_review": "PASS_WITH_NOTES_AFTER_THREE_REQUIRED_REPAIRS",
+  "planner_tests": {
+    "artifact": "review-repairs.xml",
+    "passed": 40,
+    "failures": 0,
+    "errors": 0
+  },
+  "related_earlier_combination": {
+    "artifact": "focused-final.xml",
+    "passed": 102,
+    "planner_then": 36,
+    "existing_regression": 66
+  },
+  "full_offline": {
+    "collection": "4 baseline import errors; offline.xml",
+    "broader_diagnostic": "INTERRUPTED after approximately 59 percent; repeated pre-existing legacy failures, outside standalone boundary; not claimed green",
+    "sandbox_diagnostic": "WinError 10013 on local HTTP; no product source repairs"
+  },
+  "file_sha256": {
+    "src/linkloom/semantic_ingestion/task_relation_question_planner.py": "7b448de9a4000f38fcbdb537d9ab2bfe503ecf46b07f43a63ef4777cf68b04c4",
+    "src/linkloom/semantic_ingestion/task_relation_question_models.py": "edbe031617a9bd3b80de9ed507028a08e30cf7a98a596d7b10fcccb1e28ad9ee",
+    "tests/unit/test_task_relation_question_planner.py": "be0b5d72d83fdedbda3d1806938e26e5563504e62e2469a462987301525eceff",
+    "scripts/run_question_planning.py": "f7fc1f6adf7c31d8a662872075a557e5a765ccd679d39caf71da626e25af95e6",
+    "scripts/score_question_planning.py": "2a5193c3a56841104051e66bb789af4b09b620e610a9b29d5fe0461b6b5604fe"
+  }
+}

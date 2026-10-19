@@ -1,0 +1,259 @@
+{
+  "ordinal": 8,
+  "question": "供应商切换牵连哪些任务、谁负责，交付安排是否改动，截止是否后移？",
+  "result": {
+    "schema": "task-investigation-result/v1",
+    "status": "PLANNED",
+    "plan": {
+      "plan_id": "investigation_v1_1040fecb62b96a73c1fb15ba94d6c937a5ba801730bac630ab809f2ca972dfb5",
+      "needs_more_investigation": true,
+      "schema": "task-investigation-plan/v1",
+      "goal": "供应商切换牵连哪些任务、谁负责，交付安排是否改动，截止是否后移？",
+      "workspace_id": "lab-east",
+      "snapshot_hash": "19cfabcd395d66d108dd584e87f3a90b048370409c55fc065a8031f000063acf",
+      "steps": [
+        {
+          "id": "impact",
+          "kind": "relation",
+          "question": "这次切换是否直接影响联调？",
+          "handles": [
+            "old",
+            "change"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            },
+            {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "lab-east",
+              "project": "曙光/交付组",
+              "before_vendor": "海帆",
+              "after_vendor": "星港",
+              "evidence": {
+                "span": {
+                  "workspace_id": "lab-east",
+                  "artifact_id": "public-s_change",
+                  "artifact_version_id": "artifact_v1_7ea44095e0d41008209a51916a407d92c18fad27bd69ac4aced979da0272d30e",
+                  "source_ref": "artifact://lab-east/public-s_change",
+                  "content_hash": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501",
+                  "ordinal": 0,
+                  "message_id": "message_v1_feae70cc63c10fafdadbebab518bba718e3d0da5ebc17ef07d60e7b594188a54",
+                  "segment_id": "segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_71a982e73e037e535173ecd37a093917e9140d5dd0fec7009c731e7c3314d544",
+                  "char_start": 0,
+                  "char_end": 42,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                  "quote_sha256": "04f5b1b97fdf0f65dc9d56a35edebefd3d203dde2f054849148ab9d8aa28d501"
+                },
+                "char_start": 0,
+                "char_end": 42,
+                "quote": "曙光/交付组的供应商由海帆切换为星港，这次切换使 Q-27 传感器联调需要重新适配。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [],
+          "predicate": "AFFECTED_BY",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c2945ed271d5800210ae556f1330fc7c385f2be0a53cb676972921d75107d2fd"
+        },
+        {
+          "id": "identity",
+          "kind": "relation",
+          "question": "新旧记录是否同一任务？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [
+            "impact"
+          ],
+          "predicate": "SAME_TASK",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "c325215a5b1d79f383ebcfdd04205969acadd88fda8ecf1a0eed05f223375d8b"
+        },
+        {
+          "id": "owner",
+          "kind": "inspect",
+          "question": "联调工作的负责人是谁？",
+          "handles": [
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [
+            "impact"
+          ],
+          "predicate": "",
+          "field": "owner",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "5963dcda8bb3002736ddaf6f825101b6d2a169579904d8b20ed4542838f80bca"
+        },
+        {
+          "id": "revision",
+          "kind": "relation",
+          "question": "新记录是否替换原业务安排？",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [
+            "identity"
+          ],
+          "predicate": "REVISES_PLAN",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "10ad9aef82b665c66147b40076b348356b26a2629e58772b2b136f407808e802"
+        },
+        {
+          "id": "dates",
+          "kind": "compare_dates",
+          "question": "核对新旧截止日期的精度、角色和边界。",
+          "handles": [
+            "new",
+            "old"
+          ],
+          "endpoints": [
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_740a025ca66b5ca625aa94b3dc527b6480d3cb0622d23cb21935d690caa63298",
+              "artifact_id": "public-s_new",
+              "artifact_version_id": "artifact_v1_2a641d42d14fbcc30acddac67b1cedbcd808cbe051606d6c807e9e78ea2d35ab",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ff26364de0a7df5fdb9c2f87adccb46b40e39ecd03ac5e1715e6497b728e5c",
+              "content_hash": "b38127bb843ced0422b997ed103392850716a6dd582cb1010e8c956bbd61e481",
+              "payload_hash": "f914cb4edfa50f25be4892699f7aea49de31939b3833fd6a663b55497bc800c1"
+            },
+            {
+              "workspace_id": "lab-east",
+              "observation_id": "task_observation_v1_a92ffa0d46c308187b63a8a16d5012f8209c6d6da8f5ab1949f7180ebc6fa064",
+              "artifact_id": "public-s_old",
+              "artifact_version_id": "artifact_v1_334524cdeb935c28280b53feb3866c520eecd36f7e2209a44cdaa5e7368d6013",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_999ff0a4ff62a7379cc7612329d2415be9f7434ccdd1a4944eeba444259affd7",
+              "content_hash": "e7368ae1a6ec3a8d38a6a819708b064edb7ef0001552d376a005b66998408d5c",
+              "payload_hash": "05e40a3ddc045ddc35543e0e5f620abba226033c80195b9e5e48128dd303453f"
+            }
+          ],
+          "source_handles": [],
+          "depends_on": [
+            "identity",
+            "revision"
+          ],
+          "predicate": "",
+          "field": "",
+          "target_kind": "",
+          "missing_entities": [],
+          "execution_key": "9f9436626c23155c63354cd502e75590a28227edc108b9daae7eedba5b82d857"
+        }
+      ],
+      "uncertainties": [],
+      "refusal_reasons": [],
+      "verified_results": [],
+      "parent_plan_id": null,
+      "gaps": [],
+      "authority": "ACTION_SUGGESTION_ONLY",
+      "publishable": false,
+      "conclusion_policy": "Evidence and independent Reviewer required."
+    },
+    "errors": [],
+    "provider_calls": 1,
+    "usage": {
+      "input_tokens": 90,
+      "output_tokens": 60,
+      "total_tokens": 150,
+      "duration_ms": null
+    },
+    "request_sha256": "740a689a040ce08fac50b1066693d011f2e21b12bacf5a2b8e2bda60d17e4654",
+    "response_sha256": "44e65e8154d85d0b56fd016da67ced2bf5fe1b094795d876ef16318d44d40438",
+    "model_id": "fake-planner",
+    "actual_model_version": null,
+    "budget": {
+      "calls_reserved": 1,
+      "input_tokens_reserved": 16543,
+      "output_tokens_reserved": 4096,
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24576,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 1,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      }
+    }
+  }
+}
