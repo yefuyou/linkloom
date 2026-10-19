@@ -1,0 +1,174 @@
+{
+  "schema": "task-semantic-verification/v1",
+  "core_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+  "runs": [
+    {
+      "label": "m3-semantic-red",
+      "source_log_sha256": "cfe6469aa97c8168402a7a85196db41d1d44da8cfae31c7b2aa43b413d91984f",
+      "counts": [
+        "1 error"
+      ],
+      "failed_tests": [],
+      "summary": "1 error in 13.35s"
+    },
+    {
+      "label": "m3-semantic-first",
+      "source_log_sha256": "66ffa8e850d1306dec50c0ef48049bab659f39fd117fc39f6c78d29337b4f6de",
+      "counts": [
+        "1 failed",
+        "6 passed"
+      ],
+      "failed_tests": [
+        "tests/unit/test_task_relation_semantic.py::test_llm_paraphrase_bypasses_old_revision_phrase_grammar"
+      ],
+      "summary": "1 failed, 6 passed in 35.08s"
+    },
+    {
+      "label": "m3-semantic-regression",
+      "source_log_sha256": "abf2810a6da0ae5a7204b4d42a757199f5e325e0452c4aa80d15c9aa884710ed",
+      "counts": [
+        "189 passed"
+      ],
+      "failed_tests": [],
+      "summary": "189 passed in 258.67s (0:04:18)"
+    },
+    {
+      "label": "m3-semantic-p1-provider",
+      "source_log_sha256": "8ab77fd911802a93ea8c4d1b9a8e982ab6da4741caf59c47c7aba04afe69b692",
+      "counts": [
+        "83 failed",
+        "62 passed"
+      ],
+      "failed_tests": [
+        "tests/unit/test_p85_gemini_api_adapter.py::test_final_text_response_maps_to_normalized_model_response_without_sdk_objects",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_single_function_call_maps_to_runtime_tool_call_and_is_not_executed",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_required_tool_call_mode_constrains_gemini_to_function_call",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_default_gemini_tool_mode_remains_auto",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_multiple_function_calls_preserve_order_ids_and_turn_signatures",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_missing_gemini_ids_are_deterministic_and_ordinal_unique",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_present_but_invalid_gemini_id_rejects_instead_of_being_replaced",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_duplicate_or_malformed_middle_gemini_call_rejects_whole_response[calls0-duplicate_function_call_id]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_duplicate_or_malformed_middle_gemini_call_rejects_whole_response[calls1-function_arguments_not_an_object]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_grouped_gemini_turn_preserves_call_parts_signatures_and_results",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_sdk_like_function_call_response_is_parsed_without_importing_sdk_types",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_observation_request_maps_previous_call_and_result_without_full_runtime_state",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception0-MODEL_AUTH_REQUIRED-known_failure]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception1-MODEL_INVALID_REQUEST-known_failure]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception2-MODEL_RATE_LIMITED-known_failure]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception3-MODEL_TIMEOUT-known_failure]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception4-MODEL_UNAVAILABLE-known_failure]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_provider_error_response_is_normalized_without_raw_provider_payload",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_malformed_provider_response_does_not_become_an_empty_success",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_malformed_tool_call_arguments_are_normalized_as_parse_failure",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_multiple_function_calls_use_the_runtime_v2_proposal_contract",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_invalid_finish_reason_is_rejected",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_adapter_configuration_can_supply_model_id_for_legacy_request",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_unsafe_provider_exception_request_id_is_dropped_not_raised_or_persisted",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_unsupported_schema_fails_before_provider_invocation",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_semantic_schema_projection_is_exact_and_keeps_canonical_input_unchanged",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_mock_transport_sends_exact_projected_semantic_schema_with_any_mode",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_projected_provider_limits_are_still_enforced_locally[max-length]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_projected_provider_limits_are_still_enforced_locally[max-items]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_client_request_is_json_safe_and_does_not_include_credentials_or_raw_state",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_client_seam_matches_sdk_generate_content_and_does_not_send_root_store_field",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_single_function_call_with_stop_maps_to_one_tool_action",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_non_stop_function_call_error_preserves_safe_finish_reason_diagnostic",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_undeclared_function_call_fails_closed_before_model_action_creation",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[401-MODEL_AUTH_REQUIRED]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[400-MODEL_INVALID_REQUEST]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[429-MODEL_RATE_LIMITED]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[503-MODEL_UNAVAILABLE]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_exception_diagnostics_preserve_nested_failure_and_request_shape",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[dns]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[tcp-connect]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[connect-timeout]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[read-timeout]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[tls]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[proxy-connect]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[400-HTTP_400]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[401-HTTP_401]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[403-HTTP_403]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[404-HTTP_404]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[429-HTTP_429]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[503-HTTP_5XX]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_quota_error_is_not_guessed_from_message_text",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[status-exception]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[status-response]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[reason-exception]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[reason-response]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[type-exception]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[type-response]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[code-exception]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[code-response]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_error_response_and_safety_block_are_observable",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_malformed_and_incomplete_responses_keep_provider_classification",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_diagnostics_redact_prompt_and_proxy_credentials",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unknown_sdk_exception_is_preserved_without_provider_payload",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_status_codes_use_structured_classification[RATE_LIMIT_EXCEEDED-PROVIDER_RATE_LIMIT]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_status_codes_use_structured_classification[ABORTED-PROVIDER_ABORTED]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unclassified_provider_error_does_not_guess_overload_from_message",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_aborted_provider_response_is_classified_from_finish_reason",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unclassified_exception_remains_unknown_not_guessed",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_route_diagnostics_keep_only_host_and_port",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[connection-reset]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[timeout]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-429]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-400]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-503]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-404]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-403]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[missing-http-metadata]",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_diagnostics_are_sanitized_and_keep_request_id",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_google_genai_response_json_fields_are_extracted_without_copying_body",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_unknown_generation_exception_is_not_normalized_as_transient",
+        "tests/unit/test_p85_gemini_api_adapter.py::test_http_402_prepayment_exhaustion_is_terminal_billing_failure",
+        "tests/unit/test_gemini_nullable_json_schema.py::test_exact_semantic_schema_wire_contract_and_fingerprints"
+      ],
+      "summary": "83 failed, 62 passed in 258.22s (0:04:18)"
+    },
+    {
+      "label": "m3-semantic-output-audit",
+      "source_log_sha256": "7412b44887969394c649f958d94ecc7d363274b7af6e9a1b2f396f2714a8d6db",
+      "counts": [
+        "22 passed"
+      ],
+      "failed_tests": [],
+      "summary": "22 passed in 29.93s"
+    },
+    {
+      "label": "m3-eval-infrastructure",
+      "source_log_sha256": "38b8b25c440787935e6c7919f24d413d596f774cf1090dde8ae7d36f74271f9b",
+      "summary": "35 passed in 2.97s",
+      "counts": [
+        "35 passed"
+      ],
+      "failed_tests": []
+    },
+    {
+      "label": "m3-score-review-red",
+      "source_log_sha256": "7812fcca4fc56601eb5d062691e19e5268bb57aa18cc8c3b30b8a26b15025ff2",
+      "summary": "3 failed, 7 passed in 0.74s",
+      "counts": [
+        "3 failed",
+        "7 passed"
+      ],
+      "failed_tests": [
+        "tests/test_score_task_semantic_dev.py::test_aggregate_keeps_each_expected_state",
+        "tests/test_score_task_semantic_dev.py::test_duplicate_or_unexpected_cases_are_never_silently_scored",
+        "tests/test_score_task_semantic_dev.py::test_invalid_receipts_or_call_count_mismatch_do_not_score"
+      ]
+    },
+    {
+      "label": "m3-score-final",
+      "source_log_sha256": "beebc8d9e9f26b304e528c57e9ab7496794ac42eaa8e55cf918343c9b2f9f6a4",
+      "summary": "11 passed in 0.61s",
+      "counts": [
+        "11 passed"
+      ],
+      "failed_tests": []
+    }
+  ],
+  "baseline_failures_attribution": "Unmodified Gemini tests still use incompatible model IDs/temperature and an old nullable schema wire snapshot. Independently reviewed; no old Provider/test changes.",
+  "local_log_note": "Full raw logs preserved in ignored work/. These committed summaries avoid user profile paths and test credential strings.",
+  "pytest_teardown_warning": "pyreadline3 Windows Console destructor warning occurred after test exit; assertions/exit codes recorded separately."
+}

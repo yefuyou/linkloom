@@ -1,0 +1,44 @@
+{
+  "schema": "task-semantic-provider-preflight/v1",
+  "utc": "2026-10-18T15:33:41.018393+00:00",
+  "requested_model": "gemini-3.8-flash",
+  "sdk": "2.22.0",
+  "method": "models.get; read-only",
+  "generation_calls": 0,
+  "status": "PASS",
+  "model": {
+    "name": "models/gemini-3.8-flash",
+    "version": "3.0",
+    "input_token_limit": 1048576,
+    "output_token_limit": 65536,
+    "supported_actions": [
+      "generateContent",
+      "countTokens",
+      "createCachedContent",
+      "batchGenerateContent"
+    ]
+  },
+  "docs": {
+    "model": "https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash",
+    "pricing": "https://ai.google.dev/gemini-api/docs/whats-new-gemini-3.8"
+  },
+  "documented_capabilities": {
+    "structured_outputs": true,
+    "function_calling": true,
+    "input_token_limit": 1048576,
+    "output_token_limit": 65536
+  },
+  "usage_mapping": "ModelUsage prompt/candidates/total; smoke accounting separately includes thoughts",
+  "prices_usd_per_million": {
+    "input": 0.75,
+    "output": 3.75,
+    "valid_through": "2026-12-31"
+  },
+  "adapter_capability": {
+    "supports_tool_calls": true,
+    "supports_final_answers": true,
+    "supports_multiple_tool_calls": true,
+    "supports_streaming": false,
+    "provider_executes_tools": false
+  }
+}

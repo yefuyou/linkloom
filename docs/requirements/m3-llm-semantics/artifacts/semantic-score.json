@@ -1,0 +1,769 @@
+{
+  "schema": "task-semantic-score/v1",
+  "status": "PARTIAL_EXECUTION",
+  "execution_kind": "REAL_PROVIDER",
+  "business_metrics": {
+    "scope": "EXECUTED_REAL_PROVIDER_CASES_ONLY",
+    "relation_positive_precision": {
+      "AFFECTED_BY": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "SCORED"
+      },
+      "REVISES_PLAN": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "SCORED"
+      },
+      "SAME_TASK": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0,
+        "status": "SCORED"
+      }
+    },
+    "relation_positive_recall": {
+      "AFFECTED_BY": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "SCORED"
+      },
+      "REVISES_PLAN": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0,
+        "status": "SCORED"
+      },
+      "SAME_TASK": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0,
+        "status": "SCORED"
+      }
+    },
+    "relation_by_predicate": {
+      "AFFECTED_BY": {
+        "precision": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "recall": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "tp": 1,
+        "fp": 0,
+        "fn": 0
+      },
+      "REVISES_PLAN": {
+        "precision": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "recall": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "tp": 1,
+        "fp": 0,
+        "fn": 0
+      },
+      "SAME_TASK": {
+        "precision": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "recall": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "tp": 2,
+        "fp": 0,
+        "fn": 0
+      }
+    },
+    "relation_state_accuracy": {
+      "numerator": 7,
+      "denominator": 7,
+      "value": 1.0,
+      "status": "SCORED",
+      "by_expected_state": {
+        "SUPPORTED": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "REFUTED": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "UNKNOWN": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "CONFLICT": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        }
+      }
+    },
+    "semantic_label_accuracy": {
+      "numerator": 7,
+      "denominator": 7,
+      "value": 1.0,
+      "status": "SCORED",
+      "by_expected_state": {
+        "SUPPORTED": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "REFUTED": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "UNKNOWN": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "CONFLICT": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        }
+      }
+    },
+    "false_merge": {
+      "numerator": 0,
+      "denominator": 2,
+      "value": 0.0,
+      "status": "SCORED"
+    },
+    "false_revision": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0,
+      "status": "SCORED"
+    },
+    "quote_authenticity": {
+      "numerator": 11,
+      "denominator": 11,
+      "value": 1.0,
+      "status": "SCORED"
+    },
+    "gold_source_coverage": {
+      "numerator": 5,
+      "denominator": 7,
+      "value": 0.7142857142857143,
+      "status": "SCORED"
+    },
+    "evidence_groundedness": {
+      "numerator": 5,
+      "denominator": 7,
+      "value": 0.7142857142857143,
+      "status": "SCORED"
+    },
+    "conditional_date_correctness": {
+      "numerator": 2,
+      "denominator": 2,
+      "value": 1.0,
+      "status": "SCORED"
+    },
+    "counts": {
+      "gold_relations": 7,
+      "predicted_proposals": 7,
+      "missing_gold_relations": 0,
+      "duplicate_predictions": 0,
+      "unexpected_proposals": 0,
+      "quote_valid": 11,
+      "quote_total": 11,
+      "gold_source_covered": 5,
+      "evidence_grounded": 5,
+      "state_correct": 7,
+      "state_total": 7
+    }
+  },
+  "diagnostic_metrics": null,
+  "coverage": {
+    "total_cases": 8,
+    "executed_real_cases": 3,
+    "not_run_cases": 5,
+    "invalid_output_cases": 0,
+    "scripted_diagnostic_cases": 0,
+    "missing_case_rows": 0,
+    "execution_receipts_attested": true,
+    "duplicate_case_ids": [],
+    "unexpected_case_ids": []
+  },
+  "case_scores": [
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "revision",
+      "status": "SCORED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": {
+        "scope": "EXECUTED_REAL_PROVIDER_CASES_ONLY",
+        "relation_positive_precision": {
+          "REVISES_PLAN": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          },
+          "SAME_TASK": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_positive_recall": {
+          "REVISES_PLAN": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          },
+          "SAME_TASK": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_by_predicate": {
+          "REVISES_PLAN": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "SAME_TASK": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "relation_state_accuracy": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED",
+          "by_expected_state": {
+            "SUPPORTED": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "REFUTED": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "UNKNOWN": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "CONFLICT": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            }
+          }
+        },
+        "semantic_label_accuracy": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "false_merge": {
+          "numerator": 0,
+          "denominator": 1,
+          "value": 0.0,
+          "status": "SCORED",
+          "count": 0
+        },
+        "false_revision": {
+          "numerator": 0,
+          "denominator": 1,
+          "value": 0.0,
+          "status": "SCORED",
+          "count": 0
+        },
+        "quote_authenticity": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "gold_source_coverage": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "evidence_groundedness": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "conditional_date_correctness": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "counts": {
+          "gold_relations": 2,
+          "predicted_proposals": 2,
+          "missing_gold_relations": 0,
+          "duplicate_predictions": 0,
+          "unexpected_proposals": 0,
+          "quote_valid": 4,
+          "quote_total": 4,
+          "gold_source_covered": 2,
+          "evidence_grounded": 2,
+          "state_correct": 2,
+          "state_total": 2
+        },
+        "evidence_basis": {
+          "quote_authenticity": "PROVIDED_VALIDATOR_ATTESTATION_ONLY",
+          "gold_source_coverage": "AUTHOR_VISIBLE_GOLD_REQUIRED_SOURCES",
+          "semantic_labels": "PROPOSED_VERDICT_VS_GOLD",
+          "semantic_status": "NOT_EVALUATED"
+        }
+      },
+      "diagnostic_metrics": null,
+      "invalid_output": false,
+      "reason": null
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "causality",
+      "status": "SCORED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": {
+        "scope": "EXECUTED_REAL_PROVIDER_CASES_ONLY",
+        "relation_positive_precision": {
+          "AFFECTED_BY": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_positive_recall": {
+          "AFFECTED_BY": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_by_predicate": {
+          "AFFECTED_BY": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "relation_state_accuracy": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "status": "SCORED",
+          "by_expected_state": {
+            "SUPPORTED": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "REFUTED": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "UNKNOWN": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "CONFLICT": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            }
+          }
+        },
+        "semantic_label_accuracy": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "false_merge": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "NOT_EVALUATED",
+          "reason": "NO_ELIGIBLE_ITEMS",
+          "count": 0
+        },
+        "false_revision": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "NOT_EVALUATED",
+          "reason": "NO_ELIGIBLE_ITEMS",
+          "count": 0
+        },
+        "quote_authenticity": {
+          "numerator": 3,
+          "denominator": 3,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "gold_source_coverage": {
+          "numerator": 1,
+          "denominator": 3,
+          "value": 0.3333333333333333,
+          "status": "SCORED"
+        },
+        "evidence_groundedness": {
+          "numerator": 1,
+          "denominator": 3,
+          "value": 0.3333333333333333,
+          "status": "SCORED"
+        },
+        "conditional_date_correctness": {
+          "status": "NOT_EVALUATED",
+          "value": null,
+          "reason": "NO_PREDECLARED_DATE_STANDARD"
+        },
+        "counts": {
+          "gold_relations": 3,
+          "predicted_proposals": 3,
+          "missing_gold_relations": 0,
+          "duplicate_predictions": 0,
+          "unexpected_proposals": 0,
+          "quote_valid": 3,
+          "quote_total": 3,
+          "gold_source_covered": 1,
+          "evidence_grounded": 1,
+          "state_correct": 3,
+          "state_total": 3
+        },
+        "evidence_basis": {
+          "quote_authenticity": "PROVIDED_VALIDATOR_ATTESTATION_ONLY",
+          "gold_source_coverage": "AUTHOR_VISIBLE_GOLD_REQUIRED_SOURCES",
+          "semantic_labels": "PROPOSED_VERDICT_VS_GOLD",
+          "semantic_status": "NOT_EVALUATED"
+        }
+      },
+      "diagnostic_metrics": null,
+      "invalid_output": false,
+      "reason": null
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "conflict",
+      "status": "SCORED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": {
+        "scope": "EXECUTED_REAL_PROVIDER_CASES_ONLY",
+        "relation_positive_precision": {
+          "REVISES_PLAN": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null,
+            "status": "NOT_EVALUATED",
+            "reason": "NO_ELIGIBLE_ITEMS"
+          },
+          "SAME_TASK": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_positive_recall": {
+          "REVISES_PLAN": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null,
+            "status": "NOT_EVALUATED",
+            "reason": "NO_ELIGIBLE_ITEMS"
+          },
+          "SAME_TASK": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0,
+            "status": "SCORED"
+          }
+        },
+        "relation_by_predicate": {
+          "REVISES_PLAN": {
+            "precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "tp": 0,
+            "fp": 0,
+            "fn": 0
+          },
+          "SAME_TASK": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          }
+        },
+        "relation_state_accuracy": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED",
+          "by_expected_state": {
+            "SUPPORTED": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            },
+            "REFUTED": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "UNKNOWN": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null,
+              "status": "NOT_EVALUATED",
+              "reason": "NO_ELIGIBLE_ITEMS"
+            },
+            "CONFLICT": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0,
+              "status": "SCORED"
+            }
+          }
+        },
+        "semantic_label_accuracy": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "false_merge": {
+          "numerator": 0,
+          "denominator": 1,
+          "value": 0.0,
+          "status": "SCORED",
+          "count": 0
+        },
+        "false_revision": {
+          "numerator": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "NOT_EVALUATED",
+          "reason": "NO_ELIGIBLE_ITEMS",
+          "count": 0
+        },
+        "quote_authenticity": {
+          "numerator": 4,
+          "denominator": 4,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "gold_source_coverage": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "evidence_groundedness": {
+          "numerator": 2,
+          "denominator": 2,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "conditional_date_correctness": {
+          "numerator": 1,
+          "denominator": 1,
+          "value": 1.0,
+          "status": "SCORED"
+        },
+        "counts": {
+          "gold_relations": 2,
+          "predicted_proposals": 2,
+          "missing_gold_relations": 0,
+          "duplicate_predictions": 0,
+          "unexpected_proposals": 0,
+          "quote_valid": 4,
+          "quote_total": 4,
+          "gold_source_covered": 2,
+          "evidence_grounded": 2,
+          "state_correct": 2,
+          "state_total": 2
+        },
+        "evidence_basis": {
+          "quote_authenticity": "PROVIDED_VALIDATOR_ATTESTATION_ONLY",
+          "gold_source_coverage": "AUTHOR_VISIBLE_GOLD_REQUIRED_SOURCES",
+          "semantic_labels": "PROPOSED_VERDICT_VS_GOLD",
+          "semantic_status": "NOT_EVALUATED"
+        }
+      },
+      "diagnostic_metrics": null,
+      "invalid_output": false,
+      "reason": null
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "correction",
+      "status": "NOT_EVALUATED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": null,
+      "diagnostic_metrics": null,
+      "reason": "NOT_RUN"
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "independent",
+      "status": "NOT_EVALUATED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": null,
+      "diagnostic_metrics": null,
+      "reason": "NOT_RUN"
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "alias",
+      "status": "NOT_EVALUATED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": null,
+      "diagnostic_metrics": null,
+      "reason": "NOT_RUN"
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "conditional",
+      "status": "NOT_EVALUATED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": null,
+      "diagnostic_metrics": null,
+      "reason": "NOT_RUN"
+    },
+    {
+      "schema": "task-semantic-score/v1",
+      "case_id": "missing-year",
+      "status": "NOT_EVALUATED",
+      "score_scope": "REAL_PROVIDER",
+      "business_metrics": null,
+      "diagnostic_metrics": null,
+      "reason": "NOT_RUN"
+    }
+  ]
+}
