@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import unicodedata
 
 from linkloom.agents.model_adapter import ModelUsage
+from linkloom.semantic_ingestion.artifacts import EvidenceSpan
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.semantic_ingestion.task_relation_semantic_models import Endpoint, SemanticQuery
 
@@ -41,18 +43,36 @@ class InvestigationStep:
     field: str
     target_kind: str
     missing_entities: tuple[str, ...]
+    workspace_id: str = ''
+    source_bindings: tuple[EvidenceSpan, ...] = ()
+    time_scope: tuple[str, str] = ('', '')
+    premise_keys: tuple[str, ...] = ()
+    evidence_gap: str = ''
 
     @property
-    def execution_key(self):
-        # Text paraphrases cannot create another execution of the same typed work.
+    def operation_key(self):
+        """The operation's target, without evidence/time/dependency scope."""
         refs = tuple(canonical_hash(ref.to_dict()) for ref in self.endpoints)
         if self.kind in {'inspect', 'discover', 'clarify'} or self.predicate in {
             'SAME_TASK', 'RELATED_TO', 'PROJECT_ALIAS',
         }:
             refs = tuple(sorted(refs))
-        return canonical_hash([self.kind, refs, self.predicate, self.field, self.target_kind])
+        entities = sorted({' '.join(unicodedata.normalize('NFKC', e).casefold().split())
+                           for e in self.missing_entities})
+        return canonical_hash([self.workspace_id, self.kind, refs, self.predicate,
+                               self.field, self.target_kind, entities])
+
+    @property
+    def execution_key(self):
+        # Human prose and handle/step aliases cannot manufacture fresh work.
+        sources = sorted({canonical_hash(asdict(span)) for span in self.source_bindings})
+        return canonical_hash([self.operation_key, sources, self.time_scope, sorted(set(self.premise_keys))])
 
     def to_semantic_query(self):
+        if self.kind == 'relation' and self.time_scope != ('', ''):
+            raise ValueError('TIME_SCOPED_OPERATION_REQUIRES_HOST_BINDING')
+        if self.kind == 'relation' and self.source_handles:
+            raise ValueError('SOURCE_SCOPED_OPERATION_REQUIRES_HOST_BINDING')
         return SemanticQuery(self.predicate, *self.handles) if self.kind == 'relation' else None
 
     def to_dict(self):
@@ -60,7 +80,13 @@ class InvestigationStep:
                     endpoints=[ref.to_dict() for ref in self.endpoints],
                     source_handles=list(self.source_handles), depends_on=list(self.depends_on),
                     predicate=self.predicate, field=self.field, target_kind=self.target_kind,
-                    missing_entities=list(self.missing_entities), execution_key=self.execution_key)
+                    missing_entities=list(self.missing_entities), execution_key=self.execution_key,
+                    workspace_id=self.workspace_id, source_bindings=[dict(
+                        workspace_id=s.workspace_id, artifact_id=s.artifact_id,
+                        artifact_version_id=s.artifact_version_id, evidence_ref=s.evidence_ref,
+                        content_hash=s.content_hash, span_sha256=canonical_hash(asdict(s))) for s in self.source_bindings],
+                    time_scope=dict(zip(('start', 'end'), self.time_scope)),
+                    premise_keys=list(self.premise_keys), evidence_gap=self.evidence_gap)
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,6 +97,7 @@ class VerifiedStepResult:
     receipt_id: str
     result_sha256: str
     summary: str
+    outcome: str = 'COMPLETED'
 
     def __post_init__(self):
         for value in asdict(self).values():
@@ -78,6 +105,8 @@ class VerifiedStepResult:
                 raise ValueError('invalid verified step receipt')
         if len(self.result_sha256) != 64 or any(c not in '0123456789abcdef' for c in self.result_sha256):
             raise ValueError('invalid result digest')
+        if self.outcome not in {'COMPLETED', 'SUPPORTED', 'REFUTED', 'UNKNOWN', 'CONFLICT'}:
+            raise ValueError('invalid verified result outcome')
 
 
 @dataclass(frozen=True, slots=True)
@@ -95,7 +124,7 @@ class InvestigationPlan:
 
     @property
     def plan_id(self):
-        return 'investigation_v1_' + canonical_hash(self._payload())
+        return 'investigation_v2_' + canonical_hash(self._payload())
 
     @property
     def needs_more_investigation(self):
@@ -104,11 +133,24 @@ class InvestigationPlan:
 
     @property
     def semantic_queries(self):
-        done = {r.step_id for r in self.verified_results}
-        return tuple(s.to_semantic_query() for s in self.steps if s.kind == 'relation' and s.id not in done)
+        """Ready endpoint projections only; Host must retain each full step scope."""
+        return tuple(s.to_semantic_query() for s in self.ready_steps if s.kind == 'relation')
+
+    @property
+    def ready_steps(self):
+        receipts = {r.step_id: r for r in self.verified_results}
+        steps = {s.id: s for s in self.steps}
+
+        def satisfied(identity):
+            receipt = receipts.get(identity)
+            return (receipt is not None and
+                    (steps[identity].kind != 'relation' or receipt.outcome == 'SUPPORTED') and
+                    all(satisfied(parent) for parent in steps[identity].depends_on))
+
+        return tuple(s for s in self.steps if s.id not in receipts and all(satisfied(p) for p in s.depends_on))
 
     def _payload(self):
-        return dict(schema='task-investigation-plan/v1', goal=self.goal, workspace_id=self.workspace_id,
+        return dict(schema='task-investigation-plan/v2', goal=self.goal, workspace_id=self.workspace_id,
                     snapshot_hash=self.snapshot_hash, steps=[s.to_dict() for s in self.steps],
                     uncertainties=list(self.uncertainties), refusal_reasons=list(self.refusal_reasons),
                     verified_results=[asdict(r) for r in self.verified_results],
@@ -119,6 +161,7 @@ class InvestigationPlan:
 
     def to_dict(self):
         return dict(plan_id=self.plan_id, needs_more_investigation=self.needs_more_investigation,
+                    ready_step_ids=[s.id for s in self.ready_steps],
                     **self._payload())
 
 
@@ -135,6 +178,7 @@ class PlanningResult:
     actual_model_version: str | None = None
     budget: dict = field(default_factory=dict)
     untrusted_output: dict | None = None
+    diagnostics: dict = field(default_factory=dict)
 
     def to_dict(self):
         return dict(schema='task-investigation-result/v1', status=self.status,
@@ -142,4 +186,5 @@ class PlanningResult:
                     provider_calls=self.provider_calls, usage=self.usage.to_dict(),
                     request_sha256=self.request_sha256, response_sha256=self.response_sha256,
                     model_id=self.model_id, actual_model_version=self.actual_model_version,
-                    budget=dict(self.budget), untrusted_output=self.untrusted_output)
+                    budget=dict(self.budget), untrusted_output=self.untrusted_output,
+                    diagnostics=self.diagnostics)

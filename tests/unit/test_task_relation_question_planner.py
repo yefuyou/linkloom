@@ -74,7 +74,8 @@ def test_missing_entities_can_be_discovered_with_no_endpoints():
     context = replace(snapshot(), artifacts=(), observations=(), endpoints=(), allowed_spans=(),
                       authorized_artifact_versions=frozenset(), inventory_complete=False)
     row = step(kind='discover', handles=())
-    row.update(target_kind='change', missing_entities=['用户提及的供应商变更'])
+    row.update(target_kind='change', missing_entities=['用户提及的供应商变更'],
+               evidence_gap='用户要求的变更尚无已授权端点。')
     result = planner(FakeModel(arguments(row))).plan(context)
     assert result.status == 'PLANNED'
     assert result.plan.steps[0].endpoints == ()
@@ -115,7 +116,8 @@ def test_identity_revision_date_dependencies_convert_to_semantic_queries():
     fake = FakeModel(arguments(*revision_steps()))
     result = planner(fake).plan(snapshot())
     assert result.status == 'PLANNED'
-    assert [q.predicate for q in result.plan.semantic_queries] == ['SAME_TASK', 'REVISES_PLAN']
+    assert [q.predicate for q in result.plan.semantic_queries] == ['SAME_TASK']
+    assert [s.id for s in result.plan.ready_steps] == ['identity']
 
 
 @pytest.mark.parametrize('rows', [
@@ -147,7 +149,7 @@ def test_replan_preserves_goal_completed_step_and_exact_host_receipt():
     session = planner(fake, result_verifier=lambda receipt, context: receipt.receipt_id == 'reviewed-identity')
     initial = session.plan(snapshot()).plan
     receipt = VerifiedStepResult(initial.plan_id, 'identity', 'reviewed-identity', 'a' * 64,
-                                 'Identity checked by Host evidence validator and reviewer.')
+                                 'Identity checked by Host evidence validator and reviewer.', outcome='SUPPORTED')
     fake.arguments = arguments(relation('revision', 'REVISES_PLAN', ('identity',)))
     result = session.plan(snapshot(), previous=initial, verified_results=(receipt,), gaps=('Check plan replacement.',))
     assert result.status == 'PLANNED'
@@ -174,10 +176,15 @@ def test_all_new_public_inputs_with_explicit_fake_outputs_are_contract_valid():
     from tests.question_planning_examples import scripted_outputs
     questions = public_inputs()['questions']
     assert len(questions) == len(scripted_outputs()) == 12
-    for question, output in zip(questions, scripted_outputs()):
+    for ordinal, (question, output) in enumerate(zip(questions, scripted_outputs())):
         context, discovery = planning_context(question)
         fake = FakeModel(output)
         result = planner(fake).plan(context, discovery=discovery)
+        if ordinal == 11:
+            # Preserve the historical authored output. M3-K now requires a
+            # goal-related gap rather than silently upgrading old evidence.
+            assert result.errors == ('EVIDENCE_GAP_REQUIRED',)
+            continue
         assert result.status in {'PLANNED', 'REFUSED'}, result.errors
         prompt = fake.requests[0].user_input
         assert all(secret not in prompt for secret in ('case_id', 'gold/', 'fake_output', 'required_goals'))
@@ -288,10 +295,10 @@ def test_multiple_replans_keep_all_earlier_verified_receipts():
     fake = FakeModel(arguments(relation('identity', 'SAME_TASK')))
     session = planner(fake, result_verifier=lambda receipt, context: True)
     first = session.plan(snapshot()).plan
-    identity = VerifiedStepResult(first.plan_id, 'identity', 'i', 'a' * 64, 'checked identity')
+    identity = VerifiedStepResult(first.plan_id, 'identity', 'i', 'a' * 64, 'checked identity', outcome='SUPPORTED')
     fake.arguments = arguments(relation('revision', 'REVISES_PLAN', ('identity',)))
     second = session.plan(snapshot(), previous=first, verified_results=(identity,), gaps=('revision',)).plan
-    revision = VerifiedStepResult(second.plan_id, 'revision', 'r', 'b' * 64, 'checked revision')
+    revision = VerifiedStepResult(second.plan_id, 'revision', 'r', 'b' * 64, 'checked revision', outcome='SUPPORTED')
     fake.arguments = arguments(revision_steps()[2])
     third = session.plan(snapshot(), previous=second, verified_results=(revision,), gaps=('dates',))
     assert third.status == 'PLANNED'

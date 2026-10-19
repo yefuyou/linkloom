@@ -1,0 +1,13 @@
+C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pytest_asyncio\plugin.py:247: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+........................................................................ [ 45%]
+........................................................................ [ 91%]
+.............                                                            [100%]
+- generated xml file: D:\webproject\Linkloom\work\linkloom-m3-k-planner-quality\docs\requirements\m3-k-planner-quality\evidence\related-complete.xml -
+157 passed in 72.08s (0:01:12)
+Exception ignored in: <function Console.__del__ at 0x000002D4C21111C0>
+Traceback (most recent call last):
+  File "C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pyreadline3\console\console.py", line 254, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008
