@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="17" time="2.154" timestamp="2026-10-19T18:22:10.636003+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.009"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '安排完成日志迁移。安排提交容量报告。上述任务取消。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u5bb9\u91cf\u62a5\u544a-False]" time="0.007" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.007"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '安排完成日志迁移。会议引用：“上述任务取消。”', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\n&gt; This task is cancelled.-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.007"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '安排完成日志迁移。会议引用：\n&gt; This task is cancelled.', work = '日志迁移'
+accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u65e5\u5fd7\u8fc1\u79fb\u53d6\u6d88\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.007"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '安排完成日志迁移。会议引用：“日志迁移取消。”', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u4ee5\u540e\u66f4\u6362\u914d\u8272\uff1b\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.007"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '建议以后更换配色；安排完成日志迁移。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4efb\u52a1\u53d6\u6d88\uff1a\u6574\u7406\u65e7\u622a\u56fe\uff1b\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.006"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '任务取消：整理旧截图；安排完成日志迁移。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u4e0d\u518d\u5b89\u6392\u6574\u7406\u65e7\u622a\u56fe\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.008"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))">text = '安排完成日志迁移；不再安排整理旧截图。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", [
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "日志迁移", True),
+        ("安排完成日志迁移。安排提交容量报告。上述任务取消。", "容量报告", False),
+        ("安排完成日志迁移。会议引用：“上述任务取消。”", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：\n&gt; This task is cancelled.", "日志迁移", True),
+        ("安排完成日志迁移。会议引用：“日志迁移取消。”", "日志迁移", True),
+        ("建议以后更换配色；安排完成日志迁移。", "日志迁移", True),
+        ("任务取消：整理旧截图；安排完成日志迁移。", "日志迁移", True),
+        ("安排完成日志迁移；不再安排整理旧截图。", "日志迁移", True),
+        ("安排完成日志迁移。日志迁移取消。", "日志迁移", False),
+        ("安排完成日志迁移。上述任务取消。", "日志迁移", False),
+        ("安排完成日志迁移。This task is cancelled.", "日志迁移", False),
+        ("会议引用：“安排完成日志迁移。”", "日志迁移", False),
+        ("如果预算批准，安排完成日志迁移。", "日志迁移", False),
+        ("建议安排完成日志迁移。", "日志迁移", False),
+        ("无需完成日志迁移。", "日志迁移", False),
+    ])
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        service, provider, _, _ = setup(artifact, [claim(work, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...re_code=None),), coverage_complete=False, coverage_policy='bounded-document-single-pass/v1', semantic_exhaustive=False))
+
+tests\unit\test_task_discovery_m3j.py:33: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u65e5\u5fd7\u8fc1\u79fb\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.006" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002This task is cancelled.-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5982\u679c\u9884\u7b97\u6279\u51c6\uff0c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u65e0\u9700\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.005" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_uncovered_continuation_is_visible_without_synthesizing_work" time="0.012"><failure message="KeyError: 'candidate_coverage'">def test_uncovered_continuation_is_visible_without_synthesizing_work():
+        first = "我负责青竹项目的索引迁移，截止日期：2029-06-20。"
+        second = "索引迁移还包括补齐回归脚本。"
+        artifact = source("[2029-06-01T09:00:00Z] 林枫: " + first +
+                          "\n[2029-06-01T09:01:00Z] 周岚: " + second)
+        service, provider, _, _ = setup(artifact, [claim(first, "索引迁移", owner="林枫",
+            project="青竹项目", deadline_text="2029-06-20")])
+        result = discover(service, artifact)
+        assert [o.description for o in observations(result)] == ["索引迁移"]
+&gt;       coverage = result.to_dict()["candidate_coverage"]
+E       KeyError: 'candidate_coverage'
+
+tests\unit\test_task_discovery_m3j.py:47: KeyError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_cross_message_continuation_preserves_fields_per_original_speaker" time="0.012" /></testsuite></testsuites>

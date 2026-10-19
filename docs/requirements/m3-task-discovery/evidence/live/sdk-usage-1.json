@@ -1,0 +1,9 @@
+{
+  "actual_model_version": "gemini-3.8-flash",
+  "usage": {
+    "prompt_token_count": 1575,
+    "candidates_token_count": 625,
+    "thoughts_token_count": null,
+    "total_token_count": 2200
+  }
+}

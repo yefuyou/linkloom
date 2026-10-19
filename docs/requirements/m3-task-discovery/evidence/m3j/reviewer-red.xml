@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="24" skipped="0" tests="58" time="2.696" timestamp="2026-10-19T18:31:29.359465+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u53d6\u6d88\u4e0a\u8ff0\u4efb\u52a1\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.016"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_5ac2bfe8cf6d20f0ef8cce52d9a2778f05f9c353fb3c080d9c6e7b0ebeebbcbb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_5ac2bfe8cf6d20f0ef8cce52d9a2778f05f9c353fb3c080d9c6e7b0ebeebbcbb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_5...:segment_v1_30a2dd5cfa7ff38e10e36d3040f9b0e066cbeb97dbe3de3718feec0c751fcd08', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移。取消上述任务。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_5ac2bfe8cf6d20f0ef8cce52d9a2778f05f9c353fb3c080d9c6e7b0ebeebbcbb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_5ac2bfe8cf6d20f0ef8cce52d9a2778f05f9c353fb3c080d9c6e7b0ebeebbcbb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_5...:segment_v1_30a2dd5cfa7ff38e10e36d3040f9b0e066cbeb97dbe3de3718feec0c751fcd08', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u53d6\u6d88\u4e0a\u8ff0\u4efb\u52a1\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_72189623b02e0327116d7c7fb7bcc0eae56f3344c3673f59f74109af3b06386f'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_72189623b02e0327116d7c7fb7bcc0eae56f3344c3673f59f74109af3b06386f'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_7...:segment_v1_59b2828d355dffdd3a0c0691ba2c273b7dd83f4fb0be7eaa88ab46d9019a0419', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移；取消上述任务。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_72189623b02e0327116d7c7fb7bcc0eae56f3344c3673f59f74109af3b06386f'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_72189623b02e0327116d7c7fb7bcc0eae56f3344c3673f59f74109af3b06386f'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_7...:segment_v1_59b2828d355dffdd3a0c0691ba2c273b7dd83f4fb0be7eaa88ab46d9019a0419', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u6b64\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.009"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_77cb67422332b9a47581d45e9e81e8314831d0307c9289759a2f7d08942327cb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_77cb67422332b9a47581d45e9e81e8314831d0307c9289759a2f7d08942327cb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_7...:segment_v1_a1912c4bebcbe03e8df19e65ad1800c63e084faeb62c3832501ca984ab70a4de', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移。此任务取消。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_77cb67422332b9a47581d45e9e81e8314831d0307c9289759a2f7d08942327cb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_77cb67422332b9a47581d45e9e81e8314831d0307c9289759a2f7d08942327cb'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_7...:segment_v1_a1912c4bebcbe03e8df19e65ad1800c63e084faeb62c3832501ca984ab70a4de', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002Cancel this task.-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_49eb023449cdd39c1d6f25cf60fb2d5e82c69d85dd8db1756e85d91510636781'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_49eb023449cdd39c1d6f25cf60fb2d5e82c69d85dd8db1756e85d91510636781'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_4...:segment_v1_41355fd41b3ec1f952e6b3b432f42a340a1a8e3cce19b244437926c91f5a21f4', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移。Cancel this task.', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_49eb023449cdd39c1d6f25cf60fb2d5e82c69d85dd8db1756e85d91510636781'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_49eb023449cdd39c1d6f25cf60fb2d5e82c69d85dd8db1756e85d91510636781'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_4...:segment_v1_41355fd41b3ec1f952e6b3b432f42a340a1a8e3cce19b244437926c91f5a21f4', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u82e5\u9884\u7b97\u6279\u51c6\uff0c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_5283bf4e1543d4c8e676f0b62881592c2535ff0fc129799312098eb49a564891'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_5283bf4e1543d4c8e676f0b62881592c2535ff0fc129799312098eb49a564891'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_5...:segment_v1_9665e1700f4c92030833385abedb77b01d0d1af8ab9ae3f2eb52c9366a167e6b', verified_description_parts=('日志迁移',)),)))">text = '若预算批准，安排完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_5283bf4e1543d4c8e676f0b62881592c2535ff0fc129799312098eb49a564891'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_5283bf4e1543d4c8e676f0b62881592c2535ff0fc129799312098eb49a564891'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_5...:segment_v1_9665e1700f4c92030833385abedb77b01d0d1af8ab9ae3f2eb52c9366a167e6b', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u53ea\u8981\u9884\u7b97\u6279\u51c6\uff0c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_d907b291a87848b8f6482bbdfa415164577b6718bcafe0b38b73e0f0272ffcb6'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_d907b291a87848b8f6482bbdfa415164577b6718bcafe0b38b73e0f0272ffcb6'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_d...:segment_v1_2c11fa6ec97dcf67bc5e6179b731cae1bf71dcff030eb2a0a9cc51171720d68b', verified_description_parts=('日志迁移',)),)))">text = '只要预算批准，安排完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_d907b291a87848b8f6482bbdfa415164577b6718bcafe0b38b73e0f0272ffcb6'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_d907b291a87848b8f6482bbdfa415164577b6718bcafe0b38b73e0f0272ffcb6'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_d...:segment_v1_2c11fa6ec97dcf67bc5e6179b731cae1bf71dcff030eb2a0a9cc51171720d68b', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u9664\u975e\u9884\u7b97\u6279\u51c6\uff0c\u624d\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_4b5c6fb9bfcb644fd7035526a58ef9680ac0f4d3d5218961187e1a71ea5dbe25'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_4b5c6fb9bfcb644fd7035526a58ef9680ac0f4d3d5218961187e1a71ea5dbe25'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_4...:segment_v1_188cd5b120b832844f95c983a6794e7f386aa8acf9d8f1a809239985695d2a76', verified_description_parts=('日志迁移',)),)))">text = '除非预算批准，才安排完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_4b5c6fb9bfcb644fd7035526a58ef9680ac0f4d3d5218961187e1a71ea5dbe25'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_4b5c6fb9bfcb644fd7035526a58ef9680ac0f4d3d5218961187e1a71ea5dbe25'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_4...:segment_v1_188cd5b120b832844f95c983a6794e7f386aa8acf9d8f1a809239985695d2a76', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u82e5\u9884\u7b97\u6279\u51c6\u518d\u6267\u884c\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_b12c16bb31c0c2950c99e55dc5129c22cbf63c6af981eb4192519e63153001ca'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_b12c16bb31c0c2950c99e55dc5129c22cbf63c6af981eb4192519e63153001ca'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_b...:segment_v1_400f3c26bf0ff053f957eca9e87277dae5cbc8aa2894ec3514726fba2e2fd093', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移。若预算批准再执行。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_b12c16bb31c0c2950c99e55dc5129c22cbf63c6af981eb4192519e63153001ca'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_b12c16bb31c0c2950c99e55dc5129c22cbf63c6af981eb4192519e63153001ca'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_b...:segment_v1_400f3c26bf0ff053f957eca9e87277dae5cbc8aa2894ec3514726fba2e2fd093', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u540c\u4e8b\u8bf4\uff1a'\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002'-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_e8d10a6d3356b21e45edd395b79499a4ef2094c8ed3d207ad0143a44359242b5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_e8d10a6d3356b21e45edd395b79499a4ef2094c8ed3d207ad0143a44359242b5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_e...:segment_v1_57ac655d54adb1164f64e34fa89cefba5a8b6219bb96cf85a6f8f5ddc5c90e37', verified_description_parts=('日志迁移',)),)))">text = "同事说：'完成日志迁移。'", work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_e8d10a6d3356b21e45edd395b79499a4ef2094c8ed3d207ad0143a44359242b5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_e8d10a6d3356b21e45edd395b79499a4ef2094c8ed3d207ad0143a44359242b5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_e...:segment_v1_57ac655d54adb1164f64e34fa89cefba5a8b6219bb96cf85a6f8f5ddc5c90e37', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u540c\u4e8b\u8bf4\uff1a`\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002`-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_ea3eab12090df5af4d228de63f9fa9245ccadc321bcaffe5e10100b3d7cdc761'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_ea3eab12090df5af4d228de63f9fa9245ccadc321bcaffe5e10100b3d7cdc761'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_e...:segment_v1_9776651c73a8d541b13c5b9de7195429effad628002068ddba96c91b7b554878', verified_description_parts=('日志迁移',)),)))">text = '同事说：`完成日志迁移。`', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_ea3eab12090df5af4d228de63f9fa9245ccadc321bcaffe5e10100b3d7cdc761'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_ea3eab12090df5af4d228de63f9fa9245ccadc321bcaffe5e10100b3d7cdc761'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_e...:segment_v1_9776651c73a8d541b13c5b9de7195429effad628002068ddba96c91b7b554878', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002'This task is cancelled.'-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.009"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_87fc705bd7a66eb65599fea26909a4ce17b1d8aea6b3007ad13e24fa0191a101', verified_description_parts=()),)))">text = "安排完成日志迁移。'This task is cancelled.'", work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_87fc705bd7a66eb65599fea26909a4ce17b1d8aea6b3007ad13e24fa0191a101', verified_description_parts=()),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\uff1b\u8fd9\u9879\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.009"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_91eb973fb9008a899f124cdda72e147d3ee79bed6324571a366843646edc4f77', verified_description_parts=()),)))">text = '安排完成日志迁移；安排提交容量报告；这项任务取消。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_91eb973fb9008a899f124cdda72e147d3ee79bed6324571a366843646edc4f77', verified_description_parts=()),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\uff1b\u8fd9\u9879\u4efb\u52a1\u53d6\u6d88\u3002-\u5bb9\u91cf\u62a5\u544a-False]" time="0.009" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\uff1b\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002-\u5bb9\u91cf\u62a5\u544a-True]" time="0.008"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_cb8669df91411e09d5ac3f5e63beff176e42e952133923e3aa4e0dd5a893584c', verified_description_parts=()),)))">text = '上述任务取消；安排提交容量报告。', work = '容量报告', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_cb8669df91411e09d5ac3f5e63beff176e42e952133923e3aa4e0dd5a893584c', verified_description_parts=()),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u4ee5\u540e\u6362\u80a4\uff0c\u540c\u65f6\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.009"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_9c048c4e4d1b3814f7a4b2f2711e369097fc3de7aaf0cfed508529a66d00f25d', verified_description_parts=()),)))">text = '建议以后换肤，同时安排完成日志迁移。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_9c048c4e4d1b3814f7a4b2f2711e369097fc3de7aaf0cfed508529a66d00f25d', verified_description_parts=()),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff0c\u540c\u65f6\u53d6\u6d88\u6574\u7406\u65e7\u622a\u56fe\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.006"><failure message="AssertionError: assert False is True&#10; +  where False = bool(())&#10; +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_2bb0a1ab67b739e6e6ca555547f7eafc0b27009d70e2f19a9fbb418acea60c40', verified_description_parts=()),)))">text = '安排完成日志迁移，同时取消整理旧截图。', work = '日志迁移', accepted = True
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert False is True
+E        +  where False = bool(())
+E        +    where () = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='new-meetin...tion:v1:segment_v1_2bb0a1ab67b739e6e6ca555547f7eafc0b27009d70e2f19a9fbb418acea60c40', verified_description_parts=()),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u7981\u6b62\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_b0e1320a5fe7f4bd591537d1157ab0db2186ba5005b08da93920033ab25abc83'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_b0e1320a5fe7f4bd591537d1157ab0db2186ba5005b08da93920033ab25abc83'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_b...:segment_v1_2ddf256c713aaa3a357bd1e0e0708d0fd4873fd4000f892bfb568a96dae7f524', verified_description_parts=('日志迁移',)),)))">text = '禁止完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_b0e1320a5fe7f4bd591537d1157ab0db2186ba5005b08da93920033ab25abc83'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_b0e1320a5fe7f4bd591537d1157ab0db2186ba5005b08da93920033ab25abc83'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_b...:segment_v1_2ddf256c713aaa3a357bd1e0e0708d0fd4873fd4000f892bfb568a96dae7f524', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4e0d\u5f97\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.009"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_805255bfb5984fb4e4d8a9ae8ebf7d739c31b2adc196237941b4826f19447c38'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_805255bfb5984fb4e4d8a9ae8ebf7d739c31b2adc196237941b4826f19447c38'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_8...:segment_v1_8014c0ebd55ad20edc8fa6cd3ec24277790279bb8137ce60f3d336ec69cf9560', verified_description_parts=('日志迁移',)),)))">text = '不得完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_805255bfb5984fb4e4d8a9ae8ebf7d739c31b2adc196237941b4826f19447c38'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_805255bfb5984fb4e4d8a9ae8ebf7d739c31b2adc196237941b4826f19447c38'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_8...:segment_v1_8014c0ebd55ad20edc8fa6cd3ec24277790279bb8137ce60f3d336ec69cf9560', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4e0d\u5e94\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.014"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_fadab99238ea685a616ec40154fa3612b8c0a2f370d4017a246c6d3bc431d935'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_fadab99238ea685a616ec40154fa3612b8c0a2f370d4017a246c6d3bc431d935'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_f...:segment_v1_f2e565a0a79e53cef02f82bc46770750bae98e87f6d241f384b4513a62cb0409', verified_description_parts=('日志迁移',)),)))">text = '不应完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_fadab99238ea685a616ec40154fa3612b8c0a2f370d4017a246c6d3bc431d935'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_fadab99238ea685a616ec40154fa3612b8c0a2f370d4017a246c6d3bc431d935'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_f...:segment_v1_f2e565a0a79e53cef02f82bc46770750bae98e87f6d241f384b4513a62cb0409', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4e0d\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.014"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_924d1ff5f68ac4c3cafc18ea82bce3dfc2f04528665542b4a2eddbe2a8fc61c5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_924d1ff5f68ac4c3cafc18ea82bce3dfc2f04528665542b4a2eddbe2a8fc61c5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_9...:segment_v1_27a991b2d5da449acce6f053010cddd46e814ac69d1021426dbeadb9d1855858', verified_description_parts=('日志迁移',)),)))">text = '不安排完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_924d1ff5f68ac4c3cafc18ea82bce3dfc2f04528665542b4a2eddbe2a8fc61c5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_924d1ff5f68ac4c3cafc18ea82bce3dfc2f04528665542b4a2eddbe2a8fc61c5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_9...:segment_v1_27a991b2d5da449acce6f053010cddd46e814ac69d1021426dbeadb9d1855858', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4e0d\u8ba1\u5212\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.009"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_69eee3522d85b7f32455dd8b0a6db09b9eddbe802175309b89cfb5bc09dfea59'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_69eee3522d85b7f32455dd8b0a6db09b9eddbe802175309b89cfb5bc09dfea59'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_6...:segment_v1_e9b4c9880cc3625d017f31bc588bc0f054bcb0dac424bf01b2033dd3b6f90b50', verified_description_parts=('日志迁移',)),)))">text = '不计划完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_69eee3522d85b7f32455dd8b0a6db09b9eddbe802175309b89cfb5bc09dfea59'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_69eee3522d85b7f32455dd8b0a6db09b9eddbe802175309b89cfb5bc09dfea59'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_6...:segment_v1_e9b4c9880cc3625d017f31bc588bc0f054bcb0dac424bf01b2033dd3b6f90b50', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4efb\u52a1\u653e\u5f03\uff1a\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.010"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_fa3f6d02af154ab528891c7db5a7a4d1d4fc8f6f293d4d88120c2288329ac965'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_fa3f6d02af154ab528891c7db5a7a4d1d4fc8f6f293d4d88120c2288329ac965'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_f...:segment_v1_f3122c6b377214b63095162b73e51785982e33f011c9fa30c960765114fe1d2b', verified_description_parts=('日志迁移',)),)))">text = '任务放弃：完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_fa3f6d02af154ab528891c7db5a7a4d1d4fc8f6f293d4d88120c2288329ac965'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_fa3f6d02af154ab528891c7db5a7a4d1d4fc8f6f293d4d88120c2288329ac965'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_f...:segment_v1_f3122c6b377214b63095162b73e51785982e33f011c9fa30c960765114fe1d2b', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u64a4\u56de\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.014"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_a8f74c331bec1c32be844cde64e3b28a9e8fb0e349ec9159bc09f09d79b85e99'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_a8f74c331bec1c32be844cde64e3b28a9e8fb0e349ec9159bc09f09d79b85e99'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_a...:segment_v1_0b8a938162306d57e957558157a595bc74192f8b70a0330ad04aca36b5ac24ab', verified_description_parts=('日志迁移',)),)))">text = '撤回完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_a8f74c331bec1c32be844cde64e3b28a9e8fb0e349ec9159bc09f09d79b85e99'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_a8f74c331bec1c32be844cde64e3b28a9e8fb0e349ec9159bc09f09d79b85e99'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_a...:segment_v1_0b8a938162306d57e957558157a595bc74192f8b70a0330ad04aca36b5ac24ab', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4f5c\u5e9f\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.013"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_88c5cf40702ab6a4da68b2e2da10d2c9de0b84dbbd5502aac89d4ba075598ff5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_88c5cf40702ab6a4da68b2e2da10d2c9de0b84dbbd5502aac89d4ba075598ff5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_8...:segment_v1_7d4bfb0b1905e7850857d6a66ccb94718318cdc4bbc7791c84dda401bae72090', verified_description_parts=('日志迁移',)),)))">text = '作废完成日志迁移。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_88c5cf40702ab6a4da68b2e2da10d2c9de0b84dbbd5502aac89d4ba075598ff5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_88c5cf40702ab6a4da68b2e2da10d2c9de0b84dbbd5502aac89d4ba075598ff5'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_8...:segment_v1_7d4bfb0b1905e7850857d6a66ccb94718318cdc4bbc7791c84dda401bae72090', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u65e0\u987b\u7ee7\u7eed\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.012"><failure message="AssertionError: assert True is False&#10; +  where True = bool((TaskObservation(observation_id='task_observation_v1_61faac2b0a5b012b20d4b8a49a644e7b61a1884f478724ad305bef9cf1845771'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))&#10; +    where (TaskObservation(observation_id='task_observation_v1_61faac2b0a5b012b20d4b8a49a644e7b61a1884f478724ad305bef9cf1845771'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_6...:segment_v1_0332142ab3f096401771876507f79f208dc27b146e7a98dba92b783e2e621f76', verified_description_parts=('日志迁移',)),)))">text = '安排完成日志迁移。无须继续。', work = '日志迁移', accepted = False
+
+    @pytest.mark.parametrize("text,work,accepted", REFUSAL_CASES)
+    def test_scoped_refusal(text, work, accepted):
+        artifact = source(text)
+        # Deliberately cropped mistaken PLAN: host must check original context.
+        excerpt = work if text.count(work) == 1 else next(
+            clause for clause in re.split(r"[。；;]", text) if work in clause)
+        service, provider, _, _ = setup(artifact, [claim(excerpt, work)])
+        result = discover(service, artifact)
+&gt;       assert bool(observations(result)) is accepted
+E       AssertionError: assert True is False
+E        +  where True = bool((TaskObservation(observation_id='task_observation_v1_61faac2b0a5b012b20d4b8a49a644e7b61a1884f478724ad305bef9cf1845771'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),))
+E        +    where (TaskObservation(observation_id='task_observation_v1_61faac2b0a5b012b20d4b8a49a644e7b61a1884f478724ad305bef9cf1845771'... 1, 0, 0, tzinfo=datetime.timezone.utc), event_time=None, relation_status='UNCONFIRMED', authority='SUPPORTING_ONLY'),) = observations(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_6...:segment_v1_0332142ab3f096401771876507f79f208dc27b146e7a98dba92b783e2e621f76', verified_description_parts=('日志迁移',)),)))
+
+tests\unit\test_task_discovery_m3j.py:77: AssertionError</failure></testcase><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4eca\u5929\u98ce\u5f88\u5927\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u65e0\u987b\u518d\u505a\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.011" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u6211\u4eec\u4e0d\u6267\u884c\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u8fd9\u9879\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4efb\u52a1\u53d6\u6d88\uff1a\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002-\u5bb9\u91cf\u62a5\u544a-False]" time="0.010" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002-\u5bb9\u91cf\u62a5\u544a-False]" time="0.011" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u8ba8\u8bba\u4ec5\u4f9b\u8bb0\u5f55\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.009" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u5efa\u8bae\u53d6\u6d88\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.010" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.007" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002-\u5bb9\u91cf\u62a5\u544a-True]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u5b89\u6392\u63d0\u4ea4\u5bb9\u91cf\u62a5\u544a\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u5bb9\u91cf\u62a5\u544a-False]" time="0.006" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\n&gt; This task is cancelled.-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.011" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u65e5\u5fd7\u8fc1\u79fb\u53d6\u6d88\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.012" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u4ee5\u540e\u66f4\u6362\u914d\u8272\uff1b\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.013" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4efb\u52a1\u53d6\u6d88\uff1a\u6574\u7406\u65e7\u622a\u56fe\uff1b\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.014" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\uff1b\u4e0d\u518d\u5b89\u6392\u6574\u7406\u65e7\u622a\u56fe\u3002-\u65e5\u5fd7\u8fc1\u79fb-True]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u65e5\u5fd7\u8fc1\u79fb\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.011" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u4e0a\u8ff0\u4efb\u52a1\u53d6\u6d88\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.011" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002This task is cancelled.-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u4f1a\u8bae\u5f15\u7528\uff1a\u201c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002\u201d-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5982\u679c\u9884\u7b97\u6279\u51c6\uff0c\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.007" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5982\u679c\u9884\u7b97\u6279\u51c6\uff1b\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.009" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u5efa\u8bae\u5b89\u6392\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_scoped_refusal[\u65e0\u9700\u5b8c\u6210\u65e5\u5fd7\u8fc1\u79fb\u3002-\u65e5\u5fd7\u8fc1\u79fb-False]" time="0.008" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_uncovered_continuation_is_visible_without_synthesizing_work" time="0.018" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_cross_message_continuation_preserves_fields_per_original_speaker" time="0.024" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_same_fields_do_not_merge_and_missing_year_is_not_inherited" time="0.017" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_candidate_inventory_never_releases_withheld_source_references[stale]" time="0.003" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_candidate_inventory_never_releases_withheld_source_references[revoked]" time="0.004" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_candidate_inventory_never_releases_withheld_source_references[foreign]" time="0.003" /><testcase classname="tests.unit.test_task_discovery_m3j" name="test_candidate_inventory_never_releases_withheld_source_references[during_call]" time="0.010" /></testsuite></testsuites>
