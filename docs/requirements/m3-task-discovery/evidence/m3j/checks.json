@@ -1,0 +1,102 @@
+{
+  "base": "4b58ddac03f347941339a05cfaa7f73a0028cbb9",
+  "branch": "codex/linkloom-m3j-task-discovery",
+  "scope": "F_ONLY_OFFLINE_REPAIR",
+  "new_paid_provider_calls": 0,
+  "default_max_calls": 3,
+  "max_attempts": 1,
+  "historical_outputs_and_labels": "UNCHANGED",
+  "f_original_branch": "4b58ddac03f347941339a05cfaa7f73a0028cbb9",
+  "raw_checkout_sha256": {
+    "src/linkloom/semantic_ingestion/task_observation_discovery.py": "e3c9183a260ab50b7b57f58f0c18646345cfae9753c25c136769c4538e731748",
+    "src/linkloom/semantic_ingestion/task_discovery_veto.py": "ec999ba7d7794429d749325860c72cd378f69ecd45fe712564fd40c6f6478776",
+    "src/linkloom/semantic_ingestion/extraction.py": "33e9e71bb920a5300030943281eb53e33abdb1f54b025d02f7a8a0bb3788fcda",
+    "src/linkloom/semantic_ingestion/task_observation.py": "de763ad11c1b7d0c08a184e2d18c3ed7431ab4892582e85a6276a07d28479a5d",
+    "tests/unit/test_task_discovery_m3j.py": "ebe0f116cc7119c0d6f75657cab6f755d0c11180499a61f61545373be1f160df",
+    "tests/task_discovery_m3j_acceptance.py": "f213c00127d29b25d9bf4c85043b5fd21fca7593f5c37b92058f8df5b1faab5d"
+  },
+  "protected_paths_diff_empty": [
+    "tests/fixtures/task_discovery",
+    "docs/requirements/m3-task-discovery/evidence/live",
+    "docs/requirements/m3-task-discovery/evidence/replay",
+    "docs/requirements/m3-task-discovery/evidence/replay-final",
+    "docs/requirements/m3-task-discovery/evidence/reviewed-replay",
+    "docs/requirements/m3-task-discovery/evidence/reviewed-metrics.json",
+    "src/linkloom/semantic_ingestion/extraction.py",
+    "src/linkloom/semantic_ingestion/task_observation.py"
+  ],
+  "semantic_recall_improvement": "INTERFACE_BLOCKED_NOT_MEASURED",
+  "checks": [
+    {
+      "name": "final related unit/integration task/semantic/source regression",
+      "status": "PASS",
+      "tests": 553,
+      "failures": 0,
+      "errors": 0,
+      "evidence": "related.xml",
+      "selection": "tests/unit + tests/integration matching test_task_|test_semantic_|test_source_identity"
+    },
+    {
+      "name": "F focused contracts and independent reviewer counterexamples",
+      "status": "PASS",
+      "tests": 114,
+      "evidence": "focused.xml"
+    },
+    {
+      "name": "new scripted veto before/after",
+      "status": "PASS",
+      "cases": 68,
+      "expected_positives": 18,
+      "before": {
+        "true_positive": 5,
+        "false_accepts": 32,
+        "false_rejects": 13
+      },
+      "after": {
+        "true_positive": 18,
+        "false_accepts": 0,
+        "false_rejects": 0
+      },
+      "evidence": "veto-before-after.json"
+    },
+    {
+      "name": "frozen real response replay",
+      "status": "PASS",
+      "sources": 3,
+      "exact_request_equality": true,
+      "old_output_fields_equal": true,
+      "task_recall": 0.8,
+      "task_precision": 0.8,
+      "fields_correct": "24/24",
+      "evidence_valid": "5/5",
+      "evidence": "replay-comparison.json"
+    },
+    {
+      "name": "full unit/integration",
+      "status": "BASELINE_COLLECTION_BLOCKED",
+      "errors": 4,
+      "evidence": "full-collection.xml"
+    },
+    {
+      "name": "CI/UI/deployment/real vault/live provider",
+      "status": "NOT_RUN",
+      "reason": "Outside offline F-only boundary"
+    }
+  ],
+  "limits": [
+    "scripted veto metrics are not model-quality measurements",
+    "shared extractor has no F instruction/message-context extension",
+    "bounded negative grammar is not general semantic/anaphora resolution",
+    "work/m3j retains intermediate local artifacts; no cleanup performed",
+    "qualified reference plus a different named colon target remains conservatively withheld",
+    "a wide proposal containing quoted and actual duplicate work requires a precise excerpt"
+  ],
+  "independent_review": {
+    "verdict": "PASS_WITH_NOTES",
+    "reviewer": "/root/m3j_review",
+    "model": "gpt-5.6-luna",
+    "reasoning": "max",
+    "evidence": "../../M3_J_REVIEW.md",
+    "semantic_recall": "INTERFACE_BLOCKED_NOT_MEASURED"
+  }
+}

@@ -9,7 +9,6 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
-import re
 
 from linkloom.decision_memory.sources import SourceReferenceRegistry
 from linkloom.semantic_ingestion.artifacts import RawArtifact
@@ -19,6 +18,7 @@ from linkloom.semantic_ingestion.extraction import ProviderNeutralSemanticExtrac
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.task_observation import TaskObservation, TaskProposal, build_task_observation
 from linkloom.semantic_ingestion.timestamped_text import ParseStatus
+from linkloom.semantic_ingestion.task_discovery_veto import non_asserted
 
 
 COVERAGE_POLICY = "bounded-document-single-pass/v1"
@@ -65,6 +65,15 @@ class DiscoveryGroup:
 
 
 @dataclass(frozen=True, slots=True)
+class DiscoveryCandidateCoverage:
+    """Structural candidate coverage, not a semantic judgment of task absence."""
+    artifact_id: str
+    artifact_version_id: str
+    evidence_ref: str
+    verified_description_parts: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class TaskDiscoveryResult:
     valid_observations: tuple[TaskObservation, ...]
     partial_observations: tuple[TaskObservation, ...]
@@ -75,6 +84,7 @@ class TaskDiscoveryResult:
     coverage_complete: bool
     coverage_policy: str = COVERAGE_POLICY
     semantic_exhaustive: bool = False
+    candidate_coverage: tuple[DiscoveryCandidateCoverage, ...] = ()
 
     @property
     def receipts(self):
@@ -96,6 +106,7 @@ class TaskDiscoveryResult:
             "groups": [asdict(g) for g in self.groups],
             "extractions": [r.to_dict() for r in self.extractions],
             "receipts": [r.to_dict() for r in self.receipts],
+            "candidate_coverage": [asdict(row) for row in self.candidate_coverage],
         }
 
 
@@ -225,36 +236,16 @@ class TaskObservationDiscoveryService:
         groups = [replace(g, observation_ids=tuple(oid for oid in g.observation_ids if oid in released),
                           validation_issues=("OBSERVATIONS_WITHHELD",)
                           if any(oid not in released for oid in g.observation_ids) else ()) for g in groups]
+        candidate_coverage = tuple(DiscoveryCandidateCoverage(
+            a.artifact_id, a.artifact_version_id, segment.evidence_span.evidence_ref,
+            tuple(dict.fromkeys(e.quote for o in observations
+                if o.provenance.evidence_ref == segment.evidence_span.evidence_ref
+                for e in o.field_evidence if e.field == "description")))
+            for a, segments in admitted if a.artifact_version_id not in stale for segment in segments)
         return TaskDiscoveryResult(tuple(o for o in observations if o.validation_status == "VALID"),
             tuple(o for o in observations if o.validation_status == "PARTIAL"), tuple(failures),
-            tuple(sources), tuple(groups), tuple(extractions), complete)
-
-
-_NON_ASSERTED = re.compile(
-    r"建议|提议|假设|假如|如果|倘若|考虑|可能(?:会|要|将)?|据说|未采纳|未批准|"
-    r"(?:讨论|探讨)(?:是否|能否|要不要|如何|完成)|取消|撤销|终止|不再|无需|无须|不需要|"
-    r"不要|不会|不完成|不执行|不负责|不打算|未安排|并非|不是|没有任务|"
-    r"[\"“”‘’「」『』]|\b(?:not|never|cancel\w*|terminat\w*|hypothetical|suppose|if|might|perhaps|"
-    r"reportedly|unadopted|suggest\w*|propos\w*|consider\w*|quoted?)\b",
-    re.I,
-)
-_REFERENTIAL_CANCELLATION = re.compile(
-    r"(?:上述|前述|该|这项|这个)\s*(?:任务|工作|计划)[^。！？\n]{0,16}(?:取消|撤销|不再|无需|不需要)|"
-    r"\b(?:this|that|the above)\s+(?:task|work|plan)\b[^.!?\n]{0,24}\b(?:cancel\w*|withdrawn|abandoned)\b",
-    re.I,
-)
-
-
-def _non_asserted(artifact, parts):
-    # Look at original source sentences, not only the model's cropped excerpt.
-    # Also veto an explicit cancellation repeating the same work elsewhere.
-    # With no safe identity resolution here, an unresolved referential
-    # cancellation conservatively withholds proposals from this context.
-    if _REFERENTIAL_CANCELLATION.search(artifact.content):
-        return True
-    sentences = re.split(r"[。！？\n]|[.!?](?:\s+|$)", artifact.content)
-    return any(_NON_ASSERTED.search(sentence) for sentence in sentences
-               if any(part in sentence for part in parts))
+            tuple(sources), tuple(groups), tuple(extractions), complete,
+            candidate_coverage=candidate_coverage)
 
 
 def _project(result, artifact, segments):
@@ -280,11 +271,11 @@ def _project(result, artifact, segments):
                 or any(part not in proposal.text for part in proposal.description_parts)):
             fail("TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS")
             continue
-        if _non_asserted(artifact, proposal.description_parts):
-            fail("NON_ASSERTED_TASK")
-            continue
         start = artifact.content.index(proposal.text)
         end = start + len(proposal.text)
+        if non_asserted(artifact.content, proposal.description_parts, start, end):
+            fail("NON_ASSERTED_TASK")
+            continue
         projections, refs, bound_parts = [], [], set()
         for segment in segments:
             span = segment.evidence_span
