@@ -1,0 +1,22 @@
+{
+  "schema": "task-semantic-cost/v1",
+  "provider_calls": 3,
+  "reported_usage": {
+    "prompt_token_count": 12358,
+    "candidates_token_count": 1193,
+    "thoughts_token_count": null,
+    "total_token_count": 13551,
+    "cached_content_token_count": null
+  },
+  "actual_invoice_usd": null,
+  "full_cost_estimate_usd": null,
+  "reason": "Thinking/cache detail and invoice unavailable; unknown values are not treated as zero.",
+  "reported_token_standard_price_reference_usd": 0.01374225,
+  "reference_is_complete_cost": false,
+  "pricing_source": "https://ai.google.dev/gemini-api/docs/whats-new-gemini-3.8",
+  "model_versions": [
+    "gemini-3.8-flash",
+    "gemini-3.8-flash",
+    "gemini-3.8-flash"
+  ]
+}

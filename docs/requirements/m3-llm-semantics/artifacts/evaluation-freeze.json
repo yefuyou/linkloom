@@ -1,0 +1,10 @@
+[
+  {
+    "Path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-llm-semantics\\tests\\fixtures\\task_semantic\\inputs\\dev.json",
+    "Hash": "4CDB8365457F42CB530D1832A717F7819D204334D0F6B6AA51FA33DD453D6617"
+  },
+  {
+    "Path": "D:\\webproject\\Linkloom\\work\\linkloom-m3-llm-semantics\\tests\\fixtures\\task_semantic\\gold\\dev.json",
+    "Hash": "44B99EE2574C1DAD9845E7A1B015D34F9A823163D37796DB4042246C838ACE87"
+  }
+]

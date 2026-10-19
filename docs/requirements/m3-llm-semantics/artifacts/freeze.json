@@ -1,0 +1,59 @@
+{
+  "schema": "task-semantic-freeze/v1",
+  "model_id": "gemini-3.8-flash",
+  "max_generation_attempts": 3,
+  "scope": "AUTHOR_VISIBLE_SYNTHETIC_FIXED_ENDPOINT_DIAGNOSTIC",
+  "selected": [
+    "revision",
+    "causality",
+    "conflict"
+  ],
+  "git_base": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+  "input_sha256": "4cdb8365457f42cb530d1832a717f7819d204334d0f6b6aa51fa33dd453d6617",
+  "implementation_files": {
+    "src/linkloom/semantic_ingestion/task_relation_semantic_models.py": "4008f2ca79994e79fad59c444c5a62593bc74c1d4595cadc3eaeb0ba7d3f761c",
+    "src/linkloom/semantic_ingestion/task_relation_semantic_proposer.py": "4b0098e97ca4049d8217951d18fd8dfcfb70a9e2ac09d1945756b178a856a710",
+    "src/linkloom/semantic_ingestion/task_relation_semantic_validation.py": "075375a5e3fb515dc8f6071a07ca19f65d0d3727d5389ddb233d41cebbdea789",
+    "tests/task_semantic_support.py": "ed3a2a45186233d19a519db450e5c8a87567875e65d88474fa845e52e214041f",
+    "scripts/run_task_semantic_smoke.py": "241e16859dbc4a12554f73275e7b5a2b8c9ff3648ad095d2c53206ff73916039",
+    "scripts/check_task_semantic_provider.py": "9be80ac6a59422bfba5f5106041b4caea0c33271c2d4f3e4c30601a73f4b17cd",
+    "src/linkloom/agents/providers/gemini_api.py": "b198eea1075d69d123c56397492f1db8fba99793359edc97fe5556561143241d",
+    "src/linkloom/agents/model_adapter.py": "ade9e89051eb56345ac96ce3f9cc725e5e26bc00e279e4c43eaf2adeb3e0bc12",
+    "src/linkloom/semantic_ingestion/extraction.py": "33e9e71bb920a5300030943281eb53e33abdb1f54b025d02f7a8a0bb3788fcda",
+    "src/linkloom/semantic_ingestion/artifacts.py": "3c3f13cc0aba373ad5f06de83955a7cb84ac1bf96ef7d5364d114a4b9637b0a7",
+    "src/linkloom/semantic_ingestion/document_text.py": "1e30aab163393f763e98f3a722b0a8de4e3af654df9959b0e9781869d287ee73",
+    "src/linkloom/semantic_ingestion/task_observation.py": "de763ad11c1b7d0c08a184e2d18c3ed7431ab4892582e85a6276a07d28479a5d",
+    "src/linkloom/semantic_ingestion/task_relation_models.py": "e1312905fec3a26bbc70a49b46bba485604cfa0b681433ec658153c249dfa8e5",
+    "src/linkloom/semantic_ingestion/task_relation_validation.py": "da5939ae34c382873325ae9a159e12927dca3078cc920800e6e35823f0ba7762",
+    "src/linkloom/semantic_ingestion/task_change_authority.py": "091bd5f6a061496d3049d00cb8b731560b7aa0c87131f78752fc2c12652579f9",
+    "src/linkloom/decision_memory/sources.py": "ba06a6d64e38b83c7f24cc8478bb0025325e117c9d00408a641f715807ed9ade",
+    "src/linkloom/tools/contracts.py": "1d755d6de4d6dfff1ee3de083a01153161909ac8ba00295a6ba4951f0c39a002"
+  },
+  "requests": [
+    {
+      "case_id": "revision",
+      "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+      "snapshot_sha256": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+      "schema_sha256": "12eb221ab0f103211fd3b80c00c8acb376237ca980307d94e54b78d59dea8a22"
+    },
+    {
+      "case_id": "causality",
+      "request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+      "snapshot_sha256": "aaed3a902c3fd1b74d2b9e17328900ac2c314b556071e837565529aed4fb720e",
+      "schema_sha256": "e93f649a5f7c0ac104523b61eec32ecbe5248164bfce47de1063476985402a87"
+    },
+    {
+      "case_id": "conflict",
+      "request_sha256": "ce4d2ede9f66f2f253f589974625cf15cfc107b2d986c16e35ad42e298f64862",
+      "snapshot_sha256": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a",
+      "schema_sha256": "ca61f4e185599a2c3bf4bf2d7d04f42d54a3b8ce715b8db57ce406d5cbd0ac95"
+    }
+  ],
+  "prices": {
+    "input_usd_per_million": 0.75,
+    "output_usd_per_million": 3.75,
+    "source": "https://ai.google.dev/gemini-api/docs/whats-new-gemini-3.8",
+    "date": "2026-10-18"
+  },
+  "budget_authorization": "User: 没有上限; this run voluntarily capped at three serial attempts, no retries."
+}

@@ -1,0 +1,219 @@
+{
+  "schema": "task-semantic-gold/v1",
+  "split": "dev",
+  "author_visible": true,
+  "cases": [
+    {
+      "case_id": "revision",
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "plan.md",
+            "update.md"
+          ],
+          "rationale": "明确编号、同事项与接替旧交付安排。"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "plan.md",
+            "update.md"
+          ],
+          "rationale": "明确作废并接替业务计划，截止后移四日。"
+        }
+      ]
+    },
+    {
+      "case_id": "causality",
+      "relations": [
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "adapt",
+          "object": "change",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "choice.md",
+            "work.md"
+          ],
+          "rationale": "直接变更导致必须重做。"
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "archive",
+          "object": "change",
+          "verdict": "REFUTED",
+          "required_sources": [
+            "choice.md",
+            "work.md"
+          ],
+          "rationale": "明确不受此次变更影响。"
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "cache",
+          "object": "change",
+          "verdict": "UNKNOWN",
+          "required_sources": [
+            "choice.md",
+            "work.md"
+          ],
+          "rationale": "仅同项目同日期，缺少缓存任务因果桥接。"
+        }
+      ]
+    },
+    {
+      "case_id": "conflict",
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "first.md",
+            "second.md"
+          ],
+          "rationale": "显式同一任务及同编号。"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "new",
+          "object": "old",
+          "verdict": "CONFLICT",
+          "required_sources": [
+            "first.md",
+            "second.md"
+          ],
+          "rationale": "两当前同权来源明确相反，不按时间裁决。"
+        }
+      ]
+    },
+    {
+      "case_id": "correction",
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "original.md",
+            "correction.md"
+          ],
+          "rationale": "显式同事项。"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "new",
+          "object": "old",
+          "verdict": "REFUTED",
+          "required_sources": [
+            "correction.md"
+          ],
+          "rationale": "资料纠错而非业务计划变更。"
+        }
+      ]
+    },
+    {
+      "case_id": "independent",
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "sandbox",
+          "object": "production",
+          "verdict": "REFUTED",
+          "required_sources": [
+            "tasks.md"
+          ],
+          "rationale": "明确另一独立任务。"
+        },
+        {
+          "predicate": "RELATED_TO",
+          "subject": "sandbox",
+          "object": "production",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "tasks.md"
+          ],
+          "rationale": "共享测试结果构成明确工作联系。"
+        }
+      ]
+    },
+    {
+      "case_id": "alias",
+      "relations": [
+        {
+          "predicate": "PROJECT_ALIAS",
+          "subject": "alias",
+          "object": "canonical",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "glossary.md"
+          ],
+          "rationale": "明确同项目名称。"
+        },
+        {
+          "predicate": "IN_PROJECT",
+          "subject": "work",
+          "object": "canonical",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "glossary.md",
+            "task.md"
+          ],
+          "rationale": "明确归属与别名桥接，不回写M1.project。"
+        }
+      ]
+    },
+    {
+      "case_id": "conditional",
+      "relations": [
+        {
+          "predicate": "AFFECTED_BY",
+          "subject": "work",
+          "object": "change",
+          "verdict": "UNKNOWN",
+          "required_sources": [
+            "change.md",
+            "task.md"
+          ],
+          "rationale": "条件与考虑不等于已证实直接影响，也不是明确无影响。"
+        }
+      ]
+    },
+    {
+      "case_id": "missing-year",
+      "relations": [
+        {
+          "predicate": "SAME_TASK",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "old.md",
+            "new.md"
+          ],
+          "rationale": "明确同任务。"
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "subject": "new",
+          "object": "old",
+          "verdict": "SUPPORTED",
+          "required_sources": [
+            "old.md",
+            "new.md"
+          ],
+          "rationale": "业务计划被明确撤换；年份缺失不阻止关系判断，但不得计算日历差值。"
+        }
+      ]
+    }
+  ]
+}
