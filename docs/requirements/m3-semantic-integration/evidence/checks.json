@@ -1,0 +1,66 @@
+{
+  "schema": "m3d-checks/v1",
+  "base": "26392432dcef70692461e6f2f50bc1bd5528f69a",
+  "A": "bd5de920e4bcf1a76c12253c7001910552baf287",
+  "B": "8453126d6c4eef386727e193f39df461e0816b2a",
+  "integration_merge": "d1679ed4a8b229801fd666aeb112a23d9349e09e",
+  "checks": {
+    "focused": {
+      "total": 126,
+      "passed": 126,
+      "failed": [],
+      "exit_code": 0,
+      "command": "python -m pytest tests/unit/test_semantic_context_builder.py tests/unit/test_semantic_invocation.py tests/unit/test_call_bound_executor.py tests/integration/test_semantic_runtime_integration.py tests/integration/test_semantic_recorded_runtime.py tests/integration/test_semantic_runtime_boundaries.py tests/integration/test_semantic_dev_contract.py tests/integration/test_semantic_review_guards.py tests/unit/test_task_relation_semantic.py tests/unit/test_task_semantic_smoke.py tests/unit/test_task_relation_tools.py tests/integration/test_task_relation_runtime.py tests/unit/test_task_relation_query.py tests/unit/test_task_relation_store.py -q --basetemp work/reproduce-focused-unique --junitxml=work/reproduce-focused.xml",
+      "original_junit_sha256": "78eb1e094623f27202a893731e2756554b36e45d2254908ea322807a850d56d6",
+      "portable_junit_sha256": "3fd7cbdfe89a4a6000540f1ce7587e02ea4a2b2ebc4afc77e5b0a4bf3b7fbc34"
+    },
+    "regression": {
+      "total": 138,
+      "passed": 124,
+      "failed": [
+        "tests.integration.test_m11_team_decision_vertical_slice::test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_fabricated_team_decision_evidence_fails_the_outer_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_evidence_review_failure_cannot_publish_completed_workflow",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools",
+        "tests.integration.test_m11_team_decision_vertical_slice::test_team_decision_cold_resume_revalidates_a_durable_final",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_legacy_final_replay_remains_compatible",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+        "tests.integration.test_team_decision_final_contract_communication::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]"
+      ],
+      "exit_code": 1,
+      "command": "python -m pytest tests/unit/test_agent_registry.py tests/unit/test_tool_registry.py tests/unit/test_tool_policy.py tests/unit/test_tool_runtime.py tests/unit/test_runtime_models.py tests/unit/test_p83_fake_model_loop.py tests/unit/test_p84_durable_model_loop.py tests/integration/test_retrieval_tool_runtime.py tests/integration/test_m11_team_decision_vertical_slice.py tests/integration/test_team_decision_final_contract_communication.py tests/integration/test_runtime_v2_multi_action_resume.py evals/m3_task_impact/tests -q --basetemp work/reproduce-regression-unique --junitxml=work/reproduce-regression.xml",
+      "original_junit_sha256": "fdcdbc59dd0984ab0f3e46ae39e230636908c65179d8dd77dcf557f762d95a8d",
+      "portable_junit_sha256": "ee3e65ba35783a1403991b2ddc460bf06821d4b6209bcf28907d15491ecd0587",
+      "new_failure_ids": []
+    }
+  },
+  "retained_baseline_reference": "docs/requirements/m3-runtime-tools/evidence/baseline-retained.xml",
+  "legacy_suite_all_green": false,
+  "new_live_provider_requests": 0,
+  "business_quality": "NOT_EVALUATED",
+  "compileall_exit_code": 0,
+  "diff_check_exit_code": 0,
+  "redaction": "JUnit host/path identifiers replaced; raw originals remain in work; inner artifacts exact bytes verified",
+  "readonly": "B/P4 tests verify existing sidecar byte invariance; six new runs have no P4 sidecar and unchanged synthetic sources/anchor",
+  "runtime_evidence_command": "python scripts/evaluate_m3_semantic_integration.py --output work/reproduce-evidence-unique",
+  "isolated_imports": {
+    "linkloom.tools.semantic_analysis": "PASS",
+    "linkloom.tools.semantic_context": "PASS",
+    "linkloom.evaluation.task_semantic_replay": "PASS",
+    "evals.m3_task_impact.semantic_runtime_adapter": "PASS"
+  },
+  "independent_readonly_review": {
+    "status": "PASS",
+    "blocking_P1_P2": 0,
+    "report": "../REVIEW.md",
+    "initial_findings_resolved": 5,
+    "added_regression_cases": 17
+  },
+  "staged_inner_artifact_hashes_verified": 18
+}

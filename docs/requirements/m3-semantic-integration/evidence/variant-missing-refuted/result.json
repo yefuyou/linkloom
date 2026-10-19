@@ -1,0 +1,2869 @@
+{
+  "agent_tasks": [
+    {
+      "agent_id": "retrieval_agent",
+      "allowed_tool_ids": [
+        "inspect_task_context",
+        "query_task_relations",
+        "analyze_task_semantics"
+      ],
+      "attempt": 0,
+      "created_at": "2026-10-19T04:51:59.528368+00:00",
+      "deadline_ms": 5000,
+      "input_refs": [
+        "task_context_request"
+      ],
+      "max_steps": 4,
+      "parent_agent_id": "coordinator",
+      "parent_task_id": null,
+      "run_id": "run_p4_0916c7fd9634",
+      "status": "completed",
+      "task_id": "task_3ca4eee5",
+      "workflow": "task_relations"
+    },
+    {
+      "agent_id": "reviewer_agent",
+      "allowed_tool_ids": [
+        "validate_evidence",
+        "validate_schema"
+      ],
+      "attempt": 0,
+      "created_at": "2026-10-19T04:52:00.830197+00:00",
+      "deadline_ms": 5000,
+      "input_refs": [],
+      "max_steps": 3,
+      "parent_agent_id": "coordinator",
+      "parent_task_id": "task_3ca4eee5",
+      "run_id": "run_p4_0916c7fd9634",
+      "status": "completed",
+      "task_id": "task_db76c7ba",
+      "workflow": "task_relations"
+    }
+  ],
+  "error": null,
+  "errors": [],
+  "evidence": [],
+  "fallback_used": false,
+  "handoffs": [],
+  "memory_recall": {
+    "filtered": 0,
+    "injected": 0,
+    "recalled": 0,
+    "seen_in_request": 0
+  },
+  "memory_refs": [],
+  "policy": "p4-readonly-tools-v1",
+  "result": {
+    "candidate_refs": [],
+    "evidence_refs": [],
+    "review_decision": "evidence_sufficient",
+    "task_relations": {
+      "answer_status": "PARTIAL",
+      "context": {
+        "discovery": {
+          "candidates": [
+            {
+              "authority": "SUPPORTING_ONLY",
+              "candidate_id": "task_relation_candidate_v1_2ccd8a89e8dbd4a30ba21f626162b0eb2784f1d544b03403da5e17dbc3da59ec",
+              "evidence": [
+                {
+                  "char_end": 220,
+                  "char_start": 144,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 220,
+                    "char_start": 144,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                    "line_end": 2,
+                    "line_start": 2,
+                    "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                    "ordinal": 1,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                    "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                },
+                {
+                  "char_end": 293,
+                  "char_start": 253,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 293,
+                    "char_start": 253,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                    "line_end": 3,
+                    "line_start": 3,
+                    "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                    "ordinal": 2,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                    "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                }
+              ],
+              "object": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "phase": "DISCOVERED",
+              "predicate_hint": "RELATED_TO",
+              "priority": 40,
+              "reason_codes": [
+                "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                "PROJECT_SCOPE"
+              ],
+              "relation_status": "UNCONFIRMED",
+              "rule_version": "candidate-discovery/v1",
+              "schema_version": "task-relation-candidate/v1",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "uncertainty": [
+                "PROJECT_COOCCURRENCE_ONLY",
+                "VERIFIER_REQUIRED"
+              ]
+            },
+            {
+              "authority": "SUPPORTING_ONLY",
+              "candidate_id": "task_relation_candidate_v1_7348cd30a10239326e4ce5f40d7d6ef1619fdb7ba3812675dd1f80b6eaa15b46",
+              "evidence": [
+                {
+                  "char_end": 293,
+                  "char_start": 253,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 293,
+                    "char_start": 253,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                    "line_end": 3,
+                    "line_start": 3,
+                    "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                    "ordinal": 2,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                    "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                },
+                {
+                  "char_end": 111,
+                  "char_start": 32,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 111,
+                    "char_start": 32,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                    "line_end": 1,
+                    "line_start": 1,
+                    "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                    "ordinal": 0,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                    "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                }
+              ],
+              "object": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "phase": "DISCOVERED",
+              "predicate_hint": "RELATED_TO",
+              "priority": 40,
+              "reason_codes": [
+                "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                "PROJECT_SCOPE"
+              ],
+              "relation_status": "UNCONFIRMED",
+              "rule_version": "candidate-discovery/v1",
+              "schema_version": "task-relation-candidate/v1",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "uncertainty": [
+                "PROJECT_COOCCURRENCE_ONLY",
+                "VERIFIER_REQUIRED"
+              ]
+            },
+            {
+              "authority": "SUPPORTING_ONLY",
+              "candidate_id": "task_relation_candidate_v1_b9ff7399b5b7f12cef3150de0b8d30f916ebde48e27a1e935fe33554374e1d19",
+              "evidence": [
+                {
+                  "char_end": 220,
+                  "char_start": 144,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 220,
+                    "char_start": 144,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                    "line_end": 2,
+                    "line_start": 2,
+                    "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                    "ordinal": 1,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                    "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                },
+                {
+                  "char_end": 111,
+                  "char_start": 32,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "artifact_id": "work.md",
+                    "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                    "char_end": 111,
+                    "char_start": 32,
+                    "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                    "line_end": 1,
+                    "line_start": 1,
+                    "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                    "ordinal": 0,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                    "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                    "source_ref": "artifact://semantic-dev-causality/work.md",
+                    "workspace_id": "semantic-dev-causality"
+                  }
+                }
+              ],
+              "object": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "phase": "DISCOVERED",
+              "predicate_hint": "RELATED_TO",
+              "priority": 40,
+              "reason_codes": [
+                "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                "PROJECT_SCOPE"
+              ],
+              "relation_status": "UNCONFIRMED",
+              "rule_version": "candidate-discovery/v1",
+              "schema_version": "task-relation-candidate/v1",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "uncertainty": [
+                "PROJECT_COOCCURRENCE_ONLY",
+                "VERIFIER_REQUIRED"
+              ]
+            }
+          ],
+          "considered_candidates": 3,
+          "eligible_observations": 3,
+          "endpoint_fanout": {
+            "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b": 2,
+            "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53": 2,
+            "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7": 2
+          },
+          "generated_candidates": 3,
+          "input_counts": {
+            "artifact_rows": 2,
+            "context_signals": 0,
+            "current_workspace_artifacts": 2,
+            "observation_rows": 3,
+            "source_characters": 367
+          },
+          "limits": {
+            "max_artifacts": 64,
+            "max_candidates": 20,
+            "max_context_signals": 128,
+            "max_generated_candidates": 1000,
+            "max_observations": 128,
+            "max_per_observation": 10,
+            "max_source_chars": 500000
+          },
+          "max_endpoint_fanout": 2,
+          "rejected": [],
+          "returned_candidates": 3,
+          "truncated": false,
+          "truncation_reasons": []
+        },
+        "max_output_bytes": 32768,
+        "missing_context": [],
+        "observations": [
+          {
+            "observation": {
+              "authority": "SUPPORTING_ONLY",
+              "deadline": "2026-12-16",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "deadline_text": "2026年12月16日",
+              "description": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+              "event_time": "2026-12-02T02:05:00+00:00",
+              "extraction_status": "EXTRACTED",
+              "field_evidence": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 111,
+                  "char_start": 32,
+                  "field": "raw_text",
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 111,
+                  "char_start": 32,
+                  "field": "description",
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 35,
+                  "char_start": 32,
+                  "field": "owner",
+                  "quote": "我负责"
+                },
+                {
+                  "basis": "SPEAKER",
+                  "char_end": 30,
+                  "char_start": 28,
+                  "field": "owner",
+                  "quote": "许禾"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 39,
+                  "char_start": 35,
+                  "field": "project",
+                  "quote": "澄川项目"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 71,
+                  "char_start": 57,
+                  "field": "deadline",
+                  "quote": "2026年12月16日前完成"
+                }
+              ],
+              "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+              "owner": "许禾",
+              "project": "澄川项目",
+              "provenance": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "char_end": 111,
+                "char_start": 32,
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "line_end": 1,
+                "line_start": 1,
+                "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                "ordinal": 0,
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "source_ref": "artifact://semantic-dev-causality/work.md",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "raw_text": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "validation_status": "PARTIAL",
+              "vendor": null
+            },
+            "ref": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+              "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+              "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "observation": {
+              "authority": "SUPPORTING_ONLY",
+              "deadline": "2026-12-16",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "deadline_text": "2026年12月16日",
+              "description": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+              "event_time": "2026-12-02T02:06:00+00:00",
+              "extraction_status": "EXTRACTED",
+              "field_evidence": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 220,
+                  "char_start": 144,
+                  "field": "raw_text",
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 220,
+                  "char_start": 144,
+                  "field": "description",
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 147,
+                  "char_start": 144,
+                  "field": "owner",
+                  "quote": "我负责"
+                },
+                {
+                  "basis": "SPEAKER",
+                  "char_end": 142,
+                  "char_start": 140,
+                  "field": "owner",
+                  "quote": "许禾"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 151,
+                  "char_start": 147,
+                  "field": "project",
+                  "quote": "澄川项目"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 183,
+                  "char_start": 169,
+                  "field": "deadline",
+                  "quote": "2026年12月16日前完成"
+                }
+              ],
+              "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+              "owner": "许禾",
+              "project": "澄川项目",
+              "provenance": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "char_end": 220,
+                "char_start": 144,
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "line_end": 2,
+                "line_start": 2,
+                "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                "ordinal": 1,
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "source_ref": "artifact://semantic-dev-causality/work.md",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "raw_text": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "validation_status": "PARTIAL",
+              "vendor": null
+            },
+            "ref": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+              "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          {
+            "observation": {
+              "authority": "SUPPORTING_ONLY",
+              "deadline": "2026-12-16",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "deadline_text": "2026年12月16日",
+              "description": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+              "event_time": "2026-12-02T02:07:00+00:00",
+              "extraction_status": "EXTRACTED",
+              "field_evidence": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 293,
+                  "char_start": 253,
+                  "field": "raw_text",
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 293,
+                  "char_start": 253,
+                  "field": "description",
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 256,
+                  "char_start": 253,
+                  "field": "owner",
+                  "quote": "我负责"
+                },
+                {
+                  "basis": "SPEAKER",
+                  "char_end": 251,
+                  "char_start": 249,
+                  "field": "owner",
+                  "quote": "许禾"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 260,
+                  "char_start": 256,
+                  "field": "project",
+                  "quote": "澄川项目"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 292,
+                  "char_start": 278,
+                  "field": "deadline",
+                  "quote": "2026年12月16日前完成"
+                }
+              ],
+              "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+              "owner": "许禾",
+              "project": "澄川项目",
+              "provenance": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "char_end": 293,
+                "char_start": 253,
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "line_end": 3,
+                "line_start": 3,
+                "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                "ordinal": 2,
+                "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "source_ref": "artifact://semantic-dev-causality/work.md",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "raw_text": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+              "recorded_at": "2026-10-18T00:00:00+00:00",
+              "relation_status": "UNCONFIRMED",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "validation_status": "PARTIAL",
+              "vendor": null
+            },
+            "ref": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+              "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+              "workspace_id": "semantic-dev-causality"
+            }
+          }
+        ],
+        "observations_truncated": false,
+        "schema_version": "task-context/v1",
+        "semantic_proposals": {
+          "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "publishable": false,
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+        },
+        "workspace_id": "semantic-dev-causality"
+      },
+      "investigation_status": "BLOCKED",
+      "limitations": [
+        "BOUNDED_TOOL_RECEIPT_PROJECTION",
+        "UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+        "MODEL_PROPOSED_ONLY",
+        "SEMANTIC_NOT_EVALUATED",
+        "NO_P4_PROMOTION"
+      ],
+      "receipts": [
+        {
+          "arguments": {
+            "workspace_id": "semantic-dev-causality"
+          },
+          "call_id": "run_p4_0916c7fd9634:turn:1:tool",
+          "sequence": 1,
+          "tool_id": "inspect_task_context"
+        },
+        {
+          "arguments": {
+            "include_history": true,
+            "workspace_id": "semantic-dev-causality"
+          },
+          "call_id": "run_p4_0916c7fd9634:turn:2:tool",
+          "sequence": 2,
+          "tool_id": "query_task_relations"
+        },
+        {
+          "arguments": {
+            "investigation_id": "investigation",
+            "workspace_id": "semantic-dev-causality"
+          },
+          "call_id": "run_p4_0916c7fd9634:turn:3:tool",
+          "sequence": 3,
+          "tool_id": "analyze_task_semantics"
+        }
+      ],
+      "relation_query": {
+        "as_of": null,
+        "current_supported_in_snapshot": 0,
+        "evidence_spans": {},
+        "include_history": true,
+        "max_output_bytes": 49152,
+        "max_plans": 4,
+        "max_relations": 64,
+        "missing_context": [
+          "NO_RELATION_RECORDS"
+        ],
+        "observation_refs": {},
+        "observation_snapshots": {},
+        "plans": [],
+        "relations": [],
+        "returned_relations": 0,
+        "schema_version": "task-relations-query/v1",
+        "semantic_proposals": {
+          "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "publishable": false,
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+        },
+        "status": "NO_VERIFIED_RELATIONS",
+        "total_matching_relations": 0,
+        "truncated": false,
+        "workspace_id": "semantic-dev-causality"
+      },
+      "schema_version": "task-relations-result/v1",
+      "semantic_analysis": {
+        "analysis_status": "EXECUTED",
+        "cache_hit": false,
+        "context_manifest": {
+          "errors": [],
+          "input_inventory": {
+            "display_lists_truncated": false,
+            "expected_observation_payloads": [
+              "39cb4154273874acafec0e214995dc417fa62b240162787dd7256bae49943177",
+              "61a243ccf680bdbe1766641df5d7fcfd471347241b01b0dd3025113b01875245",
+              "f8353503d8d8a18bb5f5c487b1f248c17cc18cde7249e96964b4f041b3215f31"
+            ],
+            "expected_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "inventory_complete": true,
+            "inventory_sha256": "c49f15a2af2950e352fcd519ac99de8a777ec6b461894d07a8b4b4ff220fd574",
+            "limits": {
+              "max_allowed_chars": 12000,
+              "max_artifacts": 32,
+              "max_endpoints": 80,
+              "max_input_bytes": 24000,
+              "max_input_tokens": 32768,
+              "max_observations": 64,
+              "max_output_tokens": 8192,
+              "max_proposals": 24
+            },
+            "observation_count": 3,
+            "observation_payloads": [
+              "39cb4154273874acafec0e214995dc417fa62b240162787dd7256bae49943177",
+              "61a243ccf680bdbe1766641df5d7fcfd471347241b01b0dd3025113b01875245",
+              "f8353503d8d8a18bb5f5c487b1f248c17cc18cde7249e96964b4f041b3215f31"
+            ],
+            "revoked_evidence_refs": [],
+            "revoked_observation_ids": [],
+            "source_characters": 454,
+            "source_count": 3,
+            "source_parsing": [
+              {
+                "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                "issue_count": 0,
+                "issues": [],
+                "issues_truncated": false,
+                "status": "COMPLETE"
+              },
+              {
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "issue_count": 0,
+                "issues": [],
+                "issues_truncated": false,
+                "status": "COMPLETE"
+              },
+              {
+                "artifact_version_id": "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "issue_count": 0,
+                "issues": [],
+                "issues_truncated": false,
+                "status": "COMPLETE"
+              }
+            ],
+            "source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "truncated": false,
+            "workspace_id": "semantic-dev-causality"
+          },
+          "inventory_complete": true,
+          "limits": {
+            "max_allowed_chars": 12000,
+            "max_artifacts": 32,
+            "max_endpoints": 80,
+            "max_input_bytes": 24000,
+            "max_input_tokens": 32768,
+            "max_observations": 64,
+            "max_output_tokens": 8192,
+            "max_proposals": 24
+          },
+          "observation_count": 3,
+          "revoked_evidence_refs": [],
+          "revoked_observation_ids": [],
+          "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+          "source_count": 3,
+          "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+          "source_versions": [
+            "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+            "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+          ],
+          "status": "READY",
+          "truncated": false,
+          "workspace_id": "semantic-dev-causality"
+        },
+        "errors": [],
+        "evidence_spans": {
+          "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c": {
+            "artifact_id": "investigation-v2.md",
+            "artifact_version_id": "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+            "char_end": 87,
+            "char_start": 0,
+            "content_hash": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+            "line_end": 1,
+            "line_start": 1,
+            "message_id": "message_v1_ae862a4d01d42ca8377e461856871ed5183203adf4739e39087b3058bad542ae",
+            "ordinal": 0,
+            "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+            "quote_sha256": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872",
+            "segment_id": "segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+            "source_ref": "artifact://semantic-dev-causality/investigation-v2.md",
+            "workspace_id": "semantic-dev-causality"
+          },
+          "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d": {
+            "artifact_id": "work.md",
+            "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "char_end": 220,
+            "char_start": 144,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+            "line_end": 2,
+            "line_start": 2,
+            "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+            "ordinal": 1,
+            "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+            "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+            "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "workspace_id": "semantic-dev-causality"
+          },
+          "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19": {
+            "artifact_id": "work.md",
+            "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "char_end": 293,
+            "char_start": 253,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+            "line_end": 3,
+            "line_start": 3,
+            "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+            "ordinal": 2,
+            "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+            "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+            "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "workspace_id": "semantic-dev-causality"
+          },
+          "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5": {
+            "artifact_id": "choice.md",
+            "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+            "char_end": 72,
+            "char_start": 32,
+            "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+            "line_end": 1,
+            "line_start": 1,
+            "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+            "ordinal": 0,
+            "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+            "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+            "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+            "source_ref": "artifact://semantic-dev-causality/choice.md",
+            "workspace_id": "semantic-dev-causality"
+          },
+          "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8": {
+            "artifact_id": "work.md",
+            "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+            "char_end": 111,
+            "char_start": 32,
+            "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+            "line_end": 1,
+            "line_start": 1,
+            "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+            "ordinal": 0,
+            "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+            "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+            "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+            "source_ref": "artifact://semantic-dev-causality/work.md",
+            "workspace_id": "semantic-dev-causality"
+          }
+        },
+        "execution": {
+          "adapter_requests": 1,
+          "cost_usd": null,
+          "kind": "FAKE",
+          "new_billable_cost_usd": 0.0,
+          "new_live_provider_requests": 0,
+          "original_receipt": null,
+          "provider_request_id": null,
+          "provider_response_id": null,
+          "request_sha256": "8fa564c876c30fb195dd621dff857b42538a74b87f70fee2d7f6ad5f48d01dbf",
+          "reserved_requests": 1,
+          "response_sha256": "8065808e8fd22d2faabff215b0759c38aa7988982d7a2244371dd8075b7d1668",
+          "simulated_usage": {
+            "duration_ms": null,
+            "input_tokens": 80,
+            "output_tokens": 40,
+            "total_tokens": 120
+          }
+        },
+        "investigation_id": "investigation",
+        "invocation_id": "semantic_cf96d2e245c02416711167ad5d13fc006697203def4b92a0888aba1ed4a1a9c1",
+        "origin_tool_call_id": "run_p4_0916c7fd9634:turn:3:tool",
+        "outer_call_id": "run_p4_0916c7fd9634:turn:3:tool",
+        "proposals": [
+          {
+            "actual_model_version": "gemini-3.8-flash",
+            "authority": "SUPPORTING_ONLY",
+            "changed_fields": [],
+            "counter_evidence": [],
+            "coverage": {
+              "cited_evidence_refs": [
+                "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+              ],
+              "cited_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "missing_source_versions": [],
+              "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+              "required_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "COMPLETE"
+            },
+            "displayable_as_model_analysis": true,
+            "evidence_status": "EVIDENCE_VALID",
+            "execution_status": "EXECUTED",
+            "missing_evidence": [],
+            "model_id": "gemini-3.8-flash",
+            "object": {
+              "after_vendor": "远铃",
+              "before_vendor": "岚声",
+              "candidate_id": null,
+              "decision_id": null,
+              "endpoint_type": "CHANGE",
+              "evidence": {
+                "char_end": 72,
+                "char_start": 32,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM",
+                "span": {
+                  "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                }
+              },
+              "kind": "SOURCE_CLAIM",
+              "project": "澄川项目",
+              "receipt_id": null,
+              "workspace_id": "semantic-dev-causality"
+            },
+            "predicate": "AFFECTED_BY",
+            "prompt_version": "task-relation-semantics/v1",
+            "proposal_id": "semantic_proposal_v1_dbc2ee53dede7e0199b378161d44bb3954a097b99f96ec821eed23d0f5001add",
+            "proposed_verdict": "SUPPORTED",
+            "publishable": false,
+            "reason_codes": [
+              "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+            ],
+            "release_status": "PENDING_SEMANTIC_REVIEW",
+            "schema": "task-semantic-proposal/v1",
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+            "source_validation": {
+              "authority": "SOURCE_CLAIM_ONLY",
+              "counter_evidence": [],
+              "errors": [],
+              "proposal_id": "semantic_proposal_v1_dbc2ee53dede7e0199b378161d44bb3954a097b99f96ec821eed23d0f5001add",
+              "publishable": false,
+              "semantic_status": "NOT_EVALUATED",
+              "stage": "EVIDENCE_VALID",
+              "supporting_evidence": [
+                {
+                  "char_end": 72,
+                  "char_start": 32,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                {
+                  "char_end": 111,
+                  "char_start": 32,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "char_end": 220,
+                  "char_start": 144,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "char_end": 293,
+                  "char_start": 253,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "char_end": 87,
+                  "char_start": 0,
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ],
+              "validator_version": "task-semantic-evidence/v1"
+            },
+            "stage": "MODEL_PROPOSED",
+            "subject": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+              "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+              "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "supporting_evidence": [
+              {
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "span": {
+                  "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "span": {
+                  "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "span": {
+                  "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "span": {
+                  "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                }
+              },
+              {
+                "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                "span": {
+                  "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                }
+              }
+            ]
+          },
+          {
+            "actual_model_version": "gemini-3.8-flash",
+            "authority": "SUPPORTING_ONLY",
+            "changed_fields": [],
+            "counter_evidence": [
+              {
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "span": {
+                  "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "span": {
+                  "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "span": {
+                  "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                }
+              },
+              {
+                "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                "span": {
+                  "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                }
+              }
+            ],
+            "coverage": {
+              "cited_evidence_refs": [
+                "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+              ],
+              "cited_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3"
+              ],
+              "missing_source_versions": [
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+              "required_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "INSUFFICIENT"
+            },
+            "displayable_as_model_analysis": false,
+            "evidence_status": "EVIDENCE_INVALID",
+            "execution_status": "EXECUTED",
+            "missing_evidence": [],
+            "model_id": "gemini-3.8-flash",
+            "object": {
+              "after_vendor": "远铃",
+              "before_vendor": "岚声",
+              "candidate_id": null,
+              "decision_id": null,
+              "endpoint_type": "CHANGE",
+              "evidence": {
+                "char_end": 72,
+                "char_start": 32,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM",
+                "span": {
+                  "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                }
+              },
+              "kind": "SOURCE_CLAIM",
+              "project": "澄川项目",
+              "receipt_id": null,
+              "workspace_id": "semantic-dev-causality"
+            },
+            "predicate": "AFFECTED_BY",
+            "prompt_version": "task-relation-semantics/v1",
+            "proposal_id": "semantic_proposal_v1_25b2576bcb5acbf8824d3744f1b4b2390ae1dbcac08d0f30eedeef56a10fc5c1",
+            "proposed_verdict": "REFUTED",
+            "publishable": false,
+            "reason_codes": [
+              "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+            ],
+            "release_status": "BLOCKED",
+            "schema": "task-semantic-proposal/v1",
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+            "source_validation": {
+              "authority": "SOURCE_CLAIM_ONLY",
+              "counter_evidence": [
+                {
+                  "char_end": 111,
+                  "char_start": 32,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "char_end": 220,
+                  "char_start": 144,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "char_end": 293,
+                  "char_start": 253,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "char_end": 87,
+                  "char_start": 0,
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ],
+              "errors": [],
+              "proposal_id": "semantic_proposal_v1_25b2576bcb5acbf8824d3744f1b4b2390ae1dbcac08d0f30eedeef56a10fc5c1",
+              "publishable": false,
+              "semantic_status": "NOT_EVALUATED",
+              "stage": "EVIDENCE_VALID",
+              "supporting_evidence": [],
+              "validator_version": "task-semantic-evidence/v1"
+            },
+            "stage": "MODEL_PROPOSED",
+            "subject": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+              "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "supporting_evidence": []
+          },
+          {
+            "actual_model_version": "gemini-3.8-flash",
+            "authority": "SUPPORTING_ONLY",
+            "changed_fields": [],
+            "counter_evidence": [],
+            "coverage": {
+              "cited_evidence_refs": [
+                "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+              ],
+              "cited_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "missing_source_versions": [],
+              "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+              "required_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "COMPLETE"
+            },
+            "displayable_as_model_analysis": true,
+            "evidence_status": "EVIDENCE_VALID",
+            "execution_status": "EXECUTED",
+            "missing_evidence": [
+              "No explicit impact bridge within the declared investigation."
+            ],
+            "model_id": "gemini-3.8-flash",
+            "object": {
+              "after_vendor": "远铃",
+              "before_vendor": "岚声",
+              "candidate_id": null,
+              "decision_id": null,
+              "endpoint_type": "CHANGE",
+              "evidence": {
+                "char_end": 72,
+                "char_start": 32,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM",
+                "span": {
+                  "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                }
+              },
+              "kind": "SOURCE_CLAIM",
+              "project": "澄川项目",
+              "receipt_id": null,
+              "workspace_id": "semantic-dev-causality"
+            },
+            "predicate": "AFFECTED_BY",
+            "prompt_version": "task-relation-semantics/v1",
+            "proposal_id": "semantic_proposal_v1_ac1f6833d7030ad4ae84867469e0b2b3785a65388bd521505e7d02d7a8e0c6d8",
+            "proposed_verdict": "UNKNOWN",
+            "publishable": false,
+            "reason_codes": [
+              "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+            ],
+            "release_status": "PENDING_SEMANTIC_REVIEW",
+            "schema": "task-semantic-proposal/v1",
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+            "source_validation": {
+              "authority": "SOURCE_CLAIM_ONLY",
+              "counter_evidence": [],
+              "errors": [],
+              "proposal_id": "semantic_proposal_v1_ac1f6833d7030ad4ae84867469e0b2b3785a65388bd521505e7d02d7a8e0c6d8",
+              "publishable": false,
+              "semantic_status": "NOT_EVALUATED",
+              "stage": "EVIDENCE_VALID",
+              "supporting_evidence": [
+                {
+                  "char_end": 72,
+                  "char_start": 32,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                {
+                  "char_end": 111,
+                  "char_start": 32,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "char_end": 220,
+                  "char_start": 144,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "char_end": 293,
+                  "char_start": 253,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "char_end": 87,
+                  "char_start": 0,
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "role": "RELATION_PROPOSAL",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ],
+              "validator_version": "task-semantic-evidence/v1"
+            },
+            "stage": "MODEL_PROPOSED",
+            "subject": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+              "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "supporting_evidence": [
+              {
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "span": {
+                  "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "span": {
+                  "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "span": {
+                  "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                }
+              },
+              {
+                "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "span": {
+                  "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                }
+              },
+              {
+                "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                "span": {
+                  "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                }
+              }
+            ]
+          }
+        ],
+        "publishable": false,
+        "result_artifact": {
+          "kind": "tool_result",
+          "ref": "semantic/ade9bf277a05be83da67b3e8/result.json",
+          "sha256": "c2055c8785abfd36454c1563f310b9ee0db75f25afdaec1b8354b5917dd936c2",
+          "size_bytes": 28415
+        },
+        "schema_version": "task-semantic-analysis/v1",
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "workspace_id": "semantic-dev-causality"
+    }
+  },
+  "review": {
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "created_at": "2026-10-19T04:52:00.917543+00:00",
+    "decision": "evidence_sufficient",
+    "human_approval_required": false,
+    "reason": "All validation passed",
+    "review_id": "review_82250e6a",
+    "reviewer_agent_id": "reviewer_agent",
+    "subject_refs": []
+  },
+  "run_id": "run_p4_0916c7fd9634",
+  "source": {
+    "document_count": 1,
+    "fixture_id": null,
+    "index_path": "vault_index.json",
+    "index_schema_version": 1,
+    "index_sha256": "e28a39a4a303f9fdad9c085177cc1808b7d288b355ba08eb04572df472566c42",
+    "semantic_analysis_enabled": true,
+    "vault_root_fingerprint": "root_7cf85376fabac6ae",
+    "workspace_id": "semantic-dev-causality"
+  },
+  "status": "completed",
+  "tool_ledger": [
+    {
+      "agent_id": "retrieval_agent",
+      "arguments": {
+        "workspace_id": "semantic-dev-causality"
+      },
+      "call_id": "run_p4_0916c7fd9634:turn:1:tool",
+      "created_at": "",
+      "error": null,
+      "idempotency_key": null,
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_0916c7fd9634:turn:1:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "inspect_task_context",
+        "value": {
+          "discovery": {
+            "candidates": [
+              {
+                "authority": "SUPPORTING_ONLY",
+                "candidate_id": "task_relation_candidate_v1_2ccd8a89e8dbd4a30ba21f626162b0eb2784f1d544b03403da5e17dbc3da59ec",
+                "evidence": [
+                  {
+                    "char_end": 220,
+                    "char_start": 144,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 220,
+                      "char_start": 144,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                      "line_end": 2,
+                      "line_start": 2,
+                      "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                      "ordinal": 1,
+                      "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                      "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                      "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  },
+                  {
+                    "char_end": 293,
+                    "char_start": 253,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 293,
+                      "char_start": 253,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                      "line_end": 3,
+                      "line_start": 3,
+                      "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                      "ordinal": 2,
+                      "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                      "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                      "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  }
+                ],
+                "object": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                  "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "phase": "DISCOVERED",
+                "predicate_hint": "RELATED_TO",
+                "priority": 40,
+                "reason_codes": [
+                  "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                  "PROJECT_SCOPE"
+                ],
+                "relation_status": "UNCONFIRMED",
+                "rule_version": "candidate-discovery/v1",
+                "schema_version": "task-relation-candidate/v1",
+                "subject": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                  "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "uncertainty": [
+                  "PROJECT_COOCCURRENCE_ONLY",
+                  "VERIFIER_REQUIRED"
+                ]
+              },
+              {
+                "authority": "SUPPORTING_ONLY",
+                "candidate_id": "task_relation_candidate_v1_7348cd30a10239326e4ce5f40d7d6ef1619fdb7ba3812675dd1f80b6eaa15b46",
+                "evidence": [
+                  {
+                    "char_end": 293,
+                    "char_start": 253,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 293,
+                      "char_start": 253,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                      "line_end": 3,
+                      "line_start": 3,
+                      "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                      "ordinal": 2,
+                      "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                      "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                      "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  },
+                  {
+                    "char_end": 111,
+                    "char_start": 32,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 111,
+                      "char_start": 32,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                      "line_end": 1,
+                      "line_start": 1,
+                      "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                      "ordinal": 0,
+                      "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                      "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                      "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  }
+                ],
+                "object": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                  "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "phase": "DISCOVERED",
+                "predicate_hint": "RELATED_TO",
+                "priority": 40,
+                "reason_codes": [
+                  "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                  "PROJECT_SCOPE"
+                ],
+                "relation_status": "UNCONFIRMED",
+                "rule_version": "candidate-discovery/v1",
+                "schema_version": "task-relation-candidate/v1",
+                "subject": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                  "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "uncertainty": [
+                  "PROJECT_COOCCURRENCE_ONLY",
+                  "VERIFIER_REQUIRED"
+                ]
+              },
+              {
+                "authority": "SUPPORTING_ONLY",
+                "candidate_id": "task_relation_candidate_v1_b9ff7399b5b7f12cef3150de0b8d30f916ebde48e27a1e935fe33554374e1d19",
+                "evidence": [
+                  {
+                    "char_end": 220,
+                    "char_start": 144,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 220,
+                      "char_start": 144,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                      "line_end": 2,
+                      "line_start": 2,
+                      "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                      "ordinal": 1,
+                      "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                      "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                      "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  },
+                  {
+                    "char_end": 111,
+                    "char_start": 32,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "artifact_id": "work.md",
+                      "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                      "char_end": 111,
+                      "char_start": 32,
+                      "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                      "line_end": 1,
+                      "line_start": 1,
+                      "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                      "ordinal": 0,
+                      "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                      "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                      "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                      "source_ref": "artifact://semantic-dev-causality/work.md",
+                      "workspace_id": "semantic-dev-causality"
+                    }
+                  }
+                ],
+                "object": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                  "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "phase": "DISCOVERED",
+                "predicate_hint": "RELATED_TO",
+                "priority": 40,
+                "reason_codes": [
+                  "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                  "PROJECT_SCOPE"
+                ],
+                "relation_status": "UNCONFIRMED",
+                "rule_version": "candidate-discovery/v1",
+                "schema_version": "task-relation-candidate/v1",
+                "subject": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                  "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "uncertainty": [
+                  "PROJECT_COOCCURRENCE_ONLY",
+                  "VERIFIER_REQUIRED"
+                ]
+              }
+            ],
+            "considered_candidates": 3,
+            "eligible_observations": 3,
+            "endpoint_fanout": {
+              "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b": 2,
+              "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53": 2,
+              "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7": 2
+            },
+            "generated_candidates": 3,
+            "input_counts": {
+              "artifact_rows": 2,
+              "context_signals": 0,
+              "current_workspace_artifacts": 2,
+              "observation_rows": 3,
+              "source_characters": 367
+            },
+            "limits": {
+              "max_artifacts": 64,
+              "max_candidates": 20,
+              "max_context_signals": 128,
+              "max_generated_candidates": 1000,
+              "max_observations": 128,
+              "max_per_observation": 10,
+              "max_source_chars": 500000
+            },
+            "max_endpoint_fanout": 2,
+            "rejected": [],
+            "returned_candidates": 3,
+            "truncated": false,
+            "truncation_reasons": []
+          },
+          "max_output_bytes": 32768,
+          "missing_context": [],
+          "observations": [
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": "2026-12-16",
+                "deadline_precision": "DAY",
+                "deadline_role": "TASK_DEADLINE",
+                "deadline_text": "2026年12月16日",
+                "description": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "event_time": "2026-12-02T02:05:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 111,
+                    "char_start": 32,
+                    "field": "raw_text",
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 111,
+                    "char_start": 32,
+                    "field": "description",
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 35,
+                    "char_start": 32,
+                    "field": "owner",
+                    "quote": "我负责"
+                  },
+                  {
+                    "basis": "SPEAKER",
+                    "char_end": 30,
+                    "char_start": 28,
+                    "field": "owner",
+                    "quote": "许禾"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 39,
+                    "char_start": 35,
+                    "field": "project",
+                    "quote": "澄川项目"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 71,
+                    "char_start": 57,
+                    "field": "deadline",
+                    "quote": "2026年12月16日前完成"
+                  }
+                ],
+                "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                "owner": "许禾",
+                "project": "澄川项目",
+                "provenance": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "char_end": 111,
+                  "char_start": 32,
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "line_end": 1,
+                  "line_start": 1,
+                  "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                  "ordinal": 0,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+                  "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "source_ref": "artifact://semantic-dev-causality/work.md",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "raw_text": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "recorded_at": "2026-10-18T00:00:00+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                "workspace_id": "semantic-dev-causality"
+              }
+            },
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": "2026-12-16",
+                "deadline_precision": "DAY",
+                "deadline_role": "TASK_DEADLINE",
+                "deadline_text": "2026年12月16日",
+                "description": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "event_time": "2026-12-02T02:06:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 220,
+                    "char_start": 144,
+                    "field": "raw_text",
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 220,
+                    "char_start": 144,
+                    "field": "description",
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 147,
+                    "char_start": 144,
+                    "field": "owner",
+                    "quote": "我负责"
+                  },
+                  {
+                    "basis": "SPEAKER",
+                    "char_end": 142,
+                    "char_start": 140,
+                    "field": "owner",
+                    "quote": "许禾"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 151,
+                    "char_start": 147,
+                    "field": "project",
+                    "quote": "澄川项目"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 183,
+                    "char_start": 169,
+                    "field": "deadline",
+                    "quote": "2026年12月16日前完成"
+                  }
+                ],
+                "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                "owner": "许禾",
+                "project": "澄川项目",
+                "provenance": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "char_end": 220,
+                  "char_start": 144,
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "line_end": 2,
+                  "line_start": 2,
+                  "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                  "ordinal": 1,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+                  "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "source_ref": "artifact://semantic-dev-causality/work.md",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "raw_text": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "recorded_at": "2026-10-18T00:00:00+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                "workspace_id": "semantic-dev-causality"
+              }
+            },
+            {
+              "observation": {
+                "authority": "SUPPORTING_ONLY",
+                "deadline": "2026-12-16",
+                "deadline_precision": "DAY",
+                "deadline_role": "TASK_DEADLINE",
+                "deadline_text": "2026年12月16日",
+                "description": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "event_time": "2026-12-02T02:07:00+00:00",
+                "extraction_status": "EXTRACTED",
+                "field_evidence": [
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 293,
+                    "char_start": 253,
+                    "field": "raw_text",
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 293,
+                    "char_start": 253,
+                    "field": "description",
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 256,
+                    "char_start": 253,
+                    "field": "owner",
+                    "quote": "我负责"
+                  },
+                  {
+                    "basis": "SPEAKER",
+                    "char_end": 251,
+                    "char_start": 249,
+                    "field": "owner",
+                    "quote": "许禾"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 260,
+                    "char_start": 256,
+                    "field": "project",
+                    "quote": "澄川项目"
+                  },
+                  {
+                    "basis": "SOURCE_TEXT",
+                    "char_end": 292,
+                    "char_start": 278,
+                    "field": "deadline",
+                    "quote": "2026年12月16日前完成"
+                  }
+                ],
+                "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                "owner": "许禾",
+                "project": "澄川项目",
+                "provenance": {
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "char_end": 293,
+                  "char_start": 253,
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "line_end": 3,
+                  "line_start": 3,
+                  "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+                  "ordinal": 2,
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+                  "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "source_ref": "artifact://semantic-dev-causality/work.md",
+                  "workspace_id": "semantic-dev-causality"
+                },
+                "raw_text": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                "recorded_at": "2026-10-18T00:00:00+00:00",
+                "relation_status": "UNCONFIRMED",
+                "unknown_fields": [
+                  "vendor"
+                ],
+                "validation_issues": [],
+                "validation_status": "PARTIAL",
+                "vendor": null
+              },
+              "ref": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                "workspace_id": "semantic-dev-causality"
+              }
+            }
+          ],
+          "observations_truncated": false,
+          "schema_version": "task-context/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "workspace_id": "semantic-dev-causality"
+        }
+      },
+      "run_id": "run_p4_0916c7fd9634",
+      "sequence": 1,
+      "status": "completed",
+      "task_id": "task_3ca4eee5",
+      "tool_id": "inspect_task_context",
+      "updated_at": ""
+    },
+    {
+      "agent_id": "retrieval_agent",
+      "arguments": {
+        "include_history": true,
+        "workspace_id": "semantic-dev-causality"
+      },
+      "call_id": "run_p4_0916c7fd9634:turn:2:tool",
+      "created_at": "",
+      "error": null,
+      "idempotency_key": null,
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_0916c7fd9634:turn:2:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "query_task_relations",
+        "value": {
+          "as_of": null,
+          "current_supported_in_snapshot": 0,
+          "evidence_spans": {},
+          "include_history": true,
+          "max_output_bytes": 49152,
+          "max_plans": 4,
+          "max_relations": 64,
+          "missing_context": [
+            "NO_RELATION_RECORDS"
+          ],
+          "observation_refs": {},
+          "observation_snapshots": {},
+          "plans": [],
+          "relations": [],
+          "returned_relations": 0,
+          "schema_version": "task-relations-query/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "status": "NO_VERIFIED_RELATIONS",
+          "total_matching_relations": 0,
+          "truncated": false,
+          "workspace_id": "semantic-dev-causality"
+        }
+      },
+      "run_id": "run_p4_0916c7fd9634",
+      "sequence": 2,
+      "status": "completed",
+      "task_id": "task_3ca4eee5",
+      "tool_id": "query_task_relations",
+      "updated_at": ""
+    },
+    {
+      "agent_id": "retrieval_agent",
+      "arguments": {
+        "investigation_id": "investigation",
+        "workspace_id": "semantic-dev-causality"
+      },
+      "call_id": "run_p4_0916c7fd9634:turn:3:tool",
+      "created_at": "",
+      "error": null,
+      "idempotency_key": null,
+      "result": {
+        "business_status": null,
+        "call_id": "run_p4_0916c7fd9634:turn:3:tool",
+        "error": null,
+        "status": "ok",
+        "tool_id": "analyze_task_semantics",
+        "value": {
+          "analysis_status": "EXECUTED",
+          "cache_hit": false,
+          "context_manifest": {
+            "errors": [],
+            "input_inventory": {
+              "display_lists_truncated": false,
+              "expected_observation_payloads": [
+                "39cb4154273874acafec0e214995dc417fa62b240162787dd7256bae49943177",
+                "61a243ccf680bdbe1766641df5d7fcfd471347241b01b0dd3025113b01875245",
+                "f8353503d8d8a18bb5f5c487b1f248c17cc18cde7249e96964b4f041b3215f31"
+              ],
+              "expected_source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "inventory_complete": true,
+              "inventory_sha256": "c49f15a2af2950e352fcd519ac99de8a777ec6b461894d07a8b4b4ff220fd574",
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 3,
+              "observation_payloads": [
+                "39cb4154273874acafec0e214995dc417fa62b240162787dd7256bae49943177",
+                "61a243ccf680bdbe1766641df5d7fcfd471347241b01b0dd3025113b01875245",
+                "f8353503d8d8a18bb5f5c487b1f248c17cc18cde7249e96964b4f041b3215f31"
+              ],
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "source_characters": 454,
+              "source_count": 3,
+              "source_parsing": [
+                {
+                  "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                },
+                {
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                },
+                {
+                  "artifact_version_id": "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                }
+              ],
+              "source_versions": [
+                "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+              ],
+              "truncated": false,
+              "workspace_id": "semantic-dev-causality"
+            },
+            "inventory_complete": true,
+            "limits": {
+              "max_allowed_chars": 12000,
+              "max_artifacts": 32,
+              "max_endpoints": 80,
+              "max_input_bytes": 24000,
+              "max_input_tokens": 32768,
+              "max_observations": 64,
+              "max_output_tokens": 8192,
+              "max_proposals": 24
+            },
+            "observation_count": 3,
+            "revoked_evidence_refs": [],
+            "revoked_observation_ids": [],
+            "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+            "source_count": 3,
+            "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+            "source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "status": "READY",
+            "truncated": false,
+            "workspace_id": "semantic-dev-causality"
+          },
+          "errors": [],
+          "evidence_spans": {
+            "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c": {
+              "artifact_id": "investigation-v2.md",
+              "artifact_version_id": "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "char_end": 87,
+              "char_start": 0,
+              "content_hash": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_ae862a4d01d42ca8377e461856871ed5183203adf4739e39087b3058bad542ae",
+              "ordinal": 0,
+              "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+              "quote_sha256": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872",
+              "segment_id": "segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "source_ref": "artifact://semantic-dev-causality/investigation-v2.md",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "char_end": 220,
+              "char_start": 144,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "line_end": 2,
+              "line_start": 2,
+              "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+              "ordinal": 1,
+              "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+              "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f",
+              "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "char_end": 293,
+              "char_start": 253,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "line_end": 3,
+              "line_start": 3,
+              "message_id": "message_v1_5c7b2320ad58c5f4968f5b98848c23d5c6e40748688e825d9bf3999e76d5969a",
+              "ordinal": 2,
+              "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+              "quote_sha256": "94da6831015790e11f82f1260a508678c1405fb8017b7e20db56bb9e553e4021",
+              "segment_id": "segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5": {
+              "artifact_id": "choice.md",
+              "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+              "char_end": 72,
+              "char_start": 32,
+              "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+              "ordinal": 0,
+              "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+              "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e",
+              "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "source_ref": "artifact://semantic-dev-causality/choice.md",
+              "workspace_id": "semantic-dev-causality"
+            },
+            "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8": {
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "char_end": 111,
+              "char_start": 32,
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+              "line_end": 1,
+              "line_start": 1,
+              "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+              "ordinal": 0,
+              "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+              "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc",
+              "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+              "source_ref": "artifact://semantic-dev-causality/work.md",
+              "workspace_id": "semantic-dev-causality"
+            }
+          },
+          "execution": {
+            "adapter_requests": 1,
+            "cost_usd": null,
+            "kind": "FAKE",
+            "new_billable_cost_usd": 0.0,
+            "new_live_provider_requests": 0,
+            "original_receipt": null,
+            "provider_request_id": null,
+            "provider_response_id": null,
+            "request_sha256": "8fa564c876c30fb195dd621dff857b42538a74b87f70fee2d7f6ad5f48d01dbf",
+            "reserved_requests": 1,
+            "response_sha256": "8065808e8fd22d2faabff215b0759c38aa7988982d7a2244371dd8075b7d1668",
+            "simulated_usage": {
+              "duration_ms": null,
+              "input_tokens": 80,
+              "output_tokens": 40,
+              "total_tokens": 120
+            }
+          },
+          "investigation_id": "investigation",
+          "invocation_id": "semantic_cf96d2e245c02416711167ad5d13fc006697203def4b92a0888aba1ed4a1a9c1",
+          "origin_tool_call_id": "run_p4_0916c7fd9634:turn:3:tool",
+          "outer_call_id": "run_p4_0916c7fd9634:turn:3:tool",
+          "proposals": [
+            {
+              "actual_model_version": "gemini-3.8-flash",
+              "authority": "SUPPORTING_ONLY",
+              "changed_fields": [],
+              "counter_evidence": [],
+              "coverage": {
+                "cited_evidence_refs": [
+                  "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                  "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+                ],
+                "cited_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "missing_source_versions": [],
+                "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                "required_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "status": "COMPLETE"
+              },
+              "displayable_as_model_analysis": true,
+              "evidence_status": "EVIDENCE_VALID",
+              "execution_status": "EXECUTED",
+              "missing_evidence": [],
+              "model_id": "gemini-3.8-flash",
+              "object": {
+                "after_vendor": "远铃",
+                "before_vendor": "岚声",
+                "candidate_id": null,
+                "decision_id": null,
+                "endpoint_type": "CHANGE",
+                "evidence": {
+                  "char_end": 72,
+                  "char_start": 32,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "role": "CHANGE_CLAIM",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                "kind": "SOURCE_CLAIM",
+                "project": "澄川项目",
+                "receipt_id": null,
+                "workspace_id": "semantic-dev-causality"
+              },
+              "predicate": "AFFECTED_BY",
+              "prompt_version": "task-relation-semantics/v1",
+              "proposal_id": "semantic_proposal_v1_dbc2ee53dede7e0199b378161d44bb3954a097b99f96ec821eed23d0f5001add",
+              "proposed_verdict": "SUPPORTED",
+              "publishable": false,
+              "reason_codes": [
+                "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+              ],
+              "release_status": "PENDING_SEMANTIC_REVIEW",
+              "schema": "task-semantic-proposal/v1",
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+              "source_validation": {
+                "authority": "SOURCE_CLAIM_ONLY",
+                "counter_evidence": [],
+                "errors": [],
+                "proposal_id": "semantic_proposal_v1_dbc2ee53dede7e0199b378161d44bb3954a097b99f96ec821eed23d0f5001add",
+                "publishable": false,
+                "semantic_status": "NOT_EVALUATED",
+                "stage": "EVIDENCE_VALID",
+                "supporting_evidence": [
+                  {
+                    "char_end": 72,
+                    "char_start": 32,
+                    "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                    }
+                  },
+                  {
+                    "char_end": 111,
+                    "char_start": 32,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                    }
+                  },
+                  {
+                    "char_end": 220,
+                    "char_start": 144,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                    }
+                  },
+                  {
+                    "char_end": 293,
+                    "char_start": 253,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                    }
+                  },
+                  {
+                    "char_end": 87,
+                    "char_start": 0,
+                    "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                    }
+                  }
+                ],
+                "validator_version": "task-semantic-evidence/v1"
+              },
+              "stage": "MODEL_PROPOSED",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+                "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "supporting_evidence": [
+                {
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ]
+            },
+            {
+              "actual_model_version": "gemini-3.8-flash",
+              "authority": "SUPPORTING_ONLY",
+              "changed_fields": [],
+              "counter_evidence": [
+                {
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ],
+              "coverage": {
+                "cited_evidence_refs": [
+                  "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                  "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+                ],
+                "cited_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3"
+                ],
+                "missing_source_versions": [
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                "required_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "status": "INSUFFICIENT"
+              },
+              "displayable_as_model_analysis": false,
+              "evidence_status": "EVIDENCE_INVALID",
+              "execution_status": "EXECUTED",
+              "missing_evidence": [],
+              "model_id": "gemini-3.8-flash",
+              "object": {
+                "after_vendor": "远铃",
+                "before_vendor": "岚声",
+                "candidate_id": null,
+                "decision_id": null,
+                "endpoint_type": "CHANGE",
+                "evidence": {
+                  "char_end": 72,
+                  "char_start": 32,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "role": "CHANGE_CLAIM",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                "kind": "SOURCE_CLAIM",
+                "project": "澄川项目",
+                "receipt_id": null,
+                "workspace_id": "semantic-dev-causality"
+              },
+              "predicate": "AFFECTED_BY",
+              "prompt_version": "task-relation-semantics/v1",
+              "proposal_id": "semantic_proposal_v1_25b2576bcb5acbf8824d3744f1b4b2390ae1dbcac08d0f30eedeef56a10fc5c1",
+              "proposed_verdict": "REFUTED",
+              "publishable": false,
+              "reason_codes": [
+                "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+              ],
+              "release_status": "BLOCKED",
+              "schema": "task-semantic-proposal/v1",
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+              "source_validation": {
+                "authority": "SOURCE_CLAIM_ONLY",
+                "counter_evidence": [
+                  {
+                    "char_end": 111,
+                    "char_start": 32,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                    }
+                  },
+                  {
+                    "char_end": 220,
+                    "char_start": 144,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                    }
+                  },
+                  {
+                    "char_end": 293,
+                    "char_start": 253,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                    }
+                  },
+                  {
+                    "char_end": 87,
+                    "char_start": 0,
+                    "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                    }
+                  }
+                ],
+                "errors": [],
+                "proposal_id": "semantic_proposal_v1_25b2576bcb5acbf8824d3744f1b4b2390ae1dbcac08d0f30eedeef56a10fc5c1",
+                "publishable": false,
+                "semantic_status": "NOT_EVALUATED",
+                "stage": "EVIDENCE_VALID",
+                "supporting_evidence": [],
+                "validator_version": "task-semantic-evidence/v1"
+              },
+              "stage": "MODEL_PROPOSED",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+                "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "supporting_evidence": []
+            },
+            {
+              "actual_model_version": "gemini-3.8-flash",
+              "authority": "SUPPORTING_ONLY",
+              "changed_fields": [],
+              "counter_evidence": [],
+              "coverage": {
+                "cited_evidence_refs": [
+                  "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                  "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+                  "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+                ],
+                "cited_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "missing_source_versions": [],
+                "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                "required_source_versions": [
+                  "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+                  "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+                ],
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "status": "COMPLETE"
+              },
+              "displayable_as_model_analysis": true,
+              "evidence_status": "EVIDENCE_VALID",
+              "execution_status": "EXECUTED",
+              "missing_evidence": [
+                "No explicit impact bridge within the declared investigation."
+              ],
+              "model_id": "gemini-3.8-flash",
+              "object": {
+                "after_vendor": "远铃",
+                "before_vendor": "岚声",
+                "candidate_id": null,
+                "decision_id": null,
+                "endpoint_type": "CHANGE",
+                "evidence": {
+                  "char_end": 72,
+                  "char_start": 32,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "role": "CHANGE_CLAIM",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                "kind": "SOURCE_CLAIM",
+                "project": "澄川项目",
+                "receipt_id": null,
+                "workspace_id": "semantic-dev-causality"
+              },
+              "predicate": "AFFECTED_BY",
+              "prompt_version": "task-relation-semantics/v1",
+              "proposal_id": "semantic_proposal_v1_ac1f6833d7030ad4ae84867469e0b2b3785a65388bd521505e7d02d7a8e0c6d8",
+              "proposed_verdict": "UNKNOWN",
+              "publishable": false,
+              "reason_codes": [
+                "FAKE_CONTROL_ONLY_NOT_MODEL_QUALITY"
+              ],
+              "release_status": "PENDING_SEMANTIC_REVIEW",
+              "schema": "task-semantic-proposal/v1",
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "source_snapshot_hash": "bc23c783ea24f89287f75a3ace228ab057d6626b357ca44b48e0cb2a45dd5cf2",
+              "source_validation": {
+                "authority": "SOURCE_CLAIM_ONLY",
+                "counter_evidence": [],
+                "errors": [],
+                "proposal_id": "semantic_proposal_v1_ac1f6833d7030ad4ae84867469e0b2b3785a65388bd521505e7d02d7a8e0c6d8",
+                "publishable": false,
+                "semantic_status": "NOT_EVALUATED",
+                "stage": "EVIDENCE_VALID",
+                "supporting_evidence": [
+                  {
+                    "char_end": 72,
+                    "char_start": 32,
+                    "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                    }
+                  },
+                  {
+                    "char_end": 111,
+                    "char_start": 32,
+                    "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                    }
+                  },
+                  {
+                    "char_end": 220,
+                    "char_start": 144,
+                    "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                    }
+                  },
+                  {
+                    "char_end": 293,
+                    "char_start": 253,
+                    "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                    }
+                  },
+                  {
+                    "char_end": 87,
+                    "char_start": 0,
+                    "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                    "role": "RELATION_PROPOSAL",
+                    "span": {
+                      "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                    }
+                  }
+                ],
+                "validator_version": "task-semantic-evidence/v1"
+              },
+              "stage": "MODEL_PROPOSED",
+              "subject": {
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+                "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+                "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7",
+                "workspace_id": "semantic-dev-causality"
+              },
+              "supporting_evidence": [
+                {
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "span": {
+                    "span_ref": "span_a3496f5e4d9a2f931777c0bce74da5b81a3d703c4e3fcc62f3bf390a9919ade5"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "span": {
+                    "span_ref": "span_d50671f127099bcd148edc9259727097fdc75f27c9f2fd92b3ee605c96fd52b8"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "span": {
+                    "span_ref": "span_55e5a7a04b5b55141e8a470f6fc944f149c4739febbb973b8caff67b4919da1d"
+                  }
+                },
+                {
+                  "quote": "我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。",
+                  "span": {
+                    "span_ref": "span_8997e8f5d6eda9e2bf0d38b331b537e4a90eca1f8cec809a933a647c1b5cec19"
+                  }
+                },
+                {
+                  "quote": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。",
+                  "span": {
+                    "span_ref": "span_469eaa9dacf13b126795c235ff7c3ab716de2ff64cbb471a03ab9c9080bdae6c"
+                  }
+                }
+              ]
+            }
+          ],
+          "publishable": false,
+          "result_artifact": {
+            "kind": "tool_result",
+            "ref": "semantic/ade9bf277a05be83da67b3e8/result.json",
+            "sha256": "c2055c8785abfd36454c1563f310b9ee0db75f25afdaec1b8354b5917dd936c2",
+            "size_bytes": 28415
+          },
+          "schema_version": "task-semantic-analysis/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "workspace_id": "semantic-dev-causality"
+        }
+      },
+      "run_id": "run_p4_0916c7fd9634",
+      "sequence": 3,
+      "status": "completed",
+      "task_id": "task_3ca4eee5",
+      "tool_id": "analyze_task_semantics",
+      "updated_at": ""
+    }
+  ],
+  "usage": {
+    "steps": 5,
+    "tool_calls": 4
+  },
+  "workflow": "task_relations"
+}

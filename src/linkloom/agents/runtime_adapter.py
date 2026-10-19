@@ -778,6 +778,8 @@ class RuntimeAgentAdapter:
             if self._task_relation_tools is None or self._task_relation_tools.workspace_id != self.workspace_id:
                 raise ValidationError("Task relation tools require the active authorized workspace.")
             source_context = {**source_context, "workspace_id": self.workspace_id}
+            task_relation_tools = self._task_relation_tools.for_run(run_id, artifact_store, query)
+            source_context["semantic_analysis_enabled"] = task_relation_tools.semantic_analysis is not None
         if not callable(getattr(model, "decide", None)) and not callable(
             getattr(model, "complete", None)
         ):
@@ -882,7 +884,8 @@ class RuntimeAgentAdapter:
         if task_relations:
             from linkloom.agents.task_relation_result import review_task_relation_result
             def review_task_payload(_result_type, payload):
-                return review_task_relation_result(payload, self._task_relation_tools)
+                return review_task_relation_result(payload, task_relation_tools,
+                    records=state_cursor["state"].tool_ledger, run_id=run_id)
             tool_funcs["validate_schema"] = review_task_payload
         retrieval_tool_runtime = create_retrieval_tool_runtime(
             self._search_notes,
@@ -892,12 +895,13 @@ class RuntimeAgentAdapter:
             decision_memory_executor=self._search_decision_memory if self._decision_memory_enabled else None,
             reuse_preflight=self._read_documents,
             expected_source_context=source_context,
-            task_relation_tools=self._task_relation_tools if task_relations else None,
+            task_relation_tools=task_relation_tools if task_relations else None,
         )
         event_sink = RuntimeAgentEventSink(tracer) if tracer is not None else None
         self._integration_event_sink = event_sink
         coordinator = Coordinator(
-            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled, task_relations=task_relations),
+            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled, task_relations=task_relations,
+                task_semantics=task_relations and task_relation_tools.semantic_analysis is not None),
             retrieval_agent=RetrievalAgent(
                 model=model,
                 initial_state=initial_state,

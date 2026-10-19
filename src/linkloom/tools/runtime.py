@@ -11,7 +11,7 @@ from linkloom.runtime.errors import ValidationError, ToolArgumentValidationError
 from linkloom.runtime.models import _assert_json_safe_primitive
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
-from linkloom.tools.registry import ToolRegistry
+from linkloom.tools.registry import CallBoundExecutor, ToolRegistry
 from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 
@@ -581,7 +581,7 @@ class ToolRuntime:
             )
 
         try:
-            raw_result = executor(call.arguments)
+            raw_result = executor.execute_call(call) if isinstance(executor, CallBoundExecutor) else executor(call.arguments)
         except ToolArgumentValidationError as error:
             return _record_failed_and_persist(
                 call, "TOOL_INVALID_ARGUMENTS", "input",

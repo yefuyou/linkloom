@@ -111,7 +111,7 @@ class Coordinator:
                 
             identity = self.registry.get_agent(agent_id)
             task_max_steps = 3 if max_steps is None else max_steps
-            if agent_id == "retrieval_agent" and wf == "team_decision":
+            if agent_id == "retrieval_agent" and wf in {"team_decision", "task_relations"}:
                 task_max_steps = min(self.team_decision_model_max_steps, identity.max_steps)
             task = AgentTask(
                 task_id=(retrieval_task_id if agent_id == "retrieval_agent" and retrieval_task_id is not None

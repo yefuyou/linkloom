@@ -1,0 +1,881 @@
+{
+  "records": [
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D01",
+      "input_sha256": "e8102b40d49c11a3c0156595cb3ee778bd2e80094de352b20a5ef73e37d6eee4",
+      "adapter_kind": "FAKE_RUNTIME_NOT_EVALUATED",
+      "status": "EXECUTED",
+      "answer": {
+        "tasks": [],
+        "relations": [],
+        "revisions": [],
+        "answer_status": "ABSTAIN",
+        "abstentions": [
+          "M1_EXTRACTION_AND_TYPED_RELATION_QUESTION_DISCOVERY_NOT_CONNECTED",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "answer_evidence": []
+      },
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 1,
+        "tool_receipts": [
+          {
+            "seq": 1,
+            "tool": "list_sources",
+            "arguments": {},
+            "result_sha256": "b1b9d1946cbf0b4a2ec0761048918a75ec79ffa6cf9f276452eb9c762e0ddfbe",
+            "status": "OK"
+          },
+          {
+            "seq": 2,
+            "tool": "read_source",
+            "arguments": {
+              "doc_id": "a"
+            },
+            "result_sha256": "1d8cf35738d5b24f86df3d253c5b8dc474ba721bc2624bdef1b5798140089f52",
+            "status": "OK"
+          }
+        ],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 840.228
+      },
+      "failure_stage": null,
+      "error_type": null,
+      "evaluation_status": "NOT_EVALUATED"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D02",
+      "input_sha256": "cb80936e4b6da57d58c5fddbb56258bce7abab3408d1a01adc0f860bd6dcd914",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.146
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D03",
+      "input_sha256": "8f450b879b49b30fb1e23c13d01c984d2c432b566c279ee6361eb0d08b384aa2",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.097
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D04",
+      "input_sha256": "c0bd06bde126a71f65eee655b4a47a9757dd5cf9ac4e02cee70a8c8343c1e6d2",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.092
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D05",
+      "input_sha256": "48a05a5352cd76ba14c30e2b7a43fd5f83dd00c819cba7719e780cb92306cc2c",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.084
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D06",
+      "input_sha256": "6cb2a8397c71c5092e07eefa308f9b0157b8da452096ef74c39905df42679e7d",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.109
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D07",
+      "input_sha256": "3bab5899bfa389fb21b40cd617c73123b6dd31f95eb8d8868499841481de115b",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.1
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D08",
+      "input_sha256": "69bfbe638e95f07055278efdf2358d19308b4807baaa53af3956813028d0c0e9",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.091
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D09",
+      "input_sha256": "e0398692106b78def2db453580c0626ebcb5e8cc11eba0b6824b2ae89c1c5c5f",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.108
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D10",
+      "input_sha256": "d2e13cda82b53cd4b9e4d05d9889087563e7a30445113b888bd2a4da5f9220c7",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.085
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D11",
+      "input_sha256": "fba4a1eefdea5d87311348fb8051cc420bcaf83b5ac45836341cb03e29736a6a",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.092
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    },
+    {
+      "schema": "m3-run/v1",
+      "case_id": "D12",
+      "input_sha256": "c22789f8dcf9a12d60b715c0847467a6a5bc8a54dfe5cf18726a601213982299",
+      "adapter_kind": "UNAVAILABLE",
+      "status": "NOT_RUN",
+      "answer": null,
+      "execution": {
+        "target_action": "analyze_task_impact",
+        "target_invocations": 0,
+        "tool_receipts": [],
+        "model_calls": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "cost_usd": null,
+        "wall_ms": 0.095
+      },
+      "failure_stage": "capability_gap",
+      "error_type": null,
+      "evaluation_status": "NOT_RUN"
+    }
+  ],
+  "D01_runtime_result": {
+    "agent_tasks": [
+      {
+        "agent_id": "retrieval_agent",
+        "allowed_tool_ids": [
+          "inspect_task_context",
+          "query_task_relations",
+          "analyze_task_semantics"
+        ],
+        "attempt": 0,
+        "created_at": "2026-10-19T04:52:02.743660+00:00",
+        "deadline_ms": 5000,
+        "input_refs": [
+          "task_context_request"
+        ],
+        "max_steps": 4,
+        "parent_agent_id": "coordinator",
+        "parent_task_id": null,
+        "run_id": "run_p4_a53c7061fb42",
+        "status": "completed",
+        "task_id": "task_4bdc3b4b",
+        "workflow": "task_relations"
+      },
+      {
+        "agent_id": "reviewer_agent",
+        "allowed_tool_ids": [
+          "validate_evidence",
+          "validate_schema"
+        ],
+        "attempt": 0,
+        "created_at": "2026-10-19T04:52:03.451601+00:00",
+        "deadline_ms": 5000,
+        "input_refs": [],
+        "max_steps": 3,
+        "parent_agent_id": "coordinator",
+        "parent_task_id": "task_4bdc3b4b",
+        "run_id": "run_p4_a53c7061fb42",
+        "status": "completed",
+        "task_id": "task_096e84b3",
+        "workflow": "task_relations"
+      }
+    ],
+    "error": null,
+    "errors": [],
+    "evidence": [],
+    "fallback_used": false,
+    "handoffs": [],
+    "memory_recall": {
+      "filtered": 0,
+      "injected": 0,
+      "recalled": 0,
+      "seen_in_request": 0
+    },
+    "memory_refs": [],
+    "policy": "p4-readonly-tools-v1",
+    "result": {
+      "candidate_refs": [],
+      "evidence_refs": [],
+      "review_decision": "evidence_sufficient",
+      "task_relations": {
+        "answer_status": "PARTIAL",
+        "context": {
+          "discovery": {
+            "candidates": [],
+            "considered_candidates": 0,
+            "eligible_observations": 0,
+            "endpoint_fanout": {},
+            "generated_candidates": 0,
+            "input_counts": {
+              "artifact_rows": 1,
+              "context_signals": 0,
+              "current_workspace_artifacts": 1,
+              "observation_rows": 1,
+              "source_characters": 73
+            },
+            "limits": {
+              "max_artifacts": 64,
+              "max_candidates": 20,
+              "max_context_signals": 128,
+              "max_generated_candidates": 1000,
+              "max_observations": 128,
+              "max_per_observation": 10,
+              "max_source_chars": 500000
+            },
+            "max_endpoint_fanout": 0,
+            "rejected": [
+              {
+                "observation_id": "task_observation_v1_b02cd8b7131555b62a77e9e6206356ce8b3f61f589ea7b20e88ad7f4a0d39e9d",
+                "reason_codes": [
+                  "OBSERVATION_VERIFICATION_FAILED"
+                ]
+              }
+            ],
+            "returned_candidates": 0,
+            "truncated": false,
+            "truncation_reasons": []
+          },
+          "max_output_bytes": 32768,
+          "missing_context": [
+            "SOME_OBSERVATIONS_NOT_CURRENT_OR_VERIFIABLE",
+            "NO_VERIFIABLE_TASK_OBSERVATIONS"
+          ],
+          "observations": [],
+          "observations_truncated": false,
+          "schema_version": "task-context/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "workspace_id": "m3-d01"
+        },
+        "investigation_status": "BLOCKED",
+        "limitations": [
+          "BOUNDED_TOOL_RECEIPT_PROJECTION",
+          "UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+          "MODEL_PROPOSED_ONLY",
+          "SEMANTIC_NOT_EVALUATED",
+          "NO_P4_PROMOTION"
+        ],
+        "receipts": [
+          {
+            "arguments": {
+              "workspace_id": "m3-d01"
+            },
+            "call_id": "run_p4_a53c7061fb42:turn:1:tool",
+            "sequence": 1,
+            "tool_id": "inspect_task_context"
+          },
+          {
+            "arguments": {
+              "workspace_id": "m3-d01"
+            },
+            "call_id": "run_p4_a53c7061fb42:turn:2:tool",
+            "sequence": 2,
+            "tool_id": "query_task_relations"
+          },
+          {
+            "arguments": {
+              "investigation_id": "dev-public-investigation",
+              "workspace_id": "m3-d01"
+            },
+            "call_id": "run_p4_a53c7061fb42:turn:3:tool",
+            "sequence": 3,
+            "tool_id": "analyze_task_semantics"
+          }
+        ],
+        "relation_query": {
+          "as_of": null,
+          "current_supported_in_snapshot": 0,
+          "evidence_spans": {},
+          "include_history": false,
+          "max_output_bytes": 49152,
+          "max_plans": 4,
+          "max_relations": 64,
+          "missing_context": [
+            "NO_RELATION_RECORDS"
+          ],
+          "observation_refs": {},
+          "observation_snapshots": {},
+          "plans": [],
+          "relations": [],
+          "returned_relations": 0,
+          "schema_version": "task-relations-query/v1",
+          "semantic_proposals": {
+            "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "publishable": false,
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+          },
+          "status": "NO_VERIFIED_RELATIONS",
+          "total_matching_relations": 0,
+          "truncated": false,
+          "workspace_id": "m3-d01"
+        },
+        "schema_version": "task-relations-result/v1",
+        "semantic_analysis": {
+          "analysis_status": "BLOCKED",
+          "cache_hit": false,
+          "context_manifest": {
+            "errors": [
+              "EMPTY_QUERY_SET",
+              "OBSERVATION_VERIFICATION_FAILED"
+            ],
+            "input_inventory": {
+              "display_lists_truncated": false,
+              "expected_observation_payloads": [
+                "85da944305e2d293107904eb8a4af8c3383c9aea8a7e52e4fa875ab4a9a1c36b"
+              ],
+              "expected_source_versions": [
+                "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+              ],
+              "inventory_complete": true,
+              "inventory_sha256": "01afb7367f889a5e7197b72a69ac9bbaf0d737d3a4e4abdb8f651eab1a41162a",
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 1,
+              "observation_payloads": [
+                "85da944305e2d293107904eb8a4af8c3383c9aea8a7e52e4fa875ab4a9a1c36b"
+              ],
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "source_characters": 73,
+              "source_count": 1,
+              "source_parsing": [
+                {
+                  "artifact_version_id": "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2",
+                  "issue_count": 0,
+                  "issues": [],
+                  "issues_truncated": false,
+                  "status": "COMPLETE"
+                }
+              ],
+              "source_versions": [
+                "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+              ],
+              "truncated": false,
+              "workspace_id": "m3-d01"
+            },
+            "inventory_complete": true,
+            "limits": {
+              "max_allowed_chars": 12000,
+              "max_artifacts": 32,
+              "max_endpoints": 80,
+              "max_input_bytes": 24000,
+              "max_input_tokens": 32768,
+              "max_observations": 64,
+              "max_output_tokens": 8192,
+              "max_proposals": 24
+            },
+            "observation_count": 1,
+            "revoked_evidence_refs": [],
+            "revoked_observation_ids": [],
+            "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+            "source_count": 1,
+            "source_snapshot_hash": "3f0e5f4eb258e35d7e15f3101e5abf259e43f636e972e8cd4a32631304a74eec",
+            "source_versions": [
+              "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+            ],
+            "status": "BLOCKED",
+            "truncated": false,
+            "workspace_id": "m3-d01"
+          },
+          "errors": [
+            "EMPTY_QUERY_SET",
+            "OBSERVATION_VERIFICATION_FAILED"
+          ],
+          "execution": {
+            "cost_usd": null,
+            "kind": "FAKE",
+            "new_billable_cost_usd": 0.0,
+            "new_live_provider_requests": 0,
+            "reserved_requests": 0
+          },
+          "investigation_id": "dev-public-investigation",
+          "invocation_id": "semantic_89a787a634073b86fdeae395c2294d6ee3862d9da495b01091e482f326bcd4f5",
+          "outer_call_id": "run_p4_a53c7061fb42:turn:3:tool",
+          "proposals": [],
+          "publishable": false,
+          "result_artifact": null,
+          "schema_version": "task-semantic-analysis/v1",
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "workspace_id": "m3-d01"
+        },
+        "workspace_id": "m3-d01"
+      }
+    },
+    "review": {
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "created_at": "2026-10-19T04:52:03.465646+00:00",
+      "decision": "evidence_sufficient",
+      "human_approval_required": false,
+      "reason": "All validation passed",
+      "review_id": "review_8f69b5de",
+      "reviewer_agent_id": "reviewer_agent",
+      "subject_refs": []
+    },
+    "run_id": "run_p4_a53c7061fb42",
+    "source": {
+      "document_count": 1,
+      "fixture_id": null,
+      "index_path": "vault_index.json",
+      "index_schema_version": 1,
+      "index_sha256": "5e23ea549ebcb89662c26e5e1d687512ea303144a1a18aa43eeceb8ab702322c",
+      "semantic_analysis_enabled": true,
+      "vault_root_fingerprint": "root_aa09d3248259647a",
+      "workspace_id": "m3-d01"
+    },
+    "status": "completed",
+    "tool_ledger": [
+      {
+        "agent_id": "retrieval_agent",
+        "arguments": {
+          "workspace_id": "m3-d01"
+        },
+        "call_id": "run_p4_a53c7061fb42:turn:1:tool",
+        "created_at": "",
+        "error": null,
+        "idempotency_key": null,
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_a53c7061fb42:turn:1:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "inspect_task_context",
+          "value": {
+            "discovery": {
+              "candidates": [],
+              "considered_candidates": 0,
+              "eligible_observations": 0,
+              "endpoint_fanout": {},
+              "generated_candidates": 0,
+              "input_counts": {
+                "artifact_rows": 1,
+                "context_signals": 0,
+                "current_workspace_artifacts": 1,
+                "observation_rows": 1,
+                "source_characters": 73
+              },
+              "limits": {
+                "max_artifacts": 64,
+                "max_candidates": 20,
+                "max_context_signals": 128,
+                "max_generated_candidates": 1000,
+                "max_observations": 128,
+                "max_per_observation": 10,
+                "max_source_chars": 500000
+              },
+              "max_endpoint_fanout": 0,
+              "rejected": [
+                {
+                  "observation_id": "task_observation_v1_b02cd8b7131555b62a77e9e6206356ce8b3f61f589ea7b20e88ad7f4a0d39e9d",
+                  "reason_codes": [
+                    "OBSERVATION_VERIFICATION_FAILED"
+                  ]
+                }
+              ],
+              "returned_candidates": 0,
+              "truncated": false,
+              "truncation_reasons": []
+            },
+            "max_output_bytes": 32768,
+            "missing_context": [
+              "SOME_OBSERVATIONS_NOT_CURRENT_OR_VERIFIABLE",
+              "NO_VERIFIABLE_TASK_OBSERVATIONS"
+            ],
+            "observations": [],
+            "observations_truncated": false,
+            "schema_version": "task-context/v1",
+            "semantic_proposals": {
+              "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "publishable": false,
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+            },
+            "workspace_id": "m3-d01"
+          }
+        },
+        "run_id": "run_p4_a53c7061fb42",
+        "sequence": 1,
+        "status": "completed",
+        "task_id": "task_4bdc3b4b",
+        "tool_id": "inspect_task_context",
+        "updated_at": ""
+      },
+      {
+        "agent_id": "retrieval_agent",
+        "arguments": {
+          "workspace_id": "m3-d01"
+        },
+        "call_id": "run_p4_a53c7061fb42:turn:2:tool",
+        "created_at": "",
+        "error": null,
+        "idempotency_key": null,
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_a53c7061fb42:turn:2:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "query_task_relations",
+          "value": {
+            "as_of": null,
+            "current_supported_in_snapshot": 0,
+            "evidence_spans": {},
+            "include_history": false,
+            "max_output_bytes": 49152,
+            "max_plans": 4,
+            "max_relations": 64,
+            "missing_context": [
+              "NO_RELATION_RECORDS"
+            ],
+            "observation_refs": {},
+            "observation_snapshots": {},
+            "plans": [],
+            "relations": [],
+            "returned_relations": 0,
+            "schema_version": "task-relations-query/v1",
+            "semantic_proposals": {
+              "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "publishable": false,
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+            },
+            "status": "NO_VERIFIED_RELATIONS",
+            "total_matching_relations": 0,
+            "truncated": false,
+            "workspace_id": "m3-d01"
+          }
+        },
+        "run_id": "run_p4_a53c7061fb42",
+        "sequence": 2,
+        "status": "completed",
+        "task_id": "task_4bdc3b4b",
+        "tool_id": "query_task_relations",
+        "updated_at": ""
+      },
+      {
+        "agent_id": "retrieval_agent",
+        "arguments": {
+          "investigation_id": "dev-public-investigation",
+          "workspace_id": "m3-d01"
+        },
+        "call_id": "run_p4_a53c7061fb42:turn:3:tool",
+        "created_at": "",
+        "error": null,
+        "idempotency_key": null,
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_a53c7061fb42:turn:3:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "analyze_task_semantics",
+          "value": {
+            "analysis_status": "BLOCKED",
+            "cache_hit": false,
+            "context_manifest": {
+              "errors": [
+                "EMPTY_QUERY_SET",
+                "OBSERVATION_VERIFICATION_FAILED"
+              ],
+              "input_inventory": {
+                "display_lists_truncated": false,
+                "expected_observation_payloads": [
+                  "85da944305e2d293107904eb8a4af8c3383c9aea8a7e52e4fa875ab4a9a1c36b"
+                ],
+                "expected_source_versions": [
+                  "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+                ],
+                "inventory_complete": true,
+                "inventory_sha256": "01afb7367f889a5e7197b72a69ac9bbaf0d737d3a4e4abdb8f651eab1a41162a",
+                "limits": {
+                  "max_allowed_chars": 12000,
+                  "max_artifacts": 32,
+                  "max_endpoints": 80,
+                  "max_input_bytes": 24000,
+                  "max_input_tokens": 32768,
+                  "max_observations": 64,
+                  "max_output_tokens": 8192,
+                  "max_proposals": 24
+                },
+                "observation_count": 1,
+                "observation_payloads": [
+                  "85da944305e2d293107904eb8a4af8c3383c9aea8a7e52e4fa875ab4a9a1c36b"
+                ],
+                "revoked_evidence_refs": [],
+                "revoked_observation_ids": [],
+                "source_characters": 73,
+                "source_count": 1,
+                "source_parsing": [
+                  {
+                    "artifact_version_id": "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2",
+                    "issue_count": 0,
+                    "issues": [],
+                    "issues_truncated": false,
+                    "status": "COMPLETE"
+                  }
+                ],
+                "source_versions": [
+                  "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+                ],
+                "truncated": false,
+                "workspace_id": "m3-d01"
+              },
+              "inventory_complete": true,
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 1,
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+              "source_count": 1,
+              "source_snapshot_hash": "3f0e5f4eb258e35d7e15f3101e5abf259e43f636e972e8cd4a32631304a74eec",
+              "source_versions": [
+                "artifact_v1_517557d2756eecd56b5b89273d710ff6709cb8b0267789855b2e835516cd79b2"
+              ],
+              "status": "BLOCKED",
+              "truncated": false,
+              "workspace_id": "m3-d01"
+            },
+            "errors": [
+              "EMPTY_QUERY_SET",
+              "OBSERVATION_VERIFICATION_FAILED"
+            ],
+            "execution": {
+              "cost_usd": null,
+              "kind": "FAKE",
+              "new_billable_cost_usd": 0.0,
+              "new_live_provider_requests": 0,
+              "reserved_requests": 0
+            },
+            "investigation_id": "dev-public-investigation",
+            "invocation_id": "semantic_89a787a634073b86fdeae395c2294d6ee3862d9da495b01091e482f326bcd4f5",
+            "outer_call_id": "run_p4_a53c7061fb42:turn:3:tool",
+            "proposals": [],
+            "publishable": false,
+            "result_artifact": null,
+            "schema_version": "task-semantic-analysis/v1",
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "workspace_id": "m3-d01"
+          }
+        },
+        "run_id": "run_p4_a53c7061fb42",
+        "sequence": 3,
+        "status": "completed",
+        "task_id": "task_4bdc3b4b",
+        "tool_id": "analyze_task_semantics",
+        "updated_at": ""
+      }
+    ],
+    "usage": {
+      "steps": 5,
+      "tool_calls": 4
+    },
+    "workflow": "task_relations"
+  },
+  "D01_outer_fake_calls": 4,
+  "new_live_provider_requests": 0,
+  "limitation": "D01 execution contract only; M1/typed-question discovery missing; other 11 NOT_RUN; no scoring"
+}

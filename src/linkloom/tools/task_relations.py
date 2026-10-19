@@ -1,7 +1,8 @@
 """Workspace-bound read tools over existing M1, M2 discovery and P4 queries.
 
-Only trusted composition supplies snapshots and a sidecar path. Nothing here
-extracts new semantic proposals, persists assessments or opens a writable store.
+Only trusted composition supplies snapshots and a sidecar path. Optional semantic
+analysis is separately authorized and bound by the host. No assessment is
+persisted and no writable relation store is opened.
 """
 from __future__ import annotations
 
@@ -91,12 +92,26 @@ class TaskContextSnapshot:
 
 class TaskRelationTools:
     def __init__(self, workspace_id: str, snapshot_provider: Callable[[], TaskContextSnapshot],
-                 *, relation_path: Path | str | None = None):
+                 *, relation_path: Path | str | None = None, semantic_analysis=None):
         if not isinstance(workspace_id, str) or not workspace_id.strip() or not callable(snapshot_provider):
             raise ValueError("explicit workspace and snapshot provider required")
         self.workspace_id = workspace_id
         self._snapshot_provider = snapshot_provider
         self._relation_path = Path(relation_path) if relation_path is not None else None
+        self.semantic_analysis = semantic_analysis
+
+    def for_run(self, run_id, artifact_store, question):
+        if self.semantic_analysis is None:
+            return self
+        return TaskRelationTools(self.workspace_id, self._snapshot_provider, relation_path=self._relation_path,
+            semantic_analysis=self.semantic_analysis.bind(run_id, artifact_store, question))
+
+    def _semantic_boundary(self):
+        if self.semantic_analysis is None:
+            return dict(SEMANTIC_BOUNDARY)
+        return dict(SEMANTIC_BOUNDARY, status="CONNECTED_PENDING_SEMANTIC_REVIEW",
+                    consumer="A SemanticProposer; host-owned complete raw source snapshot",
+                    semantic_status="SEMANTIC_NOT_EVALUATED", publishable=False)
 
     def _snapshot(self, workspace_id: str):
         if workspace_id != self.workspace_id:
@@ -126,7 +141,7 @@ class TaskRelationTools:
             if observation.observation_id not in rejected:
                 observations.append({"ref": ObservationRef.from_observation(observation).to_dict(),
                                      "observation": observation.to_dict()})
-        missing = ["SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"]
+        missing = ["SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"] if self.semantic_analysis is None else []
         if rejected:
             missing.append("SOME_OBSERVATIONS_NOT_CURRENT_OR_VERIFIABLE")
         if not observations:
@@ -136,7 +151,7 @@ class TaskRelationTools:
             missing.append("ANCHOR_NOT_CURRENT_OR_NOT_FOUND")
         output = {"schema_version": "task-context/v1", "workspace_id": workspace_id,
                 "observations": observations, "discovery": discovery.to_dict(),
-                "missing_context": missing, "semantic_proposals": dict(SEMANTIC_BOUNDARY),
+                "missing_context": missing, "semantic_proposals": self._semantic_boundary(),
                 "max_output_bytes": 32 * 1024, "observations_truncated": False}
         while len(json.dumps(output, ensure_ascii=False, separators=(",", ":")).encode("utf8")) > 32 * 1024:
             view = output["discovery"]
@@ -164,9 +179,11 @@ class TaskRelationTools:
                   "total_matching_relations": 0, "current_supported_in_snapshot": 0,
                   "returned_relations": 0,
                   "include_history": include_history, "as_of": as_of,
-                  "missing_context": [], "semantic_proposals": dict(SEMANTIC_BOUNDARY)}
+                  "missing_context": [], "semantic_proposals": self._semantic_boundary()}
         if self._relation_path is None or not self._relation_path.exists():
-            output["missing_context"] = ["NO_RELATION_RECORDS", "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"]
+            output["missing_context"] = ["NO_RELATION_RECORDS"]
+            if self.semantic_analysis is None:
+                output["missing_context"].append("SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED")
             return _bounded_query_view(output)
         raw = tuple(r.observation if isinstance(r, TaskObservationRead) else r for r in snapshot.observations)
         # Query rows retain lifecycle/conflict information from M1. Pass that
@@ -229,7 +246,7 @@ def register_task_relation_tools(registry, tools: TaskRelationTools):
     identifier = {"type": "string", "minLength": 1, "maxLength": 256,
                   "pattern": r"^[A-Za-z0-9_:-]+$"}
     definitions = (
-        (TASK_TOOL_IDS[0], "Inspect bounded current task observations and source evidence. Candidates are unconfirmed leads; semantic proposals are not connected.",
+        (TASK_TOOL_IDS[0], "Inspect bounded current task observations and source evidence. Candidates are unconfirmed leads. Any semantic analysis requires the separate host-authorized tool.",
          {"workspace_id": workspace, "anchor_ids": {"type": "array", "maxItems": 16, "items": identifier},
           "max_candidates": {"type": "integer", "minimum": 1, "maximum": 100}},
          lambda a: tools.inspect_task_context(**a)),
@@ -243,3 +260,12 @@ def register_task_relation_tools(registry, tools: TaskRelationTools):
             input_schema={"type": "object", "required": ["workspace_id"],
                           "properties": properties, "additionalProperties": False},
             output_schema={"type": "object"}), executor)
+    if tools.semantic_analysis is not None:
+        from linkloom.tools.registry import CallBoundExecutor
+        registry.register(ToolDefinition(tool_id="analyze_task_semantics", version="1",
+            description="Analyze the host-authorized raw source snapshot using a separately budgeted semantic proposer. This is not the Provider output function. Results remain unaccepted model proposals; never P4 current relations. No automatic retry of an ambiguous inner request.",
+            input_schema={"type": "object", "required": ["workspace_id", "investigation_id"],
+                "properties": {"workspace_id": workspace, "investigation_id": {
+                    "type": "string", "enum": [tools.semantic_analysis.investigation_id]}},
+                "additionalProperties": False}, output_schema={"type": "object"}),
+            CallBoundExecutor(tools.semantic_analysis.execute))

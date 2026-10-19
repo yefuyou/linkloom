@@ -1,0 +1,964 @@
+{
+  "schema": "m3d-offline-evidence/v1",
+  "cases": [
+    {
+      "case_id": "revision",
+      "execution_kind": "REPLAY",
+      "runtime_status": "completed",
+      "investigation_status": "PENDING_SEMANTIC_REVIEW",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "imported_usage": {
+          "duration_ms": 7766.021,
+          "input_tokens": 3316,
+          "output_tokens": 413,
+          "total_tokens": 3729
+        },
+        "kind": "REPLAY",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": {
+          "execution_kind": "REPLAY",
+          "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+          "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+          "original_case_id": "revision",
+          "original_request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+          "original_response_sha256_imported": "9b62c817d4ccb768462e988b602b7907126ba512e1c14e3a5635ebb1d328035d",
+          "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+          "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+          "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+        },
+        "provider_request_id": null,
+        "provider_response_id": "MPLUatqzGu36ytMPsOCB-AE",
+        "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+        "reserved_requests": 1,
+        "response_sha256": "1a7c9786f66e84eec632f854b71d771dfd0293e51a2e1d351db6b634a7bb65a6"
+      },
+      "proposals": [
+        {
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+              "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+              "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": {
+            "conditional_on_model_semantics": true,
+            "delta_calendar_days": 4,
+            "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+            "new_deadline": {
+              "bound": "BEFORE",
+              "precision": "DAY",
+              "role": "TASK_DEADLINE",
+              "value": "2026-12-14"
+            },
+            "old_deadline": {
+              "bound": "BEFORE",
+              "precision": "DAY",
+              "role": "TASK_DEADLINE",
+              "value": "2026-12-10"
+            },
+            "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+            "publishable": false,
+            "semantic_status": "NOT_EVALUATED",
+            "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+            "status": "COMPUTABLE"
+          }
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:51:54.610444+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_e3846c15",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450"
+        },
+        "source_hashes_after": {
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    },
+    {
+      "case_id": "causality",
+      "execution_kind": "REPLAY",
+      "runtime_status": "completed",
+      "investigation_status": "BLOCKED",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "imported_usage": {
+          "duration_ms": 3975.318,
+          "input_tokens": 5697,
+          "output_tokens": 415,
+          "total_tokens": 6112
+        },
+        "kind": "REPLAY",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": {
+          "execution_kind": "REPLAY",
+          "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+          "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+          "original_case_id": "causality",
+          "original_request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+          "original_response_sha256_imported": "3a4d5586a955df8d3fe5e3cfe205c79e67bacd0405f854d01596c3ea9d2186c6",
+          "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+          "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+          "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+        },
+        "provider_request_id": null,
+        "provider_response_id": "NfLUaqyKG7viytMP5K6Z-Qo",
+        "request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+        "reserved_requests": 1,
+        "response_sha256": "e8e5dae7b0a9b814188f4c1045584cc20bba33c7aaa2486d8b0f16ac8953e00a"
+      },
+      "proposals": [
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "REFUTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_INVALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446"
+            ],
+            "missing_source_versions": [
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "INSUFFICIENT"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_INVALID",
+          "coverage": {
+            "cited_evidence_refs": [],
+            "cited_source_versions": [],
+            "missing_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "INSUFFICIENT"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:51:56.326422+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_624b9da1",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35"
+        },
+        "source_hashes_after": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    },
+    {
+      "case_id": "conflict",
+      "execution_kind": "REPLAY",
+      "runtime_status": "completed",
+      "investigation_status": "PENDING_SEMANTIC_REVIEW",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "imported_usage": {
+          "duration_ms": 4185.814,
+          "input_tokens": 3345,
+          "output_tokens": 365,
+          "total_tokens": 3710
+        },
+        "kind": "REPLAY",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": {
+          "execution_kind": "REPLAY",
+          "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+          "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+          "original_case_id": "conflict",
+          "original_request_sha256": "ce4d2ede9f66f2f253f589974625cf15cfc107b2d986c16e35ad42e298f64862",
+          "original_response_sha256_imported": "d74b1a664bbe29c4a5c85430762ddac0db92e60f12393b3ee2e2e5315177903c",
+          "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+          "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+          "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+        },
+        "provider_request_id": null,
+        "provider_response_id": "OfLUaom3KJXgytMP34fywQM",
+        "request_sha256": "ce4d2ede9f66f2f253f589974625cf15cfc107b2d986c16e35ad42e298f64862",
+        "reserved_requests": 1,
+        "response_sha256": "c95fc63f8148c8d7d41f370bde099fb261d8dc569b2a7abd116e09f4bb0db26e"
+      },
+      "proposals": [
+        {
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+              "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "verdict": "CONFLICT",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+              "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": {
+            "conditional_on_model_semantics": true,
+            "delta_calendar_days": null,
+            "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+            "proposal_id": "semantic_proposal_v1_27c1b84d7e54908a8befc10a1efbead9b093aafbd6441a9118d9c1c46ff207d3",
+            "publishable": false,
+            "semantic_status": "NOT_EVALUATED",
+            "source_snapshot_hash": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a",
+            "status": "BLOCKED"
+          }
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:51:57.674814+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_fc9e1b01",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+          "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1"
+        },
+        "source_hashes_after": {
+          "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+          "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    },
+    {
+      "case_id": "variant-complete",
+      "execution_kind": "FAKE",
+      "runtime_status": "completed",
+      "investigation_status": "PENDING_SEMANTIC_REVIEW",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "kind": "FAKE",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "request_sha256": "8fa564c876c30fb195dd621dff857b42538a74b87f70fee2d7f6ad5f48d01dbf",
+        "reserved_requests": 1,
+        "response_sha256": "04a63f210ee486c69aa9ae05e3ba9d3112d7695607c95064c851d48879063cd8",
+        "simulated_usage": {
+          "duration_ms": null,
+          "input_tokens": 80,
+          "output_tokens": 40,
+          "total_tokens": 120
+        }
+      },
+      "proposals": [
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "REFUTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:51:59.297486+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_0cdd13b7",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "source_hashes_after": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    },
+    {
+      "case_id": "variant-missing-refuted",
+      "execution_kind": "FAKE",
+      "runtime_status": "completed",
+      "investigation_status": "BLOCKED",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "kind": "FAKE",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "request_sha256": "8fa564c876c30fb195dd621dff857b42538a74b87f70fee2d7f6ad5f48d01dbf",
+        "reserved_requests": 1,
+        "response_sha256": "8065808e8fd22d2faabff215b0759c38aa7988982d7a2244371dd8075b7d1668",
+        "simulated_usage": {
+          "duration_ms": null,
+          "input_tokens": 80,
+          "output_tokens": 40,
+          "total_tokens": 120
+        }
+      },
+      "proposals": [
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "REFUTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_INVALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3"
+            ],
+            "missing_source_versions": [
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "INSUFFICIENT"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:52:00.917543+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_82250e6a",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "source_hashes_after": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    },
+    {
+      "case_id": "variant-missing-unknown",
+      "execution_kind": "FAKE",
+      "runtime_status": "completed",
+      "investigation_status": "BLOCKED",
+      "inner_model": {
+        "adapter_requests": 1,
+        "cost_usd": null,
+        "kind": "FAKE",
+        "new_billable_cost_usd": 0.0,
+        "new_live_provider_requests": 0,
+        "original_receipt": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "request_sha256": "8fa564c876c30fb195dd621dff857b42538a74b87f70fee2d7f6ad5f48d01dbf",
+        "reserved_requests": 1,
+        "response_sha256": "b24b1e2d6cc6f9cb3f691bbc0c1e5587c1e1c8cf96cae9965b6f9671dd950bce",
+        "simulated_usage": {
+          "duration_ms": null,
+          "input_tokens": 80,
+          "output_tokens": 40,
+          "total_tokens": 120
+        }
+      },
+      "proposals": [
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "SUPPORTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "REFUTED",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_VALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_66aa599ccb21523eceeb4470d0586345ab8507886005fd56c3d1e89f87d430a6",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "COMPLETE"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        },
+        {
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "stage": "MODEL_PROPOSED",
+          "evidence": "EVIDENCE_INVALID",
+          "coverage": {
+            "cited_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+              "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d"
+            ],
+            "cited_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "missing_source_versions": [
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3"
+            ],
+            "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+            "required_source_versions": [
+              "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3",
+              "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327"
+            ],
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "status": "INSUFFICIENT"
+          },
+          "semantic_status": "SEMANTIC_NOT_EVALUATED",
+          "publishable": false,
+          "comparison": null
+        }
+      ],
+      "reviewer": {
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION",
+              "INNER_RECEIPT_IDENTITY",
+              "CURRENT_RAW_SOURCE_SNAPSHOT",
+              "A_EVIDENCE_VALIDATION",
+              "DECLARED_SOURCE_COVERAGE",
+              "SEMANTIC_NOT_EVALUATED"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-19T04:52:02.549475+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_af2988c7",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": []
+      },
+      "readonly": {
+        "source_hashes_before": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "source_hashes_after": {
+          "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+          "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+          "artifact_v1_d90dc97fe7cdff3c86b1f543b3388c7d6e3a78627057b2fd6c66592e6bb4d5b3": "e7f71d60e593f9d78190aee539f4a3742a88f25872531d46bce64143287a6872"
+        },
+        "synthetic_anchor_unchanged": true,
+        "p4_created": false
+      },
+      "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+    }
+  ],
+  "outer_fake_calls": 24,
+  "dev_outer_fake_calls": 4,
+  "inner_replay_adapter_requests": 3,
+  "inner_fake_adapter_requests": 3,
+  "new_live_provider_requests": 0,
+  "new_billable_cost_usd": 0.0,
+  "imported_historical_cost_usd": null,
+  "semantic_acceptance": "NOT_EVALUATED",
+  "business_scores": "NOT_EVALUATED",
+  "production_agent_quality": "NOT_EVALUATED",
+  "frozen_A_unchanged": true,
+  "frozen_A_file_hashes": {
+    "evaluation-freeze.json": "05e0d462c1f653927a7b5306ed2ee01bf2145510b76366b15dd0fd5edff93be0",
+    "freeze.json": "9f010aaade7eef1d001eb4474f5f8ce4e688db88b6114b1736c2b73fefb7d85b",
+    "m3-dev-not-evaluated.json": "46ca9b765d3bb52b9a9a1c753bb4a5adec95763efb0cbf3e2ed5b2489dae3f22",
+    "m3-dev-not-run.json": "bac4015f262513c91fc768150dfc893b32c72b1929a9b34b56f12edc5c050d3e",
+    "predictions.json": "4c9e53b3bd54651bb78b034931356656237a12e1fa48896d33240f3c3285546a",
+    "provenance.json": "b4daa76bc051e5c8ba1655a1a286cf135e776371bc211179b72d2e4a9cce3a0e",
+    "provider-preflight.json": "ffe7edd27a0d3c90ce23494387c863c735c8fe419b0763eae6a6e3d16a29a05f",
+    "regex-diagnostic.json": "aaee8aa183446d06721ba8d1e9000aa5cf43bcb3c9eceb53eb242191bc102fca",
+    "semantic-score.json": "2e8415cab7ab8a386263a1a234009e00458a14fc29dd063c5852387843218419",
+    "usage-accounting.json": "566855f5354d38236aaca99516be11fcca06c1bd900cdad855e6d98950aa7690",
+    "verification.json": "8bb6656117bb5f0b48b69c00998cad6d4601ba06399dc4ee896c2c3d3568ecd2"
+  },
+  "dev_executed": [
+    "D01"
+  ],
+  "dev_remaining_not_run": 11,
+  "artifact_scope": "synthetic public sources; no SDK secrets; checkpoint host paths omitted; exact inner bytes preserved"
+}

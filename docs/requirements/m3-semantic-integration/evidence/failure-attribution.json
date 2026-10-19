@@ -1,0 +1,90 @@
+{
+  "schema": "m3d-failure-attribution/v1",
+  "evidence_kind": "PASSING_FAULT_INJECTION_ASSERTIONS; not live Provider diagnoses",
+  "junit": "reviewed-focused.xml",
+  "model_internal_cause": "NOT_INFERRED",
+  "cases": [
+    {
+      "scenario": "incomplete raw source",
+      "stage": "HOST_CONTEXT_ADMISSION",
+      "result": "BLOCKED / SOURCE_PARSE_INCOMPLETE",
+      "proof": "test_semantic_review_guards::test_incomplete_raw_parser_result_is_blocked_before_semantic_adapter",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "wrong workspace, stale/revoked source or endpoint, missing source/competitor, truncation",
+      "stage": "HOST_CONTEXT_ADMISSION",
+      "result": "BLOCKED; explicit context errors in ToolResult",
+      "proof": "test_semantic_runtime_boundaries::test_semantic_admission_blocks_before_inner_request",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "inner request/cost/token budget",
+      "stage": "INNER_ADMISSION",
+      "result": "SEMANTIC_REQUEST_BUDGET_EXHAUSTED / SEMANTIC_COST_BUDGET_EXHAUSTED / INPUT_BUDGET_EXCEEDED",
+      "proof": "test_semantic_runtime_boundaries::test_semantic_admission_blocks_before_inner_request",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "inner Provider missing",
+      "stage": "INNER_ADMISSION",
+      "result": "SEMANTIC_PROVIDER_NOT_CONFIGURED",
+      "proof": "test_semantic_runtime_boundaries::test_semantic_admission_blocks_before_inner_request[provider]",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "synthetic Provider exception",
+      "stage": "INNER_ADAPTER",
+      "result": "PROVIDER_FAILED / PROVIDER_EXCEPTION; cached failure; no retry",
+      "proof": "test_semantic_invocation::test_inner_budget_and_provider_failure_are_separate",
+      "inner_requests": 1
+    },
+    {
+      "scenario": "missing independent counter-source / explicit unknown investigation source",
+      "stage": "EVIDENCE_COVERAGE",
+      "result": "EVIDENCE_INVALID; missing_source_versions disclosed; NOT_EVALUATED",
+      "proof": "test_semantic_runtime_boundaries::test_new_public_variant_discloses_required_counter_and_investigation_sources"
+    },
+    {
+      "scenario": "illegal workspace/job/path/API-key argument",
+      "stage": "TOOL_SCHEMA",
+      "result": "TOOL_INVALID_ARGUMENTS before pending ledger/executor",
+      "proof": "test_semantic_runtime_boundaries::test_semantic_schema_rejects_workspace_job_path_and_secrets_before_execution",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "outer step budget",
+      "stage": "OUTER_MODEL_LOOP",
+      "result": "failed after 2 outer FAKE calls; no semantic call",
+      "proof": "test_semantic_runtime_boundaries::test_outer_step_budget_does_not_trigger_inner_request",
+      "inner_requests": 0
+    },
+    {
+      "scenario": "source changes after semantic response, receipt tampering, forged acceptance",
+      "stage": "REVIEWER",
+      "result": "rejected; no publication",
+      "proof": "test_semantic_runtime_boundaries::test_reviewer_rejects_source_change_after_semantic_response + test_semantic_review_guards"
+    },
+    {
+      "scenario": "crash after reservation, no response",
+      "stage": "INNER_RECOVERY",
+      "result": "SEMANTIC_OUTCOME_UNKNOWN; no reissue",
+      "proof": "test_semantic_invocation::test_ambiguous_reserved_attempt_cannot_rebill_after_crash",
+      "inner_requests": 1
+    },
+    {
+      "scenario": "response durable, result missing",
+      "stage": "INNER_RECOVERY",
+      "result": "local response replay; cached result, total inner request stays 1",
+      "proof": "test_semantic_runtime_boundaries::test_response_saved_before_result_can_resume_without_another_adapter_request",
+      "inner_requests": 1
+    },
+    {
+      "scenario": "outer terminal-ledger / observation commit gap",
+      "stage": "EXISTING_OUTER_RECOVERY",
+      "result": "MODEL_LOOP_RUNTIME_FAILED; 0 extra outer/inner requests",
+      "proof": "test_semantic_runtime_boundaries::test_outer_checkpoint_resume_keeps_inner_count_and_uses_only_remaining_final[ledger_terminal]",
+      "inner_requests": 1
+    }
+  ]
+}

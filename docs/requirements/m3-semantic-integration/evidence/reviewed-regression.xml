@@ -1,0 +1,425 @@
+<testsuites><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="138" time="13.741" timestamp="2026-10-19T12:51:25.366710+08:00" hostname="HOST_REDACTED"><testcase classname="tests.unit.test_agent_registry" name="test_agent_registry_duplicate_agent_id" time="0.008" /><testcase classname="tests.unit.test_agent_registry" name="test_agent_registry_unknown_tool" time="0.001" /><testcase classname="tests.unit.test_agent_registry" name="test_agent_registry_write_capability_rejected" time="0.001" /><testcase classname="tests.unit.test_agent_registry" name="test_default_registry_stable_sort" time="0.001" /><testcase classname="tests.unit.test_agent_registry" name="test_registry_allows_only_coordinator_to_handoff_to_registered_specialist" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_register_and_resolve_returns_definition_and_executor_binding" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_resolve_does_not_execute_the_bound_executor" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_duplicate_registration_is_rejected_without_replacing_binding" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_unknown_tool_lookup_is_rejected_with_stable_details" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_registry_does_not_modify_tool_definition" time="0.001" /><testcase classname="tests.unit.test_tool_registry" name="test_register_requires_a_callable_executor" time="0.001" /><testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_safety_limits" time="0.002" /><testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_enforcer" time="0.001" /><testcase classname="tests.unit.test_tool_policy" name="test_tool_policy_enforcer_denied_tools" time="0.001" /><testcase classname="tests.unit.test_tool_policy" name="test_typed_read_tools_validate_inputs_before_injected_callbacks" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_valid_execution_returns_success_and_consumes_one_authorized_call" time="0.002" /><testcase classname="tests.unit.test_tool_runtime" name="test_unknown_tool_returns_tool_error_without_authorization_or_execution" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_malformed_arguments_are_rejected_before_policy_and_do_not_consume_budget" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_permission_denied_returns_tool_error_before_executor" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_max_calls_exhausted_returns_budget_error_without_second_execution" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_executor_exception_is_safe_and_normalized" time="0.005" /><testcase classname="tests.unit.test_tool_runtime" name="test_invalid_executor_output_is_normalized_after_authorization" time="0.002" /><testcase classname="tests.unit.test_tool_runtime" name="test_business_not_found_is_success_with_business_status" time="0.002" /><testcase classname="tests.unit.test_tool_runtime" name="test_executor_runs_only_after_resolve_input_and_policy_prechecks_pass" time="0.002" /><testcase classname="tests.unit.test_tool_runtime" name="test_json_schema_enum_does_not_treat_integer_as_boolean" time="0.001" /><testcase classname="tests.unit.test_tool_runtime" name="test_trace_lifecycle_correlates_called_with_one_terminal_event" time="0.003" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_json_roundtrip" time="0.003" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_rejects_non_serializable_fields" time="0.002" /><testcase classname="tests.unit.test_runtime_models" name="test_p2_contract_rejects_unapproved_workflows_and_missing_state_fields" time="0.002" /><testcase classname="tests.unit.test_runtime_models" name="test_team_decision_workflow_round_trips_without_changing_existing_workflows" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_p2_persistence_redacts_process_path_and_rejects_absolute_source_path" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_p2_policy_and_terminal_error_contracts" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_paused_requires_interrupt" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_running_must_not_have_interrupt" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_completed_requires_result_ref" time="0.006" /><testcase classname="tests.unit.test_runtime_models" name="test_runtime_state_failed_or_stale_requires_error" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_state_transition_validation" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_run_request_validation" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_run_status_summary" time="0.001" /><testcase classname="tests.unit.test_runtime_models" name="test_readonly_policy_enforcement" time="0.001" /><testcase classname="tests.unit.test_p83_fake_model_loop" name="test_model_actions_not_python_order_drive_tool_sequence_and_observation_context" time="0.017" /><testcase classname="tests.unit.test_p83_fake_model_loop" name="test_tool_result_error_is_passed_to_next_model_turn_as_observation" time="0.006" /><testcase classname="tests.unit.test_p83_fake_model_loop" name="test_runtime_owns_max_steps_termination_when_model_never_finishes" time="0.009" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_durable_loop_persists_model_artifacts_and_tool_observation" time="0.086" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_from_durable_final_response_does_not_call_model_again" time="0.019" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_uses_latest_model_record_by_sequence_not_list_position" time="0.020" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_rejects_response_artifact_bound_to_another_turn" time="0.016" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_pending_checkpoint_failure_does_not_become_durable_observation" time="0.040" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_terminal_checkpoint_failure_does_not_continue_with_uncertain_observation" time="0.044" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_rejects_terminal_tool_result_identity_mismatch" time="0.020" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_does_not_replay_pending_tool" time="0.016" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_resume_from_completed_tool_result_reuses_observation_and_does_not_execute_tool" time="0.063" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_ambiguous_model_window_returns_safe_error_without_model_call" time="0.003" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_crash_windows_a_to_d_have_explicit_resume_decisions[request_durable-safe_to_invoke_model-0]" time="0.022" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_crash_windows_a_to_d_have_explicit_resume_decisions[request_sent-requires_verification-0]" time="0.028" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_crash_windows_a_to_d_have_explicit_resume_decisions[response_obtained-requires_verification-1]" time="0.026" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_crash_windows_a_to_d_have_explicit_resume_decisions[response_durable-reuse_durable_model_response-1]" time="0.041" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_window_e_reuses_terminal_ledger_result_without_executor_replay" time="0.054" /><testcase classname="tests.unit.test_p84_durable_model_loop" name="test_same_input_with_different_observation_changes_fake_model_action" time="0.001" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_runtime_adapter_migrates_search_read_and_preserves_evidence_contract" time="0.200" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_runtime_adapter_projects_canonical_state_ledger" time="0.221" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_successful_empty_search_completes_without_retrieval_fallback" time="0.091" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_retrieval_agent_empty_search_returns_exact_m01_agent_result" time="0.094" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_model_executor_and_ledger_receive_identical_business_arguments" time="0.340" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_search_failure_is_recorded_and_coordinator_fallback_remains_visible" time="0.109" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_read_failure_is_not_silently_swallowed" time="0.178" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_model_facing_read_requires_a_searched_evidence_id" time="0.104" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_runtime_binding_preserves_stale_hash_validation" time="0.075" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_reused_search_checks_source_hash_before_skipping_executor" time="0.071" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_migrated_runtime_keeps_prechecks_before_executor_and_budget" time="0.002" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_whitespace_only_read_ref_is_rejected_before_policy_and_executor" time="0.002" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_invalid_scope_path_is_rejected_before_budget_and_executor[7]" time="0.002" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_invalid_scope_path_is_rejected_before_budget_and_executor[../secret]" time="0.003" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_invalid_scope_path_is_rejected_before_budget_and_executor[a\\b]" time="0.003" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_invalid_scope_path_is_rejected_before_budget_and_executor[C:\\outside]" time="0.003" /><testcase classname="tests.integration.test_retrieval_tool_runtime" name="test_invalid_decision_memory_as_of_is_rejected_before_budget_and_executor" time="0.003" /><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace" time="0.305"><failure message="AssertionError: assert 'failed' == 'completed'&#10;  &#10;  - completed&#10;  + failed">m11_root = WindowsPath('$CHECKOUT/.tmp/m11-5495ebb6aaa64391a3647c75ca750a4a')
+
+    def test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace(m11_root):
+        environment = _environment(m11_root)
+        model = _mps_model()
+        engine = _engine(environment, model, checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-frozen-mps")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None and status.result_ref
+        result = _result(environment["root"], status.run_id)
+
+&gt;       assert status.status == state.status == result["status"] == "completed"
+E       AssertionError: assert 'failed' == 'completed'
+E
+E         - completed
+E         + failed
+
+tests\integration\test_m11_team_decision_vertical_slice.py:250: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_fabricated_team_decision_evidence_fails_the_outer_workflow" time="0.289"><failure message="AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISION_CONTRACT_ERROR'&#10;  &#10;  - TEAM_DECISION_CONTRACT_ERROR&#10;  + TOOL_INVALID_ARGUMENTS">m11_root = WindowsPath('$CHECKOUT/.tmp/m11-27ae6a471a7a49109f6e28acbd8721c5')
+
+    def test_fabricated_team_decision_evidence_fails_the_outer_workflow(m11_root):
+        environment = _environment(m11_root)
+        engine = _engine(environment, _mps_model(fabricated_ref=True), checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-fabricated")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None
+        result = _result(environment["root"], status.run_id)
+        events = TraceReader(environment["root"] / "traces").read_events(status.run_id)
+
+        assert status.status == state.status == result["status"] == "failed"
+        assert status.result_ref and state.result_ref == status.result_ref
+&gt;       assert state.error.code == result["error"]["code"] == "TEAM_DECISION_CONTRACT_ERROR"
+E       AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISION_CONTRACT_ERROR'
+E
+E         - TEAM_DECISION_CONTRACT_ERROR
+E         + TOOL_INVALID_ARGUMENTS
+
+tests\integration\test_m11_team_decision_vertical_slice.py:279: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_evidence_review_failure_cannot_publish_completed_workflow" time="0.289"><failure message="AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISIO...REVIEW_FAILED'&#10;  &#10;  - TEAM_DECISION_EVIDENCE_REVIEW_FAILED&#10;  + TOOL_INVALID_ARGUMENTS">m11_root = WindowsPath('$CHECKOUT/.tmp/m11-3da13170d5d1436a844b6b6ab896b69a')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001CA25B45480&gt;
+
+    def test_team_decision_evidence_review_failure_cannot_publish_completed_workflow(m11_root, monkeypatch):
+        environment = _environment(m11_root)
+        monkeypatch.setattr(
+            RuntimeAgentAdapter,
+            "_validate_evidence",
+            lambda self, ref: {"status": "fail", "reason": "synthetic_review_failure", "ref": ref},
+        )
+        engine = _engine(environment, _mps_model(), checkpointer=InMemoryCheckpointer())
+
+        status = _start(engine, environment, "m11-review-failure")
+        state = engine.checkpointer.get_latest(status.thread_id)
+        assert state is not None
+        result = _result(environment["root"], status.run_id)
+
+        assert status.status == state.status == result["status"] == "failed"
+&gt;       assert state.error.code == "TEAM_DECISION_EVIDENCE_REVIEW_FAILED"
+E       AssertionError: assert 'TOOL_INVALID_ARGUMENTS' == 'TEAM_DECISIO...REVIEW_FAILED'
+E
+E         - TEAM_DECISION_EVIDENCE_REVIEW_FAILED
+E         + TOOL_INVALID_ARGUMENTS
+
+tests\integration\test_m11_team_decision_vertical_slice.py:300: AssertionError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools" time="0.279"><failure message="TypeError: 'NoneType' object is not subscriptable">m11_root = WindowsPath('$CHECKOUT/.tmp/m11-228bc8d8be284f6c83337a400445f4da')
+
+    def test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools(m11_root):
+        fresh_environment = _environment(m11_root / "fresh")
+        fresh_model = _mps_model()
+        fresh = _engine(fresh_environment, fresh_model, checkpointer=InMemoryCheckpointer())
+        fresh_status = _start(fresh, fresh_environment, "m11-fresh")
+        fresh_state = fresh.checkpointer.get_latest(fresh_status.thread_id)
+        assert fresh_state is not None
+&gt;       fresh_result = _result(fresh_environment["root"], fresh_status.run_id)["result"]["team_decision"]
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests\integration\test_m11_team_decision_vertical_slice.py:312: TypeError</failure></testcase><testcase classname="tests.integration.test_m11_team_decision_vertical_slice" name="test_team_decision_cold_resume_revalidates_a_durable_final" time="0.373"><failure message="Failed: DID NOT RAISE &lt;class 'test_m11_team_decision_vertical_slice.ProcessCrash'&gt;">m11_root = WindowsPath('$CHECKOUT/.tmp/m11-93cad8915523436f9f4ebd49ba98fd68')
+
+    def test_team_decision_cold_resume_revalidates_a_durable_final(m11_root):
+        environment = _environment(m11_root)
+        before = _mps_model(fabricated_ref=True)
+        first = _engine(
+            environment,
+            before,
+            checkpointer=CrashOnDurableFinal(environment["root"] / "checkpoints"),
+        )
+&gt;       with pytest.raises(ProcessCrash):
+E       Failed: DID NOT RAISE &lt;class 'test_m11_team_decision_vertical_slice.ProcessCrash'&gt;
+
+tests\integration\test_m11_team_decision_vertical_slice.py:364: Failed</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_complete_final_is_accepted_and_grounded" time="0.459" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_search_tool_result_final_missing_required_nested_field_fails_closed" time="0.435" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[False]" time="0.417" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_reviewer[True]" time="0.389" /><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">run_id = 'P14-ALIAS-A'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_real_final_replay0')
+
+    @pytest.mark.parametrize("run_id", ["P14-ALIAS-A", "P14-ALIAS-B"])
+    def test_phase14_real_final_replays_through_runtime_and_reviewer(run_id: str, tmp_path: Path):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:347:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-ALIAS-A/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">run_id = 'P14-ALIAS-B'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_real_final_replay1')
+
+    @pytest.mark.parametrize("run_id", ["P14-ALIAS-A", "P14-ALIAS-B"])
+    def test_phase14_real_final_replays_through_runtime_and_reviewer(run_id: str, tmp_path: Path):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:347:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-ALIAS-B/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_legacy_final_replay_remains_compatible" time="0.006"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_cn2_legacy_final_0')
+
+    def test_phase14_cn2_legacy_final_replay_remains_compatible(
+        tmp_path: Path,
+    ) -&gt; None:
+&gt;       observed, vault, index = _phase14_inputs("P14-CN2")
+
+tests\integration\test_team_decision_final_contract_communication.py:380:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_cn2_typed_claims_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001CA25B45E00&gt;
+
+    def test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -&gt; None:
+        from linkloom.agents import team_decision
+
+&gt;       observed, vault, index = _phase14_inputs("P14-CN2")
+
+tests\integration\test_team_decision_final_contract_communication.py:403:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'">run_id = 'P14-ALIAS-A', mutation = 'wrong_owner'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_runtime_reviewer_0')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-ALIAS-A/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-A\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'">run_id = 'P14-ALIAS-B', mutation = 'wrong_owner'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_runtime_reviewer_1')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-ALIAS-B/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-ALIAS-B\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'wrong_owner'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_runtime_reviewer_2')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]" time="0.007"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'reverse_relation'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_runtime_reviewer_3')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_team_decision_final_contract_communication" name="test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]" time="0.008"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'">run_id = 'P14-CN2', mutation = 'wrong_date'
+tmp_path = WindowsPath('$CHECKOUT/work/reviewed-regression-03/test_phase14_runtime_reviewer_4')
+
+    @pytest.mark.parametrize(
+        ("run_id", "mutation"),
+        [
+            ("P14-ALIAS-A", "wrong_owner"),
+            ("P14-ALIAS-B", "wrong_owner"),
+            ("P14-CN2", "wrong_owner"),
+            ("P14-CN2", "reverse_relation"),
+            ("P14-CN2", "wrong_date"),
+        ],
+    )
+    def test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date(
+        run_id: str, mutation: str, tmp_path: Path,
+    ):
+&gt;       observed, vault, index = _phase14_inputs(run_id)
+
+tests\integration\test_team_decision_final_contract_communication.py:452:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_team_decision_final_contract_communication.py:267: in _phase14_inputs
+    (base / "runs" / run_id / "observed.json").read_text(encoding="utf-8")
+$PYTHON_ENV\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+$PYTHON_ENV\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('$CHECKOUT/work/phase14_gemini/runs/P14-CN2/observed.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '$CHECKOUT\\work\\phase14_gemini\\runs\\P14-CN2\\observed.json'
+
+$PYTHON_ENV\Lib\pathlib\_local.py:537: FileNotFoundError</failure></testcase><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_cold_resume_continues_after_durable_prefix_without_replay[1]" time="0.204" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_cold_resume_continues_after_durable_prefix_without_replay[2]" time="0.229" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_terminal_ledger_reconstructs_missing_result_ref_without_replay" time="0.213" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_pending_middle_member_blocks_resume_and_keeps_c_unstarted" time="0.067" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_cold_resume_preserves_prior_complete_turns_before_resumed_proposal" time="0.306" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_reused_provider_id_across_turns_keeps_run_wide_ledger_and_result_identity" time="0.226" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_cold_resume_rejects_tool_result_identity_mismatch_without_replay" time="0.090" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_cold_resume_rejects_result_payload_that_disagrees_with_ledger" time="0.086" /><testcase classname="tests.integration.test_runtime_v2_multi_action_resume" name="test_v2_terminal_final_is_reusable_without_provider_reinvocation" time="0.216" /><testcase classname="evals.m3_task_impact.tests.test_reporting" name="test_aggregate_uses_counts_excludes_unrun_and_keeps_scripted_separate" time="0.007" /><testcase classname="evals.m3_task_impact.tests.test_reporting" name="test_all_unrun_has_no_business_scores" time="0.001" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_default_does_not_load_gold_or_claim_execution" time="0.008" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_scripted_target_really_reads_sources_and_scores_separately" time="0.011" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_agent_request_and_tools_only_expose_public_material" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_correct_answer_without_source_execution_does_not_count_as_run" time="0.006" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_input_or_execution_receipt_tampering_is_not_evaluated" time="0.011" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_executor_error_preserves_partial_trace_and_separate_failure_stage" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_no_holdout_execution_and_unknown_ids_are_rejected" time="0.002" /><testcase classname="evals.m3_task_impact.tests.test_runner" name="test_malformed_execution_is_observable_instead_of_crashing_score" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_missing_agent_is_not_task_failure_or_success" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_exact_annotated_answer_scores_all_dimensions" time="0.024" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_missing_discovered_task_remains_in_recall_denominator" time="0.047" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_wrong_positive_proof_costs_fp_and_fn" time="0.027" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_false_merge_and_revision_on_different_tasks" time="0.021" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_tampered_evidence_never_earns_grounded_credit[workspace_id-other]" time="0.007" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_tampered_evidence_never_earns_grounded_credit[content_hash-0000000000000000000000000000000000000000000000000000000000000000]" time="0.007" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_tampered_evidence_never_earns_grounded_credit[artifact_version_id-wrong]" time="0.008" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_tampered_evidence_never_earns_grounded_credit[char_start-0]" time="0.006" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_tampered_evidence_never_earns_grounded_credit[quote-fake]" time="0.007" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_stale_source_does_not_publish_current_revision" time="0.069" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_conflict_requires_counterevidence_and_no_delta" time="0.046" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_unsupported_negative_and_authority_abstention" time="0.069" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_zero_delta_is_not_missing_revision_and_extra_claims_are_scored" time="0.046" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_duplicate_keys_are_contract_errors_instead_of_overwriting" time="0.005" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_gold_binding_does_not_follow_edited_source_with_same_locator" time="0.005" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_semantically_wrong_field_is_not_a_grounded_claim" time="0.005" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_boolean_is_not_a_valid_calendar_delta" time="0.022" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_symmetric_identity_is_one_merge_but_direction_is_scored" time="0.026" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_blocked_revision_also_requires_relation_assessments" time="0.019" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_current_discovery_excludes_readable_history_but_preserves_required_assessments" time="0.068" /><testcase classname="evals.m3_task_impact.tests.test_scoring" name="test_change_and_task_endpoints_remain_distinct_within_one_message" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_validation" name="test_all_annotations_have_exact_evidence_and_separate_splits" time="0.070" /><testcase classname="evals.m3_task_impact.tests.test_validation" name="test_runner_cannot_load_gold_even_during_scripted_execution" time="0.004" /><testcase classname="evals.m3_task_impact.tests.test_validation" name="test_static_test_never_scores_or_runs_holdout" time="0.062" /></testsuite></testsuites>

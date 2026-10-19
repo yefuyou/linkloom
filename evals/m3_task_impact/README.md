@@ -1,5 +1,12 @@
 # M3 跨文档任务影响评测准备
 
+M3-D 的新增离线适配入口为 `semantic_runtime_adapter.OfflineSemanticRuntimeAdapter`，
+通过本目录既有 `execute(request, tools)` 契约读取公开 Dev 来源并运行现有 Agent Runtime。
+`python scripts/evaluate_m3_semantic_integration.py --output work/m3d-reproduce-unique`
+生成实际调用、Checkpoint、Reviewer 与来源回执。D01 仅执行契约验证，因 M1 抽取和关系问题识别
+尚未接入而阻断，业务状态为 NOT_EVALUATED；其他 11 Dev 为 NOT_RUN。它没有调用 scorer，
+没有替换下述 SCRIPTED 演示、旧 Gold 或冻结指标，也没有新的真实 Provider 请求。
+
 16 个新的合成业务问题，**12 Dev + 4 保留**。全部 Gold 为作者可见的人工标注，
 不构成严格外部盲测，也不代表 M3 Agent 已实现。本目录只准备数据、适配契约和离线评分。
 基线：`af001a4d968676c30979254ac70dfb750e8f9ad6`。

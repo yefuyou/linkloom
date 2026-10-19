@@ -19,6 +19,7 @@ KNOWN_TOOL_IDS = frozenset({
     "search_decision_memory",
     "inspect_task_context",
     "query_task_relations",
+    "analyze_task_semantics",
     "read_verified_note",
     "build_pair_signals",
     "validate_evidence",

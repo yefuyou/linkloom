@@ -50,13 +50,15 @@ class AgentRegistry:
                 f"Handoff from {from_agent_id} to {to_agent_id} is not allowed; only coordinator may delegate."
             )
 
-def create_default_registry(*, include_decision_memory: bool = False, task_relations: bool = False) -> AgentRegistry:
+def create_default_registry(*, include_decision_memory: bool = False, task_relations: bool = False, task_semantics: bool = False) -> AgentRegistry:
     registry = AgentRegistry()
     retrieval_capabilities = ["search_notes", "read_verified_note"]
     if include_decision_memory:
         retrieval_capabilities.append("search_decision_memory")
     if task_relations:
         retrieval_capabilities = ["inspect_task_context", "query_task_relations"]
+        if task_semantics:
+            retrieval_capabilities.append("analyze_task_semantics")
     workflows = ["ask", "connect", "team_decision", "task_relations"] if task_relations else ["ask", "connect", "team_decision"]
     registry.register(AgentIdentity(
         agent_id="coordinator",

@@ -1,0 +1,1478 @@
+{
+  "case_id": "revision",
+  "execution_kind": "REPLAY",
+  "runtime_status": "completed",
+  "investigation_status": "PENDING_SEMANTIC_REVIEW",
+  "outer_model": {
+    "kind": "FAKE",
+    "calls": 4,
+    "budget": {
+      "policy_version": "p2-readonly-v1",
+      "write_capability": false,
+      "network_capability": false,
+      "max_steps": 4,
+      "max_provider_requests": 4
+    },
+    "records": [
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:1",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 1,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:1:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 1,
+            "task_id": "task_38d25355",
+            "tool_id": "inspect_task_context"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "3e32ce88b11501d14c995632f2b22cb3530b760ee1c2d14a92c626ca23e3f11c",
+        "response_sha256": "2c14c0544ca40dc1e41a312a3f34b4405dcafb0a0b53fc20f67455a58e358b22",
+        "observation_sha256": "d24d5fbe11c2f8ac3a06dd39bb23be7d8cf142d5a94ac17b02689446e7a5e89a",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:2",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 2,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "include_history": true,
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:2:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 2,
+            "task_id": "task_38d25355",
+            "tool_id": "query_task_relations"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "73886484e010d14acb850cbacdd796c9a24be8d9bc3e12cfb9541224f6a9deaf",
+        "response_sha256": "4fe422c190e0e79d9a7c3e494a689c97541fba9ae45e17a14d0119633cdd44c0",
+        "observation_sha256": "bb7df568af1932c76b5df2df3e14be92ef080ee8b5261e123d2e91e5d2fc0331",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:3",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 3,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "investigation_id": "investigation",
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 3,
+            "task_id": "task_38d25355",
+            "tool_id": "analyze_task_semantics"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "d597f074460d15567ddb644dc41df7a7b7aff3000cd9550ac7e2d71e003bdaa6",
+        "response_sha256": "ff278f49d43893a2c5cfc152e2eaa12d3ecdb81e018a24433d84d2b5c5089846",
+        "observation_sha256": "2791da23ce2bf95d3479f8d3b8750fb6b70cf0815cec2c630bd7cb16522d0355",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:4",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 4,
+        "status": "completed",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/response.json",
+        "normalized_action": {
+          "final_answer": "{\"context_call_id\": \"run_p4_8c67e772a5cb:turn:1:tool\", \"relations_call_id\": \"run_p4_8c67e772a5cb:turn:2:tool\", \"semantic_call_id\": \"run_p4_8c67e772a5cb:turn:3:tool\"}",
+          "kind": "final",
+          "tool_call": null
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "f8e2ddcee85496922a6b3120384b355fb242cd14c32a5e4fafdd3ae09e074e79",
+        "response_sha256": "f257da82627b07ebdef55ddb1ba9629f88cf7465386f85b644a683321e68c4b6",
+        "observation_sha256": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      }
+    ]
+  },
+  "inner_model": {
+    "adapter_requests": 1,
+    "cost_usd": null,
+    "imported_usage": {
+      "duration_ms": 7766.021,
+      "input_tokens": 3316,
+      "output_tokens": 413,
+      "total_tokens": 3729
+    },
+    "kind": "REPLAY",
+    "new_billable_cost_usd": 0.0,
+    "new_live_provider_requests": 0,
+    "original_receipt": {
+      "execution_kind": "REPLAY",
+      "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+      "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+      "original_case_id": "revision",
+      "original_request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+      "original_response_sha256_imported": "9b62c817d4ccb768462e988b602b7907126ba512e1c14e3a5635ebb1d328035d",
+      "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+      "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+      "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+    },
+    "provider_request_id": null,
+    "provider_response_id": "MPLUatqzGu36ytMPsOCB-AE",
+    "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+    "reserved_requests": 1,
+    "response_sha256": "1a7c9786f66e84eec632f854b71d771dfd0293e51a2e1d351db6b634a7bb65a6"
+  },
+  "proposals": [
+    {
+      "predicate": "SAME_TASK",
+      "verdict": "SUPPORTED",
+      "stage": "MODEL_PROPOSED",
+      "evidence": "EVIDENCE_VALID",
+      "coverage": {
+        "cited_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+          "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+        ],
+        "cited_source_versions": [
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+        ],
+        "missing_source_versions": [],
+        "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+        "required_source_versions": [
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+        ],
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "COMPLETE"
+      },
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "publishable": false,
+      "comparison": null
+    },
+    {
+      "predicate": "REVISES_PLAN",
+      "verdict": "SUPPORTED",
+      "stage": "MODEL_PROPOSED",
+      "evidence": "EVIDENCE_VALID",
+      "coverage": {
+        "cited_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+          "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+        ],
+        "cited_source_versions": [
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+        ],
+        "missing_source_versions": [],
+        "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+        "required_source_versions": [
+          "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+          "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+        ],
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "COMPLETE"
+      },
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "publishable": false,
+      "comparison": {
+        "conditional_on_model_semantics": true,
+        "delta_calendar_days": 4,
+        "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+        "new_deadline": {
+          "bound": "BEFORE",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "value": "2026-12-14"
+        },
+        "old_deadline": {
+          "bound": "BEFORE",
+          "precision": "DAY",
+          "role": "TASK_DEADLINE",
+          "value": "2026-12-10"
+        },
+        "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+        "publishable": false,
+        "semantic_status": "NOT_EVALUATED",
+        "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+        "status": "COMPUTABLE"
+      }
+    }
+  ],
+  "reviewer": {
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "created_at": "2026-10-19T04:51:54.610444+00:00",
+    "decision": "evidence_sufficient",
+    "human_approval_required": false,
+    "reason": "All validation passed",
+    "review_id": "review_e3846c15",
+    "reviewer_agent_id": "reviewer_agent",
+    "subject_refs": []
+  },
+  "readonly": {
+    "source_hashes_before": {
+      "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+      "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450"
+    },
+    "source_hashes_after": {
+      "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+      "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450"
+    },
+    "synthetic_anchor_unchanged": true,
+    "p4_created": false
+  },
+  "checkpoint": {
+    "run_id": "run_p4_8c67e772a5cb",
+    "thread_id": "thread_p4_efb31d5560d1",
+    "status": "completed",
+    "model_executions": [
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:1",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 1,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_1/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:1:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 1,
+            "task_id": "task_38d25355",
+            "tool_id": "inspect_task_context"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "3e32ce88b11501d14c995632f2b22cb3530b760ee1c2d14a92c626ca23e3f11c",
+        "response_sha256": "2c14c0544ca40dc1e41a312a3f34b4405dcafb0a0b53fc20f67455a58e358b22",
+        "observation_sha256": "d24d5fbe11c2f8ac3a06dd39bb23be7d8cf142d5a94ac17b02689446e7a5e89a",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:2",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 2,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_2/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "include_history": true,
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:2:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 2,
+            "task_id": "task_38d25355",
+            "tool_id": "query_task_relations"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "73886484e010d14acb850cbacdd796c9a24be8d9bc3e12cfb9541224f6a9deaf",
+        "response_sha256": "4fe422c190e0e79d9a7c3e494a689c97541fba9ae45e17a14d0119633cdd44c0",
+        "observation_sha256": "bb7df568af1932c76b5df2df3e14be92ef080ee8b5261e123d2e91e5d2fc0331",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:3",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 3,
+        "status": "tool_result_durable",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/response.json",
+        "normalized_action": {
+          "final_answer": null,
+          "kind": "tool_call",
+          "tool_call": {
+            "agent_id": "retrieval_agent",
+            "arguments": {
+              "investigation_id": "investigation",
+              "workspace_id": "semantic-dev-revision"
+            },
+            "call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+            "run_id": "run_p4_8c67e772a5cb",
+            "sequence": 3,
+            "task_id": "task_38d25355",
+            "tool_id": "analyze_task_semantics"
+          }
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "d597f074460d15567ddb644dc41df7a7b7aff3000cd9550ac7e2d71e003bdaa6",
+        "response_sha256": "ff278f49d43893a2c5cfc152e2eaa12d3ecdb81e018a24433d84d2b5c5089846",
+        "observation_sha256": "2791da23ce2bf95d3479f8d3b8750fb6b70cf0815cec2c630bd7cb16522d0355",
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      },
+      {
+        "run_id": "run_p4_8c67e772a5cb",
+        "turn_id": "run_p4_8c67e772a5cb:turn:4",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "sequence": 4,
+        "status": "completed",
+        "request_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/request.json",
+        "tool_definition_snapshot_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/tools.json",
+        "observation_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_3/observation.json",
+        "response_ref": "model/run_p4_8c67e772a5cb/run_p4_8c67e772a5cb_turn_4/response.json",
+        "normalized_action": {
+          "final_answer": "{\"context_call_id\": \"run_p4_8c67e772a5cb:turn:1:tool\", \"relations_call_id\": \"run_p4_8c67e772a5cb:turn:2:tool\", \"semantic_call_id\": \"run_p4_8c67e772a5cb:turn:3:tool\"}",
+          "kind": "final",
+          "tool_call": null
+        },
+        "normalized_proposal": null,
+        "proposal_id": null,
+        "tool_result_refs": [],
+        "usage": {
+          "duration_ms": null,
+          "input_tokens": null,
+          "output_tokens": null,
+          "total_tokens": null
+        },
+        "provider_metadata": {
+          "adapter": "provider_neutral_fake"
+        },
+        "request_sha256": "f8e2ddcee85496922a6b3120384b355fb242cd14c32a5e4fafdd3ae09e074e79",
+        "response_sha256": "f257da82627b07ebdef55ddb1ba9629f88cf7465386f85b644a683321e68c4b6",
+        "observation_sha256": null,
+        "provider_request_id": null,
+        "provider_response_id": null,
+        "finish_reason": null,
+        "provider_error": null,
+        "response_origin": "legacy"
+      }
+    ],
+    "tool_ledger": [
+      {
+        "call_id": "run_p4_8c67e772a5cb:turn:1:tool",
+        "run_id": "run_p4_8c67e772a5cb",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "tool_id": "inspect_task_context",
+        "sequence": 1,
+        "status": "completed",
+        "arguments": {
+          "workspace_id": "semantic-dev-revision"
+        },
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_8c67e772a5cb:turn:1:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "inspect_task_context",
+          "value": {
+            "discovery": {
+              "candidates": [
+                {
+                  "authority": "SUPPORTING_ONLY",
+                  "candidate_id": "task_relation_candidate_v1_ff7c2e3e4e9fef5ecb90b0c198c2700b67d72010994ae415859abc8bad010f5f",
+                  "evidence": [
+                    {
+                      "char_end": 123,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "artifact_id": "update.md",
+                        "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                        "char_end": 123,
+                        "char_start": 32,
+                        "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "line_end": 1,
+                        "line_start": 1,
+                        "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                        "ordinal": 0,
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                        "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+                        "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "source_ref": "artifact://semantic-dev-revision/update.md",
+                        "workspace_id": "semantic-dev-revision"
+                      }
+                    },
+                    {
+                      "char_end": 72,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "artifact_id": "plan.md",
+                        "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                        "char_end": 72,
+                        "char_start": 32,
+                        "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                        "line_end": 1,
+                        "line_start": 1,
+                        "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                        "ordinal": 0,
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                        "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+                        "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                        "source_ref": "artifact://semantic-dev-revision/plan.md",
+                        "workspace_id": "semantic-dev-revision"
+                      }
+                    }
+                  ],
+                  "object": {
+                    "artifact_id": "plan.md",
+                    "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                    "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                    "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                    "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "phase": "DISCOVERED",
+                  "predicate_hint": "SAME_TASK",
+                  "priority": 100,
+                  "reason_codes": [
+                    "SCOPED_TASK_KEY"
+                  ],
+                  "relation_status": "UNCONFIRMED",
+                  "rule_version": "candidate-discovery/v1",
+                  "schema_version": "task-relation-candidate/v1",
+                  "subject": {
+                    "artifact_id": "update.md",
+                    "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                    "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "uncertainty": [
+                    "KEY_REUSE_NOT_EXCLUDED",
+                    "VERIFIER_REQUIRED"
+                  ]
+                },
+                {
+                  "authority": "SUPPORTING_ONLY",
+                  "candidate_id": "task_relation_candidate_v1_d0e1a2a668f93b45adb8b206296caafedb3e7b67502ecc72d10b40530668bf7d",
+                  "evidence": [
+                    {
+                      "char_end": 77,
+                      "char_start": 54,
+                      "quote": "请把plan.md中的工作认作本条的同一事项；",
+                      "role": "UNRESOLVED_REFERENCE",
+                      "span": {
+                        "artifact_id": "update.md",
+                        "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                        "char_end": 123,
+                        "char_start": 32,
+                        "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "line_end": 1,
+                        "line_start": 1,
+                        "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                        "ordinal": 0,
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                        "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+                        "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "source_ref": "artifact://semantic-dev-revision/update.md",
+                        "workspace_id": "semantic-dev-revision"
+                      }
+                    },
+                    {
+                      "char_end": 123,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "artifact_id": "update.md",
+                        "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                        "char_end": 123,
+                        "char_start": 32,
+                        "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "line_end": 1,
+                        "line_start": 1,
+                        "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                        "ordinal": 0,
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                        "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+                        "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                        "source_ref": "artifact://semantic-dev-revision/update.md",
+                        "workspace_id": "semantic-dev-revision"
+                      }
+                    },
+                    {
+                      "char_end": 72,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "artifact_id": "plan.md",
+                        "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                        "char_end": 72,
+                        "char_start": 32,
+                        "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                        "line_end": 1,
+                        "line_start": 1,
+                        "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                        "ordinal": 0,
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                        "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+                        "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                        "source_ref": "artifact://semantic-dev-revision/plan.md",
+                        "workspace_id": "semantic-dev-revision"
+                      }
+                    }
+                  ],
+                  "object": {
+                    "artifact_id": "plan.md",
+                    "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                    "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                    "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                    "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "phase": "DISCOVERED",
+                  "predicate_hint": "RELATED_TO",
+                  "priority": 95,
+                  "reason_codes": [
+                    "EXPLICIT_FILE_TASK_REFERENCE",
+                    "LEXICAL_OVERLAP_WITHIN_PROJECT",
+                    "PROJECT_SCOPE"
+                  ],
+                  "relation_status": "UNCONFIRMED",
+                  "rule_version": "candidate-discovery/v1",
+                  "schema_version": "task-relation-candidate/v1",
+                  "subject": {
+                    "artifact_id": "update.md",
+                    "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                    "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "uncertainty": [
+                    "PROJECT_COOCCURRENCE_ONLY",
+                    "REFERENCE_TARGET_REQUIRES_VERIFICATION",
+                    "UNQUALIFIED_FILE_REFERENCE",
+                    "VERIFIER_REQUIRED"
+                  ]
+                }
+              ],
+              "considered_candidates": 2,
+              "eligible_observations": 2,
+              "endpoint_fanout": {
+                "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700": 2,
+                "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d": 2
+              },
+              "generated_candidates": 3,
+              "input_counts": {
+                "artifact_rows": 2,
+                "context_signals": 0,
+                "current_workspace_artifacts": 2,
+                "observation_rows": 2,
+                "source_characters": 197
+              },
+              "limits": {
+                "max_artifacts": 64,
+                "max_candidates": 20,
+                "max_context_signals": 128,
+                "max_generated_candidates": 1000,
+                "max_observations": 128,
+                "max_per_observation": 10,
+                "max_source_chars": 500000
+              },
+              "max_endpoint_fanout": 2,
+              "rejected": [],
+              "returned_candidates": 2,
+              "truncated": false,
+              "truncation_reasons": []
+            },
+            "max_output_bytes": 32768,
+            "missing_context": [],
+            "observations": [
+              {
+                "observation": {
+                  "authority": "SUPPORTING_ONLY",
+                  "deadline": "2026-12-10",
+                  "deadline_precision": "DAY",
+                  "deadline_role": "TASK_DEADLINE",
+                  "deadline_text": "2026年12月10日",
+                  "description": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                  "event_time": "2026-12-01T01:00:00+00:00",
+                  "extraction_status": "EXTRACTED",
+                  "field_evidence": [
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 72,
+                      "char_start": 32,
+                      "field": "raw_text",
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 72,
+                      "char_start": 32,
+                      "field": "description",
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 35,
+                      "char_start": 32,
+                      "field": "owner",
+                      "quote": "我负责"
+                    },
+                    {
+                      "basis": "SPEAKER",
+                      "char_end": 30,
+                      "char_start": 28,
+                      "field": "owner",
+                      "quote": "许禾"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 39,
+                      "char_start": 35,
+                      "field": "project",
+                      "quote": "栖湾项目"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 71,
+                      "char_start": 57,
+                      "field": "deadline",
+                      "quote": "2026年12月10日前完成"
+                    }
+                  ],
+                  "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                  "owner": "许禾",
+                  "project": "栖湾项目",
+                  "provenance": {
+                    "artifact_id": "plan.md",
+                    "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                    "char_end": 72,
+                    "char_start": 32,
+                    "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                    "line_end": 1,
+                    "line_start": 1,
+                    "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                    "ordinal": 0,
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                    "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+                    "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                    "source_ref": "artifact://semantic-dev-revision/plan.md",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "raw_text": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                  "recorded_at": "2026-10-18T00:00:00+00:00",
+                  "relation_status": "UNCONFIRMED",
+                  "unknown_fields": [
+                    "vendor"
+                  ],
+                  "validation_issues": [],
+                  "validation_status": "PARTIAL",
+                  "vendor": null
+                },
+                "ref": {
+                  "artifact_id": "plan.md",
+                  "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                  "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                  "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57",
+                  "workspace_id": "semantic-dev-revision"
+                }
+              },
+              {
+                "observation": {
+                  "authority": "SUPPORTING_ONLY",
+                  "deadline": "2026-12-14",
+                  "deadline_precision": "DAY",
+                  "deadline_role": "TASK_DEADLINE",
+                  "deadline_text": "2026年12月14日",
+                  "description": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                  "event_time": "2026-12-02T01:00:00+00:00",
+                  "extraction_status": "EXTRACTED",
+                  "field_evidence": [
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 123,
+                      "char_start": 32,
+                      "field": "raw_text",
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 123,
+                      "char_start": 32,
+                      "field": "description",
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 35,
+                      "char_start": 32,
+                      "field": "owner",
+                      "quote": "我负责"
+                    },
+                    {
+                      "basis": "SPEAKER",
+                      "char_end": 30,
+                      "char_start": 28,
+                      "field": "owner",
+                      "quote": "许禾"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 39,
+                      "char_start": 35,
+                      "field": "project",
+                      "quote": "栖湾项目"
+                    },
+                    {
+                      "basis": "SOURCE_TEXT",
+                      "char_end": 109,
+                      "char_start": 95,
+                      "field": "deadline",
+                      "quote": "2026年12月14日前完成"
+                    }
+                  ],
+                  "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                  "owner": "许禾",
+                  "project": "栖湾项目",
+                  "provenance": {
+                    "artifact_id": "update.md",
+                    "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "char_end": 123,
+                    "char_start": 32,
+                    "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "line_end": 1,
+                    "line_start": 1,
+                    "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                    "ordinal": 0,
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                    "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+                    "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "source_ref": "artifact://semantic-dev-revision/update.md",
+                    "workspace_id": "semantic-dev-revision"
+                  },
+                  "raw_text": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                  "recorded_at": "2026-10-18T00:00:00+00:00",
+                  "relation_status": "UNCONFIRMED",
+                  "unknown_fields": [
+                    "vendor"
+                  ],
+                  "validation_issues": [],
+                  "validation_status": "PARTIAL",
+                  "vendor": null
+                },
+                "ref": {
+                  "artifact_id": "update.md",
+                  "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                  "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304",
+                  "workspace_id": "semantic-dev-revision"
+                }
+              }
+            ],
+            "observations_truncated": false,
+            "schema_version": "task-context/v1",
+            "semantic_proposals": {
+              "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "publishable": false,
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+            },
+            "workspace_id": "semantic-dev-revision"
+          }
+        },
+        "error": null,
+        "idempotency_key": null,
+        "created_at": "",
+        "updated_at": ""
+      },
+      {
+        "call_id": "run_p4_8c67e772a5cb:turn:2:tool",
+        "run_id": "run_p4_8c67e772a5cb",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "tool_id": "query_task_relations",
+        "sequence": 2,
+        "status": "completed",
+        "arguments": {
+          "include_history": true,
+          "workspace_id": "semantic-dev-revision"
+        },
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_8c67e772a5cb:turn:2:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "query_task_relations",
+          "value": {
+            "as_of": null,
+            "current_supported_in_snapshot": 0,
+            "evidence_spans": {},
+            "include_history": true,
+            "max_output_bytes": 49152,
+            "max_plans": 4,
+            "max_relations": 64,
+            "missing_context": [
+              "NO_RELATION_RECORDS"
+            ],
+            "observation_refs": {},
+            "observation_snapshots": {},
+            "plans": [],
+            "relations": [],
+            "returned_relations": 0,
+            "schema_version": "task-relations-query/v1",
+            "semantic_proposals": {
+              "consumer": "A SemanticProposer; host-owned complete raw source snapshot",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "publishable": false,
+              "semantic_status": "SEMANTIC_NOT_EVALUATED",
+              "status": "CONNECTED_PENDING_SEMANTIC_REVIEW"
+            },
+            "status": "NO_VERIFIED_RELATIONS",
+            "total_matching_relations": 0,
+            "truncated": false,
+            "workspace_id": "semantic-dev-revision"
+          }
+        },
+        "error": null,
+        "idempotency_key": null,
+        "created_at": "",
+        "updated_at": ""
+      },
+      {
+        "call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+        "run_id": "run_p4_8c67e772a5cb",
+        "task_id": "task_38d25355",
+        "agent_id": "retrieval_agent",
+        "tool_id": "analyze_task_semantics",
+        "sequence": 3,
+        "status": "completed",
+        "arguments": {
+          "investigation_id": "investigation",
+          "workspace_id": "semantic-dev-revision"
+        },
+        "result": {
+          "business_status": null,
+          "call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+          "error": null,
+          "status": "ok",
+          "tool_id": "analyze_task_semantics",
+          "value": {
+            "analysis_status": "EXECUTED",
+            "cache_hit": false,
+            "context_manifest": {
+              "errors": [],
+              "input_inventory": {
+                "display_lists_truncated": false,
+                "expected_observation_payloads": [
+                  "b116e4fea619b737f0bbc8db535e1f3582c2eef008ab5a9c4a1abbce93e43bd4",
+                  "d05eb48bbeec41c39943b8d95e67c964cb96b1704f1f0bd996c490806084f6d9"
+                ],
+                "expected_source_versions": [
+                  "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                ],
+                "inventory_complete": true,
+                "inventory_sha256": "0b047f73358539a8d6fcec955858f65cadd4a3109df9d9d4701918d5bac2ae1c",
+                "limits": {
+                  "max_allowed_chars": 12000,
+                  "max_artifacts": 32,
+                  "max_endpoints": 80,
+                  "max_input_bytes": 24000,
+                  "max_input_tokens": 32768,
+                  "max_observations": 64,
+                  "max_output_tokens": 8192,
+                  "max_proposals": 24
+                },
+                "observation_count": 2,
+                "observation_payloads": [
+                  "b116e4fea619b737f0bbc8db535e1f3582c2eef008ab5a9c4a1abbce93e43bd4",
+                  "d05eb48bbeec41c39943b8d95e67c964cb96b1704f1f0bd996c490806084f6d9"
+                ],
+                "revoked_evidence_refs": [],
+                "revoked_observation_ids": [],
+                "source_characters": 197,
+                "source_count": 2,
+                "source_parsing": [
+                  {
+                    "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                    "issue_count": 0,
+                    "issues": [],
+                    "issues_truncated": false,
+                    "status": "COMPLETE"
+                  },
+                  {
+                    "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "issue_count": 0,
+                    "issues": [],
+                    "issues_truncated": false,
+                    "status": "COMPLETE"
+                  }
+                ],
+                "source_versions": [
+                  "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                ],
+                "truncated": false,
+                "workspace_id": "semantic-dev-revision"
+              },
+              "inventory_complete": true,
+              "limits": {
+                "max_allowed_chars": 12000,
+                "max_artifacts": 32,
+                "max_endpoints": 80,
+                "max_input_bytes": 24000,
+                "max_input_tokens": 32768,
+                "max_observations": 64,
+                "max_output_tokens": 8192,
+                "max_proposals": 24
+              },
+              "observation_count": 2,
+              "revoked_evidence_refs": [],
+              "revoked_observation_ids": [],
+              "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+              "source_count": 2,
+              "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+              "source_versions": [
+                "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+              ],
+              "status": "READY",
+              "truncated": false,
+              "workspace_id": "semantic-dev-revision"
+            },
+            "errors": [],
+            "evidence_spans": {
+              "span_394e4a9114bd50d7d698dd04be6d3cc6d7c0c7c169a85f2f8f6722836bdbab1b": {
+                "artifact_id": "plan.md",
+                "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                "char_end": 72,
+                "char_start": 32,
+                "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "line_end": 1,
+                "line_start": 1,
+                "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                "ordinal": 0,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38",
+                "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "source_ref": "artifact://semantic-dev-revision/plan.md",
+                "workspace_id": "semantic-dev-revision"
+              },
+              "span_ff010cc6e4391d0171fd681a36a3faf2e0ccf9f2caf8a872d4a77fcf1a04c844": {
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                "char_end": 123,
+                "char_start": 32,
+                "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "line_end": 1,
+                "line_start": 1,
+                "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                "ordinal": 0,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4",
+                "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "source_ref": "artifact://semantic-dev-revision/update.md",
+                "workspace_id": "semantic-dev-revision"
+              }
+            },
+            "execution": {
+              "adapter_requests": 1,
+              "cost_usd": null,
+              "imported_usage": {
+                "duration_ms": 7766.021,
+                "input_tokens": 3316,
+                "output_tokens": 413,
+                "total_tokens": 3729
+              },
+              "kind": "REPLAY",
+              "new_billable_cost_usd": 0.0,
+              "new_live_provider_requests": 0,
+              "original_receipt": {
+                "execution_kind": "REPLAY",
+                "frozen_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+                "imported_from_commit": "bd5de920e4bcf1a76c12253c7001910552baf287",
+                "original_case_id": "revision",
+                "original_request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+                "original_response_sha256_imported": "9b62c817d4ccb768462e988b602b7907126ba512e1c14e3a5635ebb1d328035d",
+                "predictions_sha256": "e889e30fd371aaaa76c08886cb5d3d609bd86ed24dacbf86ceb8dff9af556bd1",
+                "source_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+                "verification": "COMMITTED_PUBLIC_OUTPUT; EXACT_REQUEST_SCHEMA_AND_SOURCE_SNAPSHOT; NOT_NEW_MODEL_EXECUTION"
+              },
+              "provider_request_id": null,
+              "provider_response_id": "MPLUatqzGu36ytMPsOCB-AE",
+              "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+              "reserved_requests": 1,
+              "response_sha256": "1a7c9786f66e84eec632f854b71d771dfd0293e51a2e1d351db6b634a7bb65a6"
+            },
+            "investigation_id": "investigation",
+            "invocation_id": "semantic_baee2b1079a5f380cabaee1543fa563149cd96f055e4d0b771831392e6a9c094",
+            "origin_tool_call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+            "outer_call_id": "run_p4_8c67e772a5cb:turn:3:tool",
+            "proposals": [
+              {
+                "actual_model_version": "gemini-3.8-flash",
+                "authority": "SUPPORTING_ONLY",
+                "changed_fields": [],
+                "counter_evidence": [],
+                "coverage": {
+                  "cited_evidence_refs": [
+                    "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+                  ],
+                  "cited_source_versions": [
+                    "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                  ],
+                  "missing_source_versions": [],
+                  "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                  "required_source_versions": [
+                    "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                  ],
+                  "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                  "status": "COMPLETE"
+                },
+                "displayable_as_model_analysis": true,
+                "evidence_status": "EVIDENCE_VALID",
+                "execution_status": "EXECUTED",
+                "missing_evidence": [],
+                "model_id": "gemini-3.8-flash",
+                "object": {
+                  "artifact_id": "plan.md",
+                  "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                  "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                  "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57",
+                  "workspace_id": "semantic-dev-revision"
+                },
+                "predicate": "SAME_TASK",
+                "prompt_version": "task-relation-semantics/v1",
+                "proposal_id": "semantic_proposal_v1_aa55b429b3664f6ed40cc9001497d0cbcd84056ea974099e289d0ea7a53f611f",
+                "proposed_verdict": "SUPPORTED",
+                "publishable": false,
+                "reason_codes": [
+                  "EXPLICIT_SAME_TASK"
+                ],
+                "release_status": "PENDING_SEMANTIC_REVIEW",
+                "schema": "task-semantic-proposal/v1",
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+                "source_validation": {
+                  "authority": "SUPPORTING_ONLY",
+                  "counter_evidence": [],
+                  "errors": [],
+                  "proposal_id": "semantic_proposal_v1_aa55b429b3664f6ed40cc9001497d0cbcd84056ea974099e289d0ea7a53f611f",
+                  "publishable": false,
+                  "semantic_status": "NOT_EVALUATED",
+                  "stage": "EVIDENCE_VALID",
+                  "supporting_evidence": [
+                    {
+                      "char_end": 72,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "span_ref": "span_394e4a9114bd50d7d698dd04be6d3cc6d7c0c7c169a85f2f8f6722836bdbab1b"
+                      }
+                    },
+                    {
+                      "char_end": 123,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "span_ref": "span_ff010cc6e4391d0171fd681a36a3faf2e0ccf9f2caf8a872d4a77fcf1a04c844"
+                      }
+                    }
+                  ],
+                  "validator_version": "task-semantic-evidence/v1"
+                },
+                "stage": "MODEL_PROPOSED",
+                "subject": {
+                  "artifact_id": "update.md",
+                  "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                  "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304",
+                  "workspace_id": "semantic-dev-revision"
+                },
+                "supporting_evidence": [
+                  {
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                    "span": {
+                      "span_ref": "span_394e4a9114bd50d7d698dd04be6d3cc6d7c0c7c169a85f2f8f6722836bdbab1b"
+                    }
+                  },
+                  {
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                    "span": {
+                      "span_ref": "span_ff010cc6e4391d0171fd681a36a3faf2e0ccf9f2caf8a872d4a77fcf1a04c844"
+                    }
+                  }
+                ]
+              },
+              {
+                "actual_model_version": "gemini-3.8-flash",
+                "authority": "SUPPORTING_ONLY",
+                "changed_fields": [
+                  "deadline"
+                ],
+                "comparison": {
+                  "conditional_on_model_semantics": true,
+                  "delta_calendar_days": 4,
+                  "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+                  "new_deadline": {
+                    "bound": "BEFORE",
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-12-14"
+                  },
+                  "old_deadline": {
+                    "bound": "BEFORE",
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-12-10"
+                  },
+                  "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+                  "publishable": false,
+                  "semantic_status": "NOT_EVALUATED",
+                  "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+                  "status": "COMPUTABLE"
+                },
+                "counter_evidence": [],
+                "coverage": {
+                  "cited_evidence_refs": [
+                    "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                    "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e"
+                  ],
+                  "cited_source_versions": [
+                    "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                  ],
+                  "missing_source_versions": [],
+                  "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+                  "required_source_versions": [
+                    "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                    "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291"
+                  ],
+                  "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                  "status": "COMPLETE"
+                },
+                "displayable_as_model_analysis": true,
+                "evidence_status": "EVIDENCE_VALID",
+                "execution_status": "EXECUTED",
+                "missing_evidence": [],
+                "model_id": "gemini-3.8-flash",
+                "object": {
+                  "artifact_id": "plan.md",
+                  "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                  "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+                  "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57",
+                  "workspace_id": "semantic-dev-revision"
+                },
+                "predicate": "REVISES_PLAN",
+                "prompt_version": "task-relation-semantics/v1",
+                "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+                "proposed_verdict": "SUPPORTED",
+                "publishable": false,
+                "reason_codes": [
+                  "EXPLICIT_PLAN_REVISION"
+                ],
+                "release_status": "PENDING_SEMANTIC_REVIEW",
+                "schema": "task-semantic-proposal/v1",
+                "semantic_status": "SEMANTIC_NOT_EVALUATED",
+                "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+                "source_validation": {
+                  "authority": "SUPPORTING_ONLY",
+                  "counter_evidence": [],
+                  "errors": [],
+                  "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+                  "publishable": false,
+                  "semantic_status": "NOT_EVALUATED",
+                  "stage": "EVIDENCE_VALID",
+                  "supporting_evidence": [
+                    {
+                      "char_end": 72,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "span_ref": "span_394e4a9114bd50d7d698dd04be6d3cc6d7c0c7c169a85f2f8f6722836bdbab1b"
+                      }
+                    },
+                    {
+                      "char_end": 123,
+                      "char_start": 32,
+                      "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                      "role": "RELATION_PROPOSAL",
+                      "span": {
+                        "span_ref": "span_ff010cc6e4391d0171fd681a36a3faf2e0ccf9f2caf8a872d4a77fcf1a04c844"
+                      }
+                    }
+                  ],
+                  "validator_version": "task-semantic-evidence/v1"
+                },
+                "stage": "MODEL_PROPOSED",
+                "subject": {
+                  "artifact_id": "update.md",
+                  "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+                  "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304",
+                  "workspace_id": "semantic-dev-revision"
+                },
+                "supporting_evidence": [
+                  {
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                    "span": {
+                      "span_ref": "span_394e4a9114bd50d7d698dd04be6d3cc6d7c0c7c169a85f2f8f6722836bdbab1b"
+                    }
+                  },
+                  {
+                    "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                    "span": {
+                      "span_ref": "span_ff010cc6e4391d0171fd681a36a3faf2e0ccf9f2caf8a872d4a77fcf1a04c844"
+                    }
+                  }
+                ]
+              }
+            ],
+            "publishable": false,
+            "result_artifact": {
+              "kind": "tool_result",
+              "ref": "semantic/b0942db1b1e934e88ffbd913/result.json",
+              "sha256": "96c2cdda8afa78f4d0e18c4d1ac05fc9bec5ac685217fd17b7ae150e4167df99",
+              "size_bytes": 11650
+            },
+            "schema_version": "task-semantic-analysis/v1",
+            "semantic_status": "SEMANTIC_NOT_EVALUATED",
+            "workspace_id": "semantic-dev-revision"
+          }
+        },
+        "error": null,
+        "idempotency_key": null,
+        "created_at": "",
+        "updated_at": ""
+      }
+    ],
+    "termination": {
+      "status": "completed",
+      "reason_code": "workflow_completed",
+      "reason": "Coordinator completed the model-driven workflow.",
+      "sequence": 31
+    }
+  },
+  "quality": "NOT_EVALUATED; script chooses outer tools; replay imports old public model output"
+}
