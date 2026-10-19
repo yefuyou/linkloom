@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-from linkloom.runtime.adaptive_planning import source_scope_violation
+from linkloom.semantic_ingestion.text_scopes import unquoted_text
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.ui.product import ProductApplicationError
 from linkloom.ui.task_investigation import ProductTaskSources
@@ -15,11 +15,11 @@ _RECORD_REFERENCE = re.compile(r'会议|消息|文档|原文|记录|\b(meetings?
 _GREETING = re.compile(r'[\s!！?？,.，。]*(?:(?:你好|您好|谢谢|hello|hi|hey|thanks|thank you)[\s!！?？,.，。]*)+', re.I)
 # Explicit commands/polite requests, not historical mentions of a change.
 # This is an operation boundary, never a positive semantic intent classifier.
-_CLAUSE = re.compile(r'[.;!?。；！？]|\b(?:and|then)\s+', re.I)
+_CLAUSE = re.compile(r'[.;!?。；！？]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
 _EN_POLITE = re.compile(r'^(?:(?:please|kindly|(?:can|could|would|will)\s+you|'
     r'i\s+(?:want|need)(?:\s+you)?\s+to|i[\x27’]d\s+like(?:\s+you)?\s+to)[,\s]+)+', re.I)
 _EN_WRITE = re.compile(
-    r'^(?:edit|modify|archive|update|complete|assign|reassign|cancel|close|reopen|remove|move|approve|reject)\s+|'
+    r'^(?:edit|modify|archive|update|complete|assign|reassign|cancel|close|reopen|remove|move|approve|reject|delete|rename|upload|download|email|send|save|write)\s+|'
     r'^(?:change|set)\s+(?!in\b|of\b|between\b|over\b|to\b)|'
     r'^finish\s+(?:(?:the|this|that|these|those|my|our|all)\s+)?tasks?\b|'
     r'^mark\s+(?:(?:the|this|that|these|those|my|our|all)\s+)?(?:tasks?|it)\b|'
@@ -28,12 +28,19 @@ _EN_WRITE = re.compile(
     r'.{0,120}\b(?:complete|completed|done)\b', re.I)
 _EN_REPORT = re.compile(r'^update\s+(?:me|us)\b', re.I)
 _ZH_POLITE = re.compile(r'^(?:(?:请[你问]?|烦请|麻烦你?|劳驾|帮我|替我|帮忙|我想|我要|可否|能否|能不能|可以帮我|能帮我)[，,\s]*)+')
-_ZH_ACTION = re.compile(r'编辑|修改|更新|归档|改成|改为|设置为?|设为|标记|标为|标成|完成|关闭|重开|取消|撤销|分配|指派|移动|移除|批准')
+_ZH_ACTION = re.compile(r'编辑|修改|更新|归档|改成|改为|设置为?|设为|标记|标为|标成|完成|关闭|重开|取消|撤销|分配|指派|移动|移除|批准|删除|重命名|发送|上传|下载|改写|保存修改')
 _ZH_HISTORY = re.compile(r'^(?:(?:为|成)?(?:已完成|完成))?(?:前|后|过|的|了)')
 _ZH_NOMINAL = re.compile(r'^(?:记录|内容|历史|情况|状态|时间|原因|依据|证据|差异|次数|日期|日志)')
 _ZH_READ_OPERATION = r'(?:列出来|列出|说明|比较|展示|解释|核对|查看|对比|查询)(?:一下|出来|给我|下)?[吧吗呢，,\s]*'
 _ZH_READ_END = re.compile(_ZH_READ_OPERATION + r'$')
 _ZH_READ_CHAIN = re.compile(_ZH_READ_OPERATION + r'(?:(?:并且|并|然后|再)' + _ZH_READ_OPERATION + r')*$')
+_FOREIGN_SCOPE = re.compile(r'\b(?:external|foreign|other|another|different|private)\s+workspace\b|'
+    r'\bworkspace\s+(?:outside|beta|other than)\b|跨工作区|其他工作区|外部工作区|别的工作区',re.I)
+_OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|policy|checks?|permissions?)\b|'
+    r'^(?:忽略|绕过).*(?:指令|规则|权限|校验)',re.I)
+_SECRET_COMMAND = re.compile(r'^(?:read|show|reveal|print|give|send|extract)\s+(?:(?:me|us)\s+)?(?:(?:the|your|our)\s+)?'
+    r'(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
+    r'^(?:读取|展示|显示|输出|告诉我|发给我)\s*(?:系统提示词|API[ _-]?key|密钥|口令|密码)',re.I)
 
 
 def _chinese_write_request(text):
@@ -58,7 +65,10 @@ def _write_request(query):
     for clause in _CLAUSE.split(query):
         text = clause.strip(' ,，')
         english = _EN_POLITE.sub('', text)
-        if ((_EN_WRITE.search(english) and not _EN_REPORT.match(english)) or _chinese_write_request(text)):
+        chinese = _ZH_POLITE.sub('',text)
+        if ((_EN_WRITE.search(english) and not _EN_REPORT.match(english)) or _chinese_write_request(text)
+                or _OVERRIDE_COMMAND.search(english) or _OVERRIDE_COMMAND.search(chinese)
+                or _SECRET_COMMAND.search(english) or _SECRET_COMMAND.search(chinese)):
             return True
     return False
 
@@ -69,10 +79,8 @@ def refers_to_records(query, *, relationships=False):
 
 
 def admission_restriction(query):
-    if source_scope_violation(query) or _write_request(query) or re.search(
-        r'\b(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|policy|checks?)\b|'
-        r'\b(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
-        r'忽略.*(?:指令|规则)|绕过.*(?:权限|校验)|系统提示词|密钥|口令|密码|发给我', query, re.I):
+    visible = unquoted_text(query)
+    if _FOREIGN_SCOPE.search(visible) or _write_request(visible):
         return ('INVESTIGATION_SCOPE_DENIED',
                 'Only read-only investigation of this workspace is supported; instructions cannot grant sources, tools or write access.')
     if _GREETING.fullmatch(query):

@@ -1,0 +1,21 @@
+{
+  "model_id": "gemini-3.8-flash",
+  "provider_id": "gemini",
+  "max_output_tokens": 3072,
+  "temperature": null,
+  "thinking_level": "low",
+  "max_attempts": 1,
+  "max_requests": 26,
+  "max_cost_usd": 3.0,
+  "reservation_usd": 0.079872,
+  "input_token_cap": 65536,
+  "billable_output_token_cap": 8192,
+  "input_price_ceiling_per_million": 0.75,
+  "output_price_ceiling_per_million": 3.75,
+  "max_wire_bytes": 49152,
+  "guard_id": "m3o-paired-ab/v1",
+  "arms": {
+    "A": null,
+    "B": "task-discovery-cross-message/v1"
+  }
+}

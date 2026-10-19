@@ -25,3 +25,18 @@ docs/requirements/m3-l-live-canary/evidence/** -text -whitespace
 # M3-N public data freeze and new offline evidence preserve exact byte hashes.
 docs/requirements/m3-n-task-discovery/data/** -text -whitespace
 docs/requirements/m3-n-task-discovery/evidence/** -text -whitespace
+docs/requirements/m3-o-quality-convergence/ab-v1/** -text -whitespace
+# Executable A/B freeze hashes must survive a fresh Windows checkout.
+src/linkloom/evaluation/task_profile_ab.py text eol=lf
+src/linkloom/evaluation/task_profile_score.py text eol=lf
+src/linkloom/semantic_ingestion/extraction.py text eol=lf
+src/linkloom/semantic_ingestion/task_observation_discovery.py text eol=lf
+src/linkloom/semantic_ingestion/task_discovery_veto.py text eol=lf
+src/linkloom/semantic_ingestion/task_observation.py text eol=lf
+src/linkloom/semantic_ingestion/text_scopes.py text eol=lf
+scripts/run_m3o_ab.py text eol=lf
+src/linkloom/semantic_ingestion/artifacts.py text eol=lf
+src/linkloom/semantic_ingestion/document_text.py text eol=lf
+src/linkloom/semantic_ingestion/timestamped_text.py text eol=lf
+src/linkloom/agents/model_adapter.py text eol=lf
+src/linkloom/agents/providers/gemini_api.py text eol=lf

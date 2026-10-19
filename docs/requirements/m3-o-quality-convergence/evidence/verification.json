@@ -1,0 +1,271 @@
+{
+  "baseline": "44a1f3b4a822d2e64a8e50cf6b826072e466badf",
+  "branch": "codex/linkloom-m3-o-quality-convergence",
+  "real_provider_requests": 0,
+  "real_count_tokens_requests": 0,
+  "REAL_MODEL_SEMANTIC_EFFECT": "NOT_EVALUATED",
+  "test_isolation": "Fake SDK / Mock / exact-request Replay; external sockets denied by scripts.evaluation_offline_plugin; loopback HTTP allowed.",
+  "batches": {
+    "a-accepted": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 13,
+      "seconds": 5.264,
+      "artifact": "work/m3-o/a-accepted.xml",
+      "sha256": "506d55e13738ccd6246a00e55e18e54c00ea2325b8a1f0d20a66fd1cd3f51fda"
+    },
+    "b-green": {
+      "tests": 92,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 92,
+      "seconds": 25.818,
+      "artifact": "work/m3-o/b-green.xml",
+      "sha256": "9c026627a83bafb5018ae4f3fefd623177c545244e7de74fcfe574a5eef31756"
+    },
+    "b-chain": {
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 70,
+      "seconds": 57.135,
+      "artifact": "work/m3-o/b-chain.xml",
+      "sha256": "3e044e2a0ee14e473bad41d68076d39f2392002ff14627d46795cf7a7bb2e826"
+    },
+    "c-green": {
+      "tests": 171,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 171,
+      "seconds": 10.295,
+      "artifact": "work/m3-o/c-green.xml",
+      "sha256": "b17c7dddc99c5933c3cbb724bfc1bcba5427b71338d182561a9dba7abe5e0195"
+    },
+    "c-http": {
+      "tests": 94,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 94,
+      "seconds": 47.594,
+      "artifact": "work/m3-o/c-http.xml",
+      "sha256": "faff12446c53ab6e6b7fcfe05b2c5e1c3d542e46acc4e11d2a087a8591ec6008"
+    },
+    "review-red": {
+      "tests": 17,
+      "failures": 6,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 11,
+      "seconds": 16.331,
+      "artifact": "work/m3-o/review-red.xml",
+      "sha256": "8fd4f39a32544b7a166dbd94d2ebb4481f503ec26702dfcba7d2cfb1d6522213"
+    },
+    "review-green": {
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 17,
+      "seconds": 9.662,
+      "artifact": "work/m3-o/review-green.xml",
+      "sha256": "3270f7ad28c2f074479894157ac63f1a3d5b5bd0ffb005ab166a2332de4cbead"
+    },
+    "mixed-red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "seconds": 3.965,
+      "artifact": "work/m3-o/mixed-red.xml",
+      "sha256": "1684ead062c530ca51ae90fdf5d24c30397fbc91b628b1e55a40b89ff9ae500a"
+    },
+    "mixed-green-final": {
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 34,
+      "seconds": 55.115,
+      "artifact": "work/m3-o/mixed-green-final.xml",
+      "sha256": "c13578842f9c4fc4329ed05d4676764d28ae54708bf887fcfd2533b67496fdcf"
+    },
+    "affected-final": {
+      "tests": 942,
+      "failures": 5,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 937,
+      "seconds": 277.598,
+      "artifact": "work/m3-o/affected-final.xml",
+      "sha256": "378dce87e6b1a91db3cd8d5c29b062ace3a14daf61dcd82cf68398ba73718951"
+    },
+    "affected-short-rerun": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 5,
+      "seconds": 18.473,
+      "artifact": "work/m3-o/affected-short-rerun.xml",
+      "sha256": "499fe56432979dbcf8b7a3a55e7b4441cadd8367041533a04a7d71805203ac7f"
+    },
+    "full-regression": {
+      "tests": 3102,
+      "failures": 241,
+      "errors": 4,
+      "skipped": 23,
+      "passed": 2834,
+      "seconds": 1424.411,
+      "artifact": "work/m3-o/full-regression.xml",
+      "sha256": "2173a181dc52f5973704e97aa86676690fc9f893e9c57802cf73a57b442361ea"
+    },
+    "environment-rerun": {
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 14,
+      "seconds": 3.919,
+      "artifact": "work/m3-o/environment-rerun.xml",
+      "sha256": "9834ed8416030f249936e06f2e6bd685c442bf405ebce23df51337e6c2f44678"
+    }
+  },
+  "overlapping_batches_are_not_summed": true,
+  "affected_scope": [
+    "tests/integration/test_unified_ask_flow.py",
+    "tests/integration/test_task_revisions_dev.py",
+    "tests/integration/test_task_relation_runtime.py",
+    "tests/integration/test_task_relation_lifecycle_dev.py",
+    "tests/integration/test_task_relation_authority_readback.py",
+    "tests/integration/test_task_relations_p2_dev.py",
+    "tests/integration/test_task_observation_flow.py",
+    "tests/integration/test_task_identity_dev.py",
+    "tests/integration/test_semantic_runtime_integration.py",
+    "tests/integration/test_semantic_runtime_boundaries.py",
+    "tests/integration/test_semantic_review_guards.py",
+    "tests/integration/test_semantic_recorded_runtime.py",
+    "tests/integration/test_semantic_dev_contract.py",
+    "tests/integration/test_m3o_host_operations.py",
+    "tests/integration/test_m3o_admission_flow.py",
+    "tests/integration/test_m3m_admission.py",
+    "tests/integration/test_m3l_http.py",
+    "tests/integration/test_m3l_canary.py",
+    "tests/integration/test_m3i_product_chain.py",
+    "tests/integration/test_m3i_http.py",
+    "tests/integration/test_context_runtime_integration.py",
+    "tests/integration/test_context_runtime_failures_resume.py",
+    "tests/unit/test_context_runtime_review_guards.py",
+    "tests/unit/test_context_recovery_v1.py",
+    "tests/unit/test_canary_ledger.py",
+    "tests/unit/test_canary_host.py",
+    "tests/unit/test_canary_freeze.py",
+    "tests/unit/test_ask_admission.py",
+    "tests/unit/test_investigation_planner_quality.py",
+    "tests/unit/test_unified_ask.py",
+    "tests/unit/test_tool_ledger_runtime.py",
+    "tests/unit/test_task_semantic_smoke.py",
+    "tests/unit/test_task_revision_compatibility.py",
+    "tests/unit/test_task_revision_comparison.py",
+    "tests/unit/test_task_relation_tools.py",
+    "tests/unit/test_task_relation_store.py",
+    "tests/unit/test_task_relation_semantic.py",
+    "tests/unit/test_task_relation_question_planner.py",
+    "tests/unit/test_task_relation_query.py",
+    "tests/unit/test_task_relation_candidates.py",
+    "tests/unit/test_task_relations_p2.py",
+    "tests/unit/test_task_observation_discovery.py",
+    "tests/unit/test_task_observation.py",
+    "tests/unit/test_task_investigation_host.py",
+    "tests/unit/test_task_identity_resolution.py",
+    "tests/unit/test_task_discovery_m3n.py",
+    "tests/unit/test_task_discovery_m3j.py",
+    "tests/unit/test_task_discovery_acceptance.py",
+    "tests/unit/test_task_change_authority.py",
+    "tests/unit/test_task_candidate_evaluation.py",
+    "tests/unit/test_semantic_invocation.py",
+    "tests/unit/test_semantic_ingestion_prompt_contract.py",
+    "tests/unit/test_semantic_ingestion_migration.py",
+    "tests/unit/test_semantic_ingestion_materialization.py",
+    "tests/unit/test_semantic_ingestion_candidates.py",
+    "tests/unit/test_semantic_ingestion_artifacts.py",
+    "tests/unit/test_semantic_context_builder.py",
+    "tests/unit/test_runtime_checkpoint.py",
+    "tests/unit/test_m3o_regex_scope.py",
+    "tests/unit/test_m3o_profile_ab.py"
+  ],
+  "affected_interpretation": "942 selected tests: 937 initially passed; all five MODEL_ARTIFACT_WRITE_FAILED cases passed after short Windows temp-root rerun. Final mixed-plan code change separately passed its affected Host/tool/product checks.",
+  "full_suite_interpretation": "Full suite is NOT green. Four collection errors are retained. 14 environment failures passed on exact-node rerun; 227 failures remain. Categories are diagnostic triage, not proof that every retained failure predates this change. No legacy assertions, Gold, scripts, recorded responses or ledgers were rewritten to hide failures.",
+  "historical_default_replay": {
+    "matched": 4,
+    "expected": 5,
+    "predicted": 5,
+    "task_recall": 0.8,
+    "task_precision": 0.8,
+    "correct_fields": 24,
+    "field_count": 24
+  },
+  "historical_exact_requests": {
+    "five-messages": true,
+    "same-project-distinct-tasks": true,
+    "discussion-and-cancelled": true,
+    "paid_calls": 0,
+    "continuation_candidate_coverage": [
+      {
+        "artifact_id": "five-messages",
+        "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8de207d6655f045d326b868050a7e52a17605e222aa8b0ca1d8a7fd221f47c16",
+        "verified_description_parts": [
+          "索引迁移"
+        ]
+      },
+      {
+        "artifact_id": "five-messages",
+        "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_04f86e3d938e87de96bca27c84d0256fc511260281423f76cc62360842ad6e5d",
+        "verified_description_parts": []
+      },
+      {
+        "artifact_id": "five-messages",
+        "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a6fd1266a0d7b18e334e78eb11979aaed0707bdc523af053180485ae742ed7d5",
+        "verified_description_parts": [
+          "提交容量报告"
+        ]
+      },
+      {
+        "artifact_id": "five-messages",
+        "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_519cb4964afb381317839207ca810970c734bf2876cd0bd71b15d3c0c00a105d",
+        "verified_description_parts": []
+      },
+      {
+        "artifact_id": "five-messages",
+        "artifact_version_id": "artifact_v1_742f1d5bf329f54b691ebc5669b6ef1b4007c0f521eb379d75f048240cf097ad",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_129786a23a5d8f3d0ee23d4148e65ece2e51313e6d701e16728e2b763bebc9dd",
+        "verified_description_parts": []
+      }
+    ]
+  },
+  "static_checks": {
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "ruff": "UNAVAILABLE_NOT_INSTALLED"
+  },
+  "protected_paths": "No diff to M3-L Canary package/ledger, M3-N frozen data/evidence, original F fixtures or historical responses/scores.",
+  "independent_review": {
+    "agent": "m3o_independent_review",
+    "model": "gpt-5.6-luna",
+    "reasoning": "max",
+    "first": "REQUEST_CHANGES: 2 P1 / 3 P2",
+    "second": "REQUEST_CHANGES: 1 additional P2",
+    "final": "PASS: all six in-scope P1/P2 closed"
+  },
+  "completion_scope": "Offline engineering acceptance only; no LIVE authorization, no real semantic quality or real product business completion claim."
+}

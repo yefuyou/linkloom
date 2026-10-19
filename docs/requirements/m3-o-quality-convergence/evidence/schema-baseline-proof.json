@@ -1,0 +1,7 @@
+{
+  "baseline": "44a1f3b4a822d2e64a8e50cf6b826072e466badf",
+  "current_schema_equals_baseline": true,
+  "legacy_snapshot_equals_baseline": false,
+  "properties_missing_in_legacy_snapshot": [],
+  "provider_adapter_diff": ""
+}

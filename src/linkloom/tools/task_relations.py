@@ -6,7 +6,7 @@ persisted and no writable relation store is opened.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from datetime import date
 import json
 from pathlib import Path
@@ -92,19 +92,28 @@ class TaskContextSnapshot:
 
 class TaskRelationTools:
     def __init__(self, workspace_id: str, snapshot_provider: Callable[[], TaskContextSnapshot],
-                 *, relation_path: Path | str | None = None, semantic_analysis=None):
+                 *, relation_path: Path | str | None = None, semantic_analysis=None, inspection_plan=None,
+                 execution_blocked_reason=None):
         if not isinstance(workspace_id, str) or not workspace_id.strip() or not callable(snapshot_provider):
             raise ValueError("explicit workspace and snapshot provider required")
         self.workspace_id = workspace_id
         self._snapshot_provider = snapshot_provider
         self._relation_path = Path(relation_path) if relation_path is not None else None
         self.semantic_analysis = semantic_analysis
+        self.inspection_plan = inspection_plan
+        self.execution_blocked_reason = execution_blocked_reason
+
+    @property
+    def planned_inspections(self):
+        return tuple(s for s in self.inspection_plan.ready_steps
+                     if s.kind == 'inspect' and s.time_scope == ('', '')) if self.inspection_plan else ()
 
     def for_run(self, run_id, artifact_store, question):
         if self.semantic_analysis is None:
             return self
         return TaskRelationTools(self.workspace_id, self._snapshot_provider, relation_path=self._relation_path,
-            semantic_analysis=self.semantic_analysis.bind(run_id, artifact_store, question))
+            semantic_analysis=self.semantic_analysis.bind(run_id, artifact_store, question),
+            inspection_plan=self.inspection_plan, execution_blocked_reason=self.execution_blocked_reason)
 
     def context_sources(self):
         """Host-only current source read; no model paths or cached currentness."""
@@ -112,6 +121,56 @@ class TaskRelationTools:
         semantics = self.semantic_analysis
         owner = getattr(semantics, "owner", semantics)
         return raw, owner.snapshot_provider() if owner is not None else None
+
+    def inspection_receipts_from_record(self, record):
+        """Host bridge for a later G replan, using the actual durable tool row.
+
+        No model-supplied receipt is an input to this method. The existing planner
+        still requires its own result_verifier and revalidates current bindings.
+        """
+        from linkloom.runtime.models import ToolExecutionRecord
+        from linkloom.semantic_ingestion.task_relation_question_models import VerifiedStepResult
+        if (not isinstance(record, ToolExecutionRecord) or record.tool_id != 'inspect_task_context'
+                or record.status != 'completed' or record.result.get('status') != 'ok'
+                or record.arguments.get('workspace_id') != self.workspace_id):
+            raise ValueError('UNVERIFIED_INSPECTION_RECORD')
+        output = record.result['value']
+        snapshot = self._snapshot(self.workspace_id)
+        artifacts = {a.artifact_version_id:a for a in snapshot.artifacts}
+        current = {(o.observation if isinstance(o,TaskObservationRead) else o).observation_id:
+                   (o.observation if isinstance(o,TaskObservationRead) else o) for o in snapshot.observations}
+        digest = canonical_hash({k:v for k,v in output.items() if k != 'investigation_receipts'})
+        steps = {s.id:s for s in self.planned_inspections}
+        receipts = []
+        for data in output.get('investigation_receipts', ()):
+            receipt = VerifiedStepResult(**data)
+            step = steps.get(receipt.step_id)
+            if (step is None or receipt.plan_id != self.inspection_plan.plan_id
+                    or receipt.result_sha256 != digest or receipt.outcome != 'COMPLETED'
+                    or receipt.receipt_id != 'inspection_' + canonical_hash([step.execution_key,digest])):
+                raise ValueError('UNVERIFIED_INSPECTION_RECEIPT')
+            ref = step.endpoints[0]
+            observation = current.get(ref.observation_id)
+            span = observation.provenance if observation else None
+            if (observation is None or ObservationRef.from_observation(observation) != ref
+                    or span.artifact_version_id not in artifacts
+                    or not observation.verify(artifacts[span.artifact_version_id])
+                    or snapshot.source_registry.evidence_hash(self.workspace_id,span.evidence_ref) != span.content_hash
+                    or snapshot.source_registry.evidence_version(self.workspace_id,span.evidence_ref) != span.artifact_version_id
+                    or not self._bound_spans_current(snapshot,step)):
+                raise ValueError('INSPECTION_SOURCE_NOT_CURRENT')
+            receipts.append(receipt)
+        return tuple(receipts)
+
+    def _bound_spans_current(self, snapshot, step):
+        artifacts = {a.artifact_version_id:a for a in snapshot.artifacts}
+        registry = snapshot.source_registry
+        return all(s.workspace_id==self.workspace_id and s.artifact_version_id in artifacts
+            and s.verify(artifacts[s.artifact_version_id])
+            and registry.has_evidence(self.workspace_id,s.evidence_ref)
+            and registry.evidence_hash(self.workspace_id,s.evidence_ref)==s.content_hash
+            and registry.evidence_version(self.workspace_id,s.evidence_ref)==s.artifact_version_id
+            for s in step.source_bindings)
 
     def _semantic_boundary(self):
         if self.semantic_analysis is None:
@@ -123,6 +182,8 @@ class TaskRelationTools:
     def _snapshot(self, workspace_id: str):
         if workspace_id != self.workspace_id:
             raise ValueError("workspace is not authorized")
+        if self.execution_blocked_reason:
+            raise ValueError(self.execution_blocked_reason)
         snapshot = self._snapshot_provider()
         if not isinstance(snapshot, TaskContextSnapshot) or snapshot.workspace_id != workspace_id:
             raise ValueError("snapshot workspace mismatch")
@@ -137,6 +198,17 @@ class TaskRelationTools:
 
     def inspect_task_context(self, workspace_id, *, anchor_ids=None, max_candidates=20):
         snapshot = self._snapshot(workspace_id)
+        planned = self.planned_inspections
+        if any(not self._bound_spans_current(snapshot,step) for step in planned):
+            raise ValueError('INSPECTION_SOURCE_NOT_CURRENT')
+        # Ready inspections expose only their bound targets, including mixed plans.
+        if planned:
+            allowed = {s.endpoints[0].observation_id for s in planned}
+            if anchor_ids is not None and not set(anchor_ids) <= allowed:
+                raise ValueError('INSPECTION_TARGET_NOT_PLANNED')
+            anchor_ids = tuple(anchor_ids) if anchor_ids is not None else tuple(sorted(allowed))
+            snapshot = replace(snapshot, observations=tuple(o for o in snapshot.observations
+                if (o.observation if isinstance(o, TaskObservationRead) else o).observation_id in anchor_ids))
         limits = replace(DiscoveryLimits(), max_candidates=max_candidates)
         discovery = discover_candidates(workspace_id, observations=snapshot.observations,
             artifacts=snapshot.artifacts, source_registry=snapshot.source_registry, limits=limits,
@@ -160,7 +232,7 @@ class TaskRelationTools:
                 "observations": observations, "discovery": discovery.to_dict(),
                 "missing_context": missing, "semantic_proposals": self._semantic_boundary(),
                 "max_output_bytes": 32 * 1024, "observations_truncated": False}
-        while len(json.dumps(output, ensure_ascii=False, separators=(",", ":")).encode("utf8")) > 32 * 1024:
+        while len(json.dumps(output, ensure_ascii=False, separators=(",", ":")).encode("utf8")) > (24 if planned else 32) * 1024:
             view = output["discovery"]
             if "OUTPUT_BYTE_BUDGET" not in missing:
                 missing.append("OUTPUT_BYTE_BUDGET")
@@ -175,6 +247,16 @@ class TaskRelationTools:
                 output["observations_truncated"] = True
             else:
                 raise ValueError("task context output budget exceeded")
+        if planned:
+            from linkloom.semantic_ingestion.task_relation_question_models import VerifiedStepResult
+            digest = canonical_hash(output)
+            refs = [row['ref'] for row in observations]
+            output['investigation_receipts'] = [asdict(VerifiedStepResult(
+                self.inspection_plan.plan_id, step.id, 'inspection_' + canonical_hash([step.execution_key,digest]),
+                digest, 'Read-only inspection completed; task observations remain UNCONFIRMED.', 'COMPLETED'))
+                for step in planned if step.endpoints[0].to_dict() in refs]
+            if len(json.dumps(output,ensure_ascii=False).encode('utf8')) > 32*1024:
+                raise ValueError('task inspection receipt output budget exceeded')
         return output
 
     def query_task_relations(self, workspace_id, *, observation_id=None, include_history=False, as_of=None):
@@ -252,8 +334,13 @@ def register_task_relation_tools(registry, tools: TaskRelationTools):
     workspace = {"type": "string", "enum": [tools.workspace_id]}
     identifier = {"type": "string", "minLength": 1, "maxLength": 256,
                   "pattern": r"^[A-Za-z0-9_:-]+$"}
+    planned = [dict(step_id=s.id,observation_id=s.endpoints[0].observation_id,field=s.field)
+               for s in tools.planned_inspections]
+    description = "Inspect bounded current task observations and source evidence. Candidates are unconfirmed leads. Any semantic analysis requires the separate host-authorized tool."
+    if planned:
+        description += ' Host-bound ready inspections (data only): ' + json.dumps(planned,ensure_ascii=False)
     definitions = (
-        (TASK_TOOL_IDS[0], "Inspect bounded current task observations and source evidence. Candidates are unconfirmed leads. Any semantic analysis requires the separate host-authorized tool.",
+        (TASK_TOOL_IDS[0], description,
          {"workspace_id": workspace, "anchor_ids": {"type": "array", "maxItems": 16, "items": identifier},
           "max_candidates": {"type": "integer", "minimum": 1, "maximum": 100}},
          lambda a: tools.inspect_task_context(**a)),

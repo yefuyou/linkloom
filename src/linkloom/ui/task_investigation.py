@@ -26,6 +26,22 @@ from linkloom.tools.semantic_context import SemanticSourceSnapshot
 from linkloom.tools.task_relations import TaskContextSnapshot, TaskRelationTools
 
 
+# Planning vocabulary remains available; execution prerequisites are explicit.
+HOST_OPERATION_CAPABILITIES = {
+    'inspect': dict(execution='EXISTING_RUNTIME_TOOL', tool='inspect_task_context',
+        result='COMPLETED inspection of UNCONFIRMED observations; no semantic approval',
+        time_scope='UNSUPPORTED; explicit gap, never silently dropped'),
+    'discover': dict(execution='BOUNDED_F_SNAPSHOT_ONLY',
+        result='UNKNOWN receipt; no second F scan and no evidence of absence'),
+    'relation': dict(execution='READY_UNSCOPED_SEMANTIC_PROPOSAL', tool='analyze_task_semantics',
+        result='EVIDENCE_VALID proposal only; independent semantic support required for premises',
+        time_scope='UNSUPPORTED', source_scope='UNSUPPORTED'),
+    'compare_dates': dict(execution='TRUSTED_RELATIONS_REQUIRED', tool='query_task_relations',
+        result='P4 can read existing verified relations; product F/G creates no such records'),
+    'clarify': dict(execution='VISIBLE_GAP_ONLY', result='No tool or automatic user conversation'),
+}
+
+
 @dataclass(frozen=True)
 class TaskInvestigationModels:
     discovery: object
@@ -182,6 +198,7 @@ def prepare_task_investigation(question, sources, models, root):
         max_calls=models.planning_limits.max_provider_calls)
     planner = InvestigationPlanner(planning_adapter,
         model_id=models.model_id, request_guard=guard, guard_id=guard_id, limits=models.planning_limits,
+        host_capabilities=HOST_OPERATION_CAPABILITIES,
         result_verifier=lambda receipt, current: receipts.get(receipt.receipt_id) == receipt)
     planning = planner.plan(context)
     if models.execution_kind == 'LIVE':
@@ -211,7 +228,7 @@ def prepare_task_investigation(question, sources, models, root):
         gaps.append('NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN')
     if planning.status != 'PLANNED':
         gaps.extend(planning.errors or (planning.status,))
-    queries = []
+    queries, ready_tools, execution_blocked = [], [], False
     if planning.plan:
         ready = {s.id for s in planning.plan.ready_steps}
         for step in planning.plan.steps:
@@ -223,8 +240,15 @@ def prepare_task_investigation(question, sources, models, root):
                     queries.append(step.to_semantic_query())
                 except ValueError as exc:
                     gaps.append(f'{exc}:{step.id}')
+                    execution_blocked = True
             elif step.kind == 'inspect':
-                gaps.append(f'INSPECTION_RETURNS_UNCONFIRMED_CANDIDATES_ONLY:{step.id}')
+                if step.time_scope != ('', ''):
+                    gaps.append(f'TIME_SCOPED_INSPECTION_UNSUPPORTED:{step.id}')
+                    execution_blocked = True
+                else:
+                    ready_tools.append(dict(step_id=step.id, execution_key=step.execution_key,
+                        tool_id='inspect_task_context', arguments=dict(workspace_id=sources.workspace_id,
+                            anchor_ids=[step.endpoints[0].observation_id])))
             else:
                 gaps.append(f'UNRESOLVED_{step.kind.upper()}:{step.id}')
     raw = TaskContextSnapshot(sources.workspace_id, tuple(observations), sources.artifacts, sources.registry)
@@ -241,11 +265,14 @@ def prepare_task_investigation(question, sources, models, root):
             models.semantics, model_id=models.model_id, policy=SemanticCallPolicy(models.execution_kind,
                 max_cost_usd=.079872 if models.execution_kind == 'LIVE' else 0,
                 request_cost_upper_bound_usd=.079872 if models.execution_kind == 'LIVE' else 0))
-    tools = TaskRelationTools(sources.workspace_id, current_raw, semantic_analysis=semantic)
+    tools = TaskRelationTools(sources.workspace_id, current_raw, semantic_analysis=semantic,
+        inspection_plan=planning.plan,
+        execution_blocked_reason='UNSUPPORTED_OPERATION_SCOPE' if execution_blocked else None)
     manifest = dict(schema='product-task-preparation/v1', question=question,
-        status='BLOCKED' if planning.status != 'PLANNED' else 'UNKNOWN' if not observations else 'PARTIAL',
+        status='BLOCKED' if planning.status != 'PLANNED' or execution_blocked else 'UNKNOWN' if not observations else 'PARTIAL',
         execution_kind=models.execution_kind, provider_id=models.provider_id, model_id=models.model_id,
         authority='MODEL_PROPOSED_ONLY',
+        operation_capabilities=HOST_OPERATION_CAPABILITIES, ready_tool_operations=ready_tools,
         discovery=discovery.to_dict(), planning=plans, source_mapping=sources.mapping,
         source_snapshot_hash=sources.identity, gaps=gaps, stage_budget=dict(
             discovery_calls_reserved=len(discovery.extractions), discovery_call_limit=models.discovery_limits.max_calls,

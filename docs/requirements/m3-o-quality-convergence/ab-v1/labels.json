@@ -1,0 +1,195 @@
+{
+  "D01": [
+    {
+      "text": "我负责松柏项目的修订告警手册，供应商：星河；截止日期：2031-03-20。",
+      "description_parts": [
+        "修订告警手册"
+      ],
+      "owner": "夏宁",
+      "deadline_text": "2031-03-20",
+      "project": "松柏项目",
+      "vendor": "星河"
+    },
+    {
+      "text": "修订告警手册还包括录制排障演示。",
+      "description_parts": [
+        "录制排障演示"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "D02": [
+    {
+      "text": "项目：松柏；负责人：夏宁；整理发布清单；截止日期：2031-03-21。",
+      "description_parts": [
+        "整理发布清单"
+      ],
+      "owner": "夏宁",
+      "deadline_text": "2031-03-21",
+      "project": "松柏",
+      "vendor": null
+    },
+    {
+      "text": "项目：海棠；负责人：何川；整理发布清单；截止日期：2031-03-22。",
+      "description_parts": [
+        "整理发布清单"
+      ],
+      "owner": "何川",
+      "deadline_text": "2031-03-22",
+      "project": "海棠",
+      "vendor": null
+    }
+  ],
+  "D03": [
+    {
+      "text": "项目：银杏；负责人：叶岑；编写容量预案。",
+      "description_parts": [
+        "编写容量预案"
+      ],
+      "owner": "叶岑",
+      "deadline_text": null,
+      "project": "银杏",
+      "vendor": null
+    },
+    {
+      "text": "项目：木棉；负责人：叶岑；校验审计导出。",
+      "description_parts": [
+        "校验审计导出"
+      ],
+      "owner": "叶岑",
+      "deadline_text": null,
+      "project": "木棉",
+      "vendor": null
+    }
+  ],
+  "D05": [],
+  "D06": [
+    {
+      "text": "安排汇总设备清单。",
+      "description_parts": [
+        "汇总设备清单"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "D07": [],
+  "D08": [
+    {
+      "text": "安排补录访问样例。",
+      "description_parts": [
+        "补录访问样例"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "D10": [
+    {
+      "text": "I will handle 更新部署说明; project: Cedar; deadline: 2031-03-24.",
+      "description_parts": [
+        "更新部署说明"
+      ],
+      "owner": "Ada",
+      "deadline_text": "2031-03-24",
+      "project": "Cedar",
+      "vendor": null
+    },
+    {
+      "text": "更新部署说明 also includes record a rollback walkthrough.",
+      "description_parts": [
+        "record a rollback walkthrough"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "D11": [
+    {
+      "text": "负责人：夏宁；安排检查恢复手册；截止日期：3月25日。",
+      "description_parts": [
+        "检查恢复手册"
+      ],
+      "owner": "夏宁",
+      "deadline_text": "3月25日",
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "m3n-cross-message-supplement": [
+    {
+      "text": "项目：霁海项目；负责人：顾遥；供应商：岚桥；完成支付回归，截止日期：2031-05-12。",
+      "description_parts": [
+        "完成支付回归"
+      ],
+      "owner": "顾遥",
+      "deadline_text": "2031-05-12",
+      "project": "霁海项目",
+      "vendor": "岚桥"
+    },
+    {
+      "text": "安排夜间告警演练。",
+      "description_parts": [
+        "夜间告警演练"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  ],
+  "m3n-missing-owner": [
+    {
+      "text": "项目：珊瑚项目；供应商：远岑；完成终端盘点，截止日期：2031-08-14。",
+      "description_parts": [
+        "完成终端盘点"
+      ],
+      "owner": null,
+      "deadline_text": "2031-08-14",
+      "project": "珊瑚项目",
+      "vendor": "远岑"
+    }
+  ],
+  "m3n-quoted-english-task": [],
+  "five-messages": [
+    {
+      "text": "我负责青竹项目的索引迁移，供应商：云桥；截止日期：2029-06-20。",
+      "description_parts": [
+        "索引迁移"
+      ],
+      "owner": "林枫",
+      "project": "青竹项目",
+      "vendor": "云桥",
+      "deadline_text": "2029-06-20"
+    },
+    {
+      "text": "索引迁移还包括补齐回归脚本。",
+      "description_parts": [
+        "补齐回归脚本"
+      ],
+      "owner": null,
+      "project": null,
+      "vendor": null,
+      "deadline_text": null
+    },
+    {
+      "text": "项目：青竹项目；负责人：周岚；提交容量报告；截止日期：6月22日。",
+      "description_parts": [
+        "提交容量报告"
+      ],
+      "owner": "周岚",
+      "project": "青竹项目",
+      "vendor": null,
+      "deadline_text": "6月22日"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": "m3o-ab/v1",
+  "files": {
+    "config.json": "33189817b8b037a1086f6504588c464d861daf1ed6ce8a690c990fade36e2390",
+    "groups.json": "40d93102e2e8413aa891120d7f9ec7fc77e9860358a1dd0dbea6943bcbd10105",
+    "labels.json": "db80711b7b81af2f664df10ab31506a42fa2e1b6ccf793ebf53daa336afc55d3",
+    "rubric.json": "1f10045c0acec98477576edb591d35204508057ba833e4e10c3e7c1cd2faadb5",
+    "sources.json": "0637180ce41c5d9321a4b8fabea0db516157134e94086e1878043adb71c57c8a"
+  },
+  "extractor_sha256": "48ce966f2558a1745e4c2dea53a205c979c98811e3200287ffd8a816625b8427",
+  "code_files": {
+    "src/linkloom/evaluation/task_profile_ab.py": "604cf947e54bafeb9b988e233f6b0348b9402aa5e2860d3579bb703ffe71de57",
+    "src/linkloom/evaluation/task_profile_score.py": "49d1df88d0b04d6954a08d572913d7b3a311a2940e55f301793345c02a45f85d",
+    "src/linkloom/semantic_ingestion/extraction.py": "48ce966f2558a1745e4c2dea53a205c979c98811e3200287ffd8a816625b8427",
+    "src/linkloom/semantic_ingestion/task_observation_discovery.py": "19427269f1e581fbfa61cf83527e0a057a7b034cc2f379f32ccbb865995888d0",
+    "src/linkloom/semantic_ingestion/task_discovery_veto.py": "9c99df8de0d6dffb3b2a7230d8423c22ef8eb54c74dbf87d8fb62b2412022246",
+    "src/linkloom/semantic_ingestion/task_observation.py": "8bce9a7b4d3294b77d116797d062afa8c41ee09c9c7b6578d3c6908c0d293b92",
+    "src/linkloom/semantic_ingestion/text_scopes.py": "186a0f69a5700e8246581a7d631baf4e6c74522db08fbcd892ea7232dc56e98f",
+    "scripts/run_m3o_ab.py": "2d5cbf8deb3c9c4f5b16742d414d03d3bdd297b60d4287cbd0df0af4aed65326",
+    "src/linkloom/semantic_ingestion/artifacts.py": "a229de7d609771748f2595ce21ffcde8758233369aaa2ce4f50dbdfe609621de",
+    "src/linkloom/semantic_ingestion/document_text.py": "81f195f82410799561645f12927e170ce56c17780a9b68089ec843defc0cea88",
+    "src/linkloom/semantic_ingestion/timestamped_text.py": "0e9c1137fb3240cfdf3106830204c342cc4f72d7d35a8b5d6b048ae32935316f",
+    "src/linkloom/agents/model_adapter.py": "523894da01962ff564b3dbc727106247862d324c1673b7cc30fa1007412a926e",
+    "src/linkloom/agents/providers/gemini_api.py": "911d436f2c67380e19f5c4a55341e5494b5e7d1510d5a3f66d52f624ad25e174"
+  },
+  "baseline": "44a1f3b4a822d2e64a8e50cf6b826072e466badf",
+  "seal_note": "Final offline implementation binding after A/B/C; initial manifest retained locally. No LIVE authorization exists.",
+  "code_byte_policy": "LF enforced by .gitattributes for all code_files; data bytes remain exact."
+}

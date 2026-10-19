@@ -2,9 +2,10 @@
 import re
 
 from linkloom.semantic_ingestion.timestamped_text import timestamped_message_body
+from linkloom.semantic_ingestion.text_scopes import quoted_ranges
 
 
-_CONDITIONAL = re.compile(r"如果|假如|倘若|假设|若|只要|除非|只有|一旦|当[^。；;\n]{0,40}时|前提下|后再|才(?=安排|执行|进行|完成|继续)|\b(?:if|unless|suppose|hypothetical)\b", re.I)
+_CONDITIONAL = re.compile(r"如果|假如|倘若|假设|(?<!\w)若|只要|除非|只有|一旦|当[^。；;\n]{0,40}时|前提下|后再|才(?=安排|执行|进行|完成|继续)|\b(?:if|unless|suppose|hypothetical)\b", re.I)
 _NON_COMMITTAL = re.compile(
     r"建议|提议|考虑|可能|据说|未采纳|未批准|引用|(?:讨论|探讨)(?:是否|能否|要不要|如何|完成|取消|终止|撤销|撤回)|"
     r"\b(?:might|perhaps|reportedly|unadopted|suggest\w*|propos\w*|consider\w*|quoted?)\b", re.I)
@@ -32,30 +33,6 @@ _ASSIGNMENT_START = re.compile(
 _SENTENCE_END = r"[。！？\n]|[.!?](?:\s+|$)"
 
 
-def _quotes(text):
-    # Mask quotation/code ranges without changing any source offset. Apostrophes
-    # inside words are not quote delimiters (e.g. don't or Alice's).
-    ranges = [(m.start(), m.end()) for m in re.finditer(
-        r"(?m)^[ \t]*>[^\n]*|```[\s\S]*?(?:```|$)|`[^`\n]*(?:`|$)", text)]
-    code_offsets = {index for left, right in ranges for index in range(left, right)}
-    stack = []
-    pairs = {'“': '”', '‘': '’', '「': '」', '『': '』', '"': '"', "'": "'"}
-    for index, char in enumerate(text):
-        if index in code_offsets:
-            continue
-        closing = bool(stack and char == stack[-1][1])
-        if char == "'" and (text[index + 1:index + 2].isalnum() if closing
-                            else index > 0 and text[index - 1].isalnum()):
-            continue
-        if closing:
-            start, _ = stack.pop()
-            ranges.append((start, index + 1))
-        elif char in pairs:
-            stack.append((index, pairs[char]))
-    ranges.extend((start, len(text)) for start, _ in stack)
-    return ranges
-
-
 def _chunks(text, delimiter):
     start = 0
     for match in re.finditer(delimiter, text):
@@ -65,7 +42,7 @@ def _chunks(text, delimiter):
 
 
 def non_asserted(text, parts, start, end):
-    quoted = _quotes(text)
+    quoted = quoted_ranges(text)
     visible = list(text)
     for left, right in quoted:
         visible[left:right] = [c if c in '\n。！？.!?；;，,' else ' ' for c in text[left:right]]

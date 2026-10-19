@@ -344,7 +344,7 @@ class InvestigationPlanner:
     question. The class performs no tool execution, persistence or permission lookup.
     """
     def __init__(self, adapter, *, model_id, request_guard, guard_id, limits=None, result_verifier=None,
-                 supported_operations=OPERATIONS):
+                 supported_operations=OPERATIONS, host_capabilities=None):
         if not model_id or not guard_id or not callable(request_guard):
             raise ValueError('explicit model and exact-request guard required')
         self.adapter, self.model_id = adapter, model_id
@@ -357,6 +357,7 @@ class InvestigationPlanner:
                 or not supported_operations <= OPERATIONS):
             raise ValueError('explicit supported operation set required')
         self.supported_operations = supported_operations
+        self.host_capabilities = deepcopy(host_capabilities)
         self._calls = self._input = self._output = 0
         self._goal = self._workspace = None
         self._latest = None
@@ -448,6 +449,8 @@ class InvestigationPlanner:
             source_handles_are_endpoints=False,
             temporal_scope='Inclusive ISO bounds retained on steps; Host tool binding required.',
             dependency_readiness='Host-verified completion; relation premises require SUPPORTED.')
+        if self.host_capabilities is not None:
+            payload['operation_capabilities']['host_execution'] = self.host_capabilities
         payload['replan'] = dict(previous_plan=previous.to_dict() if previous else None,
                                 verified_results=[asdict(r) for r in receipts], gaps=list(gaps))
         tool = ToolDefinition(TOOL_ID, '2', 'Emit action suggestions without executing work.',

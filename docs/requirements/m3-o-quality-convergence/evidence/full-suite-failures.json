@@ -1,0 +1,1243 @@
+{
+  "suite": {
+    "tests": "3102",
+    "failures": "241",
+    "errors": "4",
+    "skipped": "23",
+    "time": "1424.411"
+  },
+  "categories": {
+    "missing_tmp_parent": 2,
+    "synthetic_temp_root_mismatch": 12,
+    "missing_ignored_history": 38,
+    "other_retained_failure": 177,
+    "baseline_schema_snapshot": 3,
+    "missing_file_other": 9
+  },
+  "failures": [
+    {
+      "node": "tests/unit/test_adaptive_evaluation.py::test_run_case_c_without_injected_provider_is_explicitly_not_applicable",
+      "category": "missing_tmp_parent",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_adaptive_evaluation.py::test_c_uses_one_json_generation_after_verified_reads",
+      "category": "missing_tmp_parent",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_change_plan.py::test_build_plan_absolute_path_rejected",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_change_plan.py::test_build_plan_traversal_rejected",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_change_plan.py::test_build_plan_success",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase9_real_cn2_final_replays_against_exact_verified_passages[before]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase9_real_cn2_final_replays_against_exact_verified_passages[after]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-A]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-ALIAS-B]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_real_final_outputs_replay_against_the_exact_verified_reads[P14-CN2]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[reverse_reporting]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_date]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase14_cn2_final_rejects_wrong_relation_entity_or_time[wrong_project]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep1]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_final_replays_with_rejected_historical_candidate[rep2]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_historical_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[negated_candidate]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_draft_date]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_current_date]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_draft_ref]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[unrelated_draft_ref]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[wrong_project]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_claim_grounding.py::test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts[missing_current_ref]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_contract_v3_cases.py::test_dev_run_writes_auditable_per_case_report",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_successful_response",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_missing_executable",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_timeout",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_non_zero_exit",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_empty_output",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_invalid_json",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_schema_invalid",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_markdown_strip",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_batch_successful_response",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_batch_missing_executable",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_batch_empty_output",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_batch_invalid_json",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_evaluation_real_provider.py::test_batch_partial_schema_invalid",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_gemini_count_tokens_compat.py::test_accepted_response_is_parsed_and_latency_is_recorded_separately[within-time-budget]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_gemini_count_tokens_compat.py::test_accepted_response_is_parsed_and_latency_is_recorded_separately[accepted-response-after-time-budget]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_gemini_count_tokens_compat.py::test_transport_timeout_before_response_remains_a_timeout",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_gemini_count_tokens_compat.py::test_malformed_accepted_response_after_latency_budget_is_not_a_timeout",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_gemini_nullable_json_schema.py::test_exact_semantic_schema_wire_contract_and_fingerprints",
+      "category": "baseline_schema_snapshot",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_m11_verified_evidence_context.py::test_gemini_request_serializes_verified_context_into_model_visible_input",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_mutations_runtime.py::test_lifecycle_happy_path",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_mutations_runtime.py::test_stale_hash_after_pause",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_mutations_runtime.py::test_writer_failure_rollback",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_mutations_runtime.py::test_resume_stale_preflight_no_apply",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_mutations_runtime.py::test_resume_new_instance",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_final_text_response_maps_to_normalized_model_response_without_sdk_objects",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_single_function_call_maps_to_runtime_tool_call_and_is_not_executed",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_required_tool_call_mode_constrains_gemini_to_function_call",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_default_gemini_tool_mode_remains_auto",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_multiple_function_calls_preserve_order_ids_and_turn_signatures",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_missing_gemini_ids_are_deterministic_and_ordinal_unique",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_present_but_invalid_gemini_id_rejects_instead_of_being_replaced",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_duplicate_or_malformed_middle_gemini_call_rejects_whole_response[calls0-duplicate_function_call_id]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_duplicate_or_malformed_middle_gemini_call_rejects_whole_response[calls1-function_arguments_not_an_object]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_grouped_gemini_turn_preserves_call_parts_signatures_and_results",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_sdk_like_function_call_response_is_parsed_without_importing_sdk_types",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_observation_request_maps_previous_call_and_result_without_full_runtime_state",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception0-MODEL_AUTH_REQUIRED-known_failure]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception1-MODEL_INVALID_REQUEST-known_failure]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception2-MODEL_RATE_LIMITED-known_failure]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception3-MODEL_TIMEOUT-known_failure]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_exceptions_are_normalized_without_adapter_retry[exception4-MODEL_UNAVAILABLE-known_failure]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_provider_error_response_is_normalized_without_raw_provider_payload",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_malformed_provider_response_does_not_become_an_empty_success",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_malformed_tool_call_arguments_are_normalized_as_parse_failure",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_multiple_function_calls_use_the_runtime_v2_proposal_contract",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_invalid_finish_reason_is_rejected",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_adapter_configuration_can_supply_model_id_for_legacy_request",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_unsafe_provider_exception_request_id_is_dropped_not_raised_or_persisted",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_unsupported_schema_fails_before_provider_invocation",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_semantic_schema_projection_is_exact_and_keeps_canonical_input_unchanged",
+      "category": "baseline_schema_snapshot",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_mock_transport_sends_exact_projected_semantic_schema_with_any_mode",
+      "category": "baseline_schema_snapshot",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_projected_provider_limits_are_still_enforced_locally[max-length]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_projected_provider_limits_are_still_enforced_locally[max-items]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_client_request_is_json_safe_and_does_not_include_credentials_or_raw_state",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_client_seam_matches_sdk_generate_content_and_does_not_send_root_store_field",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_single_function_call_with_stop_maps_to_one_tool_action",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_non_stop_function_call_error_preserves_safe_finish_reason_diagnostic",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_undeclared_function_call_fails_closed_before_model_action_creation",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[401-MODEL_AUTH_REQUIRED]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[400-MODEL_INVALID_REQUEST]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[429-MODEL_RATE_LIMITED]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_official_api_error_code_is_normalized_without_retry[503-MODEL_UNAVAILABLE]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_exception_diagnostics_preserve_nested_failure_and_request_shape",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[dns]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[tcp-connect]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[connect-timeout]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[read-timeout]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[tls]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_transport_exceptions_get_narrow_safe_classification[proxy-connect]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[400-HTTP_400]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[401-HTTP_401]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[403-HTTP_403]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[404-HTTP_404]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[429-HTTP_429]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_http_failures_preserve_exact_status_class[503-HTTP_5XX]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_quota_error_is_not_guessed_from_message_text",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[status-exception]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[status-response]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[reason-exception]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[reason-response]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[type-exception]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[type-response]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[code-exception]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_structured_provider_code_is_secret_redacted[code-response]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_error_response_and_safety_block_are_observable",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_malformed_and_incomplete_responses_keep_provider_classification",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_diagnostics_redact_prompt_and_proxy_credentials",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unknown_sdk_exception_is_preserved_without_provider_payload",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_status_codes_use_structured_classification[RATE_LIMIT_EXCEEDED-PROVIDER_RATE_LIMIT]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_provider_status_codes_use_structured_classification[ABORTED-PROVIDER_ABORTED]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unclassified_provider_error_does_not_guess_overload_from_message",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_aborted_provider_response_is_classified_from_finish_reason",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_unclassified_exception_remains_unknown_not_guessed",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_gemini_route_diagnostics_keep_only_host_and_port",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[connection-reset]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[timeout]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-429]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-400]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-503]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-404]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[http-403]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_has_stable_failure_and_retry_diagnostics[missing-http-metadata]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_generation_exception_diagnostics_are_sanitized_and_keep_request_id",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_google_genai_response_json_fields_are_extracted_without_copying_body",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_unknown_generation_exception_is_not_normalized_as_transient",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_gemini_api_adapter.py::test_http_402_prepayment_exhaustion_is_terminal_billing_failure",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_p85_schema_mapping.py::test_adapter_request_groups_function_declarations_and_preserves_generation_options",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_permission_gate.py::test_validate_target_root_accepts_synthetic",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_verified_current_conflict_guides_final_only_after_both_source_reads",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[duplicate]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[boolean]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[unknown]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_numeric_plan_repairs_only_unambiguous_dependency_ids[cycle]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-DEFAULT-expected_ids0]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors[P14-PLAN-REPAIR-expected_ids1]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_phase3_task_plan.py::test_model_plan_normalization_does_not_guess_a_missing_dependent_edge",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e1_1_protocol.py::test_h3_1_reconciliation_uses_its_independent_diagnostic_ledger",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e1_1_protocol.py::test_pre_protocol_formal_history_is_counted_only_with_closed_non_scoreable_evidence",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e1_1_protocol.py::test_mh_only_readiness_requires_only_the_mh_preflight",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e1_1_protocol.py::test_versioned_mh_only_plan_removes_only_the_mh_sh_prerequisite",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e1_1_protocol.py::test_mh_only_authorization_binds_baseline_to_plan_and_fingerprints",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e2_usage_policy.py::test_zero_request_e2_stop_does_not_consume_frozen_subset",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_e2_usage_policy.py::test_h3_1_reconciliation_reference_requires_matching_scoped_seal_and_passed_evidence",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_clean_cell_freeze_artifacts_verify_without_gold[sh_32k]",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_clean_cell_freeze_artifacts_verify_without_gold[mh_6k]",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_self_resigned_freeze_and_plan_tampering_is_rejected[sh_32k]",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_self_resigned_freeze_and_plan_tampering_is_rejected[mh_6k]",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_live_runner_retries_same_method_case_without_replaying_prior_case",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_live_runner_exhausts_exactly_three_transient_attempts_then_continues",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_live_runner_blocks_retry_when_global_cost_guard_fails",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_accepted_response_followed_by_clean_eval_block_is_local_and_diagnostic",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_accepted_response_smoke_and_generic_failures_are_local[smoke_post_response-CLEAN_EVAL_BLOCK_RESPONSE_PROVIDER_USAGE_UNAVAILABLE]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_accepted_response_smoke_and_generic_failures_are_local[post_response_runtime-CLEAN_EVAL_BLOCK_LOCAL_RUNTIME_ERROR]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_public_memory_profile.py::test_historical_dual_dataset_plan_keeps_the_formal_sh_first_gate",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_runtime_v2_multi_action.py::test_runtime_keeps_only_the_newest_whole_tool_turns_within_history_limit",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_runtime_v2_multi_action.py::test_policy_denial_is_one_ordered_result_and_later_call_still_runs",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_team_decision_contract.py::test_typed_claim_relation_roles_are_visible_in_the_selected_final_protocol",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_trajectory_harness.py::test_harness_records_actual_checkpoint_and_duplicate_ledger_histories",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_trajectory_harness.py::test_harness_continues_partial_branches_and_preserves_actual_evidence",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/unit/test_trajectory_harness.py::test_harness_emits_registered_observed_events_used_for_attribution",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_handoff_trace.py::test_runtime_multi_agent_persists_state_and_jsonl_trace",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_same_production_path_allows_policy_selected_trajectories",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_model_arguments_and_observations_remain_exact_on_production_path",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_successful_empty_search_is_observed_before_exact_m01_completion",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_prior_search_failure_remains_authoritative_after_later_empty_search",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_model_policy_is_the_only_trajectory_switch[_policy_a]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_model_policy_is_the_only_trajectory_switch[_policy_b]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_runtime_refusal_returns_to_model_without_fabricating_ledger",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m03_model_driven_retrieval.py::test_model_request_budget_stops_without_an_extra_model_or_tool_call",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_aer_002_vertical_slice.py::test_team_decision_rejects_a_claim_ref_omitted_from_the_final_model_request",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_aer_002_vertical_slice.py::test_aer_002_allows_a_bounded_multi_note_trajectory_through_the_production_runtime",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_aer_002_vertical_slice.py::test_aer_002_synthesizes_multiple_verified_notes_visible_to_the_final_model_turn",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_aer_002_vertical_slice.py::test_aer_002_context_policy_fails_when_a_required_visible_evidence_class_is_removed",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_aer_002_vertical_slice.py::test_aer_002_cold_resume_reuses_the_durable_context_bearing_final",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_c_vertical_slice.py::test_slice_c_frozen_cases_synthesize_rejection_and_open_actions_from_visible_evidence[drm-003]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_c_vertical_slice.py::test_slice_c_frozen_cases_synthesize_rejection_and_open_actions_from_visible_evidence[inc-004]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_c_vertical_slice.py::test_slice_c_controller_changes_or_fails_when_required_visible_evidence_is_removed[drm-003]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_c_vertical_slice.py::test_slice_c_controller_changes_or_fails_when_required_visible_evidence_is_removed[inc-004]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_d_vertical_slice.py::test_slice_d_frozen_cases_preserve_current_authority_and_insufficient_assignment[ret-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_d_vertical_slice.py::test_slice_d_frozen_cases_preserve_current_authority_and_insufficient_assignment[iti-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_d_vertical_slice.py::test_slice_d_controller_fails_when_its_required_visible_evidence_is_removed[ret-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_d_vertical_slice.py::test_slice_d_controller_fails_when_its_required_visible_evidence_is_removed[iti-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_e_vertical_slice.py::test_slice_e_frozen_cases_preserve_preparation_and_partial_scope_boundaries[drm-002]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_e_vertical_slice.py::test_slice_e_frozen_cases_preserve_preparation_and_partial_scope_boundaries[aer-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_e_vertical_slice.py::test_slice_e_controller_fails_when_required_visible_evidence_is_removed[drm-002]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_slice_e_vertical_slice.py::test_slice_e_controller_fails_when_required_visible_evidence_is_removed[aer-005]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_team_decision_vertical_slice.py::test_frozen_mps_001_production_path_persists_current_decision_from_real_workspace",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_team_decision_vertical_slice.py::test_fabricated_team_decision_evidence_fails_the_outer_workflow",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_team_decision_vertical_slice.py::test_team_decision_evidence_review_failure_cannot_publish_completed_workflow",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_team_decision_vertical_slice.py::test_team_decision_cold_resume_reuses_durable_final_without_replaying_model_or_tools",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m11_team_decision_vertical_slice.py::test_team_decision_cold_resume_revalidates_a_durable_final",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_m12b_memory_live_001.py::test_memory_live_001_runtime_uses_memory_then_reads_source_before_grounded_final",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_memory_runtime.py::test_runtime_multi_agent_memory_injection",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_p85_durable_provider.py::test_gemini_failure_diagnostics_survive_runtime_response_artifact",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_p85_durable_provider.py::test_existing_gemini_adapter_receives_function_response_from_runtime_loop",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_p85_durable_provider.py::test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_p85_durable_provider.py::test_cold_resume_rejects_continuation_bound_to_a_different_source_turn",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_partial_failure_recovery.py::test_partial_failure_recovery_on_writer_fail",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_partial_failure_recovery.py::test_post_write_verifier_failure",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_product_application_flow.py::test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[3]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_product_application_flow.py::test_temporal_http_provider_unknown_keeps_read_source_without_verified_final[4]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_product_application_flow.py::test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_reason",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_product_application_flow.py::test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold",
+      "category": "missing_file_other",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_product_application_flow.py::test_review_requires_explicit_effective_time_for_unresolved_candidates",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_real_provider_evaluation.py::test_real_provider_baseline_eligible",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_real_provider_evaluation.py::test_real_provider_gold_read_ordering",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_real_provider_evaluation.py::test_real_provider_error_not_eligible",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_real_provider_evaluation.py::test_real_provider_malformed_not_eligible",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_retrieval_v2_agent_integration.py::test_mps001_retrieved_evidence_ids_round_trip_to_same_source_and_version",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_capture_failure_does_not_fail_successful_team_decision",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_runtime_agent_memory_capture.py::test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_safe_apply_success",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_stale_hash_rejection",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_parent_symlink_rejection",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_resolved_outside_root_rejection",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_writer_exception_redaction",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_writer_failure_rollback",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_safe_apply.py::test_verifier_failure_rollback",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-A]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_real_final_replays_through_runtime_and_reviewer[P14-ALIAS-B]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_cn2_legacy_final_replay_remains_compatible",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_cn2_typed_claims_complete_runtime_without_reparsing_generated_text",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-A-wrong_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-ALIAS-B-wrong_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_owner]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-reverse_relation]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_team_decision_final_contract_communication.py::test_phase14_runtime_reviewer_rejects_wrong_owner_relation_or_date[P14-CN2-wrong_date]",
+      "category": "missing_ignored_history",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_trajectory_evaluation.py::test_actual_runtime_run_produces_23_pass_0_fail_18_not_implemented_and_six_artifacts",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_trajectory_evaluation.py::test_cli_runs_offline_and_module_has_no_provider_judge_or_network_surface",
+      "category": "other_retained_failure",
+      "disposition": "RETAINED_UNRESOLVED"
+    },
+    {
+      "node": "tests/integration/test_writeback_e2e.py::test_writeback_e2e_successful_path_and_rollback",
+      "category": "synthetic_temp_root_mismatch",
+      "disposition": "PASS_ON_ENVIRONMENT_RERUN"
+    }
+  ],
+  "collection_errors": [
+    {
+      "node": "tests/unit/test_memoryagentbench_g31_fixed50.py",
+      "missing": "scripts/run_memoryagentbench_g3_pilot.py"
+    },
+    {
+      "node": "tests/unit/test_memoryagentbench_g32_heldout.py",
+      "missing": "scripts/run_memoryagentbench_g3_pilot.py"
+    },
+    {
+      "node": "tests/unit/test_memoryagentbench_g3_pilot.py",
+      "missing": "scripts/run_memoryagentbench_g3_pilot.py"
+    },
+    {
+      "node": "tests/integration/test_stage_c_end_to_end_loop.py",
+      "missing": "scripts/run_stage_c_context_memory_loop.py"
+    }
+  ],
+  "interpretation": "Full suite is NOT green. Four collection errors are retained. 14 environment failures passed on exact-node rerun; 227 failures remain. Categories are diagnostic triage, not proof that every retained failure predates this change. No legacy assertions, Gold, scripts, recorded responses or ledgers were rewritten to hide failures."
+}
