@@ -5,9 +5,9 @@
 
 LinkLoom recovers a team's decisions across changing sources: what is valid,
 what it replaced, and which evidence supports it. This map describes the
-merged implementation at `c5099ce242abcaad4a785710d435e0c582394b43`, checked
-against remote master on October 20, 2026. Separate Recovery integration work
-is not included.
+merged implementation at `95a125ce4d1b2867102217e1d0430044fbf4f739`, checked
+against remote master on October 20, 2026, including bounded Recovery and
+grounded partial results.
 
 ## From sources to reviewed decisions
 
@@ -21,7 +21,7 @@ flowchart TD
     Q["User question"] --> A["Unified Ask"]
     A --> D["Current / as-of lookup<br/>Python"]
     M --> D
-    D --> O["Grounded Answer<br/>evidence + uncertainty"]
+    D --> O["Grounded Answer<br/>evidence + explicit gaps"]
     A --> T["Temporal investigation<br/>reasons / conflicts"]
     M -. "pinned lookup" .-> T
     A --> R["Source-relation investigation"]
@@ -50,6 +50,29 @@ LLM intent classifier. Temporal and source-relation investigations share
 the [runtime](RUNTIME_ARCHITECTURE.md), but have different scope and Final
 contracts. Default bounds are eight model turns for temporal investigation and
 up to twelve for source-relation investigation.
+
+### Partial evidence and failed execution
+
+In supported source-relation investigations, **PARTIAL** means the requested
+final relation remains unknown while independently verified upstream facts keep
+their citations. For example, an owner may be verified while their direct
+leader remains unknown. Recovery can request a null-decision Final with the
+missing subgoal IDs after reachable searches and planned alternatives are
+exhausted. It still requires observed verified reads, claim validation and
+Reviewer acceptance. It neither fills the missing hop nor approves a decision.
+
+Unified Ask exposes an accepted incomplete source result as `INSUFFICIENT`,
+with retained facts/evidence and no final relation answer. This differs from
+`FAILED` execution and `PROVIDER_UNCERTAIN`, which expose no accepted Final.
+The UI labels partial relationships and gaps; it does not mark them as an
+approved business decision. Missing provider permission blocks launch;
+runtime identity violations and tool permission denials terminate rather than
+becoming missing evidence. Budget exhaustion before a valid Final likewise
+remains an execution failure. See the [Runtime boundaries](RUNTIME_ARCHITECTURE.md#progress-recovery-and-partial-finals).
+
+Runtime checkpoint/resume is available, but the product's investigation jobs
+remain process-local and temporary. UI recovery after a process restart is
+not supported by this integration.
 
 ## A candidate is not an approved fact
 
@@ -117,6 +140,7 @@ from the stated master baseline.
 | Temporal state and evidence inventory | [decision_memory/store.py](../../src/linkloom/decision_memory/store.py), [decision_memory/reconciliation.py](../../src/linkloom/decision_memory/reconciliation.py) | [Temporal memory](../../tests/unit/test_temporal_decision_memory.py), [structured lookup](../../tests/unit/test_structured_temporal_lookup.py) |
 | Unified Ask and scope | [ui/unified_ask.py](../../src/linkloom/ui/unified_ask.py), [ui/scope_discovery.py](../../src/linkloom/ui/scope_discovery.py) | [Unified Ask flow](../../tests/integration/test_unified_ask_flow.py) |
 | Frozen source investigation and verified projection | [ui/investigation.py](../../src/linkloom/ui/investigation.py), [runtime/team_decision_planner.py](../../src/linkloom/runtime/team_decision_planner.py) | [Source investigation](../../tests/integration/test_unified_investigation_flow.py) |
+| Bounded Recovery and cited partials | [runtime/progress.py](../../src/linkloom/runtime/progress.py), [runtime/recovery_policy.py](../../src/linkloom/runtime/recovery_policy.py), [agents/retrieval_agent.py](../../src/linkloom/agents/retrieval_agent.py) | [Graceful partial Recovery](../../tests/unit/test_graceful_partial_recovery.py), [Ask DOM boundary](../../tests/ui/unified_ask_dom_test.cjs) |
 
 For running instructions see [Quickstart](../../README.md#quickstart). Product
 direction remains in the [roadmap](../PRODUCT_ROADMAP.md); historical diagrams

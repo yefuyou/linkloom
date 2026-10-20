@@ -57,6 +57,7 @@ and [historical answer](docs/assets/v1/04-ask-as-of.png).
 | Recover decision history | Query current or as-of state, effective dates, predecessors, evidence and receipts in workspace-scoped SQLite. Records can include actions and owners when supported. |
 | Ask in one place | Reviewed-state questions use deterministic lookup. Reasons and conflicts use an explicitly enabled temporal investigation Agent. |
 | Investigate source relations | Supported project → owner → direct-leader and alias → project → owner → direct-leader question forms use bounded search/read plans. Unsupported forms request clarification. |
+| Keep verified partial results | Source-relation investigation can retain cited upstream facts and name missing hops when the requested final relation cannot be established. Grounding and Reviewer still gate the result. |
 | Track source changes | Explicit product source updates/deletions reconcile evidence and surface affected current materialized decisions in Review Attention. No automatic filesystem watcher. |
 
 ## How it works
@@ -152,12 +153,16 @@ it does not run the current source ingestion/review workflow.
   scope, duplicates and stale provenance; memory hints never become citations.
 - **Answers pass evidence checks.** Grounding validates observed source
   identities, hashes and quotes; a deterministic Reviewer gates Agent results.
-  Missing evidence, conflict and uncertain provider outcomes stay visible.
+  Integrated Recovery can close exhausted relation plans with a validated
+  partial result; missing evidence and uncertain execution stay distinct.
 - **Source changes have consequences.** Reconciliation compares the current
   evidence inventory with materialized provenance; it can mark records STALE
   or NEEDS_REVALIDATION without silently promoting a replacement candidate.
 
 ## Current status and limits
+
+Implementation baseline: master `95a125ce4d1b2867102217e1d0430044fbf4f739`,
+including the merged bounded Recovery integration.
 
 The local product implements Sources, Review, Temporal Decision Memory and
 Unified Ask. The checked-in release evidence covers a synthetic workflow,
@@ -171,7 +176,14 @@ Investigation is read-only and cannot approve decisions. Source updates are
 user-triggered; current materialized stale decisions have an attention view, with dedicated stale
 revalidation UI deferred. Runtime checkpoint/resume exists, but product
 investigation jobs use temporary, process-local state; cross-process UI recovery
-is not promised here. Separate Recovery integration work is outside this baseline.
+remains unsupported.
+
+A **PARTIAL** source-relation answer retains only independently verified, cited
+facts and explicit gaps; its missing final answer stays null. It is not an
+approved business decision. Permission/identity violations and repeated tool errors
+stop the run; reaching the model/provider run limit before a valid Final remains
+a failure. Provider-outcome uncertainty is reported separately. Recovery does not turn failed execution into
+a partial success or automatically retry it.
 
 This is a local application, not a deployed multi-user service. Imported copies
 and decision state live locally; opted-in provider calls leave the machine.

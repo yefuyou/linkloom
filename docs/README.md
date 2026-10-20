@@ -3,7 +3,8 @@
 Start with the [product README](../README.md), then the
 [product architecture](architecture/PRODUCT_ARCHITECTURE.md) and
 [runtime architecture](architecture/RUNTIME_ARCHITECTURE.md). They describe the
-merged product at `c5099ce242abcaad4a785710d435e0c582394b43`; historical
+merged product at `95a125ce4d1b2867102217e1d0430044fbf4f739`, including bounded
+Recovery and grounded partial results; historical
 architecture notes remain below. The [roadmap](PRODUCT_ROADMAP.md) owns product
 direction, and [AGENTS.md](../AGENTS.md) owns contribution boundaries.
 
@@ -41,6 +42,7 @@ durability should not be read as a cross-process UI recovery guarantee.
 | Model boundary | [agents/model_adapter.py](../src/linkloom/agents/model_adapter.py), [providers/](../src/linkloom/agents/providers/) | Provider-neutral contracts, actual SDK invocation, usage and uncertain outcomes. |
 | Tools | [tools/runtime.py](../src/linkloom/tools/runtime.py), [tools/tool_policy.py](../src/linkloom/tools/tool_policy.py) | Argument validation, permissions, pending-before-execution durability and call budget. |
 | Persistence / resume | [runtime/checkpoint.py](../src/linkloom/runtime/checkpoint.py), [tools/ledger.py](../src/linkloom/tools/ledger.py), [runtime/recovery.py](../src/linkloom/runtime/recovery.py), [runtime/recovery_policy.py](../src/linkloom/runtime/recovery_policy.py) | Durable result reuse versus verification-required outcomes; policies do not themselves grant retry authority. |
+| Progress / Partial Final | [runtime/progress.py](../src/linkloom/runtime/progress.py), [runtime/recovery_policy.py](../src/linkloom/runtime/recovery_policy.py), [ui/projection.py](../src/linkloom/ui/projection.py) | TaskPlan v2 exhaustion can request cited partials; identity/permission failures and model/provider run limits reached before a valid Final remain failures. Grounding and Reviewer still gate acceptance. |
 
 ## Retrieval, evidence and the different kinds of memory
 
@@ -71,6 +73,12 @@ $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = '1'
 $env:LINKLOOM_RETRIEVAL_MODE = 'bm25'
 python -m pytest tests/unit/test_unified_ask.py tests/integration/test_unified_ask_flow.py tests/unit/test_temporal_decision_memory.py tests/unit/test_structured_temporal_lookup.py tests/smoke/test_temporal_product_http_lifecycle.py -q
 node tests/ui/unified_ask_dom_test.cjs
+```
+
+For the integrated Recovery boundary, run these additional provider-free contracts:
+
+```powershell
+python -m pytest tests/unit/test_graceful_partial_recovery.py tests/unit/test_progress_assessment.py tests/unit/test_recovery_policy.py tests/unit/test_recovery_passage_coverage.py tests/unit/test_runtime_v2_multi_action.py tests/unit/test_context_assembler.py -q
 ```
 
 These focused contracts use synthetic data/FakeTransport, without provider

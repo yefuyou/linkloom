@@ -1505,6 +1505,7 @@ class SingleAgentModelLoop:
                 before_sequence=before_sequence,
                 observations=durable_progress_observations(),
                 task_plan=self.task_plan,
+                expected_workspace_id=self.workspace_id,
             )
 
         def current_recovery_decision(*, before_sequence: int | None = None):
@@ -1527,8 +1528,12 @@ class SingleAgentModelLoop:
                 {"reason_code": decision.reason_code},
             )
 
-        def search_strategy_stalled(call: ToolCall) -> bool:
-            if call.tool_id != "search_notes" or not self.tool_runtime.accepts_input(call):
+        def tool_progress_stalled(call: ToolCall) -> bool:
+            progress = current_progress_assessment(before_sequence=call.sequence)
+            action = decide_recovery(progress).action
+            if call.tool_id != "search_notes" and action != "FINAL_PARTIAL":
+                return False
+            if not self.tool_runtime.accepts_input(call):
                 return False
             try:
                 self.policy_enforcer.check_call_eligibility(call.tool_id)
@@ -1536,8 +1541,9 @@ class SingleAgentModelLoop:
                 return False
             if not self.tool_runtime.source_allows_reuse():
                 return False
-            progress = current_progress_assessment(before_sequence=call.sequence)
-            if decide_recovery(progress).action != "STOP_SEARCH_STRATEGY":
+            if action == "FINAL_PARTIAL":
+                return True
+            if action != "STOP_SEARCH_STRATEGY":
                 return False
             # An unseen query/scope gets one bounded escape after the second
             # no-new-evidence result. It may discover new evidence and reset
@@ -1799,10 +1805,10 @@ class SingleAgentModelLoop:
             for ordinal in range(len(result_refs), len(proposal.tool_calls)):
                 model_call = proposal.tool_calls[ordinal]
                 call = model_call.runtime_call
-                if search_strategy_stalled(call):
+                if tool_progress_stalled(call):
                     return self._error(
                         "MODEL_PROGRESS_STALLED", "runtime",
-                        "Further search was stopped after confirmed lack of progress.",
+                        "Further tool use was stopped after confirmed lack of progress.",
                         {"tool_id": call.tool_id},
                     )
                 existing = ledger.get(call.call_id)
@@ -1930,12 +1936,12 @@ class SingleAgentModelLoop:
             if bound.kind != "tool_call" or bound.tool_call is None:
                 return None
             call = bound.tool_call
-            if search_strategy_stalled(call):
+            if tool_progress_stalled(call):
                 return ToolResult(
                     call.call_id, call.tool_id, "error",
                     error=self._error(
                         "MODEL_PROGRESS_STALLED", "runtime",
-                        "Further search was stopped after confirmed lack of progress.",
+                        "Further tool use was stopped after confirmed lack of progress.",
                         {"tool_id": call.tool_id},
                     ),
                 )
@@ -2305,7 +2311,7 @@ class SingleAgentModelLoop:
                         recovery_guidance=recovery_decision.hint,
                         observation=None if grouped_history else observation,
                         available_tools=(
-                            [] if recovery_decision.action == "FINAL_CONFLICT"
+                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
                             else list(tool_definitions)
                         ),
                         previous_tool_call=None if grouped_history else previous_tool_call,

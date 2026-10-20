@@ -252,6 +252,9 @@ def _safe_runtime_error(status: Mapping[str, Any]) -> dict[str, Any]:
     elif category == "permission":
         classification = "tool_policy_denied"
         message = "A requested action was not permitted. No final answer was verified."
+    elif category == "budget":
+        classification = "budget_exhausted"
+        message = "The investigation reached its execution budget before a final answer was verified."
     else:
         classification = "runtime_failure"
         message = "The investigation stopped before a final answer could be verified."

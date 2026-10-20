@@ -249,22 +249,26 @@ class RuntimeRetrievalBackend:
                 if not line_hits:
                     continue
                 # A title or heading can outrank the line that carries the
-                # answer. Keep the document rank, but expose its best matching
-                # body passage when one is available.
-                passage = next(
-                    (item for item in line_hits if item.source_kind == "note_body"),
-                    line_hits[0],
-                )
-                evidence.append(
-                    self._decorate_evidence(
-                        passage.to_dict(),
-                        document_rank=display_rank,
-                        document_score=hit.score,
-                        retrieval_channel=hit.retrieval_channel,
-                        scope_path=effective_scope,
-                        logical_path=hit.logical_path,
+                # answer. Preserve every matching body passage when one is
+                # available, so separate relation spans in one document do
+                # not collapse into one evidence item. If a document has no
+                # body match, retain the previous title/heading fallback.
+                passages = [
+                    item for item in line_hits if item.source_kind == "note_body"
+                ] or line_hits[:1]
+                for passage in passages:
+                    evidence.append(
+                        self._decorate_evidence(
+                            passage.to_dict(),
+                            document_rank=display_rank,
+                            document_score=hit.score,
+                            retrieval_channel=hit.retrieval_channel,
+                            scope_path=effective_scope,
+                            logical_path=hit.logical_path,
+                        )
                     )
-                )
+                    if self.mode is not RetrievalMode.BM25 and len(evidence) >= top_k:
+                        break
                 if self.mode is not RetrievalMode.BM25 and len(evidence) >= top_k:
                     break
             if self.mode is RetrievalMode.BM25:
