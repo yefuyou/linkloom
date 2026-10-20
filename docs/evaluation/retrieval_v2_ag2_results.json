@@ -1,0 +1,3821 @@
+{
+  "gold_sha256_after": "2b150f3ba79f991aaa72fecfd7bffe7d83e6f3fb3656e453d1c2dfadc879b983",
+  "gold_sha256_before": "2b150f3ba79f991aaa72fecfd7bffe7d83e6f3fb3656e453d1c2dfadc879b983",
+  "modes": {
+    "bm25": {
+      "cases": [
+        {
+          "case_id": "mps-001",
+          "latency_ms": 0.7313000023714267,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "mps-002",
+          "latency_ms": 0.7571999958599918,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8319,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/01-early-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-003",
+          "latency_ms": 0.7802999971318059,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ]
+        },
+        {
+          "case_id": "mps-004",
+          "latency_ms": 0.7679999980609864,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-005",
+          "latency_ms": 0.5402999959187582,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7654,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/01-early-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-001",
+          "latency_ms": 0.4200000039418228,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "ret-002",
+          "latency_ms": 0.6004999959259294,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7537,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-003",
+          "latency_ms": 0.523299997439608,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8855,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "ret-004",
+          "latency_ms": 0.5369000064092688,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-005",
+          "latency_ms": 0.686499995936174,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "inc-001",
+          "latency_ms": 0.4658999969251454,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ]
+        },
+        {
+          "case_id": "inc-002",
+          "latency_ms": 0.6766000005882233,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-003",
+          "latency_ms": 0.6629999988945201,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "inc-004",
+          "latency_ms": 0.5700999972759746,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8503,
+            "recall_at_1": 0.5,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-005",
+          "latency_ms": 0.7393000050797127,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ]
+        },
+        {
+          "case_id": "aer-001",
+          "latency_ms": 0.435799993283581,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md"
+          ]
+        },
+        {
+          "case_id": "aer-002",
+          "latency_ms": 0.6567000018549152,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-003",
+          "latency_ms": 0.6683000028715469,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6096,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-004",
+          "latency_ms": 0.6327000010060146,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-005",
+          "latency_ms": 0.4541000016615726,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ]
+        },
+        {
+          "case_id": "iti-001",
+          "latency_ms": 0.4578000007313676,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.3333,
+            "ndcg_at_5": 0.5,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ]
+        },
+        {
+          "case_id": "iti-002",
+          "latency_ms": 0.7623999990755692,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8319,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-003",
+          "latency_ms": 0.603599997702986,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-004",
+          "latency_ms": 0.7994000043254346,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-005",
+          "latency_ms": 0.6842999937362038,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.25,
+            "ndcg_at_5": 0.2641,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.0,
+            "recall_at_5": 0.5,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "drm-001",
+          "latency_ms": 0.516200001584366,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ]
+        },
+        {
+          "case_id": "drm-002",
+          "latency_ms": 0.5948999969405122,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-003",
+          "latency_ms": 0.592500000493601,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-004",
+          "latency_ms": 0.4961000013281591,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6096,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-005",
+          "latency_ms": 0.5388999998103827,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8539,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 0.8,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ]
+        }
+      ],
+      "metrics": {
+        "evidence_availability_at_5": 1.0,
+        "mean_latency_ms": 0.6118,
+        "mrr": 0.8694,
+        "ndcg_at_5": 0.8537,
+        "recall_at_1": 0.33,
+        "recall_at_3": 0.7233,
+        "recall_at_5": 0.9239,
+        "retrieval_failure_rate": 0.0
+      }
+    },
+    "current": {
+      "cases": [
+        {
+          "case_id": "mps-001",
+          "latency_ms": 5.7027000002563,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/04-action-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "mps-002",
+          "latency_ms": 6.511500003398396,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/04-action-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-003",
+          "latency_ms": 7.494999998016283,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ]
+        },
+        {
+          "case_id": "mps-004",
+          "latency_ms": 7.889200001955032,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.3333,
+            "ndcg_at_5": 0.4367,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.3333,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-005",
+          "latency_ms": 4.05509999836795,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/02-comparison-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-001",
+          "latency_ms": 2.73169999854872,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "ret-002",
+          "latency_ms": 3.0489000055240467,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.5654,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.25,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-003",
+          "latency_ms": 2.7608000018517487,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7039,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "ret-004",
+          "latency_ms": 2.755000001343433,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7123,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-005",
+          "latency_ms": 3.530200003297068,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "inc-001",
+          "latency_ms": 2.71210000209976,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ]
+        },
+        {
+          "case_id": "inc-002",
+          "latency_ms": 2.6973999993060715,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-003",
+          "latency_ms": 3.3955999970203266,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "inc-004",
+          "latency_ms": 3.984900002251379,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-005",
+          "latency_ms": 4.865100003371481,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.3333,
+            "ndcg_at_5": 0.6183,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.3333,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ]
+        },
+        {
+          "case_id": "aer-001",
+          "latency_ms": 3.8836999956401996,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md"
+          ]
+        },
+        {
+          "case_id": "aer-002",
+          "latency_ms": 4.3324999933247454,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-003",
+          "latency_ms": 3.448499999649357,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9047,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-004",
+          "latency_ms": 4.098000004887581,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-005",
+          "latency_ms": 3.2939000011538155,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ]
+        },
+        {
+          "case_id": "iti-001",
+          "latency_ms": 3.3431999981985427,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.3333,
+            "ndcg_at_5": 0.5,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ]
+        },
+        {
+          "case_id": "iti-002",
+          "latency_ms": 3.8566000002902,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7537,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-003",
+          "latency_ms": 3.066099998250138,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.3333,
+            "ndcg_at_5": 0.4367,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.3333,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-004",
+          "latency_ms": 3.805699998338241,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8539,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 0.8,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-005",
+          "latency_ms": 4.04290000005858,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8772,
+            "recall_at_1": 0.5,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "drm-001",
+          "latency_ms": 3.1387999988510273,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ]
+        },
+        {
+          "case_id": "drm-002",
+          "latency_ms": 3.649400001449976,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-003",
+          "latency_ms": 3.2678999996278435,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-004",
+          "latency_ms": 4.372099996544421,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6096,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-005",
+          "latency_ms": 2.9418000049190596,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.786,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.4,
+            "recall_at_5": 0.8,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ]
+        }
+      ],
+      "metrics": {
+        "evidence_availability_at_5": 1.0,
+        "mean_latency_ms": 3.9559,
+        "mrr": 0.8278,
+        "ndcg_at_5": 0.8245,
+        "recall_at_1": 0.3105,
+        "recall_at_3": 0.675,
+        "recall_at_5": 0.9283,
+        "retrieval_failure_rate": 0.0
+      }
+    },
+    "dense": {
+      "cases": [
+        {
+          "case_id": "mps-001",
+          "latency_ms": 29.176800002460368,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "mps-002",
+          "latency_ms": 30.056399999011774,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8048,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-003",
+          "latency_ms": 34.493200000724755,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8855,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ]
+        },
+        {
+          "case_id": "mps-004",
+          "latency_ms": 32.14829999342328,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-005",
+          "latency_ms": 29.506400001992006,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8855,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-001",
+          "latency_ms": 31.231300003128126,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "ret-002",
+          "latency_ms": 33.04260000004433,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-003",
+          "latency_ms": 35.06750000087777,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7039,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "ret-004",
+          "latency_ms": 34.4803000043612,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-005",
+          "latency_ms": 31.42979999392992,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6096,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "inc-001",
+          "latency_ms": 33.2944999972824,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ]
+        },
+        {
+          "case_id": "inc-002",
+          "latency_ms": 33.15229999861913,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7039,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-003",
+          "latency_ms": 34.70009999728063,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8855,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "inc-004",
+          "latency_ms": 32.274299999699,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-005",
+          "latency_ms": 31.778399999893736,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ]
+        },
+        {
+          "case_id": "aer-001",
+          "latency_ms": 31.251799999154173,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md"
+          ]
+        },
+        {
+          "case_id": "aer-002",
+          "latency_ms": 33.88170000107493,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7537,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-003",
+          "latency_ms": 33.9966999963508,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7095,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.25,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-004",
+          "latency_ms": 34.176599998318125,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-005",
+          "latency_ms": 39.73240000050282,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ]
+        },
+        {
+          "case_id": "iti-001",
+          "latency_ms": 30.171799997333437,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ]
+        },
+        {
+          "case_id": "iti-002",
+          "latency_ms": 35.90970000368543,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-003",
+          "latency_ms": 32.79689999908442,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8529,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.3333,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-004",
+          "latency_ms": 29.451800000970252,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-005",
+          "latency_ms": 28.303899998718407,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "drm-001",
+          "latency_ms": 27.288600002066232,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ]
+        },
+        {
+          "case_id": "drm-002",
+          "latency_ms": 29.824199998984113,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9047,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-003",
+          "latency_ms": 30.392599997867364,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-004",
+          "latency_ms": 28.853300005721394,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-005",
+          "latency_ms": 29.47880000283476,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8688,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 0.8,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ]
+        }
+      ],
+      "metrics": {
+        "evidence_availability_at_5": 1.0,
+        "mean_latency_ms": 32.0448,
+        "mrr": 0.95,
+        "ndcg_at_5": 0.8851,
+        "recall_at_1": 0.3967,
+        "recall_at_3": 0.7039,
+        "recall_at_5": 0.9378,
+        "retrieval_failure_rate": 0.0
+      }
+    },
+    "directory_hybrid": {
+      "cases": [
+        {
+          "case_id": "mps-001",
+          "latency_ms": 29.608599994389806,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "mps-002",
+          "latency_ms": 30.18069999961881,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8319,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-003",
+          "latency_ms": 28.519899999082554,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ]
+        },
+        {
+          "case_id": "mps-004",
+          "latency_ms": 32.86469999875408,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-005",
+          "latency_ms": 28.05369999987306,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7654,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/04-action-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-001",
+          "latency_ms": 30.86009999969974,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "ret-002",
+          "latency_ms": 33.52610000001732,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8048,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-003",
+          "latency_ms": 33.430800001951866,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7039,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "ret-004",
+          "latency_ms": 38.845999995828606,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-005",
+          "latency_ms": 45.00479999842355,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "inc-001",
+          "latency_ms": 30.902300000889227,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ]
+        },
+        {
+          "case_id": "inc-002",
+          "latency_ms": 32.52299999439856,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-003",
+          "latency_ms": 43.04899999988265,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "inc-004",
+          "latency_ms": 33.88239999912912,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-005",
+          "latency_ms": 34.68109999812441,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ]
+        },
+        {
+          "case_id": "aer-001",
+          "latency_ms": 34.692299996095244,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md"
+          ]
+        },
+        {
+          "case_id": "aer-002",
+          "latency_ms": 35.31759999896167,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7537,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-003",
+          "latency_ms": 28.071500004443806,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.5925,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-004",
+          "latency_ms": 30.081099997914862,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-005",
+          "latency_ms": 27.872999999090098,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ]
+        },
+        {
+          "case_id": "iti-001",
+          "latency_ms": 25.85240000189515,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ]
+        },
+        {
+          "case_id": "iti-002",
+          "latency_ms": 31.459999998332933,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-003",
+          "latency_ms": 39.581400000315625,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-004",
+          "latency_ms": 34.498100001655985,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-005",
+          "latency_ms": 32.09529999730876,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8772,
+            "recall_at_1": 0.5,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "drm-001",
+          "latency_ms": 28.43369999754941,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ]
+        },
+        {
+          "case_id": "drm-002",
+          "latency_ms": 31.105699999898206,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7366,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-003",
+          "latency_ms": 27.549099999305326,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-004",
+          "latency_ms": 30.111699998087715,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/02-retention-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-005",
+          "latency_ms": 27.397300000302494,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ]
+        }
+      ],
+      "metrics": {
+        "evidence_availability_at_5": 1.0,
+        "mean_latency_ms": 32.3351,
+        "mrr": 0.9333,
+        "ndcg_at_5": 0.8895,
+        "recall_at_1": 0.3633,
+        "recall_at_3": 0.7456,
+        "recall_at_5": 0.9361,
+        "retrieval_failure_rate": 0.0
+      }
+    },
+    "hybrid": {
+      "cases": [
+        {
+          "case_id": "mps-001",
+          "latency_ms": 27.265899996564258,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "mps-002",
+          "latency_ms": 31.27229999518022,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8319,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-003",
+          "latency_ms": 41.028400002687704,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md"
+          ]
+        },
+        {
+          "case_id": "mps-004",
+          "latency_ms": 30.923999998776708,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md",
+            "workspaces/model_provider_selection/01-early-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/04-action-status.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "mps-005",
+          "latency_ms": 30.95240000402555,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7654,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/01-early-proposal.md",
+            "workspaces/model_provider_selection/02-comparison-review.md",
+            "workspaces/model_provider_selection/04-action-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/model_provider_selection/03-final-decision.md",
+            "workspaces/model_provider_selection/05-office-hours-prototype.md",
+            "workspaces/model_provider_selection/06-adoption-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-001",
+          "latency_ms": 32.48129999701632,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md"
+          ]
+        },
+        {
+          "case_id": "ret-002",
+          "latency_ms": 32.991000000038184,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8048,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-003",
+          "latency_ms": 34.83509999932721,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7039,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 0.6667,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/02-benchmark-review.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "ret-004",
+          "latency_ms": 40.68580000603106,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/02-benchmark-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "ret-005",
+          "latency_ms": 32.07459999975981,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9558,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/05-query-tuning-office-hours.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/retrieval_upgrade/01-semantic-draft.md",
+            "workspaces/retrieval_upgrade/03-final-decision.md",
+            "workspaces/retrieval_upgrade/04-cache-security-status.md",
+            "workspaces/retrieval_upgrade/06-release-readiness.md"
+          ]
+        },
+        {
+          "case_id": "inc-001",
+          "latency_ms": 30.963999997766223,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ]
+        },
+        {
+          "case_id": "inc-002",
+          "latency_ms": 31.403500004671514,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.906,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-003",
+          "latency_ms": 32.8531000050134,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9469,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/02-root-cause-review.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ]
+        },
+        {
+          "case_id": "inc-004",
+          "latency_ms": 31.224900005327072,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9197,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/06-operations-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md"
+          ]
+        },
+        {
+          "case_id": "inc-005",
+          "latency_ms": 33.41740000178106,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/deployment_incident/05-postmortem-draft.md",
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/01-incident-intake.md",
+            "workspaces/deployment_incident/02-root-cause-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/deployment_incident/03-mitigation-decision.md",
+            "workspaces/deployment_incident/04-remediation-status.md",
+            "workspaces/deployment_incident/05-postmortem-draft.md"
+          ]
+        },
+        {
+          "case_id": "aer-001",
+          "latency_ms": 29.632100005983375,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md"
+          ]
+        },
+        {
+          "case_id": "aer-002",
+          "latency_ms": 32.44339999946533,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7537,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-003",
+          "latency_ms": 34.94289999798639,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.5925,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-004",
+          "latency_ms": 28.46980000322219,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/02-metric-design-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md",
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md"
+          ]
+        },
+        {
+          "case_id": "aer-005",
+          "latency_ms": 31.052199999976438,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.5,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md",
+            "workspaces/agent_evaluation_rollout/05-judge-office-hours.md",
+            "workspaces/agent_evaluation_rollout/06-threshold-review.md",
+            "workspaces/agent_evaluation_rollout/01-eval-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/agent_evaluation_rollout/03-rollout-decision.md",
+            "workspaces/agent_evaluation_rollout/04-owner-status.md"
+          ]
+        },
+        {
+          "case_id": "iti-001",
+          "latency_ms": 28.664999997999985,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.6309,
+            "recall_at_1": 0.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md"
+          ]
+        },
+        {
+          "case_id": "iti-002",
+          "latency_ms": 29.286299999512266,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-003",
+          "latency_ms": 27.0063999996637,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9675,
+            "recall_at_1": 0.3333,
+            "recall_at_3": 0.6667,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-004",
+          "latency_ms": 31.49940000002971,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/02-security-review.md",
+            "workspaces/internal_tool_integration/03-integration-decision.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "iti-005",
+          "latency_ms": 33.43979999772273,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.8772,
+            "recall_at_1": 0.5,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/internal_tool_integration/06-integration-readiness.md",
+            "workspaces/internal_tool_integration/01-direct-api-proposal.md",
+            "workspaces/internal_tool_integration/05-sandbox-demo.md",
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/02-security-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/internal_tool_integration/04-owner-status.md",
+            "workspaces/internal_tool_integration/06-integration-readiness.md"
+          ]
+        },
+        {
+          "case_id": "drm-001",
+          "latency_ms": 29.079499996441882,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 1.0,
+            "recall_at_3": 1.0,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ]
+        },
+        {
+          "case_id": "drm-002",
+          "latency_ms": 30.242300003010314,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.7366,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.5,
+            "recall_at_5": 0.75,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-003",
+          "latency_ms": 38.52100000221981,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 0.9829,
+            "recall_at_1": 0.25,
+            "recall_at_3": 0.75,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/01-90-day-draft.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-004",
+          "latency_ms": 28.138900001067668,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 0.5,
+            "ndcg_at_5": 0.7606,
+            "recall_at_1": 0.0,
+            "recall_at_3": 0.5,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/02-retention-review.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md"
+          ]
+        },
+        {
+          "case_id": "drm-005",
+          "latency_ms": 29.94060000492027,
+          "metrics": {
+            "evidence_availability_at_5": 1.0,
+            "mrr": 1.0,
+            "ndcg_at_5": 1.0,
+            "recall_at_1": 0.2,
+            "recall_at_3": 0.6,
+            "recall_at_5": 1.0,
+            "retrieval_failure": 0.0
+          },
+          "ranked_source_refs": [
+            "workspaces/data_retention_migration/06-compliance-office-hours.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/03-retention-decision.md"
+          ],
+          "relevant_source_refs": [
+            "workspaces/data_retention_migration/02-retention-review.md",
+            "workspaces/data_retention_migration/03-retention-decision.md",
+            "workspaces/data_retention_migration/04-legal-status.md",
+            "workspaces/data_retention_migration/05-migration-status.md",
+            "workspaces/data_retention_migration/06-compliance-office-hours.md"
+          ]
+        }
+      ],
+      "metrics": {
+        "evidence_availability_at_5": 1.0,
+        "mean_latency_ms": 31.8911,
+        "mrr": 0.9333,
+        "ndcg_at_5": 0.8895,
+        "recall_at_1": 0.3633,
+        "recall_at_3": 0.7456,
+        "recall_at_5": 0.9361,
+        "retrieval_failure_rate": 0.0
+      }
+    }
+  }
+}

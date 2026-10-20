@@ -10,6 +10,7 @@ from linkloom.agents.providers.gemini_api import (
     map_tool_definition_to_gemini_function,
 )
 from linkloom.tools.contracts import ToolDefinition
+from linkloom.tools.runtime import create_retrieval_tool_runtime
 
 
 def _definition() -> ToolDefinition:
@@ -58,14 +59,18 @@ def _request() -> ModelTurnRequest:
 
 def test_tool_definition_maps_to_one_manual_function_declaration_without_version_leak():
     definition = _definition()
+    canonical_schema = copy.deepcopy(definition.input_schema)
+    expected_projection = copy.deepcopy(canonical_schema)
+    expected_projection["properties"]["path"].pop("maxLength")
 
     mapped = map_tool_definition_to_gemini_function(definition)
 
     assert mapped == {
         "name": "read_verified_note",
         "description": "Read one verified note.",
-        "parameters_json_schema": definition.input_schema,
+        "parameters_json_schema": expected_projection,
     }
+    assert definition.input_schema == canonical_schema
     assert "version" not in mapped
     assert "output_schema" not in mapped
 
@@ -78,6 +83,22 @@ def test_tool_schema_mapping_returns_a_deep_copy_and_does_not_mutate_definition(
     mapped["parameters_json_schema"]["properties"]["path"]["maxLength"] = 1
 
     assert definition.input_schema == original_schema
+
+
+def test_production_read_tool_tells_model_to_replay_search_evidence_id():
+    runtime = create_retrieval_tool_runtime(
+        lambda query, source_context, limit: [],
+        lambda note_ref: {"ref": note_ref},
+    )
+    definition, _executor = runtime.registry.resolve("read_verified_note")
+
+    mapped = map_tool_definition_to_gemini_function(definition)
+
+    assert "evidence_id" in mapped["description"]
+    note_ref_schema = mapped["parameters_json_schema"]["properties"]["note_ref"]
+    assert "search_notes" in note_ref_schema["description"]
+    assert "evidence_id" in note_ref_schema["description"]
+    assert "relative_path" in note_ref_schema["description"]
 
 
 def test_adapter_request_groups_function_declarations_and_preserves_generation_options():

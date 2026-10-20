@@ -1,0 +1,7 @@
+{
+  "identity": "e2-budget-reconciliation",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:05:52.759034+00:00",
+  "sha256": "ec958597a434f0d0bbd968d62ea04f77f93f12ad896cd2a0347754a652ba837d"
+}

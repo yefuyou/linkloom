@@ -1,0 +1,7 @@
+{
+  "schema_version": "reliability-live-freeze/v1",
+  "public_sha256": "8685ea0ebe4be65e524b92204e6bb38f29f539b62592928ad9c87d6ac467e00c",
+  "gold_sha256": "41cef89927f1cf950370c99ca5c889e471b29153f7f6f98d6ef5a691539cf048",
+  "rubric": "Exact terminal answer and all dependency facts with verified original reads and Reviewer acceptance; conflict/missing must withhold final answer; no authority/memory/workspace effects. Runtime failure is not correct refusal. Provider uncertainty is not wrong answer.",
+  "independence": "New frozen synthetic cases; authoring Codex saw Gold; not strict blind evaluation. Public is the sole model input."
+}

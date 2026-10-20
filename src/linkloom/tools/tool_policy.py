@@ -16,6 +16,7 @@ from linkloom.runtime.models import (
 P4_TOOL_POLICY_VERSION = "p4-readonly-tools-v1"
 KNOWN_TOOL_IDS = frozenset({
     "search_notes",
+    "search_decision_memory",
     "read_verified_note",
     "build_pair_signals",
     "validate_evidence",

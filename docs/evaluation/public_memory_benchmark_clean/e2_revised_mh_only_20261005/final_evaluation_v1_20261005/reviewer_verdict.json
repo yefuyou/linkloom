@@ -1,0 +1,18 @@
+{
+  "created_at_utc": "2026-10-05T07:13:55.516181+00:00",
+  "criticality_map": {
+    "COST_TELEMETRY_DEGRADED": 2,
+    "EVALUATION_CRITICAL": 276,
+    "OBSERVABILITY_FORMAT_ONLY": 0,
+    "SCOREABILITY_CRITICAL": 1
+  },
+  "evaluation_can_run_with_safe_degradation": "YES",
+  "gold_values_read": false,
+  "provider_calls": 0,
+  "read_only": true,
+  "review_findings": [],
+  "reviewer_model": "gpt-5.6-luna",
+  "schema_version": "linkloom-final-evaluation-independent-review/v1",
+  "summary": "No material run-blocking issue found. Identity, Gold isolation, request/scoring semantics, evidence, and cost remain hard-stop boundaries; telemetry may degrade only with durable accepted evidence and safe cost bounds.",
+  "verdict": "PASS"
+}

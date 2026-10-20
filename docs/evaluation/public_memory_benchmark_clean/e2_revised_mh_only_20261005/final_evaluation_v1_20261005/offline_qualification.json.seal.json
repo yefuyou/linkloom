@@ -1,0 +1,7 @@
+{
+  "identity": "e2-offline-qualification",
+  "schema_version": "linkloom-public-memory-artifact-seal/v1",
+  "sealed": true,
+  "sealed_at_utc": "2026-10-05T07:13:55.548503+00:00",
+  "sha256": "1ef0a22ff483d445cdc7e254889ee12a43dc748f909ea8d7aa0d8e7b04b85d79"
+}

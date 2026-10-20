@@ -1,0 +1,81 @@
+{
+  "current_question": {
+    "answer": {
+      "decision_id": "supplier-b",
+      "provenance_run_id": "run:fixture-b",
+      "source_episode_id": "episode:final-decision",
+      "source_evidence_refs": [
+        "decisions/supplier-decision.md#L8-L15"
+      ],
+      "status": "CURRENT",
+      "subject_key": "supplier-selection",
+      "supersedes_id": "supplier-a",
+      "valid_from": "2026-06-01T00:00:00+00:00",
+      "valid_to": null,
+      "value": "Supplier B",
+      "workspace_id": "borealis"
+    },
+    "question": "我们现在最终决定了什么？"
+  },
+  "evolution_question": {
+    "answer": {
+      "changed_at": "2026-06-01T00:00:00+00:00",
+      "current_decision_id": "supplier-b",
+      "from_value": "Supplier A",
+      "previous_decision_id": "supplier-a",
+      "source_evidence_refs": [
+        "decisions/supplier-decision.md#L8-L15"
+      ],
+      "subject_key": "supplier-selection",
+      "to_value": "Supplier B",
+      "workspace_id": "borealis"
+    },
+    "question": "什么时候从 A 改成了 B，证据是什么？"
+  },
+  "historical_question": {
+    "answer": {
+      "decision_id": "supplier-a",
+      "provenance_run_id": "run:fixture-a",
+      "source_episode_id": "episode:comparison-review",
+      "source_evidence_refs": [
+        "requirements/vendor-selection-v1.md#L4-L10"
+      ],
+      "status": "SUPERSEDED",
+      "subject_key": "supplier-selection",
+      "supersedes_id": null,
+      "valid_from": "2026-05-12T00:00:00+00:00",
+      "valid_to": "2026-06-01T00:00:00+00:00",
+      "value": "Supplier A",
+      "workspace_id": "borealis"
+    },
+    "as_of": "2026-05-20T00:00:00+00:00",
+    "question": "之前决定是什么？"
+  },
+  "relations": {
+    "decision_to_action_to_owner": [
+      {
+        "action_id": "supplier-b-rollout",
+        "deadline": "2026-06-15",
+        "description": "Prepare Supplier B rollout.",
+        "owner": "Rina",
+        "source_decision_id": "supplier-b",
+        "source_evidence_refs": [
+          "actions/rollout.md#L3-L8"
+        ],
+        "status": "OPEN",
+        "workspace_id": "borealis"
+      }
+    ],
+    "decision_to_evidence": [
+      "decisions/supplier-decision.md#L8-L15"
+    ],
+    "decision_to_previous_decision": "supplier-a"
+  },
+  "subject_key": "supplier-selection",
+  "workspace_id": "borealis",
+  "write_policy": {
+    "grounding": "PASS",
+    "materialization": "explicit fixture approval",
+    "team_decision_contract": "PASS"
+  }
+}

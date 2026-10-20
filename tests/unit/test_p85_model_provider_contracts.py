@@ -15,6 +15,7 @@ from linkloom.agents.model_adapter import (
     ModelTurnRequest,
     ModelUsage,
     ProviderCapability,
+    ProviderContinuation,
 )
 from linkloom.runtime.errors import ValidationError
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
@@ -181,10 +182,12 @@ def test_model_response_rejects_non_json_metadata_and_hidden_reasoning_fields():
     ("code", "category", "retryable", "outcome"),
     [
         ("MODEL_AUTH_REQUIRED", "authentication", False, "known_failure"),
+        ("MODEL_BILLING_BLOCKED", "billing_blocked", False, "known_failure"),
         ("MODEL_INVALID_REQUEST", "invalid_request", False, "known_failure"),
         ("MODEL_RATE_LIMITED", "rate_limit", True, "known_failure"),
         ("MODEL_TIMEOUT", "timeout", False, "unknown_provider_outcome"),
         ("MODEL_TRANSIENT_FAILURE", "transient", True, "known_failure"),
+        ("MODEL_UNKNOWN_FAILURE", "unknown_provider_error", False, "unknown_provider_outcome"),
         ("MODEL_UNAVAILABLE", "unavailable_model", False, "known_failure"),
         ("MODEL_RESPONSE_MALFORMED", "malformed_response", False, "known_failure"),
         ("MODEL_TOOL_CALL_PARSE_FAILED", "tool_call_parse", False, "known_failure"),
@@ -313,6 +316,94 @@ def test_model_turn_request_previous_tool_call_roundtrips_and_legacy_defaults_wo
     assert _request(generation_options={"temperature": 0.1}).generation_options == (
         ModelGenerationOptions(temperature=0.1)
     )
+
+
+def test_model_generation_options_roundtrip_required_tool_call_mode():
+    options = ModelGenerationOptions.from_dict(
+        {"max_output_tokens": 2048, "temperature": 0.0, "require_tool_call": True}
+    )
+
+    assert options.require_tool_call is True
+    assert ModelGenerationOptions().require_tool_call is False
+    assert "require_tool_call" not in ModelGenerationOptions().to_dict()
+    assert ModelGenerationOptions.from_dict(options.to_dict()) == options
+    with pytest.raises(ValidationError):
+        ModelGenerationOptions(require_tool_call=1)
+
+
+def test_model_generation_options_roundtrip_thinking_level():
+    options = ModelGenerationOptions.from_dict(
+        {
+            "max_output_tokens": 2048,
+            "temperature": None,
+            "require_tool_call": True,
+            "thinking_level": "low",
+        }
+    )
+
+    assert options.thinking_level == "low"
+    assert ModelGenerationOptions().thinking_level is None
+    assert "thinking_level" not in ModelGenerationOptions().to_dict()
+    assert ModelGenerationOptions.from_dict(options.to_dict()) == options
+    with pytest.raises(ValidationError):
+        ModelGenerationOptions(thinking_level="minimal")
+
+
+def test_provider_continuation_roundtrips_and_stays_bound_to_its_tool_call():
+    call = _call()
+    continuation = ProviderContinuation.for_tool_call(
+        provider_id="gemini",
+        source_turn_id="run_p85_1:turn:1",
+        call=call,
+        payload={"format": "gemini-function-call-v1", "encoding": "base64", "data": "c2ln"},
+    )
+    response = ModelResponse(
+        action=ModelAction.tool(call),
+        provider_continuation=continuation,
+    )
+
+    restored_response = ModelResponse.from_dict(
+        json.loads(json.dumps(response.to_dict(), sort_keys=True))
+    )
+    request = _request(
+        turn_id="run_p85_1:turn:2",
+        sequence=2,
+        observation=_observation(call),
+        previous_tool_call=call,
+        provider_continuation=restored_response.provider_continuation,
+    )
+
+    assert ModelTurnRequest.from_dict(
+        json.loads(json.dumps(request.to_dict(), sort_keys=True))
+    ) == request
+    assert restored_response.provider_continuation == continuation
+    assert call.arguments == {"query": "durability"}
+
+    mismatched_call = ToolCall(
+        **{
+            **call.to_dict(),
+            "arguments": {"query": "different"},
+        }
+    )
+    with pytest.raises(ValidationError, match="continuation identity"):
+        _request(
+            turn_id="run_p85_1:turn:2",
+            sequence=2,
+            observation=_observation(mismatched_call),
+            previous_tool_call=mismatched_call,
+            provider_continuation=continuation,
+        )
+
+
+@pytest.mark.parametrize("forbidden_key", ["credential", "reasoning"])
+def test_provider_continuation_rejects_credential_or_reasoning_fields(forbidden_key):
+    with pytest.raises(ValidationError):
+        ProviderContinuation.for_tool_call(
+            provider_id="gemini",
+            source_turn_id="run_p85_1:turn:1",
+            call=_call(),
+            payload={forbidden_key: "must-not-persist"},
+        )
 
 
 def test_model_turn_request_rejects_mismatched_previous_tool_call_identity():

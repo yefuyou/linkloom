@@ -1,0 +1,16 @@
+{
+  "schema_version": "deepseek-real-smoke-observed/v1",
+  "run_id": "run_authority_provider",
+  "result": {
+    "run_id": "run_authority_provider",
+    "status": "completed"
+  },
+  "visible_evidence_refs": [],
+  "supporting_observations": [
+    {
+      "observation_id": "observation_semantic",
+      "source_evidence_refs": [],
+      "model_observed": true
+    }
+  ]
+}

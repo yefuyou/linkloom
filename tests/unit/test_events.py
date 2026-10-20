@@ -47,6 +47,21 @@ def test_trace_event_seq_monotonic():
     assert e2.seq == 2
     assert sink.events == [e1, e2]
 
+@pytest.mark.parametrize(
+    "event_type",
+    ["retrieval.completed", "decision_memory.completed", "context.assembled"],
+)
+def test_phase4_observability_events_keep_trace_sequence_contiguous(event_type):
+    sink = DummySink()
+    emitter = EventEmitter("run_1", "thread_1", sink)
+
+    first = emitter.emit(event_type, "agent", "ok", attributes={"candidate_count": 2})
+    second = emitter.emit("tool.completed", "agent", "ok")
+
+    assert first.seq == 1
+    assert second.seq == 2
+    assert [event.seq for event in sink.events] == [1, 2]
+
 def test_trace_event_rfc3339_validation():
     with pytest.raises(ValidationError, match="Invalid started_at format"):
         TraceEvent(

@@ -50,14 +50,17 @@ class AgentRegistry:
                 f"Handoff from {from_agent_id} to {to_agent_id} is not allowed; only coordinator may delegate."
             )
 
-def create_default_registry() -> AgentRegistry:
+def create_default_registry(*, include_decision_memory: bool = False) -> AgentRegistry:
     registry = AgentRegistry()
+    retrieval_capabilities = ["search_notes", "read_verified_note"]
+    if include_decision_memory:
+        retrieval_capabilities.append("search_decision_memory")
     registry.register(AgentIdentity(
         agent_id="coordinator",
         role="router",
         version="p4-coordinator-v1",
         capabilities=[],
-        allowed_workflows=["ask", "connect"],
+        allowed_workflows=["ask", "connect", "team_decision"],
         can_read_gold=False,
         can_write_vault=False,
         max_steps=12
@@ -66,11 +69,13 @@ def create_default_registry() -> AgentRegistry:
         agent_id="retrieval_agent",
         role="retrieval",
         version="p4-retrieval-v1",
-        capabilities=["search_notes", "read_verified_note"],
-        allowed_workflows=["ask", "connect"],
+        capabilities=retrieval_capabilities,
+        allowed_workflows=["ask", "connect", "team_decision"],
         can_read_gold=False,
         can_write_vault=False,
-        max_steps=3
+        # The Runtime assigns a stricter per-task cap.  Team Decision can use
+        # up to the existing Runtime maximum; ask/connect remain at three.
+        max_steps=12
     ))
     registry.register(AgentIdentity(
         agent_id="curator_agent",
@@ -87,7 +92,7 @@ def create_default_registry() -> AgentRegistry:
         role="reviewer",
         version="p4-reviewer-v1",
         capabilities=["validate_evidence", "validate_schema"],
-        allowed_workflows=["ask", "connect"],
+        allowed_workflows=["ask", "connect", "team_decision"],
         can_read_gold=False,
         can_write_vault=False,
         max_steps=3

@@ -161,6 +161,16 @@ def test_executor_exception_is_safe_and_normalized():
     assert result.error.message == "Tool execution failed."
     assert raw_message not in serialized
     assert "secret-value" not in serialized
+    diagnostic = result.error.details["failure_diagnostic"]
+    assert diagnostic["stage"] == "executor"
+    assert diagnostic["exception_type"] == "RuntimeError"
+    assert diagnostic["location"]["file"] == "test_tool_runtime.py"
+    assert diagnostic["location"]["function"] == "executor"
+    assert isinstance(diagnostic["location"]["line"], int)
+    assert diagnostic["exception_chain"] == [
+        {"relationship": "raised", "exception_type": "RuntimeError"}
+    ]
+    assert raw_message not in json.dumps(diagnostic)
     assert enforcer.call_count == 1
 
 

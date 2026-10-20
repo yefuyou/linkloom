@@ -44,6 +44,10 @@ class ProviderResponse:
     usage: ProviderUsage
     error_type: Optional[str] = None  # missing_executable, timeout, non_zero_exit, empty_output, invalid_json, schema_invalid
 
+
+class ProviderExecutionBlocked(RuntimeError):
+    """Raised when the legacy evaluation transport cannot prove safe limits."""
+
 class CommandRunner:
     def run(self, cmd: List[str], cwd: str, timeout: int) -> subprocess.CompletedProcess:
         return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, encoding="utf-8", timeout=timeout)
@@ -51,7 +55,7 @@ class CommandRunner:
 class AgyCliAdapter:
     def __init__(
         self,
-        executable: str = r"C:\Users\18019\AppData\Local\agy\bin\agy.exe",
+        executable: str = "agy",
         model: str = "gemini-3.1-pro-high",
         effort: str = "high",
         default_timeout: int = 300,
@@ -63,9 +67,28 @@ class AgyCliAdapter:
         self.default_timeout = default_timeout
         self.runner = runner or CommandRunner()
 
+    def _assert_provider_invocation_allowed(self) -> None:
+        """Fail closed: this CLI cannot enforce token, cost, or internal retry caps."""
+        raise ProviderExecutionBlocked(
+            "provider safety gate closed: the legacy CLI transport does not enforce "
+            "request, token, cost, and retry budgets"
+        )
+
+    def _gate_closed_response(self) -> ProviderResponse:
+        return ProviderResponse(
+            None,
+            ProviderUsage(request_count=0, provider_model=self.model),
+            error_type="provider_safety_gate_closed",
+        )
+
     def predict(self, request: InferenceRequest) -> ProviderResponse:
+        try:
+            self._assert_provider_invocation_allowed()
+        except ProviderExecutionBlocked:
+            return self._gate_closed_response()
+
         start_time = time.time()
-        
+
         payload = {
             "task": "topic" if request.source_id == request.target_id else "relation",
             "source_id": request.source_id,
@@ -86,7 +109,7 @@ class AgyCliAdapter:
             '  "confidence": float 0.0-1.0 or null\n'
             "}"
         )
-        
+
         cmd = [
             self.executable,
             "--model", self.model,
@@ -95,7 +118,7 @@ class AgyCliAdapter:
             "--print",
             schema_prompt
         ]
-        
+
         with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as safe_cwd:
             try:
                 proc = self.runner.run(cmd, cwd=safe_cwd, timeout=self.default_timeout)
@@ -126,11 +149,11 @@ class AgyCliAdapter:
 
             if proc.returncode != 0:
                 return ProviderResponse(None, usage, error_type="non_zero_exit")
-            
+
             stdout = proc.stdout.strip()
             if not stdout:
                 return ProviderResponse(None, usage, error_type="empty_output")
-                
+
             if stdout.startswith("```json"):
                 stdout = stdout[7:].rsplit("```", 1)[0].strip()
             elif stdout.startswith("```"):
@@ -140,10 +163,10 @@ class AgyCliAdapter:
                 data = json.loads(stdout)
             except json.JSONDecodeError:
                 return ProviderResponse(None, usage, error_type="invalid_json")
-                
+
             if not isinstance(data, dict):
                 return ProviderResponse(None, usage, error_type="invalid_json")
-                
+
             try:
                 record = PredictionRecord(
                     source_id=request.source_id,
@@ -162,6 +185,10 @@ class AgyCliAdapter:
         start_time = time.time()
         if not requests:
             return []
+        try:
+            self._assert_provider_invocation_allowed()
+        except ProviderExecutionBlocked:
+            return [self._gate_closed_response() for _ in requests]
 
         payload_list = []
         for req in requests:
@@ -190,7 +217,7 @@ class AgyCliAdapter:
             "  }\n"
             "]"
         )
-        
+
         cmd = [
             self.executable,
             "--model", self.model,
@@ -233,11 +260,11 @@ class AgyCliAdapter:
 
             if proc.returncode != 0:
                 return make_error_responses("non_zero_exit", usage)
-            
+
             stdout = proc.stdout.strip()
             if not stdout:
                 return make_error_responses("empty_output", usage)
-                
+
             if stdout.startswith("```json"):
                 stdout = stdout[7:].rsplit("```", 1)[0].strip()
             elif stdout.startswith("```"):
@@ -247,11 +274,11 @@ class AgyCliAdapter:
                 data_list = json.loads(stdout)
             except json.JSONDecodeError:
                 return make_error_responses("invalid_json", usage)
-                
+
             if not isinstance(data_list, list):
                 return make_error_responses("invalid_json", usage)
-                
-            # If the provider gave us fewer or more items, we map what we can. 
+
+            # If the provider gave us fewer or more items, we map what we can.
             # A completely malformed batch creates one safe invalid prediction per expected task.
             responses = []
             for i, req in enumerate(requests):

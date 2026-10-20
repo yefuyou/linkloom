@@ -8,8 +8,11 @@ implementation plan under `docs/requirements/<feature>/`.
 
 ## Governance Baseline
 
-Status: Scanner implementation complete; product-direction calibration and the
-next read-only planning boundary are pending review.
+Status: Team Decision Recovery / Temporal Decision Intelligence is the current
+product direction. Semantic Ingestion Steps 1–3 are implemented in the current
+source tree, and the bounded V1 browser journey was validated with real Gemini
+on 2026-10-08. V1 feature work is frozen; remaining work is release curation,
+packaging, and documentation.
 
 Existing governance artifacts:
 
@@ -24,23 +27,41 @@ Existing governance artifacts:
 - `docs/MARKET_LANDSCAPE.md`
 - `docs/GIT_WORKFLOW.md`
 
-Current gate:
+Current V1 release gate:
 
-- Planning documents may be revised.
-- Scanner code is complete and must not expand without a new approved SPEC.
-- The next business-code task is forbidden until the human approves its feature
-  SPEC and implementation plan.
+- Do not start new feature work or implement V1.1 backlog items.
+- Do not modify the V2 planner, retrieval/traversal, ContextAssembler, Reader,
+  benchmark data, or scoring protocol as part of release curation.
+- Do not rerun the live Provider acceptance during deterministic release
+  verification.
 
-## Milestone 1: Can Read
+Current feature documents:
+
+- `docs/requirements/semantic-ingestion/SPEC.md`
+- `docs/requirements/semantic-ingestion/implementation_plan.md`
+- `docs/architecture/SEMANTIC_INGESTION_SQLITE_MIGRATION.md`
+
+The Planner, Worker, and Reviewer roles remain separate. The Step 3 Worker
+must provide test and regression evidence; a separate Reviewer checks the
+result before acceptance.
+
+## Historical Scanner-Era Roadmap (Preserved)
+
+The following Can Read / Can Find / Can Connect / Can Organize / Can Act /
+Permissioned Vault Mutation sections preserve the earlier personal-vault
+roadmap. They are historical planning, not the active LinkLoom product
+direction. The completed Scanner remains an infrastructure foundation. Vault
+Profile and the old search/organization/mutation milestones are not active
+implementation gates for the current Semantic Ingestion slice.
+
+## Historical Milestone 1: Can Read
 
 Status: Implemented and independently reviewed on a synthetic fixture.
 
 Completed feature slice: Read-Only Vault Scanner.
 
-Next planning-only closure slice: Vault Profile. It may consume an existing
-Scanner index to create a human-readable, read-only vault portrait. It must not
-change Scanner parsing behavior, infer semantic classifications with a model,
-read an unapproved real vault, or modify a source note.
+Vault Profile was an optional planning slice in the earlier roadmap. It is not
+the next active LinkLoom feature.
 
 Historical planning files for the completed Scanner:
 
@@ -68,7 +89,7 @@ Required gate evidence:
 `Data contract`:
 The exact fields and rules that every generated note record must follow.
 
-## Milestone 2: Can Find
+## Historical Milestone 2: Can Find
 
 Status: Not started.
 
@@ -78,7 +99,7 @@ Implementation may start only after Milestone 1 produces a stable note index
 and the feature SPEC defines retrieval, citations, evaluation questions,
 privacy behavior, and no-evidence handling.
 
-## Milestone 3: Can Connect
+## Historical Milestone 3: Can Connect
 
 Status: Not started.
 
@@ -88,7 +109,7 @@ Implementation may start only after Milestone 2 establishes addressable
 passages and retrieval evaluation. The feature SPEC must distinguish explicit
 links from suggested relations and forbid automatic link insertion.
 
-## Milestone 4: Can Organize
+## Historical Milestone 4: Can Organize
 
 Status: Not started.
 
@@ -100,7 +121,7 @@ configurable exclusions, and false-positive evaluation are specified.
 `False-positive evaluation`:
 A check of how often the system flags an intentional note as a problem.
 
-## Milestone 5: Can Act
+## Historical Milestone 5: Can Act
 
 Status: Not started.
 
@@ -117,7 +138,7 @@ preservation, deduplication, confidence display, the boundary between
 user-authored tasks and AI suggestions, and which planning behavior is only a
 proposal rather than a commitment.
 
-## Milestone 6: Modify Only After Confirmation
+## Historical Milestone 6: Modify Only After Confirmation
 
 Status: Not started; all real-vault writes forbidden.
 

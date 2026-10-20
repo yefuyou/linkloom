@@ -1,0 +1,326 @@
+{
+  "schema_version": "reliability-offline-summary/v1",
+  "first_frozen_score_unchanged": true,
+  "fake_model_only": true,
+  "public_sha256": "7dc7d4505c3f642b83b92bae3fc310138e407096ef1320f7a3eab098a1f6c11c",
+  "gold_sha256": "b5d60e383f8f43bac79a7b9e1f25c6dd96bffd06110f841b6eadb2dce0466752",
+  "score": {
+    "citation_valid_claimed_cases": 11,
+    "citation_valid_count": 12,
+    "claim_supported_claimed_cases": 13,
+    "claim_supported_count": 13,
+    "claimed_answer_cases_denominator": 13,
+    "denominator": 16,
+    "exact_fact_accuracy": 15,
+    "outcome_accuracy": 14,
+    "outcome_categories": {
+      "complete": 8,
+      "partial": 5,
+      "refusal": 1,
+      "runtime_failure": 1,
+      "unsupported": 1
+    },
+    "passed": 12,
+    "required_source_coverage": 16,
+    "verified_read_claimed_cases": 13,
+    "verified_read_dependency_count": 14
+  },
+  "cases": [
+    {
+      "id": "RAR-F-A",
+      "score": {
+        "citation_valid": false,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": false,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "wrenwell"
+      ]
+    },
+    {
+      "id": "RAR-F-B",
+      "score": {
+        "citation_valid": false,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": false,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "birchline"
+      ]
+    },
+    {
+      "id": "RAR-F-C",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "mara quinn",
+        "noel hart"
+      ]
+    },
+    {
+      "id": "RAR-F-D",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "silver reach",
+        "owen dale",
+        "priya shah"
+      ]
+    },
+    {
+      "id": "RAR-F-E",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "rin zhao",
+        "sol vega"
+      ]
+    },
+    {
+      "id": "RAR-F-F",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "zed kaur",
+        "quill ames"
+      ]
+    },
+    {
+      "id": "RAR-F-G",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": false,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "refusal",
+      "reason": "conflicting_evidence",
+      "facts": []
+    },
+    {
+      "id": "RAR-F-H",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "asha bell",
+        "bo lin"
+      ]
+    },
+    {
+      "id": "RAR-F-I",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "partial",
+      "reason": "conflicting_evidence",
+      "facts": [
+        "uma ray"
+      ]
+    },
+    {
+      "id": "RAR-F-J",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "partial",
+      "reason": "evidence_insufficient",
+      "facts": [
+        "pax green"
+      ]
+    },
+    {
+      "id": "RAR-F-K",
+      "score": {
+        "citation_valid": false,
+        "claim_supported": false,
+        "facts_exact": true,
+        "outcome_match": false,
+        "pass": false,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": false
+      },
+      "outcome": "unsupported",
+      "reason": "no_match",
+      "facts": []
+    },
+    {
+      "id": "RAR-F-L",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "partial",
+      "reason": "evidence_insufficient",
+      "facts": [
+        "nia cole"
+      ]
+    },
+    {
+      "id": "RAR-F-M",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "complete",
+      "reason": null,
+      "facts": [
+        "tara moss",
+        "uli chen"
+      ]
+    },
+    {
+      "id": "RAR-F-N",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "partial",
+      "reason": "evidence_insufficient",
+      "facts": [
+        "yara kim"
+      ]
+    },
+    {
+      "id": "RAR-F-O",
+      "score": {
+        "citation_valid": true,
+        "claim_supported": true,
+        "facts_exact": false,
+        "outcome_match": false,
+        "pass": false,
+        "reason_match": false,
+        "required_sources_present": true,
+        "verified_read_dependency": true
+      },
+      "outcome": "partial",
+      "reason": "evidence_insufficient",
+      "facts": [
+        "sana wu"
+      ]
+    },
+    {
+      "id": "RAR-F-P",
+      "score": {
+        "citation_valid": false,
+        "claim_supported": false,
+        "facts_exact": true,
+        "outcome_match": true,
+        "pass": true,
+        "reason_match": true,
+        "required_sources_present": true,
+        "verified_read_dependency": false
+      },
+      "outcome": "runtime_failure",
+      "reason": "budget_exhausted",
+      "facts": []
+    }
+  ],
+  "limitations": [
+    "Authoring Codex saw Gold, not strict blind test.",
+    "A/B citation flag instrumentation read missing service projection field; original first score retained.",
+    "K unsupported classified differently from expected refusal.",
+    "O partial relation read; no proven unauthorized effect.",
+    "L invalidated source was excluded by evaluation preparation, not a live version update."
+  ]
+}

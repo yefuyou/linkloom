@@ -1,0 +1,35 @@
+{
+  "created_at_utc": "2026-10-05T07:05:52.764833+00:00",
+  "fake_live_path_generation_requests": 378,
+  "focused_test_counts": {
+    "errors": 0,
+    "failed": 0,
+    "passed": 150
+  },
+  "focused_test_report_sha256": "24539469078261e18f461c3572ad1b3e39447f5ddab29491d32e6fb30054cab7",
+  "gold_unlock_gate_fail_fixture_no_gold_read": true,
+  "gold_unlock_gate_pass_fixture": true,
+  "official_gold_reads": 0,
+  "one_sided_case_status": "NOT_EVALUATED",
+  "planned_method_cases": 184,
+  "provider_calls": 0,
+  "provider_error_count_for_accepted_responses": 0,
+  "response_receipt_evidence_journal_finalizer_consistent": true,
+  "safe_telemetry_guard_fixture": "PROVIDER_COMPLETE_WITH_DEGRADED_TELEMETRY_AND_SCOREABLE",
+  "schema_version": "linkloom-final-evaluation-fake-provider-e2e/v1",
+  "scoring_enabled": false,
+  "status": "PASS",
+  "synthetic_score_fixture_official_gold_reads": 0,
+  "synthetic_score_fixture_used": true,
+  "test_names": [
+    "test_e2_accepted_response_survives_safe_telemetry_guard_as_degraded_success",
+    "test_e2_fake_full_run_scores_bounded_incomplete_usage_and_stops_gold_on_gate_failure",
+    "test_e2_incomplete_usage_with_unsafe_cost_bound_hard_stops_after_receipt",
+    "test_final_coverage_gate_uses_preregistered_95_percent_threshold",
+    "test_pre_case_failure_finalizes_partial_run_without_secondary_exception"
+  ],
+  "unsafe_cost_bound_fixture": "RUN_HARD_STOP_AFTER_DURABLE_ACCEPTED_RESPONSE",
+  "usage_incomplete_billing_uncertainty": true,
+  "usage_incomplete_case_status": "PROVIDER_COMPLETE_AND_SCOREABLE",
+  "usage_incomplete_output_tokens": null
+}

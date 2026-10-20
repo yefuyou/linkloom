@@ -1,34 +1,13 @@
 from __future__ import annotations
 
-import os
 import shutil
-import subprocess
-import sys
 from pathlib import Path
 import pytest
 
+from tests.cli_support import run_cli
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SRC_ROOT = PROJECT_ROOT / "src"
 FIXTURE_ROOT = PROJECT_ROOT / "tests" / "fixtures" / "sample_vault"
-
-
-def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
-    env = os.environ.copy()
-    existing_pythonpath = env.get("PYTHONPATH", "")
-    env["PYTHONPATH"] = str(SRC_ROOT) if not existing_pythonpath else f"{SRC_ROOT}{os.pathsep}{existing_pythonpath}"
-    env["PYTHONIOENCODING"] = "utf-8"
-    env["PYTHONUTF8"] = "1"
-    return subprocess.run(
-        [sys.executable, "-m", "linkloom", *args],
-        cwd=PROJECT_ROOT,
-        env=env,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-        timeout=30,
-    )
 
 
 @pytest.fixture

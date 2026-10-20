@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -178,6 +179,37 @@ class VaultReader:
             )
 
         return documents
+
+    def verify_source_freshness(self) -> None:
+        """Ensure indexed Markdown bytes and the workspace note set still agree."""
+        self.read_notes()
+        expected_paths = {
+            str(item.get("relative_path", "")).replace("\\", "/")
+            for item in self.index.get("notes", [])
+            if isinstance(item, dict) and item.get("relative_path")
+        }
+        expected_paths.update(
+            str(item.get("relative_path", "")).replace("\\", "/")
+            for item in self.index.get("warnings", [])
+            if isinstance(item, dict)
+            and str(item.get("relative_path", "")).lower().endswith(".md")
+        )
+        actual_paths: set[str] = set()
+        for current_path, directory_names, file_names in os.walk(
+            self.root, followlinks=False
+        ):
+            current = Path(current_path)
+            directory_names[:] = [
+                name for name in directory_names if not (current / name).is_symlink()
+            ]
+            for file_name in file_names:
+                candidate = current / file_name
+                if candidate.suffix.lower() == ".md":
+                    actual_paths.add(candidate.relative_to(self.root).as_posix())
+        if actual_paths != expected_paths:
+            raise LoaderError(
+                "Markdown source set changed after indexing.", code="CONTENT_CHANGED"
+            )
 
 
 def load_vault(

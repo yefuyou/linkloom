@@ -1,0 +1,323 @@
+[
+  {
+    "sources": 10,
+    "runs": [
+      {
+        "repeat": 0,
+        "preparation_ms": 74.11809999757679,
+        "elapsed_ms": 1533.2914999962668,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 11.20430000446504
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 11.485600000014529
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 139.95159999467432
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 31.681600004958455
+          }
+        }
+      },
+      {
+        "repeat": 1,
+        "preparation_ms": 45.10120000486495,
+        "elapsed_ms": 1539.6718000047258,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 9.481599998252932
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 10.042100002465304
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 178.56400000164285
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 28.187999996589497
+          }
+        }
+      },
+      {
+        "repeat": 2,
+        "preparation_ms": 69.9698999960674,
+        "elapsed_ms": 1671.9213999967906,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 16.267600003629923
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 14.428000002226327
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 204.5407000259729
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 32.14079999452224
+          }
+        }
+      }
+    ],
+    "rss_current_delta_bytes": 7077888,
+    "memory_kind": "OS process RSS delta across three runs; not peak allocation",
+    "median_elapsed_ms": 1539.6718000047258
+  },
+  {
+    "sources": 100,
+    "runs": [
+      {
+        "repeat": 0,
+        "preparation_ms": 453.8948999979766,
+        "elapsed_ms": 4850.267200003145,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 129.94590000016615
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 64.9660999988555
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 2587.177100009285
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 457.3835999981384
+          }
+        }
+      },
+      {
+        "repeat": 1,
+        "preparation_ms": 507.0124999983818,
+        "elapsed_ms": 4731.836799997836,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 135.68020000093384
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 73.9603999973042
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 2528.8833000086015
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 469.75649999512825
+          }
+        }
+      },
+      {
+        "repeat": 2,
+        "preparation_ms": 462.4997999999323,
+        "elapsed_ms": 4731.283099994471,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 120.14850000559818
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 58.89779999415623
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 2506.7791999827023
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 428.97610000363784
+          }
+        }
+      }
+    ],
+    "rss_current_delta_bytes": 5029888,
+    "memory_kind": "OS process RSS delta across three runs; not peak allocation",
+    "median_elapsed_ms": 4731.836799997836
+  },
+  {
+    "sources": 500,
+    "runs": [
+      {
+        "repeat": 0,
+        "preparation_ms": 2586.318300003768,
+        "elapsed_ms": 23647.132400001283,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 751.8039999995381
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 361.25140000513056
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 18861.525499996787
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 3216.029900002468
+          }
+        }
+      },
+      {
+        "repeat": 1,
+        "preparation_ms": 2385.1097999940976,
+        "elapsed_ms": 26319.081199995708,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 540.5535999962012
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 333.5845000037807
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 21567.81939999928
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 3733.174799992412
+          }
+        }
+      },
+      {
+        "repeat": 2,
+        "preparation_ms": 2213.9382000023033,
+        "elapsed_ms": 21127.15350000508,
+        "kind": "success",
+        "metrics": {
+          "max_model_turns": 12,
+          "model_turns": 6,
+          "search_count": 2,
+          "read_count": 3,
+          "tool_errors": 0
+        },
+        "answer": "Aster Brook",
+        "evidence_verified": true,
+        "stages": {
+          "snapshot_ms": {
+            "count": 1,
+            "total_ms": 675.1256999996258
+          },
+          "scan_vault_ms": {
+            "count": 1,
+            "total_ms": 250.87239999993471
+          },
+          "read_notes_ms": {
+            "count": 12,
+            "total_ms": 16732.11409999203
+          },
+          "retrieval_ms": {
+            "count": 2,
+            "total_ms": 2614.0880000020843
+          }
+        }
+      }
+    ],
+    "rss_current_delta_bytes": 24084480,
+    "memory_kind": "OS process RSS delta across three runs; not peak allocation",
+    "median_elapsed_ms": 23647.132400001283
+  }
+]

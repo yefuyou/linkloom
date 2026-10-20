@@ -51,6 +51,13 @@ class RuntimeModelError(Exception):
         }
 
 
+class ProviderOutcomeUnknownError(RuntimeError):
+    """A reserved request ended without a trustworthy Provider result."""
+
+    def __init__(self) -> None:
+        super().__init__("PROVIDER_REQUEST_RESULT_UNCERTAIN_STOP")
+
+
 class StateTransitionError(RuntimeModelError):
     def __init__(self, message: str, details: dict[str, Any] | None = None) -> None:
         super().__init__(
@@ -71,6 +78,10 @@ class ValidationError(RuntimeModelError):
             retryable=False,
             details=details,
         )
+
+
+class ToolArgumentValidationError(ValidationError):
+    """A read-only tool rejected model supplied semantic arguments before search."""
 
 
 class CheckpointError(RuntimeModelError):

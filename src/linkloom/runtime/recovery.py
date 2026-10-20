@@ -18,6 +18,8 @@ MODEL_RESUME_DECISIONS = frozenset(
         "requires_verification",
         "requires_manual_decision",
         "resume_from_tool_result",
+        "resume_durable_proposal",
+        "resume_from_tool_results",
         "already_terminal",
     }
 )
@@ -69,6 +71,25 @@ def _action_call_id(record: ModelExecutionRecord) -> str | None:
         return None
     call_id = proposal.get("call_id")
     return call_id if isinstance(call_id, str) and call_id.strip() else None
+
+
+def _proposal_call_ids(record: ModelExecutionRecord) -> list[str] | None:
+    proposal = record.normalized_proposal
+    if not isinstance(proposal, dict) or proposal.get("kind") != "tool_calls":
+        return None
+    raw_calls = proposal.get("tool_calls")
+    if not isinstance(raw_calls, list) or not raw_calls:
+        return None
+    call_ids = []
+    for item in raw_calls:
+        if not isinstance(item, dict):
+            return None
+        runtime_call = item.get("runtime_call")
+        call_id = runtime_call.get("call_id") if isinstance(runtime_call, dict) else None
+        if not isinstance(call_id, str) or not call_id.strip():
+            return None
+        call_ids.append(call_id)
+    return call_ids
 
 
 def _decision(
@@ -136,6 +157,50 @@ def decide_model_resume(
             "request_explicitly_not_sent",
             "An external verifier explicitly marked the model request safe to invoke again.",
             record,
+        )
+
+    proposal_call_ids = _proposal_call_ids(record)
+    if record.status in {
+        "response_durable",
+        "tool_results_partial",
+        "tool_results_durable",
+    } and proposal_call_ids is not None:
+        completed_count = len(record.tool_result_refs)
+        if completed_count > len(proposal_call_ids):
+            return _decision(
+                state,
+                "requires_manual_decision",
+                "proposal_result_prefix_invalid",
+                "The durable proposal result prefix is longer than its call list.",
+                record,
+            )
+        if completed_count == len(proposal_call_ids):
+            return _decision(
+                state,
+                "resume_from_tool_results",
+                "tool_results_already_durable",
+                "The complete ordered tool result set is durable.",
+                record,
+            )
+        next_call_id = proposal_call_ids[completed_count]
+        existing = ledger.get(next_call_id)
+        if existing is not None and existing.status == "pending":
+            return _decision(
+                state,
+                "requires_verification",
+                "tool_outcome_ambiguous",
+                "The next proposal tool call is pending with an unknown outcome.",
+                record,
+                next_call_id,
+            )
+        return _decision(
+            state,
+            "resume_durable_proposal",
+            "proposal_prefix_durable",
+            "The durable proposal can continue from its verified result prefix.",
+            record,
+            next_call_id,
+            completed_count=completed_count,
         )
 
     call_id = _action_call_id(record)
