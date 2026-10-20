@@ -1,94 +1,105 @@
 # LinkLoom developer map
 
-The current product is **Team Decision Recovery / Temporal Decision
-Intelligence**, with one Unified Ask form. The authoritative direction is
-[PRODUCT_ROADMAP.md](PRODUCT_ROADMAP.md); the earlier personal-vault milestones
-and completed implementation packets are historical context.
+Start with the [product README](../README.md), then the
+[product architecture](architecture/PRODUCT_ARCHITECTURE.md) and
+[runtime architecture](architecture/RUNTIME_ARCHITECTURE.md). They describe the
+merged product at `c5099ce242abcaad4a785710d435e0c582394b43`; historical
+architecture notes remain below. The [roadmap](PRODUCT_ROADMAP.md) owns product
+direction, and [AGENTS.md](../AGENTS.md) owns contribution boundaries.
 
-## Run the product
+## Run and find the product entry points
 
-```powershell
-python -m pip install '.[dev]'
-$env:PYTHONPATH = 'src'
-python -m linkloom.ui --database work/product.sqlite
-```
+Follow [Quickstart](../README.md#quickstart) for no-key startup, semantic
+extraction and the additional investigation opt-in. Source extraction needs an
+explicitly configured provider; reviewed-state lookup is deterministic. The
+separate CLI remains available through `python -m linkloom --help`.
 
-Open `http://127.0.0.1:8765/`. Source import, reviewed memory and deterministic
-Ask are local; semantic extraction and the temporal Agent require explicit
-external-provider permission and a configured provider. The separate CLI is
-`python -m linkloom --help`; its scan/ask/connect commands remain supported.
-
-## Read these eight files in order
-
-| File | Responsibility |
+| Read in order | Responsibility |
 |---|---|
-| [ui/__main__.py](../src/linkloom/ui/__main__.py) | Process setup, local SQLite ownership and explicit Provider/Agent opt-in. |
-| [ui/server.py](../src/linkloom/ui/server.py) | Product HTTP routes, request limits and Unified Ask wiring; legacy endpoints are retained. |
-| [ui/unified_ask.py](../src/linkloom/ui/unified_ask.py) | Bounded deterministic/Agent routing; pins workspace, subject, relation and valid-time date. |
-| [ui/product.py](../src/linkloom/ui/product.py) | Sources, candidate Review, Decision Memory and Timeline; coordinates stores and source reconciliation. |
-| [semantic_ingestion/materialization.py](../src/linkloom/semantic_ingestion/materialization.py) | Reviewed candidate lifecycle, exact authorization receipts and authoritative materialization. |
-| [decision_memory/store.py](../src/linkloom/decision_memory/store.py) | Workspace-scoped temporal decisions, provenance, supersession and bounded queries. |
-| [ui/investigation.py](../src/linkloom/ui/investigation.py) | Temporal Agent setup, frozen source versions, bounded runtime jobs and verified result projection. |
-| [runtime/model_loop.py](../src/linkloom/runtime/model_loop.py) | Durable model/tool execution, Ledger outcomes, Grounding and Reviewer before returning a Final. |
+| [ui/__main__.py](../src/linkloom/ui/__main__.py) | Process entry, database path, lazy Gemini SDK setup and explicit provider/Agent permissions. |
+| [ui/server.py](../src/linkloom/ui/server.py) | HTTP boundary, request limits, static UI, Unified Ask and retained legacy routes. |
+| [ui/product.py](../src/linkloom/ui/product.py) | Source versions, Review, materialization, Decision Memory and source reconciliation. |
+| [ui/unified_ask.py](../src/linkloom/ui/unified_ask.py) | Deterministic routing to reviewed state, temporal investigation or supported source relations. |
+| [ui/scope_discovery.py](../src/linkloom/ui/scope_discovery.py) | Resolve trusted decision slots and query dates; ambiguous scope remains explicit. |
+| [ui/investigation.py](../src/linkloom/ui/investigation.py) | Freeze source versions, pin run scope and project only verified investigation results. |
+| [ui/backend.py](../src/linkloom/ui/backend.py) | Start/inspect bounded background runtime jobs; expose actual Reviewer disposition. |
 
-```text
-Sources -> Semantic Ingestion -> candidates -> Review / authorization
-        -> Decision Memory / Evidence
-User -> Unified Ask -> deterministic lookup -> Decision Memory / Timeline
-                    -> temporal Agent -> Runtime / tools -> Evidence
-                                      -> Validator / Reviewer -> answer
+The reviewed-state route does not call an LLM. Investigation uses the runtime
+below; source-relation runs explicitly disable decision/generic memory. The
+current UI keeps investigation jobs in memory with temporary files, so runtime
+durability should not be read as a cross-process UI recovery guarantee.
+
+## Follow the Agent loop
+
+| Step | Source | What to inspect |
+|---|---|---|
+| Runtime ownership | [runtime/graph.py](../src/linkloom/runtime/graph.py) | RuntimeEngine construction, state/checkpoint ownership, start and resume. |
+| Wiring | [agents/runtime_adapter.py](../src/linkloom/agents/runtime_adapter.py) | Verified callbacks, workspace scope, tools, context assembly and memory-candidate capture. |
+| Orchestration | [agents/coordinator.py](../src/linkloom/agents/coordinator.py) | Deterministic task flow and Reviewer gate; Curator runs for `connect`. |
+| Retrieval wrapper | [agents/retrieval_agent.py](../src/linkloom/agents/retrieval_agent.py) | Model-loop setup, selected Final protocol, claim/temporal validation and observed evidence. |
+| Model loop | [runtime/model_loop.py](../src/linkloom/runtime/model_loop.py) | Durable requests/proposals, ordered tools, provider continuation, context visibility, budgets and termination. |
+| Model boundary | [agents/model_adapter.py](../src/linkloom/agents/model_adapter.py), [providers/](../src/linkloom/agents/providers/) | Provider-neutral contracts, actual SDK invocation, usage and uncertain outcomes. |
+| Tools | [tools/runtime.py](../src/linkloom/tools/runtime.py), [tools/tool_policy.py](../src/linkloom/tools/tool_policy.py) | Argument validation, permissions, pending-before-execution durability and call budget. |
+| Persistence / resume | [runtime/checkpoint.py](../src/linkloom/runtime/checkpoint.py), [tools/ledger.py](../src/linkloom/tools/ledger.py), [runtime/recovery.py](../src/linkloom/runtime/recovery.py), [runtime/recovery_policy.py](../src/linkloom/runtime/recovery_policy.py) | Durable result reuse versus verification-required outcomes; policies do not themselves grant retry authority. |
+
+## Retrieval, evidence and the different kinds of memory
+
+| Concern | Source entry | Boundary |
+|---|---|---|
+| Retrieval | [retrieval_v2/runtime_backend.py](../src/linkloom/retrieval_v2/runtime_backend.py), [retrievers.py](../src/linkloom/retrieval_v2/retrievers.py), [indexing/](../src/linkloom/indexing/) | BM25/dense/hybrid and directory scope; optional embedding dependencies. The older [retrieval.py](../src/linkloom/retrieval.py) still has active callers. |
+| Context | [context/assembler.py](../src/linkloom/context/assembler.py), [context/manifest.py](../src/linkloom/context/manifest.py) | Budgeted selection, stale/provenance filters and source/index lifecycle; not an LLM summarizer. |
+| Source evidence | [semantic_ingestion/artifacts.py](../src/linkloom/semantic_ingestion/artifacts.py), [evidence.py](../src/linkloom/semantic_ingestion/evidence.py), [decision_memory/sources.py](../src/linkloom/decision_memory/sources.py) | Immutable versions and exact passage identity. |
+| Extraction → Review | [semantic_ingestion/pipeline.py](../src/linkloom/semantic_ingestion/pipeline.py), [extraction.py](../src/linkloom/semantic_ingestion/extraction.py), [materialization.py](../src/linkloom/semantic_ingestion/materialization.py) | LLM extraction produces candidates; human/policy authorization and freshness checks control durable facts. |
+| Temporal Decision Memory | [decision_memory/store.py](../src/linkloom/decision_memory/store.py), [reconciliation.py](../src/linkloom/decision_memory/reconciliation.py) | Workspace-scoped validity, supersession, actions/owners, provenance and stale state. |
+| Generic Agent Memory | [memory/](../src/linkloom/memory/), [ui/feedback_memory.py](../src/linkloom/ui/feedback_memory.py) | Reviewed preferences/terminology and product feedback lifecycle, not decision truth or citation evidence. |
+| Runtime candidate capture | [agents/memory_candidate.py](../src/linkloom/agents/memory_candidate.py) | Reviewer-passed result can become a candidate; separate authorization still required. |
+| Grounding / Reviewer | [agents/team_decision.py](../src/linkloom/agents/team_decision.py), [claim_grounding.py](../src/linkloom/agents/claim_grounding.py), [reviewer_agent.py](../src/linkloom/agents/reviewer_agent.py) | Verify observed evidence, hashes, quotes and supported claim forms; Reviewer is deterministic Python. |
+| Supported relation plans | [runtime/team_decision_planner.py](../src/linkloom/runtime/team_decision_planner.py), [task_plan.py](../src/linkloom/runtime/task_plan.py) | Bounded templates and dependencies, not unrestricted reasoning. |
+
+## Focused offline verification
+
+From the checkout root, after installing the editable package:
+
+```bash
+python -m pip install -e ".[dev]"
 ```
 
-## Ownership and dependencies
-
-| Area | Where to look | Boundary |
-|---|---|---|
-| Source versions and trusted Evidence | `semantic_ingestion/`, `decision_memory/sources.py`, `agents/runtime_evidence.py` | Source identity and content versions are validated; extraction alone has no authority. |
-| Agent and tool permissions | `runtime/`, `tools/`, `agents/reviewer_agent.py`, `agents/claim_grounding.py` | Review and Grounding stay mandatory; uncertain requests cannot produce an accepted Final. |
-| External Providers | `agents/providers/` | SDK construction is explicit and lazy; Provider and tool Ledgers protect request/replay outcomes. |
-| Generic Agent Memory | `memory/` | Approved preferences and project terminology; different responsibility from temporal business decisions. |
-| Retrieval and context | `retrieval.py`, `retrieval_v2/`, `indexing/`, `context/` | Old and V2 paths have active callers and contracts; neither is disposable by name. |
-| Local note output | `scanner.py`, `services/`, `text_output.py` | Read-only inputs, separate generated reports and shared atomic UTF-8 writes. |
-
-Direct product dependencies are `PyYAML` and `rank-bm25`. Gemini SDK (`smoke`),
-vector models (`retrieval`) and pytest (`dev`) are optional extras. Setuptools
-ships only `src/linkloom`; top-level benchmarks, scripts and relation evaluation
-are not installed product packages. Normal UI startup does not import research
-runners, model SDKs or vector models. Runtime imports further tools lazily.
-
-## Research and history: read only when relevant
-
-- **OPTIONAL research:** `benchmarks/`, `relation_eval/`, `examples/`,
-  `src/linkloom/evaluation/`, `src/linkloom/experiments/`; retrieval V2
-  `benchmark.py`, `characterization.py`, `downstream_comparison.py`, `metrics.py`;
-  benchmark/report scripts. The explicit evaluation CLI remains supported.
-- **ARCHIVE context, kept in place:** `docs/implementation/`, earlier
-  `docs/requirements/` packets, `docs/evaluation/` and `output/playwright/`.
-  Frozen Gold, scores, seals, Provider Ledgers and Traces remain audit evidence.
-- **KEEP contracts:** current [Unified Ask SPEC](requirements/unified-ask-experience/SPEC.md),
-  [Semantic Ingestion SPEC](requirements/semantic-ingestion/SPEC.md),
-  [temporal integration notes](TEMPORAL_AGENT_INTEGRATION.md), root
-  [SPEC](../SPEC.md), [DEV_SPEC](../DEV_SPEC.md) and [Agent rules](../AGENTS.md).
-- **Process references:** [role boundaries](MULTI_AGENT_ROLES.md),
-  [SPEC method](SPEC_DRIVEN_DEVELOPMENT.md),
-  [acceptance checklist](ACCEPTANCE_CHECKLIST.md), [Git policy](GIT_WORKFLOW.md).
-
-## Focused offline acceptance
+In PowerShell:
 
 ```powershell
-$env:PYTHONPATH = 'src'
 $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD = '1'
 $env:LINKLOOM_RETRIEVAL_MODE = 'bm25'
 python -m pytest tests/unit/test_unified_ask.py tests/integration/test_unified_ask_flow.py tests/unit/test_temporal_decision_memory.py tests/unit/test_structured_temporal_lookup.py tests/smoke/test_temporal_product_http_lifecycle.py -q
 node tests/ui/unified_ask_dom_test.cjs
 ```
 
-These use synthetic sources/FakeTransport. Full baseline collection has four
-old failures: three MemoryAgentBench tests import a missing G3 script and Stage
-C imports a missing loop script. Some older replay tests additionally require
-untracked historical `work/` packets or use superseded model/source contracts.
-Keep those failures separate from the focused product result; do not delete
-necessary tests or alter Gold/validation to make collection look green.
+These focused contracts use synthetic data/FakeTransport, without provider
+requests. Additional tests sit beside the source anchors in the two architecture
+maps. Do not interpret a focused pass as repository-wide or CI acceptance.
+For dated acceptance context see [integration status](INTEGRATION_STATUS.md).
+Some research tests depend on unshipped scripts or historical local packets.
+Verification artifacts belong
+under ignored `work/`.
 
-Local verification/build files belong under ignored `work/`; generated
-`*.egg-info/`, caches and database sidecars are also ignored.
+## Contracts, history and research
+
+- Current contracts: [Unified Ask SPEC](requirements/unified-ask-experience/SPEC.md),
+  [Semantic Ingestion SPEC](requirements/semantic-ingestion/SPEC.md),
+  [temporal integration notes](TEMPORAL_AGENT_INTEGRATION.md),
+  [product SPEC](../SPEC.md) and [development SPEC](../DEV_SPEC.md).
+- Product demonstration: [walkthrough](V1_DEMO.md),
+  [release notes draft](V1_RELEASE_NOTES_DRAFT.md),
+  [backlog](V1_1_BACKLOG.md),
+  [evidence matrix](requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md).
+- Architecture history: [architecture directory](architecture/),
+  [LangGraph mapping](architecture/LANGGRAPH_MAPPING.md),
+  [implementation notes](implementation/). Existing documents are retained;
+  use their dates and source baseline when reading them.
+- Research/reference code: [benchmarks](../benchmarks/),
+  [relation evaluation](../relation_eval/), [examples](../examples/),
+  [evaluation code](../src/linkloom/evaluation/) and
+  [experiment code](../src/linkloom/experiments/). These are separate from
+  the normal UI startup path; frozen Gold, seals, ledgers and traces are evidence.
+- Process references: [role boundaries](MULTI_AGENT_ROLES.md),
+  [SPEC method](SPEC_DRIVEN_DEVELOPMENT.md),
+  [acceptance checklist](ACCEPTANCE_CHECKLIST.md) and [Git policy](GIT_WORKFLOW.md).
