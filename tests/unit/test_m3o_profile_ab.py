@@ -160,7 +160,7 @@ def test_live_reserves_before_sdk_and_unknown_usage_stops(tmp_path):
     from linkloom.evaluation.task_profile_ab import Budget, LiveTransport
     freeze = load_freeze()
     config = freeze['config']
-    grant = dict(approved=True,experiment='m3o-ab/v1',manifest_sha256=freeze['manifest_sha256'],
+    grant = dict(approved=True,experiment=freeze['manifest']['version'],manifest_sha256=freeze['manifest_sha256'],
         expires_at=(datetime.now(UTC)+timedelta(hours=1)).isoformat(),
         **{k:config[k] for k in ('model_id','provider_id','max_requests','max_cost_usd',
             'input_price_ceiling_per_million','output_price_ceiling_per_million')})

@@ -15,13 +15,18 @@ def main():
     parser.add_argument('--replay',type=Path)
     parser.add_argument('--enable-live',action='store_true')
     parser.add_argument('--grant',type=Path)
+    parser.add_argument('--stage',choices=('FIRST_PAIR','VERIFY_FIRST_PAIR','CONTINUE_REMAINING'))
     args = parser.parse_args()
     if args.mode == 'live' and not (args.enable_live and args.grant):
         parser.error('LIVE_AUTHORIZATION_REQUIRED: --enable-live and exact separately approved --grant')
     if args.mode != 'live' and (args.enable_live or args.grant):
         parser.error('LIVE flags cannot be used in offline modes')
-    report = run(args.output,mode=args.mode,replay=args.replay,grant=read(args.grant) if args.grant else None)
-    print({k:report[k] for k in ('mode','counts','real_provider_requests','REAL_MODEL_SEMANTIC_EFFECT')})
+    if (args.mode == 'live') != (args.stage is not None):
+        parser.error('LIVE requires an explicit stage; offline modes have no LIVE stages')
+    report = run(args.output,mode=args.mode,replay=args.replay,grant=read(args.grant) if args.grant else None,
+        stage=args.stage,enable_live=args.enable_live)
+    print({k:report[k] for k in ('mode','counts','real_provider_requests','REAL_MODEL_SEMANTIC_EFFECT',
+        'stage','status','FIRST_PAIR_GATE','sends_this_invocation') if k in report})
 
 
 if __name__ == '__main__':

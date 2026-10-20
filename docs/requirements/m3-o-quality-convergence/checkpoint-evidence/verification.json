@@ -1,0 +1,178 @@
+{
+  "STAGED_LIVE_TECHNICAL_ADMISSION": "READY",
+  "base": "29ba35fe519bd238abc8d989043f7bd398afbd55",
+  "branch": "codex/linkloom-m3o-ab-checkpoint",
+  "manifest_sha256": "a8991788425ef021459bf1fa4c933cccca906cd913a515171813d25cc2dd6c03",
+  "experiment": "m3o-ab/v2",
+  "real_provider_requests": 0,
+  "real_count_tokens_requests": 0,
+  "real_grant_created": false,
+  "canonical_v1_and_v2_ledgers_initialized": false,
+  "original_worktree_status_unchanged": true,
+  "original_worktree_dirty_entries": 203,
+  "original_status_sha256": "66d1cf37e515a792a58a24091b46645e9d054167daf8558f8d39d7c066c0299d",
+  "batches": {
+    "red-behavior": {
+      "tests": 6,
+      "failures": 6,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "c5b61c375add43670e6f27985d0a1468665386050b93c73a609989adb8dc7d4d",
+      "seconds": 3.903
+    },
+    "green-core": {
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 19,
+      "sha256": "785cef4c08bb40e295a980bcb3c94eb2bbf1fa4a776db821388668869a0651d9",
+      "seconds": 43.079
+    },
+    "faults": {
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 22,
+      "sha256": "74384d733a09fb96a7c767984a76175e7f7aba09bbd767ad8c66936d757b0866",
+      "seconds": 193.706
+    },
+    "gate-red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "7f93a2eafed13d133f66b380e05c5b2765a8e3dd67c6a80ca818cab3460c78a9",
+      "seconds": 13.265
+    },
+    "read-once-red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "a97bb6e071319aa609282c2b9b1c9308a3aae015366509b590d853ec113467d7",
+      "seconds": 12.712
+    },
+    "gate-green": {
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 16,
+      "sha256": "2a3dd0bd648d8757d3e2e01884196d857c625f2c18b8fa0fdbe8959bbcaebb9e",
+      "seconds": 34.828
+    },
+    "empty-ledger-red": {
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "b6925d8a0a62407817b6519d0c3a5da765ebf272038e9a2cc8eb6aa661f68f39",
+      "seconds": 15.76
+    },
+    "finalization-red": {
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "78d303a49a324bb48e21376f762484eb0ce7a7f1caf772f3f9c61734c42a612a",
+      "seconds": 41.005
+    },
+    "finalization-green": {
+      "tests": 6,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 4,
+      "sha256": "bcab92dd11c360358699e6e998503cba3979bcd101ef0b48383c069c12568fe5",
+      "seconds": 51.026
+    },
+    "finalization-green-permitted": {
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 6,
+      "sha256": "edebdb8cd3b4915d40ae02ac97e87489df425b6847d3f80e9588ea6bd7340602",
+      "seconds": 56.208
+    },
+    "last-pair-red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0,
+      "sha256": "01f3de586f2b6437ba22b7748514e76128bf00af05f864829c032dcb5e2e8632",
+      "seconds": 24.177
+    },
+    "checkpoint-acceptance": {
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 52,
+      "sha256": "a4794d87e60f9ca95e2597a0ed0bbdf61fc579221a09d84b565359fa151a34b9",
+      "seconds": 276.466
+    },
+    "native-acceptance": {
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 53,
+      "sha256": "66c15f909ac156a327321189789d218b8ba29ff1a3257efe2555addef3b087bd",
+      "seconds": 302.163
+    },
+    "regression": {
+      "tests": 100,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 100,
+      "sha256": "4b41c40be4ae056b4e039a4db2be55fcf2ff81adeecfa85342759b893ac97b66",
+      "seconds": 38.604
+    }
+  },
+  "overlapping_batches_are_not_summed": true,
+  "environment_note": "Initial finalization-green had 2 sandbox hardlink permission failures. Exact permitted rerun 6/6 passed; native Windows no-overwrite rename then passed the final full matrix without escalation.",
+  "static_checks": {
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "retained_full_suite_failures": "Not rerun or reclassified in this narrow patch.",
+  "LIVE_AUTHORIZATION": "New manifest requires separate explicit human confirmation; old v1 grant rejected.",
+  "REAL_MODEL_SEMANTIC_EFFECT": "NOT_EVALUATED",
+  "manifest_file_bytes_sha256": "e30e495e55abb01277c5ab85d5ec20d9cd3707719cbceabfcaa3702cd4bc5e8b",
+  "manifest_identity_format": "SHA-256 of UTF-8 json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(comma,colon), allow_nan=False); execution/grants use this canonical identity.",
+  "independent_review": {
+    "agent": "/root/m3o_independent_review",
+    "mode": "read-only",
+    "model": "gpt-5.6-luna",
+    "reasoning_effort": "max",
+    "verdict": "PASS",
+    "open_P1_P2": 0,
+    "report": "CHECKPOINT_REVIEW.md"
+  },
+  "test_environment": {
+    "PYTHONPATH": "src;.;tests/integration",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "network_guard": "-p scripts.evaluation_offline_plugin",
+    "fresh_basetemp_required": true
+  },
+  "final_acceptance_command": "python -m pytest -q -p scripts.evaluation_offline_plugin --basetemp=.tmp/native --junitxml=work/checkpoint/native-acceptance.xml tests/unit/test_m3o_ab_checkpoint.py tests/unit/test_m3o_profile_ab.py",
+  "regression_files": [
+    "tests/unit/test_canary_ledger.py",
+    "tests/unit/test_canary_host.py",
+    "tests/unit/test_canary_freeze.py",
+    "tests/unit/test_task_discovery_m3n.py",
+    "tests/unit/test_task_observation_discovery.py",
+    "tests/unit/test_semantic_ingestion_prompt_contract.py",
+    "tests/integration/test_m3l_canary.py"
+  ]
+}

@@ -24,7 +24,7 @@ from linkloom.semantic_ingestion.task_observation_discovery import TaskObservati
 from linkloom.tools.contracts import ToolCall
 
 ROOT = Path(__file__).resolve().parents[3]
-FREEZE = ROOT / 'docs/requirements/m3-o-quality-convergence/ab-v1'
+FREEZE = ROOT / 'docs/requirements/m3-o-quality-convergence/ab-v2'
 
 
 def read(path):
@@ -61,8 +61,12 @@ def load_freeze():
     if hashlib.sha256((ROOT/'src/linkloom/semantic_ingestion/extraction.py').read_bytes()).hexdigest() != manifest['extractor_sha256']:
         raise ValueError('FROZEN_EXTRACTOR_CHANGED')
     # Hash verification does not deserialize labels into the execution process.
+    from linkloom.semantic_ingestion.extraction import _provider_tool
+    if read_frozen('schema.json',manifest) != _provider_tool().to_dict():
+        raise ValueError('FROZEN_SCHEMA_CHANGED')
     return dict(manifest_sha256=digest(manifest), manifest=manifest,
-        sources=read_frozen('sources.json',manifest), config=read_frozen('config.json',manifest))
+        sources=read_frozen('sources.json',manifest), config=read_frozen('config.json',manifest),
+        control=read_frozen('control.json',manifest))
 
 
 def artifact_for(source):
@@ -75,7 +79,7 @@ def artifact_for(source):
 
 def validate_grant(grant, freeze):
     config = freeze['config']
-    expected = dict(approved=True, experiment='m3o-ab/v1', manifest_sha256=freeze['manifest_sha256'],
+    expected = dict(approved=True, experiment=freeze['manifest']['version'], manifest_sha256=freeze['manifest_sha256'],
         model_id=config['model_id'], provider_id=config['provider_id'],
         max_requests=config['max_requests'], max_cost_usd=config['max_cost_usd'],
         input_price_ceiling_per_million=config['input_price_ceiling_per_million'],
@@ -151,6 +155,8 @@ class LiveTransport:
 
     def generate_content(self, *, model, contents, config):
         validate_grant(self.grant, self.freeze)
+        if load_freeze()['manifest_sha256'] != self.freeze['manifest_sha256']:
+            raise ValueError('LIVE_FREEZE_CHANGED')
         if not self.active or self.sent:
             raise ValueError('RETRY_FORBIDDEN')
         self.sent = True
@@ -170,12 +176,14 @@ class LiveTransport:
             usage = raw.get('usage_metadata') if isinstance(raw,dict) else None
             version = response.provider_metadata.get('model_version')
             counts = [usage.get(k) for k in ('prompt_token_count','candidates_token_count','thoughts_token_count')] if isinstance(usage,dict) else []
-            safe = (not response.error and version == self.freeze['config']['model_id'] and len(counts)==3
+            safe = (not response.error and self.wire_sends == 1
+                and version == self.freeze['config']['model_id'] and len(counts)==3
                 and all(type(n) is int and n>=0 for n in counts)
                 and counts[0] <= self.freeze['config']['input_token_cap']
                 and sum(counts[1:]) <= self.freeze['config']['max_output_tokens'])
             record = dict(normalized=response.to_dict(), sdk_response=raw, usage=usage,
-                          actual_model_version=version, reservation_usd=self.freeze['config']['reservation_usd'])
+                          actual_model_version=version, reservation_usd=self.freeze['config']['reservation_usd'],
+                          wire_sends=self.wire_sends)
             self.budget.complete(identity, record, safe=safe)
             if not safe:
                 raise ValueError('PROVIDER_USAGE_VERSION_OR_OUTCOME_STOP')
@@ -184,13 +192,17 @@ class LiveTransport:
             self.active = False
 
 
-def open_live(freeze, grant):
+def live_root():
+    return Path.home()/'.linkloom'/'m3o-ab-v2'
+
+
+def open_live(freeze, grant, *, budget=None):
     validate_grant(grant, freeze)
     if version('google-genai') != '2.22.0':
         raise ValueError('PINNED_SDK_VERSION_REQUIRED')
     from linkloom.agents.providers import build_gemini_sdk_client
     # Deliberately no output/CLI override for the persistent LIVE budget.
-    budget = Budget(Path.home()/'.linkloom'/'m3o-ab-v1'/'budget.sqlite3', freeze)
+    budget = budget or Budget(live_root()/'budget.sqlite3', freeze)
     transport = LiveTransport(freeze, grant, None, budget)
     transport.sdk = build_gemini_sdk_client(os.environ.get('GEMINI_API_KEY',''),
         http_options_kwargs={'timeout':130000,'retry_options':{'attempts':1},
@@ -199,23 +211,47 @@ def open_live(freeze, grant):
     return transport
 
 
-def execute(output, *, mode='mock', replay=None, grant=None):
+def discover(freeze, source, profile, provider):
+    """One canonical request/Host projection for offline, staged LIVE and verification."""
+    artifact = artifact_for(source)
+    config = freeze['config']
+    def guard(request):
+        return ProviderRequestAuthorization.approve(request, guard_id=config['guard_id'],
+            reservation_id=source['id']+'-'+('B' if profile else 'A'),
+            estimated_cost_upper_bound_usd=config['reservation_usd'])
+    extractor = ProviderNeutralSemanticExtractor(provider,provider_id=config['provider_id'],model_id=config['model_id'],
+        request_guard=guard,request_guard_id=config['guard_id'],max_attempts=1,
+        max_output_tokens=config['max_output_tokens'],temperature=config['temperature'],thinking_level=config['thinking_level'])
+    registry = SourceReferenceRegistry()
+    for segment in parse_source_text(artifact).segments:
+        registry.register_evidence(artifact.workspace_id, segment.evidence_span.evidence_ref,
+            content_hash=artifact.content_hash,source_version=artifact.artifact_version_id)
+    service = TaskObservationDiscoveryService(extractor,source_registry=registry,current_source=lambda *_:artifact,
+        task_profile=TaskDiscoveryProfile(profile) if profile else None)
+    return service.discover((artifact,),workspace_id=artifact.workspace_id)
+
+
+def execute(output, *, mode='mock', replay=None, grant=None, stage=None, enable_live=False):
     if mode not in ('mock','replay','live'):
         raise ValueError('INVALID_MODE')
     freeze = load_freeze()
     if mode == 'live':
         validate_grant(grant, freeze)
+        if not enable_live:
+            raise ValueError('LIVE_AUTHORIZATION_REQUIRES_ENABLE_LIVE')
+        from linkloom.evaluation.task_profile_checkpoint import execute_stage
+        return execute_stage(output,freeze,grant,stage)
+    if stage is not None or enable_live:
+        raise ValueError('STAGES_REQUIRE_EXPLICIT_LIVE')
     if mode == 'replay' and replay is None:
         raise ValueError('REPLAY_REQUIRED')
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
     save(output/'freeze.json', freeze)
-    live = open_live(freeze, grant) if mode == 'live' else None
     rows, counts, pairs = [], {'A':0,'B':0}, []
     config = freeze['config']
     try:
         for source in freeze['sources']:
-            artifact = artifact_for(source)
             requests = {}
             for arm,profile in config['arms'].items():
                 identity = source['id']+'-'+arm
@@ -225,10 +261,7 @@ def execute(output, *, mode='mock', replay=None, grant=None):
                         requests[arm] = request.to_dict()
                         save(output/(identity+'.request.json'), request.to_dict())
                         counts[arm] += 1
-                        if mode == 'live':
-                            self.response, record = live.complete(request, identity)
-                            save(output/(identity+'.sdk.json'), record)
-                        elif mode == 'replay':
+                        if mode == 'replay':
                             if read(Path(replay)/(identity+'.request.json')) != request.to_dict():
                                 raise ValueError('REPLAY_REQUEST_MISMATCH')
                             self.response = ModelResponse.from_dict(read(Path(replay)/(identity+'.response.json')))
@@ -242,19 +275,7 @@ def execute(output, *, mode='mock', replay=None, grant=None):
                         save(output/(identity+'.response.json'), self.response.to_dict())
                         return self.response
                 provider = Provider()
-                def guard(request):
-                    return ProviderRequestAuthorization.approve(request, guard_id=config['guard_id'],
-                        reservation_id=identity, estimated_cost_upper_bound_usd=config['reservation_usd'])
-                extractor = ProviderNeutralSemanticExtractor(provider,provider_id=config['provider_id'],model_id=config['model_id'],
-                    request_guard=guard,request_guard_id=config['guard_id'],max_attempts=1,
-                    max_output_tokens=config['max_output_tokens'],temperature=config['temperature'],thinking_level=config['thinking_level'])
-                registry = SourceReferenceRegistry()
-                for segment in parse_source_text(artifact).segments:
-                    registry.register_evidence(artifact.workspace_id, segment.evidence_span.evidence_ref,
-                        content_hash=artifact.content_hash,source_version=artifact.artifact_version_id)
-                service = TaskObservationDiscoveryService(extractor,source_registry=registry,current_source=lambda *_:artifact,
-                    task_profile=TaskDiscoveryProfile(profile) if profile else None)
-                result = service.discover((artifact,),workspace_id=artifact.workspace_id)
+                result = discover(freeze,source,profile,provider)
                 save(output/(identity+'.host.json'),result.to_dict())
                 if provider.response is None:
                     raise ValueError('PROVIDER_OR_INFRASTRUCTURE_STOP:'+identity)
@@ -266,7 +287,7 @@ def execute(output, *, mode='mock', replay=None, grant=None):
         if counts['A'] != counts['B'] or not all(p['schema_equal'] and p['options_equal'] and p['profile_different'] for p in pairs):
             raise ValueError('PAIRING_INVALID')
         report = dict(mode=mode, counts=counts, pairs=pairs, rows=rows,
-            real_provider_requests=sum(counts.values()) if live else 0,
+            real_provider_requests=0,
             REAL_MODEL_SEMANTIC_EFFECT='NOT_EVALUATED', manifest_sha256=freeze['manifest_sha256'],
             interpretation='Mock uses empty outputs plus SAME historical failure output for both profiles; contract evidence only.')
         save(output/'execution.json',report)
@@ -275,10 +296,6 @@ def execute(output, *, mode='mock', replay=None, grant=None):
         save(output/'STOP.json',dict(reason=type(exc).__name__,detail=str(exc),counts=counts,
             completed=rows, resume='Inspect durable budget and raw artifacts; never automatically resend.'))
         raise
-    finally:
-        if live:
-            live.sdk.close()
-            live.budget.close()
 
 
 def score(output):
@@ -313,12 +330,23 @@ def score(output):
             provider_input_output_thinking=sdk.get('usage'),
             provenance='LIVE_SDK' if sdk else 'RECORDED_HISTORICAL_OUTPUT' if row['case']=='five-messages' else 'MOCK_UNKNOWN',
             new_cost_upper_bound_usd=freeze['config']['reservation_usd'] if execution['mode']=='live' else 0)
-    save(output/'scores.json',scores)
+    save_or_match(output/'scores.json',scores)
     return scores
+
+
+def save_or_match(path, value):
+    if Path(path).exists():
+        if read(path)!=value:
+            raise ValueError('EXISTING_REPORT_MISMATCH')
+    else:
+        save(path,value)
 
 
 def run(output, **kwargs):
     report = execute(output, **kwargs)
+    if kwargs.get('mode') == 'live' and report.get('status') != 'LIVE_AB_COMPLETED':
+        return report
+    sends = report.pop('sends_this_invocation',None)
     report['scores'] = score(output)
     report['totals'] = {}
     for arm in ('A','B'):
@@ -334,5 +362,7 @@ def run(output, **kwargs):
             totals[stage] = count
         totals.update({k:sum(s[k] for s in rows) for k in ('false_rejections','false_acceptances','schema_valid')})
         report['totals'][arm] = totals
-    save(Path(output)/'report.json', report)
+    save_or_match(Path(output)/'report.json', report)
+    if sends is not None:
+        report['sends_this_invocation'] = sends
     return report

@@ -1,0 +1,174 @@
+{
+  "execution_kind": "OFFICIAL_SDK_MOCK_TRANSPORT",
+  "stages": {
+    "FIRST_PAIR": 2,
+    "VERIFY_FIRST_PAIR": 0,
+    "CONTINUE_REMAINING": 24,
+    "READ_ONLY_FINALIZATION": 0
+  },
+  "total_simulated_sdk_sends": 26,
+  "real_provider_requests": 0,
+  "real_count_tokens_requests": 0,
+  "ledger_binding": "a8991788425ef021459bf1fa4c933cccca906cd913a515171813d25cc2dd6c03",
+  "state": "COMPLETED",
+  "FIRST_PAIR_GATE": "PASS",
+  "ledger": [
+    {
+      "identity": "D01-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D01-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D02-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D02-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D03-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D03-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D05-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D05-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D06-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D06-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D07-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D07-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D08-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D08-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D10-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D10-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D11-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "D11-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-cross-message-supplement-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-cross-message-supplement-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-missing-owner-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-missing-owner-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-quoted-english-task-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "m3n-quoted-english-task-B",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "five-messages-A",
+      "status": "COMPLETE"
+    },
+    {
+      "identity": "five-messages-B",
+      "status": "COMPLETE"
+    }
+  ],
+  "phase_events": [
+    "FIRST_RUNNING",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "FIRST_DONE",
+    "STAGE_REJECTED",
+    "VERIFIED",
+    "CONTINUE_RUNNING",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "ARTIFACTS_SEALED",
+    "ARTIFACTS_SEALED",
+    "PAIR_VERIFIED",
+    "FINALIZING",
+    "FINAL_REPORT_PREPARE",
+    "COMPLETED"
+  ],
+  "reserved_usd": 2.076672,
+  "budget_upper_bound_usd": 3.0,
+  "ledger_artifact": ".tmp/native/test_first_pair_verify_continu0/private-budget/budget.sqlite3",
+  "ledger_sha256": "f35c0fc457d4f343644a18123f3a2f73be981461ad18a02b2e4ea9b90190241d",
+  "interpretation": "Synthetic transport evidence only; semantic quality NOT_EVALUATED."
+}

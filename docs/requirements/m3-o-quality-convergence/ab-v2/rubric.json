@@ -1,0 +1,17 @@
+{
+  "version": "m3o-observation-units/v1",
+  "matching": "Exact work excerpts at their original message offsets; maximum one-to-one matching; no semantic judge.",
+  "raw_candidates": "PLAN/ACTION task objects in the untouched raw tool payload, before extractor/Host validation.",
+  "host_candidates": "Verified field-grounded observations; source-only authority, never confirmed business tasks.",
+  "candidate_unit": "Canonical source-message work units on both sides. Raw units are only structural splitting of exact supplied excerpts; no veto, field grounding or semantic validation. Untouched proposal count is also reported.",
+  "grouping": "Evaluation-only groups.json allows explicit source continuations; a proposed group touching multiple independently labelled observations outside one allowed continuation counts as an erroneous candidate group. This is not business task confirmation.",
+  "missing": "Missing raw work = model omission; present raw work lost after Host = Host rejection. Schema/provider failures stay separate.",
+  "fields": [
+    "owner",
+    "project",
+    "deadline_text",
+    "vendor"
+  ],
+  "nulls": "Count nulls; fields on matched units only, always display recall alongside.",
+  "interpretation": "All mock/cross-profile historical outputs are contract fixtures, not model quality. Public holdout is not blind."
+}
