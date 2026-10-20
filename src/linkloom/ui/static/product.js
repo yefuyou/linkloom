@@ -311,6 +311,7 @@
     if (viewToken !== state.agentViewToken || config.workspace_id !== workspaceId) return;
     state.askScopes = config.scopes || [];
     state.askAgent = config.agent;
+    state.askSourceContext = config.investigation_context;
     const selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
     state.askCandidates = [];
     state.askClarification = null;
@@ -323,6 +324,11 @@
       <section class="panel ask-composer"><p class="metadata">${askLabel("Workspace", "项目空间")} <strong>${escapeHtml(state.workspace.name)}</strong></p>
       <form id="ask-form" class="form-stack">
         <div class="field"><label for="ask-query">${askLabel("Your question", "你的问题")}</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="${escapeHtml(askCopy("What supplier are we currently using?", "我们现在采用哪家供应商？"))}"></textarea></div>
+        <div class="field"><label for="ask-domain">${askLabel("Investigation scope (optional)", "调查领域（可选）")}</label><select id="ask-domain" name="investigation_domain">
+          <option value="" data-ask-en="Automatic shortcuts / ask me to clarify" data-ask-zh="自动快捷路径／需要时澄清">${askCopy("Automatic shortcuts / ask me to clarify", "自动快捷路径／需要时澄清")}</option>
+          <option value="tasks" data-ask-en="Tasks across the current workspace records" data-ask-zh="当前空间记录中的任务">${askCopy("Tasks across the current workspace records", "当前空间记录中的任务")}</option>
+          <option value="source_relations" data-ask-en="Project → owner → direct leader" data-ask-zh="项目 → 负责人 → 直属领导">${askCopy("Project → owner → direct leader", "项目 → 负责人 → 直属领导")}</option></select>
+          <span class="hint">${askLabel("Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.", "自然语言未被识别时可选定领域；只读当前空间来源，结论仍未经确认。来源变更后请刷新页面。")}</span></div>
         <div class="ask-submit"><button id="ask-submit-button" class="button" type="submit">${askLabel("Ask", "提问")}</button><span class="hint">${askLabel("Ctrl / ⌘ + Enter to ask", "Ctrl / ⌘ + Enter 提交")}</span></div>
         <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>${askLabel("Advanced: decision and exact date", "高级选项：决策与精确日期")}</summary>
         <div class="field"><label for="ask-slot">${askLabel("Decision scope", "指定决策（可选）")}</label><select id="ask-slot">
@@ -435,6 +441,76 @@
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
+    if (result.path === "TASK_INVESTIGATION" && ["PARTIAL", "UNKNOWN"].includes(result.status) && result.reviewer?.accepted === true) {
+      const prep = result.preparation || {};
+      const plan = (prep.planning || []).at(-1)?.plan;
+      const gapMessage = gap => gap === "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE" || gap.startsWith("NO_TASK_CANDIDATES")
+        ? t("Only authorized materials were checked. A missing candidate does not prove that the task does not exist.", "本次只检查已授权资料；没有召回任务候选，不能证明任务不存在。")
+        : gap.startsWith("UNSATISFIED_PREMISE") ? t("A later investigation step depends on an unconfirmed task relationship.", "后续调查步骤依赖尚未确认的任务关系。")
+        : gap === "DISCOVERY_COVERAGE_INCOMPLETE" ? t("Some source material could not be fully examined within this investigation.", "部分来源资料尚未在本次调查范围内完整检查。")
+        : t("Some investigation steps still lack supporting evidence. See the investigation trace for details.", "部分调查步骤仍缺少支持证据，详情见调查轨迹。");
+      const view = result.task_review || {};
+      const label = predicate => ({SAME_TASK: t("Same task?", "是否同一任务"), REVISES_PLAN: t("Plan revision?", "是否修订计划")}[predicate] || predicate);
+      const proposalState = verdict => ({
+        SUPPORTED: t("Supported proposal", "支持性提案"),
+        REFUTED: t("Refuted proposal", "被反驳提案"),
+        CONFLICT: t("Conflicting proposal", "冲突提案"),
+        UNKNOWN: t("Unknown proposal", "未知提案"),
+      }[verdict] || verdict || t("Unknown proposal", "未知提案"));
+      const evidence = items => (items || []).map(item => `<blockquote class="quote">${escapeHtml(item.quote || item.span?.quote || "")}</blockquote>`).join("") || `<p>${t("None provided", "未提供")}</p>`;
+      const stepState = status => ({SUPPORTED: t("Supported by current verified evidence", "已有当前有效的可信证据支持"), COMPLETED: t("Read completed", "读取已完成"), REFUTED: t("Counter-evidence found", "存在否定证据"), CONFLICT: t("Conflicting evidence", "证据冲突"), UNKNOWN: t("Still unknown", "仍然未知"), BLOCKED: t("Cannot continue yet", "暂时无法继续")}[status] || status);
+      const original = id => (view.observations || []).find(o => o.observation_id === id);
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice"><h2>${t("Task investigation: evidence and open questions", "任务调查：已知证据与待确认问题")}</h2>
+        ${["FAKE", "REPLAY"].includes(prep.execution_kind) ? `<p class="metadata">${t("Offline scripted or recorded adapters: this run does not evaluate real-model understanding.", "本次使用离线脚本或回放适配器，不能据此评估真实模型的理解能力。")}</p>` : ""}
+        <p>${t("Each record below preserves what its source says. A model suggestion does not confirm task identity or make a later date effective.", "以下记录分别保留各自原文中的信息。模型建议不代表已确认同一任务，也不代表较晚日期已正式生效。")}</p>
+        <h3>${t("What the sources explicitly say", "原文明确记录的内容")}</h3>
+        ${(view.observations || []).map(o => {
+          const source = (result.evidence || []).find(e => e.evidence_ref === o.provenance.evidence_ref);
+          const unknownFields = o.unknown_fields || [];
+          const validationIssues = o.validation_issues || [];
+          return `<article class="ask-evidence"><h4>${escapeHtml(source?.source_name || t("Source record", "来源记录"))} · ${escapeHtml(o.description || o.raw_text)}</h4>
+            <p class="metadata">${t("Source version", "来源版本")}: <code>${escapeHtml(source?.source_version || o.provenance.artifact_version_id || t("Unavailable", "不可用"))}</code>${o.event_time ? ` · ${t("Recorded at", "记录时间")}: ${askDate(o.event_time, locale)}` : ""}</p>
+            <dl><dt>${t("Recorded owner", "原文负责人")}</dt><dd>${escapeHtml(o.owner || t("Unknown", "未知"))}</dd>
+            <dt>${t("Recorded deadline", "原文截止日期")}</dt><dd>${escapeHtml(o.deadline_text || t("Unknown", "未知"))}</dd>
+            <dt>${t("Deadline role", "日期角色")}</dt><dd>${escapeHtml(o.deadline_role || "UNKNOWN")}</dd></dl>
+            ${unknownFields.length ? `<p class="hint"><strong>${t("Unknown fields", "未知字段")}</strong>: ${escapeHtml(unknownFields.join(" · "))}</p>` : ""}
+            ${validationIssues.length ? `<p class="hint"><strong>${t("Validation issues", "校验问题")}</strong>: ${escapeHtml(validationIssues.join(" · "))}</p>` : ""}
+            <details><summary>${t("Original message and field evidence", "展开原始消息与字段证据")}</summary><blockquote class="quote">${escapeHtml(o.provenance.quote)}</blockquote>
+            ${(o.field_evidence || []).map(f => `<p>${escapeHtml(f.field)}: ${escapeHtml(f.quote)}</p>`).join("")}</details>
+            ${source?.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(source.source_id)}">${t("View source", "查看来源")}</button>` : ""}</article>`;
+        }).join("") || `<p>${t("No verifiable task candidate was returned. This does not establish absence.", "本次没有返回可核验的任务候选，不能据此断言任务不存在。")}</p>`}
+        <h3>${t("Relationships to review", "待审查的关系提案")}</h3>
+        ${(view.proposals || []).map(p => `<article class="ask-evidence"><h4>${escapeHtml(label(p.predicate))}</h4>
+          <p><strong>${t("Model proposal", "模型提案")}: <span data-task-proposal-verdict="${escapeHtml(p.proposed_verdict || "UNKNOWN")}">${escapeHtml(proposalState(p.proposed_verdict))}</span> (${escapeHtml(p.proposed_verdict || "UNKNOWN")})</strong>. ${t("Independent confirmation is still required.", "仍需独立确认。")}</p>
+          ${[p.subject, p.object].map(ref => `<p>${escapeHtml(original(ref.observation_id)?.raw_text || t("See the referenced source", "请查看对应来源"))}</p>`).join("")}
+          <p>${t("Model-reported reasons", "模型报告的理由")}: ${escapeHtml((p.reason_codes || []).join(" · "))}</p>
+          <details open><summary>${t("Supporting evidence", "支持证据")}</summary>${evidence(p.supporting_evidence)}</details>
+          <details><summary>${t("Counter-evidence or conflicts", "反对证据或冲突")}</summary>${evidence(p.counter_evidence)}</details>
+          <p>${t("Missing evidence reported by the model", "模型报告的证据缺口")}: ${escapeHtml((p.missing_evidence || []).join(" · ") || t("No additional gap reported; this does not imply confirmation.", "未报告额外缺口，仍不表示关系已确认。"))}</p></article>`).join("")}
+        ${(view.relations || []).map(r => `<article class="ask-evidence"><h4>${escapeHtml(label(r.assessment?.predicate || ""))} · ${escapeHtml(stepState(r.current_supported ? "SUPPORTED" : r.assessment?.verdict === "SUPPORTED" ? "BLOCKED" : r.assessment?.verdict || "UNKNOWN"))}</h4>
+          <p>${t("Existing relationship record, revalidated on read", "既有关系记录，读取时重新校验")}: ${escapeHtml(r.persistent_lifecycle)} · ${escapeHtml(r.evidence_state)}</p>
+          <details><summary>${t("Supporting and counter-evidence", "支持与反对证据")}</summary>${evidence(r.assessment?.supporting_evidence)}${evidence(r.assessment?.counter_evidence)}</details></article>`).join("")}
+        <h3>${t("Which steps ran, and why others stopped", "哪些步骤已执行，哪些仍被阻断")}</h3>
+        ${(view.steps || []).map(s => `<article><p><strong>${escapeHtml(s.question)}</strong> — ${escapeHtml(stepState(s.status))}</p>
+          ${(s.blocking_reasons || []).length ? `<p>${(s.blocking_reasons || []).some(r => r.startsWith("DEPENDENCY_")) ? t("A prerequisite relationship is not yet supported. This step has not continued.", "前置关系尚未获得可信支持，因此该步骤没有继续。") : t("No current, independently verifiable relationship record satisfies this step. A model suggestion cannot replace it.", "尚无当前有效、可独立重验的关系记录满足该步骤，模型提案不能替代这一前提。")}</p>` : ""}
+          ${(s.comparisons || []).filter(c => c.current_valid).map(c => `<p>${t("Historical deadline", "历史计划截止边界")}: ${escapeHtml(c.current_comparison?.old_deadline?.value)} → ${t("Revised deadline", "修订计划截止边界")}: ${escapeHtml(c.current_comparison?.new_deadline?.value)} · ${t("Calendar-day difference", "日历日差值")}: ${escapeHtml(c.current_comparison?.delta_calendar_days)}</p><p>${c.current_comparison?.plan_currentness === "NOT_ESTABLISHED" ? t("The difference is computable; which plan is currently effective is still unknown.", "可以核算两次计划边界的差值，但尚不能确认当前哪版计划正式有效。") : t("Effective-time details are preserved in the P4 read below.", "生效时间条件保留在下方 P4 回读结果中。")}</p>`).join("")}</article>`).join("")}
+        <p>${t("Reads actually performed", "实际完成的读取")}: ${escapeHtml((view.executed_tools || []).map(r => ({inspect_task_context: t("Task sources", "任务原文"), query_task_relations: t("Verified relationships", "可信关系"), analyze_task_semantics: t("Relationship proposals", "关系候选分析")}[r.tool] || r.tool)).join(" · "))}</p>
+        <div class="ask-unknown"><strong>${t("Unresolved evidence", "尚未解决的证据缺口")}</strong><p>${t("Task records describe source statements. Current identity, revision and effective-date claims require separately validated relationships.", "任务记录反映来源中的陈述；任务身份、计划修订及当前生效日期，需要分别通过可信关系验证。")}</p>
+        ${(prep.gaps || []).filter(gap => !gap.startsWith("UNSATISFIED_PREMISE:") || (view.unresolved || []).some(s => s.step_id === gap.split(":")[1])).map(gap => `<p>${escapeHtml(gapMessage(gap))}</p>`).join("")}</div>
+        ${(result.uncertainty?.model_reported_gaps || []).map(gap => `<p>${t("Model-reported evidence gap", "模型报告的证据缺口")}: ${escapeHtml(gap)}</p>`).join("")}
+        <h3>${t("What you can do next", "下一步可以做什么")}</h3>
+        ${(view.next_actions || []).map(a => `<p>${a.kind === "PROVIDE_TASK_SOURCE" ? t("Provide the meeting or original task assignment that is missing.", "补充缺失的会议或任务分配原文。") : a.kind === "IDENTITY_AND_REVISION_REQUIRED" ? t("Date comparison needs both task identity and a valid plan revision. Both original dates are preserved above.", "比较日期需要先确认任务身份和计划修订；上方已保留两条原始日期。") : a.predicate === "REVISES_PLAN" ? t("Provide a source explicitly stating that the later plan replaces the earlier plan.", "补充明确说明后一计划替代前一计划的来源。") : t("Expand both original messages and check whether they describe the same work. An independently verifiable identity relationship is still needed.", "展开两条原始消息，核对是否确实描述同一项工作；仍需可独立验证的任务身份关系。")}</p>`).join("")}
+        <p>${t("Human confirmation is not connected: this installation has no authenticated task-relation review interface. Viewing these records does not approve them.", "人工确认尚未接通：当前系统没有具备身份与权限校验的任务关系审核接口。查看原文不会批准关系。")}</p>
+        <details><summary>${t("All original citations", "全部原始引用")}</summary>${(result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("")}</details>
+        <details><summary>${t("Investigation trace and review", "调查轨迹与审查结果")}</summary><pre>${escapeHtml(JSON.stringify({steps: view.steps, tools: view.executed_tools, gaps: prep.gaps, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      return;
+    }
+    if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {
+      const unavailable = result.error?.code === "TASK_INVESTIGATION_UNAVAILABLE";
+      const stopMessage = unavailable ? t("Task investigation is unavailable in the current configuration. No investigation or external model call was started.", "当前配置不支持任务调查，尚未启动调查或外部模型调用。") : result.error?.code === "TASK_DATE_SCOPE_UNSUPPORTED" ? t("Clear the advanced decision date and state the investigation period in your question. The original question is kept.", "请清除高级选项中的决策日期，并在原问题中说明调查时段。原问题已保留。") : t("The configuration, source evidence or investigation budget did not pass the required checks. No verified conclusion is available.", "运行配置、来源证据或调查预算尚未通过必要检查，本次没有可核验的最终结论。");
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="status"><h2>${unavailable ? t("Task investigation unavailable", "当前无法使用任务调查") : t("Task investigation stopped", "任务调查已停止")}</h2><p>${stopMessage}</p><details><summary>${t("Reason and review", "停止原因与审查记录")}</summary><pre>${escapeHtml(JSON.stringify({error: result.error, preparation: result.preparation, uncertainty: result.uncertainty, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      return;
+    }
     if (source && ["COMPLETED", "INSUFFICIENT"].includes(result.status) && result.reviewer?.accepted === true && result.source_investigation) {
       renderSourceInvestigation(target, result, locale); return;
     }
@@ -454,13 +530,22 @@
       const memoryConflict = (result.discovery?.memory?.conflicts || []).length > 0;
       const uncertain = result.status === "PROVIDER_UNCERTAIN";
       const unsupported = code === "UNSUPPORTED_QUERY" || code === "TASK_SCOPE_CONFLICT";
-      const title = unsupported ? t("This relationship question is not supported", "目前不能可靠地拆解这个关系问题") : memoryConflict ? t("Approved terminology conflicts", "已批准术语存在冲突") : ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
+      const admissionMessages = {
+        INVESTIGATION_DOMAIN_REQUIRED: [t("Choose an investigation scope", "请选择调查领域"), t("Select tasks or project relationships above, or choose a reviewed decision. Your question has been kept; no investigation has started.", "请在上方选择任务或项目关系领域，或指定可信决策。原问题已保留，尚未启动调查。")],
+        INVESTIGATION_CONTEXT_CHANGED: [t("The source scope changed", "来源范围已变化"), t("Refresh this page to review the current workspace sources, then select the domain and ask again.", "请刷新页面，查看当前空间来源后重新选择领域并提问。")],
+        INVESTIGATION_CAPABILITY_UNAVAILABLE: [t("This investigation capability is unavailable", "当前不支持此调查能力"), t("The selected domain has no configured planner. No alternate investigation was started.", "所选领域尚无可用规划器；未改为执行其他调查。")],
+        INVESTIGATION_DOMAIN_CONFLICT: [t("Check the investigation domain", "请核对调查领域"), t("This question requests project relationships. Select that domain to continue the original question.", "该问题请求项目关系调查，请选择对应领域以继续原问题。")],
+        INVESTIGATION_SCOPE_DENIED: [t("The request exceeds read-only scope", "请求超出只读调查范围"), t("Ask about the current workspace records without write, credential or permission-bypass instructions.", "请针对当前空间记录提问，不包含写入、凭证或绕过权限的指令。")],
+        INVESTIGATION_QUESTION_REQUIRED: [t("Enter an investigation question", "请输入调查问题"), t("A greeting does not start an investigation. Ask a question about the selected records.", "问候不会启动调查，请对选定记录提出问题。")],
+      };
+      const admissionMessage = admissionMessages[code];
+      const title = admissionMessage ? admissionMessage[0] : unsupported ? t("This relationship question is not supported", "目前不能可靠地拆解这个关系问题") : memoryConflict ? t("Approved terminology conflicts", "已批准术语存在冲突") : ambiguous ? t("Which decision do you mean?", "你想问的是哪项决策？")
         : dateNeeded ? t("Choose a specific date", "请选择一个具体日期")
         : permission ? t("This investigation needs your permission", "这次调查需要你的授权")
         : uncertain ? t("Investigation outcome uncertain; no verified conclusion", "本次调查执行结果不确定，没有可核验的最终结论")
         : noMatch ? t("No matching reviewed decision found", "暂未找到与问题匹配的可信决策")
         : t("No verified answer is available", "本次尚未得到可核验的答案");
-      const message = unsupported ? t("Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.", "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
+      const message = admissionMessage ? admissionMessage[1] : unsupported ? t("Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.", "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
         : dateNeeded ? t("Select one exact date above to check which decision was valid. Your question and confirmed decision are retained.", "请在上方选择精确日期，以核实当时有效的决策。原问题和已确认的决策会保留。")
         : permission ? t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请勾选上方的本次授权，再次提问后才会发送来源内容并启动调查。")
         : uncertain ? t("Saved formal decisions are unaffected. No draft is presented as an answer.", "已保存的正式决策不受本次调查影响，本次未核验的内容不会作为答案。")
@@ -560,6 +645,8 @@
     const viewToken = ++state.agentViewToken;
     const workspaceId = state.workspace.workspace_id;
     const data = Object.fromEntries(new FormData(form));
+    const domain = data.investigation_domain;
+    delete data.investigation_domain;
     localizeAsk(data.query);
     const slotValue = document.getElementById("ask-slot").value;
     const clarification = state.askClarification;
@@ -577,6 +664,7 @@
       const result = await askRequest("/api/product/ask", { method: "POST", body: JSON.stringify({
         ...data, workspace_id: workspaceId, subject: slot?.subject, relation: slot?.relation,
         allow_external_provider: allowExternal,
+        ...(domain ? {investigation_context: {domain, snapshot_hash: state.askSourceContext?.snapshot_hash}} : {}),
       }) });
       if (viewToken !== state.agentViewToken) return;
       renderAskResult(result, viewToken);
@@ -628,8 +716,8 @@
 
   page.addEventListener("input", (event) => {
     if (event.target?.id === "ask-query") localizeAsk(event.target.value);
-    if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
-    if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) invalidateAsk();
+    if (["ask-query", "ask-slot", "ask-domain"].includes(event.target?.id)) state.askClarification = null;
+    if (["ask-query", "ask-date", "ask-slot", "ask-external", "ask-domain"].includes(event.target?.id)) invalidateAsk();
   });
 
   page.addEventListener("change", async (event) => {
@@ -638,8 +726,8 @@
       if (state.askResult) renderAskResult(state.askResult, state.agentViewToken);
       return;
     }
-    if (["ask-query", "ask-slot"].includes(event.target?.id)) state.askClarification = null;
-    if (["ask-query", "ask-date", "ask-slot", "ask-external"].includes(event.target?.id)) { invalidateAsk(); return; }
+    if (["ask-query", "ask-slot", "ask-domain"].includes(event.target?.id)) state.askClarification = null;
+    if (["ask-query", "ask-date", "ask-slot", "ask-external", "ask-domain"].includes(event.target?.id)) { invalidateAsk(); return; }
     if (event.target?.id !== "source-file") return;
     const file = event.target.files?.[0];
     if (!file) return;

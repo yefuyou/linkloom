@@ -1,0 +1,1358 @@
+{
+  "schema": "task-semantic-predictions/v1",
+  "execution_kind": "REAL_PROVIDER",
+  "model_id": "gemini-3.8-flash",
+  "frozen_manifest_sha256": "bfd7bafd24c2dcad3ba3ee1df8918c249f8fcec3509e9436350614289a998a96",
+  "cases": [
+    {
+      "case_id": "revision",
+      "result": {
+        "schema": "task-semantic-result/v1",
+        "status": "EXECUTED",
+        "proposals": [
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "SAME_TASK",
+            "subject": {
+              "workspace_id": "semantic-dev-revision",
+              "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+              "artifact_id": "update.md",
+              "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304"
+            },
+            "object": {
+              "workspace_id": "semantic-dev-revision",
+              "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+              "artifact_id": "plan.md",
+              "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57"
+            },
+            "proposed_verdict": "SUPPORTED",
+            "supporting_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-revision",
+                  "artifact_id": "plan.md",
+                  "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                  "source_ref": "artifact://semantic-dev-revision/plan.md",
+                  "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                  "ordinal": 0,
+                  "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                  "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                  "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38"
+                },
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。"
+              },
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-revision",
+                  "artifact_id": "update.md",
+                  "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "source_ref": "artifact://semantic-dev-revision/update.md",
+                  "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                  "ordinal": 0,
+                  "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                  "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "char_start": 32,
+                  "char_end": 123,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                  "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4"
+                },
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。"
+              }
+            ],
+            "counter_evidence": [],
+            "missing_evidence": [],
+            "reason_codes": [
+              "EXPLICIT_SAME_TASK"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+            "usage": {
+              "input_tokens": 3316,
+              "output_tokens": 413,
+              "total_tokens": 3729,
+              "duration_ms": 7766.021
+            }
+          },
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "REVISES_PLAN",
+            "subject": {
+              "workspace_id": "semantic-dev-revision",
+              "observation_id": "task_observation_v1_1efae013b3fb7f4341ad273a7633dca99893f6bd2a37efd1aaeea721364b7700",
+              "artifact_id": "update.md",
+              "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+              "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+              "payload_hash": "eb5f38c1e0d9fc6074fe63fb91a7655be677b32be2f84869727be4a0f7113304"
+            },
+            "object": {
+              "workspace_id": "semantic-dev-revision",
+              "observation_id": "task_observation_v1_584c2248857a4bd54b3d7e4e4ce55b78c00ba0e3e361f71bef3cb965f4eae22d",
+              "artifact_id": "plan.md",
+              "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+              "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+              "payload_hash": "2844a0cd6d2923c27eaddbc7a999abe759b08a08b02ff5456e73b7b3383d2f57"
+            },
+            "proposed_verdict": "SUPPORTED",
+            "supporting_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-revision",
+                  "artifact_id": "plan.md",
+                  "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                  "source_ref": "artifact://semantic-dev-revision/plan.md",
+                  "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                  "ordinal": 0,
+                  "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                  "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                  "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38"
+                },
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。"
+              },
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-revision",
+                  "artifact_id": "update.md",
+                  "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                  "source_ref": "artifact://semantic-dev-revision/update.md",
+                  "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                  "ordinal": 0,
+                  "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                  "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                  "char_start": 32,
+                  "char_end": 123,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                  "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4"
+                },
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。"
+              }
+            ],
+            "counter_evidence": [],
+            "missing_evidence": [],
+            "reason_codes": [
+              "EXPLICIT_PLAN_REVISION"
+            ],
+            "changed_fields": [
+              "deadline"
+            ],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+            "usage": {
+              "input_tokens": 3316,
+              "output_tokens": 413,
+              "total_tokens": 3729,
+              "duration_ms": 7766.021
+            }
+          }
+        ],
+        "errors": [],
+        "usage": {
+          "input_tokens": 3316,
+          "output_tokens": 413,
+          "total_tokens": 3729,
+          "duration_ms": 7766.021
+        },
+        "provider_calls": 1,
+        "request_sha256": "76006d3ba3a0be19c86ebcbef1b1cc133f4b74e7c4836ed53634dc7bc36546e9",
+        "prompt_sha256": "3b445225ff225883bdef76d6f9aa307c6d691318deafae165a904eff54baf6cc",
+        "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+        "elapsed_ms": 7787.909,
+        "schema_sha256": "12eb221ab0f103211fd3b80c00c8acb376237ca980307d94e54b78d59dea8a22",
+        "response_sha256": "9b62c817d4ccb768462e988b602b7907126ba512e1c14e3a5635ebb1d328035d",
+        "provider_request_id": null,
+        "provider_response_id": "MPLUatqzGu36ytMPsOCB-AE",
+        "untrusted_output": {
+          "kind": "tool_calls",
+          "tool_calls": [
+            {
+              "tool_id": "propose_task_relations",
+              "arguments": {
+                "proposals": [
+                  {
+                    "counter_evidence": [],
+                    "subject": "new",
+                    "proposed_verdict": "SUPPORTED",
+                    "predicate": "SAME_TASK",
+                    "changed_fields": [],
+                    "object": "old",
+                    "supporting_evidence": [
+                      {
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                        "span_id": "plan.md:1"
+                      },
+                      {
+                        "span_id": "update.md:1",
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。"
+                      }
+                    ],
+                    "reason_codes": [
+                      "EXPLICIT_SAME_TASK"
+                    ],
+                    "missing_evidence": []
+                  },
+                  {
+                    "proposed_verdict": "SUPPORTED",
+                    "counter_evidence": [],
+                    "changed_fields": [
+                      "deadline"
+                    ],
+                    "predicate": "REVISES_PLAN",
+                    "object": "old",
+                    "subject": "new",
+                    "supporting_evidence": [
+                      {
+                        "span_id": "plan.md:1",
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。"
+                      },
+                      {
+                        "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                        "span_id": "update.md:1"
+                      }
+                    ],
+                    "missing_evidence": [],
+                    "reason_codes": [
+                      "EXPLICIT_PLAN_REVISION"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "final_answer": null
+        }
+      },
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_aa55b429b3664f6ed40cc9001497d0cbcd84056ea974099e289d0ea7a53f611f",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-revision",
+                "artifact_id": "plan.md",
+                "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                "source_ref": "artifact://semantic-dev-revision/plan.md",
+                "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                "ordinal": 0,
+                "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38"
+              },
+              "char_start": 32,
+              "char_end": 72,
+              "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "semantic-dev-revision",
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                "source_ref": "artifact://semantic-dev-revision/update.md",
+                "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                "ordinal": 0,
+                "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "char_start": 32,
+                "char_end": 123,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4"
+              },
+              "char_start": 32,
+              "char_end": 123,
+              "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-revision",
+                "artifact_id": "plan.md",
+                "artifact_version_id": "artifact_v1_c226eb8003ca407eca591ecc43562666603cc6f1ef8c1fce6eed6520737ae291",
+                "source_ref": "artifact://semantic-dev-revision/plan.md",
+                "content_hash": "bfbe5b8855a6bacb2c2354a28f33fd98108c5d6403729a79594e63ff951ec673",
+                "ordinal": 0,
+                "message_id": "message_v1_96acc7eeb63d524535cac6d816e63e3ffec890b14321ef1d3b22a1212a82b249",
+                "segment_id": "segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_cee3c79f12015c1b238e99d7914261b5aa87365352809a1001409823f71e441e",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+                "quote_sha256": "fadcd7493227d9496aa23796add463fbd1efd81acfd96476465c6181cc925f38"
+              },
+              "char_start": 32,
+              "char_end": 72,
+              "quote": "我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "semantic-dev-revision",
+                "artifact_id": "update.md",
+                "artifact_version_id": "artifact_v1_68b70fd8de08a3a093ed86d039c26742da1c193bd849b5bf792bc8f50d525d7f",
+                "source_ref": "artifact://semantic-dev-revision/update.md",
+                "content_hash": "2320fa4aa68dc2bbe56d435e30b3aa8e0f5b74583ffbf1e45b272e22f41d5450",
+                "ordinal": 0,
+                "message_id": "message_v1_aba3029c729af8ace87b278ddaed7d163a567cae509a37029db317e74fb3d642",
+                "segment_id": "segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_034d7dd96f3c33002701f01e23c0964c16f4f5e38c7de20724c9b3b2aea9e917",
+                "char_start": 32,
+                "char_end": 123,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+                "quote_sha256": "25368f6239c84472293a994a9a834f5403147a1b4ae21f6af84071d52fc0dbf4"
+              },
+              "char_start": 32,
+              "char_end": 123,
+              "quote": "我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "comparisons": [
+        {
+          "status": "COMPUTABLE",
+          "delta_calendar_days": 4,
+          "conditional_on_model_semantics": true,
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+          "proposal_id": "semantic_proposal_v1_885d71e4ad603fbc8ed77a8c39d098eab73a2f95e6f4814ecc65d7f1f1bbee07",
+          "source_snapshot_hash": "0c9f38fa12e6c6c8a3e7fc94fd0499400b99521d429e2177a67e4ffc1e7041dc",
+          "old_deadline": {
+            "value": "2026-12-10",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          },
+          "new_deadline": {
+            "value": "2026-12-14",
+            "precision": "DAY",
+            "role": "TASK_DEADLINE",
+            "bound": "BEFORE"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "causality",
+      "result": {
+        "schema": "task-semantic-result/v1",
+        "status": "EXECUTED",
+        "proposals": [
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "AFFECTED_BY",
+            "subject": {
+              "workspace_id": "semantic-dev-causality",
+              "observation_id": "task_observation_v1_a05f130dfdac2539784863371ec870fb374ac9d225981c12db844a0df60aae53",
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "payload_hash": "2d8f3240cfcf2e3b8ecd5bc9d0e3acbd908b28d155444e304938ed35c2d16637"
+            },
+            "object": {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "semantic-dev-causality",
+              "project": "澄川项目",
+              "before_vendor": "岚声",
+              "after_vendor": "远铃",
+              "evidence": {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "choice.md",
+                  "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                  "source_ref": "artifact://semantic-dev-causality/choice.md",
+                  "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+                  "ordinal": 0,
+                  "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+                  "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e"
+                },
+                "char_start": 32,
+                "char_end": 72,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            },
+            "proposed_verdict": "SUPPORTED",
+            "supporting_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "choice.md",
+                  "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                  "source_ref": "artifact://semantic-dev-causality/choice.md",
+                  "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+                  "ordinal": 0,
+                  "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+                  "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e"
+                },
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。"
+              },
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "source_ref": "artifact://semantic-dev-causality/work.md",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "ordinal": 0,
+                  "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                  "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                  "char_start": 32,
+                  "char_end": 111,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                  "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc"
+                },
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+              }
+            ],
+            "counter_evidence": [],
+            "missing_evidence": [],
+            "reason_codes": [
+              "DIRECT_IMPACT_REPORTED"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "aaed3a902c3fd1b74d2b9e17328900ac2c314b556071e837565529aed4fb720e",
+            "usage": {
+              "input_tokens": 5697,
+              "output_tokens": 415,
+              "total_tokens": 6112,
+              "duration_ms": 3975.318
+            }
+          },
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "AFFECTED_BY",
+            "subject": {
+              "workspace_id": "semantic-dev-causality",
+              "observation_id": "task_observation_v1_90b101ac26266340ac48d02942b4cd245b3346d7ecc7038fcf4d243822029a7b",
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "payload_hash": "bc84f146818eae4c0cd52c0bf135554ed284161002b080b81f06501611c98fac"
+            },
+            "object": {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "semantic-dev-causality",
+              "project": "澄川项目",
+              "before_vendor": "岚声",
+              "after_vendor": "远铃",
+              "evidence": {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "choice.md",
+                  "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                  "source_ref": "artifact://semantic-dev-causality/choice.md",
+                  "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+                  "ordinal": 0,
+                  "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+                  "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e"
+                },
+                "char_start": 32,
+                "char_end": 72,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            },
+            "proposed_verdict": "REFUTED",
+            "supporting_evidence": [],
+            "counter_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "work.md",
+                  "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                  "source_ref": "artifact://semantic-dev-causality/work.md",
+                  "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                  "ordinal": 1,
+                  "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                  "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                  "char_start": 144,
+                  "char_end": 220,
+                  "line_start": 2,
+                  "line_end": 2,
+                  "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                  "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f"
+                },
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+              }
+            ],
+            "missing_evidence": [],
+            "reason_codes": [
+              "EXPLICITLY_UNAFFECTED"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "aaed3a902c3fd1b74d2b9e17328900ac2c314b556071e837565529aed4fb720e",
+            "usage": {
+              "input_tokens": 5697,
+              "output_tokens": 415,
+              "total_tokens": 6112,
+              "duration_ms": 3975.318
+            }
+          },
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "AFFECTED_BY",
+            "subject": {
+              "workspace_id": "semantic-dev-causality",
+              "observation_id": "task_observation_v1_a14416a0a321da943240b9143642eebf3f648f73876c6167e1607a95f744c5f7",
+              "artifact_id": "work.md",
+              "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_414a33cbce858969ce0634ddbf35c34f9590d5a8ec0347c8c2195977e5532052",
+              "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+              "payload_hash": "f9899e0bf7d120f90e00cd01ebb998cba83f4349d950978dacd38e35a51b1cc7"
+            },
+            "object": {
+              "endpoint_type": "CHANGE",
+              "workspace_id": "semantic-dev-causality",
+              "project": "澄川项目",
+              "before_vendor": "岚声",
+              "after_vendor": "远铃",
+              "evidence": {
+                "span": {
+                  "workspace_id": "semantic-dev-causality",
+                  "artifact_id": "choice.md",
+                  "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                  "source_ref": "artifact://semantic-dev-causality/choice.md",
+                  "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+                  "ordinal": 0,
+                  "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+                  "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                  "char_start": 32,
+                  "char_end": 72,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                  "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e"
+                },
+                "char_start": 32,
+                "char_end": 72,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "role": "CHANGE_CLAIM"
+              },
+              "kind": "SOURCE_CLAIM",
+              "decision_id": null,
+              "candidate_id": null,
+              "receipt_id": null
+            },
+            "proposed_verdict": "UNKNOWN",
+            "supporting_evidence": [],
+            "counter_evidence": [],
+            "missing_evidence": [
+              "work.md:3 does not mention choice.md or vendor change impact on CC-83"
+            ],
+            "reason_codes": [
+              "NO_CAUSAL_EVIDENCE"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "aaed3a902c3fd1b74d2b9e17328900ac2c314b556071e837565529aed4fb720e",
+            "usage": {
+              "input_tokens": 5697,
+              "output_tokens": 415,
+              "total_tokens": 6112,
+              "duration_ms": 3975.318
+            }
+          }
+        ],
+        "errors": [],
+        "usage": {
+          "input_tokens": 5697,
+          "output_tokens": 415,
+          "total_tokens": 6112,
+          "duration_ms": 3975.318
+        },
+        "provider_calls": 1,
+        "request_sha256": "f750fc1cc29599f8393bd8db063fc72775990231fca51b5c83153e3ab2e6b319",
+        "prompt_sha256": "052bddd96ee79093e06f1303daa12cf6021235e2275595c3888b3b91722a7b0f",
+        "source_snapshot_hash": "aaed3a902c3fd1b74d2b9e17328900ac2c314b556071e837565529aed4fb720e",
+        "elapsed_ms": 3986.954,
+        "schema_sha256": "e93f649a5f7c0ac104523b61eec32ecbe5248164bfce47de1063476985402a87",
+        "response_sha256": "3a4d5586a955df8d3fe5e3cfe205c79e67bacd0405f854d01596c3ea9d2186c6",
+        "provider_request_id": null,
+        "provider_response_id": "NfLUaqyKG7viytMP5K6Z-Qo",
+        "untrusted_output": {
+          "kind": "tool_calls",
+          "tool_calls": [
+            {
+              "tool_id": "propose_task_relations",
+              "arguments": {
+                "proposals": [
+                  {
+                    "subject": "adapt",
+                    "supporting_evidence": [
+                      {
+                        "span_id": "choice.md:1",
+                        "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。"
+                      },
+                      {
+                        "span_id": "work.md:1",
+                        "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。"
+                      }
+                    ],
+                    "predicate": "AFFECTED_BY",
+                    "object": "change",
+                    "counter_evidence": [],
+                    "reason_codes": [
+                      "DIRECT_IMPACT_REPORTED"
+                    ],
+                    "changed_fields": [],
+                    "proposed_verdict": "SUPPORTED",
+                    "missing_evidence": []
+                  },
+                  {
+                    "proposed_verdict": "REFUTED",
+                    "missing_evidence": [],
+                    "supporting_evidence": [],
+                    "object": "change",
+                    "counter_evidence": [
+                      {
+                        "span_id": "work.md:2",
+                        "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。"
+                      }
+                    ],
+                    "changed_fields": [],
+                    "subject": "archive",
+                    "predicate": "AFFECTED_BY",
+                    "reason_codes": [
+                      "EXPLICITLY_UNAFFECTED"
+                    ]
+                  },
+                  {
+                    "counter_evidence": [],
+                    "predicate": "AFFECTED_BY",
+                    "reason_codes": [
+                      "NO_CAUSAL_EVIDENCE"
+                    ],
+                    "supporting_evidence": [],
+                    "subject": "cache",
+                    "changed_fields": [],
+                    "proposed_verdict": "UNKNOWN",
+                    "missing_evidence": [
+                      "work.md:3 does not mention choice.md or vendor change impact on CC-83"
+                    ],
+                    "object": "change"
+                  }
+                ]
+              }
+            }
+          ],
+          "final_answer": null
+        }
+      },
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_ffabfaf1de61aecd0502b44ba3955b29bb87121d565ff4816ff5af78554eebdf",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-causality",
+                "artifact_id": "choice.md",
+                "artifact_version_id": "artifact_v1_e1943f4d2739fb59edabd18e25622215d5a9c67a1c288ee12c54b038ac699327",
+                "source_ref": "artifact://semantic-dev-causality/choice.md",
+                "content_hash": "42d70d3c72f2ee9d2bf9369800616efd5b8ac85e543e643732aed4bbd4aaa74e",
+                "ordinal": 0,
+                "message_id": "message_v1_badb024fac694265253e5062c794f37cc0f4996cfb77d1819c5ec4b0fa62e99d",
+                "segment_id": "segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7c1e83291f0e49226b4783022ccaef19216ebece14bab5f26a877ea89f99cda6",
+                "char_start": 32,
+                "char_end": 72,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+                "quote_sha256": "f026d0ec562c91f471fd28c4b262e0d8e5e329d7eca82b0909dfd62f8f704d4e"
+              },
+              "char_start": 32,
+              "char_end": 72,
+              "quote": "澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "semantic-dev-causality",
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "source_ref": "artifact://semantic-dev-causality/work.md",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "ordinal": 0,
+                "message_id": "message_v1_d7ec9bb2119fa330611f11659df3e14283fcbcc886ec3b1d8aa599cf24769228",
+                "segment_id": "segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e6bfd05887163cf96c496a41a6a76e6baa0a7724251652b9969608a52e2d608d",
+                "char_start": 32,
+                "char_end": 111,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+                "quote_sha256": "50892483cea99af47ec9700d38293d3f04a02c605d8fc3377a0868de500ca3bc"
+              },
+              "char_start": 32,
+              "char_end": 111,
+              "quote": "我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SOURCE_CLAIM_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_cc521e5ae0cd19ace64a078b45e3c67fb50c6547ad67b1c1d47e773da5bc4669",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-causality",
+                "artifact_id": "work.md",
+                "artifact_version_id": "artifact_v1_3120b56d9a271bba828be1e2ed290319864ff11ec54e3961d1aa5c53d8c41446",
+                "source_ref": "artifact://semantic-dev-causality/work.md",
+                "content_hash": "0d1f5431eb92ac3e3801ec50be078c8e6aca1f5c9fac224c24b534d2fe143e35",
+                "ordinal": 1,
+                "message_id": "message_v1_da78d2c06c341cbcccc98e7a52eafd85aad06202ce1662022efe47684cb9bc64",
+                "segment_id": "segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2b723aa6160d079439363e844c52faa6b0df54177fe65bae03e7538cfb888261",
+                "char_start": 144,
+                "char_end": 220,
+                "line_start": 2,
+                "line_end": 2,
+                "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+                "quote_sha256": "c818c5d50e0cd0a3ecfc747b2ff99d318ad606e0ee33ac13b7815cdf18e9d90f"
+              },
+              "char_start": 144,
+              "char_end": 220,
+              "quote": "我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SOURCE_CLAIM_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_c714304f240c372ef94e764b71149b7bf39683a688a3c870039cd30ed78045af",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [],
+          "counter_evidence": [],
+          "authority": "SOURCE_CLAIM_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "case_id": "conflict",
+      "result": {
+        "schema": "task-semantic-result/v1",
+        "status": "EXECUTED",
+        "proposals": [
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "SAME_TASK",
+            "subject": {
+              "workspace_id": "semantic-dev-conflict",
+              "observation_id": "task_observation_v1_38c930ffa567664c32bf50577ba73a530c5d8f8cbd0e3bdeddfb1de785c0f442",
+              "artifact_id": "second.md",
+              "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+              "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+              "payload_hash": "47c63bacd8ebaf339a19f5cb6c30c967efc8a09466b9f904a3c04602dd1adcb1"
+            },
+            "object": {
+              "workspace_id": "semantic-dev-conflict",
+              "observation_id": "task_observation_v1_bfa1a46711b3833490778d72bdd7f517a707314f7c67db249a6c5855a9e5817b",
+              "artifact_id": "first.md",
+              "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+              "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+              "payload_hash": "4fc582d91fd069d18e63faba13615e9d093efcaf645a3c5c7c8a27e67d6fac76"
+            },
+            "proposed_verdict": "SUPPORTED",
+            "supporting_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-conflict",
+                  "artifact_id": "second.md",
+                  "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+                  "source_ref": "artifact://semantic-dev-conflict/second.md",
+                  "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+                  "ordinal": 0,
+                  "message_id": "message_v1_32dafaca9363a0057a79367c5cbc8ac352e2f055e21e6c62cf8cdf69db048f9e",
+                  "segment_id": "segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                  "char_start": 32,
+                  "char_end": 118,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。",
+                  "quote_sha256": "a87e8ba3d1d65cf0693578d8310ec1ff975b89283eda3be8b8e4aceb1101f11e"
+                },
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。"
+              },
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-conflict",
+                  "artifact_id": "first.md",
+                  "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+                  "source_ref": "artifact://semantic-dev-conflict/first.md",
+                  "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+                  "ordinal": 0,
+                  "message_id": "message_v1_c9bc263ee5d81a112eaf5b56e0eec4cd5d20285c6d7848b8d867976c76d7b7e1",
+                  "segment_id": "segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                  "char_start": 32,
+                  "char_end": 106,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+                  "quote_sha256": "92425e1f3d08130ef03eaaa6b3f1c51a342cf605ee553ac1da85aa35e33a2c81"
+                },
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。"
+              }
+            ],
+            "counter_evidence": [],
+            "missing_evidence": [],
+            "reason_codes": [
+              "EXPLICIT_CROSS_DOC_TASK_IDENTITY"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a",
+            "usage": {
+              "input_tokens": 3345,
+              "output_tokens": 365,
+              "total_tokens": 3710,
+              "duration_ms": 4185.814
+            }
+          },
+          {
+            "schema": "task-semantic-proposal/v1",
+            "stage": "MODEL_PROPOSED",
+            "execution_status": "EXECUTED",
+            "authority": "SUPPORTING_ONLY",
+            "predicate": "REVISES_PLAN",
+            "subject": {
+              "workspace_id": "semantic-dev-conflict",
+              "observation_id": "task_observation_v1_38c930ffa567664c32bf50577ba73a530c5d8f8cbd0e3bdeddfb1de785c0f442",
+              "artifact_id": "second.md",
+              "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+              "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+              "payload_hash": "47c63bacd8ebaf339a19f5cb6c30c967efc8a09466b9f904a3c04602dd1adcb1"
+            },
+            "object": {
+              "workspace_id": "semantic-dev-conflict",
+              "observation_id": "task_observation_v1_bfa1a46711b3833490778d72bdd7f517a707314f7c67db249a6c5855a9e5817b",
+              "artifact_id": "first.md",
+              "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+              "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+              "payload_hash": "4fc582d91fd069d18e63faba13615e9d093efcaf645a3c5c7c8a27e67d6fac76"
+            },
+            "proposed_verdict": "CONFLICT",
+            "supporting_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-conflict",
+                  "artifact_id": "second.md",
+                  "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+                  "source_ref": "artifact://semantic-dev-conflict/second.md",
+                  "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+                  "ordinal": 0,
+                  "message_id": "message_v1_32dafaca9363a0057a79367c5cbc8ac352e2f055e21e6c62cf8cdf69db048f9e",
+                  "segment_id": "segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                  "char_start": 32,
+                  "char_end": 118,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。",
+                  "quote_sha256": "a87e8ba3d1d65cf0693578d8310ec1ff975b89283eda3be8b8e4aceb1101f11e"
+                },
+                "quote": "这里是应执行的新计划，覆盖first.md的11日安排。"
+              }
+            ],
+            "counter_evidence": [
+              {
+                "span": {
+                  "workspace_id": "semantic-dev-conflict",
+                  "artifact_id": "first.md",
+                  "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+                  "source_ref": "artifact://semantic-dev-conflict/first.md",
+                  "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+                  "ordinal": 0,
+                  "message_id": "message_v1_c9bc263ee5d81a112eaf5b56e0eec4cd5d20285c6d7848b8d867976c76d7b7e1",
+                  "segment_id": "segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                  "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                  "char_start": 32,
+                  "char_end": 106,
+                  "line_start": 1,
+                  "line_end": 1,
+                  "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+                  "quote_sha256": "92425e1f3d08130ef03eaaa6b3f1c51a342cf605ee553ac1da85aa35e33a2c81"
+                },
+                "quote": "second.md的15日版本只是待议草案，不会取代这里的执行安排。"
+              }
+            ],
+            "missing_evidence": [],
+            "reason_codes": [
+              "CONFLICTING_PLAN_REVISION_CLAIMS"
+            ],
+            "changed_fields": [],
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "prompt_version": "task-relation-semantics/v1",
+            "source_snapshot_hash": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a",
+            "usage": {
+              "input_tokens": 3345,
+              "output_tokens": 365,
+              "total_tokens": 3710,
+              "duration_ms": 4185.814
+            }
+          }
+        ],
+        "errors": [],
+        "usage": {
+          "input_tokens": 3345,
+          "output_tokens": 365,
+          "total_tokens": 3710,
+          "duration_ms": 4185.814
+        },
+        "provider_calls": 1,
+        "request_sha256": "ce4d2ede9f66f2f253f589974625cf15cfc107b2d986c16e35ad42e298f64862",
+        "prompt_sha256": "effd68acf9fd0bb1e72877c4548d814b889814d7e6d9661339b93bd44b11e531",
+        "source_snapshot_hash": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a",
+        "elapsed_ms": 4198.526,
+        "schema_sha256": "ca61f4e185599a2c3bf4bf2d7d04f42d54a3b8ce715b8db57ce406d5cbd0ac95",
+        "response_sha256": "d74b1a664bbe29c4a5c85430762ddac0db92e60f12393b3ee2e2e5315177903c",
+        "provider_request_id": null,
+        "provider_response_id": "OfLUaom3KJXgytMP34fywQM",
+        "untrusted_output": {
+          "kind": "tool_calls",
+          "tool_calls": [
+            {
+              "tool_id": "propose_task_relations",
+              "arguments": {
+                "proposals": [
+                  {
+                    "subject": "new",
+                    "missing_evidence": [],
+                    "changed_fields": [],
+                    "supporting_evidence": [
+                      {
+                        "span_id": "second.md:1",
+                        "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。"
+                      },
+                      {
+                        "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+                        "span_id": "first.md:1"
+                      }
+                    ],
+                    "counter_evidence": [],
+                    "predicate": "SAME_TASK",
+                    "proposed_verdict": "SUPPORTED",
+                    "reason_codes": [
+                      "EXPLICIT_CROSS_DOC_TASK_IDENTITY"
+                    ],
+                    "object": "old"
+                  },
+                  {
+                    "subject": "new",
+                    "supporting_evidence": [
+                      {
+                        "span_id": "second.md:1",
+                        "quote": "这里是应执行的新计划，覆盖first.md的11日安排。"
+                      }
+                    ],
+                    "counter_evidence": [
+                      {
+                        "span_id": "first.md:1",
+                        "quote": "second.md的15日版本只是待议草案，不会取代这里的执行安排。"
+                      }
+                    ],
+                    "missing_evidence": [],
+                    "predicate": "REVISES_PLAN",
+                    "object": "old",
+                    "reason_codes": [
+                      "CONFLICTING_PLAN_REVISION_CLAIMS"
+                    ],
+                    "changed_fields": [],
+                    "proposed_verdict": "CONFLICT"
+                  }
+                ]
+              }
+            }
+          ],
+          "final_answer": null
+        }
+      },
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_7d1ee920e9f1b590ff065cd1127869dc0ffda8d0c4d57ac5fcfa97562bbabd04",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-conflict",
+                "artifact_id": "second.md",
+                "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+                "source_ref": "artifact://semantic-dev-conflict/second.md",
+                "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+                "ordinal": 0,
+                "message_id": "message_v1_32dafaca9363a0057a79367c5cbc8ac352e2f055e21e6c62cf8cdf69db048f9e",
+                "segment_id": "segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                "char_start": 32,
+                "char_end": 118,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。",
+                "quote_sha256": "a87e8ba3d1d65cf0693578d8310ec1ff975b89283eda3be8b8e4aceb1101f11e"
+              },
+              "char_start": 32,
+              "char_end": 118,
+              "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "semantic-dev-conflict",
+                "artifact_id": "first.md",
+                "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+                "source_ref": "artifact://semantic-dev-conflict/first.md",
+                "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+                "ordinal": 0,
+                "message_id": "message_v1_c9bc263ee5d81a112eaf5b56e0eec4cd5d20285c6d7848b8d867976c76d7b7e1",
+                "segment_id": "segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                "char_start": 32,
+                "char_end": 106,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+                "quote_sha256": "92425e1f3d08130ef03eaaa6b3f1c51a342cf605ee553ac1da85aa35e33a2c81"
+              },
+              "char_start": 32,
+              "char_end": 106,
+              "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_27c1b84d7e54908a8befc10a1efbead9b093aafbd6441a9118d9c1c46ff207d3",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-conflict",
+                "artifact_id": "second.md",
+                "artifact_version_id": "artifact_v1_1509d98934849280cfd6c6e3cfe9ed4bc1cc887d917263afc173a0c102888af3",
+                "source_ref": "artifact://semantic-dev-conflict/second.md",
+                "content_hash": "fdf54dae9b4c1212f63b46994fb3c120b9ec35c6b4953ce7e77b952c23ad94f1",
+                "ordinal": 0,
+                "message_id": "message_v1_32dafaca9363a0057a79367c5cbc8ac352e2f055e21e6c62cf8cdf69db048f9e",
+                "segment_id": "segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bc239e80eb98a9a2c33b7269de4c46144ca755bee2b7dd26d205ec81a33de903",
+                "char_start": 32,
+                "char_end": 118,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。",
+                "quote_sha256": "a87e8ba3d1d65cf0693578d8310ec1ff975b89283eda3be8b8e4aceb1101f11e"
+              },
+              "char_start": 90,
+              "char_end": 118,
+              "quote": "这里是应执行的新计划，覆盖first.md的11日安排。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "semantic-dev-conflict",
+                "artifact_id": "first.md",
+                "artifact_version_id": "artifact_v1_e0bf43f43621da7644fd46400b3ea9cf79582f784505e81b840fb9ff97973256",
+                "source_ref": "artifact://semantic-dev-conflict/first.md",
+                "content_hash": "ce86f794915f57a470938d0fa6568f406581e6364a4bd63434660319ff00a146",
+                "ordinal": 0,
+                "message_id": "message_v1_c9bc263ee5d81a112eaf5b56e0eec4cd5d20285c6d7848b8d867976c76d7b7e1",
+                "segment_id": "segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_789581b06e71399b0d3ec065a6bb370b9d67f3a5d0f889b5ce641a5e82b4aa64",
+                "char_start": 32,
+                "char_end": 106,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+                "quote_sha256": "92425e1f3d08130ef03eaaa6b3f1c51a342cf605ee553ac1da85aa35e33a2c81"
+              },
+              "char_start": 72,
+              "char_end": 106,
+              "quote": "second.md的15日版本只是待议草案，不会取代这里的执行安排。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "comparisons": [
+        {
+          "status": "BLOCKED",
+          "delta_calendar_days": null,
+          "conditional_on_model_semantics": true,
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+          "proposal_id": "semantic_proposal_v1_27c1b84d7e54908a8befc10a1efbead9b093aafbd6441a9118d9c1c46ff207d3",
+          "source_snapshot_hash": "640dcfb1618468a33482ceb3477109669a23c8d05453ad626a4fec8f39fbdc8a"
+        }
+      ]
+    },
+    {
+      "case_id": "correction",
+      "result": {
+        "status": "NOT_RUN",
+        "proposals": []
+      },
+      "validation": [],
+      "comparisons": []
+    },
+    {
+      "case_id": "independent",
+      "result": {
+        "status": "NOT_RUN",
+        "proposals": []
+      },
+      "validation": [],
+      "comparisons": []
+    },
+    {
+      "case_id": "alias",
+      "result": {
+        "status": "NOT_RUN",
+        "proposals": []
+      },
+      "validation": [],
+      "comparisons": []
+    },
+    {
+      "case_id": "conditional",
+      "result": {
+        "status": "NOT_RUN",
+        "proposals": []
+      },
+      "validation": [],
+      "comparisons": []
+    },
+    {
+      "case_id": "missing-year",
+      "result": {
+        "status": "NOT_RUN",
+        "proposals": []
+      },
+      "validation": [],
+      "comparisons": []
+    }
+  ],
+  "provider_calls": 3,
+  "provider_receipts": [
+    {
+      "attempt": 1,
+      "status": "RETURNED",
+      "started_utc": "2026-10-18T16:22:05.437834+00:00",
+      "model_requested": "gemini-3.8-flash",
+      "usage": {
+        "prompt_token_count": 3316,
+        "candidates_token_count": 413,
+        "thoughts_token_count": null,
+        "total_token_count": 3729,
+        "cached_content_token_count": null
+      },
+      "cost_estimate_usd": null,
+      "actual_model_version": "gemini-3.8-flash",
+      "provider_response_id": "MPLUatqzGu36ytMPsOCB-AE",
+      "latency_ms": 7750.07
+    },
+    {
+      "attempt": 2,
+      "status": "RETURNED",
+      "started_utc": "2026-10-18T16:22:13.585869+00:00",
+      "model_requested": "gemini-3.8-flash",
+      "usage": {
+        "prompt_token_count": 5697,
+        "candidates_token_count": 415,
+        "thoughts_token_count": null,
+        "total_token_count": 6112,
+        "cached_content_token_count": null
+      },
+      "cost_estimate_usd": null,
+      "actual_model_version": "gemini-3.8-flash",
+      "provider_response_id": "NfLUaqyKG7viytMP5K6Z-Qo",
+      "latency_ms": 3964.627
+    },
+    {
+      "attempt": 3,
+      "status": "RETURNED",
+      "started_utc": "2026-10-18T16:22:17.878792+00:00",
+      "model_requested": "gemini-3.8-flash",
+      "usage": {
+        "prompt_token_count": 3345,
+        "candidates_token_count": 365,
+        "thoughts_token_count": null,
+        "total_token_count": 3710,
+        "cached_content_token_count": null
+      },
+      "cost_estimate_usd": null,
+      "actual_model_version": "gemini-3.8-flash",
+      "provider_response_id": "OfLUaom3KJXgytMP34fywQM",
+      "latency_ms": 4174.927
+    }
+  ],
+  "cost_estimate_usd": null,
+  "not_invoice": true,
+  "semantic_acceptance": "NOT_EVALUATED",
+  "production_agent_adapter": "NOT_RUN"
+}

@@ -14,6 +14,21 @@ current product contract, while `DEV_SPEC.md` maps it to implementation work.
 The original personal-vault roadmap is retained below as historical planning;
 it is no longer the active product direction.
 
+## Cross-meeting task investigation — 2026-10-21
+
+The approved M3-P mainline integration brings task observation/evidence and
+uncertainty into the existing Ask UI/HTTP. Model proposals stay separate from
+finite P4 proof reads; missing trust blocks dependent revision/date work. Saved
+completed task results revalidate current evidence catalog authorization and
+lifecycle without model calls. An explicit synthetic offline mode provides the
+normal product entry point; real task Provider stages and authenticated task
+relationship confirmation are not enabled. Historical M2 H01–H04 acceptance
+remains FAIL (0/4), and historical Profile B scores are not new mainline results.
+
+See [SPEC](requirements/m3-p-task-investigation/SPEC.md),
+[dependency audit](requirements/m3-p-task-investigation/DEPENDENCIES.md) and
+[delivery evidence](requirements/m3-p-task-investigation/DELIVERY.md).
+
 ## Unified Ask Product Experience — 2026-10-14
 
 The user-authorized follow-up adds one Product Ask form with bounded local task

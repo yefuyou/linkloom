@@ -1,0 +1,681 @@
+{
+  "schema_version": "task-relations-p2-input/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D03",
+      "workspace_id": "m2-task-relations-p2-dev-d03",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目的短信接口联调，计划在2026年10月14日前完成。\n"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目的新接口调整，计划在2026年10月18日前完成。\n说明：B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A1",
+          "source_id": "A.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目的短信接口联调，计划在2026年10月14日前完成。",
+            "description_parts": ["我负责星河项目的短信接口联调，计划在2026年10月14日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B1",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目的新接口调整，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目的新接口调整，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D03-same-task",
+          "predicate": "SAME_TASK",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {"type": "task", "label": "A1"},
+          "scope": "observation_pair",
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "星河项目的短信接口联调，计划在2026年10月14日前完成。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "星河项目的新接口调整，计划在2026年10月18日前完成。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "B1的接口调整与A.md的联调工作相关，是否属于同一业务任务尚待核对。"}
+          ]
+        },
+        {
+          "question_id": "D03-related-work-link",
+          "predicate": "RELATED_TO",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {"type": "task", "label": "A1"},
+          "relation_detail": "WORK_LINK",
+          "scope": "observation_pair",
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "星河项目的短信接口联调，计划在2026年10月14日前完成。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "星河项目的新接口调整，计划在2026年10月18日前完成。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "B1的接口调整与A.md的联调工作相关"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D06",
+      "workspace_id": "m2-task-relations-p2-dev-d06",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T10:00:00+08:00] 林悦: 星河项目正式选择云桥科技为短信供应商，自2026年10月10日起生效。\n[2026-10-15T10:00:00+08:00] 林悦: 星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。\n"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "review_decision_setup": {
+        "mode": "USE_EXISTING_APPROVAL_FLOW",
+        "records": [
+          {
+            "decision_id": "synthetic-d06-a0",
+            "source_id": "A.md",
+            "segment_index": 0,
+            "decision_kind": "SUPPLIER_SELECTION"
+          },
+          {
+            "decision_id": "synthetic-d06-a1",
+            "source_id": "A.md",
+            "segment_index": 1,
+            "decision_kind": "SUPPLIER_REPLACEMENT",
+            "supersedes_decision_id": "synthetic-d06-a0"
+          }
+        ]
+      },
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 ADAPT-2 的签名参数适配；因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D06-affected-by-reviewed-change",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {
+            "type": "change",
+            "source_id": "A.md",
+            "segment_index": 1,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目",
+            "decision_id": "synthetic-d06-a1"
+          },
+          "scope": "workspace",
+          "authority": "REVIEWED_DECISION",
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 1, "quote": "星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效，替代原选择。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "因为A.md记载的从云桥科技改用星帆通信，此任务必须调整签名参数"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D07",
+      "workspace_id": "m2-task-relations-p2-dev-d07",
+      "sources": [
+        {
+          "artifact_id": "A.txt",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 林悦: 星河项目今天正式确定，短信服务供应商选择云桥科技，自2026年10月10日起生效。选择原因是报价较低，且支持国内短信发送。\n[2026-10-10T09:05:00+08:00] 陈晨: 我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。\n"
+        },
+        {
+          "artifact_id": "B.txt",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目的短信服务供应商现正式改为星帆通信，自2026年10月15日起生效，替代2026年10月10日选择云桥科技的决定。原因是云桥科技在联调中多次延迟，星帆通信的到达率更稳定。\n[2026-10-15T10:05:00+08:00] 陈晨: 我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。\n[2026-10-15T10:10:00+08:00] 周宁: 我建议以后考虑增加邮件通知作为备用渠道，但这只是建议，本次会议尚未批准，也没有确定上线日期。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A2",
+          "source_id": "A.txt",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+            "description_parts": ["我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B2",
+          "source_id": "B.txt",
+          "segment_index": 1,
+          "task": {
+            "text": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+            "description_parts": ["我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": null,
+            "vendor": "星帆通信"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D07-a2-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "A2"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d07", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"}
+          ]
+        },
+        {
+          "question_id": "D07-b2-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "B2"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d07", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "B.txt", "segment_index": 0, "quote": "星河项目的短信服务供应商现正式改为星帆通信"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"}
+          ]
+        },
+        {
+          "question_id": "D07-same-task",
+          "predicate": "SAME_TASK",
+          "subject": {"type": "task", "label": "B2"},
+          "object": {"type": "task", "label": "A2"},
+          "scope": "observation_pair",
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"}
+          ]
+        },
+        {
+          "question_id": "D07-related",
+          "predicate": "RELATED_TO",
+          "subject": {"type": "task", "label": "B2"},
+          "object": {"type": "task", "label": "A2"},
+          "scope": "observation_pair",
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "我负责星河项目的短信接口接入"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "我继续负责短信接口接入"}
+          ]
+        },
+        {
+          "question_id": "D07-revises-plan",
+          "predicate": "REVISES_PLAN",
+          "subject": {"type": "task", "label": "B2"},
+          "object": {"type": "task", "label": "A2"},
+          "scope": "observation_pair",
+          "evidence": [
+            {"source_id": "A.txt", "segment_index": 1, "quote": "计划在2026年10月14日前完成联调"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "计划在2026年10月18日前完成"}
+          ],
+          "comparison": {"requested": true}
+        },
+        {
+          "question_id": "D07-affected-by-source-claim",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B2"},
+          "object": {
+            "type": "change",
+            "source_id": "B.txt",
+            "segment_index": 0,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目"
+          },
+          "scope": "workspace",
+          "authority": "SOURCE_CLAIM",
+          "evidence": [
+            {"source_id": "B.txt", "segment_index": 0, "quote": "星河项目的短信服务供应商现正式改为星帆通信"},
+            {"source_id": "B.txt", "segment_index": 1, "quote": "将按新供应商星帆通信的接口调整"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D08",
+      "workspace_id": "m2-task-relations-p2-dev-d08",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "manual_text",
+          "content": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "# 银梭\n本节短信接入任务仅属于银梭。\n[2026-10-16T09:00:00+08:00] 陈晨: 我负责签名参数适配，计划在2026年10月18日前完成。\n# 天河项目\n本节任务仅属于天河项目。\n[2026-10-16T09:10:00+08:00] 陈晨: 我负责重试参数适配，计划在2026年10月19日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B3",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责签名参数适配，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责签名参数适配，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": null,
+            "vendor": null
+          }
+        },
+        {
+          "label": "B6",
+          "source_id": "B.md",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责重试参数适配，计划在2026年10月19日前完成。",
+            "description_parts": ["我负责重试参数适配，计划在2026年10月19日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月19日",
+            "project": null,
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D08-project-alias",
+          "predicate": "PROJECT_ALIAS",
+          "subject": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d08", "name": "银梭"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d08", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目"}
+          ]
+        },
+        {
+          "question_id": "D08-b3-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "B3"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d08", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "A.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "# 银梭"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "本节短信接入任务仅属于银梭。"},
+            {"source_id": "B.md", "segment_index": 0, "quote": "我负责签名参数适配，计划在2026年10月18日前完成。"}
+          ]
+        },
+        {
+          "question_id": "D08-b6-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "B6"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-d08", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "# 天河项目"},
+            {"source_id": "B.md", "segment_index": null, "scope": "artifact", "quote": "本节任务仅属于天河项目。"},
+            {"source_id": "B.md", "segment_index": 1, "quote": "我负责重试参数适配，计划在2026年10月19日前完成。"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V01",
+      "workspace_id": "m2-task-relations-p2-dev-v01",
+      "sources": [
+        {
+          "artifact_id": "projects.md",
+          "source_type": "manual_text",
+          "content": "# 星河项目\n本节短信接入任务仅属于星河项目。\n签名参数适配任务，计划在2026年10月18日前完成。\n\n# 天河项目\n本节任务仅属于天河项目。\n重试参数适配任务，计划在2026年10月19日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "projects.md",
+          "segment_index": 0,
+          "task": {
+            "text": "签名参数适配任务，计划在2026年10月18日前完成。",
+            "description_parts": ["签名参数适配任务，计划在2026年10月18日前完成。"],
+            "owner": null,
+            "deadline_text": "2026年10月18日",
+            "project": null,
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "projects.md",
+          "segment_index": 0,
+          "task": {
+            "text": "重试参数适配任务，计划在2026年10月19日前完成。",
+            "description_parts": ["重试参数适配任务，计划在2026年10月19日前完成。"],
+            "owner": null,
+            "deadline_text": "2026年10月19日",
+            "project": null,
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V01-a-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "A"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v01", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "projects.md", "segment_index": 0, "quote": "# 星河项目"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "本节短信接入任务仅属于星河项目。"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "签名参数适配任务，计划在2026年10月18日前完成。"}
+          ]
+        },
+        {
+          "question_id": "V01-b-in-project",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "B"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v01", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "projects.md", "segment_index": 0, "quote": "# 天河项目"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "本节任务仅属于天河项目。"},
+            {"source_id": "projects.md", "segment_index": 0, "quote": "重试参数适配任务，计划在2026年10月19日前完成。"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V02",
+      "workspace_id": "m2-task-relations-p2-dev-v02-a",
+      "sources": [
+        {
+          "artifact_id": "alias.md",
+          "source_type": "manual_text",
+          "content": "项目说明：本工作区的“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目。"
+        }
+      ],
+      "observations": [],
+      "questions": [
+        {
+          "question_id": "V02-alias-local",
+          "predicate": "PROJECT_ALIAS",
+          "subject": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v02-a", "name": "银梭"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v02-a", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "alias.md", "segment_index": 0, "quote": "“银梭”是“星河项目”的内部代号，两者在本期短信接入资料中指同一项目"}
+          ]
+        },
+        {
+          "question_id": "V02-alias-cross-workspace",
+          "predicate": "PROJECT_ALIAS",
+          "subject": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v02-a", "name": "银梭"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v02-b", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "alias.md", "segment_index": 0, "quote": "本工作区的“银梭”是“星河项目”的内部代号"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V03",
+      "workspace_id": "m2-task-relations-p2-dev-v03",
+      "sources": [
+        {
+          "artifact_id": "no-impact.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效。\n[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 AUTH-4 的日志归档；AUTH-4无需因本次供应商更换做任何调整，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "no-impact.md",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目任务 AUTH-4 的日志归档；AUTH-4无需因本次供应商更换做任何调整，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 AUTH-4 的日志归档；AUTH-4无需因本次供应商更换做任何调整，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V03-explicit-no-impact",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {
+            "type": "change",
+            "source_id": "no-impact.md",
+            "segment_index": 0,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目"
+          },
+          "scope": "workspace",
+          "authority": "SOURCE_CLAIM",
+          "evidence": [
+            {"source_id": "no-impact.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信"},
+            {"source_id": "no-impact.md", "segment_index": 1, "quote": "AUTH-4无需因本次供应商更换做任何调整"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V04",
+      "workspace_id": "m2-task-relations-p2-dev-v04",
+      "sources": [
+        {
+          "artifact_id": "current.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目供应商现为星帆通信，自2026年10月15日起生效。\n[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 STALE-1 的适配测试，因供应商变化需要调整测试，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "current.md",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目任务 STALE-1 的适配测试，因供应商变化需要调整测试，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 STALE-1 的适配测试，因供应商变化需要调整测试，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V04-stale-change-evidence",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {
+            "type": "change",
+            "source_id": "current.md",
+            "segment_index": 0,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目"
+          },
+          "scope": "workspace",
+          "authority": "SOURCE_CLAIM",
+          "evidence": [
+            {"source_id": "current.md", "segment_index": 0, "quote": "星河项目供应商由云桥科技改为星帆通信"},
+            {"source_id": "current.md", "segment_index": 1, "quote": "因供应商变化需要调整测试"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V05",
+      "workspace_id": "m2-task-relations-p2-dev-v05",
+      "sources": [
+        {
+          "artifact_id": "same-supplier.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效。\n[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 SUP-5 的通知日志适配，目前使用星帆通信，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "same-supplier.md",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目任务 SUP-5 的通知日志适配，目前使用星帆通信，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 SUP-5 的通知日志适配，目前使用星帆通信，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V05-same-supplier-no-cause",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {
+            "type": "change",
+            "source_id": "same-supplier.md",
+            "segment_index": 0,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目"
+          },
+          "scope": "workspace",
+          "authority": "SOURCE_CLAIM",
+          "evidence": [
+            {"source_id": "same-supplier.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信"},
+            {"source_id": "same-supplier.md", "segment_index": 1, "quote": "目前使用星帆通信"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V06",
+      "workspace_id": "m2-task-relations-p2-dev-v06",
+      "sources": [
+        {
+          "artifact_id": "source-claim.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目短信供应商由云桥科技改为星帆通信，自2026年10月15日起生效。\n[2026-10-15T10:05:00+08:00] 陈晨: 我负责星河项目任务 CLAIM-1 的签名参数适配；因为该供应商更换，此任务必须调整签名参数，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "source-claim.md",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目任务 CLAIM-1 的签名参数适配；因为该供应商更换，此任务必须调整签名参数，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 CLAIM-1 的签名参数适配；因为该供应商更换，此任务必须调整签名参数，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V06-direct-cause-source-claim",
+          "predicate": "AFFECTED_BY",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {
+            "type": "change",
+            "source_id": "source-claim.md",
+            "segment_index": 0,
+            "before": "云桥科技",
+            "after": "星帆通信",
+            "project": "星河项目"
+          },
+          "scope": "workspace",
+          "authority": "SOURCE_CLAIM",
+          "evidence": [
+            {"source_id": "source-claim.md", "segment_index": 0, "quote": "星河项目短信供应商由云桥科技改为星帆通信"},
+            {"source_id": "source-claim.md", "segment_index": 1, "quote": "因为该供应商更换，此任务必须调整签名参数"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V07",
+      "workspace_id": "m2-task-relations-p2-dev-v07",
+      "sources": [
+        {
+          "artifact_id": "project-register.md",
+          "source_type": "manual_text",
+          "content": "项目登记：本工作区的短信适配事项归属星河项目。"
+        },
+        {
+          "artifact_id": "task.md",
+          "source_type": "manual_text",
+          "content": "任务说明：本任务所属项目为 project-register.md 登记的星河项目。\n签名参数适配任务，计划在2026年10月18日前完成。"
+        }
+      ],
+      "observations": [
+        {
+          "label": "B1",
+          "source_id": "task.md",
+          "segment_index": 0,
+          "task": {
+            "text": "签名参数适配任务，计划在2026年10月18日前完成。",
+            "description_parts": ["签名参数适配任务，计划在2026年10月18日前完成。"],
+            "owner": null,
+            "deadline_text": "2026年10月18日",
+            "project": null,
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V07-explicit-cross-document-project-bridge",
+          "predicate": "IN_PROJECT",
+          "subject": {"type": "task", "label": "B1"},
+          "object": {"type": "project", "workspace_id": "m2-task-relations-p2-dev-v07", "name": "星河项目"},
+          "scope": "workspace",
+          "evidence": [
+            {"source_id": "project-register.md", "segment_index": 0, "quote": "短信适配事项归属星河项目"},
+            {"source_id": "task.md", "segment_index": 0, "quote": "本任务所属项目为 project-register.md 登记的星河项目"},
+            {"source_id": "task.md", "segment_index": 0, "quote": "签名参数适配任务，计划在2026年10月18日前完成。"}
+          ]
+        }
+      ]
+    }
+  ]
+}

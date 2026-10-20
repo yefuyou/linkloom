@@ -1,0 +1,77 @@
+{
+  "baseline": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+  "method": "POST /api/product/ask",
+  "request": {
+    "query": "上次会议说林枫负责日志迁移，这次会议又调整了截止日期。它们是不是同一项任务？现在能确认的负责人和截止时间是什么？",
+    "workspace_id": "ws_48d75da33fc043f684cf115c9abb539b",
+    "investigation_context": {
+      "domain": "tasks",
+      "workspace_id": "ws_48d75da33fc043f684cf115c9abb539b",
+      "sources": [
+        {
+          "source_id": "src_6bde04ab59cb4e93ae9026b2b202a868",
+          "source_version": "artifact_v1_24b400752af213567e62d2c983c9f97a8479f5a91de9f7a553c83c8dc836a867"
+        },
+        {
+          "source_id": "src_87fd10a189c745e3af1cab975aeffbdc",
+          "source_version": "artifact_v1_7b821b5ccad0389acb2ba5b965b6bdf3fe337b3ec5317e58802ed000721f6b44"
+        }
+      ]
+    }
+  },
+  "http_status": 200,
+  "response": {
+    "result": {
+      "schema_version": "product-ask/v1",
+      "query": "上次会议说林枫负责日志迁移，这次会议又调整了截止日期。它们是不是同一项任务？现在能确认的负责人和截止时间是什么？",
+      "workspace_id": "ws_48d75da33fc043f684cf115c9abb539b",
+      "scope": {
+        "subject": "",
+        "relation": "",
+        "as_of": null
+      },
+      "path": "SOURCE_RELATION_INVESTIGATION",
+      "route": {
+        "intent": "SOURCE_RELATION",
+        "code": "SOURCE_RELATION_MULTIHOP",
+        "reason": "A bounded directed source-relation chain; no business approval is implied.",
+        "plan": null
+      },
+      "status": "NEEDS_SCOPE",
+      "conclusions": [],
+      "discovery": null,
+      "evidence": [],
+      "receipts": [],
+      "uncertainty": {
+        "unknown_fields": [],
+        "statement": ""
+      },
+      "agent_run_id": null,
+      "reviewer": {
+        "performed": false,
+        "accepted": false
+      },
+      "timeline": null,
+      "progress": null,
+      "error": {
+        "code": "UNSUPPORTED_QUERY",
+        "category": "request",
+        "message": "This relationship question cannot be reliably decomposed. Supported paths: project → owner → direct leader; alias → project → owner → direct leader."
+      }
+    }
+  },
+  "sources": [
+    {
+      "source_id": "src_6bde04ab59cb4e93ae9026b2b202a868",
+      "source_version": "artifact_v1_24b400752af213567e62d2c983c9f97a8479f5a91de9f7a553c83c8dc836a867",
+      "content": "[2029-06-01T09:00:00Z] 林枫: 项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。"
+    },
+    {
+      "source_id": "src_87fd10a189c745e3af1cab975aeffbdc",
+      "source_version": "artifact_v1_7b821b5ccad0389acb2ba5b965b6bdf3fe337b3ec5317e58802ed000721f6b44",
+      "content": "[2029-06-04T09:00:00Z] 林枫: 延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。"
+    }
+  ],
+  "provider_calls": 0,
+  "execution": "REAL_LOCALHOST_HTTP_BASELINE_NO_TASK_CAPABILITY"
+}

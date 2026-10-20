@@ -111,3 +111,17 @@ under ignored `work/`.
 - Process references: [role boundaries](MULTI_AGENT_ROLES.md),
   [SPEC method](SPEC_DRIVEN_DEVELOPMENT.md),
   [acceptance checklist](ACCEPTANCE_CHECKLIST.md) and [Git policy](GIT_WORKFLOW.md).
+
+## Cross-meeting task investigation integration
+
+[Integration SPEC](requirements/m3-p-task-investigation/SPEC.md) and
+[dependency audit](requirements/m3-p-task-investigation/DEPENDENCIES.md) define
+the task observation/proposal/P4 read boundary. The normal CLI exposes an explicit
+`--offline-task-demo` using the same Ask HTTP routes and deterministic synthetic
+stages; real task Provider stages remain unavailable. Task results have saved
+read-only validation; temporal/source-relation jobs retain their existing lifecycle.
+
+Follow `ui/task_investigation.py` (F/G/source authorization),
+`tools/task_relations.py` (read tools/P4), `agents/task_relation_result.py`
+(receipt grounding/Reviewer), and `ui/task_result.py` (display). These extend
+RuntimeEngine/ModelLoop/ToolRuntime rather than adding another loop.

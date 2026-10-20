@@ -5,10 +5,44 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
+import re
 from types import MappingProxyType
 from typing import Mapping
 
 from linkloom.semantic_ingestion.candidate_models import RelationResolution
+
+
+def explicit_replacement(quote: str, new_value: str, old_value: str) -> bool:
+    """Recognize value-bound affirmative replacement; never infer from comparison."""
+    new, old = _normalize_relation(new_value), _normalize_relation(old_value)
+    if not new or not old or new == old:
+        return False
+    for sentence in re.split(r"[。！？\n]|[.!?](?:\s+|$)", _normalize_relation(quote)):
+        if re.search(r"\b(?:not|never|propose|proposes|consider|considering)\b|建议|考虑|尚未|未批准|不批准|不替代|不会", sentence):
+            continue
+        if any(phrase in sentence for phrase in (
+            f"{new} replaces {old}", f"{new} replaced {old}",
+            f"{new} supersedes {old}", f"{new} superseded {old}",
+            f"{old} was replaced by {new}", f"{old} is replaced by {new}",
+            f"{old} was superseded by {new}", f"{old} is superseded by {new}",
+        )):
+            return True
+        # Both named values must be tied to selection and replacement in the
+        # same sentence. Dates and selection words may qualify the old decision.
+        if re.search(
+            r"(?:正式改为|正式采用|正式选用|决定采用|决定改用|已改用|现采用)\s*"
+            + re.escape(new) + r"[^。！？\n]*?(?:替代|取代)"
+            + r"(?:\d{4}年\d{1,2}月\d{1,2}日|\d{4}-\d{2}-\d{2})?"
+            + r"(?:选择|采用|选用)?\s*" + re.escape(old), sentence,
+        ):
+            return True
+        if any(re.search(pattern, sentence) for pattern in (
+            r"由\s*" + re.escape(old) + r"\s*(?:正式)?改为\s*" + re.escape(new),
+            re.escape(new) + r"\s*(?:正式)?替换\s*" + re.escape(old),
+            re.escape(old) + r"\s*(?:已)?被\s*" + re.escape(new) + r"\s*(?:正式)?(?:取代|替代|替换)",
+        )):
+            return True
+    return False
 
 
 def _normalize_relation(value: str) -> str:

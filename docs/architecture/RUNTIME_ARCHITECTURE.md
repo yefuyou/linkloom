@@ -198,3 +198,24 @@ Recovery-specific evidence includes [graceful partials](../../tests/unit/test_gr
 [same-file passage coverage](../../tests/unit/test_recovery_passage_coverage.py)
 and the [Ask DOM contracts](../../tests/ui/unified_ask_dom_test.cjs).
 For historical build-versus-buy context see [LangGraph mapping](LANGGRAPH_MAPPING.md).
+
+## Task investigation workflow
+
+The task Host binds bounded F observation extraction and typed G planning to
+the same RuntimeEngine, ModelLoop, ToolRuntime and durable Ledger. Its registered
+read tools are `inspect_task_context`, `query_task_relations` and optionally
+`analyze_task_semantics`. The Final selects observed receipt identities;
+grounding and Reviewer revalidate their exact Ledger projection and current
+source/P4 inputs. A model proposal never satisfies a trusted relation premise.
+
+Working Context is an opt-in request hook for this workflow: bounded evidence
+groups and immutable evidence references recover original sources before use.
+Compacted operational history never becomes citation evidence. Master Recovery
+termination and permission checks remain in the same model loop.
+
+Saved task-result reads reconstruct validation from existing Runtime artifacts
+without calling F/G or the model. Current Evidence Catalog membership is required
+even if retained text/version is unchanged. Invalid source or lifecycle state
+returns no old quotes, relations or trace. Temporal/source-relation jobs keep
+their prior process-local product lifecycle. See the
+[integration audit](../requirements/m3-p-task-investigation/DEPENDENCIES.md).

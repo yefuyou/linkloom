@@ -18,6 +18,30 @@ function sourceResult(complete = true) {
   return payload;
 }
 
+function taskResult() {
+  const payload = result("");
+  const first = {observation_id: "task-first", raw_text: "项目：青竹；截止日期：2029-06-20。",
+    description: "完成日志迁移", owner: "林枫", deadline: "2029-06-20", deadline_text: "2029-06-20",
+    deadline_role: "TASK_DEADLINE", event_time: "2029-06-01T09:00:00Z", recorded_at: "2029-06-01T09:00:00Z",
+    unknown_fields: [], validation_issues: [], field_evidence: [],
+    provenance: {evidence_ref: "task-ref-1", artifact_version_id: "version-1", quote: "项目：青竹；截止日期：2029-06-20。"}};
+  const second = {observation_id: "task-second", raw_text: "延续上次计划，日期调整为2029-06-24。",
+    description: "完成日志迁移", owner: "林枫", deadline: null, deadline_text: "2029-06-24",
+    deadline_role: "UNKNOWN", event_time: "2029-06-04T09:00:00Z", recorded_at: "2029-06-04T09:00:00Z",
+    unknown_fields: ["deadline"], validation_issues: ["DEADLINE_ROLE_UNRESOLVED"], field_evidence: [],
+    provenance: {evidence_ref: "task-ref-2", artifact_version_id: "version-2", quote: "延续上次计划，日期调整为2029-06-24。"}};
+  Object.assign(payload.result, {path: "TASK_INVESTIGATION", status: "PARTIAL",
+    reviewer: {accepted: true, decision: "evidence_sufficient"}, preparation: {execution_kind: "FAKE", gaps: [], planning: []},
+    task_review: {observations: [first, second], proposals: [{predicate: "SAME_TASK", proposed_verdict: "CONFLICT",
+      subject: first, object: second, reason_codes: ["DATE_CONFLICT"], supporting_evidence: [], counter_evidence: [], missing_evidence: []}],
+      relations: [], steps: [], unresolved: [], next_actions: [], executed_tools: []},
+    evidence: [{evidence_ref: "task-ref-1", source_name: "meeting-1.txt", source_id: "src-1", source_version: "version-1",
+      quote: first.provenance.quote, line_start: 1, line_end: 1},
+    {evidence_ref: "task-ref-2", source_name: "meeting-2.txt", source_id: "src-2", source_version: "version-2",
+      quote: second.provenance.quote, line_start: 1, line_end: 1}], uncertainty: {model_reported_gaps: []}});
+  return payload;
+}
+
 async function setup() {
   const elements = new Map();
   function element(id) {
@@ -198,6 +222,18 @@ async function setup() {
     assert.match(html, complete ? /Verified Leader/ : /Conflicting sources; no unique answer/);
     assert.match(html, /Known Owner/);
   }
+  const taskUi = await setup();
+  const taskOperation = taskUi.submit(); await tick();
+  taskUi.pending[0](taskResult()); await taskOperation;
+  const taskHtml = taskUi.element("ask-result").innerHTML;
+  assert.match(taskHtml, /Source version/);
+  assert.match(taskHtml, /version-2/);
+  assert.match(taskHtml, /Deadline role/);
+  assert.match(taskHtml, /UNKNOWN/);
+  assert.match(taskHtml, /Unknown fields/);
+  assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
+  assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
+  assert.match(taskHtml, /Conflicting proposal/);
   const uncertainUi = await setup();
   const unknownOperation = uncertainUi.submit(); await tick();
   const unknownPayload = result("");

@@ -3,14 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from copy import deepcopy
 from pathlib import Path
 import re
 from tempfile import TemporaryDirectory
 from threading import Lock
 from typing import Any, Callable
+from uuid import uuid4
 
 from linkloom.runtime.graph import RuntimeEngine
+from linkloom.runtime.context_engineering import ContextRuntimeConfig
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
 from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
@@ -25,7 +28,7 @@ from linkloom.ui.projection import WorkspacePresentationContext
 
 @dataclass
 class _InvestigationJob:
-    temporary_root: TemporaryDirectory[str]
+    temporary_root: TemporaryDirectory[str] | None
     backend: RuntimeRunBackend
     source_names: dict[str, str]
     source_versions: dict[str, dict[str, str]]
@@ -33,6 +36,7 @@ class _InvestigationJob:
     temporal_scope: tuple[str, str, str] | None = None
     temporal_view_holder: dict[str, Any] | None = None
     task_plan: TaskPlan | None = None
+    task_preparation: Any = None
 
 
 class ProductInvestigationService:
@@ -47,9 +51,14 @@ class ProductInvestigationService:
         max_steps: int = 8,
         external_provider: bool = True,
         relation_max_steps: int = 12,
+        task_models: Any = None,
+        task_relation_paths: dict[str, Path] | None = None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
+        self.task_models = task_models
+        # Local Host composition only. HTTP/model arguments cannot choose paths.
+        self.task_relation_paths = dict(task_relation_paths or {})
         self.run_mode = run_mode
         self.max_steps = max_steps
         self.external_provider = external_provider
@@ -65,6 +74,9 @@ class ProductInvestigationService:
             "external_provider": self.external_provider,
             "run_mode": self.run_mode,
             "relation_max_model_turns": self.relation_max_steps,
+            "task_investigation": self.task_models is not None and not self.external_provider,
+            "task_execution_kinds": ([self.task_models.execution_kind]
+                                      if self.task_models is not None else []),
             "message": (
                 "Agent model is not configured. Start the explicit offline demo to inspect a synthetic run."
                 if self.model_factory is None
@@ -76,6 +88,7 @@ class ProductInvestigationService:
         self, query: str, workspace_id: str, *,
         temporal_scope: tuple[str, str, str] | None = None,
         task_plan: TaskPlan | None = None,
+        task_investigation: bool = False,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
@@ -89,8 +102,16 @@ class ProductInvestigationService:
             expected = plan_relation_investigation(query)
             if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
                 raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
-        max_steps = self.relation_max_steps if task_plan is not None else self.max_steps
+        source_run = task_plan is not None
+        offline_unavailable = self.task_models is None or self.external_provider
+        if task_investigation and (offline_unavailable or source_run or temporal_scope is not None):
+            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task investigation requires explicitly configured offline stage adapters.", status=409)
+        if task_investigation and getattr(self.task_models, "execution_kind", None) not in {"FAKE", "REPLAY"}:
+            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Only explicitly configured offline task stages are enabled.", status=409)
+        source_run = source_run or task_investigation
+        max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
+        task_models, outer_model = self.task_models, None
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
             if len(temporal_scope) != 3 or not all(
@@ -141,9 +162,24 @@ class ProductInvestigationService:
             raise ProductApplicationError(
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
-        temporary_root = TemporaryDirectory(prefix="linkloom-investigate-")
+        temporary_root = None if task_investigation else TemporaryDirectory(prefix="linkloom-investigate-")
         try:
-            root = Path(temporary_root.name)
+            root = (Path(temporary_root.name) if temporary_root else
+                    Path(self.product_app.repository.database_path).parent / 'work' / 'investigations' / uuid4().hex[:12])
+            root.mkdir(parents=True, exist_ok=temporary_root is not None)
+            preparation = None
+            if task_investigation:
+                from linkloom.ui.task_investigation import ProductTaskSources, prepare_task_investigation
+                task_sources = ProductTaskSources(workspace_id, sources,
+                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
+                    current_evidence=lambda: self.product_app.repository.current_evidence(workspace_id))
+                preparation = prepare_task_investigation(query.strip(), task_sources, task_models, root / "preparation",
+                    relation_path=self.task_relation_paths.get(workspace_id))
+                if preparation.manifest['status'] == 'BLOCKED':
+                    return dict(kind='error', run={'id': 'blocked-' + root.name}, evidence=[],
+                        reviewer={'performed': False}, preparation=preparation.manifest,
+                        error=dict(code='TASK_PLAN_BLOCKED', classification='validation',
+                                   message='The investigation plan did not pass Host admission.'))
             vault = root / "vault"
             vault.mkdir()
             source_names: dict[str, str] = {}
@@ -158,18 +194,21 @@ class ProductInvestigationService:
                 source_names[relative_path] = str(source["name"])
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
+            model = outer_model if outer_model is not None else self.model_factory(query.strip())
             engine = RuntimeEngine(
                 vault_root=vault,
                 index_path=index,
                 checkpoint_dir=root / "runtime",
                 trace_dir=root / "traces",
-                model=self.model_factory(query.strip()),
-                decision_memory_store=self.product_app.store if task_plan is None else None,
-                decision_memory_enabled=task_plan is None,
-                memory_enabled=task_plan is None,
+                model=model,
+                decision_memory_store=self.product_app.store if not source_run else None,
+                decision_memory_enabled=not source_run,
+                memory_enabled=not source_run,
                 decision_memory_workspace_id=workspace_id,
                 temporal_decision_lookup=temporal_lookup,
                 temporal_claim_validator=temporal_validator,
+                task_relation_tools=preparation.tools if preparation else None,
+                context_runtime_config=ContextRuntimeConfig() if preparation else None,
             )
             backend = RuntimeRunBackend(
                 engine=engine,
@@ -184,23 +223,143 @@ class ProductInvestigationService:
                 # projects, not approved business-decision slots. The model
                 # still chooses read-only tools; no incompatible plan is sent.
                 planning_mode="template" if temporal_scope is not None or task_plan is not None else None,
+                workflow="task_relations" if preparation else "team_decision",
             )
             snapshot = backend.start(query.strip(), task_plan=task_plan.to_dict() if task_plan else None)
         except Exception:
-            temporary_root.cleanup()
+            if temporary_root is not None:
+                temporary_root.cleanup()
             raise
         with self._lock:
             self._jobs[snapshot["run"]["id"]] = _InvestigationJob(
                 temporary_root, backend, source_names, source_versions, workspace_id,
                 temporal_scope, temporal_view_holder, task_plan,
+                preparation,
             )
+        if preparation is not None:
+            # Identity pointer only; all execution state remains in Checkpoint.
+            pointer = dict(run_id=snapshot['run']['id'], thread_id=snapshot['run']['thread_id'],
+                workspace_id=workspace_id, root=root.name)
+            (root.parent / (pointer['run_id'] + '.json')).write_text(json.dumps(pointer), encoding='utf8')
         return self._decorate(snapshot, None, task_plan=task_plan, max_steps=max_steps)
+
+    def save_task_ask(self, run_id, ask_run):
+        job = self._jobs.get(run_id)
+        if job is None or job.task_preparation is None:
+            return
+        path = job.backend.engine.checkpoint_dir.parent.parent / (run_id + '.json')
+        pointer = json.loads(path.read_text(encoding='utf8'))
+        pointer['ask'] = ask_run
+        path.write_text(json.dumps(pointer, ensure_ascii=False), encoding='utf8')
+
+    @staticmethod
+    def _task_blocked(run_id, code):
+        return dict(kind='error', run=dict(id=run_id), reviewer=dict(performed=False), evidence=[],
+            error=dict(code=code, classification='validation', message='Saved evidence is no longer current; ask again.'))
+
+    def read_saved_task(self, run_id, workspace_id):
+        """Read existing Runtime artifacts only. Never resume execution or call a model."""
+        if re.fullmatch(r'ui-[0-9a-f]{12}', run_id) is None:
+            return None
+        with self.product_app._store_lock:
+            if self.product_app._workspace_id() != workspace_id:
+                return None
+            base = Path(self.product_app.repository.database_path).parent / 'work' / 'investigations'
+            pointer_path = base / (run_id + '.json')
+            if not pointer_path.is_file():
+                return None
+            pointer = json.loads(pointer_path.read_text(encoding='utf8'))
+            if pointer.get('workspace_id') != workspace_id or pointer.get('run_id') != run_id:
+                return None
+            if re.fullmatch(r'[0-9a-f]{12}', pointer['root']) is None:
+                return None
+            root = base / pointer['root']
+            try:
+                from linkloom.runtime.checkpoint import SQLiteCheckpointer
+                from linkloom.runtime.models import RunStatus
+                from linkloom.ui.task_investigation import ProductTaskSources, restore_task_preparation
+                from linkloom.ui.task_result import project_task_snapshot
+                manifest = json.loads((root / 'preparation' / 'preparation.json').read_text(encoding='utf8'))
+                workspace, rows = self.product_app.snapshot_investigation_sources(workspace_id)
+                sources = ProductTaskSources(workspace_id, rows,
+                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
+                    current_evidence=lambda: self.product_app.repository.current_evidence(workspace_id))
+                if sources.identity != manifest['source_snapshot_hash']:
+                    return pointer['ask'], self._task_blocked(run_id, 'SOURCE_SNAPSHOT_CHANGED')
+                preparation = restore_task_preparation(sources, manifest,
+                    relation_path=self.task_relation_paths.get(workspace_id))
+                state = SQLiteCheckpointer(root / 'runtime').get_latest(pointer['thread_id'])
+                if state is None or state.status not in {'completed', 'failed', 'rejected'} or not state.result_ref:
+                    return pointer['ask'], self._task_blocked(run_id, 'SAVED_RESULT_NOT_COMPLETE')
+                result_path = (root / 'runtime' / state.result_ref).resolve()
+                if not result_path.is_relative_to((root / 'runtime').resolve()):
+                    raise ValueError('INVALID_RESULT_PATH')
+                artifact = json.loads(result_path.read_text(encoding='utf8'))
+                status = RunStatus(state.run_id, state.thread_id, state.status,
+                    error=state.error.to_dict() if state.error else None)
+                snapshot = project_task_snapshot(manifest['question'], None, status, state, artifact)
+                self._validate_task_read(preparation, state, snapshot, root)
+                snapshot['run']['id'] = run_id
+                self._task_review(snapshot, preparation)
+                snapshot['recovery'] = dict(mode='SAVED_RESULT_READ_ONLY', session_resumed=False)
+                return pointer['ask'], snapshot
+            except Exception:
+                return pointer['ask'], self._task_blocked(run_id, 'SAVED_RESULT_REVALIDATION_FAILED')
+
+    @staticmethod
+    def _validate_task_read(preparation, state, snapshot, root):
+        payload = snapshot.get('task_investigation')
+        if payload:
+            from linkloom.agents.task_relation_result import review_task_relation_result
+            from linkloom.runtime.artifacts import ModelArtifactStore
+            tools = preparation.tools.for_run(state.run_id, ModelArtifactStore(root / 'runtime' / 'models'),
+                                             preparation.manifest['question'])
+            check = review_task_relation_result(payload, tools, records=state.tool_ledger, run_id=state.run_id)
+            if check['status'] != 'pass':
+                raise ValueError('RELATION_OR_SOURCE_CHANGED')
+
+    def _task_review(self, snapshot, preparation):
+        from linkloom.ui.task_result import project_task_review
+        preparation.sources.validate_current()
+        snapshot.setdefault('preparation', preparation.manifest)
+        for evidence in snapshot['evidence']:
+            evidence.update(preparation.sources.mapping[evidence['artifact_version_id']])
+        snapshot['task_review'] = project_task_review(snapshot, snapshot['preparation'])
 
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
             job = self._jobs.get(run_id)
         if job is None:
             return None
+        if job.task_preparation is not None:
+            with self.product_app._store_lock:
+                if self.product_app._workspace_id() != job.workspace_id:
+                    return None
+                try:
+                    job.task_preparation.sources.validate_current()
+                    try:
+                        snapshot = job.backend.inspect(run_id)
+                    except Exception:
+                        return {"kind": "error", "run": {"id": run_id}, "reviewer": {"performed": False},
+                            "evidence": [], "error": {"code": "TASK_PROJECTION_FAILED", "classification": "runtime",
+                            "message": "The task Runtime result could not be projected."}}
+                    job.task_preparation.sources.validate_current()
+                except Exception:
+                    return {"kind": "error", "run": {"id": run_id}, "reviewer": {"performed": False},
+                        "evidence": [], "error": {"code": "SOURCE_SNAPSHOT_CHANGED", "classification": "validation",
+                        "message": "The authorized source snapshot changed; ask again."}}
+                if snapshot is None:
+                    return None
+                if snapshot.get('task_investigation'):
+                    state = job.backend.engine.checkpointer.get_latest(snapshot['run']['thread_id'])
+                    try:
+                        self._validate_task_read(job.task_preparation, state, snapshot,
+                                                 job.backend.engine.checkpoint_dir.parent)
+                    except Exception:
+                        return self._task_blocked(run_id, 'RELATION_OR_SOURCE_CHANGED')
+                snapshot['preparation'] = job.task_preparation.manifest
+                self._task_review(snapshot, job.task_preparation)
+                return snapshot
         with self.product_app._store_lock:
             if self.product_app._workspace_id() != job.workspace_id:
                 return None
@@ -210,7 +369,7 @@ class ProductInvestigationService:
         try:
             state = job.backend.engine.checkpointer.get_latest(snapshot["run"]["thread_id"])
         except CheckpointError:
-            if snapshot["kind"] != "running":
+            if snapshot["kind"] not in {"running", "error"}:
                 raise
             state = None  # The worker may not have created its first checkpoint yet.
         with self.product_app._store_lock:
@@ -249,7 +408,11 @@ class ProductInvestigationService:
             "search_count": sum(item.tool_id == "search_notes" for item in ledger),
             "read_count": sum(item.tool_id == "read_verified_note" for item in ledger),
             "tool_errors": sum(item.status == "failed" for item in ledger),
+            "planning_provider_requests": snapshot.get("planning", {}).get("provider_requests",
+                None if (snapshot.get("error") or {}).get("code", "").startswith("MODEL_PLAN_") else 0),
         }
+        if snapshot.get("planning"):
+            snapshot["planning"]["plan"] = task_plan.to_dict() if task_plan else snapshot.get("task_plan")
         snapshot["trace"] = [
             {
                 "sequence": item.sequence,

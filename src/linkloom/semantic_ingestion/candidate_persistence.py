@@ -7,6 +7,7 @@ import hashlib
 import json
 
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan
+from linkloom.semantic_ingestion.task_observation import TaskObservation
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateConfidence,
     CandidateDecisionFact,
@@ -21,13 +22,14 @@ from linkloom.semantic_ingestion.candidate_models import (
 
 
 _PAYLOAD_VERSION = "candidate-decision-fact/v1"
+SOURCE_CANDIDATE_PAYLOAD_VERSIONS = frozenset({_PAYLOAD_VERSION, "candidate-decision-fact/v2", "candidate-decision-fact/v3"})
 
 
 def candidate_payload_dict(candidate: CandidateDecisionFact) -> dict[str, object]:
     if not isinstance(candidate, CandidateDecisionFact):
         raise TypeError("candidate must be CandidateDecisionFact")
     span = candidate.provenance
-    return {
+    payload = {
         "record_version": _PAYLOAD_VERSION,
         "candidate": {
             "candidate_id": candidate.candidate_id,
@@ -65,7 +67,7 @@ def candidate_payload_dict(candidate: CandidateDecisionFact) -> dict[str, object
             "value": candidate.value,
             "relation_resolution": candidate.relation_resolution.value,
             "entity_resolution": candidate.entity_resolution.value,
-            "event_time": candidate.event_time.isoformat(),
+            "event_time": candidate.event_time.isoformat() if candidate.event_time else None,
             "ingestion_time": candidate.ingestion_time.isoformat(),
             "valid_from": _serialize_temporal(candidate.valid_from),
             "valid_to": _serialize_temporal(candidate.valid_to),
@@ -79,6 +81,23 @@ def candidate_payload_dict(candidate: CandidateDecisionFact) -> dict[str, object
             "authority": candidate.authority,
         },
     }
+
+    if candidate.source_format == "document_text":
+        payload["record_version"] = "candidate-decision-fact/v2"
+        payload["candidate"].update({
+            "source_format": candidate.source_format,
+            "document_date": candidate.document_date.isoformat() if candidate.document_date else None,
+            "event_date": candidate.event_date.isoformat() if candidate.event_date else None,
+        })
+    if candidate.task_observation is not None:
+        payload["record_version"] = "candidate-decision-fact/v3"
+        payload["candidate"].update({
+            "source_format": candidate.source_format,
+            "document_date": candidate.document_date.isoformat() if candidate.document_date else None,
+            "event_date": candidate.event_date.isoformat() if candidate.event_date else None,
+            "task_observation": candidate.task_observation.to_dict(),
+        })
+    return payload
 
 
 def serialize_candidate(candidate: CandidateDecisionFact) -> tuple[str, str]:
@@ -100,7 +119,7 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         raise ValueError("stored semantic candidate payload is invalid JSON") from error
     if not isinstance(payload, dict) or set(payload) != {"record_version", "candidate"}:
         raise ValueError("stored semantic candidate payload has unsupported fields")
-    if payload["record_version"] != _PAYLOAD_VERSION:
+    if payload["record_version"] not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
         raise ValueError("stored semantic candidate payload version is unsupported")
     data = payload["candidate"]
     expected = {
@@ -136,8 +155,18 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         "candidate_status",
         "authority",
     }
+    task_version = payload["record_version"] == "candidate-decision-fact/v3"
+    if payload["record_version"] == "candidate-decision-fact/v2" or task_version:
+        expected |= {"source_format", "document_date", "event_date"}
+    if task_version:
+        expected.add("task_observation")
     if not isinstance(data, dict) or set(data) != expected:
         raise ValueError("stored CandidateDecisionFact has missing or unsupported fields")
+    document = data.get("source_format") == "document_text"
+    if payload["record_version"] == "candidate-decision-fact/v2" and not document:
+        raise ValueError("v2 payload requires document source format")
+    if task_version and data["source_format"] not in {"document_text", "timestamped_text"}:
+        raise ValueError("unsupported task candidate source format")
     raw_span = data["provenance"]
     if not isinstance(raw_span, dict):
         raise ValueError("stored candidate provenance is malformed")
@@ -174,7 +203,10 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         value=data["value"],
         relation_resolution=RelationResolution(data["relation_resolution"]),
         entity_resolution=EntityResolution(data["entity_resolution"]),
-        event_time=datetime.fromisoformat(data["event_time"]),
+        event_time=None if document and data["event_time"] is None else datetime.fromisoformat(data["event_time"]),
+        source_format="document_text" if document else "timestamped_text",
+        document_date=date.fromisoformat(data["document_date"]) if document and data["document_date"] else None,
+        event_date=date.fromisoformat(data["event_date"]) if document and data["event_date"] else None,
         ingestion_time=datetime.fromisoformat(data["ingestion_time"]),
         valid_from=_deserialize_temporal(data["valid_from"]),
         valid_to=_deserialize_temporal(data["valid_to"]),
@@ -186,7 +218,23 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         review_reasons=tuple(CandidateReasonCode(item) for item in raw_reasons),
         candidate_status=data["candidate_status"],
         authority=data["authority"],
+        task_observation=TaskObservation.from_dict(data["task_observation"]) if task_version else None,
     )
+
+
+def retain_first_task_capture(candidate: CandidateDecisionFact, previous_json: str) -> CandidateDecisionFact:
+    """Keep the first immutable receipt/time on a semantically identical task retry."""
+    previous = deserialize_candidate(previous_json)
+    def semantic_payload(value):
+        data = candidate_payload_dict(value)["candidate"]
+        for name in ("ingestion_time", "extraction_receipt", "confidence"):
+            data.pop(name)
+        if value.task_observation is not None:
+            data["task_observation"].pop("recorded_at")
+        return data
+    if previous.task_observation is None or semantic_payload(previous) != semantic_payload(candidate):
+        raise ValueError("candidate identity is already bound to different task evidence")
+    return previous
 
 
 def _serialize_temporal(value: date | datetime | None) -> dict[str, str] | None:

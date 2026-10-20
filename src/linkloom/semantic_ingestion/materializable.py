@@ -10,7 +10,6 @@ import json
 from typing import TYPE_CHECKING
 
 from linkloom.decision_memory.models import ActionRecord, decision_slot_key_for
-from linkloom.semantic_ingestion.artifacts import RawArtifactSourceType
 from linkloom.semantic_ingestion.evidence import VerifiedEvidenceBinding
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateDecisionFact,
@@ -78,7 +77,7 @@ class MaterializableDecisionCandidate:
             source_identity=candidate.artifact_id,
             source_version=candidate.artifact_version_id,
             content_hash=candidate.content_sha256,
-            source_type=RawArtifactSourceType.TIMESTAMPED_TEXT.value,
+            source_type=candidate.source_format,
             source_locator=candidate.source_ref,
             quote=span.quote,
             char_start=span.char_start,

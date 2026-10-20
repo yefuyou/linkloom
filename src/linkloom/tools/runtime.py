@@ -11,7 +11,7 @@ from linkloom.runtime.errors import ValidationError, ToolArgumentValidationError
 from linkloom.runtime.models import _assert_json_safe_primitive
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
-from linkloom.tools.registry import ToolRegistry
+from linkloom.tools.registry import CallBoundExecutor, ToolRegistry
 from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 
@@ -581,7 +581,7 @@ class ToolRuntime:
             )
 
         try:
-            raw_result = executor(call.arguments)
+            raw_result = executor.execute_call(call) if isinstance(executor, CallBoundExecutor) else executor(call.arguments)
         except ToolArgumentValidationError as error:
             return _record_failed_and_persist(
                 call, "TOOL_INVALID_ARGUMENTS", "input",
@@ -718,6 +718,7 @@ def create_retrieval_tool_runtime(
     decision_memory_executor: Callable[..., Any] | None = None,
     reuse_preflight: Callable[[], Any] | None = None,
     expected_source_context: dict[str, Any] | None = None,
+    task_relation_tools: Any = None,
 ) -> ToolRuntime:
     """Compose provider-neutral, read-only retrieval tools at the runtime boundary.
 
@@ -885,6 +886,18 @@ def create_retrieval_tool_runtime(
             ),
         )
 
+    if task_relation_tools is not None:
+        from linkloom.tools.task_relations import register_task_relation_tools
+        register_task_relation_tools(registry, task_relation_tools)
+
+    def validate_task_query_arguments(arguments: dict[str, Any]) -> None:
+        if "as_of" in arguments:
+            from datetime import date
+            try:
+                date.fromisoformat(arguments["as_of"])
+            except ValueError as error:
+                raise ValidationError("as_of must be a calendar date.", details={"path": "$.as_of"}) from error
+
     def validate_search_arguments(arguments: dict[str, Any]) -> None:
         source = arguments["source_context"]
         if expected_source_context is not None:
@@ -974,6 +987,7 @@ def create_retrieval_tool_runtime(
         ledger=ledger,
         checkpoint_callback=checkpoint_callback,
         argument_validators={
+            **({"query_task_relations": validate_task_query_arguments} if task_relation_tools is not None else {}),
             "search_notes": validate_search_arguments,
             "read_verified_note": validate_read_arguments,
             **(

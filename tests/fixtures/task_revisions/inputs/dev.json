@@ -1,0 +1,758 @@
+{
+  "schema_version": "task-revisions-input/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "D01",
+      "workspace_id": "m2-task-identity-dev-d01",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目任务 SMS-17 的短信接口接入，计划在2026年10月14日前完成。\n"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-11T09:00:00+08:00] 陈晨: 我负责星河项目的通知网关接入；本条对应A.md的SMS-17，是同一个任务，仅更换称呼，不修订任务计划。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "A.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 SMS-17 的短信接口接入，计划在2026年10月14日前完成。",
+            "description_parts": ["我负责星河项目任务 SMS-17 的短信接口接入，计划在2026年10月14日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目的通知网关接入；本条对应A.md的SMS-17，是同一个任务，仅更换称呼，不修订任务计划。",
+            "description_parts": ["我负责星河项目的通知网关接入；本条对应A.md的SMS-17，是同一个任务，仅更换称呼，不修订任务计划。"],
+            "owner": "陈晨",
+            "deadline_text": null,
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D01-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "A.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 SMS-17 的短信接口接入，计划在2026年10月14日前完成。"
+            },
+            {
+              "source_id": "B.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目的通知网关接入；本条对应A.md的SMS-17，是同一个任务，仅更换称呼，不修订任务计划。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D04",
+      "workspace_id": "m2-task-identity-dev-d04",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。\n"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。\n"
+        },
+        {
+          "artifact_id": "C.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-16T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "A.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "description_parts": ["我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "description_parts": ["我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "C",
+          "source_id": "C.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D04-b-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "A.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+            },
+            {
+              "source_id": "B.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+            }
+          ]
+        },
+        {
+          "question_id": "D04-c-revision",
+          "subject": "C",
+          "object": "B",
+          "evidence": [
+            {
+              "source_id": "B.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+            },
+            {
+              "source_id": "C.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-4，仍是B.md的同一任务；本条替代B.md计划，仅在原任务范围内增加回执校验，截止边界不变，仍在2026年10月18日前完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D05",
+      "workspace_id": "m2-task-identity-dev-d05",
+      "sources": [
+        {
+          "artifact_id": "A.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。\n"
+        },
+        {
+          "artifact_id": "B.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T09:00:00+08:00] 陈晨: 我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "A.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。",
+            "description_parts": ["我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "B.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。",
+            "description_parts": ["我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D05-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "A.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月14日前完成。"
+            },
+            {
+              "source_id": "B.md",
+              "segment_index": 0,
+              "quote": "我负责星河项目任务 API-5 的接口联调，计划在2026年10月18日前完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "D07",
+      "workspace_id": "m2-task-identity-dev-d07",
+      "sources": [
+        {
+          "artifact_id": "A.txt",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-10T09:00:00+08:00] 林悦: 星河项目今天正式确定，短信服务供应商选择云桥科技，自2026年10月10日起生效。选择原因是报价较低，且支持国内短信发送。\n[2026-10-10T09:05:00+08:00] 陈晨: 我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。\n"
+        },
+        {
+          "artifact_id": "B.txt",
+          "source_type": "timestamped_text",
+          "content": "[2026-10-15T10:00:00+08:00] 林悦: 星河项目的短信服务供应商现正式改为星帆通信，自2026年10月15日起生效，替代2026年10月10日选择云桥科技的决定。原因是云桥科技在联调中多次延迟，星帆通信的到达率更稳定。\n[2026-10-15T10:05:00+08:00] 陈晨: 我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。\n[2026-10-15T10:10:00+08:00] 周宁: 我建议以后考虑增加邮件通知作为备用渠道，但这只是建议，本次会议尚未批准，也没有确定上线日期。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "A.txt",
+          "segment_index": 1,
+          "task": {
+            "text": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+            "description_parts": ["我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月14日",
+            "project": "星河项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "B.txt",
+          "segment_index": 1,
+          "task": {
+            "text": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+            "description_parts": ["我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"],
+            "owner": "陈晨",
+            "deadline_text": "2026年10月18日",
+            "project": null,
+            "vendor": "星帆通信"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "D07-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "A.txt",
+              "segment_index": 1,
+              "quote": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。"
+            },
+            {
+              "source_id": "B.txt",
+              "segment_index": 1,
+              "quote": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V01",
+      "workspace_id": "m2-task-revisions-dev-v01",
+      "sources": [
+        {
+          "artifact_id": "old.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-11-03T09:00:00+08:00] 许澄: 我负责青岚平台项目任务 SYNC-41 的数据同步，计划在11月14日前完成。\n"
+        },
+        {
+          "artifact_id": "new.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-11-06T09:00:00+08:00] 许澄: 我负责青岚平台项目任务 SYNC-41；本条是old.md的同一任务，现修订计划，将原定11月14日前完成改为2026年11月18日前完成，本计划替代原计划。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "old.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责青岚平台项目任务 SYNC-41 的数据同步，计划在11月14日前完成。",
+            "description_parts": ["我负责青岚平台项目任务 SYNC-41 的数据同步，计划在11月14日前完成。"],
+            "owner": "许澄",
+            "deadline_text": "11月14日",
+            "project": "青岚平台项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "new.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责青岚平台项目任务 SYNC-41；本条是old.md的同一任务，现修订计划，将原定11月14日前完成改为2026年11月18日前完成，本计划替代原计划。",
+            "description_parts": ["我负责青岚平台项目任务 SYNC-41；本条是old.md的同一任务，现修订计划，将原定11月14日前完成改为2026年11月18日前完成，本计划替代原计划。"],
+            "owner": "许澄",
+            "deadline_text": "2026年11月18日",
+            "project": "青岚平台项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V01-missing-year",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "old.md",
+              "segment_index": 0,
+              "quote": "我负责青岚平台项目任务 SYNC-41 的数据同步，计划在11月14日前完成。"
+            },
+            {
+              "source_id": "new.md",
+              "segment_index": 0,
+              "quote": "我负责青岚平台项目任务 SYNC-41；本条是old.md的同一任务，现修订计划，将原定11月14日前完成改为2026年11月18日前完成，本计划替代原计划。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V02",
+      "workspace_id": "m2-task-revisions-dev-v02",
+      "sources": [
+        {
+          "artifact_id": "before.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-11-07T09:00:00+08:00] 罗宁: 我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。\n"
+        },
+        {
+          "artifact_id": "after.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-11-09T09:00:00+08:00] 罗宁: 我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "before.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。",
+            "description_parts": ["我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。"],
+            "owner": "罗宁",
+            "deadline_text": "2026年11月20日",
+            "project": "澄明门户项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "after.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。",
+            "description_parts": ["我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。"],
+            "owner": "罗宁",
+            "deadline_text": "2026年11月20日",
+            "project": "澄明门户项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V02-incompatible-boundary",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "before.md",
+              "segment_index": 0,
+              "quote": "我负责澄明门户项目任务 AUTH-52 的认证联调，计划在2026年11月20日前完成。"
+            },
+            {
+              "source_id": "after.md",
+              "segment_index": 0,
+              "quote": "我负责澄明门户项目任务 AUTH-52；本条是before.md的同一任务，现修订截止边界并替代原计划，截止日期为2026年11月20日，按该日或之前完成。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V03",
+      "workspace_id": "m2-task-revisions-dev-v03",
+      "sources": [
+        {
+          "artifact_id": "recorded.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 林嘉: 我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。\n"
+        },
+        {
+          "artifact_id": "corrected.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-03T09:00:00+08:00] 林嘉: 我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "recorded.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。",
+            "description_parts": ["我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。"],
+            "owner": "林嘉",
+            "deadline_text": "2026年12月09日",
+            "project": "赤松云项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "corrected.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。",
+            "description_parts": ["我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。"],
+            "owner": "林嘉",
+            "deadline_text": "2026年12月05日",
+            "project": "赤松云项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V03-source-correction",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "recorded.md",
+              "segment_index": 0,
+              "quote": "我负责赤松云项目任务 REL-63 的回归验证，计划在2026年12月09日前完成。"
+            },
+            {
+              "source_id": "corrected.md",
+              "segment_index": 0,
+              "quote": "我负责赤松云项目任务 REL-63；本条是recorded.md的同一任务，资料更正为2026年12月05日前完成，修正录入错误，不是业务计划修订，业务截止一直是2026年12月05日前。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V04",
+      "workspace_id": "m2-task-revisions-dev-v04",
+      "sources": [
+        {
+          "artifact_id": "base.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-04T09:00:00+08:00] 韩璇: 我负责云杉结算项目任务 BILL-74 的对账导出，计划在2026年12月10日前完成。\n"
+        },
+        {
+          "artifact_id": "revision-a.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-07T09:00:00+08:00] 韩璇: 我负责云杉结算项目任务 BILL-74；本条是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月14日前完成，替代原计划。\n"
+        },
+        {
+          "artifact_id": "revision-b.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-08T09:00:00+08:00] 韩璇: 我负责云杉结算项目任务 BILL-74；本条也是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月12日前完成，替代原计划；该来源仍有效。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "base.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责云杉结算项目任务 BILL-74 的对账导出，计划在2026年12月10日前完成。",
+            "description_parts": ["我负责云杉结算项目任务 BILL-74 的对账导出，计划在2026年12月10日前完成。"],
+            "owner": "韩璇",
+            "deadline_text": "2026年12月10日",
+            "project": "云杉结算项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "revision-a.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责云杉结算项目任务 BILL-74；本条是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月14日前完成，替代原计划。",
+            "description_parts": ["我负责云杉结算项目任务 BILL-74；本条是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月14日前完成，替代原计划。"],
+            "owner": "韩璇",
+            "deadline_text": "2026年12月14日",
+            "project": "云杉结算项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "C",
+          "source_id": "revision-b.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责云杉结算项目任务 BILL-74；本条也是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月12日前完成，替代原计划；该来源仍有效。",
+            "description_parts": ["我负责云杉结算项目任务 BILL-74；本条也是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月12日前完成，替代原计划；该来源仍有效。"],
+            "owner": "韩璇",
+            "deadline_text": "2026年12月12日",
+            "project": "云杉结算项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V04-conflicting-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "base.md",
+              "segment_index": 0,
+              "quote": "我负责云杉结算项目任务 BILL-74 的对账导出，计划在2026年12月10日前完成。"
+            },
+            {
+              "source_id": "revision-a.md",
+              "segment_index": 0,
+              "quote": "我负责云杉结算项目任务 BILL-74；本条是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月14日前完成，替代原计划。"
+            },
+            {
+              "source_id": "revision-b.md",
+              "segment_index": 0,
+              "quote": "我负责云杉结算项目任务 BILL-74；本条也是base.md的同一任务，现将原定2026年12月10日前完成改为2026年12月12日前完成，替代原计划；该来源仍有效。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V05",
+      "workspace_id": "m2-task-revisions-dev-v05",
+      "sources": [
+        {
+          "artifact_id": "current.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-10T09:00:00+08:00] 周宁: 我负责澄海数据项目任务 MIG-85 的迁移校验，计划在2026年12月20日前完成。\n"
+        },
+        {
+          "artifact_id": "future.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-10T10:00:00+08:00] 周宁: 我负责澄海数据项目任务 MIG-85；本条是current.md的同一任务，现修订计划，将原定2026年12月20日前完成改为2026年12月25日前完成，本计划自2026年12月20日起生效并替代原计划。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "current.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责澄海数据项目任务 MIG-85 的迁移校验，计划在2026年12月20日前完成。",
+            "description_parts": ["我负责澄海数据项目任务 MIG-85 的迁移校验，计划在2026年12月20日前完成。"],
+            "owner": "周宁",
+            "deadline_text": "2026年12月20日",
+            "project": "澄海数据项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "future.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责澄海数据项目任务 MIG-85；本条是current.md的同一任务，现修订计划，将原定2026年12月20日前完成改为2026年12月25日前完成，本计划自2026年12月20日起生效并替代原计划。",
+            "description_parts": ["我负责澄海数据项目任务 MIG-85；本条是current.md的同一任务，现修订计划，将原定2026年12月20日前完成改为2026年12月25日前完成，本计划自2026年12月20日起生效并替代原计划。"],
+            "owner": "周宁",
+            "deadline_text": "2026年12月25日",
+            "project": "澄海数据项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V05-future-effective",
+          "subject": "B",
+          "object": "A",
+          "as_of": "2026-12-15",
+          "evidence": [
+            {
+              "source_id": "current.md",
+              "segment_index": 0,
+              "quote": "我负责澄海数据项目任务 MIG-85 的迁移校验，计划在2026年12月20日前完成。"
+            },
+            {
+              "source_id": "future.md",
+              "segment_index": 0,
+              "quote": "我负责澄海数据项目任务 MIG-85；本条是current.md的同一任务，现修订计划，将原定2026年12月20日前完成改为2026年12月25日前完成，本计划自2026年12月20日起生效并替代原计划。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V06",
+      "workspace_id": "m2-task-revisions-dev-v06",
+      "sources": [
+        {
+          "artifact_id": "old.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-11T09:00:00+08:00] 沈禾: 我负责霁川分析项目任务 QA-96 的验收脚本，计划在2026年12月30日前完成。\n"
+        },
+        {
+          "artifact_id": "new.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-13T09:00:00+08:00] 沈禾: 我负责霁川分析项目任务 QA-96；本条是old.md的同一任务，现将原定2026年12月30日前完成改为2026年12月24日前完成，本计划替代原计划。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "old.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责霁川分析项目任务 QA-96 的验收脚本，计划在2026年12月30日前完成。",
+            "description_parts": ["我负责霁川分析项目任务 QA-96 的验收脚本，计划在2026年12月30日前完成。"],
+            "owner": "沈禾",
+            "deadline_text": "2026年12月30日",
+            "project": "霁川分析项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "new.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责霁川分析项目任务 QA-96；本条是old.md的同一任务，现将原定2026年12月30日前完成改为2026年12月24日前完成，本计划替代原计划。",
+            "description_parts": ["我负责霁川分析项目任务 QA-96；本条是old.md的同一任务，现将原定2026年12月30日前完成改为2026年12月24日前完成，本计划替代原计划。"],
+            "owner": "沈禾",
+            "deadline_text": "2026年12月24日",
+            "project": "霁川分析项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V06-earlier-boundary",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "old.md",
+              "segment_index": 0,
+              "quote": "我负责霁川分析项目任务 QA-96 的验收脚本，计划在2026年12月30日前完成。"
+            },
+            {
+              "source_id": "new.md",
+              "segment_index": 0,
+              "quote": "我负责霁川分析项目任务 QA-96；本条是old.md的同一任务，现将原定2026年12月30日前完成改为2026年12月24日前完成，本计划替代原计划。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "V07",
+      "workspace_id": "m2-task-revisions-dev-v07",
+      "sources": [
+        {
+          "artifact_id": "prior.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-15T09:00:00+08:00] 郁宁: 我负责北辰仓项目任务 DOC-107 的接口文档，计划在2027年01月15日前完成。\n"
+        },
+        {
+          "artifact_id": "revision.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-17T09:00:00+08:00] 郁宁: 我负责北辰仓项目任务 DOC-107；本条是prior.md的同一任务，现修订截止计划，将原定2027年01月15日前完成改为2027年01月15日前完成，本计划替代原计划。\n"
+        }
+      ],
+      "observations": [
+        {
+          "label": "A",
+          "source_id": "prior.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责北辰仓项目任务 DOC-107 的接口文档，计划在2027年01月15日前完成。",
+            "description_parts": ["我负责北辰仓项目任务 DOC-107 的接口文档，计划在2027年01月15日前完成。"],
+            "owner": "郁宁",
+            "deadline_text": "2027年01月15日",
+            "project": "北辰仓项目",
+            "vendor": null
+          }
+        },
+        {
+          "label": "B",
+          "source_id": "revision.md",
+          "segment_index": 0,
+          "task": {
+            "text": "我负责北辰仓项目任务 DOC-107；本条是prior.md的同一任务，现修订截止计划，将原定2027年01月15日前完成改为2027年01月15日前完成，本计划替代原计划。",
+            "description_parts": ["我负责北辰仓项目任务 DOC-107；本条是prior.md的同一任务，现修订截止计划，将原定2027年01月15日前完成改为2027年01月15日前完成，本计划替代原计划。"],
+            "owner": "郁宁",
+            "deadline_text": "2027年01月15日",
+            "project": "北辰仓项目",
+            "vendor": null
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "V07-same-day-revision",
+          "subject": "B",
+          "object": "A",
+          "evidence": [
+            {
+              "source_id": "prior.md",
+              "segment_index": 0,
+              "quote": "我负责北辰仓项目任务 DOC-107 的接口文档，计划在2027年01月15日前完成。"
+            },
+            {
+              "source_id": "revision.md",
+              "segment_index": 0,
+              "quote": "我负责北辰仓项目任务 DOC-107；本条是prior.md的同一任务，现修订截止计划，将原定2027年01月15日前完成改为2027年01月15日前完成，本计划替代原计划。"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

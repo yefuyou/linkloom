@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "mode": "OFFLINE_TASK_DEMO",
+  "model": "FakeModel",
+  "provider_requests": 0,
+  "business_approval": false,
+  "cold_read": "SAVED_RESULT_READ_ONLY",
+  "output": "D:\\webproject\\Linkloom\\work\\m3p-mainline\\work\\after-user-question-final"
+}

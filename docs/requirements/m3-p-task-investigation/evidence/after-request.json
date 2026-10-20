@@ -1,0 +1,8 @@
+{
+  "query": "上次会议说林枫负责日志迁移，这次会议又调整了截止日期。它们是不是同一项任务？现在能确认的负责人和截止时间是什么？",
+  "workspace_id": "ws_c16e399cde15454f9d6140ffd40a4165",
+  "investigation_context": {
+    "domain": "tasks",
+    "snapshot_hash": "6a2fc51c68fb8d4265924ef3cfdff4281e844d898e03e5a2cff2c11407e1c445"
+  }
+}

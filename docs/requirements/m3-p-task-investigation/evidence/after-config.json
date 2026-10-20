@@ -1,0 +1,23 @@
+{
+  "workspace_id": "ws_c16e399cde15454f9d6140ffd40a4165",
+  "investigation_context": {
+    "snapshot_hash": "6a2fc51c68fb8d4265924ef3cfdff4281e844d898e03e5a2cff2c11407e1c445",
+    "source_count": 2,
+    "domains": [
+      "tasks",
+      "source_relations"
+    ]
+  },
+  "scopes": [],
+  "agent": {
+    "available": true,
+    "external_provider": false,
+    "run_mode": "OFFLINE_TASK_DEMO",
+    "relation_max_model_turns": 12,
+    "task_investigation": true,
+    "task_execution_kinds": [
+      "FAKE"
+    ],
+    "message": "Investigation reads the selected workspace and never approves Decision Memory."
+  }
+}
