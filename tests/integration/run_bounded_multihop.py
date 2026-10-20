@@ -50,6 +50,10 @@ class SourceOnlyController:
                 self.pending = [item['evidence_id'] for item in observation.value]
             elif observation.tool_id == 'read_verified_note':
                 self.reads[goal.subgoal_id].append(observation.value)
+        if getattr(request, 'available_tools', None) == []:
+            # Exhaustion or an established conflict closes tools. Remaining
+            # search hits stay unverified and never enter reads or claims.
+            self.pending.clear()
         def tool(name, arguments):
             return ModelAction.tool(ToolCall(call_id=f'mh_{request.sequence}', tool_id=name, arguments=arguments))
         if self.pending:

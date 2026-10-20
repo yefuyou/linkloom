@@ -6,6 +6,8 @@ from uuid import uuid4
 import pytest
 
 from linkloom.agents.model_adapter import (
+    FakeModelAdapter,
+    ModelAction,
     ModelProviderError,
     ModelResponse,
     ModelToolCall,
@@ -16,7 +18,7 @@ from linkloom.agents.model_adapter import (
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.model_loop import SingleAgentModelLoop
 from linkloom.runtime.models import RuntimeState, SourceContext
-from linkloom.tools.contracts import ToolDefinition, ToolResult
+from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
 from linkloom.tools.registry import ToolRegistry
 from linkloom.tools.runtime import ToolRuntime
 from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
@@ -144,6 +146,40 @@ def _run(provider, executor, artifact_store, *, max_calls: int = 8):
         ),
     )
     return result, snapshots
+
+
+@pytest.mark.parametrize('protocol', ['legacy', 'v2'])
+def test_exhausted_plan_cannot_execute_tools_after_final_only_request(
+    artifact_store, monkeypatch, protocol,
+):
+    from linkloom.runtime.progress import ProgressAssessment
+
+    monkeypatch.setattr('linkloom.runtime.model_loop.assess_progress',
+                        lambda *args, **kwargs: ProgressAssessment(
+                            'SUSPECTED_STALL', 'SEARCH_NO_NEW_EVIDENCE',
+                            exhausted_subgoals=('leader',)))
+    executed = []
+
+    def executor(arguments):
+        executed.append(arguments['query'])
+        return []
+
+    if protocol == 'v2':
+        provider = ScriptedProvider([
+            lambda request: _tool_proposal(request, [{'query': 'unnecessary A'}, {'query': 'unnecessary B'}]),
+        ])
+    else:
+        provider = FakeModelAdapter([
+            ModelAction.tool(ToolCall('unnecessary', 'search_notes', {'query': 'unnecessary'})),
+        ])
+    result, _ = _run(provider, executor, artifact_store)
+    assert executed == []
+    assert result.state.tool_ledger == []
+    assert result.status == 'failed'
+    assert result.error.code == 'MODEL_PROGRESS_STALLED'
+    assert result.final_answer is None
+    assert len(provider.requests) == 1
+    assert provider.requests[0].available_tools == []
 
 
 def test_three_calls_execute_strictly_in_order_and_form_one_durable_turn(

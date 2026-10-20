@@ -209,3 +209,23 @@ def test_repeated_tool_failures_stop_without_becoming_missing_evidence():
     assert second.reason_code == "REPEATED_TOOL_ERROR"
     assert decide_recovery(second).action == "TERMINATE"
     assert second.evidence_ids == frozenset()
+
+
+def test_plan_exhaustion_does_not_use_searches_after_the_assessment_boundary():
+    from linkloom.runtime.team_decision_planner import plan_relation_investigation
+
+    plan = plan_relation_investigation('Who is the direct leader of the owner of Cedar Lantern?')
+    ledger = ToolExecutionLedger()
+    _record(ledger, 2, 'search_notes', {
+        'query': plan.subgoals[0].question,
+        'source_context': {'subgoal_id': plan.subgoals[0].subgoal_id},
+    }, [])
+    restored = RuntimeState.from_dict(_state(ledger.to_list()).to_dict())
+    kwargs = dict(task_id='task_progress', agent_id='retrieval_agent', task_plan=plan,
+                  expected_workspace_id='workspace_a')
+    earlier = assess_progress(restored, before_sequence=2, **kwargs)
+    assert earlier.exhausted_subgoals == ()
+    assert decide_recovery(earlier).action == 'CONTINUE'
+    exhausted = assess_progress(restored, before_sequence=3, **kwargs)
+    assert exhausted.exhausted_subgoals == tuple(item.subgoal_id for item in plan.subgoals)
+    assert decide_recovery(exhausted).action == 'FINAL_PARTIAL'

@@ -90,6 +90,20 @@ def test_context_assembler_applies_caps_and_evidence_priority() -> None:
     assert bundle.estimated_tokens >= sum(item.estimated_tokens for item in bundle.selected)
 
 
+def test_distinct_passages_from_one_source_survive_with_the_same_caps() -> None:
+    assembler = ContextAssembler(budget=ContextBudget(max_evidence=2))
+    bundle = assembler.assemble(workspace_id='borealis', query='project relations',
+        retrieved_evidence=(
+            _evidence('owner', 1, source_ref='same-file'),
+            _evidence('leader', 2, source_ref='same-file'),
+            _evidence('leader', 3, source_ref='same-file'),
+            _evidence('noise', 4, source_ref='same-file'),
+        ))
+    assert [i.item_id for i in bundle.selected if i.source_type is ContextSourceType.EVIDENCE] == ['owner', 'leader']
+    assert ('leader', ContextDropReason.DUPLICATE) in {(i.item_id,i.reason) for i in bundle.dropped}
+    assert ('noise', ContextDropReason.LOW_RANK) in {(i.item_id,i.reason) for i in bundle.dropped}
+
+
 def test_context_assembler_deduplicates_and_rejects_out_of_scope_items() -> None:
     assembler = ContextAssembler()
     bundle = assembler.assemble(
