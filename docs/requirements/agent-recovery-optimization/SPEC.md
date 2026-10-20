@@ -10,6 +10,7 @@ from `cd668f36300e5bfae7e8c654a54359dc40627d33` onto master
 - Assess search progress using new evidence and the current workspace/TaskPlan.
 - When reachable missing subgoals are exhausted, stop tools and request a null
   Typed Final that retains independently verified, cited facts and names gaps.
+  Automatic exhaustion uses typed TaskPlan v2; legacy v1 keeps its progression.
 - Preserve distinct matching passages from one file through retrieval/context;
   keep top-k/context caps, source identity, Verified Read and claim validation.
 - Terminate identity, permission and unrecoverable failures; distinguish partial

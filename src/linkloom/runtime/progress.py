@@ -238,7 +238,8 @@ def assess_progress(
             and isinstance(value := (record.result or {}).get('value'), dict)
             and isinstance(value.get('evidence_id'), str)
         }
-        if (missing and reachable_missing and evidence_ids <= read_ids
+        if (task_plan.schema_version == 'task-plan/v2'
+                and missing and reachable_missing and evidence_ids <= read_ids
                 and all(slot in searched for slot in reachable_missing)
                 and not pending_alternates and not conflict_slots):
             exhausted = missing

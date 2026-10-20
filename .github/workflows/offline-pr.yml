@@ -66,6 +66,8 @@ jobs:
       # Core is independent of historical experiment scores. Exact archived
       # synthetic inputs are replayed in the separate legacy-temporal job below.
       # All model interactions in these tests are injected fake adapters.
+      # Grounding/TaskPlan also contain local LIVE-log replays. Select their
+      # hermetic contracts explicitly; keep those historical tests unchanged.
       - name: Core product and safety regressions (no provider SDK or keys)
         run: >-
           python -m pytest -q -m 'not legacy_historical'
@@ -82,8 +84,16 @@ jobs:
           tests/unit/test_graceful_partial_recovery.py
           tests/unit/test_recovery_passage_coverage.py
           tests/unit/test_context_assembler.py
-          tests/unit/test_claim_grounding.py
-          tests/unit/test_phase3_task_plan.py
+          tests/unit/test_claim_grounding.py::test_supported_multi_hop_answer_uses_relation_specific_verified_lines
+          tests/unit/test_claim_grounding.py::test_unparseable_claim_is_unverifiable_instead_of_lexically_accepted
+          tests/unit/test_claim_grounding.py::test_claims_cannot_read_evidence_outside_their_own_citations
+          tests/unit/test_claim_grounding.py::test_wrong_owner_and_partially_supported_atomic_claims_fail_closed
+          tests/unit/test_phase3_task_plan.py::test_plan_requires_a_verified_read_before_dependent_entity_can_advance
+          tests/unit/test_phase3_task_plan.py::test_one_verified_read_satisfies_independent_subgoals_that_found_same_passage
+          tests/unit/test_phase3_task_plan.py::test_plan_rejects_same_quote_from_another_workspace_or_source
+          tests/unit/test_phase3_task_plan.py::test_current_owner_conflict_in_chinese_plan_blocks_dependent_identity_without_extra_search
+          tests/unit/test_phase3_task_plan.py::test_verified_current_conflict_guides_final_only_after_both_source_reads
+          tests/unit/test_phase3_task_plan.py::test_empty_primary_and_alternate_mark_only_current_subgoal_blocked
           tests/unit/test_ui_projection.py
           tests/unit/test_agent_retrieval_v2_integration.py
           tests/unit/test_p84_recovery.py

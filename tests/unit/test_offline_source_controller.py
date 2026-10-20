@@ -2,11 +2,9 @@
 import json
 from types import SimpleNamespace
 
-import pytest
 
 from run_bounded_multihop import SourceOnlyController
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
-from linkloom.runtime.errors import ValidationError
 from linkloom.tools.contracts import ToolResult
 
 
@@ -26,7 +24,7 @@ def test_host_delay_does_not_expire_offline_model_before_first_turn(monkeypatch)
     assert action.tool_call.arguments["source_context"]["subgoal_id"] == "owner"
 
 
-def test_final_only_fake_does_not_discard_unread_search_evidence():
+def test_final_only_fake_never_promotes_unread_search_evidence_to_a_claim():
     plan = plan_relation_investigation('Who is the direct leader of the owner of Cedar Lantern?')
     request = SimpleNamespace(
         user_input='team_decision_request=' + json.dumps({
@@ -34,5 +32,12 @@ def test_final_only_fake_does_not_discard_unread_search_evidence():
         }), sequence=2, available_tools=[],
         observation=ToolResult('search', 'search_notes', 'ok', value=[{'evidence_id': 'unread'}]),
     )
-    with pytest.raises(ValidationError, match='unread evidence'):
-        SourceOnlyController()(request)
+    controller = SourceOnlyController()
+    controller.searched = True
+    action = controller(request)
+    assert action.kind == 'final'
+    final = json.loads(action.final_answer)
+    assert final['decision']['value'] is None
+    assert final['rationale'] == []
+    assert final['evidence_refs'] == []
+    assert all(not rows for rows in controller.reads.values())
