@@ -6,6 +6,7 @@ The LIVE ledger is separate from M3-L and lives at one manifest-bound location.
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from decimal import Decimal
 import hashlib
 from importlib.metadata import version
 import json
@@ -24,7 +25,7 @@ from linkloom.semantic_ingestion.task_observation_discovery import TaskObservati
 from linkloom.tools.contracts import ToolCall
 
 ROOT = Path(__file__).resolve().parents[3]
-FREEZE = ROOT / 'docs/requirements/m3-o-quality-convergence/ab-v2'
+FREEZE = ROOT / 'docs/requirements/m3-o-quality-convergence/ab-v3'
 
 
 def read(path):
@@ -66,7 +67,8 @@ def load_freeze():
         raise ValueError('FROZEN_SCHEMA_CHANGED')
     return dict(manifest_sha256=digest(manifest), manifest=manifest,
         sources=read_frozen('sources.json',manifest), config=read_frozen('config.json',manifest),
-        control=read_frozen('control.json',manifest))
+        control=read_frozen('control.json',manifest),
+        usage_contract=read_frozen('usage_contract.json',manifest))
 
 
 def artifact_for(source):
@@ -138,6 +140,74 @@ class Budget:
         self.db.close()
 
 
+def account_usage(record, freeze):
+    """Conserve Total=P+tool-use+thinking+C; never edit the SDK snapshot.
+
+    Missing optional components have a joint residual, not an assumed zero.
+    Independent worst-case bounds protect both caps; the joint residual is
+    charged once at the higher rate. All provenance is separate from Usage.
+    """
+    contract = freeze['usage_contract']['version']
+    try:
+        usage, normalized = record['usage'], record['normalized']['usage']
+        if not isinstance(usage,dict) or digest(usage) != digest(record['sdk_response']['usage_metadata']):
+            raise ValueError('RAW_USAGE_MISMATCH')
+        required = ('prompt_token_count','candidates_token_count','total_token_count')
+        optional = ('thoughts_token_count','tool_use_prompt_token_count')
+        for name in required + optional + ('cached_content_token_count',):
+            value = usage.get(name)
+            if value is None and name not in required:
+                continue
+            if type(value) is not int or value<0:
+                raise ValueError('INVALID_TOKEN_COUNT:'+name)
+        p,c,total = (usage[name] for name in required)
+        for name,value in zip(('input_tokens','output_tokens','total_tokens'),(p,c,total),strict=True):
+            if type(normalized.get(name)) is not int or normalized[name]!=value:
+                raise ValueError('NORMALIZED_USAGE_MISMATCH')
+        if usage.get('cached_content_token_count') is not None and usage['cached_content_token_count']>p:
+            raise ValueError('CACHE_EXCEEDS_PROMPT')
+        residual = total-p-c
+        unknown = [name for name in optional if usage.get(name) is None]
+        remainder = residual-sum(usage[name] for name in optional if name not in unknown)
+        if remainder<0 or (not unknown and remainder!=0):
+            raise ValueError('TOTAL_COMPONENTS_CONTRADICT')
+        parts = []
+        for name in optional:
+            reported = usage.get(name)
+            if reported is not None:
+                state,low,high = 'REPORTED',reported,reported
+            elif len(unknown)==1 or remainder==0:
+                state,low,high = 'DERIVED',remainder,remainder
+            else:
+                state,low,high = 'BOUNDED',0,remainder
+            parts.append(dict(state=state,lower=low,upper=high,
+                sdk_field_state='ABSENT' if name not in usage else 'NULL' if reported is None else 'INTEGER'))
+        thinking,tool = parts
+        input_upper,generated_upper = p+tool['upper'],c+thinking['upper']
+        config = freeze['config']
+        ip,op = (Decimal(str(config[name])) for name in
+            ('input_price_ceiling_per_million','output_price_ceiling_per_million'))
+        unallocated = residual-thinking['lower']-tool['lower']
+        cost = (p*ip+c*op+thinking['lower']*op+tool['lower']*ip
+            +unallocated*max(ip,op))/Decimal(1000000)
+        within_reservation = cost<=Decimal(str(config['reservation_usd']))
+        reason = None
+        if (input_upper>config['input_token_cap'] or generated_upper>config['max_output_tokens']
+                or generated_upper>config['billable_output_token_cap']):
+            reason = 'TOKEN_UPPER_BOUND_EXCEEDED'
+        elif not within_reservation:
+            reason = 'RESERVATION_UPPER_BOUND_EXCEEDED'
+        state = 'BOUNDED' if any(part['state']=='BOUNDED' for part in parts) else 'DERIVED' if unknown else 'REPORTED'
+        return dict(contract=contract,state=state,safe=reason is None,reason=reason,
+            prompt=dict(state='REPORTED',value=p),
+            candidates=dict(state='REPORTED',value=c),total=dict(state='REPORTED',value=total),
+            thinking=thinking,tool_use_prompt=tool,optional_joint_total=residual,
+            input_upper=input_upper,generated_upper=generated_upper,cost_upper_usd=str(cost),
+            reservation_usd=str(Decimal(str(config['reservation_usd']))),within_reservation=within_reservation)
+    except (KeyError,TypeError,AttributeError,ValueError) as exc:
+        return dict(contract=contract,state='UNKNOWN',safe=False,reason=str(exc))
+
+
 class LiveTransport:
     def __init__(self, freeze, grant, sdk, budget):
         from linkloom.agents.providers import GeminiProviderAdapter
@@ -175,15 +245,13 @@ class LiveTransport:
             raw = self.raw if isinstance(self.raw,dict) else self.raw.model_dump(mode='json') if self.raw is not None else None
             usage = raw.get('usage_metadata') if isinstance(raw,dict) else None
             version = response.provider_metadata.get('model_version')
-            counts = [usage.get(k) for k in ('prompt_token_count','candidates_token_count','thoughts_token_count')] if isinstance(usage,dict) else []
-            safe = (not response.error and self.wire_sends == 1
-                and version == self.freeze['config']['model_id'] and len(counts)==3
-                and all(type(n) is int and n>=0 for n in counts)
-                and counts[0] <= self.freeze['config']['input_token_cap']
-                and sum(counts[1:]) <= self.freeze['config']['max_output_tokens'])
             record = dict(normalized=response.to_dict(), sdk_response=raw, usage=usage,
                           actual_model_version=version, reservation_usd=self.freeze['config']['reservation_usd'],
                           wire_sends=self.wire_sends)
+            record['usage_accounting'] = account_usage(record,self.freeze)
+            safe = (not response.error and self.wire_sends == 1
+                and version == self.freeze['config']['model_id']
+                and record['usage_accounting']['safe'])
             self.budget.complete(identity, record, safe=safe)
             if not safe:
                 raise ValueError('PROVIDER_USAGE_VERSION_OR_OUTCOME_STOP')
@@ -193,7 +261,7 @@ class LiveTransport:
 
 
 def live_root():
-    return Path.home()/'.linkloom'/'m3o-ab-v2'
+    return Path.home()/'.linkloom'/'m3o-ab-v3'
 
 
 def open_live(freeze, grant, *, budget=None):

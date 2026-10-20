@@ -27,6 +27,7 @@ docs/requirements/m3-n-task-discovery/data/** -text -whitespace
 docs/requirements/m3-n-task-discovery/evidence/** -text -whitespace
 docs/requirements/m3-o-quality-convergence/ab-v1/** -text -whitespace
 docs/requirements/m3-o-quality-convergence/ab-v2/** -text -whitespace
+docs/requirements/m3-o-quality-convergence/ab-v3/** -text -whitespace
 src/linkloom/evaluation/task_profile_checkpoint.py text eol=lf
 # Executable A/B freeze hashes must survive a fresh Windows checkout.
 src/linkloom/evaluation/task_profile_ab.py text eol=lf

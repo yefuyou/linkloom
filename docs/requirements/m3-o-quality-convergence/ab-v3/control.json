@@ -1,0 +1,15 @@
+{
+  "stages": [
+    "FIRST_PAIR",
+    "VERIFY_FIRST_PAIR",
+    "CONTINUE_REMAINING"
+  ],
+  "first_pair_requests": 2,
+  "total_requests": 26,
+  "lock": "kernel-exclusive-campaign-file",
+  "budget_namespace": "m3o-ab-v3",
+  "finalization": "read-only-26-complete; atomic-no-overwrite-report",
+  "resume": "verified-first-pair-only; interrupted-sending-stage-stops",
+  "evidence": "ledger-bound-request-sdk-response-host-sha256",
+  "usage_contract": "gemini-total-components/v1"
+}

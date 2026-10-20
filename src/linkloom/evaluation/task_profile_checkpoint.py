@@ -92,14 +92,16 @@ def _schema_valid(response):
 
 
 def _usage_valid(record, freeze):
-    usage = record.get('usage')
-    fields = ('prompt_token_count','candidates_token_count','thoughts_token_count','total_token_count')
-    if not isinstance(usage,dict) or any(type(usage.get(k)) is not int or usage[k]<0 for k in fields):
-        return False
-    p,c,t,total = (usage[k] for k in fields)
+    accounting = ab.account_usage(record,freeze)
     config = freeze['config']
-    return (p<=config['input_token_cap'] and c+t<=config['max_output_tokens']
-        and total==p+c+t and record.get('wire_sends')==1
+    if not accounting['safe']:
+        return False
+    try:
+        receipt_matches = ab.digest(accounting)==ab.digest(record.get('usage_accounting'))
+    except (TypeError,ValueError):
+        return False
+    return (receipt_matches
+        and record.get('wire_sends')==1
         and record.get('actual_model_version')==config['model_id']
         and record.get('reservation_usd')==config['reservation_usd'])
 

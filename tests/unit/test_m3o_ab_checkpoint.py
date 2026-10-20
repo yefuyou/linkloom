@@ -36,13 +36,17 @@ def campaign(tmp_path, monkeypatch):
         part={'functionCall':{'name':'emit_semantic_candidates','args':args}}
         if fault.get('signature'):
             part['thoughtSignature']='c3ludGhldGljLXNpZ25hdHVyZQ=='
+        usage={'promptTokenCount':100,'candidatesTokenCount':4096 if fault.get('output_cap') else 10,
+            **({} if fault.get('usage') else {'thoughtsTokenCount':0}),
+            'totalTokenCount':109 if fault.get('total') else 110}
+        # Optional Thinking alone is legal in v3; the fault needs missing Total.
+        if fault.get('usage'):
+            usage.pop('totalTokenCount')
         return httpx.Response(200,json={
             'candidates':[{'content':{'role':'model','parts':[part]},
                 'finishReason':'STOP'}],
             'modelVersion':'other-model' if fault.get('version') else 'gemini-3.8-flash',
-            'usageMetadata':{'promptTokenCount':100,'candidatesTokenCount':4096 if fault.get('output_cap') else 10,
-                **({} if fault.get('usage') else {'thoughtsTokenCount':0}),
-                'totalTokenCount':999 if fault.get('total') else 110}})
+            'usageMetadata':fault.get('usage_override',usage)})
     def builder(key,**kwargs):
         opts = kwargs['http_options_kwargs']
         assert opts['retry_options']=={'attempts':1}
@@ -56,7 +60,7 @@ def campaign(tmp_path, monkeypatch):
         return original(key,**kwargs)
     monkeypatch.setattr(providers,'build_gemini_sdk_client',builder)
     freeze = ab.load_freeze()
-    grant = dict(approved=True,experiment='m3o-ab/v2',manifest_sha256=freeze['manifest_sha256'],
+    grant = dict(approved=True,experiment=freeze['manifest']['version'],manifest_sha256=freeze['manifest_sha256'],
         expires_at=(datetime.now(UTC)+timedelta(hours=1)).isoformat(),
         **{k:freeze['config'][k] for k in ('model_id','provider_id','max_requests','max_cost_usd',
             'input_price_ceiling_per_million','output_price_ceiling_per_million')})
@@ -343,7 +347,7 @@ def _crash_worker(root,output,point):
         return reserve(self,identity,request)
     ab.Budget.reserve=crash_reserve
     f=ab.load_freeze()
-    grant=dict(approved=True,experiment='m3o-ab/v2',manifest_sha256=f['manifest_sha256'],
+    grant=dict(approved=True,experiment=f['manifest']['version'],manifest_sha256=f['manifest_sha256'],
         expires_at=(datetime.now(UTC)+timedelta(hours=1)).isoformat(),
         **{k:f['config'][k] for k in ('model_id','provider_id','max_requests','max_cost_usd',
             'input_price_ceiling_per_million','output_price_ceiling_per_million')})
@@ -358,7 +362,8 @@ def _crash_worker(root,output,point):
 def test_process_crash_never_resends_or_guesses_missing_evidence(campaign,point):
     stage,sends,root,output,grant,fault=campaign
     code='from tests.unit.test_m3o_ab_checkpoint import _crash_worker; import sys; _crash_worker(*sys.argv[1:])'
-    child=subprocess.run([sys.executable,'-c',code,str(root),str(output),point],capture_output=True,timeout=35)
+    # Includes fresh SDK import/client setup and Windows fsync, not Provider timeout.
+    child=subprocess.run([sys.executable,'-c',code,str(root),str(output),point],capture_output=True,timeout=120)
     assert child.returncode==71,child.stderr.decode(errors='replace')
     if point in ('AFTER_B','AFTER_GATE'):
         assert stage('VERIFY_FIRST_PAIR')['FIRST_PAIR_GATE']=='PASS'
@@ -398,7 +403,7 @@ def test_cross_process_campaign_lock_blocks_both_sending_phases(campaign):
 def test_completed_requests_can_finalize_after_process_restart_without_sending(campaign,point):
     stage,sends,root,output,grant,fault=campaign
     code='from tests.unit.test_m3o_ab_checkpoint import _crash_worker; import sys; _crash_worker(*sys.argv[1:])'
-    child=subprocess.run([sys.executable,'-c',code,str(root),str(output),point],capture_output=True,timeout=55)
+    child=subprocess.run([sys.executable,'-c',code,str(root),str(output),point],capture_output=True,timeout=180)
     assert child.returncode==71,child.stderr.decode(errors='replace')
     assert not (output/'execution.json').exists()
     report=stage('CONTINUE_REMAINING')

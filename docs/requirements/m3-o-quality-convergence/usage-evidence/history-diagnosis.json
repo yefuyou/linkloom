@@ -1,0 +1,92 @@
+{
+  "actual_model_version": "gemini-3.8-flash",
+  "count_tokens_calls_this_patch": 0,
+  "counterfactual_not_a_live_success": true,
+  "counterfactual_v3_accounting": {
+    "candidates": {
+      "state": "REPORTED",
+      "value": 288
+    },
+    "contract": "gemini-total-components/v1",
+    "cost_upper_usd": "0.00215775",
+    "generated_upper": 288,
+    "input_upper": 1437,
+    "optional_joint_total": 0,
+    "prompt": {
+      "state": "REPORTED",
+      "value": 1437
+    },
+    "reason": null,
+    "reservation_usd": "0.079872",
+    "safe": true,
+    "state": "DERIVED",
+    "thinking": {
+      "lower": 0,
+      "sdk_field_state": "NULL",
+      "state": "DERIVED",
+      "upper": 0
+    },
+    "tool_use_prompt": {
+      "lower": 0,
+      "sdk_field_state": "NULL",
+      "state": "DERIVED",
+      "upper": 0
+    },
+    "total": {
+      "state": "REPORTED",
+      "value": 1725
+    },
+    "within_reservation": true
+  },
+  "field_presence": {
+    "original_sdk_model_fields_set_saved": false,
+    "raw_http_body_available": false,
+    "sdk_dump_absent_and_null_identical": true,
+    "snapshot_thinking": "present-null",
+    "snapshot_tool_use": "present-null",
+    "wire_absent_vs_null": "NOT_IDENTIFIABLE"
+  },
+  "identity": "D01-A",
+  "no_response_payload_or_grant_exported": true,
+  "normalized_usage": {
+    "duration_ms": 6722.046,
+    "input_tokens": 1437,
+    "output_tokens": 288,
+    "total_tokens": 1725
+  },
+  "official_definition": "Total=Prompt+Candidates+Thinking+ToolUsePrompt",
+  "official_reference": "https://ai.google.dev/api/generate-content#UsageMetadata",
+  "old_campaign_state": "FIRST_FAILED",
+  "old_experiment": "m3o-ab/v2",
+  "old_files_unchanged": true,
+  "old_gate": null,
+  "old_ledger_sha256": "20eb138bf5ed36f68f6754c2ac332468249ef8d20907088a531cf77b37f21550",
+  "old_status": "UNKNOWN_STOP",
+  "old_status_unchanged": true,
+  "only_v2_usage_predicate_failure": "thoughts_token_count is None, but v2 requires explicit nonnegative integer",
+  "original_203_status_unchanged": true,
+  "real_provider_calls_this_patch": 0,
+  "residual": 0,
+  "sdk_usage_counts": {
+    "candidates_token_count": 288,
+    "prompt_token_count": 1437,
+    "thoughts_token_count": null,
+    "tool_use_prompt_token_count": null,
+    "total_token_count": 1725
+  },
+  "v3_production_ledger_exists": false,
+  "wire_sends": 1,
+  "sdk_optional_fields": {
+    "thoughts_token_count": {
+      "annotation": "typing.Optional[int]",
+      "required": false,
+      "default": null
+    },
+    "tool_use_prompt_token_count": {
+      "annotation": "typing.Optional[int]",
+      "required": false,
+      "default": null
+    }
+  },
+  "analysis_under_manifest_sha256": "ad81805d7a1b93ec0ec835e302e13a1e941d796dc224d9f341d28f094f54fe3d"
+}

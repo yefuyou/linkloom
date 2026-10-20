@@ -1,0 +1,149 @@
+{
+  "USAGE_COMPAT_TECHNICAL_ADMISSION": "READY",
+  "all_final_cases_pass_across_precise_batches": true,
+  "authorization": "Final v3 Manifest requires new explicit authorization; any future D01-A is a new request, not a resume of old UNKNOWN_STOP.",
+  "base": "adedbb323cf39a417b2048bd9d1fab60145b5718",
+  "batches": {
+    "acceptance": {
+      "errors": 0,
+      "failures": 4,
+      "passed": 187,
+      "seconds": 888.691,
+      "sha256": "6e3b7342ecf5ef6d0401a8e7ff578c8114a62ef5840db4571032112eb8b94da2",
+      "skipped": 0,
+      "tests": 191
+    },
+    "canary-short": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 5,
+      "seconds": 58.653,
+      "sha256": "128f0be030346b9e1ca709ebf746183d93381d6edd071605f2fb9959106e1feb",
+      "skipped": 0,
+      "tests": 5
+    },
+    "cost-red": {
+      "errors": 0,
+      "failures": 1,
+      "passed": 0,
+      "seconds": 5.9,
+      "sha256": "0e66f6981cb6a1ad2b1194d6142b161c888659a547baa4bbac5c8b9ca29c5bc1",
+      "skipped": 0,
+      "tests": 1
+    },
+    "crash-final": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 9,
+      "seconds": 353.568,
+      "sha256": "c5bd29cda8d26bf8efc8b1bd5a52c77086ecc77113f2a2b1ab53bf3a8ec3b971",
+      "skipped": 0,
+      "tests": 9
+    },
+    "final-code": {
+      "errors": 0,
+      "failures": 5,
+      "passed": 94,
+      "seconds": 747.681,
+      "sha256": "07911deb65b9a8ff7a0b2da7ccd08332cf17fe5301200397d00bdf06746919a9",
+      "skipped": 0,
+      "tests": 99
+    },
+    "green": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 27,
+      "seconds": 80.387,
+      "sha256": "03cae5c378d54f57fc4ca6a3dab47402176709a4f897eacfec6df80d9b816e2f",
+      "skipped": 0,
+      "tests": 27
+    },
+    "raw-type-red": {
+      "errors": 0,
+      "failures": 2,
+      "passed": 0,
+      "seconds": 19.279,
+      "sha256": "029c9e2b0396e6b6a894cf6b1dc0bf555ce56945b481ecbdeb5cfffda70fba06",
+      "skipped": 0,
+      "tests": 2
+    },
+    "receipt-type-red": {
+      "errors": 0,
+      "failures": 3,
+      "passed": 0,
+      "seconds": 5.495,
+      "sha256": "7530795433ae28e989cdbcb59a544c93ad4b1e382bdbc287c831d80f0b70f25a",
+      "skipped": 0,
+      "tests": 3
+    },
+    "red": {
+      "errors": 0,
+      "failures": 1,
+      "passed": 0,
+      "seconds": 45.223,
+      "sha256": "4ecbeb354212efb1a072ae1bcf4832507efbc51625a4f4a749f6b3975c4a0727",
+      "skipped": 0,
+      "tests": 1
+    },
+    "regression-final": {
+      "errors": 0,
+      "failures": 0,
+      "passed": 100,
+      "seconds": 83.712,
+      "sha256": "c4fedf71c0a823b6b38a663bf9ecd1a674c18ad9bc896664a2024670418d8921",
+      "skipped": 0,
+      "tests": 100
+    }
+  },
+  "branch": "codex/linkloom-m3o-usage-compat",
+  "canonical_v3_budget_initialized": false,
+  "commands": {
+    "crash_final": "python -m pytest -q -p scripts.evaluation_offline_plugin tests/unit/test_m3o_ab_checkpoint.py -k 'process_crash or cross_process or completed_requests_can_finalize' --basetemp=.tmp/cx --junitxml=work/usage/crash-final.xml",
+    "environment": {
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "PYTHONPATH": "src;.;tests/integration",
+      "fresh_basetemp_required": true
+    },
+    "final": "python -m pytest -q -p scripts.evaluation_offline_plugin tests/unit/test_m3o_usage_contract.py tests/unit/test_m3o_ab_checkpoint.py tests/unit/test_m3o_profile_ab.py --basetemp=.tmp/usage-final-code --junitxml=work/usage/final-code.xml",
+    "regression": "python -m pytest -q -p scripts.evaluation_offline_plugin tests/unit/test_canary_ledger.py tests/unit/test_canary_host.py tests/unit/test_canary_freeze.py tests/unit/test_task_discovery_m3n.py tests/unit/test_task_observation_discovery.py tests/unit/test_semantic_ingestion_prompt_contract.py tests/integration/test_m3l_canary.py --basetemp=.tmp/ln --junitxml=work/usage/regression-final.xml"
+  },
+  "count_tokens_calls_this_patch": 0,
+  "environment_note": "Initial 191 batch: 187 pass, 4 M3-L integration artifact-write failures under long basetemp. Same sandbox, shorter fresh basetemp: exact five tests pass; full 100 L/N regression then passes. No Canary/Runtime source or tests changed. Final 99 batch: 94 pass, 5 child-process wall-clock timeouts (35/55s); precise 9-case crash/lock/finalization rerun passes after test-only 120/180s startup allowances. Exit71, state, no-resend and zero-send assertions unchanged; production SDK timeout remains130000ms.",
+  "experiment": "m3o-ab/v3",
+  "final_mock_replay": {
+    "counts": {
+      "A": 13,
+      "B": 13
+    },
+    "requests_byte_equal_v2": 26,
+    "scores_equal_v2": true
+  },
+  "final_unique_tests": 199,
+  "independent_review": {
+    "mode": "READ_ONLY",
+    "open_P1_P2": 0,
+    "reviewer": "/root/m3o_independent_review",
+    "scope": "Offline technical admission only; no LIVE authorization.",
+    "verdict": "PASS"
+  },
+  "manifest_file_sha256": "a97a8659bc458ed5c9b80713d126d7472dbe969ecffbfa0f6712959dd043d10e",
+  "manifest_sha256": "ad81805d7a1b93ec0ec835e302e13a1e941d796dc224d9f341d28f094f54fe3d",
+  "network_guard": "-p scripts.evaluation_offline_plugin; official SDK MockTransport and synthetic key",
+  "old_campaign_unchanged": true,
+  "old_ledger_sha256": "20eb138bf5ed36f68f6754c2ac332468249ef8d20907088a531cf77b37f21550",
+  "old_v1_v2_freeze_bytes_unchanged": true,
+  "original_203_changes_unchanged": true,
+  "original_status_sha256": "66d1cf37e515a792a58a24091b46645e9d054167daf8558f8d39d7c066c0299d",
+  "overlapping_batches_not_summed": true,
+  "python": "3.13.5",
+  "real_grant_created": false,
+  "real_provider_requests_this_patch": 0,
+  "static_checks": {
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "test_file_sha256": {
+    "tests/unit/test_m3o_ab_checkpoint.py": "a1139bc17760d52ae0f0c6d0d3781f0ae4bd8cf6cf669a0a85c5fe71e301a77e",
+    "tests/unit/test_m3o_usage_contract.py": "b3f480e82f0f6c2ba1c0d3470de5fdcd9801162d00ff3024756a0b8b298e9b4c"
+  }
+}

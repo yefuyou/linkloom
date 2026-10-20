@@ -1,0 +1,18 @@
+{
+  "version": "gemini-total-components/v1",
+  "source": "https://ai.google.dev/api/generate-content#UsageMetadata",
+  "total_definition": "Total = Prompt + ToolUsePrompt + Thinking + Candidates; cached prompt is already included in Prompt.",
+  "required": "Prompt, Candidates, Total must be explicit nonnegative integers, not bool. Normalized P/C/Total must match the untouched SDK snapshot.",
+  "optional": "Thinking and ToolUsePrompt may be absent/null; their raw values remain unchanged. Invalid present values stop.",
+  "provenance": [
+    "REPORTED",
+    "DERIVED",
+    "BOUNDED",
+    "UNKNOWN"
+  ],
+  "allocation": "Residual = Total - Prompt - Candidates. Subtract reported optional components. One missing component is DERIVED; two missing with zero residual are DERIVED zero; two missing with positive residual each have BOUNDED [0,residual] and joint sum=residual. Contradictions are UNKNOWN.",
+  "caps": "Worst-case Prompt+ToolUsePrompt <= input_token_cap; Candidates+Thinking <= max_output_tokens and billable_output_token_cap. Bounds do not change any cap.",
+  "cost": "Decimal arithmetic: exact reported/derived input/output components plus unallocated joint residual at max(input_rate,output_rate), counted once. Must fit the same reservation; no refunds.",
+  "verdict": "safe/reason are separate from provenance. LiveTransport and VERIFY recompute the same accounting object. UNKNOWN or unsafe stops.",
+  "history": "No retroactive changes to v1/v2 campaigns. A v3 send is a new request and needs separate human authorization."
+}
