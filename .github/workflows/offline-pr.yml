@@ -46,6 +46,12 @@ jobs:
           tests/unit/test_source_identity_contract.py
           tests/unit/test_product_evidence_context_scope.py
           tests/unit/test_p84_durable_model_loop.py
+          tests/unit/test_runtime_v2_multi_action.py
+          tests/integration/test_runtime_v2_multi_action_resume.py
+          tests/unit/test_runtime_v2_model_proposal.py
+          tests/unit/test_progress_assessment.py
+          tests/unit/test_recovery_policy.py
+          tests/unit/test_p84_recovery.py
           tests/unit/test_permission_gate.py
           tests/unit/test_temporal_decision_memory.py
           tests/unit/test_decision_memory_reconciliation.py

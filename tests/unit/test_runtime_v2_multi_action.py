@@ -337,6 +337,12 @@ def test_budget_exhaustion_mid_proposal_never_invokes_over_budget_members(
 
     assert result.status == "completed"
     assert executor_order == ["A"]
+    assert [item.error.code for item in result.tool_results[1:]] == [
+        "TOOL_BUDGET_EXCEEDED", "TOOL_BUDGET_EXCEEDED",
+    ]
+    # Budget exhaustion permits a Final over prior observations, never more tools.
+    assert [item.arguments["query"] for item in result.state.tool_ledger] == ["A"]
+    assert len(result.state.model_executions[0].tool_result_refs) == 3
 
 
 def test_runtime_keeps_only_the_newest_whole_tool_turns_within_history_limit(
@@ -356,18 +362,72 @@ def test_runtime_keeps_only_the_newest_whole_tool_turns_within_history_limit(
             result.result.value
             for turn in request.tool_turns
             for result in turn.tool_results
-        ] == [[] for _ in range(16)]
+        ] == [
+            [{"evidence_id": f"ev-{prefix}-{index}"}]
+            for prefix in ("B", "C") for index in range(8)
+        ]
         return _final_response(request, "bounded history observed")
+
+    def executor(arguments):
+        executor_order.append(arguments["query"])
+        # This is a history-window probe, so each search must make progress.
+        # The original all-empty fixture is preserved as a stop regression below.
+        return [{"evidence_id": f"ev-{arguments['query']}"}]
 
     result, _ = _run(
         ScriptedProvider([proposal("A"), proposal("B"), proposal("C"), final]),
-        lambda arguments: executor_order.append(arguments["query"]) or [],
+        executor,
         artifact_store,
         max_calls=24,
     )
 
     assert result.status == "completed"
-    assert len(executor_order) == 24
+    assert executor_order == [
+        f"{prefix}-{index}" for prefix in ("A", "B", "C") for index in range(8)
+    ]
+    assert [item.arguments["query"] for item in result.state.tool_ledger] == executor_order
+    refs = [ref for record in result.state.model_executions for ref in record.tool_result_refs]
+    assert [ref["runtime_call_id"] for ref in refs] == [
+        item.call_id for item in result.state.tool_ledger
+    ]
+    for ref, record in zip(refs, result.state.tool_ledger, strict=True):
+        stored = artifact_store.read(ref["result_ref"], expected_sha256=ref["result_sha256"])
+        assert stored["model_tool_result"]["result"] == record.result
+
+
+def test_empty_search_history_stops_before_later_proposal_members(artifact_store):
+    """The old empty history fixture must still trigger the progress guard."""
+    executor_order: list[str] = []
+
+    def proposal(prefix):
+        return lambda request: _tool_proposal(
+            request, [{"query": f"{prefix}-{index}"} for index in range(8)],
+        )
+
+    provider = ScriptedProvider([
+        proposal("A"), proposal("B"), proposal("C"),
+        lambda _request: pytest.fail("stalled searches must not produce a successful Final"),
+    ])
+    result, _ = _run(
+        provider,
+        lambda arguments: executor_order.append(arguments["query"]) or [],
+        artifact_store,
+        max_calls=24,
+    )
+
+    assert result.status == "failed"
+    assert result.error.code == "MODEL_PROGRESS_STALLED"
+    assert result.final_answer is None
+    assert result.state.termination.status == "failed"
+    assert executor_order == [f"A-{index}" for index in range(8)]
+    assert len(provider.requests) == 2
+    assert [item.arguments["query"] for item in result.state.tool_ledger] == executor_order
+    first, blocked = result.state.model_executions
+    assert first.status == "tool_results_durable"
+    assert [ref["runtime_call_id"] for ref in first.tool_result_refs] == [
+        item.call_id for item in result.state.tool_ledger
+    ]
+    assert blocked.tool_result_refs == []
 
 
 def test_tool_result_artifact_helper_has_explicit_kind_and_stable_path(artifact_store):
@@ -386,7 +446,7 @@ def test_tool_result_artifact_helper_has_explicit_kind_and_stable_path(artifact_
     }
 
 
-def test_policy_denial_is_one_ordered_result_and_later_call_still_runs(
+def test_policy_denial_is_durable_and_stops_later_call_without_final(
     artifact_store,
 ):
     read_definition = ToolDefinition(
@@ -450,10 +510,7 @@ def test_policy_denial_is_one_ordered_result_and_later_call_still_runs(
         return ModelResponse(proposal=ModelTurnProposal.tools(proposal_id, calls))
 
     def final(request: ModelTurnRequest) -> ModelResponse:
-        results = request.tool_turns[0].tool_results
-        assert [result.result.status for result in results] == ["ok", "error", "ok"]
-        assert results[1].result.error.code == "TOOL_PERMISSION_DENIED"
-        return _final_response(request, "denial observed")
+        pytest.fail("permission denial must terminate before another model call or Final")
 
     provider = ScriptedProvider([tools, final])
     result = SingleAgentModelLoop(
@@ -471,8 +528,28 @@ def test_policy_denial_is_one_ordered_result_and_later_call_still_runs(
         checkpoint_callback=lambda _state: None,
     )
 
-    assert result.status == "completed"
-    assert executor_order == ["A", "C"]
+    # The former expectation that C and a Final run after denial was obsolete.
+    # The denied result is durable, but it grants no permission to continue.
+    assert result.status == "failed"
+    assert result.error.code == "MODEL_UNRECOVERABLE_TOOL_ERROR"
+    assert result.error.details["reason_code"] == "TOOL_PERMISSION_DENIED"
+    assert result.final_answer is None
+    assert result.state.termination.status == "failed"
+    assert executor_order == ["A"]
+    assert len(provider.requests) == 1
+    record, = result.state.model_executions
+    assert [ref["ordinal"] for ref in record.tool_result_refs] == [0, 1]
+    stored_results = [
+        artifact_store.read(ref["result_ref"], expected_sha256=ref["result_sha256"])["model_tool_result"]
+        for ref in record.tool_result_refs
+    ]
+    assert [item["result"]["status"] for item in stored_results] == ["ok", "error"]
+    assert stored_results[1]["result"]["error"]["code"] == "TOOL_PERMISSION_DENIED"
+    # Denial occurs before the executor/ledger pending boundary. C never starts.
+    assert [item.call_id for item in result.state.tool_ledger] == [
+        record.tool_result_refs[0]["runtime_call_id"],
+    ]
+    assert result.state.tool_ledger[0].result == stored_results[0]["result"]
 
 
 def test_malformed_provider_response_executes_zero_proposal_members(artifact_store):
