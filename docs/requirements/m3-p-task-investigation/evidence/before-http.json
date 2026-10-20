@@ -1,0 +1,151 @@
+{
+  "continuity": {
+    "status": "PARTIAL",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_27c523e0",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-20T05:37:05.335983+00:00",
+      "accepted": true
+    },
+    "tools": [
+      "inspect_task_context",
+      "query_task_relations",
+      "analyze_task_semantics"
+    ],
+    "gaps": [
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "evidence_count": 2,
+    "review_view_present": false
+  },
+  "conflict": {
+    "status": "PARTIAL",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_c9ac8877",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-20T05:37:14.030795+00:00",
+      "accepted": true
+    },
+    "tools": [
+      "inspect_task_context",
+      "query_task_relations",
+      "analyze_task_semantics"
+    ],
+    "gaps": [
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "evidence_count": 3,
+    "review_view_present": false
+  },
+  "missing": {
+    "status": "UNKNOWN",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_9a0edd84",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-20T05:37:18.387283+00:00",
+      "accepted": true
+    },
+    "tools": [
+      "inspect_task_context",
+      "query_task_relations"
+    ],
+    "gaps": [
+      "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE",
+      "NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN",
+      "UNRESOLVED_CLARIFY:clarify"
+    ],
+    "evidence_count": 0,
+    "review_view_present": false
+  },
+  "replan": {
+    "status": "PARTIAL",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_c35c708a",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-20T05:37:26.674004+00:00",
+      "accepted": true
+    },
+    "tools": [
+      "inspect_task_context",
+      "query_task_relations",
+      "analyze_task_semantics"
+    ],
+    "gaps": [
+      "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE",
+      "UNSATISFIED_PREMISE:revision"
+    ],
+    "evidence_count": 2,
+    "review_view_present": false
+  }
+}

@@ -1,0 +1,508 @@
+{
+  "evidence_level": "SCRIPTED_FAKE_PRODUCT_HTTP_RUNTIME",
+  "real_model_semantics": "NOT_EVALUATED",
+  "provider_requests": 0,
+  "count_tokens_requests": 0,
+  "session_auto_recovery": false,
+  "cases": {
+    "continuity": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_1917ede38ec4:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_1917ede38ec4:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_1917ede38ec4:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "BLOCKED",
+          "depends_on": [],
+          "blocking_reasons": [
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:identity",
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        }
+      ]
+    },
+    "conflict": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 3,
+        "planning": 1,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_9a675b20d6f1:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_9a675b20d6f1:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_9a675b20d6f1:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 3,
+      "steps": [
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "BLOCKED",
+          "depends_on": [],
+          "blocking_reasons": [
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:identity",
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        }
+      ]
+    },
+    "missing": {
+      "status": "UNKNOWN",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 0
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_8ac73dfdf7f4:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_8ac73dfdf7f4:turn:2:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "locate",
+          "kind": "discover",
+          "predicate": "",
+          "status": "UNKNOWN",
+          "depends_on": [],
+          "blocking_reasons": [],
+          "assessment_ids": null
+        },
+        {
+          "step_id": "clarify",
+          "kind": "clarify",
+          "predicate": "",
+          "status": "BLOCKED",
+          "depends_on": [
+            "locate"
+          ],
+          "blocking_reasons": [
+            "NO_EXECUTABLE_OPERATION"
+          ],
+          "assessment_ids": null
+        }
+      ]
+    },
+    "replan": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 2,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_a20fa2a7a4b4:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_a20fa2a7a4b4:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_a20fa2a7a4b4:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "locate",
+          "kind": "discover",
+          "predicate": "",
+          "status": "UNKNOWN",
+          "depends_on": [],
+          "blocking_reasons": [],
+          "assessment_ids": null
+        },
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "BLOCKED",
+          "depends_on": [],
+          "blocking_reasons": [
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:identity",
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        }
+      ]
+    },
+    "trusted": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_624de6e585eb:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_624de6e585eb:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_624de6e585eb:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "SUPPORTED",
+          "depends_on": [],
+          "blocking_reasons": [],
+          "assessment_ids": [
+            "task_assessment_v1_4de106315baedb9535a610349f68757128636fb8b4edd16cefd564cc9db299ef"
+          ]
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "SUPPORTED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [],
+          "assessment_ids": [
+            "task_assessment_v3_7693f2803ef1e02846669d25cd859ad88794ca202167bdb8f213e4ddff5b48d2"
+          ]
+        },
+        {
+          "step_id": "dates",
+          "kind": "compare_dates",
+          "predicate": "",
+          "status": "COMPLETED",
+          "depends_on": [
+            "identity",
+            "revision"
+          ],
+          "blocking_reasons": [],
+          "assessment_ids": [
+            "task_assessment_v1_4de106315baedb9535a610349f68757128636fb8b4edd16cefd564cc9db299ef",
+            "task_assessment_v3_7693f2803ef1e02846669d25cd859ad88794ca202167bdb8f213e4ddff5b48d2"
+          ]
+        }
+      ]
+    },
+    "identity_only": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_123a49fdc38d:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_123a49fdc38d:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_123a49fdc38d:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "SUPPORTED",
+          "depends_on": [],
+          "blocking_reasons": [],
+          "assessment_ids": [
+            "task_assessment_v1_b8a6869c21aaddf3a42606c2eb597cdbaeb97e72bb6cb2add471320ab139395f"
+          ]
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [
+            "NO_MATCHING_P4_RELATION"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "dates",
+          "kind": "compare_dates",
+          "predicate": "",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity",
+            "revision"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:revision",
+            "SUPPORTED_REVISES_PLAN_PREMISE_REQUIRED"
+          ],
+          "assessment_ids": [
+            "task_assessment_v1_b8a6869c21aaddf3a42606c2eb597cdbaeb97e72bb6cb2add471320ab139395f"
+          ]
+        }
+      ]
+    },
+    "no_records": {
+      "status": "PARTIAL",
+      "reviewer_accepted": true,
+      "stage_calls": {
+        "discovery": 2,
+        "planning": 1,
+        "semantics": 1
+      },
+      "tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "run_p4_88d8ee5ae863:turn:1:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "run_p4_88d8ee5ae863:turn:2:tool",
+          "status": "completed"
+        },
+        {
+          "tool": "analyze_task_semantics",
+          "call_id": "run_p4_88d8ee5ae863:turn:3:tool",
+          "status": "completed"
+        }
+      ],
+      "source_count": 2,
+      "steps": [
+        {
+          "step_id": "identity",
+          "kind": "relation",
+          "predicate": "SAME_TASK",
+          "status": "BLOCKED",
+          "depends_on": [],
+          "blocking_reasons": [
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "revision",
+          "kind": "relation",
+          "predicate": "REVISES_PLAN",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:identity",
+            "NO_RELATION_RECORDS"
+          ],
+          "assessment_ids": []
+        },
+        {
+          "step_id": "dates",
+          "kind": "compare_dates",
+          "predicate": "",
+          "status": "BLOCKED",
+          "depends_on": [
+            "identity",
+            "revision"
+          ],
+          "blocking_reasons": [
+            "DEPENDENCY_NOT_SUPPORTED:identity",
+            "DEPENDENCY_NOT_SUPPORTED:revision",
+            "NO_RELATION_RECORDS",
+            "SUPPORTED_REVISES_PLAN_PREMISE_REQUIRED",
+            "SUPPORTED_SAME_TASK_PREMISE_REQUIRED"
+          ],
+          "assessment_ids": []
+        }
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "path": "work/after-review-http/conflict/response.json",
+      "bytes": 176531,
+      "sha256": "5032f13c36a990096c3dec5723e4fcb3f40f612a3ce0cfe066223e5df0f5512e"
+    },
+    {
+      "path": "work/after-review-http/conflict/runtime-audit.zip",
+      "bytes": 222642,
+      "sha256": "3ad6829d5e90593bdf40b2981aec545bfcda19bc3028a5e8a1d528636415075e"
+    },
+    {
+      "path": "work/after-review-http/continuity/response.json",
+      "bytes": 143492,
+      "sha256": "ff548c1d13b8cbe9a98cd21d4bfbda0a699618326b1588ca4b93bc1128f27441"
+    },
+    {
+      "path": "work/after-review-http/continuity/runtime-audit.zip",
+      "bytes": 191813,
+      "sha256": "67d45a661f4b04746a9d13b9c160e231dc2f9a1eb50137dc6cec1aef719fb818"
+    },
+    {
+      "path": "work/after-review-http/identity_only/response.json",
+      "bytes": 245359,
+      "sha256": "b4a0b6118662decc4b4e438a898f91d9494e16f2bd72fabd853059dd9ebe4918"
+    },
+    {
+      "path": "work/after-review-http/identity_only/runtime-audit.zip",
+      "bytes": 263329,
+      "sha256": "dac1f233c947e92212307786014ce6ad5adaa800e3ac1124f3cdce73433afd7b"
+    },
+    {
+      "path": "work/after-review-http/missing/response.json",
+      "bytes": 50256,
+      "sha256": "34f754a1d89c0d78d68f367ccecb6873fffe969888a529059f67e747961166a1"
+    },
+    {
+      "path": "work/after-review-http/missing/runtime-audit.zip",
+      "bytes": 98152,
+      "sha256": "9cd46be087884595aa63014a381a05ce560d63aa20771c7dc09c118b29897012"
+    },
+    {
+      "path": "work/after-review-http/no_records/response.json",
+      "bytes": 187557,
+      "sha256": "e0ad7e9b27348ab29db8c8171d2c2c0ce5286a4fd85a0199fdd02bc6f27187fd"
+    },
+    {
+      "path": "work/after-review-http/no_records/runtime-audit.zip",
+      "bytes": 229397,
+      "sha256": "a5dbb227b50b9d6910fdcc39c33fe891a21e71a6c959d9376f750a7a2c634655"
+    },
+    {
+      "path": "work/after-review-http/replan/response.json",
+      "bytes": 153195,
+      "sha256": "2fb332fb23c4f7be76ea5e3a0551bc29b7010da3026362e71068b1f571ea4b34"
+    },
+    {
+      "path": "work/after-review-http/replan/runtime-audit.zip",
+      "bytes": 198902,
+      "sha256": "d435c6ae27b94d4b638625cfc9d04a0e6e23c83f688ccfcb5cca65059235c735"
+    },
+    {
+      "path": "work/after-review-http/trusted/response.json",
+      "bytes": 351860,
+      "sha256": "9d3585de0ca33cf692119e4914820cf6748de5ccbbeda5416ab6be061b1062de"
+    },
+    {
+      "path": "work/after-review-http/trusted/runtime-audit.zip",
+      "bytes": 305290,
+      "sha256": "d7cacb22fa00d79e007df7e5edd2ad0a08a7997763e1ede19e5706d859735854"
+    }
+  ]
+}

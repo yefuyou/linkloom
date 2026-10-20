@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from copy import deepcopy
 from pathlib import Path
 import re
@@ -54,10 +55,13 @@ class ProductInvestigationService:
         adaptive_planning: bool = False,
         task_models: Any = None,
         canary_host: Any = None,
+        task_relation_paths: dict[str, Path] | None = None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
+        # Local Host composition only. HTTP/model arguments cannot choose paths.
+        self.task_relation_paths = dict(task_relation_paths or {})
         if canary_host is not None:
             from linkloom.ui.canary import CanaryHost
             if type(canary_host) is not CanaryHost or model_factory is not None or task_models is not None:
@@ -187,8 +191,10 @@ class ProductInvestigationService:
                 from linkloom.ui.task_investigation import ProductTaskSources, prepare_task_investigation
                 preparation = prepare_task_investigation(query.strip(), ProductTaskSources(workspace_id, sources,
                     lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
+                    current_evidence=lambda: self.product_app.repository.current_evidence(workspace_id),
                     on_source_change=(lambda: self.canary_host.ledger.stop('SOURCE_SNAPSHOT_CHANGED'))
-                        if self.canary_host is not None else None), task_models, root / "preparation")
+                        if self.canary_host is not None else None), task_models, root / "preparation",
+                    relation_path=self.task_relation_paths.get(workspace_id))
                 if preparation.manifest['status'] == 'BLOCKED':
                     return dict(kind='error', run={'id': 'blocked-' + root.name}, evidence=[],
                         reviewer={'performed': False}, preparation=preparation.manifest,
@@ -256,7 +262,95 @@ class ProductInvestigationService:
                 temporal_scope, temporal_view_holder, task_plan,
                 preparation,
             )
+        if preparation is not None:
+            # Identity pointer only; all execution state remains in Checkpoint.
+            pointer = dict(run_id=snapshot['run']['id'], thread_id=snapshot['run']['thread_id'],
+                workspace_id=workspace_id, root=root.name)
+            (root.parent / (pointer['run_id'] + '.json')).write_text(json.dumps(pointer), encoding='utf8')
         return self._decorate(snapshot, None, task_plan=task_plan, max_steps=max_steps)
+
+    def save_task_ask(self, run_id, ask_run):
+        job = self._jobs.get(run_id)
+        if job is None or job.task_preparation is None:
+            return
+        path = job.backend.engine.checkpoint_dir.parent.parent / (run_id + '.json')
+        pointer = json.loads(path.read_text(encoding='utf8'))
+        pointer['ask'] = ask_run
+        path.write_text(json.dumps(pointer, ensure_ascii=False), encoding='utf8')
+
+    @staticmethod
+    def _task_blocked(run_id, code):
+        return dict(kind='error', run=dict(id=run_id), reviewer=dict(performed=False), evidence=[],
+            error=dict(code=code, classification='validation', message='Saved evidence is no longer current; ask again.'))
+
+    def read_saved_task(self, run_id, workspace_id):
+        """Read existing Runtime artifacts only. Never resume execution or call a model."""
+        if re.fullmatch(r'ui-[0-9a-f]{12}', run_id) is None:
+            return None
+        with self.product_app._store_lock:
+            if self.product_app._workspace_id() != workspace_id:
+                return None
+            base = Path(self.product_app.repository.database_path).parent / 'work' / 'investigations'
+            pointer_path = base / (run_id + '.json')
+            if not pointer_path.is_file():
+                return None
+            pointer = json.loads(pointer_path.read_text(encoding='utf8'))
+            if pointer.get('workspace_id') != workspace_id or pointer.get('run_id') != run_id:
+                return None
+            if re.fullmatch(r'[0-9a-f]{12}', pointer['root']) is None:
+                return None
+            root = base / pointer['root']
+            try:
+                from linkloom.runtime.checkpoint import SQLiteCheckpointer
+                from linkloom.runtime.models import RunStatus
+                from linkloom.ui.task_investigation import ProductTaskSources, restore_task_preparation
+                from linkloom.ui.task_result import project_task_snapshot
+                manifest = json.loads((root / 'preparation' / 'preparation.json').read_text(encoding='utf8'))
+                workspace, rows = self.product_app.snapshot_investigation_sources(workspace_id)
+                sources = ProductTaskSources(workspace_id, rows,
+                    lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
+                    current_evidence=lambda: self.product_app.repository.current_evidence(workspace_id))
+                if sources.identity != manifest['source_snapshot_hash']:
+                    return pointer['ask'], self._task_blocked(run_id, 'SOURCE_SNAPSHOT_CHANGED')
+                preparation = restore_task_preparation(sources, manifest,
+                    relation_path=self.task_relation_paths.get(workspace_id))
+                state = SQLiteCheckpointer(root / 'runtime').get_latest(pointer['thread_id'])
+                if state is None or state.status not in {'completed', 'failed', 'rejected'} or not state.result_ref:
+                    return pointer['ask'], self._task_blocked(run_id, 'SAVED_RESULT_NOT_COMPLETE')
+                result_path = (root / 'runtime' / state.result_ref).resolve()
+                if not result_path.is_relative_to((root / 'runtime').resolve()):
+                    raise ValueError('INVALID_RESULT_PATH')
+                artifact = json.loads(result_path.read_text(encoding='utf8'))
+                status = RunStatus(state.run_id, state.thread_id, state.status,
+                    error=state.error.to_dict() if state.error else None)
+                snapshot = project_task_snapshot(manifest['question'], None, status, state, artifact)
+                self._validate_task_read(preparation, state, snapshot, root)
+                snapshot['run']['id'] = run_id
+                self._task_review(snapshot, preparation)
+                snapshot['recovery'] = dict(mode='SAVED_RESULT_READ_ONLY', session_resumed=False)
+                return pointer['ask'], snapshot
+            except Exception:
+                return pointer['ask'], self._task_blocked(run_id, 'SAVED_RESULT_REVALIDATION_FAILED')
+
+    @staticmethod
+    def _validate_task_read(preparation, state, snapshot, root):
+        payload = snapshot.get('task_investigation')
+        if payload:
+            from linkloom.agents.task_relation_result import review_task_relation_result
+            from linkloom.runtime.artifacts import ModelArtifactStore
+            tools = preparation.tools.for_run(state.run_id, ModelArtifactStore(root / 'runtime' / 'models'),
+                                             preparation.manifest['question'])
+            check = review_task_relation_result(payload, tools, records=state.tool_ledger, run_id=state.run_id)
+            if check['status'] != 'pass':
+                raise ValueError('RELATION_OR_SOURCE_CHANGED')
+
+    def _task_review(self, snapshot, preparation):
+        from linkloom.ui.task_result import project_task_review
+        preparation.sources.validate_current()
+        snapshot.setdefault('preparation', preparation.manifest)
+        for evidence in snapshot['evidence']:
+            evidence.update(preparation.sources.mapping[evidence['artifact_version_id']])
+        snapshot['task_review'] = project_task_review(snapshot, snapshot['preparation'])
 
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
@@ -284,12 +378,18 @@ class ProductInvestigationService:
                         "message": "The authorized source snapshot changed; ask again."}}
                 if snapshot is None:
                     return None
+                if snapshot.get('task_investigation'):
+                    state = job.backend.engine.checkpointer.get_latest(snapshot['run']['thread_id'])
+                    try:
+                        self._validate_task_read(job.task_preparation, state, snapshot,
+                                                 job.backend.engine.checkpoint_dir.parent)
+                    except Exception:
+                        return self._task_blocked(run_id, 'RELATION_OR_SOURCE_CHANGED')
                 snapshot['preparation'] = job.task_preparation.manifest
                 if self.canary_host is not None:
                     snapshot['preparation'] = dict(snapshot['preparation'],
                         campaign_budget=self.canary_host.ledger.snapshot())
-                for evidence in snapshot['evidence']:
-                    evidence.update(job.task_preparation.sources.mapping[evidence['artifact_version_id']])
+                self._task_review(snapshot, job.task_preparation)
                 return snapshot
         with self.product_app._store_lock:
             if self.product_app._workspace_id() != job.workspace_id:

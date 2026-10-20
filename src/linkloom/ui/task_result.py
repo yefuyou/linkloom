@@ -4,6 +4,90 @@ from copy import deepcopy
 from linkloom.ui.backend import project_reviewer
 
 
+def _expand_references(value, *views):
+    """Expand the existing lossless tool dictionaries for display, not new facts."""
+    tables = {name: {} for name in ('evidence_spans', 'observation_refs', 'observation_snapshots')}
+    for view in views:
+        for name in tables:
+            tables[name].update(view.get(name, {}))
+    keys = {'span_ref': 'evidence_spans', 'observation_ref': 'observation_refs',
+            'observation_snapshot_ref': 'observation_snapshots'}
+
+    def visit(item):
+        if isinstance(item, dict):
+            for key, table in keys.items():
+                if set(item) == {key}:
+                    return visit(tables[table][item[key]])
+            return {k: visit(v) for k, v in item.items()}
+        if isinstance(item, list):
+            return [visit(v) for v in item]
+        return item
+    return visit(value)
+
+
+def project_task_review(snapshot, preparation):
+    """A presentation over existing observation/proposal/P4 contracts only.
+
+    Called after current product sources and the Runtime result were validated.
+    Original per-message fields remain separate even if their descriptions match.
+    """
+    payload = snapshot.get('task_investigation')
+    if not payload or snapshot.get('reviewer', {}).get('decision') != 'evidence_sufficient':
+        return None
+    discovery = preparation['discovery']
+    observations = [deepcopy(o) for o in
+        (*discovery['valid_observations'], *discovery['partial_observations'])]
+    evidence_refs = {e['evidence_ref'] for e in snapshot['evidence']}
+    for observation in observations:
+        span = observation['provenance']
+        if span['evidence_ref'] not in evidence_refs:
+            snapshot['evidence'].append(dict(evidence_ref=span['evidence_ref'],
+                artifact_version_id=span['artifact_version_id'], artifact_id=span['artifact_id'],
+                line_start=span['line_start'], line_end=span['line_end'], quote=span['quote'],
+                quote_sha256=span['quote_sha256'], verified=True,
+                authority='ORIGINAL_SOURCE_ONLY', **preparation['source_mapping'][span['artifact_version_id']]))
+            evidence_refs.add(span['evidence_ref'])
+    query = payload['relation_query']
+    analysis = payload.get('semantic_analysis', {})
+    proposals = [_expand_references(p, analysis) for p in analysis.get('proposals', [])
+                 if p.get('evidence_status') == 'EVIDENCE_VALID']
+    relations = [_expand_references(r, query) for r in query.get('relations', [])]
+    plan = (preparation.get('planning') or [{}])[-1].get('plan') or {}
+    p4_steps = {s['step_id']: deepcopy(s) for s in query.get('investigation_steps', [])}
+    completed = {r['step_id']: r for r in plan.get('verified_results', [])}
+    for row in snapshot.get('trace', []):
+        if row['tool'] == 'inspect_task_context' and row['status'] == 'completed':
+            for receipt in (row.get('result') or {}).get('value', {}).get('investigation_receipts', []):
+                completed[receipt['step_id']] = receipt
+    steps = []
+    for step in plan.get('steps', []):
+        receipt = completed.get(step['id'])
+        row = p4_steps.get(step['id']) or dict(step_id=step['id'], kind=step['kind'],
+            predicate=step['predicate'], depends_on=step['depends_on'],
+            status=receipt['outcome'] if receipt else 'BLOCKED',
+            blocking_reasons=[] if receipt else ['TRUSTED_RELATION_REQUIRED' if step['kind'] in
+                {'relation', 'compare_dates'} else 'NO_EXECUTABLE_OPERATION'])
+        row.update(question=step['question'], endpoints=deepcopy(step['endpoints']))
+        steps.append(row)
+    unresolved = [dict(step_id=s['step_id'], question=s['question'],
+        reasons=s['blocking_reasons'], depends_on=s['depends_on'])
+        for s in steps if s['status'] not in {'SUPPORTED', 'COMPLETED'}]
+    next_actions = [dict(kind='REVIEW_ORIGINALS', step_id=s['step_id'], predicate=s['predicate'],
+        observation_ids=[e['observation_id'] for e in s['endpoints'] if 'observation_id' in e])
+        for s in steps if s['status'] not in {'SUPPORTED', 'COMPLETED'} and s['kind'] == 'relation']
+    if not observations:
+        next_actions.append(dict(kind='PROVIDE_TASK_SOURCE'))
+    if any(s['kind'] == 'compare_dates' and s['status'] != 'COMPLETED' for s in steps):
+        next_actions.append(dict(kind='IDENTITY_AND_REVISION_REQUIRED'))
+    return dict(observations=observations, proposals=proposals, relations=relations,
+        steps=steps, unresolved=unresolved, next_actions=next_actions,
+        executed_tools=[dict(tool=r['tool'], call_id=r['call_id'], status=r['status'])
+                        for r in snapshot.get('trace', [])],
+        human_review=dict(available=False, reason='NO_AUTHENTICATED_RELATION_REVIEW_INTERFACE'),
+        authority='SOURCE_OBSERVATIONS_AND_SEPARATE_P4_READS',
+        scope='BOUNDED_SNAPSHOT; NO_GLOBAL_CURRENT_OWNER_OR_DEADLINE_CLAIM')
+
+
 def project_task_snapshot(query, workspace, status, state, artifact):
     review = project_reviewer(artifact)
     accepted = review.get('decision') == 'evidence_sufficient'

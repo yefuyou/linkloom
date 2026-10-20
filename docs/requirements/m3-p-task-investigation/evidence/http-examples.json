@@ -1,0 +1,446 @@
+{
+  "continuity": {
+    "status": "PARTIAL",
+    "path": "TASK_INVESTIGATION",
+    "reviewer_accepted": true,
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_5305b9028e8efaf89936141b62c7c9dec811289d7f68aacb4d32b28bf3274bf0",
+        "raw_text": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+        "owner": "林枫",
+        "deadline": "2029-06-20",
+        "deadline_text": "2029-06-20",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+            "char_start": 27,
+            "char_end": 63,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成日志迁移",
+            "char_start": 40,
+            "char_end": 46,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "负责人：林枫",
+            "char_start": 33,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "青竹",
+            "char_start": 30,
+            "char_end": 32,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "截止日期：2029-06-20",
+            "char_start": 47,
+            "char_end": 62,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "provenance": {
+          "workspace_id": "ws_8635dfb205814a0a91aa66542b29ace2",
+          "artifact_id": "src_9dfb9df690f24c72a7fae9406c2ac95c",
+          "artifact_version_id": "artifact_v1_0c2f55e4d209b5b2dbb048fa8f2abf8ec5c6fbb96d59aa5e59858c644883df5b",
+          "source_ref": "product://src_9dfb9df690f24c72a7fae9406c2ac95c",
+          "content_hash": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+          "ordinal": 0,
+          "message_id": "message_v1_1d382413a2f6e3c8d017a24f06f9b36c211f89c41551f952b4e8a242c87228de",
+          "segment_id": "segment_v1_0bd7e6cf1eaf358356b8699f3ee8900d5ef9da437282ee60aae784d8c3a0aeef",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0bd7e6cf1eaf358356b8699f3ee8900d5ef9da437282ee60aae784d8c3a0aeef",
+          "char_start": 27,
+          "char_end": 63,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+          "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8"
+        }
+      },
+      {
+        "observation_id": "task_observation_v1_335ebb0e51eac02841031d06b2e63ae8f2f0ca63aa0cb663bfef3cb1a70a201e",
+        "raw_text": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+        "owner": "林枫",
+        "deadline": null,
+        "deadline_text": null,
+        "unknown_fields": [
+          "deadline",
+          "vendor"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+            "char_start": 27,
+            "char_end": 70,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "完成日志迁移",
+            "char_start": 32,
+            "char_end": 38,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "负责人：林枫",
+            "char_start": 63,
+            "char_end": 69,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "project",
+            "quote": "青竹",
+            "char_start": 60,
+            "char_end": 62,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "provenance": {
+          "workspace_id": "ws_8635dfb205814a0a91aa66542b29ace2",
+          "artifact_id": "src_23627d32647f4f4eb3026ba62b04b5b4",
+          "artifact_version_id": "artifact_v1_f4d55ff08ac487c891b2a48ebe43aed530e254d01cab2baa8f00d9e003c810b6",
+          "source_ref": "product://src_23627d32647f4f4eb3026ba62b04b5b4",
+          "content_hash": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+          "ordinal": 0,
+          "message_id": "message_v1_44087090e1817f334f683befc0c554bec8dfdee056b309b3b21ec3ab7bb94f1d",
+          "segment_id": "segment_v1_745c1035cab5b1cedf3d8933fecfc78b3b1d41566542c3c9f2dd6420ae4e7c32",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_745c1035cab5b1cedf3d8933fecfc78b3b1d41566542c3c9f2dd6420ae4e7c32",
+          "char_start": 27,
+          "char_end": 70,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+          "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5"
+        }
+      }
+    ],
+    "proposals": [
+      {
+        "predicate": "SAME_TASK",
+        "proposed_verdict": "SUPPORTED",
+        "publishable": false,
+        "missing_evidence": [],
+        "reason_codes": [
+          "SCRIPTED_WIRING_ONLY"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "step_id": "identity",
+        "kind": "relation",
+        "status": "BLOCKED",
+        "depends_on": [],
+        "blocking_reasons": [
+          "NO_RELATION_RECORDS"
+        ],
+        "assessment_ids": []
+      },
+      {
+        "step_id": "revision",
+        "kind": "relation",
+        "status": "BLOCKED",
+        "depends_on": [
+          "identity"
+        ],
+        "blocking_reasons": [
+          "DEPENDENCY_NOT_SUPPORTED:identity",
+          "NO_RELATION_RECORDS"
+        ],
+        "assessment_ids": []
+      }
+    ],
+    "comparison": [],
+    "human_review": {
+      "available": false,
+      "reason": "NO_AUTHENTICATED_RELATION_REVIEW_INTERFACE"
+    },
+    "citations": [
+      {
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0bd7e6cf1eaf358356b8699f3ee8900d5ef9da437282ee60aae784d8c3a0aeef",
+        "artifact_version_id": "artifact_v1_0c2f55e4d209b5b2dbb048fa8f2abf8ec5c6fbb96d59aa5e59858c644883df5b",
+        "artifact_id": "src_9dfb9df690f24c72a7fae9406c2ac95c",
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。",
+        "content_sha256": "8fbd9c5e1ef05d15618c93245ff1bb9b83188428de491860a25d3754c2ee3a41",
+        "quote_sha256": "e62cb715a10343ecc8368e11f6cf7f2778badf48ad9c6bd9871f935f0470d9d8",
+        "verified": true,
+        "authority": "ORIGINAL_SOURCE_ONLY",
+        "source_id": "src_9dfb9df690f24c72a7fae9406c2ac95c",
+        "source_version": "artifact_v1_0c2f55e4d209b5b2dbb048fa8f2abf8ec5c6fbb96d59aa5e59858c644883df5b",
+        "source_name": "meeting-1.txt"
+      },
+      {
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_745c1035cab5b1cedf3d8933fecfc78b3b1d41566542c3c9f2dd6420ae4e7c32",
+        "artifact_version_id": "artifact_v1_f4d55ff08ac487c891b2a48ebe43aed530e254d01cab2baa8f00d9e003c810b6",
+        "artifact_id": "src_23627d32647f4f4eb3026ba62b04b5b4",
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "延续上次的完成日志迁移，截止日期调整为2029-06-24；项目：青竹；负责人：林枫。",
+        "content_sha256": "345480a25dd1e85ee63b06b6e630729281d270e586bbb8c886d892fdcf32d807",
+        "quote_sha256": "e1f7aff663659a4f442b7e2e528ff37d7f7690143fba648b5153b095f4ca38d5",
+        "verified": true,
+        "authority": "ORIGINAL_SOURCE_ONLY",
+        "source_id": "src_23627d32647f4f4eb3026ba62b04b5b4",
+        "source_version": "artifact_v1_f4d55ff08ac487c891b2a48ebe43aed530e254d01cab2baa8f00d9e003c810b6",
+        "source_name": "meeting-2.txt"
+      }
+    ]
+  },
+  "trusted": {
+    "status": "PARTIAL",
+    "path": "TASK_INVESTIGATION",
+    "reviewer_accepted": true,
+    "observations": [
+      {
+        "observation_id": "task_observation_v1_a466a4c26525bc6117ced06c424de2166afcc05918e165fed269fd9d43302556",
+        "raw_text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "owner": "陈晨",
+        "deadline": "2026-10-14",
+        "deadline_text": "2026年10月14日",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "char_start": 32,
+            "char_end": 74,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月14日前完成",
+            "char_start": 59,
+            "char_end": 73,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "provenance": {
+          "workspace_id": "ws_bec8b234d99a447989e55507e8de337a",
+          "artifact_id": "src_da0f2a117ac14b78898503b7a1985db3",
+          "artifact_version_id": "artifact_v1_5517ae9ff1865d9f83871ba46600096bf2e2ef7c2dd0d221f38eeb29cfc101fe",
+          "source_ref": "A.md",
+          "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+          "ordinal": 0,
+          "message_id": "message_v1_194b903d8801d793d53d3eff247831af037498df54f497ac9ec99694fc012cbe",
+          "segment_id": "segment_v1_e9a6fd43f0902c166fe27b85924387644d51e24607ed7756e7c7ee101c491093",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e9a6fd43f0902c166fe27b85924387644d51e24607ed7756e7c7ee101c491093",
+          "char_start": 32,
+          "char_end": 74,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+          "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a"
+        }
+      },
+      {
+        "observation_id": "task_observation_v1_9d13d25a7308339cf965966defb54ba7ee1f5c3d13b6d03d78c04d06fbcc0f8c",
+        "raw_text": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "owner": "陈晨",
+        "deadline": "2026-10-18",
+        "deadline_text": "2026年10月18日",
+        "unknown_fields": [
+          "vendor"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "char_start": 32,
+            "char_end": 112,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "我负责",
+            "char_start": 32,
+            "char_end": 35,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "陈晨",
+            "char_start": 28,
+            "char_end": 30,
+            "basis": "SPEAKER"
+          },
+          {
+            "field": "project",
+            "quote": "星河项目",
+            "char_start": 35,
+            "char_end": 39,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "2026年10月18日前完成",
+            "char_start": 88,
+            "char_end": 102,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "provenance": {
+          "workspace_id": "ws_bec8b234d99a447989e55507e8de337a",
+          "artifact_id": "src_82c33983908e4d4184e6443d53abd24d",
+          "artifact_version_id": "artifact_v1_109d02ea65bea1f7280894cd527b79554479fcec5e34905bf89fc7eb1e78204c",
+          "source_ref": "B.md",
+          "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+          "ordinal": 0,
+          "message_id": "message_v1_1ce626ca3029f38e3264197bb0ffae75a129f29bf13859a0eda482ac07ad9491",
+          "segment_id": "segment_v1_28fcc2b582a9b6e588fb6b7881088ce1fb0917edebd4448a49722ae59b96dca3",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_28fcc2b582a9b6e588fb6b7881088ce1fb0917edebd4448a49722ae59b96dca3",
+          "char_start": 32,
+          "char_end": 112,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+          "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41"
+        }
+      }
+    ],
+    "proposals": [
+      {
+        "predicate": "SAME_TASK",
+        "proposed_verdict": "SUPPORTED",
+        "publishable": false,
+        "missing_evidence": [],
+        "reason_codes": [
+          "SCRIPTED_WIRING_ONLY"
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "step_id": "identity",
+        "kind": "relation",
+        "status": "SUPPORTED",
+        "depends_on": [],
+        "blocking_reasons": [],
+        "assessment_ids": [
+          "task_assessment_v1_4de106315baedb9535a610349f68757128636fb8b4edd16cefd564cc9db299ef"
+        ]
+      },
+      {
+        "step_id": "revision",
+        "kind": "relation",
+        "status": "SUPPORTED",
+        "depends_on": [
+          "identity"
+        ],
+        "blocking_reasons": [],
+        "assessment_ids": [
+          "task_assessment_v3_7693f2803ef1e02846669d25cd859ad88794ca202167bdb8f213e4ddff5b48d2"
+        ]
+      },
+      {
+        "step_id": "dates",
+        "kind": "compare_dates",
+        "status": "COMPLETED",
+        "depends_on": [
+          "identity",
+          "revision"
+        ],
+        "blocking_reasons": [],
+        "assessment_ids": [
+          "task_assessment_v1_4de106315baedb9535a610349f68757128636fb8b4edd16cefd564cc9db299ef",
+          "task_assessment_v3_7693f2803ef1e02846669d25cd859ad88794ca202167bdb8f213e4ddff5b48d2"
+        ]
+      }
+    ],
+    "comparison": [
+      {
+        "old": "2026-10-14",
+        "new": "2026-10-18",
+        "delta_calendar_days": 4,
+        "plan_currentness": "NOT_ESTABLISHED"
+      }
+    ],
+    "human_review": {
+      "available": false,
+      "reason": "NO_AUTHENTICATED_RELATION_REVIEW_INTERFACE"
+    },
+    "citations": [
+      {
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e9a6fd43f0902c166fe27b85924387644d51e24607ed7756e7c7ee101c491093",
+        "artifact_version_id": "artifact_v1_5517ae9ff1865d9f83871ba46600096bf2e2ef7c2dd0d221f38eeb29cfc101fe",
+        "artifact_id": "src_da0f2a117ac14b78898503b7a1985db3",
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+        "content_sha256": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+        "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a",
+        "verified": true,
+        "authority": "ORIGINAL_SOURCE_ONLY",
+        "source_id": "src_da0f2a117ac14b78898503b7a1985db3",
+        "source_version": "artifact_v1_5517ae9ff1865d9f83871ba46600096bf2e2ef7c2dd0d221f38eeb29cfc101fe",
+        "source_name": "A.md"
+      },
+      {
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_28fcc2b582a9b6e588fb6b7881088ce1fb0917edebd4448a49722ae59b96dca3",
+        "artifact_version_id": "artifact_v1_109d02ea65bea1f7280894cd527b79554479fcec5e34905bf89fc7eb1e78204c",
+        "artifact_id": "src_82c33983908e4d4184e6443d53abd24d",
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+        "content_sha256": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+        "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41",
+        "verified": true,
+        "authority": "ORIGINAL_SOURCE_ONLY",
+        "source_id": "src_82c33983908e4d4184e6443d53abd24d",
+        "source_version": "artifact_v1_109d02ea65bea1f7280894cd527b79554479fcec5e34905bf89fc7eb1e78204c",
+        "source_name": "B.md"
+      }
+    ]
+  }
+}

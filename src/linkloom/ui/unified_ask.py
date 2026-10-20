@@ -303,6 +303,8 @@ class UnifiedAskService:
             if snapshot['kind'] == 'error':
                 return self._from_snapshot(run, snapshot), 200
             self._runs[snapshot['run']['id']] = (run, service)
+        service.save_task_ask(snapshot['run']['id'], dict(query=run.query, workspace_id=run.workspace_id,
+            scope=run.scope, route=run.route, discovery=run.discovery))
         return self._from_snapshot(run, snapshot), 202
 
     def _source_request(self, run, payload, plan):
@@ -402,7 +404,10 @@ class UnifiedAskService:
                 release_status = ('BLOCKED' if task_result.get('investigation_status') == 'BLOCKED'
                                   else (snapshot.get('preparation') or {}).get('status', 'PARTIAL'))
                 result.update(status=release_status, task_investigation=deepcopy(task_result),
-                    evidence=deepcopy(snapshot['evidence']), uncertainty=deepcopy(snapshot['uncertainty']))
+                    evidence=deepcopy(snapshot['evidence']), uncertainty=deepcopy(snapshot['uncertainty']),
+                    task_review=deepcopy(snapshot.get('task_review')))
+                if snapshot.get('recovery'):
+                    result['recovery'] = deepcopy(snapshot['recovery'])
             return result
         result["agent_run_id"] = snapshot["run"]["id"]
         result["progress"] = snapshot.get("progress")
@@ -479,7 +484,14 @@ class UnifiedAskService:
         with self._lock:
             entry = self._runs.get(run_id)
         if entry is None:
-            raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
+            with self.app._store_lock:
+                self._check_workspace(workspace_id)
+                service = self.investigation()
+                saved = service.read_saved_task(run_id, workspace_id) if service else None
+                if saved is None:
+                    raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
+                data, snapshot = saved
+                return self._from_snapshot(_AskRun(**data), snapshot), 200
         run, service = entry
         with self.app._store_lock:
             # Check before reading/projecting any evidence from an old workspace.

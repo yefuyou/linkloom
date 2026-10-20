@@ -73,6 +73,18 @@ The original blind 8/10 remains historical evidence; no real model was evaluated
 
 ## Product Goal
 
+### M3-P Reviewable task investigations — 2026-10-20
+
+The authorized offline follow-up makes original task observations and semantic
+relationship proposals directly reviewable in Ask. Existing, current P4 records
+can satisfy matching dependencies through the existing Runtime query tool;
+proposals never create that trust. Saved results can be revalidated in a new
+process without resuming F/G or calling a model. The
+[SPEC](requirements/m3-p-task-investigation/SPEC.md) and
+[delivery](requirements/m3-p-task-investigation/DELIVERY.md) distinguish synthetic
+HTTP/browser evidence from real-model semantics. Authenticated human relation
+approval remains an explicit product gap.
+
 ### M3-M Unified Ask admission — 2026-10-19
 
 The authorized isolated follow-up separates deterministic shortcuts from Agent

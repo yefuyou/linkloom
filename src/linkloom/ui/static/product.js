@@ -449,14 +449,48 @@
         : gap.startsWith("UNSATISFIED_PREMISE") ? t("A later investigation step depends on an unconfirmed task relationship.", "后续调查步骤依赖尚未确认的任务关系。")
         : gap === "DISCOVERY_COVERAGE_INCOMPLETE" ? t("Some source material could not be fully examined within this investigation.", "部分来源资料尚未在本次调查范围内完整检查。")
         : t("Some investigation steps still lack supporting evidence. See the investigation trace for details.", "部分调查步骤仍缺少支持证据，详情见调查轨迹。");
-      target.innerHTML = `<section class="panel ask-answer ask-answer--notice"><h2>${t("Task investigation: confirmation still required", "任务调查：仍需确认")}</h2>
-        <p>${t("Source checks passed. Task identity and plan changes remain unconfirmed model suggestions; real-model business acceptance has not been evaluated.", "来源核验已通过。任务身份与计划变更仍是待确认的模型建议，真实模型业务验收尚未评估。")}</p>
-        ${(plan?.steps || []).map(step => `<p>${escapeHtml(step.question)}</p>`).join("")}
-        <div class="ask-unknown"><strong>${t("Unresolved evidence", "尚未解决的证据缺口")}</strong><p>${escapeHtml(result.uncertainty?.statement || "")}</p>
-        ${(prep.gaps || []).map(gap => `<p>${escapeHtml(gapMessage(gap))}</p>`).join("")}</div>
+      const view = result.task_review || {};
+      const label = predicate => ({SAME_TASK: t("Same task?", "是否同一任务"), REVISES_PLAN: t("Plan revision?", "是否修订计划")}[predicate] || predicate);
+      const evidence = items => (items || []).map(item => `<blockquote class="quote">${escapeHtml(item.quote || item.span?.quote || "")}</blockquote>`).join("") || `<p>${t("None provided", "未提供")}</p>`;
+      const stepState = status => ({SUPPORTED: t("Supported by current verified evidence", "已有当前有效的可信证据支持"), COMPLETED: t("Read completed", "读取已完成"), REFUTED: t("Counter-evidence found", "存在否定证据"), CONFLICT: t("Conflicting evidence", "证据冲突"), UNKNOWN: t("Still unknown", "仍然未知"), BLOCKED: t("Cannot continue yet", "暂时无法继续")}[status] || status);
+      const original = id => (view.observations || []).find(o => o.observation_id === id);
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice"><h2>${t("Task investigation: evidence and open questions", "任务调查：已知证据与待确认问题")}</h2>
+        ${["FAKE", "REPLAY"].includes(prep.execution_kind) ? `<p class="metadata">${t("Offline scripted or recorded adapters: this run does not evaluate real-model understanding.", "本次使用离线脚本或回放适配器，不能据此评估真实模型的理解能力。")}</p>` : ""}
+        <p>${t("Each record below preserves what its source says. A model suggestion does not confirm task identity or make a later date effective.", "以下记录分别保留各自原文中的信息。模型建议不代表已确认同一任务，也不代表较晚日期已正式生效。")}</p>
+        <h3>${t("What the sources explicitly say", "原文明确记录的内容")}</h3>
+        ${(view.observations || []).map(o => {
+          const source = (result.evidence || []).find(e => e.evidence_ref === o.provenance.evidence_ref);
+          return `<article class="ask-evidence"><h4>${escapeHtml(source?.source_name || t("Source record", "来源记录"))} · ${escapeHtml(o.description || o.raw_text)}</h4>
+            <dl><dt>${t("Recorded owner", "原文负责人")}</dt><dd>${escapeHtml(o.owner || t("Unknown", "未知"))}</dd>
+            <dt>${t("Recorded deadline", "原文截止日期")}</dt><dd>${escapeHtml(o.deadline_text || t("Unknown", "未知"))}</dd></dl>
+            <details><summary>${t("Original message and field evidence", "展开原始消息与字段证据")}</summary><blockquote class="quote">${escapeHtml(o.provenance.quote)}</blockquote>
+            ${(o.field_evidence || []).map(f => `<p>${escapeHtml(f.field)}: ${escapeHtml(f.quote)}</p>`).join("")}</details>
+            ${source?.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(source.source_id)}">${t("View source", "查看来源")}</button>` : ""}</article>`;
+        }).join("") || `<p>${t("No verifiable task candidate was returned. This does not establish absence.", "本次没有返回可核验的任务候选，不能据此断言任务不存在。")}</p>`}
+        <h3>${t("Relationships to review", "待审查的关系提案")}</h3>
+        ${(view.proposals || []).map(p => `<article class="ask-evidence"><h4>${escapeHtml(label(p.predicate))}</h4>
+          <p>${t("Model suggestion only; independent confirmation is still required.", "模型认为可能有关联，目前仍缺少独立确认。")}</p>
+          ${[p.subject, p.object].map(ref => `<p>${escapeHtml(original(ref.observation_id)?.raw_text || t("See the referenced source", "请查看对应来源"))}</p>`).join("")}
+          <p>${t("Model-reported reasons", "模型报告的理由")}: ${escapeHtml((p.reason_codes || []).join(" · "))}</p>
+          <details open><summary>${t("Supporting evidence", "支持证据")}</summary>${evidence(p.supporting_evidence)}</details>
+          <details><summary>${t("Counter-evidence or conflicts", "反对证据或冲突")}</summary>${evidence(p.counter_evidence)}</details>
+          <p>${t("Missing evidence reported by the model", "模型报告的证据缺口")}: ${escapeHtml((p.missing_evidence || []).join(" · ") || t("No additional gap reported; this does not imply confirmation.", "未报告额外缺口，仍不表示关系已确认。"))}</p></article>`).join("")}
+        ${(view.relations || []).map(r => `<article class="ask-evidence"><h4>${escapeHtml(label(r.assessment?.predicate || ""))} · ${escapeHtml(stepState(r.current_supported ? "SUPPORTED" : r.assessment?.verdict === "SUPPORTED" ? "BLOCKED" : r.assessment?.verdict || "UNKNOWN"))}</h4>
+          <p>${t("Existing relationship record, revalidated on read", "既有关系记录，读取时重新校验")}: ${escapeHtml(r.persistent_lifecycle)} · ${escapeHtml(r.evidence_state)}</p>
+          <details><summary>${t("Supporting and counter-evidence", "支持与反对证据")}</summary>${evidence(r.assessment?.supporting_evidence)}${evidence(r.assessment?.counter_evidence)}</details></article>`).join("")}
+        <h3>${t("Which steps ran, and why others stopped", "哪些步骤已执行，哪些仍被阻断")}</h3>
+        ${(view.steps || []).map(s => `<article><p><strong>${escapeHtml(s.question)}</strong> — ${escapeHtml(stepState(s.status))}</p>
+          ${(s.blocking_reasons || []).length ? `<p>${(s.blocking_reasons || []).some(r => r.startsWith("DEPENDENCY_")) ? t("A prerequisite relationship is not yet supported. This step has not continued.", "前置关系尚未获得可信支持，因此该步骤没有继续。") : t("No current, independently verifiable relationship record satisfies this step. A model suggestion cannot replace it.", "尚无当前有效、可独立重验的关系记录满足该步骤，模型提案不能替代这一前提。")}</p>` : ""}
+          ${(s.comparisons || []).filter(c => c.current_valid).map(c => `<p>${t("Historical deadline", "历史计划截止边界")}: ${escapeHtml(c.current_comparison?.old_deadline?.value)} → ${t("Revised deadline", "修订计划截止边界")}: ${escapeHtml(c.current_comparison?.new_deadline?.value)} · ${t("Calendar-day difference", "日历日差值")}: ${escapeHtml(c.current_comparison?.delta_calendar_days)}</p><p>${c.current_comparison?.plan_currentness === "NOT_ESTABLISHED" ? t("The difference is computable; which plan is currently effective is still unknown.", "可以核算两次计划边界的差值，但尚不能确认当前哪版计划正式有效。") : t("Effective-time details are preserved in the P4 read below.", "生效时间条件保留在下方 P4 回读结果中。")}</p>`).join("")}</article>`).join("")}
+        <p>${t("Reads actually performed", "实际完成的读取")}: ${escapeHtml((view.executed_tools || []).map(r => ({inspect_task_context: t("Task sources", "任务原文"), query_task_relations: t("Verified relationships", "可信关系"), analyze_task_semantics: t("Relationship proposals", "关系候选分析")}[r.tool] || r.tool)).join(" · "))}</p>
+        <div class="ask-unknown"><strong>${t("Unresolved evidence", "尚未解决的证据缺口")}</strong><p>${t("Task records describe source statements. Current identity, revision and effective-date claims require separately validated relationships.", "任务记录反映来源中的陈述；任务身份、计划修订及当前生效日期，需要分别通过可信关系验证。")}</p>
+        ${(prep.gaps || []).filter(gap => !gap.startsWith("UNSATISFIED_PREMISE:") || (view.unresolved || []).some(s => s.step_id === gap.split(":")[1])).map(gap => `<p>${escapeHtml(gapMessage(gap))}</p>`).join("")}</div>
         ${(result.uncertainty?.model_reported_gaps || []).map(gap => `<p>${t("Model-reported evidence gap", "模型报告的证据缺口")}: ${escapeHtml(gap)}</p>`).join("")}
-        ${(result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("")}
-        <details><summary>${t("Investigation trace and review", "调查轨迹与审查结果")}</summary><pre>${escapeHtml(JSON.stringify({preparation: prep, trace: result.trace, reviewer: result.reviewer, working_context: result.working_context_audit}, null, 2))}</pre></details></section>`;
+        <h3>${t("What you can do next", "下一步可以做什么")}</h3>
+        ${(view.next_actions || []).map(a => `<p>${a.kind === "PROVIDE_TASK_SOURCE" ? t("Provide the meeting or original task assignment that is missing.", "补充缺失的会议或任务分配原文。") : a.kind === "IDENTITY_AND_REVISION_REQUIRED" ? t("Date comparison needs both task identity and a valid plan revision. Both original dates are preserved above.", "比较日期需要先确认任务身份和计划修订；上方已保留两条原始日期。") : a.predicate === "REVISES_PLAN" ? t("Provide a source explicitly stating that the later plan replaces the earlier plan.", "补充明确说明后一计划替代前一计划的来源。") : t("Expand both original messages and check whether they describe the same work. An independently verifiable identity relationship is still needed.", "展开两条原始消息，核对是否确实描述同一项工作；仍需可独立验证的任务身份关系。")}</p>`).join("")}
+        <p>${t("Human confirmation is not connected: this installation has no authenticated task-relation review interface. Viewing these records does not approve them.", "人工确认尚未接通：当前系统没有具备身份与权限校验的任务关系审核接口。查看原文不会批准关系。")}</p>
+        <details><summary>${t("All original citations", "全部原始引用")}</summary>${(result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("")}</details>
+        <details><summary>${t("Investigation trace and review", "调查轨迹与审查结果")}</summary><pre>${escapeHtml(JSON.stringify({steps: view.steps, tools: view.executed_tools, gaps: prep.gaps, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
       return;
     }
     if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {

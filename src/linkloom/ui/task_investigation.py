@@ -5,7 +5,7 @@ endpoint comes from F/G, never from a query parser or a fixture answer.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 import json
 import re
@@ -67,12 +67,14 @@ class TaskInvestigationModels:
 
 
 class ProductTaskSources:
-    def __init__(self, workspace_id, sources, current_sources, *, on_source_change=None):
+    def __init__(self, workspace_id, sources, current_sources, *, on_source_change=None,
+                 current_evidence=None):
         self.workspace_id, self.sources, self.current_sources = workspace_id, sources, current_sources
         self.on_source_change = on_source_change
+        self.current_evidence = current_evidence
         self.registry = SourceReferenceRegistry()
         self.mapping = {}
-        artifacts = []
+        artifacts, evidence_rows = [], []
         for source in sources:
             if re.fullmatch(r'src_[0-9a-f]{32}', source['source_id']) is None:
                 raise ValueError('INVALID_SOURCE_ID')
@@ -88,10 +90,23 @@ class ProductTaskSources:
                 source_version=source['source_version'], source_name=source['name'],
                 content_sha256=artifact.content_hash)
             for segment in parse_source_text(artifact).segments:
-                self.registry.register_evidence(workspace_id, segment.evidence_span.evidence_ref,
+                span = segment.evidence_span
+                evidence_rows.append(dict(source_id=artifact.artifact_id,
+                    artifact_version_id=artifact.artifact_version_id, evidence_ref=span.evidence_ref,
+                    content_sha256=span.content_hash, quote_sha256=span.quote_sha256,
+                    line_start=span.line_start, line_end=span.line_end, quote=span.quote))
+                self.registry.register_evidence(workspace_id, span.evidence_ref,
                     content_hash=artifact.content_hash, source_version=artifact.artifact_version_id)
         self.artifacts = tuple(artifacts)
         self.identity = self._identity(sources)
+        self.evidence_identity = self._evidence_identity(evidence_rows)
+        self.validate_current()
+
+    @staticmethod
+    def _evidence_identity(rows):
+        fields = ('source_id', 'artifact_version_id', 'evidence_ref', 'content_sha256',
+                  'quote_sha256', 'line_start', 'line_end', 'quote')
+        return frozenset(tuple(row.get(key) for key in fields) for row in rows)
 
     @staticmethod
     def _identity(sources):
@@ -101,14 +116,15 @@ class ProductTaskSources:
     def validate_current(self):
         try:
             current = self._identity(self.current_sources())
+            if current != self.identity:
+                raise ValueError('SOURCE_SNAPSHOT_CHANGED')
+            if (self.current_evidence is not None and not self.evidence_identity.issubset(
+                    self._evidence_identity(self.current_evidence()))):
+                raise ValueError('SOURCE_EVIDENCE_NOT_CURRENT')
         except Exception:
             if self.on_source_change is not None:
                 self.on_source_change()
             raise
-        if current != self.identity:
-            if self.on_source_change is not None:
-                self.on_source_change()
-            raise ValueError('SOURCE_SNAPSHOT_CHANGED')
 
     def current(self, workspace, artifact_id):
         self.validate_current()
@@ -160,7 +176,62 @@ class TaskPreparation:
     manifest: dict
 
 
-def prepare_task_investigation(question, sources, models, root):
+def restore_task_preparation(sources, manifest, *, relation_path=None):
+    """Rebind saved F/G data for read-only validation, without calling F or G."""
+    from linkloom.semantic_ingestion.task_observation import TaskObservation
+    from linkloom.semantic_ingestion.task_relation_models import _endpoint
+    from linkloom.semantic_ingestion.task_relation_question_models import InvestigationPlan, InvestigationStep
+    sources.validate_current()
+    if manifest['source_snapshot_hash'] != sources.identity or manifest['execution_kind'] not in {'FAKE', 'REPLAY'}:
+        raise ValueError('SAVED_SNAPSHOT_UNAVAILABLE')
+    discovery = manifest['discovery']
+    observations = tuple(TaskObservation.from_dict(o) for o in
+        (*discovery['valid_observations'], *discovery['partial_observations']))
+    artifacts = {a.artifact_version_id: a for a in sources.artifacts}
+    if any(o.provenance.artifact_version_id not in artifacts
+           or not o.verify(artifacts[o.provenance.artifact_version_id]) for o in observations):
+        raise ValueError('SAVED_OBSERVATION_INVALID')
+    spans = tuple((f'source_{i}:{j}', segment.evidence_span)
+        for i, artifact in enumerate(sources.artifacts)
+        for j, segment in enumerate(parse_source_text(artifact).segments, 1))
+    by_hash = {canonical_hash(asdict(s)): s for _, s in spans}
+    data = manifest['planning'][-1]['plan']
+    steps = []
+    for row in data['steps']:
+        steps.append(InvestigationStep(row['id'], row['kind'], row['question'], tuple(row['handles']),
+            tuple(_endpoint(e) for e in row['endpoints']), tuple(row['source_handles']),
+            tuple(row['depends_on']), row['predicate'], row['field'], row['target_kind'],
+            tuple(row['missing_entities']), row['workspace_id'],
+            tuple(by_hash[s['span_sha256']] for s in row['source_bindings']),
+            (row['time_scope']['start'], row['time_scope']['end']), tuple(row['premise_keys']), row['evidence_gap']))
+    plan = InvestigationPlan(data['goal'], data['workspace_id'], data['snapshot_hash'], tuple(steps),
+        tuple(data['uncertainties']), tuple(data['refusal_reasons']),
+        tuple(VerifiedStepResult(**r) for r in data['verified_results']), data['parent_plan_id'],
+        tuple(data['gaps']), PlanningLimits(**data['limits']))
+    if plan.to_dict() != data:
+        raise ValueError('SAVED_PLAN_BINDING_INVALID')
+    context = SemanticContext(sources.workspace_id, manifest['question'], sources.artifacts, observations,
+        tuple((f'task_{i}', ObservationRef.from_observation(o)) for i, o in enumerate(observations)),
+        spans, sources.registry, frozenset(artifacts), True, False)
+    queries = tuple(step.to_semantic_query() for step in plan.ready_steps if step.kind == 'relation')
+    semantic = None
+    if queries:
+        class ReadOnlyAdapter:
+            def complete(self, _request):
+                raise ValueError('SAVED_RESULT_CANNOT_CALL_MODEL')
+        context = replace(context, queries=queries)
+        semantic = SemanticAnalysis('product-investigation', sources.workspace_id,
+            lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(context)),
+            ReadOnlyAdapter(), model_id=manifest['model_id'],
+            policy=SemanticCallPolicy(manifest['execution_kind'], max_cost_usd=0,
+                                      request_cost_upper_bound_usd=0))
+    raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
+    tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
+        relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan)
+    return TaskPreparation(sources, tools, manifest)
+
+
+def prepare_task_investigation(question, sources, models, root, *, relation_path=None):
     """F -> G -> typed ready work; all actual tool execution stays in Runtime."""
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
@@ -265,7 +336,7 @@ def prepare_task_investigation(question, sources, models, root):
             models.semantics, model_id=models.model_id, policy=SemanticCallPolicy(models.execution_kind,
                 max_cost_usd=.079872 if models.execution_kind == 'LIVE' else 0,
                 request_cost_upper_bound_usd=.079872 if models.execution_kind == 'LIVE' else 0))
-    tools = TaskRelationTools(sources.workspace_id, current_raw, semantic_analysis=semantic,
+    tools = TaskRelationTools(sources.workspace_id, current_raw, relation_path=relation_path, semantic_analysis=semantic,
         inspection_plan=planning.plan,
         execution_blocked_reason='UNSUPPORTED_OPERATION_SCOPE' if execution_blocked else None)
     manifest = dict(schema='product-task-preparation/v1', question=question,

@@ -1,0 +1,85 @@
+{
+  "baseline": "adedbb323cf39a417b2048bd9d1fab60145b5718",
+  "branch": "codex/linkloom-m3-p-task-investigation-closure",
+  "provider_requests": 0,
+  "count_tokens_requests": 0,
+  "real_model_semantics": "NOT_EVALUATED",
+  "ci": "NOT_RUN",
+  "deployment": "NOT_RUN",
+  "checks": [
+    {
+      "path": "work/related-regression.xml",
+      "tests": 211,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "phase": "BEFORE_REVIEW_REPAIR"
+    },
+    {
+      "path": "work/m3p-final.xml",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "phase": "BEFORE_REVIEW_REPAIR"
+    },
+    {
+      "path": "work/revocation-unit-green.xml",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "phase": "AFTER_P2_REPAIR"
+    },
+    {
+      "path": "work/revocation-http-green.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "phase": "AFTER_P2_REPAIR"
+    },
+    {
+      "path": "work/review-repair-regression.xml",
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "phase": "FINAL_AFTER_P2_REPAIR"
+    }
+  ],
+  "counts_overlap": "Batches overlap; counts must not be added. Final post-repair 45 contains all 18 current new cases plus affected existing Product tests.",
+  "independent_review": "PASS; P2 repaired; no open P1/P2",
+  "http_acceptance_cases": 7,
+  "final_http_artifacts": "after-review-http/",
+  "browser": {
+    "kind": "SCRIPTED_FAKE_PRODUCT_UI",
+    "verified": [
+      "Ask form submit",
+      "Chinese review view",
+      "original message expansion",
+      "exact source navigation"
+    ],
+    "screenshots": [
+      "browser-original.png",
+      "browser-review.png"
+    ]
+  },
+  "compileall": "PASS",
+  "javascript_syntax": "PASS",
+  "git_diff_check": "PASS",
+  "forbidden_tracked_paths_diff_exit": 0,
+  "preserved_intermediate_failures": [
+    "sandbox loopback WinError10013",
+    "baseline 20s polling timeouts",
+    "cold RUN_NOT_FOUND RED",
+    "semantic policy 0 versus 0.0 exact hash mismatch",
+    "one intermediate cross-process BLOCKED; same artifact and settled-code full suite subsequently passed"
+  ],
+  "full_repository_suite": "NOT_RERUN; prior M3-O records its broader failures; no all-repository green claim",
+  "offline_bundle": {
+    "path": "offline-http.zip",
+    "bytes": 3539048,
+    "sha256": "125df6a628062c878480bb344f3d80aa2ef87a15e31e96cc2acb4ecabd78a30c"
+  }
+}
