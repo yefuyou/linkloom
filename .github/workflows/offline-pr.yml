@@ -9,6 +9,34 @@ permissions:
   contents: read
 
 jobs:
+  frozen-ledger:
+    name: Frozen ledger bytes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 10
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      GEMINI_API_KEY: ""
+      DEEPSEEK_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install 'pytest>=8.0'
+      - name: Verify committed blob, native checkout, seal and Git clean/checkout filters
+        run: >-
+          python -m pytest -q --junitxml=frozen-ledger.xml
+          tests/unit/test_frozen_rehearsal_ledger.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-ledger-results-${{ matrix.os }}
+          path: frozen-ledger.xml
+
   core:
     runs-on: ubuntu-latest
     strategy:

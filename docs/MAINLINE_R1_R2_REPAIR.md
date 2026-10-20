@@ -40,7 +40,7 @@ permission error in the first focused attempt was environmental; the controlled
 system-temp run passes. Final-SHA local runs and actual Actions receipts are
 reported separately at delivery, not inferred from these preliminary results.
 
-## R2: preserve the historical authority requirement
+## R2: historical authority requirement (previous repair)
 
 Target:
 `docs/evaluation/public_memory_benchmark_clean/e2_revised_mh_only_20261005/final_evaluation_v1_20261005/formal_rehearsal_budget_ledger.json`.
@@ -72,3 +72,39 @@ authoritative historical Git object. Until such a source is identified, R2 is
 passing integrity gate, or change the seal/ledger/scores. The ledger, its seal,
 all other frozen data and production source remain unchanged in this repair.
 A successful R1 CI run therefore does not make both blockers resolved.
+
+## R2: newly authorized seal-validated reconstruction — 2026-10-20
+
+The subsequent user instruction explicitly permits deterministic LF-to-CRLF
+reconstruction from the already-committed LF blob, only if the full original
+seal digest matches and JSON semantics are unchanged. This supersedes the
+previous restoration-only restriction above; its historical investigation and
+BLOCKED outcome remain recorded. No historical original blob was found.
+
+Source commit: `470cdd8948417c54df4dd124be6265889bcc7f80`.
+Source blob: `e17f5256b2bff8de85fd08470a2d9a9d33e9b4d8`, 3,807 bytes,
+81 LF, no CR. Replace each LF with CRLF without JSON reserialization. Result:
+3,888 bytes, 81 CRLF, SHA-256 exactly
+`a882d54781f8c505558c459a5bc0ab17726723f67dfe06e8545c505a06386640`.
+Parsing both byte streams yields identical JSON, and removing only the added
+CR bytes reproduces the source blob exactly. The reconstructed Git blob is
+`21396e54627cf9277b9fe2cf42e87c4a671a96c3`.
+
+This is reconstruction validated by the already-committed seal, **not recovery
+of a historical Git object**. The original seal blob remains
+`02040f9cc414b018e9e3e7e925ef09903f981c71`; no seal, score, ledger field or
+other frozen file is regenerated or edited.
+
+The root `.gitattributes` applies `-text` only to this exact ledger path.
+`test_frozen_rehearsal_ledger.py` checks committed HEAD bytes, working-tree
+bytes and the original seal independently, plus the attribute and both Git
+clean/checkout filter directions under autocrlf false/true/input. The dedicated
+offline CI job runs the same checks on native Linux and Windows checkouts.
+Existing Core (including both full multi-action files and progress/recovery
+contracts) and Legacy Historical jobs remain unchanged.
+
+The new integrity suite reports four failures and one pass against the prior
+HEAD's blob/attributes. Its final-commit results and the actual Core, Legacy and cross-platform CI
+receipts are recorded in delivery evidence. No production `src/`, Provider
+permission or product behavior is changed. Keep this PR Draft; this repair
+does not authorize Ready, merge, Release or another PR.
