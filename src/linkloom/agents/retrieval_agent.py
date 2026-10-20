@@ -287,6 +287,11 @@ class RetrievalAgent:
                 "action, alternative, or uncertainty statement.\n"
             )
             legacy_plan_instruction = (
+                "Every search must copy ALL original source_context fields exactly: "
+                "index_path, index_sha256, index_schema_version, vault_root_fingerprint, "
+                "document_count, and fixture_id when present. Missing document_count is an "
+                "identity violation, never an optional omission. Never issue an unscoped "
+                "search without subgoal_id to recover from an error. "
                 "For each task_plan subgoal, call search_notes with the original source_context "
                 "plus subgoal_id, dependency_entities (one literal entity from each verified "
                 "parent read), and query_variant primary or alternate. The runtime constructs "
@@ -303,6 +308,11 @@ class RetrievalAgent:
                 "without a verified read, return insufficient_evidence with a null decision "
                 "value; put its exact task_plan subgoal_id (such as the ID string in "
                 "the plan) in uncertainty.unknown_fields, never a prose description. "
+                "If a reachable subgoal was searched but lacks a supported relation and no planned "
+                "alternate remains, stop searching. Keep each independently verified upstream fact "
+                "as a separate cited rationale point in Partial Final; decision.value must be null, "
+                "decision.status and uncertainty.status insufficient_evidence, uncertainty.statement null. "
+                "Never use alternate unless this subgoal has an alternate_question. "
                 "Do not claim completion.\n"
             )
             typed_plan_instruction = (
@@ -629,7 +639,8 @@ class RetrievalAgent:
             loop_result.error.to_dict()
             if loop_result.error is not None
             and (
-                (loop_result.error.code == "MODEL_UNRECOVERABLE_TOOL_ERROR"
+                loop_result.status == 'budget_exhausted'
+                or (loop_result.error.code == "MODEL_UNRECOVERABLE_TOOL_ERROR"
                  and loop_result.error.details.get("reason_code") == "REPEATED_TOOL_ERROR")
                 or (loop_result.error.code == "MODEL_SCHEMA_CORRECTION_EXHAUSTED"
                     and loop_result.error.details.get("reason_code") == "SCHEMA_CORRECTION_EXHAUSTED")
@@ -773,7 +784,23 @@ class RetrievalAgent:
                     for index, record in enumerate(records)
                 )
             )
-            if recovered_unknown_id or recovered_corrected_argument or recovered_rejected_temporal_date:
+            # One rejected plan query may be abandoned in favor of a grounded
+            # null Final. Identity errors are excluded; the normal missing-hop,
+            # claim and Reviewer checks below still decide whether it is valid.
+            # Legacy actions retain earlier failures in the Ledger rather than
+            # the V2 ordered result list; use that durable error when necessary.
+            partial_query_errors = observed_errors or failed_errors
+            recovered_partial_query = (
+                reached_final and self.task_plan is not None
+                and self.task_plan.schema_version == 'task-plan/v2'
+                and len(failed_records) <= 1 and len(partial_query_errors) == 1
+                and partial_query_errors[0]['code'] == 'TOOL_INVALID_ARGUMENTS'
+                and partial_query_errors[0]['details'].get('reason') == 'task_plan_semantic_mismatch'
+                and partial_query_errors[0]['details'].get('path') in {
+                    '$.source_context.query_variant', '$.source_context.subgoal_id',
+                }
+            )
+            if recovered_unknown_id or recovered_corrected_argument or recovered_rejected_temporal_date or recovered_partial_query:
                 failed_errors = []
                 observation_error = None
             if not reached_final or failed_errors or observation_error is not None:
@@ -835,6 +862,11 @@ class RetrievalAgent:
             null_result = decision.decision["status"] in {
                 "insufficient_evidence", "not_found"
             }
+            if recovered_partial_query and not null_result:
+                return self._failed_result(task, usage, self._safe_error(
+                    'UNRECOVERED_QUERY_ERROR', 'runtime',
+                    'A rejected plan query can only be abandoned for a validated partial Final.',
+                ), warnings)
             if null_result and not any(
                 record.tool_id == "search_notes"
                 and record.status == "completed"

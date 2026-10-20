@@ -46,6 +46,13 @@ def decide_recovery(
     terminal_code = error.code if error is not None else progress.latest_error_code
     if terminal_code in _TERMINAL_TOOL_ERRORS:
         return RecoveryDecision("TERMINATE", terminal_code)
+    if terminal_code == 'TOOL_INVALID_ARGUMENTS' and progress.latest_error_path in {
+        '$.source_context.workspace_id', '$.source_context.vault_root_fingerprint',
+        '$.source_context.index_sha256', '$.source_context.index_path',
+        '$.source_context.index_schema_version', '$.source_context.document_count',
+        '$.source_context.fixture_id', '$.source_context.scope_path',
+    }:
+        return RecoveryDecision('TERMINATE', terminal_code)
     if terminal_code == "TOOL_BUDGET_EXCEEDED":
         return RecoveryDecision(
             "STOP_TOOL_USE", terminal_code,
@@ -75,7 +82,19 @@ def decide_recovery(
     if progress.consecutive_schema_errors == 1:
         return RecoveryDecision(
             "CORRECT_ARGUMENTS", "SCHEMA_CORRECTION_NEEDED",
-            "Correct the tool arguments against its schema once; do not repeat the same invalid call.",
+            "Correct the tool arguments against its schema once; do not repeat the same invalid call. "
+            "Never invent an alternate query absent from the plan. If the reachable missing subgoal "
+            "was already searched and no planned alternate remains, submit a null-decision Partial Final; "
+            "retain independently verified facts as cited rationale and name unresolved subgoal IDs.",
+        )
+    if progress.exhausted_subgoals:
+        return RecoveryDecision(
+            'FINAL_PARTIAL', 'PLAN_EVIDENCE_EXHAUSTED',
+            'The reachable missing subgoals were searched and no planned alternate remains. '
+            'Stop tools and submit Final with decision.value=null, status=insufficient_evidence. '
+            'Keep independently verified facts in separate cited rationale points; no unsupported assertions. '
+            'Use uncertainty.status=insufficient_evidence, statement=null, and unknown_fields='
+            + ', '.join(progress.exhausted_subgoals) + '.',
         )
     if progress.pending_alternate_subgoals:
         slots = ", ".join(progress.pending_alternate_subgoals)

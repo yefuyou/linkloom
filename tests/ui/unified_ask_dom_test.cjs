@@ -198,6 +198,14 @@ async function setup() {
     assert.match(html, complete ? /Verified Leader/ : /Conflicting sources; no unique answer/);
     assert.match(html, /Known Owner/);
   }
+  const uncertainUi = await setup();
+  const unknownOperation = uncertainUi.submit(); await tick();
+  const unknownPayload = result("");
+  Object.assign(unknownPayload.result, {status: "PROVIDER_UNCERTAIN", path: "AGENT", conclusions: [], timeline: null});
+  uncertainUi.pending[0](unknownPayload);
+  await unknownOperation;
+  assert.match(uncertainUi.element("ask-result").innerHTML, /outcome uncertain; no verified conclusion/);
+  assert.doesNotMatch(uncertainUi.element("ask-result").innerHTML, /Verified Leader|Known Owner/);
   const rejectedUi = await setup();
   const operation = rejectedUi.submit(); await tick();
   const rejected = sourceResult(); rejected.result.reviewer.accepted = false;

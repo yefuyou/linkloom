@@ -178,7 +178,9 @@ class ContextAssembler:
             if scope_path is not None and not _path_is_under(evidence.logical_path, scope_path):
                 dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.OUT_OF_SCOPE, candidate.text))
                 continue
-            identity = evidence.source_ref or evidence.evidence_id
+            # A source may contain several independently addressable passages.
+            # Only the same evidence identity is a duplicate, not its file.
+            identity = evidence.evidence_id
             if identity in seen_evidence:
                 dropped.append(_dropped(item_id, ContextSourceType.EVIDENCE, ContextDropReason.DUPLICATE, candidate.text))
                 continue

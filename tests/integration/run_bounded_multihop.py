@@ -50,6 +50,13 @@ class SourceOnlyController:
                 self.pending = [item['evidence_id'] for item in observation.value]
             elif observation.tool_id == 'read_verified_note':
                 self.reads[goal.subgoal_id].append(observation.value)
+        if getattr(request, 'available_tools', None) == []:
+            # The real Runtime may close tools after all search hits were read.
+            # Do not request duplicate reads, or discard any unread evidence.
+            read_ids = {item['evidence_id'] for rows in self.reads.values() for item in rows}
+            if not set(self.pending) <= read_ids:
+                raise ValidationError('Final-only request still contains unread evidence')
+            self.pending.clear()
         def tool(name, arguments):
             return ModelAction.tool(ToolCall(call_id=f'mh_{request.sequence}', tool_id=name, arguments=arguments))
         if self.pending:

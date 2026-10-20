@@ -79,6 +79,13 @@ jobs:
           tests/unit/test_runtime_v2_model_proposal.py
           tests/unit/test_progress_assessment.py
           tests/unit/test_recovery_policy.py
+          tests/unit/test_graceful_partial_recovery.py
+          tests/unit/test_recovery_passage_coverage.py
+          tests/unit/test_context_assembler.py
+          tests/unit/test_claim_grounding.py
+          tests/unit/test_phase3_task_plan.py
+          tests/unit/test_ui_projection.py
+          tests/unit/test_agent_retrieval_v2_integration.py
           tests/unit/test_p84_recovery.py
           tests/unit/test_permission_gate.py
           tests/unit/test_temporal_decision_memory.py
