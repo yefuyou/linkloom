@@ -300,6 +300,60 @@ def unconfigured_product_server(tmp_path):
         _stop_product_server(server, worker, app)
 
 
+def test_status_keeps_source_save_available_when_semantic_provider_is_missing(
+    unconfigured_product_server,
+):
+    status, provider = _client(unconfigured_product_server, "/api/status")
+
+    assert status == 200
+    assert provider["ready"] is False
+    assert "--allow-external-provider" in provider["message"]
+    _client(unconfigured_product_server, "/api/workspaces", method="POST", data={"name": "Saved only"})
+    content = "[2026-10-01T10:00:00Z] Alice: We decided to use Birchline."
+    status, imported = _client(unconfigured_product_server, "/api/sources/import", method="POST",
+                               data={"name": "saved.md", "content": content})
+    assert status == 202
+    source = _wait_source(unconfigured_product_server, imported["source"]["source_id"])
+    assert source["ingestion_status"] == "FAILED"
+    assert source["error"].startswith("PROVIDER_UNAVAILABLE:")
+    assert source["content"] == content
+    assert source["candidate_count"] == 0
+    assert len(source["evidence"]) == 1
+    assert _client(unconfigured_product_server, "/api/review/candidates")[1]["candidates"] == []
+
+
+def test_review_cannot_map_unknown_relation_but_can_reject_it(tmp_path):
+    claim = _claim("Birchline")
+    claim.update(relation="unmapped supplier phrase", temporal_status="NOT_STATED")
+    base, server, worker, app = _start_product_server(tmp_path, [claim])
+    try:
+        _client(base, "/api/workspaces", method="POST", data={"name": "Relation review"})
+        _, imported = _client(base, "/api/sources/import", method="POST", data={
+            "name": "unresolved.md",
+            "content": "[2026-10-01T10:00:00Z] Alice: We decided to use Birchline for Launch.",
+        })
+        _wait_source(base, imported["source"]["source_id"])
+        candidate = _client(base, "/api/review/candidates")[1]["candidates"][0]
+        path = f"/api/review/candidates/{candidate['candidate_id']}"
+        detail = _client(base, path)[1]["candidate"]
+        assert detail["relation"] is None
+        assert "relation" in detail["current_unresolved_fields"]
+        assert "subject" not in detail["current_unresolved_fields"]
+        review = {"reviewer_id": "local-user", "reason": "The relation is not confirmed."}
+        status, result = _client(base, path + "/approve", method="POST", data={
+            **review, "relation": "uses supplier", "valid_from": "2026-10-01",
+        })
+        assert status == 409
+        assert result["error"]["code"] == "RELATION_UNRESOLVED"
+        assert _client(base, path)[1]["candidate"]["status"] == "PENDING_REVIEW"
+        assert _client(base, "/api/decisions")[1]["decisions"] == []
+        assert _client(base, path + "/reject", method="POST", data=review)[0] == 200
+        assert _client(base, path)[1]["candidate"]["status"] == "REJECTED"
+        assert _client(base, "/api/decisions")[1]["decisions"] == []
+    finally:
+        _stop_product_server(server, worker, app)
+
+
 def test_product_http_flow_imports_reviews_materializes_and_asks_with_history(product_server):
     base = product_server
     status, created = _client(base, "/api/workspaces", method="POST", data={"name": "Atlas"})
