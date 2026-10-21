@@ -1,0 +1,227 @@
+{
+  "source_commit": "dd76a25bd9e70544c8e0534538b694015928fea1",
+  "read_only": true,
+  "historical_result": "0/4 FAIL; unchanged",
+  "records": [
+    {
+      "path": "docs/requirements/m2-integration-acceptance/evidence/holdout/first/H01/prediction.json",
+      "git_blob": "d2dc6b2c3265def39db6a9f6617cd9bff08e2bd1",
+      "sha256": "cde64b10055a8544c66cc862c5f6b511fb835ed4b84446f3090ee2fae93c0556",
+      "observed_verdicts": [
+        {
+          "path": "/predictions/0/same_task",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/predictions/0/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/requirements/m2-integration-acceptance/evidence/holdout/first/H02/prediction.json",
+      "git_blob": "a6be2b7486f4ec19fe52e86810e7ef1ee15b42d5",
+      "sha256": "3692f1fcfb6edba1d5e6bacdf5e165e8c41b4b20740f6184a2e813c83573732a",
+      "observed_verdicts": [
+        {
+          "path": "/predictions/0/assessment",
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+          ]
+        },
+        {
+          "path": "/predictions/1/assessment",
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+          ]
+        },
+        {
+          "path": "/predictions/2/assessment",
+          "predicate": "AFFECTED_BY",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_UNIQUE_DIRECT_CHANGE_BRIDGE"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/requirements/m2-integration-acceptance/evidence/holdout/first/H03/prediction.json",
+      "git_blob": "b9e155446dce922c4513a968e21ce8914482735d",
+      "sha256": "9601f5c7a43f04ea0e4a83c49fac4660cff3eafc1f4c324528793c59360a7fc8",
+      "observed_verdicts": [
+        {
+          "path": "/predictions/0/same_task",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/predictions/0/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "REFUTED",
+          "reason_codes": [
+            "EXPLICIT_NO_BUSINESS_REVISION"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "docs/requirements/m2-integration-acceptance/evidence/holdout/first/H04/prediction.json",
+      "git_blob": "9206d8dd9b2041a862aecebd05b5d096bc3f2222",
+      "sha256": "81da3ecb9781d55e962ace1b6b44dfaf351f87227511e599050e6af9ae5579d6",
+      "observed_verdicts": [
+        {
+          "path": "/predictions/0/same_task",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/predictions/0/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/predictions/1/same_task",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/predictions/1/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s0/current_identity/assessment",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/lifecycle/s0/current_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s0/old_identity/assessment",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/lifecycle/s0/old_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s1/current_identity/assessment",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/lifecycle/s1/current_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s1/old_identity/assessment",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/lifecycle/s1/old_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s1/old_revision/context_recheck/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "NOT_ASSESSABLE",
+          "reason_codes": [
+            "STALE_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s2/old_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s2/old_revision/context_recheck/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "NOT_ASSESSABLE",
+          "reason_codes": [
+            "STALE_EVIDENCE"
+          ]
+        },
+        {
+          "path": "/lifecycle/s2/current_identity/assessment",
+          "predicate": "SAME_TASK",
+          "verdict": "SUPPORTED",
+          "reason_codes": [
+            "SCOPED_TASK_KEY"
+          ]
+        },
+        {
+          "path": "/lifecycle/s2/current_revision/assessment",
+          "predicate": "REVISES_PLAN",
+          "verdict": "UNKNOWN",
+          "reason_codes": [
+            "NO_REVISION_EVIDENCE"
+          ]
+        }
+      ]
+    }
+  ]
+}

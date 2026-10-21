@@ -234,6 +234,34 @@ async function setup() {
   assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
   assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
   assert.match(taskHtml, /Conflicting proposal/);
+  // Render the actual HTTP demo results too when supplied by the acceptance
+  // command. These are complete product responses, not invented DOM fixtures.
+  for (const receiptPath of process.argv.slice(2)) {
+    const payload = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+    const ui = await setup();
+    const operation = ui.submit(); await tick();
+    ui.pending[0]({result: payload}); await operation;
+    const html = ui.element("ask-result").innerHTML;
+    if (payload.task_review) {
+      assert.match(html, /data-task-relation-triage/);
+      for (const row of payload.task_review.relation_triage.checks) {
+        assert.ok(html.includes(`data-task-relation-check="${row.check_id}"`));
+        assert.ok(html.includes(`data-task-relation-state="${row.state}"`));
+        for (const endpoint of row.endpoints) assert.ok(html.includes(endpoint.source_id));
+      }
+      const directed = payload.task_review.relation_triage.checks.some(row => row.directed);
+      if (directed) assert.match(html, /Relationship direction|Proposed direction, still unconfirmed|关系方向|待核对方向，尚未确认/);
+      assert.match(html, /An omitted pair does not mean|未展示的记录对不代表不存在关系/);
+      if (payload.task_review.relation_triage.p4_history_included === false) {
+        assert.match(html, /excludes historical relationship records|未包含历史关系记录/);
+        assert.match(html, /does not restore any earlier proof|不会恢复任何旧证明/);
+      }
+    } else {
+      assert.doesNotMatch(html, /data-task-relation-check=/);
+    }
+    assert.doesNotMatch(html, /data-action="(?:approve|confirm)-task/);
+    console.log(`PASS: actual task HTTP response rendered: ${receiptPath}`);
+  }
   const uncertainUi = await setup();
   const unknownOperation = uncertainUi.submit(); await tick();
   const unknownPayload = result("");

@@ -450,7 +450,7 @@
         : gap === "DISCOVERY_COVERAGE_INCOMPLETE" ? t("Some source material could not be fully examined within this investigation.", "部分来源资料尚未在本次调查范围内完整检查。")
         : t("Some investigation steps still lack supporting evidence. See the investigation trace for details.", "部分调查步骤仍缺少支持证据，详情见调查轨迹。");
       const view = result.task_review || {};
-      const label = predicate => ({SAME_TASK: t("Same task?", "是否同一任务"), REVISES_PLAN: t("Plan revision?", "是否修订计划")}[predicate] || predicate);
+      const label = predicate => ({SAME_TASK: t("Same task?", "是否同一任务"), RELATED_TO: t("Related work?", "是否有关联工作"), REVISES_PLAN: t("Plan revision?", "是否修订计划")}[predicate] || predicate);
       const proposalState = verdict => ({
         SUPPORTED: t("Supported proposal", "支持性提案"),
         REFUTED: t("Refuted proposal", "被反驳提案"),
@@ -460,9 +460,46 @@
       const evidence = items => (items || []).map(item => `<blockquote class="quote">${escapeHtml(item.quote || item.span?.quote || "")}</blockquote>`).join("") || `<p>${t("None provided", "未提供")}</p>`;
       const stepState = status => ({SUPPORTED: t("Supported by current verified evidence", "已有当前有效的可信证据支持"), COMPLETED: t("Read completed", "读取已完成"), REFUTED: t("Counter-evidence found", "存在否定证据"), CONFLICT: t("Conflicting evidence", "证据冲突"), UNKNOWN: t("Still unknown", "仍然未知"), BLOCKED: t("Cannot continue yet", "暂时无法继续")}[status] || status);
       const original = id => (view.observations || []).find(o => o.observation_id === id);
+      const triage = view.relation_triage || {};
+      const triageState = value => ({
+        ESTABLISHED: t("Established relationship", "已证实关联"),
+        POSSIBLE: t("Possibly related", "可能相关"),
+        NOT_ESTABLISHED: t("Cannot establish this relationship", "无法建立关联"),
+      }[value]);
+      const triageReason = row => row.state === "ESTABLISHED"
+        ? t("Independent source evidence supports this exact relationship and passed the current checks. This does not establish the current owner, effective plan or date.", "这项具体关系有独立来源证据支持，且本次校验已通过；不代表已确认当前负责人、有效计划或日期。")
+        : row.reason_codes.includes("UNCONFIRMED_MODEL_COUNTER_EVIDENCE")
+          ? t("The unconfirmed model analysis reports denial or conflict. Read both sides; it cannot settle the relationship.", "尚未确认的模型分析报告了否定或冲突。需对照正反证据，不能据此确定关系。")
+          : row.steps.some(s => ["CONFLICT", "REFUTED"].includes(s.status))
+            ? t("The current proof read contains denial or conflicting evidence for this relationship.", "当前证明回读中，这项关系存在否定或冲突证据。")
+            : row.reason_codes.some(reason => reason.startsWith("DEPENDENCY_"))
+              ? t("A prerequisite relationship remains unresolved; this check has not continued.", "前置关系尚未确认，这项检查还不能继续。")
+              : row.state === "POSSIBLE"
+                ? t("Discovery or a model proposal suggests checking these records together. The hint is unconfirmed and cannot establish identity or a revision.", "候选发现或模型提案提示可对照这两条记录。线索尚未确认，不能证明同一任务或计划修订。")
+                : t("The available checks do not establish this relationship. This does not prove that the tasks are unrelated.", "现有检查无法建立这项关系；这不等于证明两项任务无关。");
+      const triageEvidence = (row, role) => (row.evidence || []).filter(e => e.role === role).map(e => `<blockquote class="quote">${escapeHtml(e.quote)}<footer>${escapeHtml(e.source_name)} · ${t("lines", "行")} ${escapeHtml(e.line_start)}–${escapeHtml(e.line_end)} · ${escapeHtml(({DISCOVERY_HINT: t("Discovery hint", "候选线索"), MODEL_PROPOSAL: t("Unconfirmed model proposal", "未确认的模型提案"), P4_RECORD: t("Revalidated proof record", "重新校验的证明记录")})[e.origin])}</footer></blockquote>`).join("") || `<p class="muted">${t("None returned", "未返回")}</p>`;
+      const triageCards = (triage.checks || []).map(row => `<article class="ask-evidence" data-task-relation-check="${escapeHtml(row.check_id)}" data-task-relation-state="${escapeHtml(row.state)}">
+        <h4>${escapeHtml(label(row.predicate))} · ${escapeHtml(triageState(row.state))}</h4>
+        <p>${triageReason(row)}</p>
+        ${row.directed ? `<p class="hint">${row.state === "ESTABLISHED" ? t("Relationship direction", "关系方向") : t("Proposed direction, still unconfirmed", "待核对方向，尚未确认")}: ${row.predicate === "REVISES_PLAN" ? t("record A revises record B. The reverse is a separate question.", "记录 A 修订记录 B。反向关系需另行检查。") : t("record A → record B.", "记录 A → 记录 B。")}</p>` : ""}
+        ${row.endpoints.map((endpoint, index) => `<div><strong>${t("Record", "记录")} ${index === 0 ? "A" : "B"} · ${escapeHtml(endpoint.source_name)}</strong>
+          <p class="metadata">${t("Source version", "来源版本")}: <code>${escapeHtml(endpoint.source_version)}</code> · ${t("lines", "行")} ${escapeHtml(endpoint.line_start)}–${escapeHtml(endpoint.line_end)}</p>
+          <blockquote class="quote">${escapeHtml(endpoint.raw_text)}</blockquote>
+          <button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(endpoint.source_id)}">${t("View source", "查看来源")}</button></div>`).join("")}
+        <details><summary>${t("Supporting evidence", "支持证据")}</summary>${triageEvidence(row, "SUPPORT")}</details>
+        <details><summary>${t("Counter-evidence", "反对证据")}</summary>${triageEvidence(row, "COUNTER")}</details>
+        <details><summary>${t("Unconfirmed discovery hints", "尚未确认的候选线索")}</summary>${triageEvidence(row, "HINT")}</details>
+        ${(row.proposals || []).flatMap(p => p.missing_evidence || []).map(gap => `<p class="hint">${t("Model-reported gap", "模型报告的缺口")}: ${escapeHtml(gap)}</p>`).join("")}
+        <details><summary>${t("Check reasons and dependencies", "检查原因与依赖")}</summary><pre>${escapeHtml(JSON.stringify({reasons: row.reason_codes, steps: row.steps.map(s => ({question: s.question, status: s.status, depends_on: s.depends_on, blocking_reasons: s.blocking_reasons})), candidate_uncertainty: row.candidates.map(c => c.uncertainty)}, null, 2))}</pre></details></article>`).join("");
       target.innerHTML = `<section class="panel ask-answer ask-answer--notice"><h2>${t("Task investigation: evidence and open questions", "任务调查：已知证据与待确认问题")}</h2>
         ${["FAKE", "REPLAY"].includes(prep.execution_kind) ? `<p class="metadata">${t("Offline scripted or recorded adapters: this run does not evaluate real-model understanding.", "本次使用离线脚本或回放适配器，不能据此评估真实模型的理解能力。")}</p>` : ""}
         <p>${t("Each record below preserves what its source says. A model suggestion does not confirm task identity or make a later date effective.", "以下记录分别保留各自原文中的信息。模型建议不代表已确认同一任务，也不代表较晚日期已正式生效。")}</p>
+        <section data-task-relation-triage><h3>${t("How these task records may relate", "这些任务记录可能是什么关系")}</h3>
+        <p class="hint">${t("Only pairs returned in this bounded investigation are shown. An omitted pair does not mean that no relationship exists.", "仅展示本次有限调查返回的记录对；未展示的记录对不代表不存在关系。")}</p>
+        ${triage.p4_history_included === false ? `<p class="hint">${t("This read excludes historical relationship records, so it cannot report whether an earlier proof was revoked. A possible hint does not restore any earlier proof.", "本次读取未包含历史关系记录，无法据此判断旧证明是否曾被撤销；可能相关的线索不会恢复任何旧证明。")}</p>` : ""}
+        ${triage.p4_results_truncated ? `<p class="hint">${t("The relationship read was truncated; some proof details were not returned.", "关系读取结果已截断，部分证明详情未返回。")}</p>` : ""}
+        ${triage.candidate_discovery_truncated ? `<p class="hint">${t("Candidate discovery was truncated. More potentially related records may remain unchecked.", "候选发现结果已截断，可能还有相关记录未检查。")}</p>` : ""}
+        ${triageCards || `<p>${t("No verifiable pair was returned for comparison. Provide the missing original task or meeting record.", "本次没有返回可核验的记录对。请补充缺失的任务或会议原文。")}</p>`}</section>
         <h3>${t("What the sources explicitly say", "原文明确记录的内容")}</h3>
         ${(view.observations || []).map(o => {
           const source = (result.evidence || []).find(e => e.evidence_ref === o.provenance.evidence_ref);

@@ -1,0 +1,206 @@
+{
+  "mode": "SYNTHETIC_SCRIPTED_PRODUCT_HTTP",
+  "cases": [
+    {
+      "case": "possible",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        },
+        {
+          "predicate": "SAME_TASK",
+          "state": "POSSIBLE",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "NOT_ESTABLISHED",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": null
+    },
+    {
+      "case": "unknown",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        },
+        {
+          "predicate": "SAME_TASK",
+          "state": "NOT_ESTABLISHED",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "NOT_ESTABLISHED",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": null
+    },
+    {
+      "case": "conflict",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        },
+        {
+          "predicate": "SAME_TASK",
+          "state": "NOT_ESTABLISHED",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "NOT_ESTABLISHED",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        3,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": null
+    },
+    {
+      "case": "p4",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "SAME_TASK",
+          "state": "ESTABLISHED",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "ESTABLISHED",
+          "directed": true
+        },
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": "f2013415780429c48cc6e85bf12ad19c1219165e86ae7f4aa98e3b3679973e38"
+    },
+    {
+      "case": "reverse",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "SAME_TASK",
+          "state": "ESTABLISHED",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "POSSIBLE",
+          "directed": true
+        },
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "NOT_ESTABLISHED",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": "f7c81f7288e2bca3e8e4a02ec70896b374c81ee40a46903fba28bdbe3e97885c"
+    },
+    {
+      "case": "missing",
+      "status": "UNKNOWN",
+      "states": [],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        2,
+        0
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": null
+    },
+    {
+      "case": "retracted",
+      "status": "PARTIAL",
+      "states": [
+        {
+          "predicate": "SAME_TASK",
+          "state": "POSSIBLE",
+          "directed": false
+        },
+        {
+          "predicate": "REVISES_PLAN",
+          "state": "NOT_ESTABLISHED",
+          "directed": true
+        },
+        {
+          "predicate": "RELATED_TO",
+          "state": "POSSIBLE",
+          "directed": true
+        }
+      ],
+      "p4_history_included": false,
+      "stage_calls": [
+        2,
+        1,
+        1
+      ],
+      "p4_bytes_unchanged": true,
+      "new_live_provider_calls": 0,
+      "p4_sha256": "e953456f59f78853bc236b23891be46a5e8516de4f9c56e3f1b3f5e9a72fa60f"
+    }
+  ],
+  "historical_m2": "UNCHANGED_0_OF_4_FAIL",
+  "real_model_semantics": "NOT_EVALUATED"
+}

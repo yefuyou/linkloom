@@ -192,6 +192,7 @@ jobs:
           tests/integration/test_context_runtime_failures_resume.py
           tests/integration/test_context_runtime_integration.py
           tests/integration/test_m3p_product_review.py
+          tests/integration/test_task_relation_triage.py
           tests/integration/test_m3p_execution_failures.py
           tests/integration/test_semantic_recorded_runtime.py
           tests/integration/test_semantic_review_guards.py
@@ -202,6 +203,10 @@ jobs:
           tests/integration/test_task_relation_runtime.py
       - name: Explicit offline product entry
         run: python scripts/run_m3p_offline_acceptance.py --output work/ci-task-http
+      - name: Relation triage product HTTP and rendered response checks
+        run: |
+          python scripts/demonstrate_task_relation_triage.py --output work/ci-relation-triage
+          node tests/ui/unified_ask_dom_test.cjs work/ci-relation-triage/possible/result.json work/ci-relation-triage/p4/result.json work/ci-relation-triage/conflict/result.json work/ci-relation-triage/retracted/result.json work/ci-relation-triage/possible/revoked-hot.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -209,3 +214,4 @@ jobs:
           path: |
             task-investigation.xml
             work/ci-task-http
+            work/ci-relation-triage

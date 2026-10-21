@@ -2,6 +2,7 @@
 from copy import deepcopy
 
 from linkloom.ui.backend import project_reviewer
+from linkloom.ui.task_relation_triage import project_relation_triage
 
 
 def _expand_references(value, *views):
@@ -79,7 +80,11 @@ def project_task_review(snapshot, preparation):
         next_actions.append(dict(kind='PROVIDE_TASK_SOURCE'))
     if any(s['kind'] == 'compare_dates' and s['status'] != 'COMPLETED' for s in steps):
         next_actions.append(dict(kind='IDENTITY_AND_REVISION_REQUIRED'))
-    return dict(observations=observations, proposals=proposals, relations=relations,
+    triage = project_relation_triage(observations, payload['context'].get('discovery', {}),
+        proposals, relations, steps, preparation['source_mapping'],
+        history_included=query.get('include_history') is True,
+        relation_results_truncated=query.get('truncated') is True)
+    return dict(observations=observations, proposals=proposals, relations=relations, relation_triage=triage,
         steps=steps, unresolved=unresolved, next_actions=next_actions,
         executed_tools=[dict(tool=r['tool'], call_id=r['call_id'], status=r['status'])
                         for r in snapshot.get('trace', [])],

@@ -16,6 +16,14 @@ it is no longer the active product direction.
 
 ## Cross-meeting task investigation — 2026-10-21
 
+An isolated follow-up on exact PR #6 Head adds read-only pair triage: existing
+Discovery hints, model proposals and exact current P4 reads are shown as
+possible, not established or established relationships, with separate evidence
+origins and revision direction. It creates no new relation authority. Reads
+excluding history cannot diagnose old retractions; the UI discloses that limit.
+See the [experiment SPEC](requirements/task-relation-triage/SPEC.md) and
+[delivery](requirements/task-relation-triage/DELIVERY.md). M2 remains 0/4 FAIL.
+
 The approved M3-P mainline integration brings task observation/evidence and
 uncertainty into the existing Ask UI/HTTP. Model proposals stay separate from
 finite P4 proof reads; missing trust blocks dependent revision/date work. Saved
