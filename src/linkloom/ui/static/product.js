@@ -344,6 +344,11 @@
     return `<time datetime="${escapeHtml(value)}" title="${escapeHtml(value)}">${escapeHtml(readable)} · UTC</time>`;
   }
 
+  function savedTaskRun(workspaceId) {
+    try { return window.sessionStorage.getItem(`linkloom:last-task:${workspaceId}`); }
+    catch { return null; }
+  }
+
   async function showAsk() {
     const viewToken = state.agentViewToken;
     const workspaceId = state.workspace.workspace_id;
@@ -376,7 +381,7 @@
           <span class="hint">${askLabel("Only reviewed, source-verified decisions are available.", "仅包含已审核且来源可核验的决策。")}</span></div>
         <div class="field"><label for="ask-date">${askLabel("Decision valid on this date (optional)", "查询哪一天有效的决策（可选）")}</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml((state.askScope?.as_of || "").slice(0, 10))}"><span class="hint">${askLabel("Blank means now. Dates start at 00:00 UTC; history uses currently recorded approvals.", "留空查询当前；日期以 UTC 零点为准，使用目前记录的审核信息。")}</span></div></details>
         ${config.agent?.available && config.agent?.external_provider ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${askLabel("Allow this request to send sources to the configured external AI provider and incur bounded model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
-      </form></section><div id="ask-result" tabindex="-1" aria-live="polite"></div>
+      </form>${savedTaskRun(workspaceId) ? `<button class="button quiet" type="button" data-action="reopen-task">${askLabel("Recheck last task investigation", "重新核验上次任务调查")}</button>` : ""}</section><div id="ask-result" tabindex="-1" aria-live="polite"></div>
       <details class="panel" id="feedback-panel"><summary>${askLabel("Term not understood? Propose a correction", "术语没识别对？提出纠正")}</summary>
         <p>${askLabel("Terminology applies only to this workspace after your explicit approval. It cannot approve or change business decisions.", "术语仅在本空间经人工确认后生效，不能批准或修改业务决策。")}</p>
         <form id="feedback-form" class="form-stack">
@@ -482,6 +487,12 @@
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
     if (result.path === "TASK_INVESTIGATION" && ["PARTIAL", "UNKNOWN"].includes(result.status) && result.reviewer?.accepted === true) {
+      if (result.agent_run_id && result.workspace_id === state.workspace?.workspace_id) {
+        // Keep only a pointer in this tab. Every reopen goes through current
+        // source, catalog, Ledger and Reviewer checks on the server.
+        try { window.sessionStorage.setItem(`linkloom:last-task:${result.workspace_id}`, result.agent_run_id); }
+        catch { /* Storage can be disabled; the current result remains usable. */ }
+      }
       const prep = result.preparation || {};
       const plan = (prep.planning || []).at(-1)?.plan;
       const gapMessage = gap => gap === "BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE" || gap.startsWith("NO_TASK_CANDIDATES")
@@ -846,6 +857,11 @@
     const { action, id } = button.dataset;
     try {
       if (action === "inspect-source") await inspectSource(id);
+      else if (action === "reopen-task") {
+        const workspaceId = state.workspace.workspace_id;
+        const runId = savedTaskRun(workspaceId);
+        if (runId) await pollAsk(runId, workspaceId, ++state.agentViewToken);
+      }
       else if (["feedback-approve", "feedback-reject", "feedback-revoke"].includes(action)) {
         const actor = document.getElementById("feedback-actor");
         if (!actor.checkValidity()) { actor.reportValidity(); return; }

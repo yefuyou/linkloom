@@ -103,6 +103,37 @@ def test_new_service_reads_saved_result_without_model_calls(tmp_path):
     assert response['result']['recovery']['session_resumed'] is False
 
 
+@pytest.mark.parametrize('mutation', ['ledger_missing', 'reviewer_rejected'])
+def test_cold_read_requires_accepted_reviewer_and_complete_ledger(tmp_path, mutation):
+    from dataclasses import replace
+    from linkloom.runtime.checkpoint import SQLiteCheckpointer
+    from tests.m3p_support import cold_read
+
+    app, service, _, _, workspace = product_case(tmp_path)
+    try:
+        with product_http(app, service) as base:
+            result = http_ask(base, workspace)
+    finally:
+        app.close()
+    base = tmp_path / 'work' / 'investigations'
+    pointer = json.loads((base / (result['agent_run_id'] + '.json')).read_text(encoding='utf8'))
+    root = base / pointer['root']
+    checkpointer = SQLiteCheckpointer(root / 'runtime')
+    state = checkpointer.get_latest(pointer['thread_id'])
+    if mutation == 'ledger_missing':
+        checkpointer.save(replace(state, tool_ledger=[], step_seq=state.step_seq + 1))
+    else:
+        path = root / 'runtime' / state.result_ref
+        artifact = json.loads(path.read_text(encoding='utf8'))
+        artifact['review']['decision'] = 'evidence_insufficient'
+        path.write_text(json.dumps(artifact, ensure_ascii=False), encoding='utf8')
+    code, response = cold_read(tmp_path / 'product.sqlite', result['agent_run_id'], workspace)
+    saved = response['result']
+    assert code == 200 and saved['status'] == 'BLOCKED'
+    assert not saved['evidence'] and not saved['trace']
+    assert not saved.get('task_review') and not saved.get('preparation')
+
+
 @pytest.mark.parametrize('records', ['both', 'identity', 'none'])
 def test_http_trusted_p4_only_unlocks_matching_prerequisites(tmp_path, records):
     app, service, stages, ws, identity, revision, comparison = revision_product(tmp_path, records=records)

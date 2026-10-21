@@ -42,7 +42,7 @@ function taskResult() {
   return payload;
 }
 
-async function setup() {
+async function setup(storage = new Map()) {
   const elements = new Map();
   function element(id) {
     if (!elements.has(id)) elements.set(id, {id, innerHTML: "", textContent: "", value: "", dataset: {}, listeners: {},
@@ -76,7 +76,10 @@ async function setup() {
   vm.runInNewContext(source, {document: {documentElement: {lang: "en"},
     getElementById: element, querySelectorAll: () => nav}, fetch,
     FormData: class {constructor(form) {this.form = form;} *[Symbol.iterator]() {yield* Object.entries(this.form.fields);} get(key) {return this.form.fields[key];}},
-    window: {setTimeout() {}}, setTimeout, console});
+    window: {setTimeout() {}, sessionStorage: {
+      getItem: key => storage.get(key) || null,
+      setItem: (key, value) => storage.set(key, value),
+    }}, setTimeout, console});
   await tick(); await tick();
   await element("ask").listeners.click(); await tick();
   assert.match(element("page").innerHTML, /id="ask-slot"/);
@@ -89,6 +92,25 @@ async function setup() {
 }
 
 (async () => {
+  const savedPointer = new Map();
+  const beforeReload = await setup(savedPointer);
+  const saveRequest = beforeReload.submit(); await tick();
+  const savedTask = taskResult(); savedTask.result.agent_run_id = "saved-task";
+  beforeReload.pending[0](savedTask); await saveRequest;
+  assert.deepEqual([...savedPointer.values()], ["saved-task"]); // No quotes or result cache.
+  const reopened = await setup(savedPointer);
+  assert.match(reopened.element("page").innerHTML, /reopen-task/);
+  assert.equal(reopened.pending.length, 0);
+  const reopen = reopened.element("page").listeners.click({target: {closest: () => ({dataset: {action: "reopen-task"}})}});
+  await tick();
+  const revoked = taskResult();
+  Object.assign(revoked.result, {status: "BLOCKED", evidence: [], task_review: null, error: {code: "SOURCE_CHANGED"}});
+  reopened.polls[0](revoked); await reopen;
+  assert.doesNotMatch(reopened.element("ask-result").innerHTML, /2029-06-20|林枫/);
+  assert.match(reopened.element("ask-result").innerHTML, /stopped|已停止/);
+  const otherWorkspace = await setup(new Map([["linkloom:last-task:b", "foreign-task"]]));
+  assert.doesNotMatch(otherWorkspace.element("page").innerHTML, /reopen-task/);
+  console.log("PASS: refresh retains only workspace-bound run pointer; reopening revalidates and hides revoked evidence");
   for (const field of ["ask-date", "ask-query", "ask-slot"]) {
     const {element, pending, submit} = await setup();
     const operation = submit(); await tick();

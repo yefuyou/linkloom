@@ -341,11 +341,18 @@ class CandidateValidator:
                 valid_to = _parse_valid_time(claim.valid_to_raw)
                 if valid_from is None:
                     raise ValueError("valid_from is required")
-                if (
+                if isinstance(segment, DocumentTextSegment) and (
                     not document_valid_time_is_grounded(segment.body_text, valid_from)
                     or (valid_to is not None and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
                 ):
                     raise ValueError("valid time lacks an explicit effective-time role")
+                if not isinstance(segment, DocumentTextSegment) and (
+                    (claim.valid_from_raw not in segment.body_text
+                     and not document_valid_time_is_grounded(segment.body_text, valid_from))
+                    or (claim.valid_to_raw is not None and claim.valid_to_raw not in segment.body_text
+                        and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
+                ):
+                    raise ValueError("valid time is not present in the source span")
                 if valid_to is not None and _as_utc_midnight(valid_to) <= _as_utc_midnight(valid_from):
                     raise ValueError("valid_to must follow valid_from")
                 temporal_basis = TemporalBasis.EXPLICIT

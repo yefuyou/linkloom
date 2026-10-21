@@ -295,6 +295,8 @@ class ProductInvestigationService:
                 if not result_path.is_relative_to((root / 'runtime').resolve()):
                     raise ValueError('INVALID_RESULT_PATH')
                 artifact = json.loads(result_path.read_text(encoding='utf8'))
+                if artifact.get('review', {}).get('decision') != 'evidence_sufficient':
+                    return pointer['ask'], self._task_blocked(run_id, 'SAVED_RESULT_REVIEW_NOT_ACCEPTED')
                 status = RunStatus(state.run_id, state.thread_id, state.status,
                     error=state.error.to_dict() if state.error else None)
                 snapshot = project_task_snapshot(manifest['question'], None, status, state, artifact)
