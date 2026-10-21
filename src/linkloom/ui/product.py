@@ -25,6 +25,7 @@ from linkloom.semantic_ingestion.artifacts import (
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateDecisionFact,
     CandidateReasonCode,
+    EntityResolution,
     SemanticExtractionResult,
 )
 from linkloom.semantic_ingestion.extraction import (
@@ -1663,7 +1664,7 @@ class ProductApplication:
     @staticmethod
     def _unresolved_fields(candidate: CandidateDecisionFact) -> list[str]:
         fields: list[str] = []
-        if candidate.subject is None or candidate.subject_key is None:
+        if candidate.entity_resolution is EntityResolution.UNRESOLVED:
             fields.append("subject")
         if candidate.relation is None:
             fields.append("relation")

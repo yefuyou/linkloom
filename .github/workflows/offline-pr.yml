@@ -113,6 +113,7 @@ jobs:
         run: |
           node --check src/linkloom/ui/static/product.js
           node tests/ui/unified_ask_dom_test.cjs
+          node tests/ui/first_use_dom_test.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
