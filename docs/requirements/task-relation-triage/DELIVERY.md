@@ -63,8 +63,11 @@ M2 H01–H04 仍为 0/4 FAIL。** 不宣称语义泛化或真实模型验收通�
 Grounding/Reviewer → UI 投影，并通过热读与新服务冷读。脚本适配器只供给测试
 提案，不能设定通过验证后的业务结果。侧库产品读取前后字节一致；没有额外
 Provider 请求。基线/候选完整响应、输入与执行证据见
-[证据压缩包](evidence/offline-product-evidence.zip)；每项字节指纹在
-[MANIFEST](evidence/MANIFEST.json)，可直接浏览[演示摘要](evidence/summary.json)。
+[历史证据压缩包](https://github.com/yefuyou/linkloom/blob/a9b1fc2d0a64f24c769996a34b3a8e5a4c4d707b/docs/requirements/task-relation-triage/evidence/offline-product-evidence.zip)；每项字节指纹在原提交的
+[历史 MANIFEST](https://github.com/yefuyou/linkloom/blob/a9b1fc2d0a64f24c769996a34b3a8e5a4c4d707b/docs/requirements/task-relation-triage/evidence/MANIFEST.json)，可直接浏览[演示摘要](evidence/summary.json)。
+最终集成准备已将 ZIP 和大清单排除出待集成文件树：它们是一次性验收记录，
+不是运行或复现依赖。原提交、历史回执及其指纹保持原样；公开输入 fixture、
+脚本、测试和 CI 继续保留。后续验收输出通过 CI artifact 留存，不再回填 Git。
 
 ## 验证与限制
 

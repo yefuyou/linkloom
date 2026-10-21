@@ -1,0 +1,70 @@
+{
+  "status": "READY_FOR_FOLLOWUP_PR",
+  "condition": "PR #6 merged and exact product contracts rechecked; no PR created now",
+  "audit_commit": "a9b1fc2d0a64f24c769996a34b3a8e5a4c4d707b",
+  "exact_dependency": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+  "production_changed_this_followup": false,
+  "production_sha256": {
+    "src/linkloom/ui/task_relation_triage.py": "3d68889e90e11a81bbe6638c8bbed5d278d90fe88898bf5d13ff1d198ab38e46",
+    "src/linkloom/ui/task_result.py": "54bed8ca9ec08a28364274a57ccb6a6afb7e549131a70c194f67f7df2de4c93c",
+    "src/linkloom/ui/static/product.js": "c6a2e72b612aae54f5fa2acc2b998bd012d8fecd0e9cc2344bee809fbb455d3d"
+  },
+  "focused_regression": {
+    "tests": "36",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  "clean_export": {
+    "excluded": [
+      "offline-product-evidence.zip",
+      "MANIFEST.json"
+    ],
+    "cases": 7,
+    "all_sidecar_bytes_unchanged": true,
+    "new_live_provider_calls": 0,
+    "actual_response_dom": "PASS"
+  },
+  "isolation": {
+    "hot_workspace_denial": {
+      "http_status": 409,
+      "error": "WORKSPACE_MISMATCH",
+      "status": null,
+      "source_quote_leaked": false
+    },
+    "hot_evidence_revocation": {
+      "http_status": 200,
+      "error": null,
+      "status": "BLOCKED",
+      "source_quote_leaked": false
+    },
+    "cold_evidence_revocation": {
+      "http_status": 200,
+      "error": null,
+      "status": "BLOCKED",
+      "source_quote_leaked": false
+    },
+    "cold_workspace_denial": {
+      "http_status": 409,
+      "error": "WORKSPACE_MISMATCH",
+      "status": null,
+      "source_quote_leaked": false
+    }
+  },
+  "historical_archive": {
+    "commit": "a9b1fc2d0a64f24c769996a34b3a8e5a4c4d707b",
+    "bytes": 1123120,
+    "sha256": "4b6f6fff4689aeae4318b057dabc2ba61bf229bf85c3e1136fc5a69af1fd6573",
+    "git_history_preserved": true
+  },
+  "classification": {
+    "established": "EXACT_CURRENT_P4_STEP_SUPPORTED; source-bounded, not general semantic acceptance",
+    "model_proposal_only": "POSSIBLE_OR_NOT_ESTABLISHED",
+    "history_omitted": "POSSIBLE_HINT_ONLY; cannot diagnose past retraction",
+    "invalid_or_missing_premise": "NOT_ESTABLISHED"
+  },
+  "m2_historical_acceptance": "0/4 FAIL; unchanged",
+  "new_real_model_evaluation": false,
+  "independent_review": "Original a9 production review retained; supplemental attempt unavailable due agent usage limit; no new independent PASS claimed",
+  "browser_visual_acceptance": "Not rerun; previous limitation retained"
+}
