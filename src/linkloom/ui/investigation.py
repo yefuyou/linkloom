@@ -53,10 +53,12 @@ class ProductInvestigationService:
         relation_max_steps: int = 12,
         task_models: Any = None,
         task_relation_paths: dict[str, Path] | None = None,
+        task_only: bool = False,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
+        self.task_only = task_only
         # Local Host composition only. HTTP/model arguments cannot choose paths.
         self.task_relation_paths = dict(task_relation_paths or {})
         self.run_mode = run_mode
@@ -69,12 +71,25 @@ class ProductInvestigationService:
         self._lock = Lock()
 
     def config(self) -> dict[str, Any]:
+        task_available = (self.task_models is not None and self.model_factory is not None
+            and (self.task_models.execution_kind == 'LIVE') == self.external_provider)
+        task_live = task_available and self.task_models.execution_kind == 'LIVE'
+        from dataclasses import asdict
         return {
             "available": self.model_factory is not None,
             "external_provider": self.external_provider,
             "run_mode": self.run_mode,
             "relation_max_model_turns": self.relation_max_steps,
-            "task_investigation": self.task_models is not None and not self.external_provider,
+            "task_investigation": task_available,
+            "temporal_agent": self.model_factory is not None and not self.task_only,
+            "task_provider": dict(configured=task_available, external=bool(task_live),
+                model_id=self.task_models.model_id if task_available else None,
+                budgets=asdict(self.task_models.provider_limits) if task_live else None,
+                source_permission='PER_QUESTION_CURRENT_WORKSPACE_SNAPSHOT',
+                execution_permission='HOST_TASK_STAGES_ONLY', business_approval=False,
+                setup='Set GEMINI_API_KEY; python -m linkloom.ui --allow-external-provider --allow-task-investigation '
+                    '--task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 '
+                    '--task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30'),
             "task_execution_kinds": ([self.task_models.execution_kind]
                                       if self.task_models is not None else []),
             "message": (
@@ -89,11 +104,14 @@ class ProductInvestigationService:
         temporal_scope: tuple[str, str, str] | None = None,
         task_plan: TaskPlan | None = None,
         task_investigation: bool = False,
+        task_source_authorization: dict | None = None,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
                 "MODEL_NOT_CONFIGURED", self.config()["message"], status=503
             )
+        if self.task_only and not task_investigation:
+            raise ProductApplicationError('AGENT_STAGE_NOT_AUTHORIZED', 'Only task stages are configured.', status=403)
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
         if not isinstance(workspace_id, str) or not workspace_id.strip():
@@ -103,11 +121,8 @@ class ProductInvestigationService:
             if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
                 raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
         source_run = task_plan is not None
-        offline_unavailable = self.task_models is None or self.external_provider
-        if task_investigation and (offline_unavailable or source_run or temporal_scope is not None):
-            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task investigation requires explicitly configured offline stage adapters.", status=409)
-        if task_investigation and getattr(self.task_models, "execution_kind", None) not in {"FAKE", "REPLAY"}:
-            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Only explicitly configured offline task stages are enabled.", status=409)
+        if task_investigation and (not self.config()['task_investigation'] or source_run or temporal_scope is not None):
+            raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task stages require explicit Host configuration.", status=409)
         source_run = source_run or task_investigation
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
@@ -170,15 +185,32 @@ class ProductInvestigationService:
             preparation = None
             if task_investigation:
                 from linkloom.ui.task_investigation import ProductTaskSources, prepare_task_investigation
+                from linkloom.ui.task_provider import TaskProviderSession
+                from linkloom.ui.ask_admission import source_context
                 task_sources = ProductTaskSources(workspace_id, sources,
                     lambda: self.product_app.snapshot_investigation_sources(workspace_id)[1],
                     current_evidence=lambda: self.product_app.repository.current_evidence(workspace_id))
+                provider_session = None
+                if task_models.execution_kind == 'LIVE':
+                    from linkloom.semantic_ingestion.task_relation_models import canonical_hash
+                    expected = dict(workspace_id=workspace_id,
+                        snapshot_hash=source_context(self.product_app, workspace_id)['snapshot_hash'],
+                        question_sha256=canonical_hash(query.strip()))
+                    if task_source_authorization != expected:
+                        raise ProductApplicationError('EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
+                            'Authorize this question and exact current source snapshot.', status=403)
+                    def validate_grant():
+                        if (self.product_app._workspace_id() != workspace_id or
+                                source_context(self.product_app, workspace_id)['snapshot_hash'] != expected['snapshot_hash']):
+                            raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
+                        task_sources.validate_current()
+                    provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, validate_grant)
                 preparation = prepare_task_investigation(query.strip(), task_sources, task_models, root / "preparation",
-                    relation_path=self.task_relation_paths.get(workspace_id))
+                    relation_path=self.task_relation_paths.get(workspace_id), provider_session=provider_session)
                 if preparation.manifest['status'] == 'BLOCKED':
                     return dict(kind='error', run={'id': 'blocked-' + root.name}, evidence=[],
                         reviewer={'performed': False}, preparation=preparation.manifest,
-                        error=dict(code='TASK_PLAN_BLOCKED', classification='validation',
+                        error=dict(code=preparation.manifest.get('provider_failure', 'TASK_PLAN_BLOCKED'), classification='validation',
                                    message='The investigation plan did not pass Host admission.'))
             vault = root / "vault"
             vault.mkdir()
@@ -195,6 +227,8 @@ class ProductInvestigationService:
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
             model = outer_model if outer_model is not None else self.model_factory(query.strip())
+            if preparation and preparation.provider_session:
+                model = preparation.provider_session.bind(model, 'runtime')
             engine = RuntimeEngine(
                 vault_root=vault,
                 index_path=index,
@@ -254,8 +288,11 @@ class ProductInvestigationService:
 
     @staticmethod
     def _task_blocked(run_id, code):
+        message = ('Provider outcome is uncertain; no automatic retry or conclusion was released.'
+                   if code in {'PROVIDER_UNCERTAIN', 'PROVIDER_TIMEOUT_UNCERTAIN'}
+                   else 'Task execution or saved evidence did not pass revalidation; no conclusion was released.')
         return dict(kind='error', run=dict(id=run_id), reviewer=dict(performed=False), evidence=[],
-            error=dict(code=code, classification='validation', message='Saved evidence is no longer current; ask again.'))
+            error=dict(code=code, classification='validation', message=message))
 
     def read_saved_task(self, run_id, workspace_id):
         """Read existing Runtime artifacts only. Never resume execution or call a model."""
@@ -310,6 +347,9 @@ class ProductInvestigationService:
 
     @staticmethod
     def _validate_task_read(preparation, state, snapshot, root):
+        if preparation.manifest['execution_kind'] == 'LIVE' and snapshot.get('kind') != 'running':
+            from linkloom.ui.task_provider import validate_task_provider_receipt
+            validate_task_provider_receipt(root / 'provider' / 'budget.json', state.updated_at)
         payload = snapshot.get('task_investigation')
         if payload:
             from linkloom.agents.task_relation_result import review_task_relation_result
@@ -331,6 +371,9 @@ class ProductInvestigationService:
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
             job = self._jobs.get(run_id)
+            if (job and job.task_preparation and job.task_preparation.provider_session
+                    and job.task_preparation.provider_session.failure):
+                return self._task_blocked(run_id, job.task_preparation.provider_session.failure)
         if job is None:
             return None
         if job.task_preparation is not None:
@@ -352,6 +395,11 @@ class ProductInvestigationService:
                         "message": "The authorized source snapshot changed; ask again."}}
                 if snapshot is None:
                     return None
+                session = job.task_preparation.provider_session
+                if session and snapshot['kind'] == 'running':
+                    from time import monotonic
+                    if monotonic() - session.started > session.limits.max_seconds:
+                        return self._task_blocked(run_id, 'TASK_PROVIDER_BUDGET_EXHAUSTED')
                 if snapshot.get('task_investigation'):
                     state = job.backend.engine.checkpointer.get_latest(snapshot['run']['thread_id'])
                     try:
@@ -386,6 +434,8 @@ class ProductInvestigationService:
         self, query: str, workspace_id: str, *, subject: str, relation: str,
         as_of: str | None = None,
     ) -> dict[str, Any]:
+        if self.task_only:
+            raise ProductApplicationError('AGENT_STAGE_NOT_AUTHORIZED', 'Temporal stages are not enabled.', status=403)
         if self.model_factory is None:
             raise ProductApplicationError(
                 "MODEL_NOT_CONFIGURED", self.config()["message"], status=503,

@@ -1,0 +1,46 @@
+{
+  "result": {
+    "schema_version": "product-ask/v1",
+    "query": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+    "workspace_id": "ws_582c74572f444c519fd1fc7ad45775a6",
+    "scope": {
+      "subject": "",
+      "relation": "",
+      "as_of": null
+    },
+    "path": "TASK_INVESTIGATION",
+    "route": {
+      "intent": "TASK_INVESTIGATION",
+      "code": "SOURCE_TASK_INVESTIGATION",
+      "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+      "admission": {
+        "origin": "USER_SCOPED",
+        "context": {
+          "domain": "tasks",
+          "snapshot_hash": "46653328622a9e80259ef51654ac5b76ab97f786dbc5594f425eeebb329fc65f"
+        }
+      }
+    },
+    "status": "BLOCKED",
+    "conclusions": [],
+    "discovery": null,
+    "evidence": [],
+    "receipts": [],
+    "uncertainty": {
+      "unknown_fields": [],
+      "statement": ""
+    },
+    "agent_run_id": null,
+    "reviewer": {
+      "performed": false,
+      "accepted": false
+    },
+    "timeline": null,
+    "progress": null,
+    "error": {
+      "code": "EXTERNAL_PROVIDER_PERMISSION_REQUIRED",
+      "category": "permission",
+      "message": "Authorize this question to send the selected workspace source snapshot within the displayed budgets."
+    }
+  }
+}

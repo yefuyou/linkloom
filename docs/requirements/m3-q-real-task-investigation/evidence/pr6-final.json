@@ -1,0 +1,15 @@
+{
+  "repository": "yefuyou/linkloom",
+  "number": 6,
+  "url": "https://github.com/yefuyou/linkloom/pull/6",
+  "state": "open",
+  "draft": true,
+  "merged": false,
+  "base": "master",
+  "base_sha": "8f9227d39f3d4425524f8dfb39209e22e3d66d17",
+  "head": "codex/m3p-mainline-integration",
+  "head_sha": "67b91a1520f6b129985905702f2a2bd19a631882",
+  "source": "GitHub connector read-only",
+  "expected_head": "67b91a1520f6b129985905702f2a2bd19a631882",
+  "matches_expected": true
+}

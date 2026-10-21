@@ -1,0 +1,56 @@
+{
+  "workspace_id": "ws_582c74572f444c519fd1fc7ad45775a6",
+  "investigation_context": {
+    "snapshot_hash": "46653328622a9e80259ef51654ac5b76ab97f786dbc5594f425eeebb329fc65f",
+    "source_count": 2,
+    "domains": [
+      "tasks",
+      "source_relations"
+    ],
+    "sources": [
+      {
+        "source_id": "src_74189ce188e144669d4f7aae976824ec",
+        "name": "public-meeting-1.txt",
+        "version": "artifact_v1_6129624886c2067f8a59ac85b65c02ad770cabf42bdb48b398e76e78af1ffcd6"
+      },
+      {
+        "source_id": "src_88a764372af840f3bec2e7b79889f7ca",
+        "name": "public-meeting-2.txt",
+        "version": "artifact_v1_6933123b6eea63531a762e23881432b60de51e7f986abdcebe559716fa69c519"
+      }
+    ]
+  },
+  "scopes": [],
+  "agent": {
+    "available": true,
+    "external_provider": true,
+    "run_mode": "GEMINI_TASK_EXPLICIT",
+    "relation_max_model_turns": 12,
+    "task_investigation": true,
+    "temporal_agent": false,
+    "task_provider": {
+      "configured": true,
+      "external": true,
+      "model_id": "gemini-3.8-flash",
+      "budgets": {
+        "max_requests": 16,
+        "max_input_tokens": 500000,
+        "max_output_tokens": 100000,
+        "max_cost_usd": 2,
+        "max_seconds": 120,
+        "request_timeout_seconds": 30,
+        "request_cost_upper_bound_usd": 0.1,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "source_permission": "PER_QUESTION_CURRENT_WORKSPACE_SNAPSHOT",
+      "execution_permission": "HOST_TASK_STAGES_ONLY",
+      "business_approval": false,
+      "setup": "Set GEMINI_API_KEY; python -m linkloom.ui --allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30"
+    },
+    "task_execution_kinds": [
+      "LIVE"
+    ],
+    "message": "Investigation reads the selected workspace and never approves Decision Memory."
+  }
+}

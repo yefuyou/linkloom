@@ -159,6 +159,10 @@ def validate_proposals(result,context,*,decision_store=None):
             or (p.proposed_verdict in {'REFUTED','CONFLICT'} and not p.counter_evidence)
             or (p.proposed_verdict=='UNKNOWN' and not p.missing_evidence)):
             errors.add('MISSING_VERDICT_EVIDENCE')
+        if ((p.supporting_evidence and p.counter_evidence and p.proposed_verdict != 'CONFLICT')
+                or (p.proposed_verdict == 'SUPPORTED' and p.counter_evidence)
+                or (p.proposed_verdict == 'REFUTED' and p.supporting_evidence)):
+            errors.add('VERDICT_EVIDENCE_POLARITY_MISMATCH')
         if (set(p.changed_fields)-{'deadline','scope'} or (p.changed_fields and p.predicate!='REVISES_PLAN')
             or (p.predicate=='REVISES_PLAN' and p.proposed_verdict=='SUPPORTED' and not p.changed_fields)):
             errors.add('INVALID_CHANGE_FIELDS')

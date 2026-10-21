@@ -103,7 +103,8 @@ def parse_context(value):
 def source_context(app, workspace_id):
     _, sources = app.snapshot_investigation_sources(workspace_id)
     return dict(snapshot_hash=canonical_hash(dict(workspace_id=workspace_id,
-        sources=ProductTaskSources._identity(sources))), source_count=len(sources), domains=list(DOMAINS))
+        sources=ProductTaskSources._identity(sources))), source_count=len(sources), domains=list(DOMAINS),
+        sources=[dict(source_id=s['source_id'], name=s['name'], version=s['source_version']) for s in sources])
 
 
 def validate_context(app, workspace_id, context):

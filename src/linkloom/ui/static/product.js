@@ -142,7 +142,7 @@
       </article>`).join("") : `<section class="empty"><h2>No sources yet</h2><p>Add a timestamped meeting or decision artifact below. Source text is kept as an immutable version; this does not edit files in your workspace.</p></section>`;
     page.innerHTML = `${heading("Sources", "Bring the project record together", "Import timestamped meeting notes. LinkLoom keeps exact source versions and shows when semantic extraction needs review.")}
       <div class="split"><section><div class="section-title"><h2>Workspace sources</h2><span class="muted">${sources.length} active</span></div>${list}</section>
-      <section class="panel"><h2>Add a source</h2><p class="hint">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. ${providerReady ? "LinkLoom will show INGESTING, then the candidate and review counts." : "The source is saved as an immutable version now; semantic extraction stays unavailable until a provider is enabled."}</p>
+      <section class="panel"><h2>Add a source</h2><p class="hint">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. ${providerReady ? "LinkLoom will show INGESTING, then the candidate and review counts." : "The source is saved as an immutable version now. Saved sources can be investigated in Ask after configuring task stages and authorizing that question."}</p>
         ${providerReady ? `<p class="hint">${escapeHtml(state.provider.message)} Source text is sent to this configured provider when you submit.</p>` : `<div class="error-box"><strong>Source saving is available; semantic extraction is not.</strong><p>${escapeHtml(state.provider?.message || "Configure a provider before extracting source text.")} You can save the source now and extract it later after enabling a provider.</p></div>`}
         <form id="source-create" class="form-stack"><div class="field"><label for="source-file">Choose a Markdown or text artifact</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"><span class="hint">Files are read in this browser and submitted to the local LinkLoom server.</span></div>
         <div class="field"><label for="source-name">Artifact name</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
@@ -357,6 +357,9 @@
     state.askScopes = config.scopes || [];
     state.askAgent = config.agent;
     state.askSourceContext = config.investigation_context;
+    if (config.agent?.task_investigation && config.agent?.external_provider) {
+      document.getElementById("provider-state").textContent = "Task Provider configured. Ask requires per-question source permission; import extraction is disabled.";
+    }
     const selected = state.askScopes.findIndex((slot) => slot.subject === state.askScope?.subject && slot.relation === state.askScope?.relation);
     state.askCandidates = [];
     state.askClarification = null;
@@ -374,6 +377,10 @@
           <option value="tasks" data-ask-en="Tasks across the current workspace records" data-ask-zh="当前空间记录中的任务">${askCopy("Tasks across the current workspace records", "当前空间记录中的任务")}</option>
           <option value="source_relations" data-ask-en="Project → owner → direct leader" data-ask-zh="项目 → 负责人 → 直属领导">${askCopy("Project → owner → direct leader", "项目 → 负责人 → 直属领导")}</option></select>
           <span class="hint">${askLabel("Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.", "自然语言未被识别时可选定领域；只读当前空间来源，结论仍未经确认。来源变更后请刷新页面。")}</span></div>
+        <div id="task-provider-status" role="status"><p>${config.agent?.task_investigation ? askLabel("Task stages configured. Relationship proposals require independent confirmation.", "任务阶段已配置；关系提案仍需独立确认。") : askLabel("Task Provider unavailable. Configure the Host before running task investigation.", "任务 Provider 不可用，请先配置 Host。")}</p>
+          ${!config.agent?.task_investigation ? `<p class="hint">${escapeHtml(config.agent?.task_provider?.setup || "--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30")}</p>` : ""}
+          ${config.agent?.task_provider?.budgets ? `<p class="metadata">${askLabel("Per-question limits", "单次调查上限")}: ${escapeHtml(config.agent.task_provider.model_id)} · ${config.agent.task_provider.budgets.max_requests} requests · ${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_seconds}s</p>` : ""}
+          <details><summary>${askLabel("Sources in this authorization", "本次授权的来源清单")} (${config.investigation_context?.source_count || 0})</summary><ul>${(config.investigation_context?.sources || []).map(s => `<li>${escapeHtml(s.name)} <small>${escapeHtml(s.version)}</small></li>`).join("")}</ul><p class="hint">${askLabel("Only the current snapshot, for this question. Does not approve business relationships.", "仅本次问题、当前来源快照；不授予业务关系批准权限。")}</p></details></div>
         <div class="ask-submit"><button id="ask-submit-button" class="button" type="submit">${askLabel("Ask", "提问")}</button><span class="hint">${askLabel("Ctrl / ⌘ + Enter to ask", "Ctrl / ⌘ + Enter 提交")}</span></div>
         <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>${askLabel("Advanced: decision and exact date", "高级选项：决策与精确日期")}</summary>
         <div class="field"><label for="ask-slot">${askLabel("Decision scope", "指定决策（可选）")}</label><select id="ask-slot">
@@ -558,8 +565,13 @@
     }
     if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {
       const unavailable = result.error?.code === "TASK_INVESTIGATION_UNAVAILABLE";
-      const stopMessage = unavailable ? t("Task investigation is unavailable in the current configuration. No investigation or external model call was started.", "当前配置不支持任务调查，尚未启动调查或外部模型调用。") : result.error?.code === "TASK_DATE_SCOPE_UNSUPPORTED" ? t("Clear the advanced decision date and state the investigation period in your question. The original question is kept.", "请清除高级选项中的决策日期，并在原问题中说明调查时段。原问题已保留。") : t("The configuration, source evidence or investigation budget did not pass the required checks. No verified conclusion is available.", "运行配置、来源证据或调查预算尚未通过必要检查，本次没有可核验的最终结论。");
-      target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="status"><h2>${unavailable ? t("Task investigation unavailable", "当前无法使用任务调查") : t("Task investigation stopped", "任务调查已停止")}</h2><p>${stopMessage}</p><details><summary>${t("Reason and review", "停止原因与审查记录")}</summary><pre>${escapeHtml(JSON.stringify({error: result.error, preparation: result.preparation, uncertainty: result.uncertainty, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      const permission = result.error?.code === "EXTERNAL_PROVIDER_PERMISSION_REQUIRED";
+      let stopMessage = t("The configuration, source evidence or investigation budget did not pass the required checks. No verified conclusion is available.", "运行配置、来源证据或调查预算尚未通过必要检查，本次没有可核验的最终结论。");
+      if (unavailable) stopMessage = t("Task investigation is unavailable in the current configuration. No investigation or external model call was started.", "当前配置不支持任务调查，尚未启动调查或外部模型调用。");
+      else if (permission) stopMessage = t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请查看上方来源清单与预算，勾选本次授权后再次提问；授权前不会发送来源内容。");
+      else if (["PROVIDER_UNCERTAIN", "PROVIDER_TIMEOUT_UNCERTAIN"].includes(result.error?.code)) stopMessage = t("The Provider outcome is uncertain. No automatic retry or verified conclusion was released.", "Provider 执行结果不确定；系统不会自动重试，本次没有发布可核验结论。");
+      else if (result.error?.code === "TASK_DATE_SCOPE_UNSUPPORTED") stopMessage = t("Clear the advanced decision date and state the investigation period in your question. The original question is kept.", "请清除高级选项中的决策日期，并在原问题中说明调查时段。原问题已保留。");
+      target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="status"><h2>${unavailable ? t("Task investigation unavailable", "当前无法使用任务调查") : permission ? t("This investigation needs your permission", "这次调查需要你的授权") : t("Task investigation stopped", "任务调查已停止")}</h2><p>${stopMessage}</p><details><summary>${t("Reason and review", "停止原因与审查记录")}</summary><pre>${escapeHtml(JSON.stringify({error: result.error, preparation: result.preparation, uncertainty: result.uncertainty, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
       return;
     }
     if (source && ["COMPLETED", "INSUFFICIENT"].includes(result.status) && result.reviewer?.accepted === true && result.source_investigation) {

@@ -28,9 +28,10 @@ class SemanticCallPolicy:
     max_output_tokens: int = 8192
     max_cost_usd: float = 0.0
     request_cost_upper_bound_usd: float = 0.0
+    live_authorized: bool = False
 
     def __post_init__(self):
-        if self.execution_kind not in {"FAKE", "REPLAY"}:
+        if self.execution_kind not in {"FAKE", "REPLAY"} and not (self.execution_kind == 'LIVE' and self.live_authorized is True):
             raise ValueError("new live semantic Provider execution is not enabled")
         if type(self.max_requests) is not int or self.max_requests not in (0, 1):
             raise ValueError("one semantic batch per run; request budget must be 0 or 1")
@@ -102,7 +103,7 @@ def _compact_evidence(view):
 
 class SemanticAnalysis:
     def __init__(self, investigation_id, workspace_id, snapshot_provider, adapter, *, model_id, policy):
-        if policy.execution_kind not in {'FAKE', 'REPLAY'}:
+        if policy.execution_kind not in {'FAKE', 'REPLAY', 'LIVE'}:
             raise ValueError('new live semantic Provider execution is not enabled')
         self.investigation_id = investigation_id
         self.workspace_id = workspace_id
@@ -121,6 +122,8 @@ class BoundSemanticAnalysis:
         self.workspace_id, self.investigation_id = owner.workspace_id, owner.investigation_id
         self.identity = dict(run_id=run_id, workspace_id=self.workspace_id, investigation_id=self.investigation_id,
                              model_id=owner.model_id, policy=asdict(owner.policy))
+        if owner.policy.execution_kind != 'LIVE':
+            self.identity['policy'].pop('live_authorized')
         self.invocation_id = "semantic_" + canonical_hash(self.identity)
         # One slot per outer run, even if a caller attempts a different job.
         self.prefix = "semantic/" + canonical_hash(run_id)[:24]
@@ -151,7 +154,7 @@ class BoundSemanticAnalysis:
             semantic_status="SEMANTIC_NOT_EVALUATED", publishable=False, cache_hit=False,
             result_artifact=None, execution=dict(kind=self.owner.policy.execution_kind,
                 reserved_requests=int(self._exists(self.reservation_ref)), new_live_provider_requests=0,
-                cost_usd=None, new_billable_cost_usd=0.0))
+                cost_usd=None, new_billable_cost_usd=None if self.owner.policy.execution_kind == 'LIVE' else 0.0))
 
     def _view(self, call_id, built, payload, artifact, cache_hit):
         request = build_request(built.context, self.owner.model_id)
@@ -175,7 +178,8 @@ class BoundSemanticAnalysis:
             if not response.get("exception") and canonical_hash(response["response"]) != payload["result"]["response_sha256"]:
                 raise ValueError("semantic response hash changed")
         result = _restore_result(payload["result"], built.context, self.owner.model_id)
-        usage_key = "imported_usage" if self.owner.policy.execution_kind == "REPLAY" else "simulated_usage"
+        live = self.owner.policy.execution_kind == 'LIVE'
+        usage_key = 'provider_usage' if live else "imported_usage" if self.owner.policy.execution_kind == "REPLAY" else "simulated_usage"
         return _compact_evidence(dict(schema_version="task-semantic-analysis/v1", workspace_id=self.workspace_id,
             invocation_id=self.invocation_id, investigation_id=self.investigation_id, outer_call_id=call_id,
             origin_tool_call_id=payload["origin_call_id"], cache_hit=cache_hit,
@@ -183,9 +187,9 @@ class BoundSemanticAnalysis:
             proposals=_proposal_view(result, built.context), semantic_status="SEMANTIC_NOT_EVALUATED",
             publishable=False, result_artifact=artifact, execution=dict(kind=self.owner.policy.execution_kind,
                 reserved_requests=1, adapter_requests=result.provider_calls,
-                new_live_provider_requests=0,
+                new_live_provider_requests=int(live and not cache_hit and result.provider_calls > 0),
                 **{usage_key: result.usage.to_dict()}, cost_usd=None,
-                new_billable_cost_usd=0.0,
+                new_billable_cost_usd=None if live else 0.0,
                 request_sha256=result.request_sha256, response_sha256=result.response_sha256,
                 provider_request_id=result.provider_request_id, provider_response_id=result.provider_response_id,
                 original_receipt=payload["original_receipt"])))

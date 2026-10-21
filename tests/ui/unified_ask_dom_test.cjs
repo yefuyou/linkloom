@@ -256,6 +256,13 @@ async function setup(storage = new Map()) {
   assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
   assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
   assert.match(taskHtml, /Conflicting proposal/);
+  const taskPermissionUi = await setup();
+  const taskPermissionOperation = taskPermissionUi.submit(); await tick();
+  const deniedTask = taskResult();
+  Object.assign(deniedTask.result, {status: "BLOCKED", reviewer: {accepted: false},
+    error: {code: "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", message: "Authorize the current sources."}});
+  taskPermissionUi.pending[0](deniedTask); await taskPermissionOperation;
+  assert.match(taskPermissionUi.element("ask-result").innerHTML, /Check the per-request permission/);
   const uncertainUi = await setup();
   const unknownOperation = uncertainUi.submit(); await tick();
   const unknownPayload = result("");

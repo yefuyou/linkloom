@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="4.815" timestamp="2026-10-21T23:27:39.055992+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[missing]" time="3.330"><failure message="AssertionError: {'result': {'agent_run_id': 'ui-0684f7d9757c', 'conclusions': [], 'discovery': None, 'error': None, ...}}&#10;assert (200 == 200 and 'PARTIAL' == 'BLOCKED'&#10;  &#10;  - BLOCKED&#10;  + PARTIAL)">tests\integration\test_m3q_provider_host.py:240: in test_live_hot_and_cold_reads_require_complete_provider_receipts
+    assert status == 200 and hot['result']['status'] == 'BLOCKED', hot
+E   AssertionError: {'result': {'agent_run_id': 'ui-0684f7d9757c', 'conclusions': [], 'discovery': None, 'error': None, ...}}
+E   assert (200 == 200 and 'PARTIAL' == 'BLOCKED'
+E     
+E     - BLOCKED
+E     + PARTIAL)</failure></testcase></testsuite></testsuites>

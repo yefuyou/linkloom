@@ -185,7 +185,7 @@ class UnifiedAskService:
                             result["path"] = None
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
-                        return self._task_request(run, context=context)
+                        return self._task_request(run, payload, context=context)
                 if plan is not None or _RELATION_QUESTION.search(run.query):
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
@@ -238,7 +238,7 @@ class UnifiedAskService:
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
 
-    def _task_request(self, run, *, context=None):
+    def _task_request(self, run, payload, *, context=None):
         route = dict(intent='TASK_INVESTIGATION', code='SOURCE_TASK_INVESTIGATION',
                      reason='Bounded task investigation; observations and plans remain unconfirmed.')
         route['admission'] = dict(origin='USER_SCOPED' if context else 'RECORD_SHORTCUT',
@@ -252,14 +252,22 @@ class UnifiedAskService:
                 category='validation', status='BLOCKED'), 200
         service = self.investigation()
         config = service.config() if service else {}
-        if (not config.get('available') or not config.get('task_investigation')
-                or config.get('external_provider') is True
-                or not set(config.get('task_execution_kinds', ())).intersection({'FAKE', 'REPLAY'})):
+        if not config.get('available') or not config.get('task_investigation'):
             return self._failure(result, 'TASK_INVESTIGATION_UNAVAILABLE',
-                'Task investigation needs explicitly configured offline stage adapters. No external Provider call was started.',
+                config.get('task_provider', {}).get('setup', 'Configure task Provider stages in the Product Host.'),
                 category='configuration', status='BLOCKED'), 200
+        authorization = None
+        if config.get('external_provider'):
+            if payload.get('allow_external_provider') is not True:
+                return self._failure(result, 'EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
+                    'Authorize this question to send the selected workspace source snapshot within the displayed budgets.',
+                    category='permission', status='BLOCKED'), 403
+            from linkloom.semantic_ingestion.task_relation_models import canonical_hash
+            authorization = dict(workspace_id=run.workspace_id, snapshot_hash=context['snapshot_hash'],
+                                 question_sha256=canonical_hash(run.query))
         try:
-            snapshot = service.start(run.query, run.workspace_id, task_investigation=True)
+            snapshot = service.start(run.query, run.workspace_id, task_investigation=True,
+                                     task_source_authorization=authorization)
         except Exception as exc:
             code = str(exc) if isinstance(exc, ValueError) else getattr(exc, 'code', 'TASK_PREPARATION_FAILED')
             return self._failure(result, code, 'Task preparation stopped; no result is publishable.',
