@@ -25,6 +25,7 @@ from linkloom.semantic_ingestion.artifacts import (
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateDecisionFact,
     CandidateReasonCode,
+    EntityResolution,
     SemanticExtractionResult,
 )
 from linkloom.semantic_ingestion.extraction import (
@@ -759,6 +760,8 @@ class ProductApplication:
             check_same_thread=False,
         )
         self.materializer = SemanticDecisionMaterializer(self.store)
+        from linkloom.ui.revalidation import DecisionRevalidation
+        self.revalidation = DecisionRevalidation(self)
         self._reconcile()
 
     def close(self) -> None:
@@ -845,6 +848,8 @@ class ProductApplication:
             }
         if path == "/api/review/attention":
             return {"decisions": self._attention_records()}
+        if path.startswith("/api/review/revalidation/"):
+            return {"revalidation": self.revalidation.inspect(path.removeprefix("/api/review/revalidation/"))}
         if path.startswith("/api/review/candidates/"):
             candidate_id = path.removeprefix("/api/review/candidates/")
             return {"candidate": self._candidate_detail(candidate_id)}
@@ -895,6 +900,9 @@ class ProductApplication:
                 self._reject_candidate(candidate_id, payload)
                 return {"workflow_state": CandidateWorkflowState.REJECTED.value}, 200
             return self._approve_candidate(candidate_id, payload), 200
+        revalidation_match = re.fullmatch(r"/api/review/revalidation/([^/]+)/approve", path)
+        if revalidation_match:
+            return self.revalidation.approve(revalidation_match.group(1), payload), 200
         retry_match = re.fullmatch(r"/api/sources/([^/]+)/retry", path)
         if retry_match:
             workspace_id = self._workspace_id()
@@ -1464,7 +1472,10 @@ class ProductApplication:
         payload["current_unresolved_fields"] = self._unresolved_fields(candidate)
         return payload
 
-    def _approve_candidate(self, candidate_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    def _approve_candidate(
+        self, candidate_id: str, payload: dict[str, Any], *, revalidation_of: str | None = None,
+        resume_approved: bool = False,
+    ) -> dict[str, Any]:
         workspace_id = self._workspace_id()
         candidate = self.materializer.get_candidate(workspace_id, candidate_id)
         if not isinstance(candidate, CandidateDecisionFact):
@@ -1474,14 +1485,16 @@ class ProductApplication:
         if fingerprint is None:
             raise ProductApplicationError("CANDIDATE_NOT_FOUND", "The candidate is unavailable in this workspace.", status=404)
         try:
-            self.materializer.approve(
-                workspace_id,
-                candidate_id,
-                reviewer_id=_required_payload_text(payload, "reviewer_id", 120),
-                expected_candidate_fingerprint=fingerprint,
-                reason=_required_payload_text(payload, "reason", 1000),
-                resolution=resolution,
-            )
+            if not resume_approved:
+                self.materializer.approve(
+                    workspace_id,
+                    candidate_id,
+                    reviewer_id=_required_payload_text(payload, "reviewer_id", 120),
+                    expected_candidate_fingerprint=fingerprint,
+                    reason=_required_payload_text(payload, "reason", 1000),
+                    resolution=resolution,
+                    revalidation_of_decision_id=revalidation_of,
+                )
             materialized = self.materializer.materialize(workspace_id, candidate_id)
         except (MaterializationBlockedError, ValueError) as error:
             code = getattr(error, "reason_code", "REVIEW_NOT_READY")
@@ -1565,10 +1578,12 @@ class ProductApplication:
         workspace_id = self._workspace_id()
         all_records = self.store.list_decisions(workspace_id)
         now = datetime.now(UTC)
+        completed = self.revalidation.completed(workspace_id)
         current = [
             record
             for record in all_records
             if record.valid_to is None and record.valid_from <= now
+            and record.decision_id not in completed
         ]
         return [self._decision_payload(record) for record in current]
 
@@ -1618,6 +1633,10 @@ class ProductApplication:
             "supersedes_id": record.supersedes_id,
             "source_episode_id": record.source_episode_id,
             "evidence": evidence,
+            "revalidated_by": self.revalidation.completed(record.workspace_id).get(record.decision_id),
+            "authorization": next(({
+                key: receipt[key] for key in ("receipt_id", "authorization_type", "authorized_at", "materialized_at", "effective_at")
+            } for receipt in self.store.get_decision_receipt_rows(record.workspace_id, record.decision_id)), None),
         }
 
     def _evidence_payload(self, workspace_id: str, evidence_ref: str) -> dict[str, Any]:
@@ -1663,7 +1682,7 @@ class ProductApplication:
     @staticmethod
     def _unresolved_fields(candidate: CandidateDecisionFact) -> list[str]:
         fields: list[str] = []
-        if candidate.subject is None or candidate.subject_key is None:
+        if candidate.entity_resolution is EntityResolution.UNRESOLVED:
             fields.append("subject")
         if candidate.relation is None:
             fields.append("relation")

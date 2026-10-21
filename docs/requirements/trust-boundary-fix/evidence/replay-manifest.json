@@ -1,0 +1,47 @@
+{
+  "purpose": "Offline reproduction of original E07 and E15 trust-boundary attacks",
+  "provider": "none",
+  "secrets": "cleared in replay process environment",
+  "hf_offline": true,
+  "runtime_environment": {
+    "LINKLOOM_RETRIEVAL_MODE": "bm25",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "LINKLOOM_PROVIDER": "none",
+    "PROVIDER": "none",
+    "secret_variables": {
+      "OPENAI_API_KEY": "",
+      "ANTHROPIC_API_KEY": "",
+      "GOOGLE_API_KEY": "",
+      "GEMINI_API_KEY": "",
+      "DEEPSEEK_API_KEY": ""
+    }
+  },
+  "source_audit_script": "D:/webproject/Linkloom/work/trust-audit-20261021/evidence/audit_evidence.py",
+  "source_audit_script_sha256": "398a3f4e5911c3dbf0aa824bccf09d8d37598664f5b52a9822d3d56d23831701",
+  "script_change_scope": "Copied script only changed ROOT/BASE/OUT path injection through AUDIT_REPLAY_* environment variables; attack inputs, model actions, contracts, case bodies, and assertions are unchanged.",
+  "canonical_complete_snapshot_roots": ["m", "p"],
+  "path_note": "A first long-path extraction attempt is retained under the named archive directories; complete replay inputs are the short roots above.",
+  "snapshots": [
+    {
+      "name": "master",
+      "commit": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+      "archive": "master-ca2e775ce17581f8b69b2e1f9daf813a1230fb1c/master.tar",
+      "archive_sha256": "5964256f977f19b9d17ef43b9787dd85012bf730bcc6700e1ad05428719d783d",
+      "tree_file_count": 843,
+      "snapshot_root": "m",
+      "modified_script_sha256": "e844a81ad93daea4c88a2c9c302c0a820420eb9199b18f448ad889ce3487ae3f"
+    },
+    {
+      "name": "pr6",
+      "commit": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+      "archive": "pr6-13adb03c61df8c882a32ce71004b006f7a94fd9b/pr6.tar",
+      "archive_sha256": "f897b216117687bb800deac7921ae30d5ff8cc128363621fd780c302f29fabc8",
+      "tree_file_count": 953,
+      "snapshot_root": "p",
+      "modified_script_sha256": "e844a81ad93daea4c88a2c9c302c0a820420eb9199b18f448ad889ce3487ae3f"
+    }
+  ],
+  "replay_cases": ["E07", "E15"],
+  "evidence_contract": "Preserve entrypoint, actual imported module path, tool ledger, visible evidence, Final, Grounding/Reviewer, and result JSON."
+}

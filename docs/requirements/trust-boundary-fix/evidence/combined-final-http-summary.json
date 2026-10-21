@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "mode": "OFFLINE_TASK_DEMO",
+  "model": "FakeModel",
+  "provider_requests": 0,
+  "business_approval": false,
+  "cold_read": "SAVED_RESULT_READ_ONLY",
+  "output": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\c6\\work\\final-trust-http"
+}

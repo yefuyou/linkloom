@@ -704,8 +704,14 @@ class RetrievalAgent:
             and self._successful_value(record) is not None
         ]
         read_refs: list[str] = []
+        read_evidence: dict[str, dict[str, Any]] = {}
         for record in successful_reads:
-            for ref in self._refs_from_value(self._successful_value(record)):
+            value = self._successful_value(record)
+            values = value if isinstance(value, list) else [value]
+            for item in values:
+                if isinstance(item, dict) and isinstance(item.get("evidence_id"), str):
+                    read_evidence[item["evidence_id"]] = dict(item)
+            for ref in self._refs_from_value(value):
                 if ref not in read_refs:
                     read_refs.append(ref)
         observed_temporal_decision_ids = {
@@ -880,6 +886,7 @@ class RetrievalAgent:
                     temporal_validator=self.temporal_claim_validator,
                     read_evidence_ids=read_refs,
                     observed_temporal_decision_ids=observed_temporal_decision_ids,
+                    require_read_evidence=True,
                 )
             except ValidationError as error:
                 temporal_reason = error.details.get("reason") if isinstance(error.details, dict) else None
@@ -1149,6 +1156,7 @@ class RetrievalAgent:
                 decision.validate_claim_support(
                     visible_evidence,
                     question=query,
+                    observed_evidence_by_ref=read_evidence,
                 )
             except ValidationError:
                 return self._failed_result(
