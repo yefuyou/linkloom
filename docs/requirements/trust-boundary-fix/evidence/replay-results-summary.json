@@ -1,0 +1,68 @@
+{
+  "replay_command_mode": "python audit_evidence.py with AUDIT_CASES=E07 or E15; provider=none; HF_HUB_OFFLINE=1; TRANSFORMERS_OFFLINE=1",
+  "master": {
+    "commit": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+    "module_path": "D:/webproject/Linkloom/work/trust-p1-fix/work/trust-evidence/m/src/linkloom/__init__.py",
+    "E07": {
+      "verdict": "FAIL",
+      "runtime_status": "completed",
+      "user_status": "completed",
+      "review_decision": "evidence_sufficient",
+      "team_decision_status": "approved",
+      "observed_tool_results": ["search_notes"],
+      "provider_requests": 2,
+      "result_json": "m/evidence/results-e07.json",
+      "observed_result_json": "m/evidence/data_7470427340/search_only/observed_result.json"
+    },
+    "E15": {
+      "verdict": "FAIL",
+      "runtime_status": "completed",
+      "review_decision": "evidence_sufficient",
+      "team_decision_status": "approved",
+      "read_count": 2,
+      "assessment_with_both_read_sources": "CONTRADICTED",
+      "provider_requests": 4,
+      "result_json": "m/evidence/results-e15.json",
+      "observed_result_json": "m/evidence/data_91f77c52e3/known_conflict/observed_result.json"
+    }
+  },
+  "pr6": {
+    "commit": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+    "module_path": "D:/webproject/Linkloom/work/trust-p1-fix/work/trust-evidence/p/src/linkloom/__init__.py",
+    "E07": {
+      "verdict": "FAIL",
+      "runtime_status": "completed",
+      "user_status": "completed",
+      "review_decision": "evidence_sufficient",
+      "team_decision_status": "approved",
+      "observed_tool_results": ["search_notes"],
+      "provider_requests": 2,
+      "result_json": "p/evidence/results-e07.json",
+      "observed_result_json": "p/evidence/data_2677fa7963/search_only/observed_result.json"
+    },
+    "E15": {
+      "verdict": "FAIL",
+      "runtime_status": "completed",
+      "review_decision": "evidence_sufficient",
+      "team_decision_status": "approved",
+      "read_count": 2,
+      "assessment_with_both_read_sources": "CONTRADICTED",
+      "provider_requests": 4,
+      "result_json": "p/evidence/results-e15.json",
+      "observed_result_json": "p/evidence/data_d13b2148fe/known_conflict/observed_result.json"
+    }
+  },
+  "red_tests": {
+    "file": "../../tests/integration/test_final_evidence_trust.py",
+    "master_junit": "red-master-snapshot.xml",
+    "master_log": "red-master-snapshot.log",
+    "master_result": "2 failed, 1 passed",
+    "pr6_junit": "red-pr6-snapshot.xml",
+    "pr6_log": "red-pr6-snapshot.log",
+    "pr6_result": "2 failed, 1 passed",
+    "fixed_current_junit": "fixed-current.xml",
+    "fixed_current_log": "fixed-current.log",
+    "fixed_current_result": "3 passed (target worktree after main-agent fix)",
+    "meaning": "The two attack assertions fail on both exact snapshots; the normal search-to-read control passes."
+  }
+}

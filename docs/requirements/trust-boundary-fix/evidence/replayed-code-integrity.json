@@ -1,0 +1,59 @@
+{
+  "note": "Git archive on this Windows host applied CRLF. All six replayed production files equal their exact commit blobs after CRLF/LF normalization; no code changes.",
+  "files": [
+    {
+      "label": "master",
+      "sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+      "path": "src/linkloom/agents/retrieval_agent.py",
+      "git_blob_sha256": "7171bce52119a93449fc0b8839ce38705acf92b212ddec9b38c5e1e8cebc56ea",
+      "snapshot_sha256": "890864decfdfb1825b2fd34c39826eb04bd5fb4ee3c6e97671f447f78cb1ee48",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    },
+    {
+      "label": "master",
+      "sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+      "path": "src/linkloom/agents/team_decision.py",
+      "git_blob_sha256": "77c86fa284fcf17361df267d873129e4f74979c9ab19b77ac4ca7bc2eb127851",
+      "snapshot_sha256": "dbb351432a48b0369d00160cdecd9678d5f2c9b6d6f4288ba0f93d3fbf1da6af",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    },
+    {
+      "label": "master",
+      "sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+      "path": "src/linkloom/agents/claim_grounding.py",
+      "git_blob_sha256": "d76a62d1d151cc3646409b4ef51af8f80ea2692b8494a71529ba7625f4ccd243",
+      "snapshot_sha256": "20becac8980e4028d5fc35f1828c2da1a03d8f3bb5cc27eec743e126d0248126",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    },
+    {
+      "label": "pr6",
+      "sha": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+      "path": "src/linkloom/agents/retrieval_agent.py",
+      "git_blob_sha256": "c301b8ed9a0361f8fb16fee4bb7ff1f019f92771323328c7c8bb91e728c90829",
+      "snapshot_sha256": "d3b29c97bd452dc3c3813dabd194baee3b7bc29e074715f84d8da32e5030a935",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    },
+    {
+      "label": "pr6",
+      "sha": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+      "path": "src/linkloom/agents/team_decision.py",
+      "git_blob_sha256": "77c86fa284fcf17361df267d873129e4f74979c9ab19b77ac4ca7bc2eb127851",
+      "snapshot_sha256": "dbb351432a48b0369d00160cdecd9678d5f2c9b6d6f4288ba0f93d3fbf1da6af",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    },
+    {
+      "label": "pr6",
+      "sha": "13adb03c61df8c882a32ce71004b006f7a94fd9b",
+      "path": "src/linkloom/agents/claim_grounding.py",
+      "git_blob_sha256": "d76a62d1d151cc3646409b4ef51af8f80ea2692b8494a71529ba7625f4ccd243",
+      "snapshot_sha256": "20becac8980e4028d5fc35f1828c2da1a03d8f3bb5cc27eec743e126d0248126",
+      "byte_identical": false,
+      "identical_except_line_endings": true
+    }
+  ]
+}
