@@ -108,11 +108,13 @@ jobs:
           tests/integration/test_unified_investigation_flow.py
           tests/integration/test_decision_discovery_flow.py
           tests/integration/test_product_application_flow.py
+          tests/integration/test_stale_decision_revalidation.py
       - name: Ask DOM and JavaScript syntax
         if: always()
         run: |
           node --check src/linkloom/ui/static/product.js
           node tests/ui/unified_ask_dom_test.cjs
+          node tests/ui/stale_revalidation_dom_test.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

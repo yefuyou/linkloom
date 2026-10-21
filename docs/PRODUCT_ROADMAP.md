@@ -71,6 +71,14 @@ and capture; formal queries retain their authority boundary. The [delivery](requ
 records offline HTTP/browser acceptance and the HOLD-G classification repair.
 The original blind 8/10 remains historical evidence; no real model was evaluated.
 
+## STALE Decision Revalidation — 2026-10-21
+
+The user-authorized V1.1 follow-up adds a Review Attention comparison and explicit
+new-candidate approval using the existing review lifecycle. The [SPEC](requirements/stale-decision-revalidation/SPEC.md)
+and [delivery](requirements/stale-decision-revalidation/DELIVERY.md) record
+HTTP/SQLite acceptance and the outstanding real-browser acceptance. This is
+an isolated increment, not a V1.1 release or authorization for Runtime changes.
+
 ## Product Goal
 
 ### Real-Agent Reliability Sprint — 2026-10-15

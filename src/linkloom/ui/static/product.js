@@ -6,6 +6,7 @@
     provider: null,
     sourceId: null,
     candidateId: null,
+    revalidation: null,
     decisionId: null,
     agentViewToken: 0,
     askScopes: [],
@@ -115,6 +116,7 @@
     setNavigation(screen);
     state.sourceId = null;
     state.candidateId = null;
+    state.revalidation = null;
     state.decisionId = null;
     if (!state.workspace) { await showNoWorkspace(); return; }
     page.innerHTML = `<section class="state-card"><p class="loading">Loading ${escapeHtml(screen)}…</p></section>`;
@@ -189,15 +191,23 @@
       <article class="card"><div class="card-head"><div><p class="eyebrow">PROPOSAL</p><h3>${escapeHtml(candidate.subject || candidate.proposed_value || "Unresolved proposal")}</h3></div>${badge("SUPPORTING_ONLY")}</div>
         <p class="decision-value">${escapeHtml(candidate.proposed_value || "Value not resolved")}</p><p class="metadata">${escapeHtml(candidate.source_name)} · lines ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
         <blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="hint">Supporting evidence only. This proposal is not approved and is not part of Decision Memory.</p></article>`).join("") : `<p class="muted">No proposals are currently held as supporting evidence.</p>`;
-    const attentionCards = attention.decisions.length ? attention.decisions.map((decision) => `<article class="card"><div class="card-head"><div><h3>${escapeHtml(decision.subject)} · ${escapeHtml(decision.relation)}</h3><p>${escapeHtml(decision.value)}</p></div>${badge(decision.memory_state)}</div><p class="hint">Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it.</p><button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(decision.decision_id)}">Inspect decision</button></article>`).join("") : `<p class="muted">No Decision Memory records currently need revalidation.</p>`;
+    const attentionCards = attention.decisions.length ? attention.decisions.map((decision) => `<article class="card"><div class="card-head"><div><h3>${escapeHtml(decision.subject)} · ${escapeHtml(decision.relation)}</h3><p>${escapeHtml(decision.value)}</p></div>${badge(decision.memory_state)}</div><p class="hint">Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it.</p><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decision.decision_id)}">Revalidate decision</button></article>`).join("") : `<p class="muted">No Decision Memory records currently need revalidation.</p>`;
     page.innerHTML = `${heading("Review", "Decide what becomes authoritative", "Inspect the exact source passage, resolve only fields you can support, then approve or reject through the recorded human review lifecycle.")}
       <div class="section-title"><h2>Pending candidates</h2><span class="muted">${candidates.length}</span></div>${items}
       <div class="section-title"><h2>Supporting proposals</h2><span class="muted">${proposals.length} · not authoritative</span></div>${proposalItems}
       <div class="section-title"><h2>Decision records needing attention</h2></div>${attentionCards}`;
   }
 
-  async function inspectCandidate(candidateId) {
+  async function inspectCandidate(candidateId, revalidation = null) {
+    const viewToken = ++state.agentViewToken;
+    const workspaceId = state.workspace?.workspace_id;
     const { candidate } = await request(`/api/review/candidates/${encodeURIComponent(candidateId)}`);
+    if (viewToken !== state.agentViewToken || workspaceId !== state.workspace?.workspace_id) return;
+    if (revalidation && candidate.status === "APPROVED") {
+      await inspectRevalidation(revalidation.original.decision_id);
+      return;
+    }
+    state.revalidation = revalidation;
     state.candidateId = candidateId;
     const unresolved = candidate.current_unresolved_fields;
     const resolutionFields = unresolved.length ? `<section class="panel"><h3>Resolve fields from the evidence</h3><p class="hint">Leave uncertain fields empty. Effective time never defaults to today.</p>
@@ -209,11 +219,35 @@
         <p class="section-title"><strong>Review reasons</strong></p><p>${escapeHtml(candidate.review_reasons.join(" · ") || "Human authorization required")}</p>
         <h3>Exact supporting evidence</h3><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · lines ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
         <details><summary>Source version and provenance</summary><p>Version: ${escapeHtml(candidate.evidence.source_version)}</p><p>Evidence ref: ${escapeHtml(candidate.evidence.evidence_ref)}</p></details></section>
-      <form id="candidate-review" class="panel form-stack" data-id="${escapeHtml(candidateId)}">${resolutionFields}
+      <form id="candidate-review" class="panel form-stack" data-id="${escapeHtml(candidateId)}">${revalidation ? `<div class="notice"><strong>New approval for a stale decision</strong><p>Original: ${escapeHtml(revalidation.original.value)}. This approval applies only to this new candidate and its current evidence. The original decision and authorization remain in history.</p></div>` : ""}${resolutionFields}
         <div class="field"><label for="reviewer-id">Reviewer</label><input id="reviewer-id" name="reviewer_id" required maxlength="120" placeholder="Your name"></div>
         <div class="field"><label for="review-reason">Review reason</label><textarea id="review-reason" name="reason" required maxlength="1000" placeholder="Why is this evidence sufficient?"></textarea></div>
         <div class="actions"><button class="button" type="submit" data-review-action="approve">Approve and materialize</button><button class="button danger" type="submit" data-review-action="reject" formnovalidate>Reject</button></div></form></div>
-      <p><button class="button quiet" data-action="back-review">Back to Review</button></p>`;
+      <p>${revalidation ? `<button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(revalidation.original.decision_id)}">Keep unresolved / back to comparison</button>` : `<button class="button quiet" data-action="back-review">Back to Review</button>`}</p>`;
+  }
+
+  async function inspectRevalidation(decisionId) {
+    const viewToken = ++state.agentViewToken;
+    const { revalidation: view } = await request(`/api/review/revalidation/${encodeURIComponent(decisionId)}`);
+    if (viewToken !== state.agentViewToken) return;
+    state.revalidation = view;
+    const original = view.original;
+    const reasonLabels = {
+      ORIGINAL_EVIDENCE_UNAVAILABLE: "The exact historical evidence cannot be verified.",
+      SOURCE_MISSING: "The original source record is unavailable.",
+      SOURCE_REMOVED: "The source was removed from the active workspace. Historical evidence is retained for audit only.",
+      EVIDENCE_WITHDRAWN_OR_CHANGED: "The original timestamp, speaker and exact quote no longer occur uniquely in the current source. The evidence was changed, withdrawn or duplicated.",
+      SOURCE_RECONCILIATION_REQUIRED: "Source reconciliation still requires review.",
+      DECISION_INVALIDATED: "This decision was invalidated. It cannot be restored through stale revalidation.",
+    };
+    const evidence = original.evidence.map(item => `<blockquote class="quote">${escapeHtml(item.quote || "Historical quote unavailable")}</blockquote><p class="metadata">${escapeHtml(item.source_name)} · lines ${item.line_start || "?"}–${item.line_end || "?"} · Version ${escapeHtml(item.source_version || "Unavailable")}</p>`).join("");
+    const sources = view.current_sources.map(source => `<article class="card"><div class="card-head"><h3>${escapeHtml(source.name)}</h3>${badge(source.active ? source.ingestion_status : "REMOVED")}</div><p class="metadata">Current version: ${escapeHtml(source.source_version)}</p><pre class="quote">${escapeHtml(source.content)}</pre></article>`).join("");
+    const candidates = view.candidates.map(candidate => `<article class="card"><div class="card-head"><h3>${escapeHtml(candidate.proposed_value)}</h3>${badge(candidate.status)}</div><p class="metadata">${escapeHtml(candidate.subject)} · ${escapeHtml(candidate.relation)} · Effective ${escapeHtml(candidate.valid_from)}</p><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · lines ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>${candidate.recorded_approval ? `<details><summary>Recorded approval (read-only)</summary><pre>${escapeHtml(JSON.stringify(candidate.recorded_approval, null, 2))}</pre></details><p class="hint">Approval is already recorded. Finish materialization using only that authorization.</p>` : ""}<button class="button" data-action="${candidate.status === "APPROVED" ? "retry-revalidation" : "revalidate-candidate"}" data-id="${escapeHtml(candidate.candidate_id)}">${candidate.status === "APPROVED" ? "Finish recorded approval" : "Review this new candidate"}</button></article>`).join("");
+    page.innerHTML = `${heading("Review Attention", `${original.subject} · ${original.relation}`, "Compare the original approval with current sources. A new candidate needs a separate explicit human approval.")}
+      <section class="panel"><div class="card-head"><h2>Original decision: ${escapeHtml(original.value)}</h2>${badge(original.memory_state)}</div><p class="metadata">Effective ${escapeHtml(original.valid_from)} · ${escapeHtml(view.status)}</p><h3>Why this needs attention</h3>${view.reasons.map(reason => `<p>${escapeHtml(reasonLabels[reason.code] || reason.code)}</p>`).join("")}${evidence}<details><summary>Original authorization receipts (read-only)</summary><pre>${escapeHtml(JSON.stringify(view.original_receipts, null, 2))}</pre></details></section>
+      <section class="panel"><h2>Current sources</h2>${sources || `<p>No current source record is available. Add a source in Sources, then return to review.</p>`}</section>
+      <section class="panel"><h2>New candidates for explicit review</h2>${candidates || (view.status === "RESOLVED" ? `<p>This revalidation is complete. The new approval and original record can be inspected in history.</p>` : view.status === "READ_ONLY" ? `<p>This record is read-only and cannot be revalidated here.</p>` : `<p>No valid new candidate is available. This decision stays unresolved. Add or update a source, finish extraction, and return here.</p>`)}${view.completion ? `<p>Revalidated by a new approval on ${escapeHtml(view.completion.authorized_at)}. The original record remains unchanged.</p><button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(view.completion.decision_id)}">View approved decision and history</button>` : ""}</section>
+      <div class="actions"><button class="button quiet" data-action="back-review">${view.status === "UNRESOLVED" ? "Keep unresolved" : "Back to Review"}</button><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decisionId)}">Refresh comparison</button></div>`;
   }
 
   async function loadDecisions() {
@@ -230,6 +264,7 @@
     const viewToken = ++state.agentViewToken;
     const detail = await request(`/api/decisions/${encodeURIComponent(decisionId)}`);
     const decision = detail.decision;
+    const { history } = await request(`/api/decisions/${encodeURIComponent(decisionId)}/history`);
     const { recovery } = await send("POST", "/api/decisions/recover", {
       subject: decision.subject, relation: decision.relation, as_of: asOf || null,
     });
@@ -241,10 +276,10 @@
       · Evidence ${escapeHtml(item.evidence_ref || "Unavailable")}</div>
       <blockquote class="quote">${escapeHtml(item.quote || "Verified quote unavailable")}</blockquote>
       ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">Inspect source</button>` : ""}`).join("");
-    const timeline = recovery.history.map((item) => `<article class="timeline-item"><div class="card-head"><strong>${escapeHtml(item.value)}</strong>${badge(item.status)}${badge(item.memory_state)}</div>
+    const timeline = history.filter(item => item.valid_from <= recovery.as_of).map((item) => `<article class="timeline-item"><div class="card-head"><strong>${escapeHtml(item.value)}</strong>${badge(item.status)}${badge(item.memory_state)}</div>
       <p class="metadata">Decision ${escapeHtml(item.decision_id)} · ${escapeHtml(item.valid_from)}${item.valid_to ? ` → ${escapeHtml(item.valid_to)}` : " → open-ended"}</p>
       <p class="metadata">Review receipt: ${escapeHtml(item.authorization?.receipt_id || "Unavailable")}
-      · Authorized ${escapeHtml(item.authorization?.authorized_at || "Unknown")}</p>${evidenceRows(item.evidence)}</article>`).join("");
+      · Authorized ${escapeHtml(item.authorization?.authorized_at || "Unknown")}</p>${item.revalidated_by ? `<p>Revalidated by a separate human approval on ${escapeHtml(item.revalidated_by.authorized_at)}. Receipt: ${escapeHtml(item.revalidated_by.receipt_id)}</p>` : ""}${evidenceRows(item.evidence)}</article>`).join("");
     const transitions = recovery.transitions.map((item) => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} on ${escapeHtml(item.effective_at)}.
       Replacement reason: ${item.reason_status === "NOT_SOURCE_VERIFIED" ? "Cannot confirm from verified sources" : escapeHtml(item.reason_status)}.</p>`).join("");
     const proposals = recovery.proposals.map((item) => `<article class="timeline-item"><strong>${escapeHtml(item.value)}</strong> ${badge(item.status)}
@@ -683,7 +718,18 @@
             if (!field.checkValidity()) { field.reportValidity(); return; }
           }
         }
-        const result = await send("POST", `/api/review/candidates/${encodeURIComponent(form.dataset.id)}/${action}`, data);
+        const reviewViewToken = state.agentViewToken;
+        const revalidation = state.revalidation;
+        const linked = action === "approve" && revalidation;
+        if (linked) Object.assign(data, {
+          workspace_id: revalidation.workspace_id, review_token: revalidation.review_token,
+          candidate_id: form.dataset.id,
+          candidate_fingerprint: revalidation.candidates.find(item => item.candidate_id === form.dataset.id)?.candidate_fingerprint,
+        });
+        const result = await send("POST", linked
+          ? `/api/review/revalidation/${encodeURIComponent(revalidation.original.decision_id)}/approve`
+          : `/api/review/candidates/${encodeURIComponent(form.dataset.id)}/${action}`, data);
+        if (reviewViewToken !== state.agentViewToken) return;
         announce(action === "approve" ? "Candidate approved and materialized." : "Candidate rejected.");
         await refreshWorkspaceState();
         await loadReview();
@@ -718,6 +764,20 @@
         }
       }
       else if (action === "inspect-candidate") await inspectCandidate(id);
+      else if (action === "revalidate-decision") await inspectRevalidation(id);
+      else if (action === "revalidate-candidate") await inspectCandidate(id, state.revalidation);
+      else if (action === "retry-revalidation") {
+        const view = state.revalidation;
+        const viewToken = state.agentViewToken;
+        const candidate = view.candidates.find(item => item.candidate_id === id);
+        const result = await send("POST", `/api/review/revalidation/${encodeURIComponent(view.original.decision_id)}/approve`, {
+          workspace_id: view.workspace_id, review_token: view.review_token,
+          candidate_id: id, candidate_fingerprint: candidate.candidate_fingerprint,
+        });
+        if (viewToken !== state.agentViewToken) return;
+        announce("The recorded revalidation approval was materialized.");
+        await inspectDecision(result.decision_id);
+      }
       else if (action === "inspect-decision") await inspectDecision(id);
       else if (action === "ask-timeline") await inspectDecision(id, button.dataset.asOf || "");
       else if (action === "ask-decision") {

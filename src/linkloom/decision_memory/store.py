@@ -870,6 +870,40 @@ class TemporalDecisionStore:
         ).fetchall()
         return tuple(dict(row) for row in rows)
 
+    def get_decision_revalidation_links(self, workspace_id: str) -> dict[str, dict[str, object]]:
+        """Project completed revalidations from their actual approval and receipt.
+
+        This is an audit relation, never a synthetic business supersession.
+        Pending approvals without a materialization receipt cannot close it.
+        """
+        rows = self._connection.execute(
+            """SELECT receipt.*, event.metadata_json
+               FROM semantic_materialization_receipt AS receipt
+               JOIN semantic_candidate_event AS event
+                 ON event.workspace_id = receipt.workspace_id
+                AND event.candidate_id = receipt.candidate_id
+                AND event.candidate_fingerprint = receipt.candidate_fingerprint
+                AND event.actor_id = receipt.authorization_id
+                AND event.event_at = receipt.authorized_at
+               WHERE receipt.workspace_id = ? AND event.event_type = 'HUMAN_APPROVAL'
+                 AND receipt.authorization_type = 'HUMAN_APPROVAL'
+                 AND receipt.candidate_source_kind = 'SOURCE_INGESTION'
+               ORDER BY receipt.materialized_at, receipt.receipt_id""",
+            (workspace_id,),
+        ).fetchall()
+        links: dict[str, dict[str, object]] = {}
+        for row in rows:
+            original_id = json.loads(str(row["metadata_json"])).get("revalidation_of_decision_id")
+            original = self.get_decision(workspace_id, original_id) if original_id else None
+            successor = self.get_decision(workspace_id, str(row["decision_id"]))
+            if (original is None or successor is None or original.decision_id == successor.decision_id
+                or original.subject_key != successor.subject_key):
+                continue
+            links[original.decision_id] = {key: row[key] for key in (
+                "decision_id", "candidate_id", "receipt_id", "authorized_at", "effective_at",
+            )}
+        return links
+
     def transition_semantic_candidate(
         self,
         *,

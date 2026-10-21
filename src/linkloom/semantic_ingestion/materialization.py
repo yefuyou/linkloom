@@ -759,6 +759,7 @@ class SemanticDecisionMaterializer:
         reason: str,
         resolution: CandidateReviewResolution | None = None,
         now: datetime | None = None,
+        revalidation_of_decision_id: str | None = None,
     ) -> MaterializationAssessment:
         reviewer_id = _required_text(reviewer_id, "reviewer_id")
         reason = _required_text(reason, "review reason")
@@ -805,6 +806,10 @@ class SemanticDecisionMaterializer:
                 "review_resolution_fingerprint": (
                     resolution.fingerprint if resolution is not None else None
                 ),
+                # Audit context only. Authority still comes from this fresh
+                # candidate-specific approval and its materialization receipt.
+                **({"revalidation_of_decision_id": revalidation_of_decision_id}
+                   if revalidation_of_decision_id is not None else {}),
             },
         )
         if not changed:
