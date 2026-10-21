@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="41" time="290.795" timestamp="2026-10-21T12:36:20.124009+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3p_product_review" name="test_offline_demo_rejects_a_user_named_database" time="0.415" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_partial_exposes_original_tasks_proposal_and_exact_block" time="5.375" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_explicit_tasks_domain_accepts_owner_field_in_original_question" time="9.402" /><testcase classname="tests.integration.test_m3p_product_review" name="test_new_service_reads_saved_result_without_model_calls" time="15.976" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[both]" time="15.422" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[identity]" time="14.758" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[none]" time="13.083" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[update]" time="31.485" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[remove]" time="33.276"><failure message="TimeoutError: timed out">tests\integration\test_m3p_product_review.py:145: in test_http_hot_and_new_process_hide_invalidated_results
+    result = http_ask(base, ws)
+tests\m3p_support.py:159: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+D:\Anaconda\Lib\socket.py:719: in readinto
+    return self._sock.recv_into(b)
+E   TimeoutError: timed out</failure></testcase><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[relation_retract]" time="33.465" /><testcase classname="tests.integration.test_m3p_product_review" name="test_same_name_separate_work_never_inherits_fields_or_model_identity" time="9.169" /><testcase classname="tests.integration.test_m3p_product_review" name="test_revoked_evidence_without_source_change_cannot_be_resurrected" time="33.538"><failure message="TimeoutError: timed out">tests\integration\test_m3p_product_review.py:225: in test_revoked_evidence_without_source_change_cannot_be_resurrected
+    result = http_ask(base, ws)
+tests\m3p_support.py:159: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+D:\Anaconda\Lib\socket.py:719: in readinto
+    return self._sock.recv_into(b)
+E   TimeoutError: timed out</failure></testcase><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_fake_task_models_reject_known_external_provider_adapters[gemini]" time="0.008" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_fake_task_models_reject_known_external_provider_adapters[deepseek]" time="0.007" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_product_source_registry_requires_current_catalog_membership" time="0.017" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_query_projects_exact_p4_relation_and_replayed_comparison" time="21.475" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D01-revision-REVISES_PLAN-REFUTED]" time="1.639" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D07-identity-SAME_TASK-UNKNOWN]" time="2.250" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_non_supported_p4_verdicts_remain_visible_and_block_dependents[V04-revision-REVISES_PLAN-CONFLICT]" time="3.390" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_missing_sidecar_and_unsupported_scope_explain_blocked_steps" time="1.130" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_source_binding_and_for_run_configuration_are_preserved" time="1.554" /><testcase classname="tests.unit.test_task_investigation_p4_steps" name="test_source_scoped_steps_do_not_consume_unscoped_p4_reads" time="3.737" /><testcase classname="tests.integration.test_m3p_execution_failures" name="test_task_http_execution_failure_never_becomes_accepted_partial[provider_unknown]" time="4.271" /><testcase classname="tests.integration.test_m3p_execution_failures" name="test_task_http_execution_failure_never_becomes_accepted_partial[budget]" time="5.254" /><testcase classname="tests.integration.test_m3p_execution_failures" name="test_task_http_execution_failure_never_becomes_accepted_partial[no_progress]" time="5.652" /><testcase classname="tests.integration.test_m3p_execution_failures" name="test_task_http_execution_failure_never_becomes_accepted_partial[workspace]" time="2.725" /><testcase classname="tests.integration.test_m3p_execution_failures" name="test_task_http_execution_failure_never_becomes_accepted_partial[permission]" time="2.973" /><testcase classname="tests.integration.test_final_evidence_trust" name="test_e07_search_only_final_cannot_be_trusted" time="1.066" /><testcase classname="tests.integration.test_final_evidence_trust" name="test_e15_known_read_counterevidence_cannot_be_trusted" time="2.273" /><testcase classname="tests.integration.test_final_evidence_trust" name="test_search_then_read_remains_a_valid_trusted_path" time="1.464" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_same_scope_read_counterevidence_cannot_be_hidden_by_final_refs" time="0.004" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_source_claim_requires_successful_read_but_search_to_read_remains_valid" time="0.005" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_different_valid_dates_do_not_create_global_conflict" time="0.004" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_evidence_free_abstention_is_allowed" time="0.003" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_unrelated_scope_and_other_event_date_do_not_block_read_fact[Mira Chen is the accountable owner of Lantern Plan.-Jordan Lee is the accountable owner of Lantern Plan for Beacon.]" time="0.005" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_unrelated_scope_and_other_event_date_do_not_block_read_fact[Mira Chen is the accountable owner of Lantern Plan for Atlas.-Jordan Lee is the accountable owner of Lantern Plan for Beacon.]" time="0.005" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_unrelated_scope_and_other_event_date_do_not_block_read_fact[Meridian A was replaced by Cobalt B on 2025-02-14.-Cobalt B replaced Meridian A on 2025-03-14.]" time="0.005" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_legitimate_partial_keeps_its_supported_fact" time="0.007" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_typed_source_final_cannot_bypass_read_or_omit_known_conflict" time="0.012" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_successful_read_cannot_authorize_another_evidence_id" time="0.005" /><testcase classname="tests.unit.test_final_trust_boundary" name="test_typed_quote_truncation_cannot_discard_original_project_scope" time="0.007" /></testsuite></testsuites>

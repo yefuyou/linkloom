@@ -1,0 +1,85 @@
+{
+  "baseline_sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+  "module_path": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\src\\linkloom\\__init__.py",
+  "data_dir": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\evidence\\data_7470427340",
+  "results": [
+    {
+      "id": "E07",
+      "name": "Search-only final without read_verified_note",
+      "verdict": "FAIL",
+      "runtime_status": "completed",
+      "user_status": "completed",
+      "review": {
+        "checks": [
+          {
+            "ref": "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7",
+            "status": "pass"
+          },
+          {
+            "result_type": "subject",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-20T23:52:53.326418+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_ba6ab88a",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": [
+          "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+        ]
+      },
+      "result": {
+        "candidate_refs": [
+          "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+        ],
+        "evidence_refs": [
+          "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+        ],
+        "review_decision": "evidence_sufficient",
+        "team_decision": {
+          "actions": [],
+          "decision": {
+            "evidence_refs": [
+              "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+            ],
+            "status": "approved",
+            "value": "Acme"
+          },
+          "evidence_refs": [
+            "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+          ],
+          "rationale": [
+            {
+              "evidence_refs": [
+                "ev_v2_40898f6f86925336f68a13b42809fbb2a2c39175385ba7669526d64e2cf6d9b7"
+              ],
+              "point": "The observed note names Acme."
+            }
+          ],
+          "rejected_alternatives": [],
+          "schema_version": "team-decision-result/v1",
+          "uncertainty": {
+            "evidence_refs": [],
+            "statement": null,
+            "status": "none",
+            "unknown_fields": []
+          },
+          "unresolved_items": []
+        }
+      },
+      "memory_candidate": {
+        "candidate_id": "agent_memory_candidate_v1_eda8ec4909b0b20c4b3ad2f8faaa61c32fe13748ee2a9b172607c274dc8b3989",
+        "reason": "CLAIM_TYPE_UNRESOLVED",
+        "review_required": true,
+        "status": "CAPTURED"
+      },
+      "observed_tool_results": [
+        "search_notes"
+      ],
+      "provider_requests": 2,
+      "artifact": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\evidence\\data_7470427340\\search_only\\observed_result.json"
+    }
+  ]
+}

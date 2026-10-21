@@ -1,0 +1,39 @@
+{
+  "baseline_sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+  "module_path": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\src\\linkloom\\__init__.py",
+  "data_dir": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\runs\\fixed\\data_1a4bc317e5",
+  "results": [
+    {
+      "id": "E07",
+      "name": "Search-only final without read_verified_note",
+      "verdict": "PASS",
+      "runtime_status": "failed",
+      "user_status": "failed",
+      "review": null,
+      "result": null,
+      "memory_candidate": {
+        "candidate_id": null,
+        "reason": "ANSWER_NOT_COMPLETED",
+        "review_required": false,
+        "status": "BLOCKED"
+      },
+      "observed_tool_results": [
+        "search_notes"
+      ],
+      "provider_requests": 2,
+      "artifact": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\runs\\fixed\\data_1a4bc317e5\\search_only\\observed_result.json"
+    },
+    {
+      "id": "E15",
+      "name": "Final omits known read counterevidence and claims no uncertainty",
+      "verdict": "PASS",
+      "status": "failed",
+      "read_count": 2,
+      "assessment_with_both_read_sources": "CONTRADICTED",
+      "review": null,
+      "result": null,
+      "provider_requests": 4,
+      "artifact": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\runs\\fixed\\data_1a4bc317e5\\known_conflict\\observed_result.json"
+    }
+  ]
+}
