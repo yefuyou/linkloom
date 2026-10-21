@@ -65,6 +65,11 @@ class DecisionReconciler:
         action_rows = connection.execute(
             "SELECT * FROM action ORDER BY workspace_id, action_id"
         ).fetchall()
+        revalidated_ids = {
+            decision_id
+            for workspace_id in {str(row["workspace_id"]) for row in decision_rows}
+            for decision_id in self.store.get_decision_revalidation_links(workspace_id)
+        }
 
         with connection:
             active_rows = [
@@ -143,6 +148,10 @@ class DecisionReconciler:
                     )
                     desired = DecisionMemoryState.INVALIDATED
                 current_state = DecisionMemoryState(str(row["memory_state"]))
+                # Reintroducing an old quote cannot reuse the original approval
+                # after a separate human revalidation produced its successor.
+                if str(row["decision_id"]) in revalidated_ids:
+                    desired = DecisionMemoryState.STALE
                 # Extraction corrections are terminal invalidations. Source
                 # inventory reconciliation may restore STALE records, but it
                 # must not resurrect a decision explicitly invalidated as a
