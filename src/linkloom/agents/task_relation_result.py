@@ -6,9 +6,20 @@ import json
 from linkloom.runtime.errors import ValidationError
 
 
+def _parse_final_json(final_answer):
+    """Parse the exact receipt object, tolerating one JSON Markdown fence."""
+    if not isinstance(final_answer, str):
+        raise ValueError("Final answer must be text")
+    text = final_answer.strip()
+    lines = text.splitlines()
+    if len(lines) >= 3 and lines[0].strip().lower() in {"```", "```json"} and lines[-1].strip() == "```":
+        text = "\n".join(lines[1:-1]).strip()
+    return json.loads(text)
+
+
 def project_task_relation_result(final_answer, records, visible_results, workspace_id, *, require_semantic=False, prior_visible_results=()):
     try:
-        final = json.loads(final_answer)
+        final = _parse_final_json(final_answer)
         keys = ("context_call_id", "relations_call_id", "semantic_call_id") if require_semantic else ("context_call_id", "relations_call_id")
         tool_ids = ("inspect_task_context", "query_task_relations", "analyze_task_semantics") if require_semantic else ("inspect_task_context", "query_task_relations")
         if (not isinstance(final, dict) or set(final) != set(keys)

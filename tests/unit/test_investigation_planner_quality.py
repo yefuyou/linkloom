@@ -4,12 +4,22 @@ from dataclasses import replace
 import pytest
 
 from linkloom.semantic_ingestion.task_relation_question_models import VerifiedStepResult
+from linkloom.semantic_ingestion.task_relation_question_planner import INSTRUCTIONS
 from tests.question_planning_support import public_inputs, planning_context
 from tests.unit.test_task_relation_question_planner import FakeModel, arguments, planner, relation, step, snapshot
 
 
 def context(ordinal=8):
     return planning_context(public_inputs()['questions'][ordinal])[0]
+
+
+def test_planner_instructions_make_inspect_target_kind_empty():
+    instructions = INSTRUCTIONS.lower()
+    assert "for every inspect step, target_kind, predicate" in instructions
+    assert "empty string/list" in instructions
+    assert "for relation steps, handles provide the two typed endpoints" in instructions
+    assert "for compare_dates, handles provide" in instructions
+    assert "the two task observations" in instructions
 
 
 def owner(identity='owner', **patch):

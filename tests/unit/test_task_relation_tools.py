@@ -117,6 +117,19 @@ def test_final_rejects_unseen_receipts_and_free_text_claims():
                                      [r.result for r in records], "w")
 
 
+def test_final_accepts_json_wrapped_in_one_markdown_code_fence():
+    from types import SimpleNamespace
+    from linkloom.agents.task_relation_result import project_task_relation_result
+    import json
+    records = [SimpleNamespace(call_id=tool, tool_id=tool, status="completed", sequence=index,
+        result={"status": "ok", "value": {"workspace_id": "w"}}, arguments={"workspace_id": "w"})
+        for index, tool in enumerate(("inspect_task_context", "query_task_relations"))]
+    final = {"context_call_id": records[0].call_id, "relations_call_id": records[1].call_id}
+    fenced = "```json\n" + json.dumps(final) + "\n```"
+    result = project_task_relation_result(fenced, records, [r.result for r in records], "w")
+    assert result["answer_status"] == "PARTIAL"
+
+
 def test_truncated_results_do_not_claim_absence_of_verified_relations(tmp_path, monkeypatch):
     import linkloom.tools.task_relations as module
     from linkloom.semantic_ingestion.task_relation_query import RelationQuery

@@ -29,6 +29,7 @@ from linkloom.runtime.task_plan import (
     conflicted_subgoals,
     validate_relation_final,
 )
+from linkloom.agents.task_relation_result import _parse_final_json
 from linkloom.tools.contracts import ToolError
 from linkloom.tools.runtime import ToolRuntime
 from linkloom.tools.tool_policy import ToolPolicyEnforcer
@@ -626,7 +627,7 @@ class RetrievalAgent:
             require_semantic = "analyze_task_semantics" in task.allowed_tool_ids
             prior_visible = []
             if require_semantic:
-                selected_id = json.loads(loop_result.final_answer).get("semantic_call_id")
+                selected_id = _parse_final_json(loop_result.final_answer).get("semantic_call_id")
                 selected_record = next((r for r in records if r.call_id == selected_id), None)
                 if selected_record is None:
                     raise ValidationError("Semantic Final has no authorized tool receipt.")
