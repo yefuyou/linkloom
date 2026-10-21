@@ -1,0 +1,70 @@
+{
+  "baseline_sha": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+  "module_path": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\src\\linkloom\\__init__.py",
+  "data_dir": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\evidence\\data_91f77c52e3",
+  "results": [
+    {
+      "id": "E15",
+      "name": "Final omits known read counterevidence and claims no uncertainty",
+      "verdict": "FAIL",
+      "status": "completed",
+      "read_count": 2,
+      "assessment_with_both_read_sources": "CONTRADICTED",
+      "review": {
+        "checks": [
+          {
+            "ref": "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e",
+            "status": "pass"
+          },
+          {
+            "result_type": "subject",
+            "status": "pass"
+          }
+        ],
+        "created_at": "2026-10-20T23:53:16.686192+00:00",
+        "decision": "evidence_sufficient",
+        "human_approval_required": false,
+        "reason": "All validation passed",
+        "review_id": "review_8b8f4546",
+        "reviewer_agent_id": "reviewer_agent",
+        "subject_refs": [
+          "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e"
+        ]
+      },
+      "result": {
+        "candidate_refs": [
+          "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e"
+        ],
+        "evidence_refs": [
+          "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e"
+        ],
+        "review_decision": "evidence_sufficient",
+        "team_decision": {
+          "actions": [],
+          "decision": {
+            "evidence_refs": [
+              "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e"
+            ],
+            "status": "approved",
+            "value": "Mira Chen is the accountable owner of Lantern Plan."
+          },
+          "evidence_refs": [
+            "ev_v2_3e2c2d81580ca84016b3b8aa3d500c729e2ba91fb392b3b21b5a1b98ebe8d91e"
+          ],
+          "rationale": [],
+          "rejected_alternatives": [],
+          "schema_version": "team-decision-result/v1",
+          "uncertainty": {
+            "evidence_refs": [],
+            "statement": null,
+            "status": "none",
+            "unknown_fields": []
+          },
+          "unresolved_items": []
+        }
+      },
+      "provider_requests": 4,
+      "artifact": "D:\\webproject\\Linkloom\\work\\trust-p1-fix\\work\\trust-evidence\\m\\evidence\\data_91f77c52e3\\known_conflict\\observed_result.json"
+    }
+  ]
+}

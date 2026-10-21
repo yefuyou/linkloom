@@ -72,6 +72,8 @@ jobs:
         run: >-
           python -m pytest -q -m 'not legacy_historical'
           -o junit_family=xunit1 --junitxml=offline-core.xml
+          tests/integration/test_final_evidence_trust.py
+          tests/unit/test_final_trust_boundary.py
           tests/unit/test_offline_source_controller.py
           tests/unit/test_source_identity_contract.py
           tests/unit/test_product_evidence_context_scope.py
@@ -115,6 +117,7 @@ jobs:
           node --check src/linkloom/ui/static/product.js
           node tests/ui/unified_ask_dom_test.cjs
           node tests/ui/stale_revalidation_dom_test.cjs
+          node tests/ui/first_use_dom_test.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

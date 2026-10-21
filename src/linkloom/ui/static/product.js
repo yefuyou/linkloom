@@ -132,6 +132,7 @@
 
   async function loadSources() {
     const { sources } = await request("/api/sources");
+    const providerReady = Boolean(state.provider?.ready);
     const list = sources.length ? sources.map((source) => `
       <article class="card" data-source-card="${escapeHtml(source.source_id)}">
         <div class="card-head"><div><h3>${escapeHtml(source.name)}</h3><p class="status-line">Version captured ${escapeHtml(source.updated_at)}</p></div>${badge(source.ingestion_status)}</div>
@@ -141,22 +142,24 @@
       </article>`).join("") : `<section class="empty"><h2>No sources yet</h2><p>Add a timestamped meeting or decision artifact below. Source text is kept as an immutable version; this does not edit files in your workspace.</p></section>`;
     page.innerHTML = `${heading("Sources", "Bring the project record together", "Import timestamped meeting notes. LinkLoom keeps exact source versions and shows when semantic extraction needs review.")}
       <div class="split"><section><div class="section-title"><h2>Workspace sources</h2><span class="muted">${sources.length} active</span></div>${list}</section>
-      <section class="panel"><h2>Add a source</h2><p class="hint">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. LinkLoom will show INGESTING, then the candidate and review counts.</p>
-        ${state.provider?.ready ? `<p class="hint">${escapeHtml(state.provider.message)} Source text is sent to this configured provider when you submit.</p>` : `<div class="error-box"><strong>Semantic provider is not enabled.</strong><p>${escapeHtml(state.provider?.message || "Configure a provider before importing.")}</p></div>`}
+      <section class="panel"><h2>Add a source</h2><p class="hint">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. ${providerReady ? "LinkLoom will show INGESTING, then the candidate and review counts." : "The source is saved as an immutable version now; semantic extraction stays unavailable until a provider is enabled."}</p>
+        ${providerReady ? `<p class="hint">${escapeHtml(state.provider.message)} Source text is sent to this configured provider when you submit.</p>` : `<div class="error-box"><strong>Source saving is available; semantic extraction is not.</strong><p>${escapeHtml(state.provider?.message || "Configure a provider before extracting source text.")} You can save the source now and extract it later after enabling a provider.</p></div>`}
         <form id="source-create" class="form-stack"><div class="field"><label for="source-file">Choose a Markdown or text artifact</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"><span class="hint">Files are read in this browser and submitted to the local LinkLoom server.</span></div>
         <div class="field"><label for="source-name">Artifact name</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
         <div class="field"><label for="source-content">Timestamped source text</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
-        <button class="button" type="submit">Import and extract</button></form></section></div>`;
+        <button class="button" type="submit">${providerReady ? "Import and extract" : "Save source for later extraction"}</button></form></section></div>`;
   }
 
   async function inspectSource(sourceId) {
     const { source } = await request(`/api/sources/${encodeURIComponent(sourceId)}`);
+    const providerReady = Boolean(state.provider?.ready);
     state.sourceId = sourceId;
+    const extractionUnavailable = source.error?.startsWith("PROVIDER_UNAVAILABLE:");
     const evidence = source.evidence.length ? source.evidence.map((item) => `<div class="card"><div class="metadata"><span>Lines ${item.line_start}–${item.line_end}</span><span>${badge("VERIFIED")}</span></div><blockquote class="quote">${escapeHtml(item.quote)}</blockquote></div>`).join("") : `<p class="empty">No timestamped evidence spans were parsed.</p>`;
     page.innerHTML = `${heading("Sources", source.name, `Current version ${source.source_version}. Source changes create a new version; prior evidence remains available.`)}
-      <div class="detail-layout"><section class="panel"><div class="card-head"><h2>Ingestion</h2>${badge(source.ingestion_status)}</div><p>${source.candidate_count} candidates · ${source.review_required_count} need review · ${source.segment_summary.total} segments · ${source.segment_summary.processed} processed · ${source.segment_summary.failed} extraction failed</p>${source.error ? `<div class="error-box" role="alert">${escapeHtml(source.error)}</div>` : ""}${source.segments.map((segment) => `<p class="metadata">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join("")}${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">Retry failed segment</button>` : ""}
+      <div class="detail-layout"><section class="panel"><div class="card-head"><h2>Ingestion</h2>${badge(source.ingestion_status)}</div>${extractionUnavailable ? `<p class="review-guidance"><strong>Source saved. Semantic extraction is unavailable.</strong> The exact source text remains stored locally. Enable a provider, then return to Sources and import the original artifact again for extraction.</p>` : ""}<p>${source.candidate_count} candidates · ${source.review_required_count} need review · ${source.segment_summary.total} segments · ${source.segment_summary.processed} processed · ${source.segment_summary.failed} extraction failed</p>${source.error ? `<div class="error-box" role="alert">${escapeHtml(source.error)}</div>` : ""}${source.segments.map((segment) => `<p class="metadata">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join("")}${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">Retry failed segment</button>` : ""}
         <h3>Exact evidence spans</h3>${evidence}<details><summary>Source version details</summary><p class="metadata">Version: ${escapeHtml(source.source_version)} · Content SHA-256: ${escapeHtml(source.content_sha256)}</p></details></section>
-      <section class="panel"><h2>Update source</h2><p class="hint">Submitting changed text creates a new immutable source version and runs reconciliation.</p>
+      <section class="panel"><h2>Update source</h2><p class="hint">Submitting changed text creates a new immutable source version and runs reconciliation.${providerReady ? " The new version will be extracted by the configured provider." : " Enable a provider before saving a new version if you want semantic extraction."}</p>
         <form id="source-update" class="form-stack" data-id="${escapeHtml(sourceId)}"><div class="field"><label for="update-name">Artifact name</label><input id="update-name" name="name" value="${escapeHtml(source.name)}" required></div>
         <div class="field"><label for="update-content">Timestamped source text</label><textarea class="source-input" id="update-content" name="content" required>${escapeHtml(source.content)}</textarea></div>
         <button class="button" type="submit">Save new source version</button><button class="button danger" type="button" data-action="delete-source" data-id="${escapeHtml(sourceId)}">Remove from workspace</button></form></section></div>
@@ -210,10 +213,12 @@
     state.revalidation = revalidation;
     state.candidateId = candidateId;
     const unresolved = candidate.current_unresolved_fields;
-    const resolutionFields = unresolved.length ? `<section class="panel"><h3>Resolve fields from the evidence</h3><p class="hint">Leave uncertain fields empty. Effective time never defaults to today.</p>
+    const relationUnresolved = unresolved.includes("relation");
+    const relationGuidance = relationUnresolved ? `<div class="review-guidance" role="note" id="relation-guidance"><strong>Canonical relation cannot be corrected in this review form.</strong><p>Extracted relation phrase: ${escapeHtml(candidate.relation_phrase || "Not present")}. This form cannot add a catalog mapping or turn an unknown relation into a canonical one.</p><p>Open the original source to inspect it. With a provider enabled, return to Sources and import the original artifact again to request a new extraction. Re-extraction may still leave the relation unresolved.</p><p>If you cannot confirm the candidate from its evidence, leave it unresolved and use Reject. Enter your reviewer name and reason to record the rejection; it will not enter Decision Memory.</p><button class="button quiet" type="button" data-action="inspect-source" data-id="${escapeHtml(candidate.source_id)}">Open original source</button></div>` : "";
+    const resolutionFields = unresolved.length ? `<section class="panel"><h3>Resolve fields from the evidence</h3><p class="hint">Only an unresolved subject and an explicit effective time can be corrected here. Leave uncertain fields empty. Effective time never defaults to today.</p>
       ${unresolved.includes("subject") ? `<div class="field"><label for="review-subject">Subject</label><input id="review-subject" name="subject" value="${escapeHtml(candidate.subject || "")}" required></div>` : ""}
-      ${unresolved.includes("relation") ? `<p class="hint">Extracted relation phrase: ${escapeHtml(candidate.relation_phrase || "Not present")}</p><div class="field"><label for="review-relation">Canonical relation</label><input id="review-relation" name="relation" required></div>` : ""}
-      ${unresolved.includes("valid_from") ? `<div class="field"><label for="review-valid-from">Effective date or timestamp</label><input id="review-valid-from" name="valid_from" placeholder="YYYY-MM-DD or ISO 8601 with timezone" required></div>` : ""}</section>` : `<p class="hint">Subject, relation, and effective time are resolved from the source.</p>`;
+      ${relationGuidance}
+      ${unresolved.includes("valid_from") ? `<div class="field"><label for="review-valid-from">Effective date or timestamp</label><input id="review-valid-from" name="valid_from" placeholder="YYYY-MM-DD or ISO 8601 with timezone" required></div>` : ""}</section>` : `<p class="hint">Subject, canonical relation, and effective time are resolved from the source.</p>`;
     page.innerHTML = `${heading("Review candidate", candidate.proposed_value || "Needs review", `${candidate.claim_type} · ${candidate.status}`)}
       <div class="detail-layout"><section class="panel"><div class="metadata"><span>Subject <strong>${escapeHtml(candidate.subject || "Needs review")}</strong></span><span>Relation <strong>${escapeHtml(candidate.relation || "Needs review")}</strong></span><span>Valid from <strong>${escapeHtml(candidate.valid_from || "Not resolved")}</strong></span></div>
         <p class="section-title"><strong>Review reasons</strong></p><p>${escapeHtml(candidate.review_reasons.join(" · ") || "Human authorization required")}</p>
@@ -222,7 +227,7 @@
       <form id="candidate-review" class="panel form-stack" data-id="${escapeHtml(candidateId)}">${revalidation ? `<div class="notice"><strong>New approval for a stale decision</strong><p>Original: ${escapeHtml(revalidation.original.value)}. This approval applies only to this new candidate and its current evidence. The original decision and authorization remain in history.</p></div>` : ""}${resolutionFields}
         <div class="field"><label for="reviewer-id">Reviewer</label><input id="reviewer-id" name="reviewer_id" required maxlength="120" placeholder="Your name"></div>
         <div class="field"><label for="review-reason">Review reason</label><textarea id="review-reason" name="reason" required maxlength="1000" placeholder="Why is this evidence sufficient?"></textarea></div>
-        <div class="actions"><button class="button" type="submit" data-review-action="approve">Approve and materialize</button><button class="button danger" type="submit" data-review-action="reject" formnovalidate>Reject</button></div></form></div>
+        <div class="actions"><button class="button" type="submit" data-review-action="approve" ${relationUnresolved ? 'disabled aria-describedby="relation-guidance"' : ""}>Approve and materialize</button><button class="button danger" type="submit" data-review-action="reject" formnovalidate>Reject</button></div></form></div>
       <p>${revalidation ? `<button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(revalidation.original.decision_id)}">Keep unresolved / back to comparison</button>` : `<button class="button quiet" data-action="back-review">Back to Review</button>`}</p>`;
   }
 
@@ -701,7 +706,9 @@
       } else if (form.id === "source-create") {
         const result = await send("POST", "/api/sources/import", Object.fromEntries(new FormData(form)));
         state.sourceId = result.source.source_id;
-        announce("Source ingestion started.");
+        announce(state.provider?.ready
+          ? "Source ingestion started."
+          : "Source saved. Semantic extraction is unavailable until a provider is enabled.");
         await inspectSource(result.source.source_id);
         pollSource(result.source.source_id, true);
       } else if (form.id === "source-update") {
@@ -712,6 +719,7 @@
       } else if (form.id === "candidate-review") {
         const data = Object.fromEntries(new FormData(form));
         const action = event.submitter?.dataset.reviewAction || "approve";
+        if (action === "approve" && form.querySelector('[data-review-action="approve"]').disabled) return;
         if (action === "reject") {
           for (const id of ["reviewer-id", "review-reason"]) {
             const field = document.getElementById(id);

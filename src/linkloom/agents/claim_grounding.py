@@ -7,7 +7,7 @@ unrecognized material claims are returned as UNVERIFIABLE and must fail closed.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from enum import StrEnum
 import re
@@ -623,12 +623,13 @@ def evidence_supports_typed_claim(
     object_value: str,
     valid_on: str | None,
     temporal_kind: str | None,
+    observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> bool:
     """Compare a typed proposal with an existing normalized fact in one quote.
 
     This intentionally adds no answer-language parser. The caller supplies an
     exact source quote copied from verified evidence; this function maps the
-    two supported proposal predicates onto the existing source-fact vocabulary
+    supported proposal predicates onto the existing source-fact vocabulary
     and requires exact entity and temporal-scope equality.
     """
     definition = TYPED_CLAIM_RELATIONS.get(predicate)
@@ -644,14 +645,37 @@ def evidence_supports_typed_claim(
         return False
     normalized_subject = _normalize_entity(subject)
     normalized_object = _normalize_entity(object_value)
-    return any(
-        fact.relation in relations
+    witnesses = tuple(
+        fact for fact in _source_facts(evidence)
+        if fact.relation in relations
         and fact.subject == normalized_subject
         and fact.value == normalized_object
         and fact.valid_on == valid_on
         and fact.temporal_kind == temporal_kind
-        for fact in _source_facts(evidence)
     )
+    observations = [fact for ref, value in (observed_evidence_by_ref or {}).items()
+                    if isinstance(value, Mapping) and value.get("evidence_id") == ref
+                    for fact in _source_facts(value)]
+    return bool(witnesses) and not _has_observed_conflict(witnesses, observations)
+
+
+def _has_observed_conflict(witnesses: Sequence[_Fact], observations: Sequence[_Fact]) -> bool:
+    """Check known reads in the cited fact's relation, project and valid time.
+
+    Source facts still supply support only through the claim's own citations.
+    Other successful reads can veto that support, never supply a missing cite.
+    """
+    def canonical(fact):
+        return replace(fact, relation="reports_to") if fact.relation == "direct_leader_of" else fact
+
+    for witness in witnesses:
+        scoped = [canonical(fact) for fact in observations
+                  if _same_temporal_scope(fact, witness)
+                  and (fact.project_scope is None
+                       or fact.project_scope == witness.project_scope)]
+        if _fact_status(canonical(witness), scoped) is ClaimSupportStatus.CONTRADICTED:
+            return True
+    return False
 
 
 def _fact_status(claim: _Fact, evidence_facts: Sequence[_Fact]) -> ClaimSupportStatus:
@@ -718,8 +742,9 @@ def assess_claim_text(
     evidence_by_ref: Mapping[str, Mapping[str, Any]],
     *,
     question: str | None = None,
+    observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> ClaimAssessment:
-    """Assess every clause using only exact verified passages cited by the claim."""
+    """Require cited support; successful observed reads can veto it for conflict."""
     if not isinstance(text, str) or not text.strip():
         return ClaimAssessment(ClaimSupportStatus.UNVERIFIABLE, ())
     parsed = _claim_facts(text, question=question)
@@ -736,6 +761,9 @@ def assess_claim_text(
             source_facts.append(fact)
             evidence_refs_by_fact.setdefault(fact, []).append(ref)
 
+    observations = [fact for ref, value in (observed_evidence_by_ref or {}).items()
+                    if isinstance(value, Mapping) and value.get("evidence_id") == ref
+                    for fact in _source_facts(value)]
     claims: list[AtomicClaimAssessment] = []
     for index, fact in enumerate(parsed):
         scoped_facts = source_facts
@@ -775,6 +803,9 @@ def assess_claim_text(
             if matching_refs
             else evidence_status
         )
+        witnesses = [source for source in scoped_facts if _fact_supports(source, fact)]
+        if _has_observed_conflict(witnesses, observations):
+            status = ClaimSupportStatus.CONTRADICTED
         claims.append(
             AtomicClaimAssessment(
                 text=text if len(parsed) == 1 else f"{text} [claim {index + 1}]",

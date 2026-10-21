@@ -665,6 +665,7 @@ class TeamDecisionResult:
         temporal_validator: Callable[..., Mapping[str, Any]] | None = None,
         read_evidence_ids: Collection[str] = (),
         observed_temporal_decision_ids: Collection[str] = (),
+        require_read_evidence: bool = False,
     ) -> "TeamDecisionResult":
         """Parse the explicitly selected protocol and verify it against observed evidence."""
         if final_protocol not in {SCHEMA_VERSION, CLAIM_PROPOSAL_SCHEMA_VERSION}:
@@ -696,6 +697,7 @@ class TeamDecisionResult:
                 temporal_validator=temporal_validator,
                 read_evidence_ids=read_evidence_ids,
                 observed_temporal_decision_ids=observed_temporal_decision_ids,
+                require_read_evidence=require_read_evidence,
             )
         if (isinstance(payload, dict)
                 and payload.get("schema_version") == CLAIM_PROPOSAL_SCHEMA_VERSION):
@@ -721,6 +723,12 @@ class TeamDecisionResult:
         if any(ref not in observed for ref in result.claim_evidence_refs()):
             raise ValidationError(
                 "Team Decision claims reference evidence not observed by the model."
+            )
+        if require_read_evidence and any(
+            ref not in set(read_evidence_ids) for ref in result.claim_evidence_refs()
+        ):
+            raise ValidationError(
+                "Team Decision source claims must cite evidence returned by a successful read."
             )
         if expected_workspace_id is not None:
             if not isinstance(expected_workspace_id, str) or not expected_workspace_id.strip():
@@ -753,6 +761,7 @@ class TeamDecisionResult:
         temporal_validator: Callable[..., Mapping[str, Any]] | None,
         read_evidence_ids: Collection[str],
         observed_temporal_decision_ids: Collection[str],
+        require_read_evidence: bool,
     ) -> "TeamDecisionResult":
         if (not isinstance(expected_workspace_id, str)
                 or not expected_workspace_id.strip()
@@ -826,6 +835,10 @@ class TeamDecisionResult:
                         "ClaimProposal references evidence not observed by the model."
                     )
                 evidence = evidence_by_ref.get(evidence_id)
+                if require_read_evidence and evidence_id not in set(read_evidence_ids):
+                    raise ValidationError(
+                        "ClaimProposal source claims must cite evidence returned by a successful read."
+                    )
                 source_quote = evidence.get("quote") if isinstance(evidence, Mapping) else None
                 if (
                     not isinstance(evidence, Mapping)
@@ -892,6 +905,7 @@ class TeamDecisionResult:
         evidence_by_ref: Mapping[str, Mapping[str, Any]],
         *,
         question: str | None = None,
+        observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
     ) -> None:
         """Fail closed unless every supported product-slice assertion is grounded."""
         if self.verified_claims is not None:
@@ -922,15 +936,17 @@ class TeamDecisionResult:
                         raise ValidationError(
                             "Verified ClaimProposal evidence changed before review."
                         )
-                    exact_quote_evidence = dict(evidence)
-                    exact_quote_evidence["quote"] = claim.quote
+                    # Preserve the full read scope when checking known conflict;
+                    # a model-selected substring cannot discard project or time.
                     if not evidence_supports_typed_claim(
-                        exact_quote_evidence,
+                        evidence,
                         predicate=claim.predicate,
                         subject=claim.subject,
                         object_value=claim.object_value,
                         valid_on=claim.valid_on,
                         temporal_kind=claim.temporal_kind,
+                        observed_evidence_by_ref=(observed_evidence_by_ref
+                            if self.decision["status"] in {"approved", "partial"} else None),
                     ):
                         raise ValidationError(
                             "Verified ClaimProposal relation no longer matches its evidence."
@@ -951,7 +967,8 @@ class TeamDecisionResult:
 
         for text, refs, claim_question in claims:
             assessment = assess_claim_text(
-                text, refs, evidence_by_ref, question=claim_question
+                text, refs, evidence_by_ref, question=claim_question,
+                observed_evidence_by_ref=observed_evidence_by_ref,
             )
             if assessment.status is not ClaimSupportStatus.SUPPORTED:
                 raise ValidationError(

@@ -1,0 +1,134 @@
+{
+  "note": "Batches overlap, not additive and not a full repository claim. RED failures are preserved. Core and full combined suite precede the final small scope correction, whose controls and final head CI are separately reported.",
+  "provider_calls": 0,
+  "countTokens_calls": 0,
+  "LIVE_evaluations": 0,
+  "batches": [
+    {
+      "label": "original RED master",
+      "path": "trust-evidence/red-master-snapshot.xml",
+      "sha256": "e3922ff5423f7cf178ce368dee54167842d983a3784a72be4821779de09c4815",
+      "passed": 1,
+      "failed": 2,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "original RED PR6",
+      "path": "trust-evidence/red-pr6-snapshot.xml",
+      "sha256": "0a2527147e7b4ab0de7ec491213a0591f60884af973c84015435e6db682d72ca",
+      "passed": 1,
+      "failed": 2,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "Core before final scope control",
+      "path": "core-final.xml",
+      "sha256": "b88f41821c310d7f236f2c49abc22d6626b8f39da8e15216130776a4f2989293",
+      "passed": 282,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "final trust controls",
+      "path": "final-trust-green.xml",
+      "sha256": "69b27b28edcab9b2a56196309eee83574849a59b7139518cfb13cacc810b728b",
+      "passed": 14,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "TeamDecision final",
+      "path": "team-contract-post-review.xml",
+      "sha256": "4c501232c01537196a4b14662d50843070235bcd91c9ec09153c7f8079642f9c",
+      "passed": 33,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "Grounding",
+      "path": "grounding-contract-final.xml",
+      "sha256": "49e265c9292924187c2595568830ddbbefc7a2e60a1a97b8d8ff14214f880e7f",
+      "passed": 16,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "Legacy",
+      "path": "legacy-temporal-final.xml",
+      "sha256": "36af6327c21d9172c62fd7f3b437258e46f34c282bb5b895da2ee8ff04de4cfa",
+      "passed": 4,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "Frozen Ledger",
+      "path": "frozen-ledger-final.xml",
+      "sha256": "7a7f05d7b7192b79de0fc7fda168029fcc71b2eb28d33e1d6c0f01f93367e2ac",
+      "passed": 5,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "PR6 original control",
+      "path": "pr6-original-p4.xml",
+      "sha256": "01a3043e2df9248e738639fbccdbc8b1431a49fab476bc31193a7f51556a2ded",
+      "passed": 22,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "PR6 + fix complete task suite",
+      "path": "combined-task-final.xml",
+      "sha256": "e11be0e1c9fa1af9264f8f5da03d633ee0e8de53e9116525f678a9fa00f10704",
+      "passed": 543,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "PR6 + final scope controls",
+      "path": "combined-post-review.xml",
+      "sha256": "a6e151a6f22b3b4c2132b50b71b6fc41405a74033fc177542c38637e72357906",
+      "passed": 39,
+      "failed": 2,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "isolated recheck of two HTTP timeouts",
+      "path": "combined-timeout-recheck.xml",
+      "sha256": "e3c72b26e53f1c87735c71f86f862c91cf18b8c21d72e8ed951044a4cbb04517",
+      "passed": 2,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "project/date RED",
+      "path": "scope-red.xml",
+      "sha256": "432a35df7aa38fd9e408a3ea5c997d6eeae5866396fcb561269446c1264ab473",
+      "passed": 4,
+      "failed": 2,
+      "error": 0,
+      "skipped": 0
+    },
+    {
+      "label": "review scope RED",
+      "path": "scope-review-red.xml",
+      "sha256": "534a4ce68b54f77a8d2e9176a7190e231da3a9739a400ad895fa37af333b4e14",
+      "passed": 10,
+      "failed": 1,
+      "error": 0,
+      "skipped": 0
+    }
+  ]
+}
