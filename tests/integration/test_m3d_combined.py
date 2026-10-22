@@ -4,6 +4,7 @@ import pytest
 from tests.m3d_support import combined_product, start_case, preparation, verify_case
 from tests.m3p_support import product_http, cold_read
 from tests.integration.test_product_application_flow import _client
+from tests.integration.test_m3q_provider_host import loopback_only
 
 
 @pytest.mark.parametrize('case', ['A', 'B', 'C'])

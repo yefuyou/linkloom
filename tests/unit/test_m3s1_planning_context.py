@@ -20,6 +20,7 @@ def replan_fixture():
 
 def test_original_saved_replan_fits_original_budget_without_repeating_bindings():
     context,fake,session,previous,receipt=replan_fixture()
+    assert context.limits.max_input_bytes == 24000
     before=previous.to_dict()
     result=session.plan(context,previous=previous,verified_results=(receipt,),gaps=('MISSING_ENTITY_REMAINS_UNKNOWN',))
     assert result.status=='PLANNED',result.errors
@@ -80,3 +81,14 @@ def test_replan_request_reserves_retained_ids_in_schema_and_context():
     req=fake.requests[-1];payload=json.loads(req.user_input.split('INPUT_JSON\n',1)[1])
     assert payload['operation_capabilities']['reserved_step_ids']==[receipt.step_id]
     assert receipt.step_id in req.available_tools[0].input_schema['properties']['steps']['items']['properties']['id']['description']
+
+
+def test_replan_rejects_reusing_retained_unknown_step_id_for_different_work():
+    context,fake,session,previous,receipt=replan_fixture()
+    before=previous.to_dict()
+    fake.arguments=arguments(dict(step(receipt.step_id,handles=('task_0',)),
+        evidence_gap='Inspect a field instead of repeating the retained discovery.'))
+    result=session.plan(context,previous=previous,verified_results=(receipt,),gaps=('UNKNOWN',))
+    assert result.status=='OUTPUT_INVALID' and result.errors==('INVALID_STEP_ID_OR_QUESTION',)
+    assert result.plan is None and len(fake.requests)==2
+    assert previous.to_dict()==before
