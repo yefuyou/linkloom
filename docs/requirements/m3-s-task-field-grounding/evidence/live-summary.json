@@ -1,0 +1,85 @@
+{
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low",
+  "sdk_attempts": 1,
+  "new_request_limit": 25,
+  "new_reserved_limit_usd": 8,
+  "project_limit_usd": 50,
+  "new_requests": 22,
+  "new_stages": {
+    "semantic-extractor-v1": 12,
+    "question-planner": 5,
+    "retrieval_agent": 4,
+    "semantic-proposer": 1
+  },
+  "new_outcomes": {
+    "SUCCEEDED": 21,
+    "UNCERTAIN": 1
+  },
+  "known_returned_usage": {
+    "input_tokens": 91028,
+    "output_tokens": 13235,
+    "total_tokens": 105465
+  },
+  "unknown_usage_requests": 1,
+  "new_reserved_usd": 5.5,
+  "unknown_request_reserved_usd": 0.25,
+  "prior_project_requests": 47,
+  "cumulative_requests": 69,
+  "prior_reserved_usd_conservative": 13.93,
+  "cumulative_reserved_usd_conservative": 19.43,
+  "remaining_project_reservation_capacity_usd": 30.57,
+  "remaining_m3s_reservation_capacity_usd": 2.5,
+  "remaining_requests": 3,
+  "paid_execution_stopped": true,
+  "stop_reason": "PROVIDER_TIMEOUT_UNCERTAIN; no further paid requests or retries",
+  "actual_bill_usd": null,
+  "promotional_credit_deduction_usd": null,
+  "billing_project_verified": false,
+  "estimate_known_response_portion_usd_at_configured_rates": 0.157203,
+  "estimate_note": "Configured budgeting rates $1/$5 per million input/candidate-output tokens; not verified Google tariff or invoice. One unknown request and possible additional thinking billing are excluded, not priced at zero.",
+  "completed_product_runs": [
+    "ui-b96e71f09bb4"
+  ],
+  "reviewer": {
+    "performed": true,
+    "review_id": "review_1d7c985d",
+    "reviewer_agent_id": "reviewer_agent",
+    "decision": "evidence_sufficient",
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "reason": "All validation passed",
+    "created_at": "2026-10-22T04:56:41.554383+00:00",
+    "accepted": true
+  },
+  "browser": "155.0.8059.85",
+  "browser_errors": [],
+  "source_opened_exact": true,
+  "cross_workspace_status": 409,
+  "cold_refresh_revocation_update_provider_calls": 0,
+  "field_results": {
+    "CORRECT_ACCEPT": 31,
+    "CORRECT_UNKNOWN": 32,
+    "MISSING_OBSERVATION": 4,
+    "REJECTED": 1
+  },
+  "semantic_authority": "MODEL_PROPOSED_ONLY; P4 not established; no trusted date delta",
+  "acceptance": "PARTIAL: field feature and one complete Product LIVE verified; ambiguous Product end-to-end remains incomplete",
+  "initial_fixture_sha256": "e935da9e3c85fc8a22ca7795949d4bb8da6e8eb38d4c738a4da7f7310c48a268",
+  "initial_holdout_sha256": "690c7bfd67914e8af4ca3e2aaa3a9fcf328a99eb7a7a3357a536fe3cef37c743"
+}

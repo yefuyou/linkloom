@@ -1,0 +1,19 @@
+{
+  "previous_campaign": "work/m3s-live-20261022/global-provider/budget.json",
+  "prior_m3s_requests": 11,
+  "prior_m3s_reserved_usd": 2.75,
+  "new_m3s_requests_limit": 25,
+  "new_m3s_reserved_limit_usd": 8,
+  "authorization": "User explicitly approved at most 25 requests; monetary caps unchanged",
+  "prior_project_requests": 47,
+  "prior_project_reserved_usd_conservative": 13.93,
+  "global_limit_usd": 50,
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low",
+  "retry_attempts": 1,
+  "billing_project_verified": false,
+  "actual_bill_usd": null,
+  "promotional_credit_deduction_usd": null,
+  "started_at": "2026-10-22T04:55:48.618250+00:00"
+}

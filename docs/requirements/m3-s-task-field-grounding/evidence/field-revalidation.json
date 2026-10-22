@@ -1,0 +1,663 @@
+{
+  "evaluation": "OFFLINE_REVALIDATION_OF_UNCHANGED_REAL_F_RESPONSES; NOT_NEW_MODEL_CALLS",
+  "field_slots": 68,
+  "final_binding_outcomes": {
+    "CORRECT_ACCEPT": 31,
+    "CORRECT_UNKNOWN": 32,
+    "MISSING_OBSERVATION": 4,
+    "REJECTED": 1
+  },
+  "legacy_outcomes": {
+    "REJECTED": 25,
+    "CORRECT_ACCEPT": 5,
+    "CORRECT_UNKNOWN": 26,
+    "MISSING_OBSERVATION": 12
+  },
+  "fields": [
+    {
+      "case_id": "F01",
+      "field": "owner",
+      "expected": "顾言",
+      "actual": "顾言",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F01",
+      "field": "deadline",
+      "expected": [
+        "2033年2月18日",
+        "2033-02-18",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033年2月18日",
+        "2033-02-18",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F01",
+      "field": "project",
+      "expected": "银杉计划",
+      "actual": "银杉计划",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F01",
+      "field": "vendor",
+      "expected": "云渡",
+      "actual": "云渡",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F02",
+      "field": "owner",
+      "expected": "许晴",
+      "actual": "许晴",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F02",
+      "field": "deadline",
+      "expected": [
+        "2033-03-09",
+        "2033-03-09",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033-03-09",
+        "2033-03-09",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F02",
+      "field": "project",
+      "expected": "浅湾工程",
+      "actual": "浅湾工程",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F02",
+      "field": "vendor",
+      "expected": "松桥",
+      "actual": "松桥",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F03",
+      "field": "owner",
+      "expected": "简宁",
+      "actual": "简宁",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F03",
+      "field": "deadline",
+      "expected": [
+        "4月16日",
+        null,
+        "MONTH_DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "4月16日",
+        null,
+        "MONTH_DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F03",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F03",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F04",
+      "field": "owner",
+      "expected": null,
+      "actual": null,
+      "outcome": "MISSING_OBSERVATION"
+    },
+    {
+      "case_id": "F04",
+      "field": "deadline",
+      "expected": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "actual": null,
+      "outcome": "MISSING_OBSERVATION"
+    },
+    {
+      "case_id": "F04",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "MISSING_OBSERVATION"
+    },
+    {
+      "case_id": "F04",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "MISSING_OBSERVATION"
+    },
+    {
+      "case_id": "F05",
+      "field": "owner",
+      "expected": "苏珂",
+      "actual": "苏珂",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F05",
+      "field": "deadline",
+      "expected": [
+        "2033年5月21日",
+        "2033-05-21",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033年5月21日",
+        "2033-05-21",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F05",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F05",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F06",
+      "field": "owner",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F06",
+      "field": "deadline",
+      "expected": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "actual": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F06",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F06",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F07",
+      "field": "owner",
+      "expected": "陈柯",
+      "actual": "陈柯",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F07",
+      "field": "deadline",
+      "expected": [
+        "8月23日",
+        null,
+        "MONTH_DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "8月23日",
+        null,
+        "MONTH_DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F07",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F07",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F08",
+      "field": "owner",
+      "expected": "周薇",
+      "actual": "周薇",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F08",
+      "field": "deadline",
+      "expected": [
+        "11月",
+        null,
+        "MONTH",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "11月",
+        null,
+        "MONTH",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F08",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F08",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F09",
+      "field": "owner",
+      "expected": "宋岚",
+      "actual": "宋岚",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F09",
+      "field": "deadline",
+      "expected": [
+        "2033-06-08",
+        "2033-06-08",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033-06-08",
+        "2033-06-08",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F09",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F09",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F10",
+      "field": "owner",
+      "expected": "陈朔",
+      "actual": "陈朔",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F10",
+      "field": "deadline",
+      "expected": [
+        "2033-07-08",
+        "2033-07-08",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033-07-08",
+        "2033-07-08",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F10",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F10",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F11",
+      "field": "owner",
+      "expected": "许旸",
+      "actual": "许旸",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F11",
+      "field": "deadline",
+      "expected": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "actual": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F11",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F11",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F12",
+      "field": "owner",
+      "expected": "陆溪",
+      "actual": "陆溪",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F12",
+      "field": "deadline",
+      "expected": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "actual": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F12",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F12",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F13",
+      "field": "owner",
+      "expected": "闻舟",
+      "actual": "闻舟",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F13",
+      "field": "deadline",
+      "expected": [
+        "2033-10-04",
+        "2033-10-04",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033-10-04",
+        "2033-10-04",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F13",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F13",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F13",
+      "field": "owner",
+      "expected": "姚月",
+      "actual": "姚月",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F13",
+      "field": "deadline",
+      "expected": [
+        "2033-10-07",
+        "2033-10-07",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2033-10-07",
+        "2033-10-07",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "F13",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "F13",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H01",
+      "field": "owner",
+      "expected": "赵宁",
+      "actual": "赵宁",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "H01",
+      "field": "deadline",
+      "expected": [
+        "2029-07-03",
+        "2029-07-03",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2029-07-03",
+        "2029-07-03",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "H01",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H01",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H02",
+      "field": "owner",
+      "expected": "林悦",
+      "actual": "林悦",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "H02",
+      "field": "deadline",
+      "expected": [
+        "2029-07-06",
+        "2029-07-06",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        null,
+        null,
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "outcome": "REJECTED"
+    },
+    {
+      "case_id": "H02",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H02",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H03",
+      "field": "owner",
+      "expected": "周敏",
+      "actual": "周敏",
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "H03",
+      "field": "deadline",
+      "expected": [
+        "2029-07-12",
+        "2029-07-12",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "actual": [
+        "2029-07-12",
+        "2029-07-12",
+        "DAY",
+        "TASK_DEADLINE"
+      ],
+      "outcome": "CORRECT_ACCEPT"
+    },
+    {
+      "case_id": "H03",
+      "field": "project",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    },
+    {
+      "case_id": "H03",
+      "field": "vendor",
+      "expected": null,
+      "actual": null,
+      "outcome": "CORRECT_UNKNOWN"
+    }
+  ],
+  "notes": [
+    "Missing F04 observation is a model discovery omission, not a correct UNKNOWN.",
+    "H02 deadline_text included a boundary word; format rejection is retained, not scored as a false accept."
+  ]
+}

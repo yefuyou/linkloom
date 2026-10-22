@@ -1,0 +1,17 @@
+{
+  "prior_requests": 47,
+  "prior_reserved_usd_conservative": 13.93,
+  "new_requests_limit": 24,
+  "new_reserved_usd_limit": 8,
+  "global_limit_usd": 50,
+  "fixture_sha256": "e935da9e3c85fc8a22ca7795949d4bb8da6e8eb38d4c738a4da7f7310c48a268",
+  "holdout_sha256": "690c7bfd67914e8af4ca3e2aaa3a9fcf328a99eb7a7a3357a536fe3cef37c743",
+  "started_at": "2026-10-22T04:36:02.751039+00:00",
+  "sdk": "google-genai 2.22.0",
+  "model": "gemini-3.8-flash",
+  "thinking_level": "low",
+  "billing_project_verified": false,
+  "actual_bill_usd": null,
+  "promotional_credit_deduction_usd": null,
+  "billing_identity": "Existing local authorized API key, default Google SDK endpoint; project/bill not exposed by generation API"
+}

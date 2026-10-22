@@ -14,7 +14,7 @@ from linkloom.agents.providers import DeepSeekProviderAdapter, GeminiProviderAda
 from linkloom.decision_memory.sources import SourceReferenceRegistry
 from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.document_text import parse_source_text
-from linkloom.semantic_ingestion.extraction import ProviderNeutralSemanticExtractor, ProviderRequestAuthorization
+from linkloom.semantic_ingestion.extraction import ProviderNeutralSemanticExtractor, ProviderRequestAuthorization, TaskDiscoveryProfile
 from linkloom.semantic_ingestion.task_observation_discovery import TaskObservationDiscoveryService, DiscoveryLimits
 from linkloom.semantic_ingestion.task_relation_models import ObservationRef, canonical_hash
 from linkloom.semantic_ingestion.task_relation_question_models import PlanningLimits, VerifiedStepResult
@@ -267,9 +267,11 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
     extractor = ProviderNeutralSemanticExtractor(
         discovery_adapter,
         provider_id=models.provider_id if models.execution_kind == 'LIVE' else models.execution_kind, model_id=models.model_id,
-        request_guard=guard, request_guard_id=guard_id, max_attempts=1)
+        request_guard=guard, request_guard_id=guard_id, max_attempts=1,
+        max_output_tokens=4096 if models.execution_kind == 'LIVE' else 1536)
     discovery = TaskObservationDiscoveryService(extractor, source_registry=sources.registry,
-        current_source=sources.current, limits=models.discovery_limits).discover(
+        current_source=sources.current, limits=models.discovery_limits,
+        task_profile=TaskDiscoveryProfile.FIELD_GROUNDED_V2 if models.execution_kind == 'LIVE' else None).discover(
             sources.artifacts, workspace_id=sources.workspace_id)
     observations = (*discovery.valid_observations, *discovery.partial_observations)
     spans = tuple((f'source_{i}:{j}', segment.evidence_span)

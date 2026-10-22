@@ -1,0 +1,122 @@
+{
+  "files": {
+    "evidence/.gitattributes": {
+      "sha256": "1b452e2f8729a3b083f654240ef94729fd5734a4aa4b1439671ac23142ad7ecc",
+      "bytes": 159
+    },
+    "evidence/campaign-1-budget.json": {
+      "sha256": "a6f9b5f016ae0c499648f23b4e1785ec8763d526be0aa3d06283a42046ed09aa",
+      "bytes": 7638
+    },
+    "evidence/campaign-1-reservation.json": {
+      "sha256": "55dc48911aa32e31bdf959461ac41738899f91c78a6251013089cd5c3fd179c1",
+      "bytes": 729
+    },
+    "evidence/campaign-2-budget.json": {
+      "sha256": "06c194f886f7f66bc8ee484021a15aa40ac8026d4f25aa7e4e15d6f420e772b3",
+      "bytes": 5056
+    },
+    "evidence/campaign-2-reservation.json": {
+      "sha256": "5ca261c589b791c1f541fe0849177b44269b32ee07c12b0699b12323c4a7caaf",
+      "bytes": 701
+    },
+    "evidence/campaign-3-budget.json": {
+      "sha256": "829953e53d88fdeaa4a8684f7d95ef515ed7f535c2ce2e2ebe31fd6de3b5b77c",
+      "bytes": 1871
+    },
+    "evidence/campaign-3-reservation.json": {
+      "sha256": "b06fbf89278afa5dc65b76a9ce9a75c9d501573b0f5b021f6da3e5fa30c15145",
+      "bytes": 778
+    },
+    "evidence/campaign-4-budget.json": {
+      "sha256": "44ed5c64b9f519d0f3e2d2c1c16bfb63f1d61b465a73f4fc1aa80fc1ff5cca75",
+      "bytes": 5806
+    },
+    "evidence/campaign-4-reservation.json": {
+      "sha256": "af36ef0b3d48f3cef277b1beee1b3f2fdb1662e7bbea5e74ff37917d1678fe69",
+      "bytes": 844
+    },
+    "evidence/cold-fields.png": {
+      "sha256": "f2d4863805071ec9b798980fe600c2ce0a1bde2f427bc71521e0075376669c01",
+      "bytes": 373065
+    },
+    "evidence/field-live-results.json": {
+      "sha256": "2e0a2e03298f2fd7498daebfd31562bd798a4c07e8343913668f971e204b2190",
+      "bytes": 331416
+    },
+    "evidence/field-revalidation.json": {
+      "sha256": "c8e0ba8718aeee2972c3002d1209ab5de36e37d8dcbdbd55933103debae53525",
+      "bytes": 13935
+    },
+    "evidence/final-unit-legacy.xml": {
+      "sha256": "de688abcffa9d93172929dd7850c73af0a17d1d5a84840a64de4bfbf772cecca",
+      "bytes": 20458
+    },
+    "evidence/live-summary.json": {
+      "sha256": "028cfed91b08d6a087cc256fc1da3ddf95d6dcc6c09997db685547863f5a4508",
+      "bytes": 3009
+    },
+    "evidence/prior-f-attribution.json": {
+      "sha256": "e2d2902194b1404e5dde0add4a563901e7df63867a3ad4feb79d3ad3c4fbefcf",
+      "bytes": 8665
+    },
+    "evidence/product-attempts.json": {
+      "sha256": "04e65e9a41291dcef75efa92c4514daa2e81588ea0a751cf1e4288c81cb5b357",
+      "bytes": 167261
+    },
+    "evidence/product-clear.json": {
+      "sha256": "ec14c726a0ecd3e9e784c3dea9161df286fdc4d300325f111081dab967097ec7",
+      "bytes": 212593
+    },
+    "evidence/regression.xml": {
+      "sha256": "d5b8db8690b7922b20671703ca6d2af9578827010ad6cffd995abfe14ce50e57",
+      "bytes": 100888
+    },
+    "evidence/revalidate_m3s_f.py": {
+      "sha256": "77e1db754ada487834cd869d616ba654864fb6c4dee3dd71bdb9dfb1f9692419",
+      "bytes": 3106
+    },
+    "evidence/run_m3s_live.py": {
+      "sha256": "5fa391731eb7e926e52b66e396edb8dcd61732ce6b59426baae27fa3e4b0efe5",
+      "bytes": 13657
+    },
+    "evidence/run_m3s_phase2.py": {
+      "sha256": "a1d238e5eb96032087dac62f2cbf82c7621a1ebc284d81e79b348c2a2257d76f",
+      "bytes": 10128
+    },
+    "evidence/run_m3s_phase3.py": {
+      "sha256": "d0edcff55d47fb02c95eef308733d36686bc259f418d0cd495d1b5410b68f883",
+      "bytes": 10524
+    },
+    "evidence/run_m3s_phase4.py": {
+      "sha256": "95ceb4fa9674ad96a72587a0cb0583794eccfdb67ba38a549fcaa28288961104",
+      "bytes": 11198
+    },
+    "evidence/source-open.png": {
+      "sha256": "fb0078d82b23106c58164bdb803a48f96eea802e692d914e7ad00250be3f3387",
+      "bytes": 119160
+    },
+    "evidence/tamper-and-budget.xml": {
+      "sha256": "9f5d90e1224254cdc3406a79d10c55e166705b48b1d727d6b7132888eea9c43c",
+      "bytes": 529
+    },
+    "evidence/verify_m3s_cold.py": {
+      "sha256": "ae80577a980945397a2e25398ebdd727b8fdd5dca5328bfc47e09b9f42078fc0",
+      "bytes": 6976
+    },
+    "field-cases.json": {
+      "sha256": "e935da9e3c85fc8a22ca7795949d4bb8da6e8eb38d4c738a4da7f7310c48a268",
+      "bytes": 5143
+    },
+    "holdout-expectations.json": {
+      "sha256": "690c7bfd67914e8af4ca3e2aaa3a9fcf328a99eb7a7a3357a536fe3cef37c743",
+      "bytes": 749
+    }
+  },
+  "local_journal_hashes": {
+    "work\\m3s-live-20261022\\global-provider\\budget.json": "a6f9b5f016ae0c499648f23b4e1785ec8763d526be0aa3d06283a42046ed09aa",
+    "work\\m3s-live-phase2-20261022\\global-provider\\budget.json": "06c194f886f7f66bc8ee484021a15aa40ac8026d4f25aa7e4e15d6f420e772b3",
+    "work\\m3s-live-phase3-20261022\\global-provider\\budget.json": "829953e53d88fdeaa4a8684f7d95ef515ed7f535c2ce2e2ebe31fd6de3b5b77c",
+    "work\\m3s-live-phase4-20261022\\global-provider\\budget.json": "44ed5c64b9f519d0f3e2d2c1c16bfb63f1d61b465a73f4fc1aa80fc1ff5cca75"
+  }
+}

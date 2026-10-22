@@ -10,6 +10,7 @@ import re
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan, RawArtifact
 from linkloom.semantic_ingestion.document_text import SourceSegment, parse_source_text
 from linkloom.semantic_ingestion.timestamped_text import _HEADER_PATTERN, _source_lines
+from linkloom.semantic_ingestion.task_field_binding import TaskFieldBinding, FIELD_ROLES, STATES, validate_bindings
 
 
 _OPTIONAL_FIELDS = ("owner", "deadline", "project", "vendor")
@@ -27,8 +28,16 @@ class TaskProposal:
     deadline_text: str | None = None
     project: str | None = None
     vendor: str | None = None
+    field_bindings: tuple[TaskFieldBinding, ...] | None = None
+    work_state: str | None = None
 
     def __post_init__(self):
+        if self.field_bindings is not None:
+            validate_bindings(self.field_bindings)
+            if self.work_state not in STATES:
+                raise ValueError('explicit model work state required')
+        elif self.work_state is not None:
+            raise ValueError('work state requires the field-binding contract')
         if not isinstance(self.description_parts, tuple) or len(self.description_parts) > 8:
             raise ValueError("description_parts must be a bounded tuple")
         for name, value in [("text", self.text), *[("description_part", p) for p in self.description_parts],
@@ -40,15 +49,27 @@ class TaskProposal:
                 raise ValueError(f"invalid task {name}")
 
     def to_dict(self):
-        return {**asdict(self), "description_parts": list(self.description_parts)}
+        result = {**asdict(self), "description_parts": list(self.description_parts)}
+        if self.field_bindings is None:
+            result.pop('field_bindings')
+            result.pop('work_state')
+        else:
+            result['field_bindings'] = [asdict(b) for b in self.field_bindings]
+        return result
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != {f.name for f in fields(cls)}:
+        old = {f.name for f in fields(cls)} - {'field_bindings', 'work_state'}
+        if not isinstance(data, dict) or set(data) not in (old, old | {'field_bindings', 'work_state'}):
             raise ValueError("task proposal has missing or unsupported fields")
         if not isinstance(data["description_parts"], list):
             raise ValueError("description_parts must be a list")
-        return cls(**{**data, "description_parts": tuple(data["description_parts"])})
+        values = {**data, 'description_parts': tuple(data['description_parts'])}
+        if 'field_bindings' in data:
+            if not isinstance(data['field_bindings'], list):
+                raise ValueError('field bindings must be an array')
+            values['field_bindings'] = tuple(TaskFieldBinding.from_dict(b) for b in data['field_bindings'])
+        return cls(**values)
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,8 +118,16 @@ class TaskObservation:
     event_time: datetime | None
     relation_status: str = "UNCONFIRMED"
     authority: str = "SUPPORTING_ONLY"
+    field_bindings: tuple[TaskFieldBinding, ...] | None = None
+    work_state: str | None = None
 
     def __post_init__(self):
+        if self.field_bindings is not None:
+            validate_bindings(self.field_bindings)
+            if self.work_state != 'ASSERTED':
+                raise ValueError('only asserted model work observations can be stored')
+        elif self.work_state is not None:
+            raise ValueError('work state requires the field-binding contract')
         if not isinstance(self.provenance, EvidenceSpan):
             raise ValueError("task provenance must be EvidenceSpan")
         if self.authority != "SUPPORTING_ONLY" or self.relation_status != "UNCONFIRMED":
@@ -138,13 +167,23 @@ class TaskObservation:
         for name in ("unknown_fields", "validation_issues"):
             result[name] = list(result[name])
         result["field_evidence"] = [asdict(e) for e in self.field_evidence]
+        if self.field_bindings is None:
+            result.pop('field_bindings')
+            result.pop('work_state')
+        else:
+            result['field_bindings'] = [asdict(b) for b in self.field_bindings]
         return result
 
     @classmethod
     def from_dict(cls, data):
-        if not isinstance(data, dict) or set(data) != {f.name for f in fields(cls)}:
+        old = {f.name for f in fields(cls)} - {'field_bindings', 'work_state'}
+        if not isinstance(data, dict) or set(data) not in (old, old | {'field_bindings', 'work_state'}):
             raise ValueError("stored task observation has unsupported fields")
         values = dict(data)
+        if 'field_bindings' in values:
+            if not isinstance(values['field_bindings'], list):
+                raise ValueError('stored field bindings must be an array')
+            values['field_bindings'] = tuple(TaskFieldBinding.from_dict(b) for b in values['field_bindings'])
         values["provenance"] = EvidenceSpan(**values["provenance"])
         values["field_evidence"] = tuple(TaskFieldEvidence(**e) for e in values["field_evidence"])
         for name in ("unknown_fields", "validation_issues"):
@@ -154,7 +193,11 @@ class TaskObservation:
         return cls(**values)
 
     def verify(self, artifact: RawArtifact) -> bool:
-        """Read back source and field roles, including the canonical speaker header."""
+        """Replay source binding, not semantic truth or storage authenticity.
+
+        Saved consumers must also check their external ObservationRef payload
+        hash; a consistent rewrite of model declarations is not authenticated here.
+        """
         if not self.provenance.verify(artifact):
             return False
         if any(artifact.content[e.char_start:e.char_end] != e.quote for e in self.field_evidence):
@@ -163,9 +206,14 @@ class TaskObservation:
                         if s.evidence_span == self.provenance), None)
         if segment is None:
             return False
+        proposed = ({b.field: b.value for b in self.field_bindings} if self.field_bindings is not None else
+                    dict(owner=self.owner, deadline=self.deadline_text, project=self.project, vendor=self.vendor))
         proposal = TaskProposal(self.raw_text, tuple(e.quote for e in self.field_evidence if e.field == "description"),
-                                self.owner, self.deadline_text, self.project, self.vendor)
+                                proposed['owner'], proposed['deadline'], proposed['project'], proposed['vendor'], self.field_bindings, self.work_state)
         expected = build_task_observation(proposal, segment, artifact)
+        if self.field_bindings is not None and any(getattr(self, name) != getattr(expected, name) for name in
+                ('deadline_text', 'validation_status', 'validation_issues', 'unknown_fields', 'work_state')):
+            return False
         return all(getattr(self, name) == getattr(expected, name) for name in
                    ("description", "owner", "deadline", "deadline_precision", "deadline_role", "project", "vendor",
                     "field_evidence", "event_time"))
@@ -190,6 +238,15 @@ def _deadline(text, token):
     """Interpret only a role-bound explicit date; never fill year/day from metadata."""
     if _deadline_role_match(text, token) is None:
         return None, "UNKNOWN", "UNKNOWN", "DEADLINE_ROLE_UNRESOLVED"
+    return _date_value(token)
+
+
+def _date_value(token, *, month_only=False):
+    """Calendar syntax only; role comes from the applicable extraction contract."""
+    if month_only and re.fullmatch(r'\d{1,2}月', token):
+        month = int(token[:-1])
+        if 1 <= month <= 12:
+            return None, 'MONTH', 'TASK_DEADLINE', 'DEADLINE_YEAR_AND_DAY_MISSING'
     if not re.fullmatch(_DATE, token):
         return None, "UNKNOWN", "UNKNOWN", "DEADLINE_INVALID"
     numbers = [int(v) for v in re.findall(r"\d+", token)]
@@ -242,6 +299,52 @@ def _entity_role_match(text, value, field):
     return None
 
 
+def _model_fields(proposal, raw, segment, artifact, bind, issues):
+    """Bind model-declared roles to one canonical message, without phrase rules.
+
+    A name/date occurrence alone is insufficient: require the task-work witness,
+    an explicit current role/state and an exact value or canonical speaker link.
+    These are evidence-valid model interpretations, not independent proof.
+    """
+    values = dict(owner=None, deadline=None, deadline_text=None, project=None, vendor=None)
+    precision = role = 'UNKNOWN'
+    canonical = next(s for s in parse_source_text(artifact).segments if s.evidence_span == segment.evidence_span)
+    speaker_proofs = []
+    for declaration in proposal.field_bindings:
+        field, value = declaration.field, declaration.value
+        supplied = getattr(proposal, 'deadline_text' if field == 'deadline' else field)
+        if declaration.state != 'ASSERTED' or declaration.role != FIELD_ROLES[field]:
+            if value is not None:
+                issues.append(field.upper() + '_ROLE_UNRESOLVED')
+            continue
+        quote, task = declaration.quote, declaration.task_quote
+        valid = (value is not None and value == supplied
+                 and declaration.message_ordinal == canonical.ordinal
+                 and bool(quote) and raw.count(quote) == 1
+                 and bool(task) and task in proposal.description_parts
+                 and raw.count(task) == 1)
+        if declaration.basis == 'SPEAKER':
+            valid = valid and canonical.speaker == value and segment.speaker == canonical.speaker
+        else:
+            valid = valid and bool(value) and quote.count(value) == 1 and len(quote) > len(value)
+        if not valid:
+            issues.append(field.upper() + '_EVIDENCE_INVALID')
+            continue
+        if field == 'deadline':
+            day, precision, role, issue = _date_value(value, month_only=True)
+            if issue:
+                issues.append(issue)
+            if role != 'TASK_DEADLINE':
+                continue
+            values.update(deadline=day, deadline_text=value)
+        else:
+            values[field] = value
+        bind(field, quote, raw.index(quote))
+        if declaration.basis == 'SPEAKER':
+            speaker_proofs.append(_speaker_evidence(artifact, segment.evidence_span, value))
+    return values, precision, role, speaker_proofs
+
+
 def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment,
                            artifact: RawArtifact) -> TaskObservation:
     if not segment.evidence_span.verify(artifact):
@@ -274,7 +377,12 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
         issues.append("DESCRIPTION_UNGROUNDED")
     owner = project = vendor = deadline = deadline_text = None
     precision = role = "UNKNOWN"
-    if proposal:
+    if proposal and proposal.field_bindings is not None:
+        resolved, precision, role, speaker_proofs = _model_fields(proposal, raw, segment, artifact, bind, issues)
+        owner, deadline, deadline_text, project, vendor = (resolved[n] for n in
+            ('owner', 'deadline', 'deadline_text', 'project', 'vendor'))
+        evidence.extend(speaker_proofs)
+    elif proposal:
         if proposal.owner:
             named = _owner_role_match(raw, proposal.owner)
             cue = next((match for match in _FIRST_PERSON.finditer(span.quote)
@@ -322,4 +430,6 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
         "EXTRACTED" if proposal_supplied else "NOT_PROVIDED", "INVALID" if description is None else "PARTIAL" if unknown or issues else "VALID",
         unknown, tuple(issues), tuple(evidence), artifact.ingestion_time,
         getattr(next((s for s in parse_source_text(artifact).segments if s.evidence_span == span), None), "event_time", None),
+        field_bindings=proposal.field_bindings if proposal else None,
+        work_state=proposal.work_state if proposal else None,
     )
