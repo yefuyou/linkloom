@@ -1,0 +1,41 @@
+{
+  "limits": {
+    "max_requests": 1,
+    "max_input_tokens": 40000,
+    "max_output_tokens": 8192,
+    "max_cost_usd": 0.25,
+    "max_seconds": 40,
+    "request_timeout_seconds": 30,
+    "request_cost_upper_bound_usd": 0.25,
+    "input_usd_per_million": 1.0,
+    "output_usd_per_million": 5.0
+  },
+  "requests_reserved": 1,
+  "started_at": "2026-10-22T00:25:14.720012+00:00",
+  "input_tokens_reserved": 14626,
+  "output_tokens_reserved": 8192,
+  "cost_reserved_usd": 0.25,
+  "actual_cost_usd": null,
+  "elapsed_seconds": 4.563,
+  "failure": null,
+  "attempts": [
+    {
+      "sequence": 1,
+      "stage": "independent-semantics",
+      "request_sha256": "4d2c81d9082c0ab3ab6889d30690ef16cdee9b7935614b6f0a2d14375318226d",
+      "input_reserved": 14626,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "d3a79959a13c202edf21403b7d42eb7269100f5059e46ed47f300fbfe6f2e1ef",
+      "usage": {
+        "input_tokens": 3819,
+        "output_tokens": 188,
+        "total_tokens": 4007,
+        "duration_ms": 4535.443
+      },
+      "provider_request_id": null,
+      "provider_response_id": "8VfZar3mKMLhytMP1sKKyQs"
+    }
+  ]
+}

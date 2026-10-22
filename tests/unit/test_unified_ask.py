@@ -60,3 +60,22 @@ def test_same_quote_citations_only_merge_when_source_versions_match(frozen_versi
     assert len(result["evidence"]) == evidence_count
     assert result["evidence"][0]["evidence_ref"] == "formal-ref"
     assert result["evidence"][0]["source_version"] == "version-new"
+
+
+def test_executed_semantic_candidate_remains_visible_when_one_proposal_is_unverified():
+    from linkloom.ui.unified_ask import UnifiedAskService, _AskRun
+
+    service = UnifiedAskService(None, lambda: None)
+    run = _AskRun("Did the task change?", "workspace-a", {},
+                  {"intent": "TASK_INVESTIGATION"})
+    snapshot = {
+        "kind": "insufficient", "run": {"id": "run-a"},
+        "reviewer": {"decision": "evidence_sufficient"}, "evidence": [],
+        "uncertainty": {}, "preparation": {"status": "PARTIAL"},
+        "task_investigation": {
+            "investigation_status": "BLOCKED",
+            "semantic_analysis": {"analysis_status": "EXECUTED"},
+        },
+    }
+    result = service._from_snapshot(run, snapshot)
+    assert result["status"] == "PARTIAL"

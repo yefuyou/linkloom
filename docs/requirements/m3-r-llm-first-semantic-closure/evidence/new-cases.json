@@ -1,0 +1,65 @@
+{
+  "schema": "m3r-independent-semantic-cases/v1",
+  "fixed_before_model_results": true,
+  "scope": "Public synthetic sources; semantic-only diagnostics, separate from Product E2E and P4 authority",
+  "cases": [
+    {
+      "case_id": "delivery-slot",
+      "before": "我负责演示包封装，交付窗口定在2031年3月12日。",
+      "after": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+      "queries": [["SAME_TASK", "new", "old"], ["REVISES_PLAN", "new", "old"]],
+      "expected": ["SUPPORTED", "SUPPORTED"]
+    },
+    {
+      "case_id": "shared-owner-distinct-work",
+      "before": "我负责把注册页面改成无障碍表单，本周只做页面键盘操作。",
+      "after": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。",
+      "queries": [["SAME_TASK", "new", "old"]],
+      "expected": ["REFUTED"]
+    },
+    {
+      "case_id": "progress-without-replanning",
+      "before": "我负责迁移演练，排期是2031年4月8日。",
+      "after": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+      "queries": [["SAME_TASK", "new", "old"], ["REVISES_PLAN", "new", "old"]],
+      "expected": ["SUPPORTED", "REFUTED"]
+    },
+    {
+      "case_id": "withdrawn-suggestion",
+      "before": "我负责采购清单核对，2031年5月3日交付。",
+      "after": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+      "queries": [["SAME_TASK", "new", "old"], ["REVISES_PLAN", "new", "old"]],
+      "expected": ["SUPPORTED", "REFUTED"]
+    },
+    {
+      "case_id": "opposed-minutes",
+      "before": "我负责音频字幕复核，原定2031年6月10日。",
+      "after": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+      "extra": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。",
+      "queries": [["SAME_TASK", "new", "old"], ["REVISES_PLAN", "new", "old"]],
+      "expected": ["SUPPORTED", "CONFLICT"]
+    },
+    {
+      "case_id": "indirect-dependency",
+      "before": "我负责离线手册校对，正文校对使用本地文件，尚不清楚认证变更是否影响本项工作。",
+      "after": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+      "queries": [["AFFECTED_BY", "old", "change"]],
+      "expected": ["UNKNOWN"],
+      "change": {"project": "文档发布", "before": "本地票据", "after": "单点登录"}
+    },
+    {
+      "case_id": "missing-reference",
+      "before": "我负责地图图例核对，交付是2031年7月9日。",
+      "after": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+      "queries": [["SAME_TASK", "new", "old"], ["REVISES_PLAN", "new", "old"]],
+      "expected": ["UNKNOWN", "UNKNOWN"]
+    },
+    {
+      "case_id": "source-authority-change",
+      "reuse_context": "delivery-slot",
+      "mutations": ["revoke-observation", "change-source-version"],
+      "expected": ["BLOCKED_BEFORE_PROVIDER", "EVIDENCE_INVALID_ON_READ"],
+      "provider_calls_expected": 0
+    }
+  ]
+}

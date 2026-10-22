@@ -355,8 +355,15 @@ class UnifiedAskService:
             result['reviewer'] = dict(review, accepted=review.get('decision') == 'evidence_sufficient')
             if snapshot.get('task_investigation') and result['reviewer']['accepted']:
                 task_result = snapshot['task_investigation']
-                release_status = ('BLOCKED' if task_result.get('investigation_status') == 'BLOCKED'
-                                  else (snapshot.get('preparation') or {}).get('status', 'PARTIAL'))
+                analysis = task_result.get('semantic_analysis') or {}
+                # An executed semantic batch may contain both evidence-valid
+                # candidates and blocked/insufficient proposals. Keep the
+                # candidate layer visible as PARTIAL; only a provider/receipt
+                # failure should close the whole product result.
+                release_status = ('PARTIAL' if (task_result.get('investigation_status') == 'BLOCKED'
+                                                and analysis.get('analysis_status') == 'EXECUTED')
+                                  else ('BLOCKED' if task_result.get('investigation_status') == 'BLOCKED'
+                                        else (snapshot.get('preparation') or {}).get('status', 'PARTIAL')))
                 result.update(status=release_status, task_investigation=deepcopy(task_result),
                     evidence=deepcopy(snapshot['evidence']), uncertainty=deepcopy(snapshot['uncertainty']),
                     task_review=deepcopy(snapshot.get('task_review')))

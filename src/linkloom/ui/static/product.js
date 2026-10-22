@@ -540,6 +540,7 @@
         <h3>${t("Relationships to review", "待审查的关系提案")}</h3>
         ${(view.proposals || []).map(p => `<article class="ask-evidence"><h4>${escapeHtml(label(p.predicate))}</h4>
           <p><strong>${t("Model proposal", "模型提案")}: <span data-task-proposal-verdict="${escapeHtml(p.proposed_verdict || "UNKNOWN")}">${escapeHtml(proposalState(p.proposed_verdict))}</span> (${escapeHtml(p.proposed_verdict || "UNKNOWN")})</strong>. ${t("Independent confirmation is still required.", "仍需独立确认。")}</p>
+          <p class="hint">${p.evidence_status === "EVIDENCE_VALID" ? t("References verified; semantic review remains pending.", "引用已核验，语义仍待复核。") : t("References or source coverage are incomplete. This proposal remains uncertain and cannot unlock a trusted relation.", "引用或来源覆盖尚不完整；该提案仍不确定，不能解锁可信关系。")}</p>
           ${[p.subject, p.object].map(ref => `<p>${escapeHtml(original(ref.observation_id)?.raw_text || t("See the referenced source", "请查看对应来源"))}</p>`).join("")}
           <p>${t("Model-reported reasons", "模型报告的理由")}: ${escapeHtml((p.reason_codes || []).join(" · "))}</p>
           <details open><summary>${t("Supporting evidence", "支持证据")}</summary>${evidence(p.supporting_evidence)}</details>

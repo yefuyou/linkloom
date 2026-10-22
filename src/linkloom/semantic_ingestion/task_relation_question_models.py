@@ -75,6 +75,17 @@ class InvestigationStep:
             raise ValueError('SOURCE_SCOPED_OPERATION_REQUIRES_HOST_BINDING')
         return SemanticQuery(self.predicate, *self.handles) if self.kind == 'relation' else None
 
+    def to_semantic_proposal_query(self):
+        """Project a relation into the non-authoritative semantic proposer.
+
+        Source bindings are part of the authorized semantic context and may be
+        supplied to the proposer. The P4 query projection above remains strict:
+        source-scoped and time-scoped operations still require host binding.
+        """
+        if self.kind == 'relation' and self.time_scope != ('', ''):
+            raise ValueError('TIME_SCOPED_OPERATION_REQUIRES_HOST_BINDING')
+        return SemanticQuery(self.predicate, *self.handles) if self.kind == 'relation' else None
+
     def to_dict(self):
         return dict(id=self.id, kind=self.kind, question=self.question, handles=list(self.handles),
                     endpoints=[ref.to_dict() for ref in self.endpoints],

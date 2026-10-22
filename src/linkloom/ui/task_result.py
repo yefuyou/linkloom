@@ -49,8 +49,19 @@ def project_task_review(snapshot, preparation):
             evidence_refs.add(span['evidence_ref'])
     query = payload['relation_query']
     analysis = payload.get('semantic_analysis', {})
-    proposals = [_expand_references(p, analysis) for p in analysis.get('proposals', [])
-                 if p.get('evidence_status') == 'EVIDENCE_VALID']
+    proposals = []
+    for proposal in analysis.get('proposals', []):
+        if proposal.get('evidence_status') == 'EVIDENCE_VALID':
+            proposals.append(_expand_references(proposal, analysis))
+        else:
+            # Show the failed candidate and its gap without presenting unchecked
+            # quotes or reference bindings as source evidence.
+            candidate = {key: deepcopy(proposal.get(key)) for key in
+                ('predicate', 'proposed_verdict', 'evidence_status', 'semantic_status',
+                 'missing_evidence', 'reason_codes')}
+            candidate.update(subject={}, object={}, supporting_evidence=[],
+                             counter_evidence=[], publishable=False)
+            proposals.append(candidate)
     relations = [_expand_references(r, query) for r in query.get('relations', [])]
     plan = (preparation.get('planning') or [{}])[-1].get('plan') or {}
     p4_steps = {s['step_id']: deepcopy(s) for s in query.get('investigation_steps', [])}
