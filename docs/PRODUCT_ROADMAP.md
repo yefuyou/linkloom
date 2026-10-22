@@ -14,6 +14,17 @@ current product contract, while `DEV_SPEC.md` maps it to implementation work.
 The original personal-vault roadmap is retained below as historical planning;
 it is no longer the active product direction.
 
+## Explicit task Provider composition — 2026-10-21
+
+M3-Q adds normal Product Host task stages through the existing Gemini Adapter,
+F/G, Runtime and Reviewer, with separate Host execution permission, per-question
+source-snapshot authorization and shared request/token/cost/time budgets.
+Complete planned relation questions can yield unconfirmed model proposals;
+P4 prerequisites and business authority are unchanged. HTTP and actual Chromium
+acceptance use an explicitly scripted OFFLINE transport. Real Provider semantics
+remain **REAL_PROVIDER_NOT_EVALUATED**; historical M2 H01–H04 remains 0/4 FAIL.
+See the [M3-Q delivery and limits](requirements/m3-q-real-task-investigation/DELIVERY.md).
+
 ## Cross-meeting task investigation — 2026-10-21
 
 The approved M3-P mainline integration brings task observation/evidence and

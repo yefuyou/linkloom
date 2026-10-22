@@ -70,6 +70,13 @@ def main() -> int:
         action="store_true",
         help="Explicitly enable bounded read-only temporal Agent runs using the configured Gemini model.",
     )
+    parser.add_argument('--allow-task-investigation', action='store_true',
+        help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
+    for name in ('requests', 'input-tokens', 'output-tokens'):
+        parser.add_argument('--task-max-' + name, type=int)
+    for name in ('cost-usd', 'seconds'):
+        parser.add_argument('--task-max-' + name, type=float)
+    parser.add_argument('--task-request-timeout-seconds', type=float)
     parser.add_argument(
         "--model",
         default=os.environ.get("LINKLOOM_SEMANTIC_MODEL", GEMINI_38_FLASH_MODEL_ID),
@@ -82,10 +89,21 @@ def main() -> int:
         help="Audited upper-bound estimate recorded for each provider request.",
     )
     args = parser.parse_args()
+    task_limits = None
+    if args.allow_task_investigation:
+        from linkloom.ui.task_provider import TaskProviderLimits
+        if not args.allow_external_provider:
+            parser.error('--allow-task-investigation requires --allow-external-provider')
+        try:
+            task_limits = TaskProviderLimits(args.task_max_requests, args.task_max_input_tokens,
+                args.task_max_output_tokens, args.task_max_cost_usd, args.task_max_seconds,
+                args.task_request_timeout_seconds, args.estimated_cost_per_request)
+        except ValueError as exc:
+            parser.error('Task Provider requires all explicit --task-* budgets: ' + str(exc))
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
     if args.offline_task_demo:
-        if args.allow_external_provider or args.allow_temporal_agent:
+        if args.allow_external_provider or args.allow_temporal_agent or args.allow_task_investigation:
             parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
     else:
         if args.model != GEMINI_38_FLASH_MODEL_ID:
@@ -113,7 +131,9 @@ def main() -> int:
             if not api_key:
                 parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
             try:
-                sdk_client = build_gemini_sdk_client(api_key)
+                sdk_client = build_gemini_sdk_client(api_key, http_options_kwargs=(dict(
+                    timeout=round(task_limits.request_timeout_seconds * 1000),
+                    retry_options=dict(attempts=1)) if task_limits else None))
                 provider = GeminiProviderAdapter(
                     GeminiSDKClientBridge(sdk_client),
                     model_id=args.model,
@@ -133,7 +153,9 @@ def main() -> int:
                     estimated_cost_upper_bound_usd=args.estimated_cost_per_request,
                 )
 
-            extractor = ProviderNeutralSemanticExtractor(
+            # Task configuration is not permission to send imports. Its source
+            # disclosure happens only in Ask for the exact selected snapshot.
+            extractor = None if task_limits else ProviderNeutralSemanticExtractor(
                 provider,
                 provider_id="gemini",
                 model_id=args.model,
@@ -143,7 +165,11 @@ def main() -> int:
             )
 
         product_app = ProductApplication(database_path=args.database, extractor=extractor)
-        if args.allow_temporal_agent:
+        if task_limits:
+            from linkloom.ui.task_provider import compose_task_provider
+            investigation_service = compose_task_provider(product_app, provider, task_limits,
+                                                         enable_temporal=args.allow_temporal_agent)
+        elif args.allow_temporal_agent:
             investigation_service = ProductInvestigationService(
                 product_app,
                 model_factory=lambda _query: GeminiProviderAdapter(
@@ -173,6 +199,8 @@ def main() -> int:
     print(f"Local product database: {database_display}")
     if args.offline_task_demo:
         print("Offline synthetic task demo enabled: deterministic FakeModel runtime and FAKE stages; no external provider or business approval.")
+    elif task_limits:
+        print(f'Task Provider configured: {args.model}; sources require per-question Ask authorization; no business approval.')
     elif extractor is None:
         print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
     else:

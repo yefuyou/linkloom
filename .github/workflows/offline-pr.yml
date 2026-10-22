@@ -166,7 +166,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -e '.[dev]'
+      - run: python -m pip install -e '.[dev,smoke]'
       - name: Observation, planning, proof, context, Runtime and HTTP contracts
         run: >-
           python -m pytest -q --junitxml=task-investigation.xml
@@ -194,6 +194,11 @@ jobs:
           tests/unit/test_task_relation_tools.py
           tests/unit/test_task_relations_p2.py
           tests/unit/test_task_revision_comparison.py
+          tests/unit/test_m3q_provider_budget.py
+          tests/unit/test_m3q_gemini_receipts.py
+          tests/unit/test_m3q_cli_config.py
+          tests/unit/test_m3q_semantic_polarity.py
+          tests/integration/test_m3q_provider_host.py
           tests/integration/test_context_runtime_failures_resume.py
           tests/integration/test_context_runtime_integration.py
           tests/integration/test_m3p_product_review.py

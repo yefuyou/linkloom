@@ -1,0 +1,2 @@
+# Preserve exact generated evidence bytes and SHA-256 receipts across checkouts.
+* -text

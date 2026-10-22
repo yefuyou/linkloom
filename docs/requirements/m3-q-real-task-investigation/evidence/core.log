@@ -1,0 +1,16 @@
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+..........F............................................................. [ 71%]
+........................................................................ [ 95%]
+...............                                                          [100%]
+================================== FAILURES ===================================
+_________________ test_validate_target_root_accepts_synthetic _________________
+tests\unit\test_permission_gate.py:13: in test_validate_target_root_accepts_synthetic
+    assert validate_target_root(tmp_path, fingerprint="f1")
+src\linkloom\mutations\permission.py:24: in validate_target_root
+    raise PermissionError("Real repository or Vault path rejected")
+E   linkloom.mutations.models.PermissionError: Real repository or Vault path rejected
+--- generated xml file: D:\webproject\Linkloom\work\m3q\work\gates\core.xml ---
+=========================== short test summary info ===========================
+FAILED tests/unit/test_permission_gate.py::test_validate_target_root_accepts_synthetic
+1 failed, 302 passed, 2 deselected in 212.41s (0:03:32)

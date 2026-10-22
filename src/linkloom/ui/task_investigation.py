@@ -51,13 +51,19 @@ class TaskInvestigationModels:
     provider_id: str = 'offline'
     discovery_limits: DiscoveryLimits = field(default_factory=DiscoveryLimits)
     planning_limits: PlanningLimits = field(default_factory=PlanningLimits)
+    provider_limits: object = None
 
     def __post_init__(self):
-        # Product task investigation is deliberately offline in this milestone.
-        # External Provider stages are not part of this Host composition.
-        if self.execution_kind not in {'FAKE', 'REPLAY'}:
+        if self.execution_kind == 'LIVE':
+            from linkloom.ui.task_provider import TaskProviderLimits
+            if (not isinstance(self.provider_limits, TaskProviderLimits)
+                    or self.provider_id != 'gemini'
+                    or not all(isinstance(s, GeminiProviderAdapter) and s.model_id == self.model_id
+                               for s in (self.discovery, self.planner, self.semantics))):
+                raise ValueError('LIVE_TASK_PROVIDER_REQUIRES_EXPLICIT_HOST_CONFIG')
+        elif self.execution_kind not in {'FAKE', 'REPLAY'}:
             raise ValueError('Only explicitly injected FAKE/REPLAY task stages are enabled.')
-        if any(isinstance(stage, (GeminiProviderAdapter, DeepSeekProviderAdapter))
+        if self.execution_kind != 'LIVE' and any(isinstance(stage, (GeminiProviderAdapter, DeepSeekProviderAdapter))
                for stage in (self.discovery, self.planner, self.semantics)):
             raise ValueError('LIVE_ADAPTER_CANNOT_BE_FAKE_OR_REPLAY')
         if not all(callable(getattr(stage, 'complete', None))
@@ -151,7 +157,7 @@ class _AuditedAdapter:
         payload['reservation'] = dict(calls_reserved=self.count, max_calls=self.max_calls,
             input_tokens_upper_bound=size + 1024, output_tokens=output_limit,
             max_request_bytes=self.max_request_bytes,
-            new_billable_cost_usd=0.0)
+            new_billable_cost_usd=None if hasattr(self.adapter, 'session') else 0.0)
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf8')
         try:
             response = self.adapter.complete(request)
@@ -173,6 +179,7 @@ class TaskPreparation:
     sources: ProductTaskSources
     tools: TaskRelationTools
     manifest: dict
+    provider_session: object = None
 
 
 def restore_task_preparation(sources, manifest, *, relation_path=None):
@@ -181,7 +188,7 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
     from linkloom.semantic_ingestion.task_relation_models import _endpoint
     from linkloom.semantic_ingestion.task_relation_question_models import InvestigationPlan, InvestigationStep
     sources.validate_current()
-    if manifest['source_snapshot_hash'] != sources.identity or manifest['execution_kind'] not in {'FAKE', 'REPLAY'}:
+    if manifest['source_snapshot_hash'] != sources.identity or manifest['execution_kind'] not in {'FAKE', 'REPLAY', 'LIVE'}:
         raise ValueError('SAVED_SNAPSHOT_UNAVAILABLE')
     discovery = manifest['discovery']
     observations = tuple(TaskObservation.from_dict(o) for o in
@@ -212,7 +219,7 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
     context = SemanticContext(sources.workspace_id, manifest['question'], sources.artifacts, observations,
         tuple((f'task_{i}', ObservationRef.from_observation(o)) for i, o in enumerate(observations)),
         spans, sources.registry, frozenset(artifacts), True, False)
-    queries = tuple(step.to_semantic_query() for step in plan.ready_steps if step.kind == 'relation')
+    queries = _proposal_queries(plan, complete=manifest.get('proposal_scope') == 'ALL_PLANNED_RELATIONS')
     semantic = None
     if queries:
         class ReadOnlyAdapter:
@@ -222,15 +229,23 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
         semantic = SemanticAnalysis('product-investigation', sources.workspace_id,
             lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(context)),
             ReadOnlyAdapter(), model_id=manifest['model_id'],
-            policy=SemanticCallPolicy(manifest['execution_kind'], max_cost_usd=0,
-                                      request_cost_upper_bound_usd=0))
+            policy=SemanticCallPolicy(**manifest.get('semantic_policy', dict(
+                execution_kind=manifest['execution_kind'], max_cost_usd=0, request_cost_upper_bound_usd=0))))
     raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
     tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
         relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan)
     return TaskPreparation(sources, tools, manifest)
 
 
-def prepare_task_investigation(question, sources, models, root, *, relation_path=None):
+def _proposal_queries(plan, *, complete=True):
+    # Proposing dependent semantics never satisfies a Runtime prerequisite.
+    # Scope that the current semantic tool cannot enforce stays unsupported.
+    steps = plan.steps if complete else plan.ready_steps
+    return tuple(step.to_semantic_query() for step in steps if step.kind == 'relation'
+                 and step.time_scope == ('', '') and not step.source_handles)
+
+
+def prepare_task_investigation(question, sources, models, root, *, relation_path=None, provider_session=None):
     """F -> G -> typed ready work; all actual tool execution stays in Runtime."""
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
@@ -241,13 +256,16 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         sources.validate_current()
         return ProviderRequestAuthorization.approve(request, guard_id=guard_id,
             reservation_id=canonical_hash(request.to_dict()),
-            estimated_cost_upper_bound_usd=0)
+            estimated_cost_upper_bound_usd=models.provider_limits.request_cost_upper_bound_usd if provider_session else 0)
 
-    discovery_adapter = _AuditedAdapter(models.discovery, root, 'discovery', sources.validate_current,
+    def stage_adapter(adapter, stage):
+        return provider_session.bind(adapter, stage) if provider_session else adapter
+
+    discovery_adapter = _AuditedAdapter(stage_adapter(models.discovery, 'discovery'), root, 'discovery', sources.validate_current,
         max_calls=models.discovery_limits.max_calls)
     extractor = ProviderNeutralSemanticExtractor(
         discovery_adapter,
-        provider_id=models.execution_kind, model_id=models.model_id,
+        provider_id=models.provider_id if models.execution_kind == 'LIVE' else models.execution_kind, model_id=models.model_id,
         request_guard=guard, request_guard_id=guard_id, max_attempts=1)
     discovery = TaskObservationDiscoveryService(extractor, source_registry=sources.registry,
         current_source=sources.current, limits=models.discovery_limits).discover(
@@ -262,7 +280,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
     # G can plan with incomplete Discovery. That coverage is never evidence of
     # absence, and is separately retained in the final release gaps.
     receipts = {}
-    planning_adapter = _AuditedAdapter(models.planner, root, 'planning', sources.validate_current,
+    planning_adapter = _AuditedAdapter(stage_adapter(models.planner, 'planning'), root, 'planning', sources.validate_current,
         max_calls=models.planning_limits.max_provider_calls)
     planner = InvestigationPlanner(planning_adapter,
         model_id=models.model_id, request_guard=guard, guard_id=guard_id, limits=models.planning_limits,
@@ -321,13 +339,20 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         sources.validate_current()
         return raw
 
+    # Include dependent relation questions for model analysis only. P4, plan
+    # readiness and date comparison still require independent trusted proofs.
+    if planning.plan and models.execution_kind == 'LIVE':
+        queries = list(_proposal_queries(planning.plan))
     semantic = None
+    semantic_policy = SemanticCallPolicy(models.execution_kind,
+        max_cost_usd=models.provider_limits.max_cost_usd if provider_session else 0,
+        request_cost_upper_bound_usd=models.provider_limits.request_cost_upper_bound_usd if provider_session else 0,
+        live_authorized=provider_session is not None)
     if queries:
         semantic_context = replace(context, queries=tuple(queries))
         semantic = SemanticAnalysis('product-investigation', sources.workspace_id,
             lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(semantic_context)),
-            models.semantics, model_id=models.model_id, policy=SemanticCallPolicy(models.execution_kind,
-                max_cost_usd=0, request_cost_upper_bound_usd=0))
+            stage_adapter(models.semantics, 'semantics'), model_id=models.model_id, policy=semantic_policy)
     tools = TaskRelationTools(sources.workspace_id, current_raw, relation_path=relation_path, semantic_analysis=semantic,
         inspection_plan=planning.plan,
         execution_blocked_reason='UNSUPPORTED_OPERATION_SCOPE' if execution_blocked else None)
@@ -335,6 +360,8 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         status='BLOCKED' if planning.status != 'PLANNED' or execution_blocked else 'UNKNOWN' if not observations else 'PARTIAL',
         execution_kind=models.execution_kind, provider_id=models.provider_id, model_id=models.model_id,
         authority='MODEL_PROPOSED_ONLY',
+        proposal_scope='ALL_PLANNED_RELATIONS' if models.execution_kind == 'LIVE' else 'READY_RELATIONS',
+        semantic_policy=asdict(semantic_policy),
         operation_capabilities=HOST_OPERATION_CAPABILITIES, ready_tool_operations=ready_tools,
         discovery=discovery.to_dict(), planning=plans, source_mapping=sources.mapping,
         source_snapshot_hash=sources.identity, gaps=gaps, stage_budget=dict(
@@ -343,9 +370,12 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
             discovery_output_tokens_reserved=discovery_adapter.output_reserved,
             discovery_max_request_bytes=discovery_adapter.max_request_bytes,
             planning=planning.budget, semantic_call_limit=1 if queries else 0,
-            new_billable_cost_usd=0.0),
+            new_billable_cost_usd=None if provider_session else 0.0),
         evidence_layers=dict(component='SEPARATE_TEST_EVIDENCE', integration=models.execution_kind,
             real_model_semantics='NOT_EVALUATED', real_product_business_task='NOT_EVALUATED'))
     sources.validate_current()
     (root / 'preparation.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
-    return TaskPreparation(sources, tools, manifest)
+    if provider_session and provider_session.failure:
+        manifest.update(status='BLOCKED', provider_failure=provider_session.failure)
+        (root / 'preparation.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
+    return TaskPreparation(sources, tools, manifest, provider_session)

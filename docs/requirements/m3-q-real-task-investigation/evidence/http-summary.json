@@ -1,0 +1,10 @@
+{
+  "mode": "OFFLINE",
+  "status": "PASS",
+  "provider_adapter_requests": 16,
+  "real_provider_requests": 0,
+  "actual_cost_usd": 0,
+  "real_provider": "REAL_PROVIDER_NOT_EVALUATED",
+  "workspace_id": "ws_582c74572f444c519fd1fc7ad45775a6",
+  "agent_run_id": "ui-532f8d58eabe"
+}

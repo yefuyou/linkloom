@@ -563,6 +563,8 @@ def _function_response_payload(observation: ToolResult) -> dict[str, Any]:
         "status": observation.status,
         "value": _model_visible_tool_value(observation),
     }
+    if observation.call_id is not None:
+        payload['call_id'] = observation.call_id
     if observation.business_status is not None:
         payload["business_status"] = observation.business_status
     if observation.error is not None:

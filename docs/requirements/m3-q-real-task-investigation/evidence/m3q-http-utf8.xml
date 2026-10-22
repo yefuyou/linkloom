@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="27" time="99.756" timestamp="2026-10-21T21:17:21.870674+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_host_requires_source_permission_then_runs_actual_adapter" time="4.093" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[SUPPORTED]" time="3.655" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[REFUTED]" time="3.660" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[CONFLICT]" time="3.637" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[UNKNOWN]" time="4.017"><failure message="AssertionError: {'agent_run_id': 'ui-4632e2367f7c', 'conclusions': [], 'discovery': None, 'error': None, ...}&#10;assert 'BLOCKED' == 'PARTIAL'&#10;  &#10;  - PARTIAL&#10;  + BLOCKED">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3q/work/pytest-m3q-http-utf8/test_http_preserves_unconfirme3')
+verdict = 'UNKNOWN'
+
+    @pytest.mark.parametrize('verdict', ['SUPPORTED', 'REFUTED', 'CONFLICT', 'UNKNOWN'])
+    def test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4(tmp_path, verdict):
+        app, service, transport, stages, ws = provider_product(tmp_path)
+        transport.semantic_verdict = verdict
+        try:
+            with product_http(app, service) as base:
+                _, body = ask_request(base, ws, authorized=True)
+                result = poll(base, ws, body['result'])
+&gt;               assert result['status'] == 'PARTIAL', result
+E               AssertionError: {'agent_run_id': 'ui-4632e2367f7c', 'conclusions': [], 'discovery': None, 'error': None, ...}
+E               assert 'BLOCKED' == 'PARTIAL'
+E                 
+E                 - PARTIAL
+E                 + BLOCKED
+
+tests\integration\test_m3q_provider_host.py:149: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[discovery_timeout]" time="3.498"><failure message="AssertionError: {'agent_run_id': 'ui-8b6f62fd8bc0', 'conclusions': [], 'discovery': None, 'error': None, ...}&#10;assert 'PARTIAL' == 'BLOCKED'&#10;  &#10;  - BLOCKED&#10;  + PARTIAL">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3q/work/pytest-m3q-http-utf8/test_normal_http_failures_neve0')
+mode = 'discovery_timeout'
+
+    @pytest.mark.parametrize('mode', ['discovery_timeout', 'semantics_timeout', 'budget', 'reviewer'])
+    def test_normal_http_failures_never_release_successful_partial_or_old_trace(tmp_path, mode):
+        app, service, transport, stages, ws = provider_product(tmp_path)
+        if mode.endswith('timeout'):
+            transport.fail_stage = 'emit_semantic_candidates' if mode.startswith('discovery') else 'AUTHORIZED_SNAPSHOT_JSON'
+        elif mode == 'budget':
+            service.task_models = replace(service.task_models,
+                provider_limits=replace(service.task_models.provider_limits, max_requests=5))
+        else:
+            transport.invalid_final = True
+        try:
+            with product_http(app, service) as base:
+                _, body = ask_request(base, ws, authorized=True)
+                result = poll(base, ws, body['result'])
+&gt;               assert result['status'] == 'BLOCKED', result
+E               AssertionError: {'agent_run_id': 'ui-8b6f62fd8bc0', 'conclusions': [], 'discovery': None, 'error': None, ...}
+E               assert 'PARTIAL' == 'BLOCKED'
+E                 
+E                 - BLOCKED
+E                 + PARTIAL
+
+tests\integration\test_m3q_provider_host.py:172: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[semantics_timeout]" time="2.474" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[budget]" time="2.311" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[reviewer]" time="3.408" /><testcase classname="tests.unit.test_m3q_cli_config" name="test_task_configuration_does_not_send_imports_or_model_requests" time="0.170" /><testcase classname="tests.unit.test_m3q_cli_config" name="test_task_provider_cannot_start_without_explicit_permissions_and_budgets[args0]" time="0.004" /><testcase classname="tests.unit.test_m3q_cli_config" name="test_task_provider_cannot_start_without_explicit_permissions_and_budgets[args1]" time="0.004" /><testcase classname="tests.unit.test_m3q_cli_config" name="test_pinned_sdk_constructs_supported_timeout_and_retry_options_offline" time="3.460" /><testcase classname="tests.integration.test_m3p_product_review" name="test_offline_demo_rejects_a_user_named_database" time="0.185" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_partial_exposes_original_tasks_proposal_and_exact_block" time="2.975" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_explicit_tasks_domain_accepts_owner_field_in_original_question" time="2.869" /><testcase classname="tests.integration.test_m3p_product_review" name="test_new_service_reads_saved_result_without_model_calls" time="5.291" /><testcase classname="tests.integration.test_m3p_product_review" name="test_cold_read_requires_accepted_reviewer_and_complete_ledger[ledger_missing]" time="3.301" /><testcase classname="tests.integration.test_m3p_product_review" name="test_cold_read_requires_accepted_reviewer_and_complete_ledger[reviewer_rejected]" time="3.096" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[both]" time="4.885" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[identity]" time="2.994" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_trusted_p4_only_unlocks_matching_prerequisites[none]" time="2.919" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[update]" time="7.895" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[remove]" time="8.782" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[relation_retract]" time="8.229" /><testcase classname="tests.integration.test_m3p_product_review" name="test_same_name_separate_work_never_inherits_fields_or_model_identity" time="2.511" /><testcase classname="tests.integration.test_m3p_product_review" name="test_revoked_evidence_without_source_change_cannot_be_resurrected" time="7.632" /></testsuite></testsuites>

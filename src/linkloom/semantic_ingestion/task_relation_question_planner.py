@@ -64,8 +64,14 @@ Every discovery and every repeated operation with a different scope needs a
 nonempty evidence_gap explaining its necessity for the ORIGINAL GOAL. This text
 is an unverified justification, not a Host-certified semantic conclusion.
 Inspect requires exactly one inspection_handles entry, never a project/change
-or source handle. An inspect with explicit sources must include that task's own
+or source handle. For every inspect step, target_kind, predicate and
+missing_entities MUST each be the empty string/list; inspect does not name a
+target kind. An inspect with explicit sources must include that task's own
 provenance. Inspect source-only/change material through discover or clarify.
+For relation steps, handles provide the two typed endpoints, so target_kind,
+field and missing_entities MUST be empty. For compare_dates, handles provide
+the two task observations, so target_kind, predicate, field and
+missing_entities MUST be empty.
 time_scope is an inclusive ISO calendar-date range: start/end both empty for
 unbounded scope, or both YYYY-MM-DD (equal dates mean as-of). Never hide dates
 or new prerequisites only in question prose. Keep contradictory/negative evidence

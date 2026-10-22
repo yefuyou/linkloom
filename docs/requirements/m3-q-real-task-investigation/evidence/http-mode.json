@@ -1,0 +1,8 @@
+{
+  "mode": "OFFLINE_SCRIPTED_TRANSPORT",
+  "real_provider": "REAL_PROVIDER_NOT_EVALUATED",
+  "real_provider_requests": 0,
+  "actual_cost_usd": 0,
+  "model_configured": "gemini-3.8-flash",
+  "base_url": "http://127.0.0.1:14990"
+}

@@ -1,0 +1,145 @@
+{
+  "checks": [
+    {
+      "path": "work/gates/core.xml",
+      "tests": 303,
+      "failures": 1,
+      "errors": 0,
+      "sha256": "9bf2b9534f61fdf300a0426ef4508288f029914854c8ba6752ab89473234160b"
+    },
+    {
+      "path": "work/gates/core-synthetic-temp.xml",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "d6c2dc763ea4d8dac45510c750e72d2f247df8e42e3c50290d0ab66967df045c"
+    },
+    {
+      "path": "work/gates/core-final.xml",
+      "tests": 303,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "0a6e56cc0db7f3e744fd638d81948c27913d23e6a82df2e89c269effee2d3956"
+    },
+    {
+      "path": "work/gates/task-investigation.xml",
+      "tests": 568,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "e41cae2df86b5b1adb7ac008f3606929e486a1169aec9272d08493c1c61b4c19"
+    },
+    {
+      "path": "work/gates/task-investigation-final.xml",
+      "tests": 582,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "7f90d66d0c585f9e9146de4f002958547044957ee6d83d9c2f9ca5e6026e0cd1"
+    },
+    {
+      "path": "work/gates/legacy-temporal.xml",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "88bb892014533cc6d2d3c35da6031c80fc06c784434f310213012925b719adc6"
+    },
+    {
+      "path": "work/gates/frozen-ledger.xml",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "0531c283934b73167eb64f3e6a50c71e25806a472cdf835cd2ad5e750a2285aa"
+    },
+    {
+      "path": "work/m3q-contracts.xml",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "1747836fa6f0dc7607207d1dc167ebad3806bd370c7453f26a543e2f26f5f7bb"
+    },
+    {
+      "path": "work/m3q-normal.xml",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "e6b4ddf3912817e0b91aa9e52bdf275acd051c25cbc03d29b9cc124badb7c2ad"
+    },
+    {
+      "path": "work/m3q-final-guards.xml",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "e60dda33d7a8e85811f3325ba5660349540b07965beb5f377feaf30ef86a810e"
+    },
+    {
+      "path": "work/m3q-duration.xml",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "604d45010d4c2dae3a021bc5656c9db6ab79238726521a841cedb004814bbca5"
+    },
+    {
+      "path": "work/m3q-final-guards-latest.xml",
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "46a3322e115640fb19b068c0d558c07f27be6838f7863836d16189e129c1d863"
+    },
+    {
+      "path": "work/m3q-focused.xml",
+      "tests": 51,
+      "failures": 5,
+      "errors": 0,
+      "sha256": "2151c2b75ae79d7441cccfb37bfadea2162cacf9afc4eb296ec10e119bddfb60"
+    },
+    {
+      "path": "work/m3q-http-utf8.xml",
+      "tests": 27,
+      "failures": 2,
+      "errors": 0,
+      "sha256": "748f78dba81f9d905210c7cd23ffe3c5468b026d492738df696f401606331416"
+    },
+    {
+      "path": "work/baseline-p85.xml",
+      "tests": 86,
+      "failures": 82,
+      "errors": 0,
+      "sha256": "c1d5c02c0945def8b526bda915202993c66f786435727a63ea4b4149f91fe29f"
+    },
+    {
+      "path": "work/m3q-receipt-red.xml",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "sha256": "afa7a244a7f9b897f6052c746ff1785625c421526177689d940c44d03046a5ab"
+    },
+    {
+      "path": "work/m3q-receipt-green.xml",
+      "tests": 55,
+      "failures": 18,
+      "errors": 0,
+      "sha256": "7b767c206c8fae67156a7688a0645f4eda082e071f962d8f1790045ee5881261"
+    },
+    {
+      "path": "work/m3q-receipt-green2.xml",
+      "tests": 17,
+      "failures": 1,
+      "errors": 0,
+      "sha256": "9ba05bbf5fe7e7d5d6b15fe8cb4c8cc5ff3a18f3318debc8e5687d91c459f8c8"
+    },
+    {
+      "path": "work/m3q-receipt-green3.xml",
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "sha256": "56530dcd6bfcc05bbd7b7346545cb17193aee91988159d8b6498c3830ab7d8e3"
+    }
+  ],
+  "frozen_data_changed": false,
+  "real_provider": "REAL_PROVIDER_NOT_EVALUATED",
+  "actual_provider_requests": 0,
+  "actual_cost_usd": 0,
+  "model_configured": "gemini-3.8-flash",
+  "sdk_version": "2.22.0",
+  "wheel_sha256": "8ad069b4f2e6efabb3bbef252af06897ddc98bf64ced0a4b21871dd868d9bbc5",
+  "note": "Overlapping engineering checks, not product quality scores. Preserve initial failures; core-final uses the original selector with a synthetic root outside Git."
+}
