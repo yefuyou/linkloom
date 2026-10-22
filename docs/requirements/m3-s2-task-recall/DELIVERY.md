@@ -1,5 +1,10 @@
 # M3-S2 交付
 
+后续补验已完成：新版 12 组新案例全部取得有效输出，任务 7/7，5 组负例无误召回；
+普通 Product 已完成真实 F/G/Runtime 及冷读闭环。累计保守预留更新为 $27.68。
+详见 [补验结果](FOLLOWUP.md) 和 [补验收据](evidence/followup/summary.json)。
+以下保留首次交付的实际结果与当时限制，不用补验覆盖初次失败记录。
+
 从固定基线 `bde9d9e2b88c2e69132cf48d1534dc28d4fca764` 修复 F 的任务发现与
 日期输出协议，分支 `codex/m3s-task-recall`。Product LIVE F 使用 `task-recall/v3`。
 G、Runtime、SemanticAnalysis、P4、M3-S1、冻结评测、master 和 PR #6 未修改；不创建 PR。

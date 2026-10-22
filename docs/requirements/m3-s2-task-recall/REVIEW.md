@@ -20,3 +20,18 @@ ModelRequest 另核对完整 neutral schema hash，逐观察核验来源。最�
 
 接受明确披露的范围限制：N01–N04 独立对照不可评分；完整 LIVE Ask 未完成；
 不宣称完整 LIVE Runtime 验收或全单元集全绿。详见 DELIVERY.md。
+
+## 用户继续指令后的补验复核
+
+`/root/final_review` 对相对 `56732e316` 的增量再次独立只读复核：**PASS，P1=0，P2=0**。
+本次产品代码、tests、benchmarks 无改动，只增加有限补验 glue 与证据文档。
+
+- 合计 7 请求/$1.75；累计 102 请求/保守 $27.68，SDK 单次，失败 v2 没有重发。
+- 14 原件 hash、脚本快照、S1/S2 旧账本与固定案例 hash 一致。
+- 独立重算新版 12 案例覆盖：7/7 任务、5 负例零误召回、6 接受/22 UNKNOWN。
+- 真实 Product F/G/Runtime 完成；Reviewer 接受执行证据，来源、冷读、Workspace
+  隔离及更新后阻断均有证据。首次“完整 LIVE Ask 未完成”的限制现已由补验解决。
+- FOLLOWUP/DELIVERY 区分补验覆盖与首次失败，保留 V2 N01–N04 不可评分的限制，
+  没有将 PARTIAL 解释为 P4 权威。
+
+审核者未编辑、未调用 LIVE、未执行 Git 写操作；允许按现有授权提交并非强推。

@@ -44,11 +44,13 @@ def cold(database, run, ws):
     return json.loads(result.stdout)
 
 
-def main(*, replay=False):
+def main(*, replay=False, followup=False):
     global ROOT
     live_root = ROOT
     if replay:
         ROOT = Path('work/m3s2-product-replay')
+    elif followup:
+        ROOT = Path('work/m3s2-followup/product')
     assert not ROOT.exists(), 'SINGLE_USE_PRODUCT_RUN; no retries'
     ledgers = [OUT/'provider/budget.json', Path('work/m3s2-unattempted/provider/budget.json'),
                Path('work/m3s2-unattempted-2/provider/budget.json')]
@@ -57,13 +59,27 @@ def main(*, replay=False):
     assert not any(a['outcome'] in {'PENDING', 'UNCERTAIN'} for p in previous for a in p['attempts'])
     assert sum(p['cost_reserved_usd'] for p in previous)+1.5 <= 5
     snap = budget_snapshot()
-    assert snap['prior_plus_s1_full_allocation_usd']+5 <= 50
+    if followup:
+        reservation = read('work/m3s2-followup/reservation.json')
+        assert reservation['max_requests'] == 8 and reservation['max_reserved_usd'] == 2
+        assert digest(DOC/'cases.json') == reservation['fixed_cases_sha256']
+        f_ledgers = [Path('work/m3s2-followup/f-provider/budget.json'),
+                     Path('work/m3s2-followup/v3-unattempted/f-provider/budget.json')]
+        f_budgets = [read(p) for p in f_ledgers if p.exists()]
+        assert sum(b['requests_reserved'] for b in f_budgets) <= 2
+        assert sum(b['cost_reserved_usd'] for b in f_budgets) <= .5
+        assert not any(a['outcome'] in {'PENDING', 'UNCERTAIN'} for b in f_budgets for a in b['attempts'])
+        assert snap['prior_plus_s1_full_allocation_usd']+reservation['initial_m3s2_reserved_usd']+2 <= 50
+    else:
+        assert snap['prior_plus_s1_full_allocation_usd']+5 <= 50
     cases = {c['id']: c for c in read(DOC/'cases.json')['cases']}
     scene = dict(source='\n'.join(f'[2030-01-0{i+1}T09:00:00Z] {cases[k]["speaker"]}: {cases[k]["text"]}' for i,k in enumerate(['N01','N07'])),
         question='请列出原文中的离线索引重建和兼容矩阵核验两条任务观察，各自的负责人、交付日期及证据是什么？未确定的字段请明确写未知。')
     save(ROOT/'reservation.json', dict(**snap, prior_f_ledger_sha256=digest(OUT/'provider/budget.json'),
-        max_requests=6, max_reserved_usd=1.5, combined_m3s2_max_requests=20,
-        combined_m3s2_max_reserved_usd=5, scene=scene))
+        max_requests=6, max_reserved_usd=1.5,
+        combined_m3s2_max_requests=reservation['initial_m3s2_requests']+8 if followup else 20,
+        combined_m3s2_max_reserved_usd=reservation['initial_m3s2_reserved_usd']+2 if followup else 5, scene=scene,
+        followup_reservation_sha256=digest('work/m3s2-followup/reservation.json') if followup else None))
     sdk = None if replay else build_gemini_sdk_client(os.environ['GEMINI_API_KEY'], http_options_kwargs=dict(timeout=45000, retry_options=dict(attempts=1)))
     class Bridge:
         def generate_content(self, **kwargs):

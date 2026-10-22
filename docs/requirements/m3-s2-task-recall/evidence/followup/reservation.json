@@ -1,0 +1,45 @@
+{
+  "authorization": "User continuation after initial M3-S2 delivery; explicit new bounded verification",
+  "started_at": "2026-10-22T12:06:21.286997+00:00",
+  "snapshot": {
+    "prior": {
+      "requests": 79,
+      "reserved_usd": 21.93
+    },
+    "s1_snapshots": [
+      {
+        "path": "..\\m3s1\\work\\m3s1-live-20261022\\global-provider\\budget.json",
+        "sha256": "e1504c61c040f77bd2b0ee19f1847b09f36ac4b8eebd477cc2550850824f24df",
+        "requests": 3,
+        "reserved_usd": 0.75,
+        "allocation_usd": 3
+      },
+      {
+        "path": "..\\m3s1\\work\\m3s1-live-recheck-20261022\\global-provider\\budget.json",
+        "sha256": "41d38b7acf6bae305005a9afdb9db6ce5a01f5a6a1639ccebd36901329f40b46",
+        "requests": 7,
+        "reserved_usd": 1.75,
+        "allocation_usd": 2.25
+      }
+    ],
+    "prior_plus_s1_full_allocation_usd": 24.68
+  },
+  "initial_m3s2_requests": 16,
+  "initial_m3s2_reserved_usd": 4.0,
+  "cumulative_prior_requests": 95,
+  "cumulative_prior_reserved_usd": 25.93,
+  "prior_ledgers": {
+    "work\\m3s2-live\\provider\\budget.json": "d9c6114cb46bcbd226d819386dde2ccaaf30ae2c952e21bc7e02b3c8deb915d6",
+    "work\\m3s2-unattempted\\provider\\budget.json": "7a05506712f001a6c3cc33b3fc83f54c6128350c03cbe171e77b532ccdec4e2e",
+    "work\\m3s2-unattempted-2\\provider\\budget.json": "89f73b5157fb61ad79922e1862157b1e302b088b321ca7552a429d07d93ae25e",
+    "work\\m3s2-product\\campaign-provider\\budget.json": "fd0827f0f30de93d443c7625a03baf7a8f14501ffbb3fdbbb58b3c316d857c18"
+  },
+  "fixed_cases_sha256": "8503356794263b2d7d0c0da6fc887097d0ba16ccadad0bb6729c9cab036b35b0",
+  "max_requests": 8,
+  "max_reserved_usd": 2,
+  "project_cap_usd": 50,
+  "sdk_attempts": 1,
+  "model": "gemini-3.8-flash",
+  "automatic_retries": 0,
+  "actual_bill_usd": null
+}
