@@ -1,0 +1,362 @@
+{
+  "analysis_status": "EXECUTED",
+  "cache_hit": false,
+  "context_manifest": {
+    "errors": [],
+    "input_inventory": {
+      "display_lists_truncated": false,
+      "expected_observation_payloads": [
+        "0fa79ad3b30ee646f1a0c9ffe6150a238467351138a8e9c06021550faac4b424",
+        "19686d4d088d3cb8968fe4f6f00f356a1bb8e5939ba75eb36ad6a980ed5036fe"
+      ],
+      "expected_source_versions": [
+        "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+        "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+      ],
+      "inventory_complete": true,
+      "inventory_sha256": "fd75b340ce0573fae578a2410fa1d79c0135e7886f2683dceeddc471a72bb8bd",
+      "limits": {
+        "max_allowed_chars": 12000,
+        "max_artifacts": 32,
+        "max_endpoints": 80,
+        "max_input_bytes": 24000,
+        "max_input_tokens": 32768,
+        "max_observations": 64,
+        "max_output_tokens": 8192,
+        "max_proposals": 24
+      },
+      "observation_count": 2,
+      "observation_payloads": [
+        "0fa79ad3b30ee646f1a0c9ffe6150a238467351138a8e9c06021550faac4b424",
+        "19686d4d088d3cb8968fe4f6f00f356a1bb8e5939ba75eb36ad6a980ed5036fe"
+      ],
+      "revoked_evidence_refs": [],
+      "revoked_observation_ids": [],
+      "source_characters": 204,
+      "source_count": 2,
+      "source_parsing": [
+        {
+          "artifact_version_id": "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf",
+          "issue_count": 0,
+          "issues": [],
+          "issues_truncated": false,
+          "status": "COMPLETE"
+        },
+        {
+          "artifact_version_id": "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+          "issue_count": 0,
+          "issues": [],
+          "issues_truncated": false,
+          "status": "COMPLETE"
+        }
+      ],
+      "source_versions": [
+        "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+        "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+      ],
+      "truncated": false,
+      "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+    },
+    "inventory_complete": true,
+    "limits": {
+      "max_allowed_chars": 12000,
+      "max_artifacts": 32,
+      "max_endpoints": 80,
+      "max_input_bytes": 24000,
+      "max_input_tokens": 32768,
+      "max_observations": 64,
+      "max_output_tokens": 8192,
+      "max_proposals": 24
+    },
+    "observation_count": 2,
+    "revoked_evidence_refs": [],
+    "revoked_observation_ids": [],
+    "scope": "HOST_DECLARED_BOUNDED_SOURCE_INVENTORY; NOT_GLOBAL_TASK_COMPLETENESS",
+    "source_count": 2,
+    "source_snapshot_hash": "f64838709ed3cfde4d165f9af5380e47834209f55d661db49f35030905e8557e",
+    "source_versions": [
+      "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+      "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+    ],
+    "status": "READY",
+    "truncated": false,
+    "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+  },
+  "errors": [],
+  "evidence_spans": {
+    "span_10dc5bdb3f1250aba9da43d10d874bb84fc98e7d74db9dbfa2e997e7131fe18e": {
+      "artifact_id": "src_6b1f73b70ffb43a6b6d275cb903f3119",
+      "artifact_version_id": "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+      "char_end": 128,
+      "char_start": 29,
+      "content_hash": "d3846be5f6ec93a0ade332fc75b3dd6ab4a3e8f574a05ac9631d06ec1791aaee",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+      "line_end": 1,
+      "line_start": 1,
+      "message_id": "message_v1_51292bd70bb06576f42f53e280725b90b33f3ccd49e0957d215546d0022d5c76",
+      "ordinal": 0,
+      "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。新的计划日期提到2029-06-24，同时有人只是在讨论中普通提及2029-06-26；原文没有写明哪一个日期是正式截止日期，也没有完整的替代关系证明。",
+      "quote_sha256": "c53bc3bed072f0103878a29d3ee9f402b4a4daa167854e7930ddeb170d3f805c",
+      "segment_id": "segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+      "source_ref": "linkloom://ws_21bd06232c1a459c8423be7cd48447dd/src_6b1f73b70ffb43a6b6d275cb903f3119",
+      "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+    },
+    "span_a9a1e6564588c838c80f426468c6cff209208a54a82b2fb9a965b915991a2c97": {
+      "artifact_id": "src_aba67d03b83f41c5b9aa3871d8205441",
+      "artifact_version_id": "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf",
+      "char_end": 76,
+      "char_start": 27,
+      "content_hash": "a3f0f1159664ae616f0aaa7e0b71829c4db7f3aa07b60855323d09f8f8f88775",
+      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+      "line_end": 1,
+      "line_start": 1,
+      "message_id": "message_v1_7d16f5885667b7e979d99a0085ca6bac9c74927434c02b0ea703f7928621b61e",
+      "ordinal": 0,
+      "quote": "负责项目上线检查任务。原计划的截止日期是2029-06-20；这一天是会议记录日期，不是截止日期。",
+      "quote_sha256": "fe720c4b60d089f9220bfdcaadfa315160a02c1410a7e68647f9250a573abf2b",
+      "segment_id": "segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+      "source_ref": "linkloom://ws_21bd06232c1a459c8423be7cd48447dd/src_aba67d03b83f41c5b9aa3871d8205441",
+      "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+    }
+  },
+  "execution": {
+    "adapter_requests": 1,
+    "cost_usd": null,
+    "kind": "LIVE",
+    "new_billable_cost_usd": null,
+    "new_live_provider_requests": 1,
+    "original_receipt": null,
+    "provider_request_id": null,
+    "provider_response_id": "W0vZaonZEIyEuMYPnLnjoAw",
+    "provider_usage": {
+      "duration_ms": 3319.204,
+      "input_tokens": 3437,
+      "output_tokens": 302,
+      "total_tokens": 3739
+    },
+    "request_sha256": "e0a020f4c15e82175ba39392100330dd51ac40dae32867cdf5affffb382d55ad",
+    "reserved_requests": 1,
+    "response_sha256": "da5a915afcb2769e87b361aeaeeb7cefd305d48937d92db7e39d8eb2dcbc887f"
+  },
+  "investigation_id": "product-investigation",
+  "invocation_id": "semantic_60a1904b726db747d08aa499341dde8c6997df45156db504aaf696ea1883c7b9",
+  "origin_tool_call_id": "rtc_c52677a329f102aaa1121e2346df14fc",
+  "outer_call_id": "rtc_c52677a329f102aaa1121e2346df14fc",
+  "proposals": [
+    {
+      "actual_model_version": "gemini-3.8-flash",
+      "authority": "SUPPORTING_ONLY",
+      "changed_fields": [],
+      "counter_evidence": [],
+      "coverage": {
+        "cited_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+          "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138"
+        ],
+        "cited_source_versions": [
+          "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+          "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+        ],
+        "missing_source_versions": [],
+        "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+        "required_source_versions": [
+          "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+          "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+        ],
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "COMPLETE"
+      },
+      "displayable_as_model_analysis": true,
+      "evidence_status": "EVIDENCE_VALID",
+      "execution_status": "EXECUTED",
+      "missing_evidence": [],
+      "model_id": "gemini-3.8-flash",
+      "object": {
+        "artifact_id": "src_6b1f73b70ffb43a6b6d275cb903f3119",
+        "artifact_version_id": "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+        "content_hash": "d3846be5f6ec93a0ade332fc75b3dd6ab4a3e8f574a05ac9631d06ec1791aaee",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+        "observation_id": "task_observation_v1_9e55f320883d5a6acc7ce5df0279e59de57cd0e4663c56b408a19d43aedcc78f",
+        "payload_hash": "31bffc2ed9eb87be1a2d65e884c22d898550e07e41c622858365dcf2bd24ba07",
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+      },
+      "predicate": "SAME_TASK",
+      "prompt_version": "task-relation-semantics/v1",
+      "proposal_id": "semantic_proposal_v1_52bfce59723f3cbad89dd92d1abf782b2b3c87dc0944275a5ea4a83d681398ae",
+      "proposed_verdict": "SUPPORTED",
+      "publishable": false,
+      "reason_codes": [
+        "SAME_TASK_CONFIRMED"
+      ],
+      "release_status": "PENDING_SEMANTIC_REVIEW",
+      "schema": "task-semantic-proposal/v1",
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "source_snapshot_hash": "f64838709ed3cfde4d165f9af5380e47834209f55d661db49f35030905e8557e",
+      "source_validation": {
+        "authority": "SUPPORTING_ONLY",
+        "counter_evidence": [],
+        "errors": [],
+        "proposal_id": "semantic_proposal_v1_52bfce59723f3cbad89dd92d1abf782b2b3c87dc0944275a5ea4a83d681398ae",
+        "publishable": false,
+        "semantic_status": "NOT_EVALUATED",
+        "stage": "EVIDENCE_VALID",
+        "supporting_evidence": [
+          {
+            "char_end": 38,
+            "char_start": 27,
+            "quote": "负责项目上线检查任务。",
+            "role": "RELATION_PROPOSAL",
+            "span": {
+              "span_ref": "span_a9a1e6564588c838c80f426468c6cff209208a54a82b2fb9a965b915991a2c97"
+            }
+          },
+          {
+            "char_end": 52,
+            "char_start": 29,
+            "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。",
+            "role": "RELATION_PROPOSAL",
+            "span": {
+              "span_ref": "span_10dc5bdb3f1250aba9da43d10d874bb84fc98e7d74db9dbfa2e997e7131fe18e"
+            }
+          }
+        ],
+        "validator_version": "task-semantic-evidence/v1"
+      },
+      "stage": "MODEL_PROPOSED",
+      "subject": {
+        "artifact_id": "src_aba67d03b83f41c5b9aa3871d8205441",
+        "artifact_version_id": "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf",
+        "content_hash": "a3f0f1159664ae616f0aaa7e0b71829c4db7f3aa07b60855323d09f8f8f88775",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+        "observation_id": "task_observation_v1_0cc3cd61e059c354434e3f9ab0d99ca346658698161459aedd954a41c198453c",
+        "payload_hash": "b00dcf82cfd258556f7b3a8e55dce763b819c1d994db02105efcf715a83b2b64",
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+      },
+      "supporting_evidence": [
+        {
+          "quote": "负责项目上线检查任务。",
+          "span": {
+            "span_ref": "span_a9a1e6564588c838c80f426468c6cff209208a54a82b2fb9a965b915991a2c97"
+          }
+        },
+        {
+          "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。",
+          "span": {
+            "span_ref": "span_10dc5bdb3f1250aba9da43d10d874bb84fc98e7d74db9dbfa2e997e7131fe18e"
+          }
+        }
+      ]
+    },
+    {
+      "actual_model_version": "gemini-3.8-flash",
+      "authority": "SUPPORTING_ONLY",
+      "changed_fields": [],
+      "comparison": {
+        "conditional_on_model_semantics": true,
+        "delta_calendar_days": null,
+        "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+        "proposal_id": "semantic_proposal_v1_bf08ecf3a7a3de128c6a0ad5a7fc7a38d836dfc9f1bfaaecfb328ff07a070404",
+        "publishable": false,
+        "semantic_status": "NOT_EVALUATED",
+        "source_snapshot_hash": "f64838709ed3cfde4d165f9af5380e47834209f55d661db49f35030905e8557e",
+        "status": "BLOCKED"
+      },
+      "counter_evidence": [],
+      "coverage": {
+        "cited_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138"
+        ],
+        "cited_source_versions": [
+          "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9"
+        ],
+        "missing_source_versions": [
+          "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+        ],
+        "policy": "EXPLICIT_HOST_INVESTIGATION_SOURCE_COVERAGE/v1",
+        "required_source_versions": [
+          "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+          "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf"
+        ],
+        "semantic_status": "SEMANTIC_NOT_EVALUATED",
+        "status": "INSUFFICIENT"
+      },
+      "displayable_as_model_analysis": false,
+      "evidence_status": "EVIDENCE_INVALID",
+      "execution_status": "EXECUTED",
+      "missing_evidence": [
+        "explicit confirmation of replacement plan or official deadline"
+      ],
+      "model_id": "gemini-3.8-flash",
+      "object": {
+        "artifact_id": "src_aba67d03b83f41c5b9aa3871d8205441",
+        "artifact_version_id": "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf",
+        "content_hash": "a3f0f1159664ae616f0aaa7e0b71829c4db7f3aa07b60855323d09f8f8f88775",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+        "observation_id": "task_observation_v1_0cc3cd61e059c354434e3f9ab0d99ca346658698161459aedd954a41c198453c",
+        "payload_hash": "b00dcf82cfd258556f7b3a8e55dce763b819c1d994db02105efcf715a83b2b64",
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+      },
+      "predicate": "REVISES_PLAN",
+      "prompt_version": "task-relation-semantics/v1",
+      "proposal_id": "semantic_proposal_v1_bf08ecf3a7a3de128c6a0ad5a7fc7a38d836dfc9f1bfaaecfb328ff07a070404",
+      "proposed_verdict": "UNKNOWN",
+      "publishable": false,
+      "reason_codes": [
+        "AMBIGUOUS_REVISION"
+      ],
+      "release_status": "BLOCKED",
+      "schema": "task-semantic-proposal/v1",
+      "semantic_status": "SEMANTIC_NOT_EVALUATED",
+      "source_snapshot_hash": "f64838709ed3cfde4d165f9af5380e47834209f55d661db49f35030905e8557e",
+      "source_validation": {
+        "authority": "SUPPORTING_ONLY",
+        "counter_evidence": [],
+        "errors": [],
+        "proposal_id": "semantic_proposal_v1_bf08ecf3a7a3de128c6a0ad5a7fc7a38d836dfc9f1bfaaecfb328ff07a070404",
+        "publishable": false,
+        "semantic_status": "NOT_EVALUATED",
+        "stage": "EVIDENCE_VALID",
+        "supporting_evidence": [
+          {
+            "char_end": 128,
+            "char_start": 29,
+            "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。新的计划日期提到2029-06-24，同时有人只是在讨论中普通提及2029-06-26；原文没有写明哪一个日期是正式截止日期，也没有完整的替代关系证明。",
+            "role": "RELATION_PROPOSAL",
+            "span": {
+              "span_ref": "span_10dc5bdb3f1250aba9da43d10d874bb84fc98e7d74db9dbfa2e997e7131fe18e"
+            }
+          }
+        ],
+        "validator_version": "task-semantic-evidence/v1"
+      },
+      "stage": "MODEL_PROPOSED",
+      "subject": {
+        "artifact_id": "src_6b1f73b70ffb43a6b6d275cb903f3119",
+        "artifact_version_id": "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+        "content_hash": "d3846be5f6ec93a0ade332fc75b3dd6ab4a3e8f574a05ac9631d06ec1791aaee",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+        "observation_id": "task_observation_v1_9e55f320883d5a6acc7ce5df0279e59de57cd0e4663c56b408a19d43aedcc78f",
+        "payload_hash": "31bffc2ed9eb87be1a2d65e884c22d898550e07e41c622858365dcf2bd24ba07",
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+      },
+      "supporting_evidence": [
+        {
+          "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。新的计划日期提到2029-06-24，同时有人只是在讨论中普通提及2029-06-26；原文没有写明哪一个日期是正式截止日期，也没有完整的替代关系证明。",
+          "span": {
+            "span_ref": "span_10dc5bdb3f1250aba9da43d10d874bb84fc98e7d74db9dbfa2e997e7131fe18e"
+          }
+        }
+      ]
+    }
+  ],
+  "publishable": false,
+  "result_artifact": {
+    "kind": "tool_result",
+    "ref": "semantic/ee45263639886fbf68e603c1/result.json",
+    "sha256": "4f422ba2f22f042dc3d61c467e7f98847e7ed170cc67b0723de5dd7557534b24",
+    "size_bytes": 10195
+  },
+  "schema_version": "task-semantic-analysis/v1",
+  "semantic_status": "SEMANTIC_NOT_EVALUATED",
+  "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd"
+}

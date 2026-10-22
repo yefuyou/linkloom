@@ -1,0 +1,3 @@
+# Preserve archived receipt bytes and their SHA-256 hashes, including Windows EOLs.
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.png binary

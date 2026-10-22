@@ -1,0 +1,88 @@
+{
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low",
+  "product_requests": 8,
+  "semantic_diagnostic_requests": 7,
+  "new_requests": 15,
+  "new_outcomes": {
+    "SUCCEEDED": 15
+  },
+  "new_usage": {
+    "input_tokens": 79939,
+    "output_tokens": 4049,
+    "total_tokens": 86156
+  },
+  "new_reserved_usd": 2.050037,
+  "actual_bill_usd": null,
+  "prior_reported_requests": 32,
+  "prior_reported_outcomes": {
+    "SUCCEEDED": 24,
+    "FAILED": 5,
+    "UNCERTAIN": 3
+  },
+  "prior_reserved_usd_approx": 11.87,
+  "cumulative_requests": 47,
+  "cumulative_reserved_usd_approx": 13.920036999999999,
+  "conservative_global_reserved_usd": 13.93,
+  "global_cap_usd": 50,
+  "bill_project_independently_verified": false,
+  "billing_note": "Same local authorized API key and default Google SDK endpoint. Generation receipts do not expose the billing project or actual charge.",
+  "product_run_id": "ui-987f33c9c7cf",
+  "product_review": {
+    "checks": [
+      {
+        "checks": [
+          "CURRENT_SOURCE_VERSIONS",
+          "P4_LIFECYCLE_REPLAY",
+          "RECEIPT_PROJECTION",
+          "INNER_RECEIPT_IDENTITY",
+          "CURRENT_RAW_SOURCE_SNAPSHOT",
+          "A_EVIDENCE_VALIDATION",
+          "DECLARED_SOURCE_COVERAGE",
+          "SEMANTIC_NOT_EVALUATED"
+        ],
+        "result_type": "task-relations-result/v1",
+        "status": "pass"
+      }
+    ],
+    "created_at": "2026-10-21T23:31:44.038658+00:00",
+    "decision": "evidence_sufficient",
+    "human_approval_required": false,
+    "reason": "All validation passed",
+    "review_id": "review_3ead0082",
+    "reviewer_agent_id": "reviewer_agent",
+    "subject_refs": []
+  },
+  "product_status": "completed",
+  "product_tools": [
+    {
+      "tool": "inspect_task_context",
+      "call_id": "rtc_577c2ee4d99c7840d93cf68d5b82acd9",
+      "status": "completed"
+    },
+    {
+      "tool": "query_task_relations",
+      "call_id": "rtc_3fb3d763a2612e8c264b834b19119ca3",
+      "status": "completed"
+    },
+    {
+      "tool": "analyze_task_semantics",
+      "call_id": "rtc_c52677a329f102aaa1121e2346df14fc",
+      "status": "completed"
+    }
+  ],
+  "product_relation_status": "BLOCKED",
+  "p4_relation_created": false,
+  "trusted_date_delta": null,
+  "product_cold_ui": {
+    "base": "http://127.0.0.1:8827/",
+    "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd",
+    "run_id": "ui-987f33c9c7cf",
+    "result": "任务调查：已知证据与待确认问题\n\n以下记录分别保留各自原文中的信息。模型建议不代表已确认同一任务，也不代表较晚日期已正式生效。\n\n原文明确记录的内容\nmeeting-a.txt · 负责项目上线检查任务\n\n来源版本:\nartifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf\n· 记录时间:\n2029年6月1日 · UTC\n\n原文负责人\n未知\n原文截止日期\n未知\n日期角色\nUNKNOWN\n\n未知字段: owner · deadline · project · vendor\n\n校验问题: OWNER_UNGROUNDED\n\n展开原始消息与字段证据\n查看来源\nmeeting-b.txt · 项目上线检查\n\n来源版本:\nartifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9\n· 记录时间:\n2029年6月4日 · UTC\n\n原文负责人\n未知\n原文截止日期\n未知\n日期角色\nUNKNOWN\n\n未知字段: owner · deadline · project · vendor\n\n校验问题: OWNER_UNGROUNDED\n\n展开原始消息与字段证据\n查看来源\n待审查的关系提案\n是否同一任务\n\n模型提案: 支持性提案 (SUPPORTED). 仍需独立确认。\n\n引用已核验，语义仍待复核。\n\n负责项目上线检查任务。\n\n林枫继续负责项目上线检查。\n\n模型报告的理由: SAME_TASK_CONFIRMED\n\n支持证据\n负责项目上线检查任务。\n讨论此前任务的修订；林枫继续负责项目上线检查。\n反对证据或冲突\n\n模型报告的证据缺口: 未报告额外缺口，仍不表示关系已确认。\n\n是否修订计划\n\n模型提案: 未知提案 (UNKNOWN). 仍需独立确认。\n\n引用或来源覆盖尚不完整；该提案仍不确定，不能解锁可信关系。\n\n请查看对应来源\n\n请查看对应来源\n\n模型报告的理由: AMBIGUOUS_REVISION\n\n支持证据\n\n未提供\n\n反对证据或冲突\n\n模型报告的证据缺口: explicit confirmation of replacement plan or official deadline\n\n哪些步骤已执行，哪些仍被阻断\n\n核实task_0的负责人是否为林枫。 — 读取已完成\n\n核实task_1的负责人是否为林枫。 — 读取已完成\n\n核实task_0的原计划截止日期及角色定义。 — 读取已完成\n\n核实task_1的调整后截止日期及角色定义。 — 读取已完成\n\n判定task_0与task_1是否属于同一任务。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n判定task_1是否修订了task_0的执行计划。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n对比task_1与task_0的截止日期，分析变化天数。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n实际完成的读取: 任务原文 · 可信关系 · 关系候选分析\n\n尚未解决的证据缺口\n\n任务记录反映来源中的陈述；任务身份、计划修订及当前生效日期，需要分别通过可信关系验证。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n模型报告的证据缺口: explicit confirmation of replacement plan or official deadline\n\n下一步可以做什么\n\n展开两条原始消息，核对是否确实描述同一项工作；仍需可独立验证的任务身份关系。\n\n补充明确说明后一计划替代前一计划的来源。\n\n比较日期需要先确认任务身份和计划修订；上方已保留两条原始日期。\n\n人工确认尚未接通：当前系统没有具备身份与权限校验的任务关系审核接口。查看原文不会批准关系。\n\n全部原始引用\n调查轨迹与审查结果",
+    "source_opened": true,
+    "refreshed_proposals": 2,
+    "refreshed": "任务调查：已知证据与待确认问题\n\n以下记录分别保留各自原文中的信息。模型建议不代表已确认同一任务，也不代表较晚日期已正式生效。\n\n原文明确记录的内容\nmeeting-a.txt · 负责项目上线检查任务\n\n来源版本:\nartifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf\n· 记录时间:\n2029年6月1日 · UTC\n\n原文负责人\n未知\n原文截止日期\n未知\n日期角色\nUNKNOWN\n\n未知字段: owner · deadline · project · vendor\n\n校验问题: OWNER_UNGROUNDED\n\n展开原始消息与字段证据\n查看来源\nmeeting-b.txt · 项目上线检查\n\n来源版本:\nartifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9\n· 记录时间:\n2029年6月4日 · UTC\n\n原文负责人\n未知\n原文截止日期\n未知\n日期角色\nUNKNOWN\n\n未知字段: owner · deadline · project · vendor\n\n校验问题: OWNER_UNGROUNDED\n\n展开原始消息与字段证据\n查看来源\n待审查的关系提案\n是否同一任务\n\n模型提案: 支持性提案 (SUPPORTED). 仍需独立确认。\n\n引用已核验，语义仍待复核。\n\n负责项目上线检查任务。\n\n林枫继续负责项目上线检查。\n\n模型报告的理由: SAME_TASK_CONFIRMED\n\n支持证据\n负责项目上线检查任务。\n讨论此前任务的修订；林枫继续负责项目上线检查。\n反对证据或冲突\n\n模型报告的证据缺口: 未报告额外缺口，仍不表示关系已确认。\n\n是否修订计划\n\n模型提案: 未知提案 (UNKNOWN). 仍需独立确认。\n\n引用或来源覆盖尚不完整；该提案仍不确定，不能解锁可信关系。\n\n请查看对应来源\n\n请查看对应来源\n\n模型报告的理由: AMBIGUOUS_REVISION\n\n支持证据\n\n未提供\n\n反对证据或冲突\n\n模型报告的证据缺口: explicit confirmation of replacement plan or official deadline\n\n哪些步骤已执行，哪些仍被阻断\n\n核实task_0的负责人是否为林枫。 — 读取已完成\n\n核实task_1的负责人是否为林枫。 — 读取已完成\n\n核实task_0的原计划截止日期及角色定义。 — 读取已完成\n\n核实task_1的调整后截止日期及角色定义。 — 读取已完成\n\n判定task_0与task_1是否属于同一任务。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n判定task_1是否修订了task_0的执行计划。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n对比task_1与task_0的截止日期，分析变化天数。 — 暂时无法继续\n\n前置关系尚未获得可信支持，因此该步骤没有继续。\n\n实际完成的读取: 任务原文 · 可信关系 · 关系候选分析\n\n尚未解决的证据缺口\n\n任务记录反映来源中的陈述；任务身份、计划修订及当前生效日期，需要分别通过可信关系验证。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n后续调查步骤依赖尚未确认的任务关系。\n\n模型报告的证据缺口: explicit confirmation of replacement plan or official deadline\n\n下一步可以做什么\n\n展开两条原始消息，核对是否确实描述同一项工作；仍需可独立验证的任务身份关系。\n\n补充明确说明后一计划替代前一计划的来源。\n\n比较日期需要先确认任务身份和计划修订；上方已保留两条原始日期。\n\n人工确认尚未接通：当前系统没有具备身份与权限校验的任务关系审核接口。查看原文不会批准关系。\n\n全部原始引用\n调查轨迹与审查结果",
+    "errors": []
+  }
+}

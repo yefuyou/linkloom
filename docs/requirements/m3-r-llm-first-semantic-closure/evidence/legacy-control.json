@@ -1,0 +1,116 @@
+[
+  {
+    "case_id": "delivery-slot",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "old_revision": "UNKNOWN",
+    "old_revision_reasons": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ],
+    "new_model_verdicts": [
+      "SUPPORTED",
+      "SUPPORTED"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID",
+      "EVIDENCE_VALID"
+    ]
+  },
+  {
+    "case_id": "shared-owner-distinct-work",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "new_model_verdicts": [
+      "REFUTED"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID"
+    ]
+  },
+  {
+    "case_id": "progress-without-replanning",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "old_revision": "UNKNOWN",
+    "old_revision_reasons": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ],
+    "new_model_verdicts": [
+      "SUPPORTED",
+      "REFUTED"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID",
+      "EVIDENCE_VALID"
+    ]
+  },
+  {
+    "case_id": "withdrawn-suggestion",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "old_revision": "UNKNOWN",
+    "old_revision_reasons": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ],
+    "new_model_verdicts": [
+      "SUPPORTED",
+      "REFUTED"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID",
+      "EVIDENCE_VALID"
+    ]
+  },
+  {
+    "case_id": "opposed-minutes",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "old_revision": "UNKNOWN",
+    "old_revision_reasons": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ],
+    "new_model_verdicts": [
+      "SUPPORTED",
+      "CONFLICT"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID",
+      "EVIDENCE_VALID"
+    ]
+  },
+  {
+    "case_id": "missing-reference",
+    "old_same_task": "UNKNOWN",
+    "old_same_task_reasons": [
+      "INSUFFICIENT_IDENTITY",
+      "PROJECT_SCOPE_UNKNOWN"
+    ],
+    "old_revision": "UNKNOWN",
+    "old_revision_reasons": [
+      "SAME_TASK_NOT_SUPPORTED"
+    ],
+    "new_model_verdicts": [
+      "UNKNOWN",
+      "UNKNOWN"
+    ],
+    "new_evidence_validation": [
+      "EVIDENCE_VALID",
+      "EVIDENCE_VALID"
+    ]
+  }
+]

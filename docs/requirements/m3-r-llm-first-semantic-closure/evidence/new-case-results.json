@@ -1,0 +1,2125 @@
+{
+  "cases": [
+    {
+      "case_id": "delivery-slot",
+      "expected": [
+        "SUPPORTED",
+        "SUPPORTED"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 5819.372,
+      "provider_response_id": "_lTZarHQGIqE1sgP0J6z6As",
+      "usage": {
+        "input_tokens": 3171,
+        "output_tokens": 354,
+        "total_tokens": 3525,
+        "duration_ms": 5811.454
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-delivery-slot",
+            "observation_id": "task_observation_v1_981a588c2062c796782c7578cb924ac36e719df2c2c38bb8f22d44427b645d24",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+            "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+            "payload_hash": "7006ac441705ae34b0671183d5f2a9ac725595cdd7149c6ef2250086e970ad34"
+          },
+          "object": {
+            "workspace_id": "m3r-delivery-slot",
+            "observation_id": "task_observation_v1_ac5e3c8c2df5ad3fdd3196a06811ea2a51aa5ee114195fb88a3e4628b12dbbdc",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+            "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+            "payload_hash": "71bfd70f38d4d2388754cc4220c794efe1d3922b10784e70e2c7b746978bff39"
+          },
+          "proposed_verdict": "SUPPORTED",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+                "source_ref": "artifact://m3r-delivery-slot/before.txt",
+                "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+                "ordinal": 0,
+                "message_id": "message_v1_1d405be034af0d2d56c6cdeade9eef9a0318c91d14d3ce2362be2e1244101233",
+                "segment_id": "segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "char_start": 32,
+                "char_end": 58,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                "quote_sha256": "067929b2a91e842d6ead98bd7999f888a0fb541c0ec36e7fc2628005b58869e0"
+              },
+              "quote": "我负责演示包封装，交付窗口定在2031年3月12日。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+                "source_ref": "artifact://m3r-delivery-slot/after.txt",
+                "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+                "ordinal": 0,
+                "message_id": "message_v1_345c5c0c5dc697692fa460a2fddd3d54d727f02adf630194fbf13e421818b69f",
+                "segment_id": "segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "char_start": 32,
+                "char_end": 92,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+                "quote_sha256": "268db11d5c8b27050f2111decc6ab036d007c3ca006231d99e46cc2b77a69043"
+              },
+              "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [],
+          "reason_codes": [
+            "SAME_TASK_DEMO_PACKAGE_PACKAGING"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "aa2f447079d8c4ceec846fe55dc65c4b71ba43c2559392136a8bb3332b549644",
+          "usage": {
+            "input_tokens": 3171,
+            "output_tokens": 354,
+            "total_tokens": 3525,
+            "duration_ms": 5811.454
+          }
+        },
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "REVISES_PLAN",
+          "subject": {
+            "workspace_id": "m3r-delivery-slot",
+            "observation_id": "task_observation_v1_981a588c2062c796782c7578cb924ac36e719df2c2c38bb8f22d44427b645d24",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+            "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+            "payload_hash": "7006ac441705ae34b0671183d5f2a9ac725595cdd7149c6ef2250086e970ad34"
+          },
+          "object": {
+            "workspace_id": "m3r-delivery-slot",
+            "observation_id": "task_observation_v1_ac5e3c8c2df5ad3fdd3196a06811ea2a51aa5ee114195fb88a3e4628b12dbbdc",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+            "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+            "payload_hash": "71bfd70f38d4d2388754cc4220c794efe1d3922b10784e70e2c7b746978bff39"
+          },
+          "proposed_verdict": "SUPPORTED",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+                "source_ref": "artifact://m3r-delivery-slot/before.txt",
+                "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+                "ordinal": 0,
+                "message_id": "message_v1_1d405be034af0d2d56c6cdeade9eef9a0318c91d14d3ce2362be2e1244101233",
+                "segment_id": "segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "char_start": 32,
+                "char_end": 58,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                "quote_sha256": "067929b2a91e842d6ead98bd7999f888a0fb541c0ec36e7fc2628005b58869e0"
+              },
+              "quote": "我负责演示包封装，交付窗口定在2031年3月12日。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+                "source_ref": "artifact://m3r-delivery-slot/after.txt",
+                "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+                "ordinal": 0,
+                "message_id": "message_v1_345c5c0c5dc697692fa460a2fddd3d54d727f02adf630194fbf13e421818b69f",
+                "segment_id": "segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "char_start": 32,
+                "char_end": 92,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+                "quote_sha256": "268db11d5c8b27050f2111decc6ab036d007c3ca006231d99e46cc2b77a69043"
+              },
+              "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [],
+          "reason_codes": [
+            "REVISE_DELIVERY_DEADLINE"
+          ],
+          "changed_fields": [
+            "deadline"
+          ],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "aa2f447079d8c4ceec846fe55dc65c4b71ba43c2559392136a8bb3332b549644",
+          "usage": {
+            "input_tokens": 3171,
+            "output_tokens": 354,
+            "total_tokens": 3525,
+            "duration_ms": 5811.454
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_602593bc336526578e75231fb8933409982c316817f61cb48870dd944af285b4",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+                "source_ref": "artifact://m3r-delivery-slot/before.txt",
+                "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+                "ordinal": 0,
+                "message_id": "message_v1_1d405be034af0d2d56c6cdeade9eef9a0318c91d14d3ce2362be2e1244101233",
+                "segment_id": "segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "char_start": 32,
+                "char_end": 58,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                "quote_sha256": "067929b2a91e842d6ead98bd7999f888a0fb541c0ec36e7fc2628005b58869e0"
+              },
+              "char_start": 32,
+              "char_end": 58,
+              "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+                "source_ref": "artifact://m3r-delivery-slot/after.txt",
+                "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+                "ordinal": 0,
+                "message_id": "message_v1_345c5c0c5dc697692fa460a2fddd3d54d727f02adf630194fbf13e421818b69f",
+                "segment_id": "segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "char_start": 32,
+                "char_end": 92,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+                "quote_sha256": "268db11d5c8b27050f2111decc6ab036d007c3ca006231d99e46cc2b77a69043"
+              },
+              "char_start": 32,
+              "char_end": 92,
+              "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_7813c4c720464513c60a55c968146597e0771aa0fe0f29584565b091f34debfc",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_291c1a4aa3bcf7ce6336343d8f4f8e99336ba1b64fb41c635d1356f01286424c",
+                "source_ref": "artifact://m3r-delivery-slot/before.txt",
+                "content_hash": "66de159d3b569775ba7e4ba427c8de9030a11e65d3834eb1ce2adbc4c0cda4bc",
+                "ordinal": 0,
+                "message_id": "message_v1_1d405be034af0d2d56c6cdeade9eef9a0318c91d14d3ce2362be2e1244101233",
+                "segment_id": "segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_37c6ac4ebc7a48623b921d49a50ef2eb2b85524bbc22c5d91398ba5843ca9435",
+                "char_start": 32,
+                "char_end": 58,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                "quote_sha256": "067929b2a91e842d6ead98bd7999f888a0fb541c0ec36e7fc2628005b58869e0"
+              },
+              "char_start": 32,
+              "char_end": 58,
+              "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-delivery-slot",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_4a17e4b71a0587996ac29f167d3e02129fbaf66578412157d85899ff1086e9fd",
+                "source_ref": "artifact://m3r-delivery-slot/after.txt",
+                "content_hash": "55e7b11053d68312f8900f1cb67d94a4b31b0b137471a42fd1a211c924c1a8d7",
+                "ordinal": 0,
+                "message_id": "message_v1_345c5c0c5dc697692fa460a2fddd3d54d727f02adf630194fbf13e421818b69f",
+                "segment_id": "segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0e08cb19f8bf19ccb7a21bc70a7bee3951b9debdb1b14c18a8dcd5d0b108d969",
+                "char_start": 32,
+                "char_end": 92,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+                "quote_sha256": "268db11d5c8b27050f2111decc6ab036d007c3ca006231d99e46cc2b77a69043"
+              },
+              "char_start": 32,
+              "char_end": 92,
+              "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "object": "old",
+                  "subject": "new",
+                  "proposed_verdict": "SUPPORTED",
+                  "counter_evidence": [],
+                  "supporting_evidence": [
+                    {
+                      "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                      "span_id": "before.txt:1"
+                    },
+                    {
+                      "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。",
+                      "span_id": "after.txt:1"
+                    }
+                  ],
+                  "reason_codes": [
+                    "SAME_TASK_DEMO_PACKAGE_PACKAGING"
+                  ],
+                  "predicate": "SAME_TASK",
+                  "missing_evidence": [],
+                  "changed_fields": []
+                },
+                {
+                  "changed_fields": [
+                    "deadline"
+                  ],
+                  "supporting_evidence": [
+                    {
+                      "quote": "我负责演示包封装，交付窗口定在2031年3月12日。",
+                      "span_id": "before.txt:1"
+                    },
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "接着前场说的演示包封装：这项活还是我来。客户周五才能验收，因此交付窗口现在定在2031年3月15日，之前那一格日程取消。"
+                    }
+                  ],
+                  "predicate": "REVISES_PLAN",
+                  "proposed_verdict": "SUPPORTED",
+                  "counter_evidence": [],
+                  "subject": "new",
+                  "reason_codes": [
+                    "REVISE_DELIVERY_DEADLINE"
+                  ],
+                  "object": "old",
+                  "missing_evidence": []
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "SUPPORTED",
+        "SUPPORTED"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "shared-owner-distinct-work",
+      "expected": [
+        "REFUTED"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 2318.905,
+      "provider_response_id": "AlXZap34K9zcytMPpcSM6AM",
+      "usage": {
+        "input_tokens": 3134,
+        "output_tokens": 131,
+        "total_tokens": 3265,
+        "duration_ms": 2312.96
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-shared-owner-distinct-work",
+            "observation_id": "task_observation_v1_c5cad93c03126d649ca1d5a79db1628508d9b5fa890dbc1b68538f41a5faaf26",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_7c1fdd9c1ff157d6a108a9fd754333f07b94f06a0778fbc01ccf666f1c416b05",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3fd118d6c4ac4042672706f4c2b863741da72104c67f2886633f48f8b072b355",
+            "content_hash": "d65f77b22463f6f3d82a0247e40a6717b6c0f4a3295a17b0aa1cd22391970807",
+            "payload_hash": "2977d5678d667586706f02e204a184551002886596d1b82ab19137f548c644d2"
+          },
+          "object": {
+            "workspace_id": "m3r-shared-owner-distinct-work",
+            "observation_id": "task_observation_v1_b7d5601b8bf2ef0a7c0cfaf3746e2094e82927ec4694bcb3776dfe39fe854ddb",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_d7407d134b40831e3465f9a444ec3764092886b7ada4cc5921ed5b3245471b1d",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b8426e95e62ee98b0718bf0c54f4f730a5916bcda1267d54f19fa60fd90d0990",
+            "content_hash": "3c0d164fa3dca502f00c3644007b756a8d9ce0dd137db1113d81dfd834c7c020",
+            "payload_hash": "877e07b08921bfe099e5a7aa84fa29a591ec146b5d75785216dadc719ae34218"
+          },
+          "proposed_verdict": "REFUTED",
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-shared-owner-distinct-work",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_7c1fdd9c1ff157d6a108a9fd754333f07b94f06a0778fbc01ccf666f1c416b05",
+                "source_ref": "artifact://m3r-shared-owner-distinct-work/after.txt",
+                "content_hash": "d65f77b22463f6f3d82a0247e40a6717b6c0f4a3295a17b0aa1cd22391970807",
+                "ordinal": 0,
+                "message_id": "message_v1_579f06af11d3ad30408cff2239e785dcbb3aaf4bd511dcee9396ed9f7e6d1f41",
+                "segment_id": "segment_v1_3fd118d6c4ac4042672706f4c2b863741da72104c67f2886633f48f8b072b355",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3fd118d6c4ac4042672706f4c2b863741da72104c67f2886633f48f8b072b355",
+                "char_start": 32,
+                "char_end": 65,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。",
+                "quote_sha256": "2db0478893db759076d6490c634a8a0399186244eab80d63cde6d5bcb1a13c47"
+              },
+              "quote": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。"
+            }
+          ],
+          "missing_evidence": [],
+          "reason_codes": [
+            "DISTINCT_TASKS",
+            "EXPLICIT_INDEPENDENT_WORK"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "e024886825a3a84c39d7a653485b51f3bae43caeed6b94cbd300b407f0d74673",
+          "usage": {
+            "input_tokens": 3134,
+            "output_tokens": 131,
+            "total_tokens": 3265,
+            "duration_ms": 2312.96
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_10693097e04dc85d9e9a5b20e1b3a8781db88bfa2cc43b41c5cd3ce1f3b45487",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-shared-owner-distinct-work",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_7c1fdd9c1ff157d6a108a9fd754333f07b94f06a0778fbc01ccf666f1c416b05",
+                "source_ref": "artifact://m3r-shared-owner-distinct-work/after.txt",
+                "content_hash": "d65f77b22463f6f3d82a0247e40a6717b6c0f4a3295a17b0aa1cd22391970807",
+                "ordinal": 0,
+                "message_id": "message_v1_579f06af11d3ad30408cff2239e785dcbb3aaf4bd511dcee9396ed9f7e6d1f41",
+                "segment_id": "segment_v1_3fd118d6c4ac4042672706f4c2b863741da72104c67f2886633f48f8b072b355",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3fd118d6c4ac4042672706f4c2b863741da72104c67f2886633f48f8b072b355",
+                "char_start": 32,
+                "char_end": 65,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。",
+                "quote_sha256": "2db0478893db759076d6490c634a8a0399186244eab80d63cde6d5bcb1a13c47"
+              },
+              "char_start": 32,
+              "char_end": 65,
+              "quote": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "object": "old",
+                  "reason_codes": [
+                    "DISTINCT_TASKS",
+                    "EXPLICIT_INDEPENDENT_WORK"
+                  ],
+                  "proposed_verdict": "REFUTED",
+                  "subject": "new",
+                  "counter_evidence": [
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "我还负责数据库备份演练。它与注册页面改造是两项独立工作，分开验收。"
+                    }
+                  ],
+                  "supporting_evidence": [],
+                  "missing_evidence": [],
+                  "predicate": "SAME_TASK",
+                  "changed_fields": []
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "REFUTED"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "progress-without-replanning",
+      "expected": [
+        "SUPPORTED",
+        "REFUTED"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 3242.04,
+      "provider_response_id": "BVXZauW8A9Pr1sgPs_-C2Qs",
+      "usage": {
+        "input_tokens": 3149,
+        "output_tokens": 276,
+        "total_tokens": 3425,
+        "duration_ms": 3235.174
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-progress-without-replanning",
+            "observation_id": "task_observation_v1_68734664126f5d0fbc8589096133c0b3c6c37f629e66d2a1e39623c5e1807ece",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+            "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+            "payload_hash": "074cb74cd50438fd61c0e94595b930e5594d08aea0cf2cbdc59329dca601a812"
+          },
+          "object": {
+            "workspace_id": "m3r-progress-without-replanning",
+            "observation_id": "task_observation_v1_0b55e00f6a220214c65dfb653750eeefc115eef65bb4def62b4f1f1149165d9c",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_c52f3e9086d00ea7d663de430aae5391ecf256c12ad4f9d320ecf043ef2caed0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+            "content_hash": "c7d39914466df7d3b7f1554a459b222f2a69a17c016a1faabe50ee0bce8245ec",
+            "payload_hash": "b3cec2091838d69ca7a726b92307325dd5b1e00375358a9a2100a3c1641ef32c"
+          },
+          "proposed_verdict": "SUPPORTED",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_c52f3e9086d00ea7d663de430aae5391ecf256c12ad4f9d320ecf043ef2caed0",
+                "source_ref": "artifact://m3r-progress-without-replanning/before.txt",
+                "content_hash": "c7d39914466df7d3b7f1554a459b222f2a69a17c016a1faabe50ee0bce8245ec",
+                "ordinal": 0,
+                "message_id": "message_v1_0586dfff4045b45c8e392d6a77f04b1a36861bbb081f03c055a6385dc232a12d",
+                "segment_id": "segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+                "char_start": 32,
+                "char_end": 53,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责迁移演练，排期是2031年4月8日。",
+                "quote_sha256": "3c1b8a9acd1c7dd5dc8f54e68fc764e0f6ff80e841e1b3ea93a9537d9fb84c07"
+              },
+              "quote": "我负责迁移演练，排期是2031年4月8日。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+                "source_ref": "artifact://m3r-progress-without-replanning/after.txt",
+                "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+                "ordinal": 0,
+                "message_id": "message_v1_0c538fc93b3d45bb1ad747e1219de254cd3687f07a6c850c71ddd47c9053dd33",
+                "segment_id": "segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "char_start": 32,
+                "char_end": 81,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+                "quote_sha256": "fc00218833cf313597446e1ea600d188585d80faaa46d286050031a84a83650e"
+              },
+              "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [],
+          "reason_codes": [
+            "EXPLICIT_CROSS_DOC_TASK_REFERENCE"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "44d261cad5fb9f7f5f3a28927e1ca21eea9f52a5f96a68e22cf64cc17d40c187",
+          "usage": {
+            "input_tokens": 3149,
+            "output_tokens": 276,
+            "total_tokens": 3425,
+            "duration_ms": 3235.174
+          }
+        },
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "REVISES_PLAN",
+          "subject": {
+            "workspace_id": "m3r-progress-without-replanning",
+            "observation_id": "task_observation_v1_68734664126f5d0fbc8589096133c0b3c6c37f629e66d2a1e39623c5e1807ece",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+            "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+            "payload_hash": "074cb74cd50438fd61c0e94595b930e5594d08aea0cf2cbdc59329dca601a812"
+          },
+          "object": {
+            "workspace_id": "m3r-progress-without-replanning",
+            "observation_id": "task_observation_v1_0b55e00f6a220214c65dfb653750eeefc115eef65bb4def62b4f1f1149165d9c",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_c52f3e9086d00ea7d663de430aae5391ecf256c12ad4f9d320ecf043ef2caed0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+            "content_hash": "c7d39914466df7d3b7f1554a459b222f2a69a17c016a1faabe50ee0bce8245ec",
+            "payload_hash": "b3cec2091838d69ca7a726b92307325dd5b1e00375358a9a2100a3c1641ef32c"
+          },
+          "proposed_verdict": "REFUTED",
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+                "source_ref": "artifact://m3r-progress-without-replanning/after.txt",
+                "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+                "ordinal": 0,
+                "message_id": "message_v1_0c538fc93b3d45bb1ad747e1219de254cd3687f07a6c850c71ddd47c9053dd33",
+                "segment_id": "segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "char_start": 32,
+                "char_end": 81,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+                "quote_sha256": "fc00218833cf313597446e1ea600d188585d80faaa46d286050031a84a83650e"
+              },
+              "quote": "本次只汇报进度，没有修改任务范围或日期。"
+            }
+          ],
+          "missing_evidence": [],
+          "reason_codes": [
+            "EXPLICIT_NO_PLAN_REVISION"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "44d261cad5fb9f7f5f3a28927e1ca21eea9f52a5f96a68e22cf64cc17d40c187",
+          "usage": {
+            "input_tokens": 3149,
+            "output_tokens": 276,
+            "total_tokens": 3425,
+            "duration_ms": 3235.174
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_e1390527fe0cac0ac96e3710fdeba59913caa5131b5087ddb93c2c3f9f80c8fc",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_c52f3e9086d00ea7d663de430aae5391ecf256c12ad4f9d320ecf043ef2caed0",
+                "source_ref": "artifact://m3r-progress-without-replanning/before.txt",
+                "content_hash": "c7d39914466df7d3b7f1554a459b222f2a69a17c016a1faabe50ee0bce8245ec",
+                "ordinal": 0,
+                "message_id": "message_v1_0586dfff4045b45c8e392d6a77f04b1a36861bbb081f03c055a6385dc232a12d",
+                "segment_id": "segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_fe3c470744393277f2b520eb26ad2cc075acc3e85813841ef32406d1817abdb7",
+                "char_start": 32,
+                "char_end": 53,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责迁移演练，排期是2031年4月8日。",
+                "quote_sha256": "3c1b8a9acd1c7dd5dc8f54e68fc764e0f6ff80e841e1b3ea93a9537d9fb84c07"
+              },
+              "char_start": 32,
+              "char_end": 53,
+              "quote": "我负责迁移演练，排期是2031年4月8日。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+                "source_ref": "artifact://m3r-progress-without-replanning/after.txt",
+                "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+                "ordinal": 0,
+                "message_id": "message_v1_0c538fc93b3d45bb1ad747e1219de254cd3687f07a6c850c71ddd47c9053dd33",
+                "segment_id": "segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "char_start": 32,
+                "char_end": 81,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+                "quote_sha256": "fc00218833cf313597446e1ea600d188585d80faaa46d286050031a84a83650e"
+              },
+              "char_start": 32,
+              "char_end": 81,
+              "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_624bc75343eeb76d4f5d930400c60832bb55540b91316173ca18a7e8c1e5e84e",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-progress-without-replanning",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_02469a7da41ab84ddd3ddde96cd090a9f656de61736b25ccba1be17d4936afec",
+                "source_ref": "artifact://m3r-progress-without-replanning/after.txt",
+                "content_hash": "1bb7fc49bef8df3258e87b3f6231ef4dfd66989ed67773c7dbae0b87ae5c6954",
+                "ordinal": 0,
+                "message_id": "message_v1_0c538fc93b3d45bb1ad747e1219de254cd3687f07a6c850c71ddd47c9053dd33",
+                "segment_id": "segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3711e8edc71e38d71d3c5b857d0253e942bdf6b396477410991d6fe67c0f67cc",
+                "char_start": 32,
+                "char_end": 81,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。",
+                "quote_sha256": "fc00218833cf313597446e1ea600d188585d80faaa46d286050031a84a83650e"
+              },
+              "char_start": 61,
+              "char_end": 81,
+              "quote": "本次只汇报进度，没有修改任务范围或日期。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "counter_evidence": [],
+                  "reason_codes": [
+                    "EXPLICIT_CROSS_DOC_TASK_REFERENCE"
+                  ],
+                  "predicate": "SAME_TASK",
+                  "changed_fields": [],
+                  "supporting_evidence": [
+                    {
+                      "quote": "我负责迁移演练，排期是2031年4月8日。",
+                      "span_id": "before.txt:1"
+                    },
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "昨天的迁移演练已准备好七成。排期依旧是2031年4月8日，本次只汇报进度，没有修改任务范围或日期。"
+                    }
+                  ],
+                  "object": "old",
+                  "proposed_verdict": "SUPPORTED",
+                  "subject": "new",
+                  "missing_evidence": []
+                },
+                {
+                  "proposed_verdict": "REFUTED",
+                  "changed_fields": [],
+                  "missing_evidence": [],
+                  "reason_codes": [
+                    "EXPLICIT_NO_PLAN_REVISION"
+                  ],
+                  "object": "old",
+                  "predicate": "REVISES_PLAN",
+                  "subject": "new",
+                  "supporting_evidence": [],
+                  "counter_evidence": [
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "本次只汇报进度，没有修改任务范围或日期。"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "SUPPORTED",
+        "REFUTED"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "withdrawn-suggestion",
+      "expected": [
+        "SUPPORTED",
+        "REFUTED"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 9897.02,
+      "provider_response_id": "CFXZatz_E_qHytMPyu6N0Qs",
+      "usage": {
+        "input_tokens": 3172,
+        "output_tokens": 310,
+        "total_tokens": 4431,
+        "duration_ms": 9879.51
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-withdrawn-suggestion",
+            "observation_id": "task_observation_v1_b3c90b39746b8d2305cdba1742f371085dac6c704371b9aa9c2f95e140738b0b",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+            "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+            "payload_hash": "99430349c3bf7fdaaf6b91b2625cbc72abbac166b05bf4f5efd18fa99690f643"
+          },
+          "object": {
+            "workspace_id": "m3r-withdrawn-suggestion",
+            "observation_id": "task_observation_v1_6e52d73a1a2255d1ee7597b88144322fb93c490cbb8df165baa46fb202f4e274",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_58859243447d3fa904cec39f8629f6b114c744ad10f76c22496fd510523ff1a1",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+            "content_hash": "97dbf371a5f05e13e534c1ed47354af819e0bd3e3494764de1578246f0cb635a",
+            "payload_hash": "b95127dd4af2a94ca35b77bb354966e7eb68609f37af6b438b4a66e57c1fa9df"
+          },
+          "proposed_verdict": "SUPPORTED",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_58859243447d3fa904cec39f8629f6b114c744ad10f76c22496fd510523ff1a1",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/before.txt",
+                "content_hash": "97dbf371a5f05e13e534c1ed47354af819e0bd3e3494764de1578246f0cb635a",
+                "ordinal": 0,
+                "message_id": "message_v1_f0a267565cb665a5087867e247f5c2b37572432e060dbfe68de6ac70ababb90d",
+                "segment_id": "segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+                "char_start": 32,
+                "char_end": 54,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责采购清单核对，2031年5月3日交付。",
+                "quote_sha256": "50e2f004ea00bef248ff8d3fa22b7bccf9aa675cb1a9ae8c85d3c5621767d099"
+              },
+              "quote": "我负责采购清单核对，2031年5月3日交付。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/after.txt",
+                "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+                "ordinal": 0,
+                "message_id": "message_v1_c94cf0863272fb820d73c2807bb57fa0f90adecf0ee86df0326e1ee82245ed1d",
+                "segment_id": "segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "char_start": 32,
+                "char_end": 87,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+                "quote_sha256": "f0af4ddf5d46d2093362f92ffb4a905c30487c37f3149f6bc82ddec0bf85319b"
+              },
+              "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [],
+          "reason_codes": [
+            "SAME_BUSINESS_TASK"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "616147b3324b3ea768654cf4342e9d720d8f9da3737064106dc33f1f7d8d44e8",
+          "usage": {
+            "input_tokens": 3172,
+            "output_tokens": 310,
+            "total_tokens": 4431,
+            "duration_ms": 9879.51
+          }
+        },
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "REVISES_PLAN",
+          "subject": {
+            "workspace_id": "m3r-withdrawn-suggestion",
+            "observation_id": "task_observation_v1_b3c90b39746b8d2305cdba1742f371085dac6c704371b9aa9c2f95e140738b0b",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+            "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+            "payload_hash": "99430349c3bf7fdaaf6b91b2625cbc72abbac166b05bf4f5efd18fa99690f643"
+          },
+          "object": {
+            "workspace_id": "m3r-withdrawn-suggestion",
+            "observation_id": "task_observation_v1_6e52d73a1a2255d1ee7597b88144322fb93c490cbb8df165baa46fb202f4e274",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_58859243447d3fa904cec39f8629f6b114c744ad10f76c22496fd510523ff1a1",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+            "content_hash": "97dbf371a5f05e13e534c1ed47354af819e0bd3e3494764de1578246f0cb635a",
+            "payload_hash": "b95127dd4af2a94ca35b77bb354966e7eb68609f37af6b438b4a66e57c1fa9df"
+          },
+          "proposed_verdict": "REFUTED",
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/after.txt",
+                "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+                "ordinal": 0,
+                "message_id": "message_v1_c94cf0863272fb820d73c2807bb57fa0f90adecf0ee86df0326e1ee82245ed1d",
+                "segment_id": "segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "char_start": 32,
+                "char_end": 87,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+                "quote_sha256": "f0af4ddf5d46d2093362f92ffb4a905c30487c37f3149f6bc82ddec0bf85319b"
+              },
+              "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。"
+            }
+          ],
+          "missing_evidence": [],
+          "reason_codes": [
+            "PROPOSAL_WITHDRAWN",
+            "PLAN_UNCHANGED"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "616147b3324b3ea768654cf4342e9d720d8f9da3737064106dc33f1f7d8d44e8",
+          "usage": {
+            "input_tokens": 3172,
+            "output_tokens": 310,
+            "total_tokens": 4431,
+            "duration_ms": 9879.51
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_e8683aa0209d6d02ba9ddd4def71606543b45b6680e60e06f0b259019784baae",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_58859243447d3fa904cec39f8629f6b114c744ad10f76c22496fd510523ff1a1",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/before.txt",
+                "content_hash": "97dbf371a5f05e13e534c1ed47354af819e0bd3e3494764de1578246f0cb635a",
+                "ordinal": 0,
+                "message_id": "message_v1_f0a267565cb665a5087867e247f5c2b37572432e060dbfe68de6ac70ababb90d",
+                "segment_id": "segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e90f474ded0d9716e8793634827f8b10a29476a54dfd19e6c95bf72a92d64f8e",
+                "char_start": 32,
+                "char_end": 54,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责采购清单核对，2031年5月3日交付。",
+                "quote_sha256": "50e2f004ea00bef248ff8d3fa22b7bccf9aa675cb1a9ae8c85d3c5621767d099"
+              },
+              "char_start": 32,
+              "char_end": 54,
+              "quote": "我负责采购清单核对，2031年5月3日交付。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/after.txt",
+                "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+                "ordinal": 0,
+                "message_id": "message_v1_c94cf0863272fb820d73c2807bb57fa0f90adecf0ee86df0326e1ee82245ed1d",
+                "segment_id": "segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "char_start": 32,
+                "char_end": 87,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+                "quote_sha256": "f0af4ddf5d46d2093362f92ffb4a905c30487c37f3149f6bc82ddec0bf85319b"
+              },
+              "char_start": 32,
+              "char_end": 87,
+              "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_7b1b68f6baea3abd95c212e91b79e756ef187bca478aec86c2ca23901d5fd98e",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-withdrawn-suggestion",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_44258dede667caec248f6abc70432c73bf06e1db28122bdcde7ea680461d5c03",
+                "source_ref": "artifact://m3r-withdrawn-suggestion/after.txt",
+                "content_hash": "88709d68101d050597ba32c9f043f289249bb936d5b4369a3a3a218403d9940d",
+                "ordinal": 0,
+                "message_id": "message_v1_c94cf0863272fb820d73c2807bb57fa0f90adecf0ee86df0326e1ee82245ed1d",
+                "segment_id": "segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a01510de89ff8e9f0506bf3f1b79f7d37dc8bd279c4a33b31c2f6ebed0247d97",
+                "char_start": 32,
+                "char_end": 87,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+                "quote_sha256": "f0af4ddf5d46d2093362f92ffb4a905c30487c37f3149f6bc82ddec0bf85319b"
+              },
+              "char_start": 32,
+              "char_end": 87,
+              "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "subject": "new",
+                  "supporting_evidence": [
+                    {
+                      "quote": "我负责采购清单核对，2031年5月3日交付。",
+                      "span_id": "before.txt:1"
+                    },
+                    {
+                      "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。",
+                      "span_id": "after.txt:1"
+                    }
+                  ],
+                  "counter_evidence": [],
+                  "object": "old",
+                  "changed_fields": [],
+                  "reason_codes": [
+                    "SAME_BUSINESS_TASK"
+                  ],
+                  "predicate": "SAME_TASK",
+                  "proposed_verdict": "SUPPORTED",
+                  "missing_evidence": []
+                },
+                {
+                  "counter_evidence": [
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "关于采购清单核对，有人建议挪到2031年5月7日；这个建议已经撤回，从未实施，交付仍按2031年5月3日执行。"
+                    }
+                  ],
+                  "object": "old",
+                  "predicate": "REVISES_PLAN",
+                  "supporting_evidence": [],
+                  "missing_evidence": [],
+                  "reason_codes": [
+                    "PROPOSAL_WITHDRAWN",
+                    "PLAN_UNCHANGED"
+                  ],
+                  "changed_fields": [],
+                  "proposed_verdict": "REFUTED",
+                  "subject": "new"
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "SUPPORTED",
+        "REFUTED"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "opposed-minutes",
+      "expected": [
+        "SUPPORTED",
+        "CONFLICT"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 4000.878,
+      "provider_response_id": "ElXZarPXJferytMPorO2kQQ",
+      "usage": {
+        "input_tokens": 3699,
+        "output_tokens": 358,
+        "total_tokens": 4057,
+        "duration_ms": 3993.492
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-opposed-minutes",
+            "observation_id": "task_observation_v1_d522f5264398074d7149ee5772ca57c875e84b9884c27c106559ba6b23d26754",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+            "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+            "payload_hash": "463ccafc4a423302a48acc52d9ea5938524f2d762e3a470b7c54192bcf5cbaa9"
+          },
+          "object": {
+            "workspace_id": "m3r-opposed-minutes",
+            "observation_id": "task_observation_v1_7aa14a03d8abb2ff631098992b41b144317d97d68c7536f29bfb0a8ff8aa29bb",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_7ef23a192e722881edbec6e10c298e4c20e61f05bdb713a0a2be9daaeb8bca63",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+            "content_hash": "e399bd45f2e203f2cc2beaef8e92dd5a268d5dc7c0005753946191473d322e32",
+            "payload_hash": "bbc7e9ee9fb010ab81039e67d29de9703844e72d98748a7a166b0eb9314bf488"
+          },
+          "proposed_verdict": "SUPPORTED",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_7ef23a192e722881edbec6e10c298e4c20e61f05bdb713a0a2be9daaeb8bca63",
+                "source_ref": "artifact://m3r-opposed-minutes/before.txt",
+                "content_hash": "e399bd45f2e203f2cc2beaef8e92dd5a268d5dc7c0005753946191473d322e32",
+                "ordinal": 0,
+                "message_id": "message_v1_63c704123634a1d5c772ad37060b1278b0fff6a38a7b5a2f2c1baab0d6ceea8b",
+                "segment_id": "segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+                "char_start": 32,
+                "char_end": 55,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责音频字幕复核，原定2031年6月10日。",
+                "quote_sha256": "08f578ade228c7e7f5838dbc2557ce603b95f54189b3d4134a9e92bbf18bb8dc"
+              },
+              "quote": "我负责音频字幕复核，原定2031年6月10日。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+                "source_ref": "artifact://m3r-opposed-minutes/after.txt",
+                "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+                "ordinal": 0,
+                "message_id": "message_v1_61b6c91c9781ac111b03afa6e9e09ba3ec40d912658802d39e62f2fe88c840bf",
+                "segment_id": "segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "char_start": 32,
+                "char_end": 75,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                "quote_sha256": "02195a56360386c363290b7c711cd0b6e723da8d0e095ed07064c2286100e8d0"
+              },
+              "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [],
+          "reason_codes": [
+            "SAME_CONCRETE_TASK"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "84186fd4297abaae9512294fe1c18c0953d50bb2d2b06c2cc31167594bf80f07",
+          "usage": {
+            "input_tokens": 3699,
+            "output_tokens": 358,
+            "total_tokens": 4057,
+            "duration_ms": 3993.492
+          }
+        },
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "REVISES_PLAN",
+          "subject": {
+            "workspace_id": "m3r-opposed-minutes",
+            "observation_id": "task_observation_v1_d522f5264398074d7149ee5772ca57c875e84b9884c27c106559ba6b23d26754",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+            "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+            "payload_hash": "463ccafc4a423302a48acc52d9ea5938524f2d762e3a470b7c54192bcf5cbaa9"
+          },
+          "object": {
+            "workspace_id": "m3r-opposed-minutes",
+            "observation_id": "task_observation_v1_7aa14a03d8abb2ff631098992b41b144317d97d68c7536f29bfb0a8ff8aa29bb",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_7ef23a192e722881edbec6e10c298e4c20e61f05bdb713a0a2be9daaeb8bca63",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+            "content_hash": "e399bd45f2e203f2cc2beaef8e92dd5a268d5dc7c0005753946191473d322e32",
+            "payload_hash": "bbc7e9ee9fb010ab81039e67d29de9703844e72d98748a7a166b0eb9314bf488"
+          },
+          "proposed_verdict": "CONFLICT",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+                "source_ref": "artifact://m3r-opposed-minutes/after.txt",
+                "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+                "ordinal": 0,
+                "message_id": "message_v1_61b6c91c9781ac111b03afa6e9e09ba3ec40d912658802d39e62f2fe88c840bf",
+                "segment_id": "segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "char_start": 32,
+                "char_end": 75,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                "quote_sha256": "02195a56360386c363290b7c711cd0b6e723da8d0e095ed07064c2286100e8d0"
+              },
+              "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。"
+            }
+          ],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "counter.txt",
+                "artifact_version_id": "artifact_v1_7d6f2fc9fed814f576e6b234044fd024fa15aae986a17c44f057120dbb226d2b",
+                "source_ref": "artifact://m3r-opposed-minutes/counter.txt",
+                "content_hash": "2d775c6f6924f5cddfe7a04b3a67b6782e2cf17e1440530d5cbab3ab97d0a3c9",
+                "ordinal": 0,
+                "message_id": "message_v1_1141717c1c08a856cfde8ef0054715b7a276a6f8bffe6de90e7a5f09c273574c",
+                "segment_id": "segment_v1_bf8f951790caede4206de1a530ebd3e7ea3b3086ae3809e7e52bb8bfd745cab2",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf8f951790caede4206de1a530ebd3e7ea3b3086ae3809e7e52bb8bfd745cab2",
+                "char_start": 32,
+                "char_end": 98,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。",
+                "quote_sha256": "c8d7a143095f0dab1a0ea413133b49f0676de6b4d530bf685295579917c47d6c"
+              },
+              "quote": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。"
+            }
+          ],
+          "missing_evidence": [],
+          "reason_codes": [
+            "UNRESOLVED_CONTRADICTORY_MINUTES"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "84186fd4297abaae9512294fe1c18c0953d50bb2d2b06c2cc31167594bf80f07",
+          "usage": {
+            "input_tokens": 3699,
+            "output_tokens": 358,
+            "total_tokens": 4057,
+            "duration_ms": 3993.492
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_bba2fce3e2a8d53f9ef42dad957c650f038f3d378a1ff873d597d1b4bb21aa26",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_7ef23a192e722881edbec6e10c298e4c20e61f05bdb713a0a2be9daaeb8bca63",
+                "source_ref": "artifact://m3r-opposed-minutes/before.txt",
+                "content_hash": "e399bd45f2e203f2cc2beaef8e92dd5a268d5dc7c0005753946191473d322e32",
+                "ordinal": 0,
+                "message_id": "message_v1_63c704123634a1d5c772ad37060b1278b0fff6a38a7b5a2f2c1baab0d6ceea8b",
+                "segment_id": "segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7e661338dec660f1ff75b257e7d0da85bd32b7cbb8d428baf394cdcdb268b5f7",
+                "char_start": 32,
+                "char_end": 55,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责音频字幕复核，原定2031年6月10日。",
+                "quote_sha256": "08f578ade228c7e7f5838dbc2557ce603b95f54189b3d4134a9e92bbf18bb8dc"
+              },
+              "char_start": 32,
+              "char_end": 55,
+              "quote": "我负责音频字幕复核，原定2031年6月10日。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+                "source_ref": "artifact://m3r-opposed-minutes/after.txt",
+                "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+                "ordinal": 0,
+                "message_id": "message_v1_61b6c91c9781ac111b03afa6e9e09ba3ec40d912658802d39e62f2fe88c840bf",
+                "segment_id": "segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "char_start": 32,
+                "char_end": 75,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                "quote_sha256": "02195a56360386c363290b7c711cd0b6e723da8d0e095ed07064c2286100e8d0"
+              },
+              "char_start": 32,
+              "char_end": 75,
+              "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_e90e42af87e7030f0c9119daedc372ace94ec01571d8c2a50e71ef9d03f5ab29",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_c89b410f46555cdf0605af39a1444df794f406122ac0393ced55ef3bfa253f0b",
+                "source_ref": "artifact://m3r-opposed-minutes/after.txt",
+                "content_hash": "0d5b413fd29c782bd50f2ab2264daa8bd4e1402c5f727824be34ee0271611020",
+                "ordinal": 0,
+                "message_id": "message_v1_61b6c91c9781ac111b03afa6e9e09ba3ec40d912658802d39e62f2fe88c840bf",
+                "segment_id": "segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_86625cd55d6591a6a87cf9486bcfa3cafd8101c279cb4e01c13dacb5113be84e",
+                "char_start": 32,
+                "char_end": 75,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                "quote_sha256": "02195a56360386c363290b7c711cd0b6e723da8d0e095ed07064c2286100e8d0"
+              },
+              "char_start": 32,
+              "char_end": 75,
+              "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-opposed-minutes",
+                "artifact_id": "counter.txt",
+                "artifact_version_id": "artifact_v1_7d6f2fc9fed814f576e6b234044fd024fa15aae986a17c44f057120dbb226d2b",
+                "source_ref": "artifact://m3r-opposed-minutes/counter.txt",
+                "content_hash": "2d775c6f6924f5cddfe7a04b3a67b6782e2cf17e1440530d5cbab3ab97d0a3c9",
+                "ordinal": 0,
+                "message_id": "message_v1_1141717c1c08a856cfde8ef0054715b7a276a6f8bffe6de90e7a5f09c273574c",
+                "segment_id": "segment_v1_bf8f951790caede4206de1a530ebd3e7ea3b3086ae3809e7e52bb8bfd745cab2",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bf8f951790caede4206de1a530ebd3e7ea3b3086ae3809e7e52bb8bfd745cab2",
+                "char_start": 32,
+                "char_end": 98,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。",
+                "quote_sha256": "c8d7a143095f0dab1a0ea413133b49f0676de6b4d530bf685295579917c47d6c"
+              },
+              "char_start": 32,
+              "char_end": 98,
+              "quote": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "object": "old",
+                  "predicate": "SAME_TASK",
+                  "proposed_verdict": "SUPPORTED",
+                  "missing_evidence": [],
+                  "changed_fields": [],
+                  "reason_codes": [
+                    "SAME_CONCRETE_TASK"
+                  ],
+                  "subject": "new",
+                  "supporting_evidence": [
+                    {
+                      "span_id": "before.txt:1",
+                      "quote": "我负责音频字幕复核，原定2031年6月10日。"
+                    },
+                    {
+                      "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                      "span_id": "after.txt:1"
+                    }
+                  ],
+                  "counter_evidence": []
+                },
+                {
+                  "reason_codes": [
+                    "UNRESOLVED_CONTRADICTORY_MINUTES"
+                  ],
+                  "counter_evidence": [
+                    {
+                      "span_id": "counter.txt:1",
+                      "quote": "另一份同场纪要写道：音频字幕复核没有改动，2031年6月10日仍是交付日；6月14日只是建议。两份纪要尚未核对，也没有决定哪份有效。"
+                    }
+                  ],
+                  "predicate": "REVISES_PLAN",
+                  "object": "old",
+                  "subject": "new",
+                  "supporting_evidence": [
+                    {
+                      "quote": "会议纪要写道：音频字幕复核的交付现在定在2031年6月14日，原来的交付安排不再执行。",
+                      "span_id": "after.txt:1"
+                    }
+                  ],
+                  "missing_evidence": [],
+                  "proposed_verdict": "CONFLICT",
+                  "changed_fields": []
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "SUPPORTED",
+        "CONFLICT"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "indirect-dependency",
+      "expected": [
+        "UNKNOWN"
+      ],
+      "status": "BLOCKED",
+      "errors": [
+        "CHANGE_FIELDS_NOT_IN_SOURCE"
+      ],
+      "provider_calls": 0,
+      "elapsed_ms": null,
+      "provider_response_id": null,
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null,
+        "duration_ms": null
+      },
+      "proposals": [],
+      "validation": [],
+      "public_output": null,
+      "verdicts": [],
+      "matches_fixed_expectation": false
+    },
+    {
+      "case_id": "missing-reference",
+      "expected": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "status": "EXECUTED",
+      "errors": [],
+      "provider_calls": 1,
+      "elapsed_ms": 3939.917,
+      "provider_response_id": "FlXZauKtEfDaytMPj7WUuAg",
+      "usage": {
+        "input_tokens": 3112,
+        "output_tokens": 313,
+        "total_tokens": 3425,
+        "duration_ms": 3932.821
+      },
+      "proposals": [
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "SAME_TASK",
+          "subject": {
+            "workspace_id": "m3r-missing-reference",
+            "observation_id": "task_observation_v1_a4db86a7bc10f050f99b24076cadd042fda3741f6c6bb8d2219ba21ece2b6427",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+            "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+            "payload_hash": "56e1ef471f5ead4110ceeb91ec5d5dbc6323609f6d047e10ee7d6949f6ccd2fa"
+          },
+          "object": {
+            "workspace_id": "m3r-missing-reference",
+            "observation_id": "task_observation_v1_1906fa01e2056c36f2e5820b064758177efe1f00ca81e15a26b856368b2317c1",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_821dbf4ca23d0d017adcee5c5f3c4cff047f011679eabde7da2850996e8160e3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+            "content_hash": "93c35bf4a6b43140c7103021f557444eac734d50286cd4f758a25293bab4874d",
+            "payload_hash": "c8df55d000a61595ecbfe94edc9e9bad457d24c199010aaed5610b602553d956"
+          },
+          "proposed_verdict": "UNKNOWN",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+                "source_ref": "artifact://m3r-missing-reference/after.txt",
+                "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+                "ordinal": 0,
+                "message_id": "message_v1_846720de4c9d001d8cbd04f13507ee7ece0bf94bbc101fd802e15321236671d5",
+                "segment_id": "segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+                "quote_sha256": "038a024e3ca0cb451cb483b95c4318808e79db30e87ea9256534afd5052a0aa5"
+              },
+              "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_821dbf4ca23d0d017adcee5c5f3c4cff047f011679eabde7da2850996e8160e3",
+                "source_ref": "artifact://m3r-missing-reference/before.txt",
+                "content_hash": "93c35bf4a6b43140c7103021f557444eac734d50286cd4f758a25293bab4874d",
+                "ordinal": 0,
+                "message_id": "message_v1_9ee46262486121e784b70ab4ea308617765b0f0feec41236d8b27911e66704d6",
+                "segment_id": "segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+                "char_start": 32,
+                "char_end": 55,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责地图图例核对，交付是2031年7月9日。",
+                "quote_sha256": "f518ed030a6e0601c97506a58ee07883e111ce058d8231b0e747e5b57e71fae1"
+              },
+              "quote": "我负责地图图例核对，交付是2031年7月9日。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [
+            "附件内容缺失，无法确认昨天附件中的事项是否为地图图例核对任务"
+          ],
+          "reason_codes": [
+            "MISSING_CROSS_REFERENCE"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "43b12e718338f6aa25599fd757bcf21cb1babc38e3cbe962852b21f98d441e50",
+          "usage": {
+            "input_tokens": 3112,
+            "output_tokens": 313,
+            "total_tokens": 3425,
+            "duration_ms": 3932.821
+          }
+        },
+        {
+          "schema": "task-semantic-proposal/v1",
+          "stage": "MODEL_PROPOSED",
+          "execution_status": "EXECUTED",
+          "authority": "SUPPORTING_ONLY",
+          "predicate": "REVISES_PLAN",
+          "subject": {
+            "workspace_id": "m3r-missing-reference",
+            "observation_id": "task_observation_v1_a4db86a7bc10f050f99b24076cadd042fda3741f6c6bb8d2219ba21ece2b6427",
+            "artifact_id": "after.txt",
+            "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+            "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+            "payload_hash": "56e1ef471f5ead4110ceeb91ec5d5dbc6323609f6d047e10ee7d6949f6ccd2fa"
+          },
+          "object": {
+            "workspace_id": "m3r-missing-reference",
+            "observation_id": "task_observation_v1_1906fa01e2056c36f2e5820b064758177efe1f00ca81e15a26b856368b2317c1",
+            "artifact_id": "before.txt",
+            "artifact_version_id": "artifact_v1_821dbf4ca23d0d017adcee5c5f3c4cff047f011679eabde7da2850996e8160e3",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+            "content_hash": "93c35bf4a6b43140c7103021f557444eac734d50286cd4f758a25293bab4874d",
+            "payload_hash": "c8df55d000a61595ecbfe94edc9e9bad457d24c199010aaed5610b602553d956"
+          },
+          "proposed_verdict": "UNKNOWN",
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+                "source_ref": "artifact://m3r-missing-reference/after.txt",
+                "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+                "ordinal": 0,
+                "message_id": "message_v1_846720de4c9d001d8cbd04f13507ee7ece0bf94bbc101fd802e15321236671d5",
+                "segment_id": "segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+                "quote_sha256": "038a024e3ca0cb451cb483b95c4318808e79db30e87ea9256534afd5052a0aa5"
+              },
+              "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。"
+            }
+          ],
+          "counter_evidence": [],
+          "missing_evidence": [
+            "因任务同一性未确定且新计划具体内容缺失，无法确认是否修订原业务计划"
+          ],
+          "reason_codes": [
+            "UNRESOLVED_SAME_TASK"
+          ],
+          "changed_fields": [],
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "prompt_version": "task-relation-semantics/v1",
+          "source_snapshot_hash": "43b12e718338f6aa25599fd757bcf21cb1babc38e3cbe962852b21f98d441e50",
+          "usage": {
+            "input_tokens": 3112,
+            "output_tokens": 313,
+            "total_tokens": 3425,
+            "duration_ms": 3932.821
+          }
+        }
+      ],
+      "validation": [
+        {
+          "proposal_id": "semantic_proposal_v1_9fc7c2f82fe20e08198e9bb2ef43af54c5430c75d76fd8018c8d7f7523db87e8",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+                "source_ref": "artifact://m3r-missing-reference/after.txt",
+                "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+                "ordinal": 0,
+                "message_id": "message_v1_846720de4c9d001d8cbd04f13507ee7ece0bf94bbc101fd802e15321236671d5",
+                "segment_id": "segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+                "quote_sha256": "038a024e3ca0cb451cb483b95c4318808e79db30e87ea9256534afd5052a0aa5"
+              },
+              "char_start": 32,
+              "char_end": 74,
+              "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+              "role": "RELATION_PROPOSAL"
+            },
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "before.txt",
+                "artifact_version_id": "artifact_v1_821dbf4ca23d0d017adcee5c5f3c4cff047f011679eabde7da2850996e8160e3",
+                "source_ref": "artifact://m3r-missing-reference/before.txt",
+                "content_hash": "93c35bf4a6b43140c7103021f557444eac734d50286cd4f758a25293bab4874d",
+                "ordinal": 0,
+                "message_id": "message_v1_9ee46262486121e784b70ab4ea308617765b0f0feec41236d8b27911e66704d6",
+                "segment_id": "segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b30da96f263c2b2bb5738a108086f9547f44fe9b2b407547879e354dce66c4e8",
+                "char_start": 32,
+                "char_end": 55,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责地图图例核对，交付是2031年7月9日。",
+                "quote_sha256": "f518ed030a6e0601c97506a58ee07883e111ce058d8231b0e747e5b57e71fae1"
+              },
+              "char_start": 32,
+              "char_end": 55,
+              "quote": "我负责地图图例核对，交付是2031年7月9日。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        },
+        {
+          "proposal_id": "semantic_proposal_v1_604f990a65ace4dd87ab009cbdde6a3acbcc30ec7d44b2dd790b28f0786e6d32",
+          "stage": "EVIDENCE_VALID",
+          "errors": [],
+          "supporting_evidence": [
+            {
+              "span": {
+                "workspace_id": "m3r-missing-reference",
+                "artifact_id": "after.txt",
+                "artifact_version_id": "artifact_v1_1d2ebdd80e0b5c6cc645665a9e9c03cbaccd4d951ed1a984124b06f801fc2b92",
+                "source_ref": "artifact://m3r-missing-reference/after.txt",
+                "content_hash": "24920b6e4eecef546695eadf977c4f51121ac3fd8c56aaf195946578b07215db",
+                "ordinal": 0,
+                "message_id": "message_v1_846720de4c9d001d8cbd04f13507ee7ece0bf94bbc101fd802e15321236671d5",
+                "segment_id": "segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_f1f01a08b5fd9d7d999b646a9b64ed6af9909cd2e0c4afc5fe4537e8281ecc36",
+                "char_start": 32,
+                "char_end": 74,
+                "line_start": 1,
+                "line_end": 1,
+                "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+                "quote_sha256": "038a024e3ca0cb451cb483b95c4318808e79db30e87ea9256534afd5052a0aa5"
+              },
+              "char_start": 32,
+              "char_end": 74,
+              "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。",
+              "role": "RELATION_PROPOSAL"
+            }
+          ],
+          "counter_evidence": [],
+          "authority": "SUPPORTING_ONLY",
+          "semantic_status": "NOT_EVALUATED",
+          "publishable": false,
+          "validator_version": "task-semantic-evidence/v1"
+        }
+      ],
+      "public_output": {
+        "kind": "tool_calls",
+        "tool_calls": [
+          {
+            "tool_id": "propose_task_relations",
+            "arguments": {
+              "proposals": [
+                {
+                  "object": "old",
+                  "changed_fields": [],
+                  "proposed_verdict": "UNKNOWN",
+                  "counter_evidence": [],
+                  "subject": "new",
+                  "missing_evidence": [
+                    "附件内容缺失，无法确认昨天附件中的事项是否为地图图例核对任务"
+                  ],
+                  "predicate": "SAME_TASK",
+                  "reason_codes": [
+                    "MISSING_CROSS_REFERENCE"
+                  ],
+                  "supporting_evidence": [
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。"
+                    },
+                    {
+                      "quote": "我负责地图图例核对，交付是2031年7月9日。",
+                      "span_id": "before.txt:1"
+                    }
+                  ]
+                },
+                {
+                  "object": "old",
+                  "predicate": "REVISES_PLAN",
+                  "supporting_evidence": [
+                    {
+                      "span_id": "after.txt:1",
+                      "quote": "我负责昨天附件里的那件事，按新时间交付。附件不在本次资料中，未记录任务名称和新日期。"
+                    }
+                  ],
+                  "missing_evidence": [
+                    "因任务同一性未确定且新计划具体内容缺失，无法确认是否修订原业务计划"
+                  ],
+                  "reason_codes": [
+                    "UNRESOLVED_SAME_TASK"
+                  ],
+                  "changed_fields": [],
+                  "counter_evidence": [],
+                  "proposed_verdict": "UNKNOWN",
+                  "subject": "new"
+                }
+              ]
+            }
+          }
+        ],
+        "final_answer": null
+      },
+      "verdicts": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "matches_fixed_expectation": true
+    },
+    {
+      "case_id": "source-authority-change",
+      "provider_calls": 0,
+      "admission_status": "BLOCKED",
+      "admission_errors": [
+        "OBSERVATION_REVOKED"
+      ],
+      "revoked_evidence": [
+        "EVIDENCE_INVALID",
+        "EVIDENCE_INVALID"
+      ],
+      "stale_evidence": [
+        "EVIDENCE_INVALID",
+        "EVIDENCE_INVALID"
+      ],
+      "passed": true
+    }
+  ],
+  "fixture_sha256": "c4bf69e1feb9f5d5e3e0338b48aa4959ac4df3ed7ada7942b926452906ea1619",
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low",
+  "evaluation": "SMALL_SYNTHETIC_SEMANTIC_ONLY; NO_PRODUCT_OR_P4_SCORE",
+  "binding_correction": {
+    "original_project": "文档发布",
+    "corrected_scope": "认证组件",
+    "reason": "Harness scope was absent from source; bind to the exact named component already present. No source, expected verdict or semantic prompt changed.",
+    "expected": [
+      "UNKNOWN"
+    ],
+    "original_provider_calls": 0
+  },
+  "corrected_indirect_case": {
+    "case_id": "indirect-dependency",
+    "status": "EXECUTED",
+    "errors": [],
+    "provider_calls": 1,
+    "elapsed_ms": 4541.8,
+    "provider_response_id": "8VfZar3mKMLhytMP1sKKyQs",
+    "usage": {
+      "input_tokens": 3819,
+      "output_tokens": 188,
+      "total_tokens": 4007,
+      "duration_ms": 4535.443
+    },
+    "expected": [
+      "UNKNOWN"
+    ],
+    "verdicts": [
+      "UNKNOWN"
+    ],
+    "proposals": [
+      {
+        "schema": "task-semantic-proposal/v1",
+        "stage": "MODEL_PROPOSED",
+        "execution_status": "EXECUTED",
+        "authority": "SUPPORTING_ONLY",
+        "predicate": "AFFECTED_BY",
+        "subject": {
+          "workspace_id": "m3r-indirect-dependency",
+          "observation_id": "task_observation_v1_f47193ba7dddd4646b4e7014e728f6e9c7a18e2aa5a46a5ad2a1f5c125134a8b",
+          "artifact_id": "before.txt",
+          "artifact_version_id": "artifact_v1_42bea09c97d1eb40b521ea91b5d9006324967728594267dfdee97fd91feea678",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9112a586c4039ea930e7e1a8b836888e05886fe9311ce149fb5c2c03af92f49c",
+          "content_hash": "23a7f2a3fd526cf9d5d2bbf51b97cdc96d1c5eb633a1d68301d8ca15d8d8d1ba",
+          "payload_hash": "4b31f5e904c1fc7d4833312bbf19e0ceaaaf888a4e4b96be3e4209656683a8ce"
+        },
+        "object": {
+          "endpoint_type": "CHANGE",
+          "workspace_id": "m3r-indirect-dependency",
+          "project": "认证组件",
+          "before_vendor": "本地票据",
+          "after_vendor": "单点登录",
+          "evidence": {
+            "span": {
+              "workspace_id": "m3r-indirect-dependency",
+              "artifact_id": "after.txt",
+              "artifact_version_id": "artifact_v1_1c6ade089855de3732828a36156909ac6ffcb705c333bc17e49cf428737f86a6",
+              "source_ref": "artifact://m3r-indirect-dependency/after.txt",
+              "content_hash": "623f1f6d938834f05edfd1691e147d5ac0c823f4fd3ca6d366125f83076c97a1",
+              "ordinal": 0,
+              "message_id": "message_v1_80d19d2394551e73953949d5f4ad199bdee2ffc8d9eea1957e8947c9a61a71a8",
+              "segment_id": "segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "char_start": 32,
+              "char_end": 78,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+              "quote_sha256": "8cd60924ef7d54b92c4fff723bf56b8293b324aeb9342cc85b5f333bab00da3b"
+            },
+            "char_start": 32,
+            "char_end": 78,
+            "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+            "role": "CHANGE_CLAIM"
+          },
+          "kind": "SOURCE_CLAIM",
+          "decision_id": null,
+          "candidate_id": null,
+          "receipt_id": null
+        },
+        "proposed_verdict": "UNKNOWN",
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m3r-indirect-dependency",
+              "artifact_id": "before.txt",
+              "artifact_version_id": "artifact_v1_42bea09c97d1eb40b521ea91b5d9006324967728594267dfdee97fd91feea678",
+              "source_ref": "artifact://m3r-indirect-dependency/before.txt",
+              "content_hash": "23a7f2a3fd526cf9d5d2bbf51b97cdc96d1c5eb633a1d68301d8ca15d8d8d1ba",
+              "ordinal": 0,
+              "message_id": "message_v1_04290ebf6363eeecea42096bbb33631de4c95f626c0d6e371b3c27189307af7b",
+              "segment_id": "segment_v1_9112a586c4039ea930e7e1a8b836888e05886fe9311ce149fb5c2c03af92f49c",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9112a586c4039ea930e7e1a8b836888e05886fe9311ce149fb5c2c03af92f49c",
+              "char_start": 32,
+              "char_end": 70,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责离线手册校对，正文校对使用本地文件，尚不清楚认证变更是否影响本项工作。",
+              "quote_sha256": "803540b798e12290199ad1554e866bd591ef096124878057ec24c182f7198607"
+            },
+            "quote": "我负责离线手册校对，正文校对使用本地文件，尚不清楚认证变更是否影响本项工作。"
+          },
+          {
+            "span": {
+              "workspace_id": "m3r-indirect-dependency",
+              "artifact_id": "after.txt",
+              "artifact_version_id": "artifact_v1_1c6ade089855de3732828a36156909ac6ffcb705c333bc17e49cf428737f86a6",
+              "source_ref": "artifact://m3r-indirect-dependency/after.txt",
+              "content_hash": "623f1f6d938834f05edfd1691e147d5ac0c823f4fd3ca6d366125f83076c97a1",
+              "ordinal": 0,
+              "message_id": "message_v1_80d19d2394551e73953949d5f4ad199bdee2ffc8d9eea1957e8947c9a61a71a8",
+              "segment_id": "segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "char_start": 32,
+              "char_end": 78,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+              "quote_sha256": "8cd60924ef7d54b92c4fff723bf56b8293b324aeb9342cc85b5f333bab00da3b"
+            },
+            "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。"
+          }
+        ],
+        "counter_evidence": [],
+        "missing_evidence": [
+          "离线手册是否实际受到认证组件变更影响的评估结果"
+        ],
+        "reason_codes": [
+          "IMPACT_UNCERTAIN"
+        ],
+        "changed_fields": [],
+        "model_id": "gemini-3.8-flash",
+        "actual_model_version": "gemini-3.8-flash",
+        "prompt_version": "task-relation-semantics/v1",
+        "source_snapshot_hash": "171288c87ddd5b9d63b2330c156e05019e795c334fd39bd12feb2de023475914",
+        "usage": {
+          "input_tokens": 3819,
+          "output_tokens": 188,
+          "total_tokens": 4007,
+          "duration_ms": 4535.443
+        }
+      }
+    ],
+    "validation": [
+      {
+        "proposal_id": "semantic_proposal_v1_2153527104b991dbffb9d18a3ef76fc468fc567e548b0e51a5f10da657be61e6",
+        "stage": "EVIDENCE_VALID",
+        "errors": [],
+        "supporting_evidence": [
+          {
+            "span": {
+              "workspace_id": "m3r-indirect-dependency",
+              "artifact_id": "before.txt",
+              "artifact_version_id": "artifact_v1_42bea09c97d1eb40b521ea91b5d9006324967728594267dfdee97fd91feea678",
+              "source_ref": "artifact://m3r-indirect-dependency/before.txt",
+              "content_hash": "23a7f2a3fd526cf9d5d2bbf51b97cdc96d1c5eb633a1d68301d8ca15d8d8d1ba",
+              "ordinal": 0,
+              "message_id": "message_v1_04290ebf6363eeecea42096bbb33631de4c95f626c0d6e371b3c27189307af7b",
+              "segment_id": "segment_v1_9112a586c4039ea930e7e1a8b836888e05886fe9311ce149fb5c2c03af92f49c",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9112a586c4039ea930e7e1a8b836888e05886fe9311ce149fb5c2c03af92f49c",
+              "char_start": 32,
+              "char_end": 70,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "我负责离线手册校对，正文校对使用本地文件，尚不清楚认证变更是否影响本项工作。",
+              "quote_sha256": "803540b798e12290199ad1554e866bd591ef096124878057ec24c182f7198607"
+            },
+            "char_start": 32,
+            "char_end": 70,
+            "quote": "我负责离线手册校对，正文校对使用本地文件，尚不清楚认证变更是否影响本项工作。",
+            "role": "RELATION_PROPOSAL"
+          },
+          {
+            "span": {
+              "workspace_id": "m3r-indirect-dependency",
+              "artifact_id": "after.txt",
+              "artifact_version_id": "artifact_v1_1c6ade089855de3732828a36156909ac6ffcb705c333bc17e49cf428737f86a6",
+              "source_ref": "artifact://m3r-indirect-dependency/after.txt",
+              "content_hash": "623f1f6d938834f05edfd1691e147d5ac0c823f4fd3ca6d366125f83076c97a1",
+              "ordinal": 0,
+              "message_id": "message_v1_80d19d2394551e73953949d5f4ad199bdee2ffc8d9eea1957e8947c9a61a71a8",
+              "segment_id": "segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_1f21deacac872de9d157c77f6cdb76f0f985abb0811415506246a6373f47dbe7",
+              "char_start": 32,
+              "char_end": 78,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+              "quote_sha256": "8cd60924ef7d54b92c4fff723bf56b8293b324aeb9342cc85b5f333bab00da3b"
+            },
+            "char_start": 32,
+            "char_end": 78,
+            "quote": "认证组件已从本地票据切换为单点登录。在线帮助入口会随登录流程更新；离线手册的影响评估尚未做。",
+            "role": "RELATION_PROPOSAL"
+          }
+        ],
+        "counter_evidence": [],
+        "authority": "SOURCE_CLAIM_ONLY",
+        "semantic_status": "NOT_EVALUATED",
+        "publishable": false,
+        "validator_version": "task-semantic-evidence/v1"
+      }
+    ]
+  }
+}

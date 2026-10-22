@@ -1,0 +1,131 @@
+{
+  "limits": {
+    "max_requests": 7,
+    "max_input_tokens": 250000,
+    "max_output_tokens": 57344,
+    "max_cost_usd": 1.75,
+    "max_seconds": 240,
+    "request_timeout_seconds": 30,
+    "request_cost_upper_bound_usd": 0.25,
+    "input_usd_per_million": 1.0,
+    "output_usd_per_million": 5.0
+  },
+  "requests_reserved": 6,
+  "started_at": "2026-10-22T00:12:39.454334+00:00",
+  "input_tokens_reserved": 78633,
+  "output_tokens_reserved": 49152,
+  "cost_reserved_usd": 1.5,
+  "actual_cost_usd": null,
+  "elapsed_seconds": 29.375,
+  "failure": null,
+  "attempts": [
+    {
+      "sequence": 1,
+      "stage": "independent-semantics",
+      "request_sha256": "93a5ec0866c0aae242f8e58170181efb54188aa4fd68657c03f4a658a3698ab1",
+      "input_reserved": 13003,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "bdd565c6dddd39c92ae8801b7741c81a611e5c51882d5a1a2bfd80c10357c024",
+      "usage": {
+        "input_tokens": 3171,
+        "output_tokens": 354,
+        "total_tokens": 3525,
+        "duration_ms": 5811.454
+      },
+      "provider_request_id": null,
+      "provider_response_id": "_lTZarHQGIqE1sgP0J6z6As"
+    },
+    {
+      "sequence": 2,
+      "stage": "independent-semantics",
+      "request_sha256": "17d2a8c19886ffc0be556e099251a0f5d0117931e772d66d8e52c0dcbcbcb738",
+      "input_reserved": 12866,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "ee9043c297099460d3604054947a9f0bd6958820cadf2a4d46b086fe8da234cb",
+      "usage": {
+        "input_tokens": 3134,
+        "output_tokens": 131,
+        "total_tokens": 3265,
+        "duration_ms": 2312.96
+      },
+      "provider_request_id": null,
+      "provider_response_id": "AlXZap34K9zcytMPpcSM6AM"
+    },
+    {
+      "sequence": 3,
+      "stage": "independent-semantics",
+      "request_sha256": "2804424fd17da7ecde884e91389e29c775e5600df2e5746da078f5193225a0eb",
+      "input_reserved": 12969,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "c01c1172b29976650bd397db70b9581801787e95cc3bf5fe5c0588f718ad8e92",
+      "usage": {
+        "input_tokens": 3149,
+        "output_tokens": 276,
+        "total_tokens": 3425,
+        "duration_ms": 3235.174
+      },
+      "provider_request_id": null,
+      "provider_response_id": "BVXZauW8A9Pr1sgPs_-C2Qs"
+    },
+    {
+      "sequence": 4,
+      "stage": "independent-semantics",
+      "request_sha256": "789fa5efe4f32b051d8f75340c55da8173a3b3a5b12412b61701e6dd2ea48711",
+      "input_reserved": 12947,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "578b92775521fa5d04385d024edae373b231d9e8829163005ec898aa1fa142b3",
+      "usage": {
+        "input_tokens": 3172,
+        "output_tokens": 310,
+        "total_tokens": 4431,
+        "duration_ms": 9879.51
+      },
+      "provider_request_id": null,
+      "provider_response_id": "CFXZatz_E_qHytMPyu6N0Qs"
+    },
+    {
+      "sequence": 5,
+      "stage": "independent-semantics",
+      "request_sha256": "046178598f5962c3f86cbd065979530ca8cd8ba04446b9d01b3d1afcb6cc1386",
+      "input_reserved": 13952,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "c48a80b9d422dc04899bab13f6fc0b936cec9a4c9fd725070808737e53f7e8a9",
+      "usage": {
+        "input_tokens": 3699,
+        "output_tokens": 358,
+        "total_tokens": 4057,
+        "duration_ms": 3993.492
+      },
+      "provider_request_id": null,
+      "provider_response_id": "ElXZarPXJferytMPorO2kQQ"
+    },
+    {
+      "sequence": 6,
+      "stage": "independent-semantics",
+      "request_sha256": "69327e21d078eaccd70bc5323c55e695db67c6d2b70039e8047de81f609cfcdd",
+      "input_reserved": 12896,
+      "output_reserved": 8192,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "5d2d049f80c4e888680af67b4bf793bfa612d29a7ff201116a9e11fe371b8f23",
+      "usage": {
+        "input_tokens": 3112,
+        "output_tokens": 313,
+        "total_tokens": 3425,
+        "duration_ms": 3932.821
+      },
+      "provider_request_id": null,
+      "provider_response_id": "FlXZauKtEfDaytMPj7WUuAg"
+    }
+  ]
+}

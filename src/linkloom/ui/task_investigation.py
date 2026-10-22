@@ -32,9 +32,10 @@ HOST_OPERATION_CAPABILITIES = {
         time_scope='UNSUPPORTED; explicit gap, never silently dropped'),
     'discover': dict(execution='BOUNDED_F_SNAPSHOT_ONLY',
         result='UNKNOWN receipt; no second F scan and no evidence of absence'),
-    'relation': dict(execution='READY_UNSCOPED_SEMANTIC_PROPOSAL', tool='analyze_task_semantics',
-        result='EVIDENCE_VALID proposal only; independent semantic support required for premises',
-        time_scope='UNSUPPORTED', source_scope='UNSUPPORTED'),
+    'relation': dict(execution='BOUNDED_SEMANTIC_PROPOSAL', tool='analyze_task_semantics',
+        result='Unconfirmed proposal with evidence validation; no P4 premise is established',
+        time_scope='UNSUPPORTED',
+        source_scope='Candidate hints within the full authorized snapshot; source-scoped P4 execution remains unsupported'),
     'compare_dates': dict(execution='TRUSTED_RELATIONS_REQUIRED', tool='query_task_relations',
         result='P4 can read existing verified relations; product F/G creates no such records'),
     'clarify': dict(execution='VISIBLE_GAP_ONLY', result='No tool or automatic user conversation'),
@@ -241,8 +242,8 @@ def _proposal_queries(plan, *, complete=True):
     # Proposing dependent semantics never satisfies a Runtime prerequisite.
     # Scope that the current semantic tool cannot enforce stays unsupported.
     steps = plan.steps if complete else plan.ready_steps
-    return tuple(step.to_semantic_query() for step in steps if step.kind == 'relation'
-                 and step.time_scope == ('', '') and not step.source_handles)
+    return tuple(step.to_semantic_proposal_query() for step in steps if step.kind == 'relation'
+                 and step.time_scope == ('', ''))
 
 
 def prepare_task_investigation(question, sources, models, root, *, relation_path=None, provider_session=None):
@@ -319,7 +320,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
                     gaps.append(f'UNSATISFIED_PREMISE:{step.id}')
             elif step.kind == 'relation':
                 try:
-                    queries.append(step.to_semantic_query())
+                    queries.append(step.to_semantic_proposal_query())
                 except ValueError as exc:
                     gaps.append(f'{exc}:{step.id}')
                     execution_blocked = True

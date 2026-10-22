@@ -1,0 +1,80 @@
+{
+  "schema": "m3r-evidence-manifest/v1",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 169,
+      "sha256": "c10e62b5c94f85b3ff81b56221948f3b6fcfe96180082bc1cc80544d8079daaa"
+    },
+    {
+      "path": "final-metadata.xml",
+      "bytes": 11647,
+      "sha256": "9bf03c9b6e8d228cab7d894580f88bcc7b0209105b7b6a5548b024ea3d0ec77f"
+    },
+    {
+      "path": "indirect-budget.json",
+      "bytes": 1232,
+      "sha256": "c069e2eb1deababbfc9866843a1012a3e96d1114ad79482dc2d6494f635446e2"
+    },
+    {
+      "path": "legacy-control.json",
+      "bytes": 2583,
+      "sha256": "e898cd7fc3e49476f5cd6451d16648ec8a2a747b9d3e8101356aafaa6de6d784"
+    },
+    {
+      "path": "live-summary.json",
+      "bytes": 10105,
+      "sha256": "d68a0c8e144c304e96ea3900ce67ed5d4c9a7cda49867665afd52303fb1b89ff"
+    },
+    {
+      "path": "m3r_legacy_control.py",
+      "bytes": 2246,
+      "sha256": "de8cd21410570fd70895c8bd612489d37629078409c77902a47ab68dcb2b02e9"
+    },
+    {
+      "path": "new-case-results.json",
+      "bytes": 110701,
+      "sha256": "d70df06a89e6898396a1a498d5d7966c86d0ebab020b4f2c121fcfa71e6465a6"
+    },
+    {
+      "path": "new-cases-budget.json",
+      "bytes": 4439,
+      "sha256": "7ab9d9fbc56269ce37a0e612bae353895ba5f6ef3433f9e1e00e3fa1f954906d"
+    },
+    {
+      "path": "new-cases.json",
+      "bytes": 3606,
+      "sha256": "c4bf69e1feb9f5d5e3e0338b48aa4959ac4df3ed7ada7942b926452906ea1619"
+    },
+    {
+      "path": "product-budget.json",
+      "bytes": 5659,
+      "sha256": "caa496625ced68997d0ef28f9bd46e977631e253cacedae82fbfed3b6c2f082c"
+    },
+    {
+      "path": "product-cold-ui.png",
+      "bytes": 311626,
+      "sha256": "57f9e6b18fcebc5c69ea84a02b9f52eff86ccdb03b21945364aabf168e14a3ae"
+    },
+    {
+      "path": "product-semantics.json",
+      "bytes": 17460,
+      "sha256": "aab354c01566dfff1bc46911b6548979805a8993b500234f9701650fa944df68"
+    },
+    {
+      "path": "regression.xml",
+      "bytes": 27953,
+      "sha256": "09ca3022afc0d6af337f107de55e261d5ff53a6fb3a8609f0264d018892fa7b0"
+    },
+    {
+      "path": "run_m3r_indirect_binding.py",
+      "bytes": 4026,
+      "sha256": "0ec04f71a863a354abcfd2cce3d4e0ea8017181d67cd55c58eae4febe2eab936"
+    },
+    {
+      "path": "run_m3r_new_cases.py",
+      "bytes": 6900,
+      "sha256": "e7f25fa365510653790283e5cac61b9d47e43299c2c79ef1114613d6a4b029f9"
+    }
+  ]
+}
