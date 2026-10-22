@@ -254,6 +254,19 @@ def test_normal_host_requires_source_permission_then_runs_actual_adapter(tmp_pat
             assert result['status'] == 'PARTIAL', result
             assert result['reviewer']['accepted']
             assert len(result['task_review']['observations']) == 2
+            discovery_calls = [r for r in transport.requests if 'emit_semantic_candidates' in str(r['config'])]
+            assert len(discovery_calls) == 2
+            from linkloom.semantic_ingestion.extraction import _recall_schema
+            for request in discovery_calls:
+                assert 'task-recall/v3' in json.dumps(request['contents'], ensure_ascii=False)
+                declaration = request['config']['tools'][0]['function_declarations'][0]
+                schema = declaration.get('parameters_json_schema', declaration.get('parameters'))
+                date_schema = schema['properties']['claims']['items']['properties']['task']['properties']['deadline_text']
+                expected = _recall_schema()['properties']['claims']['items']['properties']['task']['properties']['deadline_text']
+                # Gemini's wire mapping rewrites nullable/type spelling; the
+                # F-specific token constraint must survive that translation.
+                assert date_schema['pattern'] == expected['pattern']
+                assert date_schema['description'] == expected['description']
             assert stages[2].requests
             assert {p['predicate'] for p in result['task_review']['proposals']} == {'SAME_TASK', 'REVISES_PLAN'}
             count = len(transport.requests)

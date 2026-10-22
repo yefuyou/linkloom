@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "docs\\requirements\\m3-s2-task-recall\\cases.json": "8503356794263b2d7d0c0da6fc887097d0ba16ccadad0bb6729c9cab036b35b0",
+    "docs\\requirements\\m3-s-task-field-grounding\\field-cases.json": "e935da9e3c85fc8a22ca7795949d4bb8da6e8eb38d4c738a4da7f7310c48a268",
+    "docs\\requirements\\m3-s-task-field-grounding\\holdout-expectations.json": "690c7bfd67914e8af4ca3e2aaa3a9fcf328a99eb7a7a3357a536fe3cef37c743"
+  },
+  "reservation_sha256": "d02f72b8fb842aa2e16d284cd44e54e325cf9169571c61c31e7de367c2752412",
+  "unchanged": true
+}

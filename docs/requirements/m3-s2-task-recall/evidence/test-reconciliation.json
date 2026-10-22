@@ -1,0 +1,2204 @@
+{
+  "note": "Latest result per unchanged testcase identity across focused runs; not a claim that the initial all-at-once run passed.",
+  "unique_cases": 549,
+  "latest_pass": 549,
+  "latest_fail": 0,
+  "cases": {
+    "tests.unit.test_frozen_rehearsal_ledger::test_committed_blob_and_worktree_match_the_unchanged_original_seal": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_frozen_rehearsal_ledger::test_ledger_has_exact_byte_preserving_attribute": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_frozen_rehearsal_ledger::test_checkout_and_clean_filters_preserve_sealed_bytes[false-lf]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_frozen_rehearsal_ledger::test_checkout_and_clean_filters_preserve_sealed_bytes[true-crlf]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_frozen_rehearsal_ledger::test_checkout_and_clean_filters_preserve_sealed_bytes[input-lf]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_cli_config::test_task_configuration_does_not_send_imports_or_model_requests": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_cli_config::test_task_provider_cannot_start_without_explicit_permissions_and_budgets[args0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_cli_config::test_task_provider_cannot_start_without_explicit_permissions_and_budgets[args1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_cli_config::test_pinned_sdk_constructs_supported_timeout_and_retry_options_offline": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_cli_config::test_real_sdk_sends_structured_task_request_to_mock_transport_only": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_gemini_receipts::test_wire_result_carries_runtime_receipt_identity_for_structured_final": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_budget_reserves_all_stages_and_stops_before_third_request": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_unknown_outcome_poisoned_session_never_retries": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_timeout_is_uncertain_and_no_late_result_can_publish": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_source_revocation_and_output_overrun_fail_closed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_explicit_finite_positive_limits_required[max_requests-True]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_explicit_finite_positive_limits_required[max_input_tokens-0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_explicit_finite_positive_limits_required[max_seconds-nan]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_explicit_finite_positive_limits_required[max_cost_usd-0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_explicit_finite_positive_limits_required[request_timeout_seconds--1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_cold_read_uses_execution_completion_time_not_later_read_time": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[input]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[output]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[cost]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[usage]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[sequence]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_provider_budget::test_completed_provider_receipt_revalidates_budget_and_usage[limits]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[CONFLICT]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_hashes_exact_utf8_and_has_stable_version_identity": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_uses_stable_local_source_reference_when_uri_is_absent": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_metadata_is_small_scalar_json_and_read_only": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_missing_identity_content_or_naive_ingestion_time[kwargs0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_missing_identity_content_or_naive_ingestion_time[kwargs1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_missing_identity_content_or_naive_ingestion_time[kwargs2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_missing_identity_content_or_naive_ingestion_time[kwargs3]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_source_uris_that_embed_credentials[https://user:password@example.test/meeting]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_source_uris_that_embed_credentials[https://example.test/meeting?access_token=secret]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_raw_artifact_rejects_source_uris_that_embed_credentials[https://example.test/meeting?api_key=secret]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_parser_extracts_inline_and_multiline_turns_with_exact_unicode_spans": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_parser_preserves_multiline_crlf_quote_and_unicode_character_offsets": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_segment_and_evidence_identities_are_stable_across_reingestion_time": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_parser_marks_naive_timestamp_block_failed_without_assigning_its_body": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_parser_rejects_orphan_text_and_unknown_source_type_explicitly": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_artifacts::test_candidate_evidence_cannot_be_verified_against_another_workspace_or_source_version": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_decision_is_structured_source_grounded_and_non_authoritative": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_extractor_preserves_explicit_model_default_temperature": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_gemini_3_semantic_extractor_defaults_to_low_thinking": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[PROPOSAL-Maybe we should use Vendor C for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[QUESTION-Should we use Vendor C for launch?-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[REJECTED_OPTION-We considered Vendor C but rejected it for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[PLAN-We plan to use Vendor C for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[ACTION-Alice will use Vendor C for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[OPINION-I think Vendor C is best for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_non_decision_classes_remain_structurally_distinct_and_non_authoritative[SPECULATION-Vendor C might work for launch.-Vendor C]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_conflicting_batch_candidates_remain_separate_and_require_review": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_explicit_replacement_language_is_not_misclassified_as_conflict": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_future_effective_date_is_preserved_without_lifecycle_mutation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_timestamped_explicit_decision_preserves_source_bound_valid_time[2026-10-01-On 2026-10-01 we choose Vendor A for launch.-expected0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_timestamped_explicit_decision_preserves_source_bound_valid_time[2026-10-02-On 2026-10-01 we choose Vendor A for launch.-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_timestamped_explicit_decision_preserves_source_bound_valid_time[2026-10-01-launch \\u91c7\\u7528 Vendor A\\uff0c\\u81ea2026\\u5e7410\\u67081\\u65e5\\u8d77\\u751f\\u6548\\u3002-expected2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_ambiguous_relative_time_is_retained_as_unresolved": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_subject_key_is_relation_scoped": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_unknown_relation_is_a_candidate_and_catalog_is_unchanged": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_explicit_relation_alias_maps_only_to_a_frozen_canonical_relation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_fabricated_provenance_workspace_and_unknown_fields_fail_closed[extra0-PROVENANCE_INVALID]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_fabricated_provenance_workspace_and_unknown_fields_fail_closed[extra1-WORKSPACE_MISMATCH]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_fabricated_provenance_workspace_and_unknown_fields_fail_closed[extra2-MALFORMED_EXTRACTION]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_candidate_subject_and_value_must_be_supported_by_the_source_quote": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_duplicate_inputs_have_stable_candidate_identity_and_config_changes_are_distinct": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_saved_extraction_replays_without_a_second_provider_call": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_saved_extraction_rejects_claim_tampering_when_receipt_is_unchanged": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_saved_extraction_cannot_be_replayed_against_a_changed_source_version": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_provider_failure_retries_only_explicit_retryable_known_failures": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_unknown_provider_outcome_is_not_replayed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_request_guard_blocks_before_provider_and_unknown_usage_stays_unknown": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_workspace_preflight_blocks_before_sending_source_text": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_accepted_malformed_response_is_not_replayed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_candidates::test_metrics_cover_synthetic_class_relation_time_provenance_and_false_authority": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_fake_provider_materializes_vendor_replacement_with_valid_time_and_receipts": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_three_segment_synthetic_ingestion_keeps_proposal_supporting_only_and_replaces_decision": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[We decided to use Vendor X.-DECISION-Vendor X]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[We are considering Vendor X.-PROPOSAL-Vendor X]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[Vendor X is located in Tokyo.-FACT-Tokyo]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[We are replacing Vendor X with Vendor Y.-DECISION-Vendor Y]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[The current vendor is Vendor Y.-FACT-Vendor Y]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[The previous decision is superseded; use Vendor Y going forward.-DECISION-Vendor Y]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_provider_neutral_pipeline_preserves_typed_semantic_cases[A prior report says the team replaced Vendor X with Vendor Y last year.-FACT-Vendor Y]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_materialization_revalidates_source_version_after_authorization": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_replay_capture_returns_persisted_materialized_state": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_unverified_source_is_persisted_as_rejected_not_reviewable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_materialization_requires_matching_durable_authorization_event": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_candidate_is_not_visible_outside_its_workspace": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_overlay_cannot_rewrite_source_resolved_fields[resolution0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_overlay_cannot_rewrite_source_resolved_fields[resolution1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_overlay_can_set_valid_time_for_not_stated_candidate_from_source_event_time": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_flow_applies_valid_overlay_before_final_materializability_check": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_flow_keeps_unresolved_mandatory_time_blocked": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_review_overlay_cannot_make_proposal_authoritative": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_synthetic_review_gate_allows_unresolved_time_only_with_exact_event_time_review": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_synthetic_review_gate_rejects_historical_report_without_current_choice": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_conflict_policy_state_and_reason_are_durable_and_reviewable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_human_approval_is_bound_to_exact_candidate_fingerprint": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_calibrated_low_risk_candidate_uses_policy_authorization_not_human_approval": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_duplicate_requires_human_approval_without_calibration": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_future_effective_successor_changes_current_value_at_valid_time_boundary": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_extraction_correction_invalidates_old_record_without_business_supersession": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_same_value_extraction_correction_does_not_dedupe_to_invalidated_record": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_correction_receipt_requires_a_materialized_same_workspace_target": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_reconciliation_updates_semantic_candidate_state_and_event": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_new_source_version_is_recorded_without_rewriting_prior_candidate": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_materialization::test_receipt_failure_rolls_back_decision_evidence_and_state_change": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_migration::test_unversioned_store_migrates_relation_slots_and_preserves_legacy_lookups": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_migration::test_relation_slot_migration_rolls_back_on_active_slot_collision": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_migration::test_v1_candidate_rows_default_to_source_ingestion_when_origin_column_is_added": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_prompt_contract::test_prompt_defines_general_decision_fact_and_historical_reporting_boundaries": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_semantic_ingestion_prompt_contract::test_prompt_keeps_source_event_time_dates_owned_by_local_temporal_policy": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_reviewed_change_accepts_real_receipt_and_exposes_chain": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_source_claim_is_explicitly_non_formal_and_refs_cannot_be_forged": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_reviewed_change_requires_the_referenced_receipt": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_stale_source_evidence_blocks_reviewed_authority": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_revoked_candidate_cannot_keep_reviewed_authority": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_existing_store_prevents_receipt_fingerprint_mutation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_change_authority::test_authority_checks_work_with_sql_writes_denied": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_roles_use_model_witnesses_without_legacy_phrase_grammar": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[AMBIGUOUS]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[CONDITIONAL]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[NEGATED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[HISTORICAL]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[REPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[WITHDRAWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change3]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change4]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_speaker_basis_requires_real_header_and_task_role_quote": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[3\\u670818\\u65e5-MONTH_DAY-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[2032\\u5e743\\u6708-MONTH-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[2032-03-18-DAY-2032-03-18]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_meeting_date_role_and_invalid_calendar_are_not_deadlines": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_separate_role_and_work_witnesses_bind_within_one_task_message": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_first_person_and_deadline_role_clauses_need_not_repeat_work": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_tampered_field_or_source_does_not_verify": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_new_discovery_contract_preserves_bindings_and_legacy_wire_shape": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_new_discovery_never_silently_falls_back_to_legacy_roles": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_legacy_profile_rejects_injected_role_bindings_even_if_asserted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_message_ordinal_256_is_valid_within_bounded_source": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_field_binding::test_field_profile_honors_explicit_extractor_output_bound": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_observation_reference_is_versioned_and_ignores_capture_time": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_exact_quote_readback_rejects_wrong_text_and_new_source_version": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_same_scoped_key_is_supported_without_using_owner_dates_or_similarity": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_reference_can_confirm_identity_despite_description_change": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_distinct_task_is_refuted_and_not_unknown": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_similar_work_with_same_project_remains_unknown": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u5982\\u679c\\u901a\\u8fc7\\u786e\\u8ba4\\uff0c\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u5efa\\u8bae\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u662f\\u5426\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\uff1f]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u65e0\\u6cd5\\u786e\\u8ba4\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u540c\\u4e8b\\u8bf4\\uff1a\\u201c\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002\\u201d]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u5f15\\u7528\\u793a\\u4f8b\\uff1a\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[> \\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[`\\u672c\\u6761\\u4e0eA.md\\u7684FLOW-31\\u662f\\u540c\\u4e00\\u4e2a\\u4efb\\u52a1\\u3002`]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u5e76\\u975e\\u4e0d\\u662fA.md\\u7684FLOW-31\\uff0c\\u8fd9\\u662f\\u5f85\\u786e\\u8ba4\\u7684\\u89e3\\u91ca\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_quoted_uncertain_and_double_negative_are_not_assertions[\\u5982\\u679c\\u53d8\\u66f4\\u88ab\\u6279\\u51c6\\uff0c\\u8fd9\\u662f\\u72ec\\u7acb\\u4efb\\u52a1\\uff0c\\u5e76\\u975eA.md\\u7684FLOW-31\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_unrelated_negative_and_quoted_sentence_do_not_cancel_later_assertion": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_valid_support_and_counter_evidence_produce_conflict": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_identity_predicate_for_another_reference_is_not_attached_to_this_pair": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_counter_predicate_for_another_reference_does_not_refute_this_pair": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_reused_key_does_not_override_counter_evidence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_same_key_with_different_or_missing_project_is_not_identity[\\u701a\\u6d77\\u9879\\u76ee-\\u701a\\u6d77\\u9879\\u76ee\\u4efb\\u52a1 FLOW-31\\uff1a\\u5b8c\\u6210\\u62a5\\u8868\\u5bfc\\u51fa\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_same_key_with_different_or_missing_project_is_not_identity[None-\\u4efb\\u52a1 FLOW-31\\uff1a\\u5b8c\\u6210\\u62a5\\u8868\\u5bfc\\u51fa\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_reference_cannot_bypass_conflicting_project_scope": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_missing_project_does_not_block_a_unique_explicit_reference_or_copy_fields": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_number_namespace_is_checked[\\u8d26\\u52a1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_number_namespace_is_checked[\\u641c\\u7d22]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_namespace_in_source_context_is_not_ignored_when_task_text_is_narrow[\\u7cfb\\u7edf\\uff1a\\u8d26\\u52a1-\\u7cfb\\u7edf\\uff1a\\u641c\\u7d22-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_namespace_in_source_context_is_not_ignored_when_task_text_is_narrow[System: Billing-System: Search-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_namespace_in_source_context_is_not_ignored_when_task_text_is_narrow[\\u7cfb\\u7edf\\uff1a\\u8d26\\u52a1-\\u7cfb\\u7edf\\uff1a\\u8d26\\u52a1-SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_unbound_namespace_in_another_source_segment_prevents_a_default_scope": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_task_key_reuse_in_context_prevents_shared_key_confirmation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_explicit_identity_uncertainty_blocks_the_shared_key_shortcut": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conditional_hint_does_not_cancel_an_independent_explicit_assertion": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_semicolon_ends_conditional_scope_before_independent_assertion": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_negated_reuse_statement_is_not_positive_ambiguity_evidence[\\u7f16\\u53f7\\u6ca1\\u6709\\u590d\\u7528]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_negated_reuse_statement_is_not_positive_ambiguity_evidence[\\u7f16\\u53f7\\u6ca1\\u6709\\u91cd\\u590d]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_negated_reuse_statement_is_not_positive_ambiguity_evidence[\\u7f16\\u53f7\\u4e0d\\u5b58\\u5728\\u51b2\\u7a81]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_negated_reuse_statement_is_not_positive_ambiguity_evidence[\\u5e76\\u672a\\u590d\\u7528\\u7f16\\u53f7]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_reimport_and_input_order_do_not_change_assessment_identity": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_ambiguous_source_basename_is_not_a_unique_reference": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_unqualified_reference_to_multi_task_source_is_ambiguous": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_unqualified_file_reference_does_not_assume_unexposed_tasks_are_absent[partial_span]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_unqualified_file_reference_does_not_assume_unexposed_tasks_are_absent[multiple_segments]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[cross_workspace]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[new_version]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[bad_hash]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[missing_registry]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[altered_observation]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[not_provided]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_invalid_input_and_source_identity_are_not_assessable[wrong_type]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_conflicting_extractions_of_same_observation_are_not_silently_selected": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_identity_resolution::test_other_names_and_key_prefixes_are_not_fixture_specific": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_fake_task_models_reject_known_external_provider_adapters[gemini]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_fake_task_models_reject_known_external_provider_adapters[deepseek]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_product_source_registry_requires_current_catalog_membership": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_query_projects_exact_p4_relation_and_replayed_comparison": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D01-revision-REVISES_PLAN-REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D07-identity-SAME_TASK-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[V04-revision-REVISES_PLAN-CONFLICT]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_missing_sidecar_and_unsupported_scope_explain_blocked_steps": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_source_binding_and_for_run_configuration_are_preserved": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_p4_steps::test_source_scoped_steps_do_not_consume_unscoped_p4_reads": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_semantic_projection::test_source_bound_relation_is_available_to_semantic_proposal_but_not_p4_query": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_investigation_semantic_projection::test_task_relation_prompt_does_not_treat_empty_p4_as_reason_to_skip_semantics": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_first_person_owner_and_chinese_deadline_have_readable_exact_evidence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[\\u8d1f\\u8d23\\u4eba\\uff1a\\u738b\\u5b81\\uff1b\\u5de5\\u4f5c\\uff1a\\u5b8c\\u6210\\u5ba1\\u8ba1\\uff1b\\u622a\\u6b62\\u65e5\\u671f\\uff1a2027-02-28\\u3002-proposal0-2027-02-28-DAY-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[Project Aurora; Owner: Mira Cole; deliver export adapter by 2028-03-04.-proposal1-2028-03-04-DAY-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[\\u8ba1\\u5212\\u572810\\u670818\\u65e5\\u524d\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal2-None-MONTH_DAY-DEADLINE_YEAR_MISSING]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[\\u6587\\u6863\\u65e5\\u671f\\uff1a2026-10-10\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal3-None-UNKNOWN-DEADLINE_ROLE_UNRESOLVED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[\\u4f1a\\u8bae\\u65e5\\u671f\\uff1a2026-10-10\\uff1b\\u8d1f\\u8d23\\u4eba\\uff1a\\u5c0f\\u6797\\uff1b\\u6d4b\\u8bd5\\u63a5\\u53e3\\u3002-proposal4-None-UNKNOWN-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_independent_wording_missing_year_and_time_roles[\\u8ba1\\u5212\\u57282027\\u5e742\\u670830\\u65e5\\u524d\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal5-None-UNKNOWN-DEADLINE_INVALID]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_missing_owner_is_not_inferred_from_an_untrusted_speaker_or_incidental_name": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_hallucinated_fields_and_non_responsibility_first_person_are_not_accepted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_observation_identity_and_field_evidence_survive_serialization": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_two_tasks_in_one_segment_have_different_observation_ids": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_proposed_or_quoted_responsibility_is_not_a_confirmed_owner[\\u4e0d\\u662f\\u8d1f\\u8d23\\u4eba\\uff1a\\u738b\\u5b81\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_proposed_or_quoted_responsibility_is_not_a_confirmed_owner[\\u5efa\\u8bae\\u738b\\u5b81\\u8d1f\\u8d23\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_proposed_or_quoted_responsibility_is_not_a_confirmed_owner[\\u6211\\u5efa\\u8bae\\u6211\\u8d1f\\u8d23\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_proposed_or_quoted_responsibility_is_not_a_confirmed_owner[\\u540c\\u4e8b\\u8bf4\\uff1a\\u201c\\u6211\\u8d1f\\u8d23\\u63a5\\u53e3\\u6d4b\\u8bd5\\u201d\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_or_unconfirmed_deadline_role_stays_unknown[\\u65e5\\u671f\\u4e0d\\u662f\\u622a\\u6b62\\u65e5\\u671f\\uff1a2027-02-28\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_or_unconfirmed_deadline_role_stays_unknown[\\u5c1a\\u672a\\u786e\\u5b9a\\u622a\\u6b62\\u65e5\\u671f\\uff1a2027-02-28\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_successful_but_unbound_proposal_is_not_reported_as_omitted_extraction": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_multiline_speaker_binding_points_to_the_header_and_deadline_role_is_readable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_repeated_deadline_evidence_is_bound_to_the_affirmative_occurrence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_project_and_vendor_mentions_remain_unknown[\\u4e0d\\u662f\\u661f\\u6cb3\\u9879\\u76ee\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_project_and_vendor_mentions_remain_unknown[\\u4f9b\\u5e94\\u5546\\u4e0d\\u662f\\u661f\\u5e06\\u901a\\u4fe1\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_negated_project_and_vendor_mentions_remain_unknown[\\u4e0d\\u662f\\u4f9b\\u5e94\\u5546\\uff1a\\u661f\\u5e06\\u901a\\u4fe1\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-proposal2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_repeated_entity_and_owner_evidence_uses_the_valid_role_occurrence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_incomplete_owner_names_are_not_silently_accepted[\\u8d1f\\u8d23\\u4eba\\uff1a\\u738b\\u5b81\\uff1b\\u5b8c\\u6210\\u63a5\\u53e3\\u6d4b\\u8bd5\\u3002-\\u738b]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_incomplete_owner_names_are_not_silently_accepted[Owner: Mira Cole; deliver export adapter.-Mira]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_explicit_absent_or_unconfirmed_deadline_remains_unknown[\\u65e0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_explicit_absent_or_unconfirmed_deadline_remains_unknown[\\u975e]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation::test_explicit_absent_or_unconfirmed_deadline_remains_unknown[\\u672a\\u786e\\u5b9a]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_real_tool_contract_multiple_distinct_tasks_and_exact_fields": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_first_person_missing_owner_year_and_mixed_correction": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u5efa\\u8bae\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u5982\\u679c\\u9884\\u7b97\\u6279\\u51c6\\uff0c\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u540c\\u4e8b\\u8bf4\\uff1a\\u2018\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002\\u2019]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u6797\\u67ab\\u4e0d\\u9700\\u8981\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u4efb\\u52a1\\u53d6\\u6d88\\uff1a\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u5047\\u8bbe\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u4eca\\u5929\\u8ba8\\u8bba\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u672a\\u91c7\\u7eb3\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u5927\\u5bb6\\u53ef\\u80fd\\u4f1a\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u63d0\\u8bae\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u5047\\u5982\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u636e\\u8bf4\\u6797\\u67ab\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u65e0\\u987b\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u4efb\\u52a1\\u7ec8\\u6b62\\uff1a\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cropped_model_task_cannot_hide_non_task_sentence[\\u4eca\\u5929\\u4ec5\\u8ba8\\u8bba\\u5b8c\\u6210\\u7d22\\u5f15\\u6d4b\\u8bd5\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_empty_success_does_not_assert_absence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_cross_message_work_stays_separate_exact_partial_observations": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_stale_revoked_or_foreign_inputs_never_reach_provider": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_update_during_call_withholds_all_observations": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_overlong_duplicate_malformed_and_partial_parse_are_explicit": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_missing_fields_hallucinations_and_absent_task_are_not_silent_success": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_current_version_update_requires_new_registration_and_old_unavailable_is_not_current": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_registration_removed_during_call_is_withheld_and_loader_errors_do_not_leak": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_exact_duplicate_task_proposals_are_collapsed_but_conflicting_same_location_is_quarantined": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_whole_document_budget_saturation_and_unicode_size_are_reported": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_invalid_limits_are_rejected[limits0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_invalid_limits_are_rejected[limits1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_invalid_limits_are_rejected[limits2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_invalid_limits_are_rejected[limits3]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_empty_batch_wrong_type_and_too_many_sources": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_later_call_revoking_an_earlier_source_withholds_the_earlier_observation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_referential_cancellation_cannot_release_an_earlier_task[\\u4e0a\\u8ff0\\u4efb\\u52a1\\u53d6\\u6d88\\uff0c\\u4e0d\\u9700\\u8981\\u7ee7\\u7eed\\u6267\\u884c\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_observation_discovery::test_referential_cancellation_cannot_release_an_earlier_task[This task is cancelled.]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[FAKE-GeminiProviderAdapter]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[FAKE-DeepSeekProviderAdapter]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[REPLAY-GeminiProviderAdapter]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[REPLAY-DeepSeekProviderAdapter]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_explicit_revision_requires_reverified_identity_and_keeps_direction": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_same_task_with_different_dates_does_not_imply_revision": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_explicit_non_revision_is_refuted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_forged_supported_identity_is_not_a_revision_permission": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_stale_identity_dependencies_are_not_trusted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_narrow_revision_proposal_cannot_grow_into_whole_bridge": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_positive_and_negative_revision_same_sentence_is_conflict": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_invalid_workspace_and_wrong_pair_identity_are_rejected": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_forged_source_version_and_invalid_input_are_not_assessable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_non_revision_timestamp_or_source_edit_never_creates_plan_revision": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_canonical_forged_identity_with_real_but_irrelevant_quote_is_rejected": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_other_tasks_plan_statement_does_not_apply_to_this_observation[\\u5176\\u4ed6\\u4efb\\u52a1\\u73b0\\u4fee\\u8ba2\\u5176\\u8ba1\\u5212\\uff0c\\u5c06\\u539f\\u5b9a2027\\u5e743\\u67084\\u65e5\\u524d\\u5b8c\\u6210\\u6539\\u4e3a2027\\u5e743\\u67088\\u65e5\\u524d\\u5b8c\\u6210\\uff0c\\u672c\\u8ba1\\u5212\\u66ff\\u4ee3\\u539f\\u8ba1\\u5212\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_other_tasks_plan_statement_does_not_apply_to_this_observation[\\u5176\\u4ed6\\u4efb\\u52a1\\u4e0d\\u4fee\\u8ba2\\u4efb\\u52a1\\u8ba1\\u5212\\u3002]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_negated_replacement_is_not_positive_revision_proof": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_plan_revision::test_revision_bridge_cannot_escape_observation_raw_range": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_explicit_work_survives_all_unknown_fields_and_cold_read": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[CONDITIONAL]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[NEGATED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[REPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[HISTORICAL]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[WITHDRAWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[NOT_STATED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[AMBIGUOUS]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036-04-17-2036-04-17-DAY]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036\\u5e744\\u670817\\u65e5-2036-04-17-DAY]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[8\\u67089\\u65e5-None-MONTH_DAY]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036\\u5e748\\u6708-None-MONTH]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[8\\u6708-None-MONTH]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-02-31-change0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17\\u524d-change1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change3]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change4]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change5]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_recall_protocol::test_profile_is_versioned_without_changing_historical_v2_request": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_explicit_project_and_roundtrip_do_not_mutate_m1": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_nonassertive_project_is_not_confirmed[\\u5982\\u679c]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_nonassertive_project_is_not_confirmed[\\u5efa\\u8bae]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_nonassertive_project_is_not_confirmed[\\u636e\\u8bf4]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_nonassertive_project_is_not_confirmed[\\u5f15\\u7528\\uff1a]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_nonassertive_project_is_not_confirmed[> ]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_other_project_mention_in_same_document_does_not_bind_task": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_cross_workspace_project_rejected": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_alias_and_scoped_heading_bind_only_the_right_task": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_heading_scope_and_explicit_direct_statement_conflict": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_related_work_link_is_bound_to_exact_target[\\u672c\\u4efb\\u52a1\\u4e0eA.md\\u7684\\u4efb\\u52a1 GATE-42 \\u6709\\u5de5\\u4f5c\\u8054\\u7cfb\\u3002-SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_related_work_link_is_bound_to_exact_target[\\u672c\\u4efb\\u52a1\\u4e0eA.md\\u7684\\u4efb\\u52a1 GATE-42 \\u65e0\\u5de5\\u4f5c\\u8054\\u7cfb\\u3002-REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_related_work_link_is_bound_to_exact_target[\\u5982\\u679c\\u672c\\u4efb\\u52a1\\u4e0eA.md\\u7684\\u4efb\\u52a1 GATE-42 \\u6709\\u5de5\\u4f5c\\u8054\\u7cfb\\u3002-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_related_work_link_is_bound_to_exact_target[\\u5f15\\u7528\\uff1a\\u201c\\u672c\\u4efb\\u52a1\\u4e0eA.md\\u7684\\u4efb\\u52a1 GATE-42 \\u6709\\u5de5\\u4f5c\\u8054\\u7cfb\\u3002\\u201d-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_related_work_link_is_bound_to_exact_target[\\u672c\\u4efb\\u52a1\\u4e0eA.md\\u7684\\u4efb\\u52a1 GATE-99 \\u6709\\u5de5\\u4f5c\\u8054\\u7cfb\\u3002-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_claim_requires_direct_concrete_change_bridge[\\u56e0\\u4e3aA.md\\u8bb0\\u8f7d\\u7684\\u4ece\\u6749\\u6797\\u6570\\u636e\\u6539\\u7528\\u8fdc\\u5ddd\\u670d\\u52a1\\uff0c\\u6b64\\u4efb\\u52a1\\u5fc5\\u987b\\u8c03\\u6574\\u7b7e\\u540d\\u53c2\\u6570\\u3002-SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_claim_requires_direct_concrete_change_bridge[\\u672c\\u4efb\\u52a1\\u65e0\\u9700\\u56e0A.md\\u8bb0\\u8f7d\\u7684\\u4ece\\u6749\\u6797\\u6570\\u636e\\u6539\\u7528\\u8fdc\\u5ddd\\u670d\\u52a1\\u505a\\u4efb\\u4f55\\u8c03\\u6574\\u3002-REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_claim_requires_direct_concrete_change_bridge[\\u6211\\u8d1f\\u8d23\\u8fdc\\u5ddd\\u670d\\u52a1\\u7684\\u7b7e\\u540d\\u53c2\\u6570\\u9002\\u914d\\u3002-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_claim_requires_direct_concrete_change_bridge[\\u5982\\u679c\\u56e0\\u4e3aA.md\\u8bb0\\u8f7d\\u7684\\u4ece\\u6749\\u6797\\u6570\\u636e\\u6539\\u7528\\u8fdc\\u5ddd\\u670d\\u52a1\\uff0c\\u6b64\\u4efb\\u52a1\\u5fc5\\u987b\\u8c03\\u6574\\u7b7e\\u540d\\u53c2\\u6570\\u3002-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_claim_requires_direct_concrete_change_bridge[\\u56e0\\u4e3aA.md\\u8bb0\\u8f7d\\u7684\\u4ece\\u6749\\u6797\\u6570\\u636e\\u6539\\u7528\\u8fdc\\u5ddd\\u670d\\u52a1\\uff0c\\u5176\\u4ed6\\u4efb\\u52a1\\u5fc5\\u987b\\u8c03\\u6574\\u7b7e\\u540d\\u53c2\\u6570\\u3002-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_invalid_typed_endpoints_are_not_assessable[IN_PROJECT]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_invalid_typed_endpoints_are_not_assessable[RELATED_TO]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_invalid_typed_endpoints_are_not_assessable[AFFECTED_BY]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_invalid_typed_endpoints_are_not_assessable[PROJECT_ALIAS]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_partial_proposal_cannot_remove_if_prefix": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_stale_alias_dependency_blocks_project_binding": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_relation_id_stable_on_replay_import_time_and_serialization": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_work_link_conflict_is_not_resolved_by_source_order": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_alias_has_no_semantic_similarity_fallback_and_quoted_claim_is_unknown": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_source_version_replacement_invalidates_relation_without_mutation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_heading_does_not_hide_conflicting_exclusive_project_statement": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_same_transition_twice_cannot_be_unique_change_reference": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_review_narrow_task_proposal_cannot_borrow_omitted_title": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_review_parent_project_scope_survives_generic_subheading": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relations_p2::test_review_same_sentence_duplicate_transition_is_ambiguous": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_scoped_keys_are_unconfirmed_candidates_with_exact_evidence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_keys_cannot_escape_project_or_namespace[\\u6c5f\\u5c91\\u9879\\u76ee\\uff1b\\u7cfb\\u7edf\\uff1a\\u652f\\u4ed8\\uff1b\\u4efb\\u52a1 PAY-81\\uff1a\\u63a5\\u5165\\u652f\\u4ed8\\u3002-\\u6c5f\\u5c91\\u9879\\u76ee]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_keys_cannot_escape_project_or_namespace[\\u677e\\u6f9c\\u9879\\u76ee\\uff1b\\u7cfb\\u7edf\\uff1a\\u4ed3\\u50a8\\uff1b\\u4efb\\u52a1 PAY-81\\uff1a\\u63a5\\u5165\\u652f\\u4ed8\\u3002-\\u677e\\u6f9c\\u9879\\u76ee]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_keys_cannot_escape_project_or_namespace[\\u4efb\\u52a1 PAY-81\\uff1a\\u63a5\\u5165\\u652f\\u4ed8\\u3002-None]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_explicit_reference_discovers_target_without_project_or_matching_description": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_stale_unverified_conflicting_and_foreign_observations_are_excluded": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_reimport_time_does_not_change_candidate_identity": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_current_query_rows_are_accepted_but_payloads_still_verified": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_direct_alias_dependency_is_scoped_and_versioned": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_supplier_change_is_a_typed_claim_lead_never_a_confirmed_impact": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_only_reference_revision_cue_produces_directional_revision_hint": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_candidate_revalidation_rejects_updated_endpoint_and_same_location_payload_changes": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_limits_deduplication_and_ordering_are_visible_and_deterministic": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_weak_project_and_lexical_candidates_are_explicitly_uncertain": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_file_key_reference_selects_only_target_task_inside_multitask_source": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_context_signal_budget_is_bounded_before_candidate_expansion": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_portable_candidate_roundtrip_rejects_tampering": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_unbound_namespace_in_another_message_does_not_become_shared_scope": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_ambiguous_file_references_are_marked_and_cannot_look_unique": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_alias_project_can_find_supplier_change_without_asserting_impact": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_non_change_supplier_sentence_does_not_abort_other_discovery": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_generation_budget_fails_explicitly_before_returning_partial_candidates": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_change_candidates_share_the_same_generation_budget": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_budget_usage_fanout_and_truncation_reasons_are_observable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_candidates::test_multi_key_observation_is_marked_ambiguous_not_confirmed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_dependency_retraction_immediately_blocks_revision_and_keeps_historical_delta": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_source_version_change_and_mutated_bytes_fail_closed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_read_only_no_context_unknown_and_no_autocreate": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_forged_canonical_assessment_cannot_be_published": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_future_effective_and_unknown_effective_are_distinct": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_replaced_assessment_does_not_poison_valid_corrected_plan": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_ambiguous_current_versions_and_missing_m1_payload_never_publish": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_comparison_forgery_cannot_hide_behind_explicit_as_of": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_nonpositive_comparison_semantics_survive_readback[D01-NOT_APPLICABLE]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_nonpositive_comparison_semantics_survive_readback[V01-NOT_COMPARABLE]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_nonpositive_comparison_semantics_survive_readback[V04-BLOCKED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_sql_inserted_corrupt_record_is_diagnostic_only": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_same_endpoints_with_competing_effective_claims_cannot_select_by_id": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_explicit_future_revision_keeps_known_effective_predecessor[False]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_explicit_future_revision_keeps_known_effective_predecessor[True]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_current_known_competitor_is_not_hidden_by_stored_context[True]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_current_known_competitor_is_not_hidden_by_stored_context[False]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_m1_query_adapter_preserves_source_and_extraction_status[NOT_CURRENT-False]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_m1_query_adapter_preserves_source_and_extraction_status[CURRENT-True]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_m1_query_adapter_preserves_source_and_extraction_status[CURRENT-False]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_query::test_stale_old_source_does_not_poison_a_fresh_proven_revision_chain": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_single_model_turn_binds_host_refs_without_claim_authority": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_missing_entities_can_be_discovered_with_no_endpoints": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_synonymous_owner_questions_have_one_execution_signature": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_context_and_input_budget_fail_before_provider_call": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_identity_revision_date_dependencies_convert_to_semantic_queries": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_relation_and_subgoal_and_fanout_budgets": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_total_call_reservation_includes_invalid_outputs_without_retry": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_replan_preserves_goal_completed_step_and_exact_host_receipt": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_unverified_replan_receipt_and_goal_change_block_before_call": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_all_new_public_inputs_with_explicit_fake_outputs_are_contract_valid": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_candidate_absence_does_not_limit_relation_endpoints": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_three_relation_hops_remain_questions_and_budgeted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_wrong_workspace_same_business_number_is_rejected_as_input": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[stale]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[revoked]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[unauthorized]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[truncated]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_source_change_during_provider_call_does_not_publish_plan": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_exact_request_guard_rejects_wrong_hash_and_wrong_guard": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_single_final_text_or_wrong_function_never_becomes_a_plan": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_total_token_reservation_blocks_before_call[limits0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_total_token_reservation_blocks_before_call[limits1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_replan_rejects_duplicate_completed_work_and_rechecks_old_receipts": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_multiple_replans_keep_all_earlier_verified_receipts": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_relation_types_and_symmetric_duplicate_are_checked": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_no_entity_schema_has_no_empty_enumerations": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_result_revalidation_detects_revocation_during_replan_call": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_provider_exception_is_charged_and_not_retried": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_provider_output_over_reservation_stops_session": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_plan_carries_limits_and_rejected_output_for_diagnostics": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_snapshot_output_token_budget_also_limits_request_and_reservation": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_guard_cannot_mutate_schema_after_authorizing_request": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_run_identity_distinguishes_sessions_and_survives_replan": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_question_planner::test_provider_error_with_over_budget_usage_exhausts_session": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_real_quote_and_proposal_do_not_become_semantically_accepted": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_llm_paraphrase_bypasses_old_revision_phrase_grammar": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_fake_quote_stale_source_and_revocation_are_rejected": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_admission_rejects_scope_budget_and_unauthorized_sources_before_call": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_unknown_handles_and_forged_assessment_fields_fail_closed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_missing_year_does_not_use_event_time_and_conflict_stays_blocked": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_all_new_dev_inputs_are_verified_m1_and_never_read_gold": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_incomplete_inventory_and_truncation_block_calls": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_overlapping_quote_occurrences_are_ambiguous": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_source_changes_during_call_fail_closed_without_retry": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_source_claim_does_not_acquire_formal_authority_and_receipt_is_required": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_missing_output_is_not_interpreted_as_refuted_and_guard_binds_exact_request": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_unicode_offsets_are_codepoints_and_quotes_are_not_normalized": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_existing_gemini_adapter_accepts_new_schema_without_tool_execution": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_semantic::test_rejected_tool_and_final_outputs_remain_auditable": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_reopen_idempotent_preserves_first_snapshot_and_terminal_event": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_append_only_and_invalid_transition_or_stale_predecessor": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_replace_requires_real_same_workspace_record_and_leaves_old_payload": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_stale_cannot_reactivate_and_event_clock_cannot_move_back": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_writer_refuses_to_initialize_another_database": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_store::test_unrelated_same_predicate_cannot_be_claimed_as_assessment_correction": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_context_returns_only_verified_observations_and_unconfirmed_candidates": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_wrong_workspace_rejected_before_snapshot_read": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_stale_source_and_snapshot_overflow_fail_closed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_relation_query_keeps_rule_proof_date_comparison_unknown_and_history": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_query_wire_catalogs_preserve_exact_p4_evidence_and_payloads": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_final_rejects_unseen_receipts_and_free_text_claims": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_final_accepts_json_wrapped_in_one_markdown_code_fence": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_truncated_results_do_not_claim_absence_of_verified_relations": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_history_filter_applies_to_plan_chain_extensions": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_relation_tools::test_plan_extensions_share_the_relation_count_budget": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_result_projection::test_task_review_keeps_invalid_model_proposal_visible_as_uncertain": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_explicit_revision_compares_calendar_boundaries_not_actual_delay": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_blocked_and_inapplicable_never_return_zero[\\u8ba1\\u5212\\u57282027\\u5e743\\u67088\\u65e5\\u524d\\u5b8c\\u6210\\u3002-BLOCKED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_blocked_and_inapplicable_never_return_zero[\\u4ec5\\u66f4\\u6362\\u79f0\\u547c\\uff0c\\u4e0d\\u4fee\\u8ba2\\u4efb\\u52a1\\u8ba1\\u5212\\u3002-NOT_APPLICABLE]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_forged_revision_cannot_authorize_date_math": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_boundary_is_derived_from_explicit_role_context[\\u524d\\u5b8c\\u6210-BEFORE]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_boundary_is_derived_from_explicit_role_context[\\uff0c\\u6309\\u8be5\\u65e5\\u6216\\u4e4b\\u524d\\u5b8c\\u6210-ON_OR_BEFORE]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_boundary_is_derived_from_explicit_role_context[\\uff08\\u5f53\\u65e5\\u5b8c\\u6210\\uff09-ON]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_boundary_is_derived_from_explicit_role_context[-UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_event_and_import_times_cannot_fill_missing_deadline_year": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_deadline_role_cannot_be_forged_to_bypass_m1_verify": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_future_effective_revision_is_not_published_as_current_plan": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_zero_is_forbidden_when_only_scope_revision_and_dates_disagree": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_repeat_recording_and_serialization_do_not_change_ids": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_invalid_comparison_cannot_encode_zero_for_unknown_state": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_inclusive_and_exclusive_boundary_markers_cannot_be_silently_collapsed": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.unit.test_task_revision_comparison::test_trailing_comma_boundary_countercue_is_preserved": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[provider_unknown]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[budget]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[no_progress]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[workspace]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[permission]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_offline_demo_rejects_a_user_named_database": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_partial_exposes_original_tasks_proposal_and_exact_block": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_explicit_tasks_domain_accepts_owner_field_in_original_question": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_new_service_reads_saved_result_without_model_calls": {
+      "status": "PASS",
+      "receipt": "cold-and-wiring.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_cold_read_requires_accepted_reviewer_and_complete_ledger[ledger_missing]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_cold_read_requires_accepted_reviewer_and_complete_ledger[reviewer_rejected]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[both]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[identity]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[none]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[update]": {
+      "status": "PASS",
+      "receipt": "cold-and-wiring.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[remove]": {
+      "status": "PASS",
+      "receipt": "cold-and-wiring.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[relation_retract]": {
+      "status": "PASS",
+      "receipt": "wiring-and-retract.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_same_name_separate_work_never_inherits_fields_or_model_identity": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3p_product_review::test_revoked_evidence_without_source_change_cannot_be_resurrected": {
+      "status": "PASS",
+      "receipt": "cold-and-wiring.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_explicit_product_discovery_output_exceeding_budget_never_reaches_provider": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_cold_read_rejects_dual_field_and_role_binding_tamper": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_http_import_does_not_send_sources_before_ask_authorization": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_composed_hot_and_cold_reads_revalidate_current_authority[source_update]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_composed_hot_and_cold_reads_revalidate_current_authority[evidence_revoke]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_composed_hot_and_cold_reads_revalidate_current_authority[workspace]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_host_requires_source_permission_then_runs_actual_adapter": {
+      "status": "PASS",
+      "receipt": "wiring-and-retract.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[missing]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[UNCERTAIN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[PENDING]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[FAILED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[WITHHELD]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[counters]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_live_hot_and_cold_reads_require_complete_provider_receipts[malformed]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[SUPPORTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[REFUTED]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[CONFLICT]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[UNKNOWN]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_http_failures_never_release_successful_partial_or_old_trace[discovery_timeout]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_http_failures_never_release_successful_partial_or_old_trace[semantics_timeout]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_http_failures_never_release_successful_partial_or_old_trace[budget]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_m3q_provider_host::test_normal_http_failures_never_release_successful_partial_or_old_trace[reviewer]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_observation_flow::test_original_case_persists_queries_and_preserves_review_and_supplier_chain": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_observation_flow::test_independent_documents_roundtrip_repeated_ingestion_and_version_history[# \\u5c9a\\u6d77\\u5de5\\u7a0b\\n\\u6587\\u6863\\u65e5\\u671f\\uff1a2027-02-01\\n\\u8d1f\\u8d23\\u4eba\\uff1a\\u738b\\u5b81\\uff1b\\u5c9a\\u6d77\\u5de5\\u7a0b\\u9700\\u8981\\u8fc1\\u79fb\\u7f13\\u5b58\\uff1b\\u4f9b\\u5e94\\u5546\\uff1a\\u8fdc\\u5ddd\\u6570\\u636e\\uff1b\\u622a\\u6b62\\u65e5\\u671f\\uff1a2027-02-28\\u3002-proposal0-\\u738b\\u5b81-2027-02-28]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_observation_flow::test_independent_documents_roundtrip_repeated_ingestion_and_version_history[Project Aurora; Owner: Mira Cole; deliver export adapter using supplier Cedar Labs by 2028-03-04.-proposal1-Mira Cole-2028-03-04]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_observation_flow::test_failed_extraction_and_missing_task_fields_are_different_states": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_authority_readback::test_reviewed_change_receipt_readback_and_source_claim_remain_separate": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_durable_runtime_inspect_query_final_and_reviewer": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_p4_diagnostics_preserved_through_real_runtime[stale]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_p4_diagnostics_preserved_through_real_runtime[revoked]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_p4_diagnostics_preserved_through_real_runtime[insufficient]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_reviewer_rejects_source_change_after_model_read": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_runtime_rejects_illegal_business_arguments_before_executor[arguments0]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_runtime_rejects_illegal_business_arguments_before_executor[arguments1]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_runtime_rejects_illegal_business_arguments_before_executor[arguments2]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_runtime_rejects_illegal_business_arguments_before_executor[arguments3]": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_tool_budget_and_permission_are_enforced": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_missing_provider_and_model_step_budget": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    },
+    "tests.integration.test_task_relation_runtime::test_default_workflows_do_not_gain_task_capabilities": {
+      "status": "PASS",
+      "receipt": "task-final.xml"
+    }
+  }
+}

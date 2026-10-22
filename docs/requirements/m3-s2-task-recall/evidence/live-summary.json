@@ -1,0 +1,109 @@
+{
+  "baseline": "bde9d9e2b88c2e69132cf48d1534dc28d4fca764",
+  "profile": "task-recall/v3",
+  "cohorts": {
+    "new_v2": {
+      "successful_batches": 2,
+      "failed_batches": 1,
+      "scored": {
+        "false_recalled_tasks": 0,
+        "negative_cases": 4,
+        "negative_cases_with_false_recall": 0,
+        "expected_tasks": 4,
+        "recalled_tasks": 4,
+        "CORRECT_ACCEPT": 6,
+        "CORRECT_UNKNOWN": 10
+      },
+      "failed_case_ids": [
+        "N01",
+        "N02",
+        "N03",
+        "N04"
+      ]
+    },
+    "original_v3": {
+      "successful_batches": 8,
+      "failed_batches": 0,
+      "scored": {
+        "expected_tasks": 17,
+        "recalled_tasks": 17,
+        "CORRECT_ACCEPT": 32,
+        "false_recalled_tasks": 0,
+        "CORRECT_UNKNOWN": 36
+      },
+      "failed_case_ids": []
+    },
+    "new_v3": {
+      "successful_batches": 2,
+      "failed_batches": 1,
+      "scored": {
+        "false_recalled_tasks": 0,
+        "negative_cases": 4,
+        "negative_cases_with_false_recall": 0,
+        "expected_tasks": 4,
+        "recalled_tasks": 4,
+        "CORRECT_ACCEPT": 6,
+        "CORRECT_UNKNOWN": 10
+      },
+      "failed_case_ids": [
+        "N01",
+        "N02",
+        "N03",
+        "N04"
+      ]
+    }
+  },
+  "new_billable": {
+    "requests": 16,
+    "reserved_usd": 4.0
+  },
+  "provider_outcomes": {
+    "SUCCEEDED": 15,
+    "FAILED": 1
+  },
+  "known_returned_usage": {
+    "input_tokens": 38995,
+    "output_tokens": 13559,
+    "total_tokens": 52554
+  },
+  "requests_without_returned_usage": 1,
+  "prior": {
+    "prior": {
+      "requests": 79,
+      "reserved_usd": 21.93
+    },
+    "s1_snapshots": [
+      {
+        "path": "..\\m3s1\\work\\m3s1-live-20261022\\global-provider\\budget.json",
+        "sha256": "e1504c61c040f77bd2b0ee19f1847b09f36ac4b8eebd477cc2550850824f24df",
+        "requests": 3,
+        "reserved_usd": 0.75,
+        "allocation_usd": 3
+      },
+      {
+        "path": "..\\m3s1\\work\\m3s1-live-recheck-20261022\\global-provider\\budget.json",
+        "sha256": "41d38b7acf6bae305005a9afdb9db6ce5a01f5a6a1639ccebd36901329f40b46",
+        "requests": 7,
+        "reserved_usd": 1.75,
+        "allocation_usd": 2.25
+      }
+    ],
+    "prior_plus_s1_full_allocation_usd": 24.68
+  },
+  "cumulative_requests": 95,
+  "cumulative_reserved_usd": 25.93,
+  "actual_bill_usd": null,
+  "billing_project_verified": false,
+  "automatic_retries": 0,
+  "product_real": {
+    "run_id": "ui-bf45a92ec370",
+    "observations": 2,
+    "status": "REAL_F_G_PRODUCT_PREPARATION; FULL_ASK_NOT_COMPLETED"
+  },
+  "product_offline_replay": {
+    "run_id": "ui-7c46628a24b1",
+    "status": "PARTIAL",
+    "new_billable_requests": 0
+  },
+  "limits": "12 new fixed cases: 8 scored in each variant; 4 remain unscorable. Product adds a successful real N01 unknown-fields observation. No general quality or full LIVE Product claim."
+}

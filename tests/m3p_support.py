@@ -46,7 +46,7 @@ class ScriptedStage:
             arguments = {'claims': [] if self.missing else [claim(text, '完成日志迁移', owner='林枫' if source_index < 2 else None,
                 project='青竹' if source_index < 2 else None,
                 deadline_text=('2029-06-24' if source_index == 1 else '2029-06-20'))]}
-            if 'task-field-grounding/v2' in request.user_input:
+            if any(profile in request.user_input for profile in ('task-field-grounding/v2', 'task-recall/v3')):
                 # Explicit scripted role declarations for the new LIVE schema;
                 # legacy/offline fixtures retain their original wire payload.
                 from linkloom.semantic_ingestion.task_field_binding import FIELD_ROLES

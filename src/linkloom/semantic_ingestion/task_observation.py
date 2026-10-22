@@ -17,6 +17,8 @@ _OPTIONAL_FIELDS = ("owner", "deadline", "project", "vendor")
 _FIRST_PERSON = re.compile(r"(?:^|[。；;\n])\s*(?P<cue>我(?:继续|将|会)?负责|I (?:am responsible for|will handle|will own)\b)", re.I)
 _NEGATED = re.compile(r"不是|不负责|不由|未分配|尚未|待定|未确定|建议|考虑|(?:无|非)\s*(?:截止|到期|负责人|供应商|项目)|[“”\"「」]|\b(?:not|unassigned|propose|consider)\b", re.I)
 _DATE = r"(?:\d{4}-\d{2}-\d{2}|\d{4}年\d{1,2}月\d{1,2}[日号]|\d{1,2}月\d{1,2}[日号]|\d{4}年\d{1,2}月)"
+# Generation syntax only; _date_value still independently validates the calendar.
+DATE_TOKEN_PATTERN = rf"^(?:{_DATE}|\d{{1,2}}月)$"
 
 
 @dataclass(frozen=True, slots=True)
