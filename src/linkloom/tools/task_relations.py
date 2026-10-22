@@ -167,7 +167,8 @@ def _comparison_premises(comparison_read):
     return comparison.same_task_id, comparison.revision_id
 
 
-def _investigation_steps(plan, snapshot, reads, comparison_reads, *, no_relation_reason=None):
+def _investigation_steps(plan, snapshot, reads, comparison_reads, *, no_relation_reason=None,
+                         inspection_results=()):
     """Bind G's relation/compare steps to current P4 read-only evidence.
 
     The returned rows are a product view over existing typed reads. They never
@@ -177,10 +178,14 @@ def _investigation_steps(plan, snapshot, reads, comparison_reads, *, no_relation
     if plan is None:
         return []
     steps = tuple(step for step in plan.steps if step.kind in {"relation", "compare_dates"})
+    inspect_ids = {step.id for step in plan.steps if step.kind == 'inspect'}
+    # G's plan is not execution evidence. Only Host-checked Ledger receipts
+    # may satisfy an inspection, including when a plan carries prior results.
+    verified_results = tuple(r for r in plan.verified_results if r.step_id not in inspect_ids) + tuple(inspection_results)
     rows = {}
     for step in steps:
         row = _base_investigation_step(step)
-        dependency_outcomes = _dependency_outcomes(step, rows, plan.verified_results)
+        dependency_outcomes = _dependency_outcomes(step, rows, verified_results)
         row["dependency_outcomes"] = dependency_outcomes
         blockers = set()
         if step.workspace_id and step.workspace_id != snapshot.workspace_id:
@@ -367,7 +372,7 @@ class TaskContextSnapshot:
 class TaskRelationTools:
     def __init__(self, workspace_id: str, snapshot_provider: Callable[[], TaskContextSnapshot],
                  *, relation_path: Path | str | None = None, semantic_analysis=None, inspection_plan=None,
-                 execution_blocked_reason=None):
+                 execution_blocked_reason=None, inspection_snapshot_hash=None):
         if not isinstance(workspace_id, str) or not workspace_id.strip() or not callable(snapshot_provider):
             raise ValueError("explicit workspace and snapshot provider required")
         self.workspace_id = workspace_id
@@ -375,6 +380,9 @@ class TaskRelationTools:
         self._relation_path = Path(relation_path) if relation_path is not None else None
         self.semantic_analysis = semantic_analysis
         self.inspection_plan = inspection_plan
+        # Supplied independently by Host preparation, never inferred from G's
+        # plan or a tool argument. Absent binding cannot certify an inspection.
+        self._inspection_snapshot_hash = inspection_snapshot_hash
         self.execution_blocked_reason = execution_blocked_reason
 
     @property
@@ -387,7 +395,8 @@ class TaskRelationTools:
             return self
         return TaskRelationTools(self.workspace_id, self._snapshot_provider, relation_path=self._relation_path,
             semantic_analysis=self.semantic_analysis.bind(run_id, artifact_store, question),
-            inspection_plan=self.inspection_plan, execution_blocked_reason=self.execution_blocked_reason)
+            inspection_plan=self.inspection_plan, execution_blocked_reason=self.execution_blocked_reason,
+            inspection_snapshot_hash=self._inspection_snapshot_hash)
 
     def context_sources(self):
         """Host-only current source read; no model paths or cached currentness."""
@@ -397,18 +406,30 @@ class TaskRelationTools:
         return raw, owner.snapshot_provider() if owner is not None else None
 
     def inspection_receipts_from_record(self, record):
-        """Host bridge for a later G replan, using the actual durable tool row.
+        """Validate an actual tool row for Host dependency and receipt replay.
 
         No model-supplied receipt is an input to this method. The existing planner
         still requires its own result_verifier and revalidates current bindings.
         """
         from linkloom.runtime.models import ToolExecutionRecord
         from linkloom.semantic_ingestion.task_relation_question_models import VerifiedStepResult
+        from linkloom.tools.contracts import ToolResult
         if (not isinstance(record, ToolExecutionRecord) or record.tool_id != 'inspect_task_context'
                 or record.status != 'completed' or record.result.get('status') != 'ok'
+                or record.error is not None
                 or record.arguments.get('workspace_id') != self.workspace_id):
             raise ValueError('UNVERIFIED_INSPECTION_RECORD')
+        result = ToolResult.from_dict(record.result)
+        if (result.call_id != record.call_id or result.tool_id != record.tool_id
+                or result.error is not None or result.business_status is not None):
+            raise ValueError('UNVERIFIED_INSPECTION_RECORD')
+        if self.inspection_plan is None or len({s.id for s in self.inspection_plan.steps}) != len(self.inspection_plan.steps):
+            raise ValueError('UNVERIFIED_INSPECTION_PLAN')
         output = record.result['value']
+        # Rebind arguments, targets, output and source authorization together.
+        # Replaying this local read never invokes a Provider or executes a tool.
+        if output != self.inspect_task_context(**record.arguments):
+            raise ValueError('INSPECTION_SOURCE_OR_ARGUMENTS_CHANGED')
         snapshot = self._snapshot(self.workspace_id)
         artifacts = {a.artifact_version_id:a for a in snapshot.artifacts}
         current = {(o.observation if isinstance(o,TaskObservationRead) else o).observation_id:
@@ -416,25 +437,62 @@ class TaskRelationTools:
         digest = canonical_hash({k:v for k,v in output.items() if k != 'investigation_receipts'})
         steps = {s.id:s for s in self.planned_inspections}
         receipts = []
+        seen = set()
         for data in output.get('investigation_receipts', ()):
             receipt = VerifiedStepResult(**data)
             step = steps.get(receipt.step_id)
-            if (step is None or receipt.plan_id != self.inspection_plan.plan_id
+            if (step is None or receipt.step_id in seen
+                    or step.workspace_id != self.workspace_id
+                    or receipt.plan_id != self.inspection_plan.plan_id
                     or receipt.result_sha256 != digest or receipt.outcome != 'COMPLETED'
                     or receipt.receipt_id != 'inspection_' + canonical_hash([step.execution_key,digest])):
                 raise ValueError('UNVERIFIED_INSPECTION_RECEIPT')
+            seen.add(receipt.step_id)
             ref = step.endpoints[0]
             observation = current.get(ref.observation_id)
             span = observation.provenance if observation else None
             if (observation is None or ObservationRef.from_observation(observation) != ref
                     or span.artifact_version_id not in artifacts
                     or not observation.verify(artifacts[span.artifact_version_id])
+                    or not snapshot.source_registry.has_evidence(self.workspace_id,span.evidence_ref)
                     or snapshot.source_registry.evidence_hash(self.workspace_id,span.evidence_ref) != span.content_hash
                     or snapshot.source_registry.evidence_version(self.workspace_id,span.evidence_ref) != span.artifact_version_id
                     or not self._bound_spans_current(snapshot,step)):
                 raise ValueError('INSPECTION_SOURCE_NOT_CURRENT')
             receipts.append(receipt)
         return tuple(receipts)
+
+    def query_task_relations_from_record(self, query, records, *, run_id, task_id):
+        """Host-only Ledger projection, shared by Runtime, Reviewer and cold reads.
+
+        The query's earlier same-task Ledger prefix is the execution authority;
+        neither model arguments nor the plan's claimed inspection outcomes are.
+        """
+        from linkloom.runtime.models import ToolExecutionRecord
+        records = tuple(records)
+        if (not run_id or query.run_id != run_id or not task_id or query.task_id != task_id
+                or query.agent_id != 'retrieval_agent' or query.tool_id != 'query_task_relations'
+                or query.arguments.get('workspace_id') != self.workspace_id
+                or any(not isinstance(r, ToolExecutionRecord) for r in records)
+                or len({r.call_id for r in records}) != len(records)):
+            raise ValueError('UNVERIFIED_QUERY_LEDGER')
+        bound = next((r for r in records if r.call_id == query.call_id), None)
+        if (bound is None or bound.error is not None or bound.status not in {'pending', 'completed'}
+                or any(getattr(bound, key) != getattr(query, key) for key in
+                ('run_id', 'task_id', 'agent_id', 'tool_id', 'sequence', 'arguments'))):
+            raise ValueError('QUERY_LEDGER_IDENTITY_MISMATCH')
+        inspections = []
+        for record in records:
+            if (record.tool_id != 'inspect_task_context' or record.status != 'completed'
+                    or record.run_id != run_id or record.task_id != query.task_id
+                    or record.agent_id != query.agent_id or record.sequence >= query.sequence):
+                continue
+            try:
+                inspections.extend(self.inspection_receipts_from_record(record))
+            except (ValueError, KeyError, TypeError, AttributeError):
+                # A failed or stale inspection is an unavailable premise.
+                continue
+        return self.query_task_relations(**query.arguments, _inspection_results=tuple(inspections))
 
     def _bound_spans_current(self, snapshot, step):
         artifacts = {a.artifact_version_id:a for a in snapshot.artifacts}
@@ -461,6 +519,12 @@ class TaskRelationTools:
         snapshot = self._snapshot_provider()
         if not isinstance(snapshot, TaskContextSnapshot) or snapshot.workspace_id != workspace_id:
             raise ValueError("snapshot workspace mismatch")
+        plan = self.inspection_plan
+        if plan is not None and (plan.workspace_id != workspace_id
+                or (any(s.kind == 'inspect' for s in plan.steps) and not self._inspection_snapshot_hash)
+                or (self._inspection_snapshot_hash is not None
+                    and plan.snapshot_hash != self._inspection_snapshot_hash)):
+            raise ValueError('INSPECTION_PLAN_CONTEXT_MISMATCH')
         limits = DiscoveryLimits()
         if (len(snapshot.observations) > limits.max_observations
                 or len(snapshot.artifacts) > limits.max_artifacts
@@ -533,7 +597,8 @@ class TaskRelationTools:
                 raise ValueError('task inspection receipt output budget exceeded')
         return output
 
-    def query_task_relations(self, workspace_id, *, observation_id=None, include_history=False, as_of=None):
+    def query_task_relations(self, workspace_id, *, observation_id=None, include_history=False, as_of=None,
+                             _inspection_results=()):
         snapshot = self._snapshot(workspace_id)
         when = date.fromisoformat(as_of) if as_of is not None else None
         output = {"schema_version": "task-relations-query/v1", "workspace_id": workspace_id,
@@ -549,7 +614,8 @@ class TaskRelationTools:
             if self.semantic_analysis is None:
                 output["missing_context"].append("SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED")
             output["investigation_steps"] = _investigation_steps(
-                self.inspection_plan, snapshot, (), (), no_relation_reason="NO_RELATION_RECORDS")
+                self.inspection_plan, snapshot, (), (), no_relation_reason="NO_RELATION_RECORDS",
+                inspection_results=_inspection_results)
             output["returned_investigation_steps"] = len(output["investigation_steps"])
             return _bounded_query_view(output)
         raw = tuple(r.observation if isinstance(r, TaskObservationRead) else r for r in snapshot.observations)
@@ -606,7 +672,8 @@ class TaskRelationTools:
                     seen_plans.add(fingerprint)
             output["truncated"] |= len(roots) > 4
             output["investigation_steps"] = _investigation_steps(
-                self.inspection_plan, snapshot, reads, tuple(comparison_reads.values()))
+                self.inspection_plan, snapshot, reads, tuple(comparison_reads.values()),
+                inspection_results=_inspection_results)
             output["returned_investigation_steps"] = len(output["investigation_steps"])
         output = _bounded_query_view(output)
         output["returned_relations"] = len(output["relations"])
@@ -621,6 +688,7 @@ class TaskRelationTools:
 
 def register_task_relation_tools(registry, tools: TaskRelationTools):
     """Register strict business schemas; the path/provider never enter arguments."""
+    from linkloom.tools.registry import LedgerBoundExecutor
     workspace = {"type": "string", "enum": [tools.workspace_id]}
     identifier = {"type": "string", "minLength": 1, "maxLength": 256,
                   "pattern": r"^[A-Za-z0-9_:-]+$"}
@@ -637,7 +705,8 @@ def register_task_relation_tools(registry, tools: TaskRelationTools):
         (TASK_TOOL_IDS[1], "Read existing P4 relations, lifecycle blocks, history, plan revisions and date comparisons. No records means no verified relations; never create or restore judgments.",
          {"workspace_id": workspace, "observation_id": identifier, "include_history": {"type": "boolean"},
           "as_of": {"type": "string", "pattern": r"^\d{4}-\d{2}-\d{2}$"}},
-         lambda a: tools.query_task_relations(**a)),
+         LedgerBoundExecutor(lambda call, records: tools.query_task_relations_from_record(
+             call, records, run_id=call.run_id, task_id=call.task_id))),
     )
     for tool_id, description, properties, executor in definitions:
         registry.register(ToolDefinition(tool_id=tool_id, version="1", description=description,

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="64.955" timestamp="2026-10-22T23:34:02.643706+08:00" hostname="beagle"><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_inspection_receipt_unblocks_dependent_relation" time="42.995"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3d-fix-inspect-ledger-dependency/work/pytest-p2b-http-baseline-junit/test_product_http_inspection_r0')
+
+    def test_product_http_inspection_receipt_unblocks_dependent_relation(tmp_path):
+        """A real completed inspect record is the premise for SAME_TASK."""
+    
+&gt;       http_result, ledger, reviewer, cold, _planning_requests = _run_http_case(tmp_path)
+
+tests\integration\test_inspect_ledger_dependency.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_inspect_ledger_dependency.py:118: in _run_http_case
+    http_result = http_ask(base, workspace)
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x000001E5EDBEE2C0&gt;
+b = &lt;memory at 0x000001E5EDC1FB80&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase></testsuite></testsuites>

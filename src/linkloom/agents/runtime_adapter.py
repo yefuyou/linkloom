@@ -903,14 +903,15 @@ class RuntimeAgentAdapter:
         if self._decision_memory_enabled:
             tool_funcs["search_decision_memory"] = self._search_decision_memory
         if task_relations:
-            from linkloom.agents.task_relation_result import review_task_relation_result
+            from linkloom.agents.task_relation_result import review_task_relation_result, task_relation_task_id
             def review_task_payload(_result_type, payload):
                 if context_runtime is not None:
                     context_check = context_runtime.review(state_cursor["state"])
                     if context_check["status"] != "pass":
                         return context_check
                 return review_task_relation_result(payload, task_relation_tools,
-                    records=state_cursor["state"].tool_ledger, run_id=run_id)
+                    records=state_cursor["state"].tool_ledger, run_id=run_id,
+                    task_id=task_relation_task_id(state_cursor['state'].model_executions, run_id))
             tool_funcs["validate_schema"] = review_task_payload
         retrieval_tool_runtime = create_retrieval_tool_runtime(
             self._search_notes,

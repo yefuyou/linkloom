@@ -144,8 +144,14 @@ class RuntimeWorkingContext:
         for record in state.tool_ledger:
             if record.status != "completed" or record.result.get("status") != "ok":
                 continue
+            if record.error is not None:
+                raise ValidationError('Tool checkpoint uncertainty requires recovery.',
+                    details={'code': 'CONTEXT_LIFECYCLE_CHANGED'})
             if record.tool_id == "query_task_relations":
-                if self.tools.query_task_relations(**record.arguments) != record.result["value"]:
+                from linkloom.agents.task_relation_result import task_relation_task_id
+                if self.tools.query_task_relations_from_record(
+                        record, state.tool_ledger, run_id=state.run_id,
+                        task_id=task_relation_task_id(state.model_executions, state.run_id)) != record.result["value"]:
                     raise ValidationError("Relation lifecycle changed after observation.", details={"code": "CONTEXT_LIFECYCLE_CHANGED"})
             if record.tool_id == "analyze_task_semantics" and self.tools.semantic_analysis is not None:
                 if self.tools.semantic_analysis.review(record.result["value"], call_id=record.call_id)["status"] != "pass":

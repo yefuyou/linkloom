@@ -27,6 +27,15 @@ class CallBoundExecutor:
         raise ValidationError("Call-bound executors require ToolRuntime identity binding.")
 
 
+@dataclass(frozen=True)
+class LedgerBoundExecutor:
+    """Host executor receiving the authorized call and a defensive Ledger copy."""
+    execute_call: Callable[..., Any]
+
+    def __call__(self, _arguments):
+        raise ValidationError("Ledger-bound executors require ToolRuntime identity binding.")
+
+
 class ToolRegistry:
     """Register and resolve static tool definitions and executor bindings."""
 
@@ -63,4 +72,4 @@ class ToolRegistry:
         return binding
 
 
-__all__ = ["CallBoundExecutor", "ToolBinding", "ToolExecutor", "ToolRegistry"]
+__all__ = ["CallBoundExecutor", "LedgerBoundExecutor", "ToolBinding", "ToolExecutor", "ToolRegistry"]

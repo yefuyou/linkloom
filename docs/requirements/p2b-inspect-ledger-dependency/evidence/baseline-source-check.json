@@ -1,0 +1,47 @@
+[
+  {
+    "path": "src/linkloom/agents/runtime_adapter.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "6b231e1f63ef6813eb19b055b430e1ec929cf9894b927b068289fe0a27152971"
+  },
+  {
+    "path": "src/linkloom/agents/task_relation_result.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "47a1eee13cf3e2ad4acdc20851bb1bde33b9e674eb41250f7c66f8e6b5f63b2e"
+  },
+  {
+    "path": "src/linkloom/runtime/context_engineering.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "216ddc1a0e2951c5c1b08a003d7fa3f2eed1f1bbcf13457de0a432b683f9edb0"
+  },
+  {
+    "path": "src/linkloom/tools/ledger.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "3a58cf9617aa247b8a389ee692dd5c439e3d6e54b4906fcfc48238c503ab6de7"
+  },
+  {
+    "path": "src/linkloom/tools/registry.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "1cf20781fdead57c2ee3fcb6421974bfa5212db61de01098a3623ef674329838"
+  },
+  {
+    "path": "src/linkloom/tools/runtime.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "5d7b8e59b4c4f46afc835fb2b7ddef2e23ea7c8399b39c097673cc2708c06814"
+  },
+  {
+    "path": "src/linkloom/tools/task_relations.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "c7164004b6d8f998fcb5af50e9a4e521443bf939055f034a2d50b80c840c9a4a"
+  },
+  {
+    "path": "src/linkloom/ui/investigation.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "fc1a661c7fa71aca34c05abb99f224d954a01e51bfa936d7c4d371fd3e7f06b3"
+  },
+  {
+    "path": "src/linkloom/ui/task_investigation.py",
+    "baseline_copy_matches_fixed_commit": true,
+    "baseline_lf_sha256": "3c71c40588b83925c606f136a7103ea1767d2fc8b2811f6e8b02c45121ffc912"
+  }
+]
