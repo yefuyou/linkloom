@@ -98,6 +98,18 @@ async function setup(storage = new Map()) {
   const savedTask = taskResult(); savedTask.result.agent_run_id = "saved-task";
   beforeReload.pending[0](savedTask); await saveRequest;
   assert.deepEqual([...savedPointer.values()], ["saved-task"]); // No quotes or result cache.
+  const rechecking = beforeReload.element("page").listeners.click({target: {closest: () => ({dataset: {action: "reopen-task"}})}});
+  await tick();
+  assert.equal(beforeReload.polls.length, 1);
+  assert.doesNotMatch(beforeReload.element("ask-result").innerHTML, /2029-06-20|林枫|CONFLICT/,
+    "Revalidation must hide the previous evidence before the response arrives");
+  beforeReload.element("ask-language").value = "zh";
+  await beforeReload.element("page").listeners.change({target: {id: "ask-language"}});
+  assert.doesNotMatch(beforeReload.element("ask-result").innerHTML, /2029-06-20|林枫|CONFLICT/,
+    "Language changes must not restore a result awaiting revalidation");
+  beforeReload.polls[0](savedTask); await rechecking;
+  assert.match(beforeReload.element("ask-result").innerHTML, /2029-06-20/);
+  console.log("PASS: revalidation hides previous fields, quotes and proposals while HTTP is pending, including language changes");
   const reopened = await setup(savedPointer);
   assert.match(reopened.element("page").innerHTML, /reopen-task/);
   assert.equal(reopened.pending.length, 0);

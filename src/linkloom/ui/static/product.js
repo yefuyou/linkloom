@@ -816,7 +816,10 @@
       else if (action === "reopen-task") {
         const workspaceId = state.workspace.workspace_id;
         const runId = savedTaskRun(workspaceId);
-        if (runId) await pollAsk(runId, workspaceId, ++state.agentViewToken);
+        if (runId) {
+          invalidateAsk();
+          await pollAsk(runId, workspaceId, state.agentViewToken);
+        }
       }
       else if (["feedback-approve", "feedback-reject", "feedback-revoke"].includes(action)) {
         const actor = document.getElementById("feedback-actor");
