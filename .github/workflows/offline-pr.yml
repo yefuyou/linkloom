@@ -167,6 +167,14 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install -e '.[dev,smoke]'
+      # Scripted wire transport; production F/G/Host/Runtime/Reviewer are used.
+      # Keep this separate so the source_handles regression has a clear receipt.
+      - name: M3-R Product semantic tool chain (offline, loopback HTTP only)
+        run: >-
+          python -m pytest -q --junitxml=m3r-semantic-chain.xml
+          tests/integration/test_m3q_provider_host.py
+          tests/unit/test_task_investigation_semantic_projection.py
+          tests/unit/test_tool_ledger_runtime.py::test_unknown_tool_does_not_create_pending_record
       - name: Observation, planning, proof, context, Runtime and HTTP contracts
         run: >-
           python -m pytest -q --junitxml=task-investigation.xml
@@ -198,7 +206,6 @@ jobs:
           tests/unit/test_m3q_gemini_receipts.py
           tests/unit/test_m3q_cli_config.py
           tests/unit/test_m3q_semantic_polarity.py
-          tests/integration/test_m3q_provider_host.py
           tests/integration/test_context_runtime_failures_resume.py
           tests/integration/test_context_runtime_integration.py
           tests/integration/test_m3p_product_review.py
@@ -217,5 +224,6 @@ jobs:
         with:
           name: task-investigation-results
           path: |
+            m3r-semantic-chain.xml
             task-investigation.xml
             work/ci-task-http
