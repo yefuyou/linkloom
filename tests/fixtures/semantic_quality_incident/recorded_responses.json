@@ -1,0 +1,260 @@
+{
+  "origin": "Historical Gemini gemini-3.8-flash normalized tool arguments; replay only, no new model request",
+  "source_id": "src_d1c8eaf16a0e42a48fda395be9c9f23d",
+  "recordings": [
+    {
+      "text": "星河项目今天正式确定，短信服务供应商选择云桥科技，自2026年10月10日起生效。选择原因是报价较低，且支持国内短信发送。",
+      "source_line": 1,
+      "claims": [
+        {
+          "claim_type": "DECISION",
+          "confidence": {
+            "claim_type": 0.99,
+            "entity": 0.95,
+            "overall": 0.96,
+            "relation": 0.95,
+            "temporal": 0.95
+          },
+          "relation": "uses vendor",
+          "subject": "星河项目",
+          "temporal_status": "EXPLICIT",
+          "valid_from": "2026-10-10",
+          "valid_to": null,
+          "value": "云桥科技"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.9,
+            "entity": 0.9,
+            "overall": 0.88,
+            "relation": 0.85,
+            "temporal": 0.85
+          },
+          "relation": "选择原因",
+          "subject": "云桥科技",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "报价较低，且支持国内短信发送"
+        }
+      ]
+    },
+    {
+      "text": "我负责星河项目的短信接口接入，计划在2026年10月14日前完成联调。",
+      "source_line": 2,
+      "claims": [
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.95,
+            "overall": 0.92,
+            "relation": 0.9,
+            "temporal": 0.9
+          },
+          "relation": "responsible for",
+          "subject": "陈晨",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "星河项目的短信接口接入"
+        },
+        {
+          "claim_type": "PLAN",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.9,
+            "overall": 0.92,
+            "relation": 0.9,
+            "temporal": 0.95
+          },
+          "relation": "planned completion date",
+          "subject": "星河项目的短信接口联调",
+          "temporal_status": "EXPLICIT",
+          "valid_from": null,
+          "valid_to": "2026-10-14",
+          "value": "完成联调"
+        }
+      ]
+    },
+    {
+      "text": "星河项目的短信服务供应商现正式改为星帆通信，自2026年10月15日起生效，替代2026年10月10日选择云桥科技的决定。原因是云桥科技在联调中多次延迟，星帆通信的到达率更稳定。",
+      "source_line": 3,
+      "claims": [
+        {
+          "claim_type": "DECISION",
+          "confidence": {
+            "claim_type": 0.98,
+            "entity": 0.95,
+            "overall": 0.95,
+            "relation": 0.95,
+            "temporal": 0.95
+          },
+          "relation": "uses vendor",
+          "subject": "星河项目",
+          "temporal_status": "EXPLICIT",
+          "valid_from": "2026-10-15",
+          "valid_to": null,
+          "value": "星帆通信"
+        },
+        {
+          "claim_type": "REJECTED_OPTION",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.95,
+            "overall": 0.92,
+            "relation": 0.9,
+            "temporal": 0.9
+          },
+          "relation": "uses vendor",
+          "subject": "星河项目",
+          "temporal_status": "EXPLICIT",
+          "valid_from": "2026-10-10",
+          "valid_to": "2026-10-15",
+          "value": "云桥科技"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.9,
+            "entity": 0.9,
+            "overall": 0.88,
+            "relation": 0.85,
+            "temporal": 0.85
+          },
+          "relation": "联调情况",
+          "subject": "云桥科技",
+          "temporal_status": "NOT_STATED",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "多次延迟"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.9,
+            "entity": 0.9,
+            "overall": 0.88,
+            "relation": 0.85,
+            "temporal": 0.85
+          },
+          "relation": "到达率",
+          "subject": "星帆通信",
+          "temporal_status": "NOT_STATED",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "更稳定"
+        }
+      ]
+    },
+    {
+      "text": "我继续负责短信接口接入，将按新供应商星帆通信的接口调整，计划在2026年10月18日前完成。",
+      "source_line": 4,
+      "claims": [
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.95,
+            "overall": 0.95,
+            "relation": 0.9,
+            "temporal": 0.95
+          },
+          "relation": "responsible for",
+          "subject": "陈晨",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "短信接口接入"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.95,
+            "overall": 0.95,
+            "relation": 0.95,
+            "temporal": 0.95
+          },
+          "relation": "uses vendor",
+          "subject": "短信接口",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "星帆通信"
+        },
+        {
+          "claim_type": "PLAN",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.9,
+            "overall": 0.92,
+            "relation": 0.9,
+            "temporal": 0.95
+          },
+          "relation": "completion target",
+          "subject": "短信接口接入调整",
+          "temporal_status": "EXPLICIT",
+          "valid_from": null,
+          "valid_to": "2026-10-18",
+          "value": "完成"
+        }
+      ]
+    },
+    {
+      "text": "我建议以后考虑增加邮件通知作为备用渠道，但这只是建议，本次会议尚未批准，也没有确定上线日期。",
+      "source_line": 5,
+      "claims": [
+        {
+          "claim_type": "PROPOSAL",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.9,
+            "overall": 0.9,
+            "relation": 0.85,
+            "temporal": 0.9
+          },
+          "relation": "增加备用渠道",
+          "subject": "邮件通知",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "备用渠道"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.9,
+            "overall": 0.9,
+            "relation": 0.85,
+            "temporal": 0.9
+          },
+          "relation": "审批状态",
+          "subject": "增加邮件通知作为备用渠道",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "本次会议尚未批准"
+        },
+        {
+          "claim_type": "FACT",
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.9,
+            "overall": 0.9,
+            "relation": 0.85,
+            "temporal": 0.9
+          },
+          "relation": "上线日期确定状态",
+          "subject": "邮件通知",
+          "temporal_status": "SOURCE_EVENT_TIME",
+          "valid_from": null,
+          "valid_to": null,
+          "value": "未确定上线日期"
+        }
+      ]
+    }
+  ]
+}

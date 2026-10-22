@@ -25,7 +25,11 @@ from linkloom.semantic_ingestion.candidate_models import (
 )
 from linkloom.semantic_ingestion.extraction import SemanticExtractionContext
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
-from linkloom.semantic_ingestion.timestamped_text import TimestampedTextSegment
+from linkloom.semantic_ingestion.task_observation import build_task_observation
+from linkloom.semantic_ingestion.document_text import (
+    DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, document_valid_time_is_grounded,
+    parse_source_time,
+)
 
 
 _DATE_ONLY = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
@@ -62,6 +66,8 @@ def _is_grounded_mention(value: str | None, quote: str) -> bool:
 def _parse_valid_time(value: str | None) -> date | datetime | None:
     if value is None:
         return None
+    if re.fullmatch(r"\d{4}年\d{1,2}月\d{1,2}日", value):
+        return parse_source_time(value)
     if _DATE_ONLY.fullmatch(value):
         return date.fromisoformat(value)
     normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
@@ -93,14 +99,14 @@ class CandidateValidator:
     def validate(
         self,
         extraction: SemanticExtractionResult,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> tuple[CandidateValidationResult, ...]:
         if not isinstance(extraction, SemanticExtractionResult):
             raise TypeError("extraction must be SemanticExtractionResult")
-        if not isinstance(segment, TimestampedTextSegment):
-            raise TypeError("segment must be a Step 1 TimestampedTextSegment")
+        if not isinstance(segment, SOURCE_SEGMENT_TYPES):
+            raise TypeError("segment must be a parsed source segment")
         if not isinstance(artifact, RawArtifact):
             raise TypeError("artifact must be RawArtifact")
         if not isinstance(context, SemanticExtractionContext):
@@ -279,26 +285,14 @@ class CandidateValidator:
 
     @staticmethod
     def _explicit_replacement(candidate: CandidateDecisionFact, prior_value: str) -> bool:
-        quote = _normalized_mention(candidate.provenance.quote)
-        current_value = _normalized_mention(candidate.value or "")
-        previous_value = _normalized_mention(prior_value)
-        affirmative_phrases = (
-            f"{current_value} replaces {previous_value}",
-            f"{current_value} replaced {previous_value}",
-            f"{current_value} supersedes {previous_value}",
-            f"{current_value} superseded {previous_value}",
-            f"{previous_value} was replaced by {current_value}",
-            f"{previous_value} is replaced by {current_value}",
-            f"{previous_value} was superseded by {current_value}",
-            f"{previous_value} is superseded by {current_value}",
-        )
-        return any(phrase in quote for phrase in affirmative_phrases)
+        from linkloom.semantic_ingestion.relations import explicit_replacement
+        return explicit_replacement(candidate.provenance.quote, candidate.value or "", prior_value)
 
     def _validate_claim(
         self,
         claim: ExtractedClaim,
         extraction: SemanticExtractionResult,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         relation_resolver: FrozenRelationResolver,
     ) -> CandidateValidationResult:
@@ -326,9 +320,14 @@ class CandidateValidator:
         valid_to: date | datetime | None = None
         temporal_resolution = claim.temporal_status
         temporal_basis = TemporalBasis.UNRESOLVED
-        if claim.temporal_status is TemporalResolution.SOURCE_EVENT_TIME:
+        if claim.claim_type.value in {"PLAN", "ACTION"}:
+            # Action deadlines are supporting source information, never decision
+            # effective intervals. Raw endpoints remain in the extraction audit.
+            temporal_resolution = TemporalResolution.NOT_STATED
+        elif claim.temporal_status is TemporalResolution.SOURCE_EVENT_TIME:
             if (
                 claim.claim_type.value == "DECISION"
+                and segment.event_time is not None
                 and _SOURCE_EVENT_EFFECTIVE_CUE.search(segment.body_text)
             ):
                 valid_from = segment.event_time
@@ -338,15 +337,22 @@ class CandidateValidator:
                 reason_codes.append(CandidateReasonCode.TEMPORAL_UNRESOLVED)
         elif claim.temporal_status is TemporalResolution.EXPLICIT:
             try:
-                if claim.valid_from_raw not in segment.body_text:
-                    raise ValueError("valid_from is not present in the source span")
                 valid_from = _parse_valid_time(claim.valid_from_raw)
-                if claim.valid_to_raw is not None:
-                    if claim.valid_to_raw not in segment.body_text:
-                        raise ValueError("valid_to is not present in the source span")
                 valid_to = _parse_valid_time(claim.valid_to_raw)
                 if valid_from is None:
                     raise ValueError("valid_from is required")
+                if isinstance(segment, DocumentTextSegment) and (
+                    not document_valid_time_is_grounded(segment.body_text, valid_from)
+                    or (valid_to is not None and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
+                ):
+                    raise ValueError("valid time lacks an explicit effective-time role")
+                if not isinstance(segment, DocumentTextSegment) and (
+                    (claim.valid_from_raw not in segment.body_text
+                     and not document_valid_time_is_grounded(segment.body_text, valid_from))
+                    or (claim.valid_to_raw is not None and claim.valid_to_raw not in segment.body_text
+                        and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
+                ):
+                    raise ValueError("valid time is not present in the source span")
                 if valid_to is not None and _as_utc_midnight(valid_to) <= _as_utc_midnight(valid_from):
                     raise ValueError("valid_to must follow valid_from")
                 temporal_basis = TemporalBasis.EXPLICIT
@@ -380,6 +386,8 @@ class CandidateValidator:
             "valid_to": valid_to.isoformat() if valid_to else None,
             "extraction_fingerprint": extraction.receipt.extraction_fingerprint,
         }
+        if claim.task is not None:
+            candidate_payload["task"] = claim.task.to_dict()
         candidate_id = f"candidate_v1_{_sha256_json(candidate_payload)}"
         candidate = CandidateDecisionFact(
             candidate_id=candidate_id,
@@ -405,6 +413,9 @@ class CandidateValidator:
             relation_resolution=relation_resolution,
             entity_resolution=entity_resolution,
             event_time=segment.event_time,
+            source_format="document_text" if isinstance(segment, DocumentTextSegment) else "timestamped_text",
+            document_date=segment.document_date if isinstance(segment, DocumentTextSegment) else None,
+            event_date=segment.event_date if isinstance(segment, DocumentTextSegment) else None,
             ingestion_time=artifact.ingestion_time,
             valid_from=valid_from,
             valid_to=valid_to,
@@ -414,6 +425,8 @@ class CandidateValidator:
             extraction_fingerprint=extraction.receipt.extraction_fingerprint,
             extraction_receipt=extraction.receipt,
             review_reasons=tuple(reason_codes),
+            task_observation=(build_task_observation(claim.task, segment, artifact)
+                              if claim.claim_type.value in {"PLAN", "ACTION"} else None),
         )
         return CandidateValidationResult(
             outcome=CandidateOutcome.UNRESOLVED if reason_codes else CandidateOutcome.ACCEPTED,

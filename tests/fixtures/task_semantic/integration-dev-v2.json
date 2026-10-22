@@ -1,0 +1,82 @@
+{
+  "schema": "m3d-public-dev-variant/v1",
+  "origin": "causality public input; no Gold or verdict labels",
+  "cases": [
+    {
+      "case_id": "m3d-causality-investigation-v2",
+      "workspace_id": "semantic-dev-causality",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。 请同时交代独立变更通知、工作记录与本次调查备忘的引用覆盖。",
+      "sources": [
+        {
+          "id": "choice.md",
+          "artifact_id": "choice.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T10:00:00+08:00] 李棠: 澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。\n"
+        },
+        {
+          "id": "work.md",
+          "artifact_id": "work.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T10:05:00+08:00] 许禾: 我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。\n[2026-12-02T10:06:00+08:00] 许禾: 我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。\n[2026-12-02T10:07:00+08:00] 许禾: 我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。\n"
+        },
+        {
+          "id": "investigation",
+          "artifact_id": "investigation-v2.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-11 10:00] 调查员：已核对 choice.md 与 work.md，调查范围包含签名适配、日志归档和缓存压测；压测与供应商更换之间仍无明确影响桥接。"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "adapt",
+          "source": "work.md",
+          "ordinal": 0,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        },
+        {
+          "handle": "archive",
+          "source": "work.md",
+          "ordinal": 1,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        },
+        {
+          "handle": "cache",
+          "source": "work.md",
+          "ordinal": 2,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        }
+      ],
+      "projects": [],
+      "changes": [
+        {
+          "handle": "change",
+          "source": "choice.md",
+          "ordinal": 0,
+          "project": "澄川项目",
+          "before": "岚声",
+          "after": "远铃"
+        }
+      ],
+      "queries": [
+        [
+          "AFFECTED_BY",
+          "adapt",
+          "change"
+        ],
+        [
+          "AFFECTED_BY",
+          "archive",
+          "change"
+        ],
+        [
+          "AFFECTED_BY",
+          "cache",
+          "change"
+        ]
+      ]
+    }
+  ]
+}

@@ -8,13 +8,23 @@ to later runtime layers.
 from __future__ import annotations
 
 from typing import Any, Callable, TypeAlias
+from dataclasses import dataclass
 
 from linkloom.runtime.errors import ValidationError
-from linkloom.tools.contracts import ToolDefinition
+from linkloom.tools.contracts import ToolCall, ToolDefinition
 
 
 ToolExecutor: TypeAlias = Callable[..., Any]
 ToolBinding: TypeAlias = tuple[ToolDefinition, ToolExecutor]
+
+
+@dataclass(frozen=True)
+class CallBoundExecutor:
+    """Trusted executor needing the authorized outer call's durable identity."""
+    execute_call: Callable[[ToolCall], Any]
+
+    def __call__(self, _arguments):
+        raise ValidationError("Call-bound executors require ToolRuntime identity binding.")
 
 
 class ToolRegistry:
@@ -53,4 +63,4 @@ class ToolRegistry:
         return binding
 
 
-__all__ = ["ToolBinding", "ToolExecutor", "ToolRegistry"]
+__all__ = ["CallBoundExecutor", "ToolBinding", "ToolExecutor", "ToolRegistry"]

@@ -13,7 +13,7 @@ from linkloom.runtime.errors import StateTransitionError, ValidationError
 
 
 # Read workflows are extended only when their approved contract is available.
-VALID_WORKFLOWS = {"ask", "connect", "team_decision"}
+VALID_WORKFLOWS = {"ask", "connect", "team_decision", "task_relations"}
 VALID_STATUSES = {
     "accepted",
     "running",

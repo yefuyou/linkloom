@@ -229,11 +229,11 @@ class VerifiedEvidenceBinding:
         artifact: RawArtifact,
         segment: object,
     ) -> "VerifiedEvidenceBinding":
-        from linkloom.semantic_ingestion.timestamped_text import TimestampedTextSegment
+        from linkloom.semantic_ingestion.document_text import SOURCE_SEGMENT_TYPES
 
         if not isinstance(artifact, RawArtifact):
             raise TypeError("artifact must be RawArtifact")
-        if not isinstance(segment, TimestampedTextSegment):
+        if not isinstance(segment, SOURCE_SEGMENT_TYPES):
             raise TypeError("segment must be TimestampedTextSegment")
         span = segment.evidence_span
         if not span.verify(artifact):

@@ -1,0 +1,185 @@
+{
+  "batches": [
+    {
+      "name": "initial-contracts",
+      "tests": 95,
+      "passed": 65,
+      "failed": 30,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\initial-contracts.xml",
+      "sha256": "5b9790f24fa538cba743a871b313e666daa690a53220ed72c726696d4a7a255c"
+    },
+    {
+      "name": "proof-contracts",
+      "tests": 46,
+      "passed": 46,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\proof-contracts.xml",
+      "sha256": "081a5b656f90180b636aec9f18bec83c7bc610464916786567894fdfc941041e"
+    },
+    {
+      "name": "m1-compat",
+      "tests": 65,
+      "passed": 65,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\m1-compat.xml",
+      "sha256": "fed5885b975d9d3494562f091b47905d65327a334403178543501fb0eb71bb5a"
+    },
+    {
+      "name": "dependency-complete",
+      "tests": 397,
+      "passed": 392,
+      "failed": 5,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\dependency-complete.xml",
+      "sha256": "9f41b1afd0608a049a108aad20a422051972de0ef659b826540164b208928d36"
+    },
+    {
+      "name": "semantic-repair",
+      "tests": 88,
+      "passed": 85,
+      "failed": 3,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\semantic-repair.xml",
+      "sha256": "028ab8cd40098c10f8f0592ac8155491c32cf850898c1deb531c07e7c92f5d79"
+    },
+    {
+      "name": "semantic-boundary-green",
+      "tests": 26,
+      "passed": 26,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\semantic-boundary-green.xml",
+      "sha256": "1378477ba5acd53fc96bb0986e217a41d1a131ab944c852f011a56106a523349"
+    },
+    {
+      "name": "semantic-policy-green",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\semantic-policy-green.xml",
+      "sha256": "1c250460671f73618c35f7ab867a510ceebf5361a424a0bd3fbe5a29e58a1f44"
+    },
+    {
+      "name": "core-allowed",
+      "tests": 270,
+      "passed": 269,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\core-allowed.xml",
+      "sha256": "7825fd06df90534befb9dc6f1f7138da9bd067b824c2a00fe2e8a8b6629679d0"
+    },
+    {
+      "name": "review-materialization-compat",
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\review-materialization-compat.xml",
+      "sha256": "77dd250abcc6e8a4a290b6d1639d15892f88b12a68372934b486a5bf3fb62d8c"
+    },
+    {
+      "name": "legacy-allowed",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\legacy-allowed.xml",
+      "sha256": "3a69178d3291d5592bee79022c6544d9451f1d1a17ed88a593fec32e4433098a"
+    },
+    {
+      "name": "frozen-ledger",
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\frozen-ledger.xml",
+      "sha256": "8c8d246e1c8a359eb18ae872a7e93a031cb94b34f75592093fc42db815db200b"
+    },
+    {
+      "name": "unified-ask-regression",
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\unified-ask-regression.xml",
+      "sha256": "68bf6f4786fead2cd5abb080ae81eabcbe1b0da95fb0d19fe2ae7d6120c8b6a1"
+    },
+    {
+      "name": "task-http-failures",
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\task-http-failures.xml",
+      "sha256": "801a70776e01f1b1b0aa1fcf2cc86a5b60e49a8568842ee9baff67e7716467c8"
+    },
+    {
+      "name": "task-offline-permissions",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\task-offline-permissions.xml",
+      "sha256": "69b2e2db623a114d4209a0050613b80b83d9d45f30b7bed3aaff535ea8e37516"
+    },
+    {
+      "name": "task-final",
+      "tests": 530,
+      "passed": 529,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\task-final.xml",
+      "sha256": "96ff8122f1117944ef1a9bc5884bd6177c30600bcd94144ad50d84eac3159848"
+    },
+    {
+      "name": "task-comparison-final",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\task-comparison-final.xml",
+      "sha256": "eaf8d6cf833990f9d975b4c3564c65c62e43edee26db751db46a510fce035f07"
+    },
+    {
+      "name": "core-final",
+      "tests": 270,
+      "passed": 270,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": "work\\core-final.xml",
+      "sha256": "b86424fa769d6d04c17eeda6431f331af4b283ebf8f50a3d6aabb1b5cd376c53"
+    }
+  ],
+  "unique_observed_test_nodes": 839,
+  "latest_observed": {
+    "passed": 839,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "note": "Batches overlap; counts are not additive. Later relevant focused runs close earlier failures. This is not a full-repository-suite claim.",
+  "provider_calls": 0,
+  "countTokens_calls": 0,
+  "LIVE_evaluations": 0
+}

@@ -57,6 +57,7 @@ and [historical answer](docs/assets/v1/04-ask-as-of.png).
 | Recover decision history | Query current or as-of state, effective dates, predecessors, evidence and receipts in workspace-scoped SQLite. Records can include actions and owners when supported. |
 | Ask in one place | Reviewed-state questions use deterministic lookup. Reasons and conflicts use an explicitly enabled temporal investigation Agent. |
 | Investigate source relations | Supported project → owner → direct-leader and alias → project → owner → direct-leader question forms use bounded search/read plans. Unsupported forms request clarification. |
+| Inspect cross-meeting tasks | Explicit offline task demo shows independent task observations, source evidence, model proposals and blocked prerequisites. Normal startup reports task stages unavailable. Existing valid P4 proofs can be read by trusted Host composition; no task approval UI is added. |
 | Keep verified partial results | Source-relation investigation can retain cited upstream facts and name missing hops when the requested final relation cannot be established. Grounding and Reviewer still gate the result. |
 | Track source changes | Explicit product source updates/deletions reconcile evidence and surface affected current materialized decisions in Review Attention. No automatic filesystem watcher. |
 
@@ -108,6 +109,23 @@ Sources, Review, Decision Memory and Ask. **No key is needed to start.** A fresh
 database has no approved decisions, and extraction and Agent investigation are
 disabled. The database path above keeps demo data in this checkout; omitting
 `--database` defaults to `~/.linkloom/product.sqlite`.
+
+For a key-free **cross-meeting task demonstration**, use the explicit synthetic
+mode with a dedicated local database:
+
+```bash
+python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
+```
+
+In Ask, select task investigation and ask whether the two meetings describe the
+same task and which owner/deadline can be established. The banner identifies
+deterministic FakeModel stages. The second raw date is retained while its
+uncertain deadline role stays UNKNOWN; model SAME_TASK proposals do not unlock
+revision work. This mode makes no external Provider call and cannot be combined
+with external-provider flags. It is a product wiring demonstration, not real-model
+semantic acceptance. Normal task-stage Provider configuration and authenticated
+task relationship approval remain unavailable. See [the integration boundary](docs/requirements/m3-p-task-investigation/SPEC.md)
+and [dependency/failure audit](docs/requirements/m3-p-task-investigation/DEPENDENCIES.md).
 
 For the complete source → review → answer workflow, install the provider extra
 and set `GEMINI_API_KEY` in your environment:

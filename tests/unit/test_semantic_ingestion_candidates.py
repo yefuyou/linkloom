@@ -361,6 +361,24 @@ def test_future_effective_date_is_preserved_without_lifecycle_mutation() -> None
     assert candidate.authority == "NON_AUTHORITATIVE"
 
 
+@pytest.mark.parametrize("written_date,content,expected", [
+    ("2026-10-01", "On 2026-10-01 we choose Vendor A for launch.", date(2026, 10, 1)),
+    ("2026-10-02", "On 2026-10-01 we choose Vendor A for launch.", None),
+    ("2026-10-01", "launch 采用 Vendor A，自2026年10月1日起生效。", date(2026, 10, 1)),
+])
+def test_timestamped_explicit_decision_preserves_source_bound_valid_time(written_date, content, expected):
+    results, _, _, _ = _run(
+        _payload(_claim(temporal_status="EXPLICIT", valid_from=written_date)),
+        content=content,
+    )
+    candidate = results[0].candidate
+    assert candidate is not None
+    assert candidate.valid_from == expected
+    assert candidate.temporal_resolution is (
+        TemporalResolution.EXPLICIT if expected is not None else TemporalResolution.UNRESOLVED
+    )
+
+
 def test_ambiguous_relative_time_is_retained_as_unresolved() -> None:
     content = "Starting next Monday, Vendor B replaces Vendor A for launch."
     claim = _claim(

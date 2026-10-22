@@ -30,6 +30,7 @@ from linkloom.semantic_ingestion.candidate_models import (
     TemporalResolution,
 )
 from linkloom.semantic_ingestion.candidate_persistence import (
+    SOURCE_CANDIDATE_PAYLOAD_VERSIONS,
     deserialize_candidate as deserialize_source_candidate,
     serialize_candidate as serialize_source_candidate,
 )
@@ -548,6 +549,12 @@ class SemanticDecisionMaterializer:
                 raise MaterializationBlockedError(
                     "CANDIDATE_INVALID", "validation produced no candidate"
                 )
+            if candidate.task_observation is not None:
+                from linkloom.semantic_ingestion.candidate_persistence import retain_first_task_capture
+                previous = self.store.get_semantic_candidate_row(candidate.workspace_id, candidate.candidate_id)
+                if previous is not None:
+                    candidate = retain_first_task_capture(candidate, str(previous["payload_json"]))
+                    result = replace(result, candidate=candidate, extraction_receipt=candidate.extraction_receipt)
             source_kind = CandidateSourceKind.SOURCE_INGESTION
             payload_json, fingerprint = serialize_source_candidate(candidate)
             extraction_fingerprint = candidate.extraction_fingerprint
@@ -593,11 +600,7 @@ class SemanticDecisionMaterializer:
             content_sha256=primary.content_sha256,
             extraction_fingerprint=extraction_fingerprint,
             candidate_fingerprint=candidate_fingerprint,
-            payload_version=(
-                "candidate-decision-fact/v1"
-                if source_kind is CandidateSourceKind.SOURCE_INGESTION
-                else str(json.loads(payload_json)["record_version"])
-            ),
+            payload_version=str(json.loads(payload_json)["record_version"]),
             candidate_source_kind=source_kind.value,
             validation_state=validation_state,
             validation_reasons=validation_reasons,
@@ -1277,6 +1280,16 @@ def _apply_review_resolution(
         raise MaterializationBlockedError(
             "CANDIDATE_INVALID", "rejected extraction cannot be resolved"
         )
+    from linkloom.semantic_ingestion.validation import _is_grounded_mention
+    # Preserve the existing unresolved-time refusal before validating a value
+    # for materialization. A supplied/current valid time still requires the
+    # original value to be grounded; subject review cannot authorize it.
+    if (resolution.valid_from is not None or candidate.valid_from is not None) and not _is_grounded_mention(
+        candidate.value, candidate.provenance.quote
+    ):
+        raise MaterializationBlockedError(
+            "ENTITY_UNRESOLVED", "human subject resolution cannot authorize an unsupported value"
+        )
     if (
         resolution.subject is not None
         and candidate.entity_resolution is not EntityResolution.UNRESOLVED
@@ -1387,11 +1400,15 @@ def _candidate_view_from_row(
         ) from error
     payload_json = str(row["payload_json"])
     if source_kind is CandidateSourceKind.SOURCE_INGESTION:
-        if str(row["payload_version"]) != "candidate-decision-fact/v1":
+        if str(row["payload_version"]) not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
             raise MaterializationBlockedError(
                 "CANDIDATE_INVALID", "source-ingestion candidate payload version is unsupported"
             )
         candidate = deserialize_source_candidate(payload_json)
+        if str(row["payload_version"]) != json.loads(payload_json)["record_version"]:
+            raise MaterializationBlockedError(
+                "CANDIDATE_INVALID", "source candidate payload version does not match its row"
+            )
         encoded, fingerprint = serialize_source_candidate(candidate)
         raw_reasons = json.loads(str(row["validation_reasons_json"]))
         if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
@@ -1721,20 +1738,8 @@ def _same_value(left: str, right: str) -> bool:
 
 
 def _explicit_replacement(quote: str, new_value: str, old_value: str) -> bool:
-    normalized_quote = normalize_temporal_component(quote)
-    new = normalize_temporal_component(new_value)
-    old = normalize_temporal_component(old_value)
-    phrases = (
-        f"{new} replaces {old}",
-        f"{new} replaced {old}",
-        f"{new} supersedes {old}",
-        f"{new} superseded {old}",
-        f"{old} was replaced by {new}",
-        f"{old} is replaced by {new}",
-        f"{old} was superseded by {new}",
-        f"{old} is superseded by {new}",
-    )
-    return any(phrase in normalized_quote for phrase in phrases)
+    from linkloom.semantic_ingestion.relations import explicit_replacement
+    return explicit_replacement(quote, new_value, old_value)
 
 
 def _required_text(value: str, field_name: str) -> str:

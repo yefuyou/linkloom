@@ -1,0 +1,571 @@
+{
+  "baseline": "ca2e775ce17581f8b69b2e1f9daf813a1230fb1c",
+  "files": [
+    {
+      "path": "src/linkloom/agents/coordinator.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "8a22c6c7fd9968fd89e194e98572c054a5a1d2739931a44fcd00ddab40aa6151",
+      "integrated_bytes_sha256": "160f21ef5de093e2532af3e995a8d1c9d9c05446d05d109021bff2c925b4f99e",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/agents/registry.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "bb08742a315d9358250200b0daa3092528b8f05813a0d889e30988573433034c",
+      "integrated_bytes_sha256": "036fd5743e7e8dcad3c4f7e9076dfc2108d2b015914cb5c887d22c085173a358",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/agents/retrieval_agent.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "17e648bbf4f950710b31555cbcf4b3341db50fbe323c2239fb040a9a59a1f6d8",
+      "integrated_bytes_sha256": "c301b8ed9a0361f8fb16fee4bb7ff1f019f92771323328c7c8bb91e728c90829",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/agents/runtime_adapter.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "6b231e1f63ef6813eb19b055b430e1ec929cf9894b927b068289fe0a27152971",
+      "integrated_bytes_sha256": "331adfc290632d4bb781fe1d8b3a87f2706d9ec831dfef7637e2e4413449a73e",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/__init__.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "45a2a94a9c93b092e43322523056e4fa49377016436f0671fd5c25aaf4cba9f3",
+      "integrated_bytes_sha256": "500c89c409032955d44640f12eb87c5ee9e42d4224f38bb1250eb6abe0ceb4d8",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/assembler.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "3f30462e1dfdcbac9cd4c8b7d4bbf6f2882b5b39e09e15c5e651d9bf3e929018",
+      "integrated_bytes_sha256": "8d6df4a6f03b679700ed630309e78bddf0abe1979012dbed31e6ccb12c0fdbbf",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/runtime/graph.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "a1549c953a7b10890691e669ce6719e632df173b26bbfb7401c6b83fd370a7e5",
+      "integrated_bytes_sha256": "3924f831d2201125c324a58633bfb17c76aea1d3da56cf996c696e4c3e2d2ca4",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/runtime/model_loop.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "fa73140f9638b0ed5500a4b0199167fbf1c6902908f0d3331a133f87e64c813b",
+      "integrated_bytes_sha256": "c61aaabd912b19185efb2456910c40b5d74b295a935a3d641f942f0bcb820450",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/runtime/models.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "f652a2c0edf28442faccd1e574293b4bac8d18f77b807a2492107151165f70eb",
+      "integrated_bytes_sha256": "5884ac13399b11dbc879203b1819a4c72f9ff4e0a8916c2e30ad60a50341bb51",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/candidate_models.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "6461e80b26e448ffb45c1655912852cd5b8d042548c92c83a15a2323e41d15a1",
+      "integrated_bytes_sha256": "0c60a44d96df66d5a7bd3e3cb68a1f9b793f321e3ec77bc72a949275566c8c2e",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/candidate_persistence.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "e9ee07eba6185a39fc222faca3a635c79e74c7e379202b165474e22604a43853",
+      "integrated_bytes_sha256": "42756b4eef282bad256e2189c1ccbe714bfa40d99cc712c5073cb48b3f1cc943",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/evidence.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "c497c5548085a555d3e7cf0753ab322a700d0a17fa20e7c636978911face03e2",
+      "integrated_bytes_sha256": "e225fb4b8d83d7b166f40925b92ea4a1f3c92970729e31cea7b35af4055a402c",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/extraction.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "48ce966f2558a1745e4c2dea53a205c979c98811e3200287ffd8a816625b8427",
+      "integrated_bytes_sha256": "48ce966f2558a1745e4c2dea53a205c979c98811e3200287ffd8a816625b8427",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/materializable.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "d9d9b0100b8cf2275aaf7916a01dbbb3edb436a29675081c1c1e97c9626014b3",
+      "integrated_bytes_sha256": "e74ce493df2a21a762d0b24f06fda94a214b2f98d281d125671ec5d37416e1c3",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/materialization.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "0ca25fb97f684f69b3bf1a5bb880b5c3e747137efe2ab4b2184a9a43ff6a682c",
+      "integrated_bytes_sha256": "6211ca3f6cf8727a64f06b783f22bda8d9230b64c5d9f2d1ec3183d23ce57f85",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/pipeline.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "4775a7eee69093b0e246b6f14e861194208e075349bceea953fd558272d9fefd",
+      "integrated_bytes_sha256": "a8b71546d3a4c3bc992ef4463baf3bde6ebb88f1af15476ef61a060b6df6def6",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/relations.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "e058b84ffacaa24a9bf072f85c965ebd3980e565e5600ae1dcacb5bd3da2988f",
+      "integrated_bytes_sha256": "b4cedf8bcd6a924362d4a5e7150412d51e9395b40d2f4a0e804f07c39839efa7",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/validation.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "2c2450152b53db83febffaa4580f20f7b3a848094aab8df5c86a3f96b1c16421",
+      "integrated_bytes_sha256": "18982f927c2f85b45a5cb07d521977f32a22b9ab06d9ca851840823f14edc0e9",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/tools/registry.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "1cf20781fdead57c2ee3fcb6421974bfa5212db61de01098a3623ef674329838",
+      "integrated_bytes_sha256": "6535b181e286d69671e2d9ed51001e50b77e29772b43e6b6db582b7b22557056",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/tools/runtime.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "611217726e2f33a784b2e91d68c4ee9912f7714df38cfa1d94df67ebd3b5eeb7",
+      "integrated_bytes_sha256": "5d7b8e59b4c4f46afc835fb2b7ddef2e23ea7c8399b39c097673cc2708c06814",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/tools/tool_policy.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "b94753afba431b6f7658dbbb88d5d01a495103017517defcc6bb71e368af248c",
+      "integrated_bytes_sha256": "540e504f33a76812be1d38320cf01bcdb0c0ef2a44cf440da033c6595e549bc1",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/ui/__main__.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "8e0e233cf5691c7f476074f8f2f880dbde7e643b03eb49b5404cb1694c5e64ec",
+      "integrated_bytes_sha256": "52bb9d15c9669384feb6d96237f0e6b863f4595298de0fbc69c61283cb5191a7",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/backend.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "72b99179ff11bd639a1c363885f47d1b391aba293ff155a4839945711b0c731a",
+      "integrated_bytes_sha256": "948d682ae38576aab62a7aa68543878c19442c74722463fa66162df7b5415373",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/ui/investigation.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "943d9ff317678572a28c1e43a787b1d9aac707c77adf30b237514ef18b90e166",
+      "integrated_bytes_sha256": "c5043719f1df4e94187871412cf0ee22164edad0c51e68c5f926f481c13c876b",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/static/product.js",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "fcb617dd91866e6e7bb2945a939cb6297fe66772b1df3030067064d525879b62",
+      "integrated_bytes_sha256": "3fdfd121cede20857946ab650a45316fd36bc4cafb0e43e206e8dd2bda6a2e0f",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/unified_ask.py",
+      "change": "modified",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "ae99c925f129876478f6b667ec689bf5978b3acfd484ed97ff0afe696776eb80",
+      "integrated_bytes_sha256": "0cd624b5f04cc8f59e441951a3004af093e36576637b6036795697c56cb90e5e",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/agents/task_relation_result.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "2ec0e162f3181e229fc3b7c5a69524487a28a03714818104186cf59481ab877f",
+      "integrated_bytes_sha256": "4a7d11cdb8266b90353197d223626e8e2b3e65fbd14f90d9724690647f58cf51",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/policy.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "962ac7080911347af882ff567755478e6b798c8a2a0d372318db9c6087fd496e",
+      "integrated_bytes_sha256": "a3fa6aa3d3d5be4b0df82c20332cbd0118cbcd0d4f385b9526028e580ad4a653",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/recovery.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "a3cd98a9fef0b41500c4031b9937e4b8934dd516dfe22063fe0c4ec4b92a4482",
+      "integrated_bytes_sha256": "48cacd188ac3de3dbf54652ebfb6928911a53175343c5fea853702905bf48fb8",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/selection.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "78943251710b06541d3b992a022504c7b63dac856af8b56446c848f6f4313f67",
+      "integrated_bytes_sha256": "e6ad11ce15278846120034a2f264359419c5411b3cf6cca3e05956af433be899",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/context/working.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "ea18e79a5e343d73da5b6ab95ef8e3d88bce1a9efe89c0b6463a1fca998912da",
+      "integrated_bytes_sha256": "56e8eb8e1d1f3c68021c88cb83d534b0e12f3acc821da2bd071a5e1ea0022f35",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/evaluation/task_semantic_replay.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "ebc4d333650e69407a85ec3598d93f01a9bbee642b5c504bbd2adade5b2a4d78",
+      "integrated_bytes_sha256": "964db82acb21e85ed92319957faf3b41113f60354693be4198e140fbe8adbf12",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/runtime/context_engineering.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "216ddc1a0e2951c5c1b08a003d7fa3f2eed1f1bbcf13457de0a432b683f9edb0",
+      "integrated_bytes_sha256": "1180db4119aa2376c8c8765bd1539dfd720eb3719db3fc9249dfd9f890c96ea8",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/runtime/context_sources.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "4b3316315c784d77e67ba64b232a160422ffe3fd307e1b436bba080f867cd6f0",
+      "integrated_bytes_sha256": "3b3ee9dc73b800212468ad12eecf2f1242a838a44eae04043bedf1e88ecfd09e",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/document_text.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "81f195f82410799561645f12927e170ce56c17780a9b68089ec843defc0cea88",
+      "integrated_bytes_sha256": "81f195f82410799561645f12927e170ce56c17780a9b68089ec843defc0cea88",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_change_authority.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "c4dab7abf92f442ef877bf4c0c6d1c0795bc9e3f37ddef2e04f8a060eb92e3bc",
+      "integrated_bytes_sha256": "091bd5f6a061496d3049d00cb8b731560b7aa0c87131f78752fc2c12652579f9",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_discovery_veto.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "9c99df8de0d6dffb3b2a7230d8423c22ef8eb54c74dbf87d8fb62b2412022246",
+      "integrated_bytes_sha256": "9c99df8de0d6dffb3b2a7230d8423c22ef8eb54c74dbf87d8fb62b2412022246",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_observation.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "8bce9a7b4d3294b77d116797d062afa8c41ee09c9c7b6578d3c6908c0d293b92",
+      "integrated_bytes_sha256": "8bce9a7b4d3294b77d116797d062afa8c41ee09c9c7b6578d3c6908c0d293b92",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_observation_discovery.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "19427269f1e581fbfa61cf83527e0a057a7b034cc2f379f32ccbb865995888d0",
+      "integrated_bytes_sha256": "19427269f1e581fbfa61cf83527e0a057a7b034cc2f379f32ccbb865995888d0",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_observation_query.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "dadfa992fea7873fe7edd971cc4dc9207f1d482aa61285f5d8e6de1278da51a0",
+      "integrated_bytes_sha256": "b98b54dd31e08d99275d3c6c0c3d22f66642e4e1249703277dc7964f457c44ff",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_plan_revision.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "4af9ad4dd09ff31f94bbfdeb2e9b04d9df05d0fc820e694f6eae7262a95ac31c",
+      "integrated_bytes_sha256": "4c2754d7911ff7354620571d86c7422a452deeafb4b71942846ef5ecd5b5c1d0",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_candidates.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "a733d5c30522dbaea91f8312650a48d763c1097e4ff3803fc39056d31e75ab7c",
+      "integrated_bytes_sha256": "e4886bb96963d454c65638cbd309d8dd3c84b15788c8a8b4373632ff6bfe5ba7",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_context.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "00b738bd51094b53605e070f07281f125faf06c72e0d6f0a1a5eff7f3f7b9a77",
+      "integrated_bytes_sha256": "29d00e828f733e0b22d62c9759b46b5b65e130dfa2f9f25550bc76d12e93eed5",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_lifecycle.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "1390ae345c9f1384033f63b71586ac0669c5ed88113d578c763f7f8ed6b0064b",
+      "integrated_bytes_sha256": "8f35b81adc7b735b024543a9349b75015e0e06d9a00f31921e159c35d218fcee",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_models.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "ce2fa20d515543116b623ed7fc3e1bcff265b9c81572ded5bbab7e102398933f",
+      "integrated_bytes_sha256": "e1312905fec3a26bbc70a49b46bba485604cfa0b681433ec658153c249dfa8e5",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_query.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "e3b254cee3b1a09a0a88292d19072e658ebef54f8dd12ea4580b9eda9163393a",
+      "integrated_bytes_sha256": "b1197c60e3e690b7ef4cd87115d6aea25e0fa9e78e72771ae58d4ccb2a4cc939",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_question_models.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "7ef92a99f26ca231f9957cd7ee580bec72653b8af3fbf70ca846c90a71e2c7df",
+      "integrated_bytes_sha256": "100836ae04be06008cf4b4230d89db95e344bf0428a796b82eb0684f62053348",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_question_planner.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "d4e1586a01388d4e1f8665ad2d7d9eb80dc27d3ace17788598b74a60262d90e8",
+      "integrated_bytes_sha256": "2e089f4705f176ea6aeeafd80551cb8a138de716886931fde39c3d3973bd3830",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_semantic_models.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "4008f2ca79994e79fad59c444c5a62593bc74c1d4595cadc3eaeb0ba7d3f761c",
+      "integrated_bytes_sha256": "f8535d93cbe0dc6701935e9fa8cc75e95248a7631ac8e48d9cf3f588f5e40741",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_semantic_proposer.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "4b0098e97ca4049d8217951d18fd8dfcfb70a9e2ac09d1945756b178a856a710",
+      "integrated_bytes_sha256": "b64bf40eb915d3a4e82a629f28147e9102e02599cc5f14ae06ff77d87a17f5a1",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_semantic_validation.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "075375a5e3fb515dc8f6071a07ca19f65d0d3727d5389ddb233d41cebbdea789",
+      "integrated_bytes_sha256": "7728ceb8183deb164e5e4346823badb59241982e89211b09f5ed8baf78cb96eb",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_store.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "11b5c488ab317234a896381a3cd764d3ad7099e8ae53388e812f510fe18af3f9",
+      "integrated_bytes_sha256": "cc649cbc5eb562f2c8ae0ec062f53a1e5734cfccf6c013b15741315e903072ea",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_relation_validation.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "732f29a1c43dce07342ed5b0adb4b294c2caedba68f737636b7602955afb5b0f",
+      "integrated_bytes_sha256": "da5939ae34c382873325ae9a159e12927dca3078cc920800e6e35823f0ba7762",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_revision_comparison.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "dd4dbf540d58fa1dbb3eab0ef8a49201ac3fafe31298cf264f0267edca3c0679",
+      "integrated_bytes_sha256": "e56b5135c70d183ed7a41d00f47900e7c3094f0cab5637acd9690a13dbbd5cd8",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_work_proofs.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "e6a10b16756bb68f3c07c560dbd55fe3f75b5f39d77be2c6eb71a9c9c22301cc",
+      "integrated_bytes_sha256": "29d9faa92ec1b6e4616e66db174ffb9e22286df75ce108c9e7c0c7efb5ba9461",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/text_scopes.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "186a0f69a5700e8246581a7d631baf4e6c74522db08fbcd892ea7232dc56e98f",
+      "integrated_bytes_sha256": "186a0f69a5700e8246581a7d631baf4e6c74522db08fbcd892ea7232dc56e98f",
+      "unchanged_from_source": true,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/tools/semantic_analysis.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "f74eee7bf6a44978fc566c786f5668cf4643d7c0135a2a2d0ff546b145e5eda7",
+      "integrated_bytes_sha256": "d59d2ab6945d58dc16cc6e29c9783935a442c02909c256cac8bcd686c5df50e8",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/tools/semantic_context.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "f46fa2db9813efeb724548546ce0c13cd88e3d413a61d118a83ed3e694e39a48",
+      "integrated_bytes_sha256": "6dbb1aa51135d7ee118a89c4339f003948be0bdf15b53e4ccca03627d88a1163",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": true
+    },
+    {
+      "path": "src/linkloom/tools/task_relations.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "ab9b7d8dfc0300d6d5b250540c6432d47ef8465aaaf2f540c41fb8dfebecd0f9",
+      "integrated_bytes_sha256": "2ffde6c3d575f86a9a3aa0e749d7faa2ffa58bb3afd1753ac534df33f6a18d20",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/ask_admission.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "f98d1963089d6572ae25c1b6919da96202b328a7728def567dbc0fb3a94de315",
+      "integrated_bytes_sha256": "f98d1963089d6572ae25c1b6919da96202b328a7728def567dbc0fb3a94de315",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/offline_task_demo.py",
+      "change": "added",
+      "source_head": null,
+      "source_blob_sha256": null,
+      "integrated_bytes_sha256": "dd16eb3dc05e357a45984a457f1e82bfcac222ebf3cb544b0ee1927d4deeef3f",
+      "unchanged_from_source": false
+    },
+    {
+      "path": "src/linkloom/ui/task_investigation.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "18ecc221129913ad16e6950d7e5d90b86d263ff42edf788bb9dad706080b8400",
+      "integrated_bytes_sha256": "cfe22150c96eb75433adc7b7678bc3a41c65f88ae9281d517bb4127640252264",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    },
+    {
+      "path": "src/linkloom/ui/task_result.py",
+      "change": "added",
+      "source_head": "dd76a25bd9e70544c8e0534538b694015928fea1",
+      "source_blob_sha256": "6fe24e03eefa886bb88d956192ae4a38668a78ab769a9657d7339b8493057de9",
+      "integrated_bytes_sha256": "6fe24e03eefa886bb88d956192ae4a38668a78ab769a9657d7339b8493057de9",
+      "unchanged_from_source": false,
+      "unchanged_except_line_endings": false
+    }
+  ]
+}

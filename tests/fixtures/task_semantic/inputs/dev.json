@@ -1,0 +1,412 @@
+{
+  "schema": "task-semantic-dev/v1",
+  "split": "dev",
+  "cases": [
+    {
+      "case_id": "revision",
+      "workspace_id": "semantic-dev-revision",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "plan.md",
+          "artifact_id": "plan.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 许禾: 我负责栖湾项目任务 RG-71 的网关接入，计划在2026年12月10日前完成。\n"
+        },
+        {
+          "id": "update.md",
+          "artifact_id": "update.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T09:00:00+08:00] 许禾: 我负责栖湾项目任务 RG-71 的网关接入。请把plan.md中的工作认作本条的同一事项；旧的交付安排到此作废，新的任务计划在2026年12月14日前完成，由此版接替，不是另开任务。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "old",
+          "source": "plan.md",
+          "ordinal": 0,
+          "project": "栖湾项目",
+          "deadline_text": "2026年12月10日"
+        },
+        {
+          "handle": "new",
+          "source": "update.md",
+          "ordinal": 0,
+          "project": "栖湾项目",
+          "deadline_text": "2026年12月14日"
+        }
+      ],
+      "projects": [],
+      "changes": [],
+      "queries": [
+        [
+          "SAME_TASK",
+          "new",
+          "old"
+        ],
+        [
+          "REVISES_PLAN",
+          "new",
+          "old"
+        ]
+      ]
+    },
+    {
+      "case_id": "causality",
+      "workspace_id": "semantic-dev-causality",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "choice.md",
+          "artifact_id": "choice.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T10:00:00+08:00] 李棠: 澄川项目的短信供应商此次换成了远铃，之前使用的是岚声；这份资料尚未经过人工审核。\n"
+        },
+        {
+          "id": "work.md",
+          "artifact_id": "work.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T10:05:00+08:00] 许禾: 我负责澄川项目任务 CC-81 的签名适配，计划在2026年12月16日前完成；choice.md所述更换直接导致签名规范变化，所以这项工作必须重做签名映射。\n[2026-12-02T10:06:00+08:00] 许禾: 我负责澄川项目任务 CC-82 的日志归档，计划在2026年12月16日前完成；就choice.md这次供应商更换而言，归档工作完全不受影响，无须调整。\n[2026-12-02T10:07:00+08:00] 许禾: 我负责澄川项目任务 CC-83 的缓存优化，计划在2026年12月16日前完成。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "adapt",
+          "source": "work.md",
+          "ordinal": 0,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        },
+        {
+          "handle": "archive",
+          "source": "work.md",
+          "ordinal": 1,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        },
+        {
+          "handle": "cache",
+          "source": "work.md",
+          "ordinal": 2,
+          "project": "澄川项目",
+          "deadline_text": "2026年12月16日"
+        }
+      ],
+      "projects": [],
+      "changes": [
+        {
+          "handle": "change",
+          "source": "choice.md",
+          "ordinal": 0,
+          "project": "澄川项目",
+          "before": "岚声",
+          "after": "远铃"
+        }
+      ],
+      "queries": [
+        [
+          "AFFECTED_BY",
+          "adapt",
+          "change"
+        ],
+        [
+          "AFFECTED_BY",
+          "archive",
+          "change"
+        ],
+        [
+          "AFFECTED_BY",
+          "cache",
+          "change"
+        ]
+      ]
+    },
+    {
+      "case_id": "conflict",
+      "workspace_id": "semantic-dev-conflict",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "first.md",
+          "artifact_id": "first.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 许禾: 我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月11日前完成。second.md的15日版本只是待议草案，不会取代这里的执行安排。\n"
+        },
+        {
+          "id": "second.md",
+          "artifact_id": "second.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-03T09:00:00+08:00] 许禾: 我负责岑湖项目任务 CH-91 的回调联调，计划在2026年12月15日前完成。这就是first.md里的同一任务；这里是应执行的新计划，覆盖first.md的11日安排。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "old",
+          "source": "first.md",
+          "ordinal": 0,
+          "project": "岑湖项目",
+          "deadline_text": "2026年12月11日"
+        },
+        {
+          "handle": "new",
+          "source": "second.md",
+          "ordinal": 0,
+          "project": "岑湖项目",
+          "deadline_text": "2026年12月15日"
+        }
+      ],
+      "projects": [],
+      "changes": [],
+      "queries": [
+        [
+          "SAME_TASK",
+          "new",
+          "old"
+        ],
+        [
+          "REVISES_PLAN",
+          "new",
+          "old"
+        ]
+      ]
+    },
+    {
+      "case_id": "correction",
+      "workspace_id": "semantic-dev-correction",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "original.md",
+          "artifact_id": "original.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 许禾: 我负责眠沙项目任务 MS-17 的报表接入，计划在2026年12月20日前完成。\n"
+        },
+        {
+          "id": "correction.md",
+          "artifact_id": "correction.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-04T09:00:00+08:00] 许禾: 我负责眠沙项目任务 MS-17 的报表接入，仍是original.md中同一个事项。这里纠正一次资料笔误：22日其实是文档整理日期，业务任务从来没改过截止，计划在2026年12月20日前完成。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "old",
+          "source": "original.md",
+          "ordinal": 0,
+          "project": "眠沙项目",
+          "deadline_text": "2026年12月20日"
+        },
+        {
+          "handle": "new",
+          "source": "correction.md",
+          "ordinal": 0,
+          "project": "眠沙项目",
+          "deadline_text": "2026年12月20日"
+        }
+      ],
+      "projects": [],
+      "changes": [],
+      "queries": [
+        [
+          "SAME_TASK",
+          "new",
+          "old"
+        ],
+        [
+          "REVISES_PLAN",
+          "new",
+          "old"
+        ]
+      ]
+    },
+    {
+      "case_id": "independent",
+      "workspace_id": "semantic-dev-independent",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "tasks.md",
+          "artifact_id": "tasks.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 许禾: 我负责青汀项目任务 QT-41 的生产网关联调，计划在2026年12月10日前完成。\n[2026-12-02T09:00:00+08:00] 许禾: 我负责青汀项目任务 QT-42 的沙箱网关联调，计划在2026年12月14日前完成。这是另一份独立工作，请勿与QT-41合为一个任务；两项联调共享测试结果，存在明确工作联系。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "production",
+          "source": "tasks.md",
+          "ordinal": 0,
+          "project": "青汀项目",
+          "deadline_text": "2026年12月10日"
+        },
+        {
+          "handle": "sandbox",
+          "source": "tasks.md",
+          "ordinal": 1,
+          "project": "青汀项目",
+          "deadline_text": "2026年12月14日"
+        }
+      ],
+      "projects": [],
+      "changes": [],
+      "queries": [
+        [
+          "SAME_TASK",
+          "sandbox",
+          "production"
+        ],
+        [
+          "RELATED_TO",
+          "sandbox",
+          "production"
+        ]
+      ]
+    },
+    {
+      "case_id": "alias",
+      "workspace_id": "semantic-dev-alias",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "glossary.md",
+          "artifact_id": "glossary.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T08:00:00+08:00] 李棠: 在本期工作区，白桨只是苇岸项目的内部称呼，两个名称指向同一个项目。\n"
+        },
+        {
+          "id": "task.md",
+          "artifact_id": "task.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 许禾: 我负责白桨的收据适配，计划在2026年12月12日前完成；这项工作归属白桨。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "work",
+          "source": "task.md",
+          "ordinal": 0,
+          "project": null,
+          "deadline_text": "2026年12月12日"
+        }
+      ],
+      "projects": [
+        {
+          "handle": "alias",
+          "name": "白桨"
+        },
+        {
+          "handle": "canonical",
+          "name": "苇岸项目"
+        }
+      ],
+      "changes": [],
+      "queries": [
+        [
+          "PROJECT_ALIAS",
+          "alias",
+          "canonical"
+        ],
+        [
+          "IN_PROJECT",
+          "work",
+          "canonical"
+        ]
+      ]
+    },
+    {
+      "case_id": "conditional",
+      "workspace_id": "semantic-dev-conditional",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "change.md",
+          "artifact_id": "change.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 李棠: 清芦项目的短信供应商由晓声改成晚铃。\n"
+        },
+        {
+          "id": "task.md",
+          "artifact_id": "task.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T09:00:00+08:00] 许禾: 我负责清芦项目任务 QL-55 的验收，计划在2026年12月18日前完成；如果change.md的切换将来改变签名规范，我们才考虑增加补测，目前没有证据证明需要调整。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "work",
+          "source": "task.md",
+          "ordinal": 0,
+          "project": "清芦项目",
+          "deadline_text": "2026年12月18日"
+        }
+      ],
+      "projects": [],
+      "changes": [
+        {
+          "handle": "change",
+          "source": "change.md",
+          "ordinal": 0,
+          "project": "清芦项目",
+          "before": "晓声",
+          "after": "晚铃"
+        }
+      ],
+      "queries": [
+        [
+          "AFFECTED_BY",
+          "work",
+          "change"
+        ]
+      ]
+    },
+    {
+      "case_id": "missing-year",
+      "workspace_id": "semantic-dev-missing-year",
+      "question": "阅读全部授权原文，逐项判断给定关系，保留否定、条件、冲突及缺证；只提出关系，不宣称正式审批。",
+      "sources": [
+        {
+          "id": "old.md",
+          "artifact_id": "old.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-01T09:00:00+08:00] 李棠: 岚溪项目任务 LX-61：计划在12月20日前完成校验，负责人待定。\n"
+        },
+        {
+          "id": "new.md",
+          "artifact_id": "new.md",
+          "source_type": "timestamped_text",
+          "content": "[2026-12-02T09:00:00+08:00] 李棠: 岚溪项目任务 LX-61仍然是old.md的原任务；原先交付计划被本条撤换，改成计划在12月23日前完成，负责人仍未确定。\n"
+        }
+      ],
+      "tasks": [
+        {
+          "handle": "old",
+          "source": "old.md",
+          "ordinal": 0,
+          "project": "岚溪项目",
+          "deadline_text": "12月20日"
+        },
+        {
+          "handle": "new",
+          "source": "new.md",
+          "ordinal": 0,
+          "project": "岚溪项目",
+          "deadline_text": "12月23日"
+        }
+      ],
+      "projects": [],
+      "changes": [],
+      "queries": [
+        [
+          "SAME_TASK",
+          "new",
+          "old"
+        ],
+        [
+          "REVISES_PLAN",
+          "new",
+          "old"
+        ]
+      ]
+    }
+  ]
+}

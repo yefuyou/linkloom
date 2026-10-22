@@ -98,8 +98,18 @@ class RuntimeAgentAdapter:
         temporal_decision_lookup: Callable[[str | None, str | None, str | None], dict[str, Any]] | None = None,
         temporal_claim_validator: Callable[..., dict[str, Any]] | None = None,
         decision_memory_enabled: bool = True,
+        task_relation_tools: Any = None,
+        context_runtime_config: Any = None,
     ) -> None:
         self.reader = VaultReader(vault_root=vault_root, index_path=index_path)
+        self._task_relation_tools = task_relation_tools
+        self._context_runtime_config = context_runtime_config
+        if context_runtime_config is not None:
+            from linkloom.runtime.context_engineering import ContextRuntimeConfig
+            if not isinstance(context_runtime_config, ContextRuntimeConfig):
+                raise ValidationError("Explicit ContextRuntimeConfig required.")
+            if context_assembler is None:
+                context_assembler = ContextAssembler(policy=context_runtime_config.policy, budget=context_runtime_config.local_budget)
         self.workspace_id = workspace_id or self.reader.vault_root_fingerprint
         selected_mode = retrieval_mode or os.environ.get(
             "LINKLOOM_RETRIEVAL_MODE",
@@ -428,6 +438,9 @@ class RuntimeAgentAdapter:
         decision_memory=(),
         scope_path: str | None = None,
         temporal_query: bool | None = None,
+        evidence_groups=(),
+        task_subgoals=(),
+        request_usage=None,
     ) -> ContextBundle:
         started = time.perf_counter()
         bundle = self._context_assembler.assemble(
@@ -438,6 +451,9 @@ class RuntimeAgentAdapter:
             runtime_state=self._active_runtime_state,
             scope_path=scope_path,
             temporal_query=temporal_query,
+            evidence_groups=evidence_groups,
+            task_subgoals=task_subgoals,
+            request_usage=request_usage,
         )
         self._last_context_assembly_ms = (time.perf_counter() - started) * 1000.0
         self._last_context_bundle = bundle
@@ -771,6 +787,18 @@ class RuntimeAgentAdapter:
         verified_evidence_context_limit: int = 8,
         final_protocol: str = SCHEMA_VERSION,
     ) -> dict[str, Any]:
+        task_relations = workflow == "task_relations"
+        context_runtime = None
+        if task_relations:
+            if self._task_relation_tools is None or self._task_relation_tools.workspace_id != self.workspace_id:
+                raise ValidationError("Task relation tools require the active authorized workspace.")
+            source_context = {**source_context, "workspace_id": self.workspace_id}
+            task_relation_tools = self._task_relation_tools.for_run(run_id, artifact_store, query)
+            source_context["semantic_analysis_enabled"] = task_relation_tools.semantic_analysis is not None
+            if self._context_runtime_config is not None:
+                from linkloom.runtime.context_engineering import RuntimeWorkingContext
+                context_runtime = RuntimeWorkingContext(self._context_runtime_config, task_relation_tools,
+                    artifact_store, query, self._assemble_context)
         if not callable(getattr(model, "decide", None)) and not callable(
             getattr(model, "complete", None)
         ):
@@ -828,11 +856,13 @@ class RuntimeAgentAdapter:
                     or any(getattr(original, key) != value for key, value in identity.items())
                     or original.task_id != retrieval_task_id
                     or payload.get("user_input") != original.user_input
-                    or original.user_input != RetrievalAgent._retrieval_instruction(
-                        query, source_context, workflow, self._task_plan,
-                        prompt_profile, memory_hints, final_protocol,
-                    )):
+                    or not (context_runtime.validate_instruction(first, RetrievalAgent._retrieval_instruction(
+                        query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol))
+                        if context_runtime is not None else original.user_input == RetrievalAgent._retrieval_instruction(
+                            query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol))):
                 raise ValidationError("Resume input does not match the original durable request.")
+            if context_runtime is not None:
+                context_runtime.restore(initial_state)
 
         state_cursor = {"state": initial_state}
         self._active_runtime_state = initial_state
@@ -857,10 +887,12 @@ class RuntimeAgentAdapter:
             state_cursor["state"] = current_state
             self._active_runtime_state = current_state
 
-        documents = self._read_documents()
+        documents = [] if task_relations else self._read_documents()
         if resume_model_loop:
             self._restore_evidence(initial_state, retrieval_task_id, documents)
         initial_refs = [f"note_ref_{idx}" for idx, _ in enumerate(documents[:2])]
+        if task_relations:
+            initial_refs = ["task_context_request"]
         tool_funcs = {
             "search_notes": self._search_notes,
             "read_verified_note": self._read_verified_note_for_tool,
@@ -870,6 +902,16 @@ class RuntimeAgentAdapter:
         }
         if self._decision_memory_enabled:
             tool_funcs["search_decision_memory"] = self._search_decision_memory
+        if task_relations:
+            from linkloom.agents.task_relation_result import review_task_relation_result
+            def review_task_payload(_result_type, payload):
+                if context_runtime is not None:
+                    context_check = context_runtime.review(state_cursor["state"])
+                    if context_check["status"] != "pass":
+                        return context_check
+                return review_task_relation_result(payload, task_relation_tools,
+                    records=state_cursor["state"].tool_ledger, run_id=run_id)
+            tool_funcs["validate_schema"] = review_task_payload
         retrieval_tool_runtime = create_retrieval_tool_runtime(
             self._search_notes,
             self._read_verified_note_for_tool,
@@ -878,17 +920,20 @@ class RuntimeAgentAdapter:
             decision_memory_executor=self._search_decision_memory if self._decision_memory_enabled else None,
             reuse_preflight=self._read_documents,
             expected_source_context=source_context,
+            task_relation_tools=task_relation_tools if task_relations else None,
         )
         event_sink = RuntimeAgentEventSink(tracer) if tracer is not None else None
         self._integration_event_sink = event_sink
         coordinator = Coordinator(
-            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled),
+            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled, task_relations=task_relations,
+                task_semantics=task_relations and task_relation_tools.semantic_analysis is not None),
             retrieval_agent=RetrievalAgent(
                 model=model,
                 initial_state=initial_state,
                 artifact_store=artifact_store,
                 state_checkpoint_callback=persist_state,
                 resume_model_loop=resume_model_loop,
+                context_runtime=context_runtime,
                 task_plan=self._task_plan,
                 expected_workspace_id=self.workspace_id,
                 prompt_profile=prompt_profile,
@@ -925,6 +970,8 @@ class RuntimeAgentAdapter:
                 run_id=run_id,
             )
         result["source"] = source_context
+        if context_runtime is not None:
+            result["working_context_audit"] = context_runtime.latest
         if injected_memory:
             result["memory_refs"] = [
                 {

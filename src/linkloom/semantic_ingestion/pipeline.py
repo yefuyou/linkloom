@@ -10,7 +10,7 @@ from linkloom.semantic_ingestion.candidate_models import (
     SemanticExtractionResult,
 )
 from linkloom.semantic_ingestion.extraction import SemanticExtractionContext, SemanticExtractor
-from linkloom.semantic_ingestion.timestamped_text import TimestampedTextSegment
+from linkloom.semantic_ingestion.document_text import DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES
 from linkloom.semantic_ingestion.validation import CandidateValidator
 
 
@@ -34,7 +34,7 @@ class SemanticIngestionPipeline:
 
     def process_segment(
         self,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> tuple[CandidateValidationResult, ...]:
@@ -42,7 +42,7 @@ class SemanticIngestionPipeline:
 
     def process_segments(
         self,
-        segments: tuple[TimestampedTextSegment, ...] | list[TimestampedTextSegment],
+        segments: tuple[SourceSegment, ...] | list[SourceSegment],
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> tuple[CandidateValidationResult, ...]:
@@ -65,7 +65,7 @@ class SemanticIngestionPipeline:
 
     def process_segment_with_trace(
         self,
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> SemanticIngestionResult:
@@ -86,7 +86,7 @@ class SemanticIngestionPipeline:
     def replay_extraction(
         self,
         saved_extraction: SemanticExtractionResult | dict[str, object],
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> SemanticIngestionResult:
@@ -113,12 +113,12 @@ class SemanticIngestionPipeline:
 
     @staticmethod
     def _validate_source(
-        segment: TimestampedTextSegment,
+        segment: SourceSegment,
         artifact: RawArtifact,
         context: SemanticExtractionContext,
     ) -> None:
-        if not isinstance(segment, TimestampedTextSegment):
-            raise TypeError("segment must be a Step 1 TimestampedTextSegment")
+        if not isinstance(segment, SOURCE_SEGMENT_TYPES):
+            raise TypeError("segment must be a parsed source segment")
         if not isinstance(artifact, RawArtifact):
             raise TypeError("artifact must be RawArtifact")
         if not isinstance(context, SemanticExtractionContext):

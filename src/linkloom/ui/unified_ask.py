@@ -14,6 +14,8 @@ from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
+from linkloom.ui.ask_admission import (admission_restriction, parse_context,
+    source_context, validate_context)
 
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
@@ -85,7 +87,9 @@ class UnifiedAskService:
         with self.app._store_lock:
             workspace_id = self.app._workspace_id()
             slots = self._trusted_slots(workspace_id)
+            context = source_context(self.app, workspace_id)
         return {"workspace_id": workspace_id,
+                "investigation_context": context,
                 "scopes": [{"subject": slot["subject"], "relation": slot["relation"]} for slot in slots],
                 "agent": service.config() if service else {
             "available": False, "external_provider": False, "run_mode": "MODEL_NOT_CONFIGURED",
@@ -164,7 +168,24 @@ class UnifiedAskService:
             # Keep the current-workspace check and setup atomic with workspace selection.
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
+                context = parse_context(payload.get("investigation_context"))
+                restriction = admission_restriction(run.query)
+                if restriction:
+                    result["path"] = None
+                    return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
                 plan = plan_relation_investigation(run.query)
+                if context:
+                    validate_context(self.app, run.workspace_id, context)
+                    if context["domain"] == "tasks":
+                        # The explicit structured domain owns task wording.  A
+                        # task question may mention an owner/leader naturally;
+                        # only an advanced decision scope or an independently
+                        # recognized relation plan is a real admission conflict.
+                        if values["subject"] or values["relation"] or plan is not None:
+                            result["path"] = None
+                            return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
+                                "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
+                        return self._task_request(run, context=context)
                 if plan is not None or _RELATION_QUESTION.search(run.query):
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
@@ -216,6 +237,40 @@ class UnifiedAskService:
                 return self._from_snapshot(pinned, snapshot), 202
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
+
+    def _task_request(self, run, *, context=None):
+        route = dict(intent='TASK_INVESTIGATION', code='SOURCE_TASK_INVESTIGATION',
+                     reason='Bounded task investigation; observations and plans remain unconfirmed.')
+        route['admission'] = dict(origin='USER_SCOPED' if context else 'RECORD_SHORTCUT',
+                                  context=deepcopy(context))
+        run = _AskRun(run.query, run.workspace_id, run.scope, route)
+        result = self._base(run)
+        result['path'] = 'TASK_INVESTIGATION'
+        if run.scope.get('as_of') is not None:
+            return self._failure(result, 'TASK_DATE_SCOPE_UNSUPPORTED',
+                'Task investigation cannot bind the advanced decision date. Clear it and state the investigation period in the question.',
+                category='validation', status='BLOCKED'), 200
+        service = self.investigation()
+        config = service.config() if service else {}
+        if (not config.get('available') or not config.get('task_investigation')
+                or config.get('external_provider') is True
+                or not set(config.get('task_execution_kinds', ())).intersection({'FAKE', 'REPLAY'})):
+            return self._failure(result, 'TASK_INVESTIGATION_UNAVAILABLE',
+                'Task investigation needs explicitly configured offline stage adapters. No external Provider call was started.',
+                category='configuration', status='BLOCKED'), 200
+        try:
+            snapshot = service.start(run.query, run.workspace_id, task_investigation=True)
+        except Exception as exc:
+            code = str(exc) if isinstance(exc, ValueError) else getattr(exc, 'code', 'TASK_PREPARATION_FAILED')
+            return self._failure(result, code, 'Task preparation stopped; no result is publishable.',
+                category='validation', status='BLOCKED'), 200
+        with self._lock:
+            if snapshot['kind'] == 'error':
+                return self._from_snapshot(run, snapshot), 200
+            self._runs[snapshot['run']['id']] = (run, service)
+        service.save_task_ask(snapshot['run']['id'], dict(query=run.query, workspace_id=run.workspace_id,
+            scope=run.scope, route=run.route, discovery=run.discovery))
+        return self._from_snapshot(run, snapshot), 202
 
     def _source_request(self, run, payload, plan):
         route = {"intent": "SOURCE_RELATION", "code": "SOURCE_RELATION_MULTIHOP",
@@ -282,6 +337,24 @@ class UnifiedAskService:
 
     def _from_snapshot(self, run: _AskRun, snapshot: dict[str, Any]) -> dict[str, Any]:
         result = self._base(run)
+        if run.route['intent'] == 'TASK_INVESTIGATION':
+            result.update(path='TASK_INVESTIGATION', agent_run_id=snapshot['run']['id'],
+                status='INVESTIGATING' if snapshot['kind'] == 'running' else 'BLOCKED',
+                metrics=deepcopy(snapshot.get('metrics', {})), trace=deepcopy(snapshot.get('trace', [])),
+                preparation=deepcopy(snapshot.get('preparation')), error=deepcopy(snapshot.get('error')),
+                working_context_audit=deepcopy(snapshot.get('working_context_audit')))
+            review = snapshot.get('reviewer', {})
+            result['reviewer'] = dict(review, accepted=review.get('decision') == 'evidence_sufficient')
+            if snapshot.get('task_investigation') and result['reviewer']['accepted']:
+                task_result = snapshot['task_investigation']
+                release_status = ('BLOCKED' if task_result.get('investigation_status') == 'BLOCKED'
+                                  else (snapshot.get('preparation') or {}).get('status', 'PARTIAL'))
+                result.update(status=release_status, task_investigation=deepcopy(task_result),
+                    evidence=deepcopy(snapshot['evidence']), uncertainty=deepcopy(snapshot['uncertainty']),
+                    task_review=deepcopy(snapshot.get('task_review')))
+                if snapshot.get('recovery'):
+                    result['recovery'] = deepcopy(snapshot['recovery'])
+            return result
         result["agent_run_id"] = snapshot["run"]["id"]
         result["progress"] = snapshot.get("progress")
         result["metrics"] = snapshot.get("metrics", {})
@@ -349,7 +422,14 @@ class UnifiedAskService:
         with self._lock:
             entry = self._runs.get(run_id)
         if entry is None:
-            raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
+            with self.app._store_lock:
+                self._check_workspace(workspace_id)
+                service = self.investigation()
+                saved = service.read_saved_task(run_id, workspace_id) if service else None
+                if saved is None:
+                    raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
+                data, snapshot = saved
+                return self._from_snapshot(_AskRun(**data), snapshot), 200
         run, service = entry
         with self.app._store_lock:
             # Check before reading/projecting any evidence from an old workspace.

@@ -1,0 +1,39 @@
+Skip to content
+L
+LinkLoom
+Workspace
+Select workspace
+Public offline task investigation
+New workspace
+No semantic provider is enabled. Set GEMINI_API_KEY and start with --allow-external-provider to send source text for extraction.
+Sources
+Review
+Decision Memory
+Ask
+
+SOURCES
+
+offline-meeting-1.txt
+
+Current version artifact_v1_207b8a5a1fa23edfae5a400d633dc31e0f37e429870c13dcc219bff01f9ff181. Source changes create a new version; prior evidence remains available.
+
+Ingestion
+COMPLETE
+
+0 candidates · 0 need review · 0 segments · 0 processed · 0 extraction failed
+
+Exact evidence spans
+Lines 1–1
+VERIFIED
+项目：青竹；负责人：林枫；完成日志迁移；截止日期：2029-06-20。
+Source version details
+Update source
+
+Submitting changed text creates a new immutable source version and runs reconciliation.
+
+Artifact name
+Timestamped source text
+Save new source version
+Remove from workspace
+
+Back to sources

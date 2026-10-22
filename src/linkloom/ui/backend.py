@@ -62,6 +62,7 @@ class RuntimeRunBackend:
         max_provider_requests: int = 8,
         final_protocol: str = "team-decision-result/v1",
         planning_mode: str | None = None,
+        workflow: str = "team_decision",
     ) -> None:
         if not isinstance(engine, RuntimeEngine):
             raise TypeError("RuntimeRunBackend requires a RuntimeEngine.")
@@ -73,6 +74,9 @@ class RuntimeRunBackend:
         self.max_provider_requests = max_provider_requests
         self.final_protocol = final_protocol
         self.planning_mode = planning_mode
+        if workflow not in {"team_decision", "task_relations"}:
+            raise ValueError("Unsupported product Runtime workflow.")
+        self.workflow = workflow
         self._jobs: dict[str, _RuntimeJob] = {}
         self._lock = Lock()
         self._documents = VaultReader(
@@ -91,6 +95,8 @@ class RuntimeRunBackend:
 
     def start(self, query: str, *, task_plan: dict[str, Any] | None = None) -> dict[str, Any]:
         clean_query = query.strip()
+        if self.workflow == 'task_relations' and task_plan is not None:
+            raise ValueError('Task investigation planning belongs to the Host-bound G plan.')
         if not clean_query:
             raise ValueError("A non-empty decision question is required.")
         plan = (validate_model_proposed_plan(task_plan, user_query=clean_query, max_steps=self.max_steps)
@@ -126,10 +132,10 @@ class RuntimeRunBackend:
                 RunRequest(
                     request_id=job.ui_run_id,
                     thread_id=job.thread_id,
-                    workflow="team_decision",
+                    workflow=self.workflow,
                     query=job.query,
                     task_plan=job.task_plan,
-                    planning_mode=("template" if job.task_plan is not None else self.planning_mode) or (
+                    planning_mode=("template" if self.workflow == 'task_relations' or job.task_plan is not None else self.planning_mode) or (
                         "model" if (
                             callable(getattr(self.engine.model, "propose_task_plan", None))
                             and plan_team_decision_query(job.query) is None
@@ -187,11 +193,18 @@ class RuntimeRunBackend:
         try:
             state = self.engine.checkpointer.get_latest(job.thread_id)
         except CheckpointError:
-            if status.status not in {"accepted", "running"}:
+            if status.status not in {"accepted", "running", "failed"}:
                 raise
-            state = None  # No checkpoint exists before the background worker starts.
+            state = None  # Also possible when model plan admission fails before execution.
         ledger = state.tool_ledger if state is not None else []
         artifact = self._safe_result_artifact(status)
+        if self.workflow == "task_relations":
+            from linkloom.ui.task_result import project_task_snapshot
+            snapshot = project_task_snapshot(job.query, self.workspace, status, state, artifact)
+            snapshot['metrics'].update(max_model_turns=self.max_steps, max_provider_requests=self.max_provider_requests)
+            snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
+            snapshot["run"]["id"] = job.ui_run_id
+            return snapshot
         try:
             snapshot = project_run_snapshot(
                 query=job.query,
@@ -219,6 +232,15 @@ class RuntimeRunBackend:
                 tool_ledger=ledger,
             )
         snapshot["reviewer"] = project_reviewer(artifact)
+        if state is not None and state.request_ref:
+            request = json.loads((self.engine.checkpoint_dir / state.request_ref).read_text(encoding="utf-8"))
+            if request.get("task_plan") is not None:
+                snapshot["task_plan"] = request["task_plan"]
+                snapshot["planning"] = {
+                    "origin": "model" if request.get("planning_mode") == "model" else "rules",
+                    "validated": True,
+                    "provider_requests": self.max_provider_requests - request["max_provider_requests"],
+                }
         snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
         snapshot["run"]["id"] = job.ui_run_id
         return snapshot

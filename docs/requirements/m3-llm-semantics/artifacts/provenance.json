@@ -1,0 +1,24 @@
+{
+  "schema": "task-semantic-delivery-provenance/v1",
+  "core_commit": "04a446d10494a2f6d61ea1f0a745a3ce9f1e8d0c",
+  "visibility": "AUTHOR_VISIBLE_DEV_DIAGNOSTIC",
+  "new_holdout_score": false,
+  "production_agent_adapter": "NOT_RUN",
+  "provider_generation_calls": 3,
+  "input_sha256": "4cdb8365457f42cb530d1832a717f7819d204334d0f6b6aa51fa33dd453d6617",
+  "gold_sha256": "44b99ee2574c1dad9845e7a1b015d34f9a823163d37796db4042246c838ace87",
+  "evaluator_source_sha256": "fcff7b980e14596d75a73ccdfadf76b803fbef617db30545a070a7de4e35519e",
+  "evaluator_tests_sha256": "a91e2cf15752c0207ff83d69646d995a19ed3dd726621bd09bf85bb670f57507",
+  "artifacts_sha256": {
+    "evaluation-freeze.json": "05e0d462c1f653927a7b5306ed2ee01bf2145510b76366b15dd0fd5edff93be0",
+    "freeze.json": "9f010aaade7eef1d001eb4474f5f8ce4e688db88b6114b1736c2b73fefb7d85b",
+    "m3-dev-not-evaluated.json": "46ca9b765d3bb52b9a9a1c753bb4a5adec95763efb0cbf3e2ed5b2489dae3f22",
+    "m3-dev-not-run.json": "bac4015f262513c91fc768150dfc893b32c72b1929a9b34b56f12edc5c050d3e",
+    "predictions.json": "4c9e53b3bd54651bb78b034931356656237a12e1fa48896d33240f3c3285546a",
+    "provider-preflight.json": "ffe7edd27a0d3c90ce23494387c863c735c8fe419b0763eae6a6e3d16a29a05f",
+    "regex-diagnostic.json": "aaee8aa183446d06721ba8d1e9000aa5cf43bcb3c9eceb53eb242191bc102fca",
+    "semantic-score.json": "2e8415cab7ab8a386263a1a234009e00458a14fc29dd063c5852387843218419",
+    "usage-accounting.json": "566855f5354d38236aaca99516be11fcca06c1bd900cdad855e6d98950aa7690",
+    "verification.json": "8bb6656117bb5f0b48b69c00998cad6d4601ba06399dc4ee896c2c3d3568ecd2"
+  }
+}

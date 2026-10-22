@@ -49,6 +49,11 @@ def main() -> int:
     parser.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost"])
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument(
+        "--offline-task-demo",
+        action="store_true",
+        help="Start the normal UI with public synthetic task sources and deterministic offline stages.",
+    )
+    parser.add_argument(
         "--database",
         default=os.environ.get(
             "LINKLOOM_DATABASE_PATH", str(Path.home() / ".linkloom" / "product.sqlite")
@@ -79,69 +84,96 @@ def main() -> int:
     args = parser.parse_args()
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
-    if args.model != GEMINI_38_FLASH_MODEL_ID:
-        parser.error(
-            f"Gemini product runs are pinned to {GEMINI_38_FLASH_MODEL_ID}; no model fallback is allowed."
-        )
-    if args.allow_temporal_agent and not args.allow_external_provider:
-        parser.error("--allow-temporal-agent requires --allow-external-provider")
+    if args.offline_task_demo:
+        if args.allow_external_provider or args.allow_temporal_agent:
+            parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
+    else:
+        if args.model != GEMINI_38_FLASH_MODEL_ID:
+            parser.error(
+                f"Gemini product runs are pinned to {GEMINI_38_FLASH_MODEL_ID}; no model fallback is allowed."
+            )
+        if args.allow_temporal_agent and not args.allow_external_provider:
+            parser.error("--allow-temporal-agent requires --allow-external-provider")
 
     extractor = None
     sdk_client = None
-    if args.allow_external_provider:
-        api_key = os.environ.get("GEMINI_API_KEY")
-        if not api_key:
-            parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
+    if args.offline_task_demo:
+        from linkloom.ui.offline_task_demo import build_offline_task_demo
+        default_database = str(Path.home() / ".linkloom" / "product.sqlite")
+        demo_database = Path(args.database)
+        if not os.environ.get("LINKLOOM_DATABASE_PATH") and args.database == default_database:
+            demo_database = Path.cwd() / "work" / "offline-task-demo.sqlite"
         try:
-            sdk_client = build_gemini_sdk_client(api_key)
-            provider = GeminiProviderAdapter(
-                GeminiSDKClientBridge(sdk_client),
+            product_app, investigation_service = build_offline_task_demo(demo_database)
+        except ValueError as exc:
+            parser.error(f"--offline-task-demo requires a dedicated synthetic database: {exc}")
+    else:
+        if args.allow_external_provider:
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key:
+                parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
+            try:
+                sdk_client = build_gemini_sdk_client(api_key)
+                provider = GeminiProviderAdapter(
+                    GeminiSDKClientBridge(sdk_client),
+                    model_id=args.model,
+                )
+            except (ImportError, TypeError, ValueError, ValidationError):
+                parser.error(
+                    "Gemini provider could not be initialized. Install the configured provider dependency and check GEMINI_API_KEY."
+                )
+
+            guard_id = "linkloom-local-ui-explicit-provider-opt-in/v1"
+
+            def authorize_request(request):
+                return ProviderRequestAuthorization.approve(
+                    request,
+                    guard_id=guard_id,
+                    reservation_id=f"local-provider-request-{uuid4().hex}",
+                    estimated_cost_upper_bound_usd=args.estimated_cost_per_request,
+                )
+
+            extractor = ProviderNeutralSemanticExtractor(
+                provider,
+                provider_id="gemini",
                 model_id=args.model,
-            )
-        except (ImportError, TypeError, ValueError, ValidationError):
-            parser.error(
-                "Gemini provider could not be initialized. Install the configured provider dependency and check GEMINI_API_KEY."
-            )
-
-        guard_id = "linkloom-local-ui-explicit-provider-opt-in/v1"
-
-        def authorize_request(request):
-            return ProviderRequestAuthorization.approve(
-                request,
-                guard_id=guard_id,
-                reservation_id=f"local-provider-request-{uuid4().hex}",
-                estimated_cost_upper_bound_usd=args.estimated_cost_per_request,
+                request_guard=authorize_request,
+                request_guard_id=guard_id,
+                max_attempts=1,
             )
 
-        extractor = ProviderNeutralSemanticExtractor(
-            provider,
-            provider_id="gemini",
-            model_id=args.model,
-            request_guard=authorize_request,
-            request_guard_id=guard_id,
-            max_attempts=1,
-        )
-
-    product_app = ProductApplication(database_path=args.database, extractor=extractor)
+        product_app = ProductApplication(database_path=args.database, extractor=extractor)
+        if args.allow_temporal_agent:
+            investigation_service = ProductInvestigationService(
+                product_app,
+                model_factory=lambda _query: GeminiProviderAdapter(
+                    GeminiSDKClientBridge(sdk_client), model_id=args.model,
+                ),
+                run_mode="GEMINI_38_FLASH_EXPLICIT",
+                max_steps=8,
+            )
+        else:
+            # Keep saved task results readable in an ordinary no-provider
+            # process.  This service has no model factory, so config remains
+            # unavailable for new runs while read_saved_task can revalidate
+            # existing artifacts without resuming Runtime or calling a model.
+            investigation_service = ProductInvestigationService(
+                product_app,
+                model_factory=None,
+                run_mode="MODEL_NOT_CONFIGURED",
+                external_provider=False,
+            )
     backend = DemoRunBackend(DemoCase.load_mps_001())
-    investigation_service = (
-        ProductInvestigationService(
-            product_app,
-            model_factory=lambda _query: GeminiProviderAdapter(
-                GeminiSDKClientBridge(sdk_client), model_id=args.model,
-            ),
-            run_mode="GEMINI_38_FLASH_EXPLICIT",
-            max_steps=8,
-        )
-        if args.allow_temporal_agent else None
-    )
     server = create_http_server(
         backend, product_app=product_app, investigation_service=investigation_service,
         host=args.host, port=args.port,
     )
     print(f"LinkLoom Product UI: http://{args.host}:{server.server_port}")
-    print(f"Local product database: {Path(args.database).expanduser()}")
-    if extractor is None:
+    database_display = demo_database if args.offline_task_demo else Path(args.database).expanduser()
+    print(f"Local product database: {database_display}")
+    if args.offline_task_demo:
+        print("Offline synthetic task demo enabled: deterministic FakeModel runtime and FAKE stages; no external provider or business approval.")
+    elif extractor is None:
         print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
     else:
         print(f"Semantic extraction provider enabled: Gemini model {args.model}")
