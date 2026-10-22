@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="5" time="187.865" timestamp="2026-10-22T23:22:32.775733+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3p_product_review" name="test_new_service_reads_saved_result_without_model_calls" time="11.248" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[update]" time="18.761" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[remove]" time="34.450"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-utf8/test_http_hot_and_new_process_1')
+mutation = 'remove'
+
+    @pytest.mark.parametrize('mutation', ['update', 'remove', 'relation_retract'])
+    def test_http_hot_and_new_process_hide_invalidated_results(tmp_path, mutation):
+        from tests.integration.test_product_application_flow import _client
+        from tests.unit.test_task_relation_query import retract
+        from linkloom.semantic_ingestion.document_text import parse_source_text
+        app, service, stages, ws, identity, _, _ = revision_product(tmp_path)
+        try:
+            with product_http(app, service) as base:
+&gt;               result = http_ask(base, ws)
+
+tests\integration\test_m3p_product_review.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x0000019E8553C9D0&gt;
+b = &lt;memory at 0x0000019E854C90C0&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[relation_retract]" time="73.940"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-utf8/test_http_hot_and_new_process_2')
+mutation = 'relation_retract'
+
+    @pytest.mark.parametrize('mutation', ['update', 'remove', 'relation_retract'])
+    def test_http_hot_and_new_process_hide_invalidated_results(tmp_path, mutation):
+        from tests.integration.test_product_application_flow import _client
+        from tests.unit.test_task_relation_query import retract
+        from linkloom.semantic_ingestion.document_text import parse_source_text
+        app, service, stages, ws, identity, _, _ = revision_product(tmp_path)
+        try:
+            with product_http(app, service) as base:
+&gt;               result = http_ask(base, ws)
+
+tests\integration\test_m3p_product_review.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x0000019E8553FB80&gt;
+b = &lt;memory at 0x0000019E854C9540&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_m3p_product_review" name="test_revoked_evidence_without_source_change_cannot_be_resurrected" time="25.254"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-utf8/test_revoked_evidence_without_0')
+
+    def test_revoked_evidence_without_source_change_cannot_be_resurrected(tmp_path):
+        from tests.integration.test_product_application_flow import _client
+        app, service, _, ws, *_ = revision_product(tmp_path)
+        try:
+            with product_http(app, service) as base:
+&gt;               result = http_ask(base, ws)
+
+tests\integration\test_m3p_product_review.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x0000019E857831F0&gt;
+b = &lt;memory at 0x0000019E854CAB00&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase></testsuite></testsuites>

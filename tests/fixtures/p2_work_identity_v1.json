@@ -1,0 +1,213 @@
+{
+  "captured_from_commit": "33390e2eeaad71d215e279b2f724cae672ea4f80",
+  "source": {
+    "workspace_id": "p2-history",
+    "artifact_id": "meeting",
+    "source_type": "timestamped_text",
+    "content": "[2037-08-01T09:00:00Z] 记录员: 乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+    "ingestion_time": "2037-08-01T00:00:00+00:00"
+  },
+  "observations": [
+    {
+      "observation": {
+        "observation_id": "task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee",
+        "provenance": {
+          "workspace_id": "p2-history",
+          "artifact_id": "meeting",
+          "artifact_version_id": "artifact_v1_559b04b84b3baa33f300041824cded11d04ad4ca93955d034cc651a822c91767",
+          "source_ref": "artifact://p2-history/meeting",
+          "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+          "ordinal": 0,
+          "message_id": "message_v1_0f716ae58ab1df3e682749574c371400fb97ff8f4d4028b60cf00391e2655628",
+          "segment_id": "segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+          "char_start": 28,
+          "char_end": 66,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822"
+        },
+        "raw_text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "description": "兼容矩阵核验",
+        "owner": "乔雨",
+        "deadline": null,
+        "deadline_text": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [
+          "DEADLINE_ROLE_UNRESOLVED"
+        ],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "char_start": 28,
+            "char_end": 66,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "兼容矩阵核验",
+            "char_start": 32,
+            "char_end": 38,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "乔雨负责",
+            "char_start": 28,
+            "char_end": 32,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2037-08-01T00:00:00+00:00",
+        "event_time": "2037-08-01T09:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY"
+      },
+      "ref": {
+        "workspace_id": "p2-history",
+        "observation_id": "task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee",
+        "artifact_id": "meeting",
+        "artifact_version_id": "artifact_v1_559b04b84b3baa33f300041824cded11d04ad4ca93955d034cc651a822c91767",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+        "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+        "payload_hash": "ef551aad539515427d948bcbcd7df89142d0414701a3c910c8f12916dd8fc794"
+      }
+    },
+    {
+      "observation": {
+        "observation_id": "task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee",
+        "provenance": {
+          "workspace_id": "p2-history",
+          "artifact_id": "meeting",
+          "artifact_version_id": "artifact_v1_559b04b84b3baa33f300041824cded11d04ad4ca93955d034cc651a822c91767",
+          "source_ref": "artifact://p2-history/meeting",
+          "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+          "ordinal": 0,
+          "message_id": "message_v1_0f716ae58ab1df3e682749574c371400fb97ff8f4d4028b60cf00391e2655628",
+          "segment_id": "segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+          "char_start": 28,
+          "char_end": 66,
+          "line_start": 1,
+          "line_end": 1,
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822"
+        },
+        "raw_text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "description": "兼容矩阵核验",
+        "owner": "乔雨",
+        "deadline": "2037-08-19",
+        "deadline_text": "2037-08-19",
+        "deadline_precision": "DAY",
+        "deadline_role": "TASK_DEADLINE",
+        "project": null,
+        "vendor": null,
+        "extraction_status": "EXTRACTED",
+        "validation_status": "PARTIAL",
+        "unknown_fields": [
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "field_evidence": [
+          {
+            "field": "raw_text",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "char_start": 28,
+            "char_end": 66,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "description",
+            "quote": "兼容矩阵核验",
+            "char_start": 32,
+            "char_end": 38,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "owner",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "char_start": 28,
+            "char_end": 66,
+            "basis": "SOURCE_TEXT"
+          },
+          {
+            "field": "deadline",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "char_start": 28,
+            "char_end": 66,
+            "basis": "SOURCE_TEXT"
+          }
+        ],
+        "recorded_at": "2037-08-01T00:00:00+00:00",
+        "event_time": "2037-08-01T09:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "authority": "SUPPORTING_ONLY",
+        "field_bindings": [
+          {
+            "field": "owner",
+            "value": "乔雨",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "deadline",
+            "value": "2037-08-19",
+            "role": "TASK_DEADLINE",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "project",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "vendor",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          }
+        ],
+        "work_state": "ASSERTED"
+      },
+      "ref": {
+        "workspace_id": "p2-history",
+        "observation_id": "task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee",
+        "artifact_id": "meeting",
+        "artifact_version_id": "artifact_v1_559b04b84b3baa33f300041824cded11d04ad4ca93955d034cc651a822c91767",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_70ae88044c4861ef456290e8d062aaaabadb7f8a1244c62c88fe29652a9729be",
+        "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+        "payload_hash": "d38e87262b5f8443349088b1b8328e4a6de2bc684615ede4a78eb3b0ecf42dcc"
+      }
+    }
+  ]
+}
