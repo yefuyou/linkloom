@@ -1,0 +1,164 @@
+{
+  "acceptance": "PASS: original ambiguous Product executed correctly; business result remains PARTIAL/UNKNOWN",
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low",
+  "sdk_attempts": 1,
+  "sdk_timeout_seconds": 60,
+  "new_requests": 10,
+  "new_stages": {
+    "semantic-extractor-v1": 2,
+    "question-planner": 3,
+    "retrieval_agent": 4,
+    "semantic-proposer": 1
+  },
+  "new_outcomes": {
+    "SUCCEEDED": 10
+  },
+  "new_usage": {
+    "input_tokens": 71909,
+    "output_tokens": 5076,
+    "total_tokens": 78273
+  },
+  "unknown_usage_requests": 0,
+  "new_reserved_usd": 2.5,
+  "new_max_reserved_usd": 3,
+  "new_max_requests": 12,
+  "prior_project_requests": 69,
+  "prior_reserved_usd_conservative": 19.43,
+  "cumulative_requests": 79,
+  "cumulative_reserved_usd_conservative": 21.93,
+  "remaining_project_reservation_capacity_usd": 28.07,
+  "project_limit_usd": 50,
+  "historical_uncertain_reservation_retained": true,
+  "actual_bill_usd": null,
+  "promotional_credit_deduction_usd": null,
+  "billing_project_verified": false,
+  "model_contract_rejections": 1,
+  "provider_failures": 0,
+  "uncertain": 0,
+  "automatic_retries": 0,
+  "original_source_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+  "original_question_sha256": "fa7b900995f64c93f5f0b3035e450ec21fd88243c8c78f8ca1c7b8bcd4dbcc93",
+  "initial_case_sha256": "6a31f461ca0535a3b999f1fcf40b07a66380194ffdf5f5119980fec36d5ca9c0",
+  "recheck_case_sha256": "e9a6a43f6763f8b7fb362b0f969a6e69e0e613864ae501f692d915f61501a1a8",
+  "initial_product": {
+    "status": "BLOCKED",
+    "reason": "INVALID_STEP_ID_OR_QUESTION; reused retained step id",
+    "requests": 3,
+    "reserved_usd": 0.75,
+    "replan_request_reserved_bytes": 21194,
+    "provider_outcomes": "SUCCEEDED; Host rejected invalid returned plan"
+  },
+  "accepted_product": {
+    "run_id": "ui-872e36156520",
+    "status": "PARTIAL",
+    "requests": 7,
+    "reserved_usd": 1.75,
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_27c4ee36",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION",
+            "INNER_RECEIPT_IDENTITY",
+            "CURRENT_RAW_SOURCE_SNAPSHOT",
+            "A_EVIDENCE_VALIDATION",
+            "DECLARED_SOURCE_COVERAGE",
+            "SEMANTIC_NOT_EVALUATED"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-22T10:54:55.108975+00:00",
+      "accepted": true
+    },
+    "observations": [
+      {
+        "description": "页面巡检",
+        "owner": null,
+        "deadline_text": null,
+        "deadline_role": "UNKNOWN"
+      },
+      {
+        "description": "页面巡检",
+        "owner": null,
+        "deadline_text": null,
+        "deadline_role": "UNKNOWN"
+      }
+    ],
+    "tools": [
+      {
+        "tool": "inspect_task_context",
+        "call_id": "rtc_8178cd17befc81540a46bdccae9b9d1d",
+        "status": "completed"
+      },
+      {
+        "tool": "query_task_relations",
+        "call_id": "rtc_990d7be17d7fe3d7afbba32673a21228",
+        "status": "completed"
+      },
+      {
+        "tool": "analyze_task_semantics",
+        "call_id": "rtc_a1b9429b03e237e1e8cf4cbab9598fd3",
+        "status": "completed"
+      }
+    ],
+    "semantic_proposals": [
+      {
+        "predicate": "SAME_TASK",
+        "proposed_verdict": "UNKNOWN",
+        "evidence_status": "EVIDENCE_VALID"
+      },
+      {
+        "predicate": "REVISES_PLAN",
+        "proposed_verdict": "REFUTED",
+        "evidence_status": "EVIDENCE_VALID"
+      }
+    ],
+    "p4_relations_created": false,
+    "trusted_date_delta": false,
+    "initial_plan_chose_clarify": true,
+    "replan_calls": 0
+  },
+  "browser": "155.0.8059.85",
+  "browser_errors": [],
+  "source_opened_exact": true,
+  "cross_workspace_status": 409,
+  "cold_refresh_revocation_update_provider_requests": 0,
+  "tests": {
+    "prelive": {
+      "tests": 123,
+      "failures": 0,
+      "errors": 0
+    },
+    "safety": {
+      "tests": 55,
+      "failures": 0,
+      "errors": 0
+    },
+    "review-fixes": {
+      "tests": 99,
+      "failures": 0,
+      "errors": 0
+    },
+    "regression": {
+      "tests": 625,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "ci_status": "LOCAL_ONLY; CI gates unchanged",
+  "limitations": [
+    "Final accepted real plan used clarify directly; replan reserved-ID correction covered offline, not re-hit in accepted real run.",
+    "Model proposals and Reviewer acceptance do not establish P4 business authority.",
+    "Actual billing project, invoice and promotional credit deduction remain independently unverified."
+  ]
+}

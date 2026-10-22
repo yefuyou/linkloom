@@ -304,7 +304,8 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
             receipts[receipt.receipt_id] = receipt
             verified.append(receipt)
         planning = planner.plan(context, previous=planning.plan, verified_results=tuple(verified),
-            gaps=('BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE',))
+            gaps=('BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE',),
+            unavailable_operations=('discover',))
         plans.append(planning.to_dict())
     gaps = list(planning.plan.gaps) if planning.plan else []
     if not discovery.coverage_complete:

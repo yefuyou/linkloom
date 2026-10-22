@@ -1,0 +1,44 @@
+{
+  "case_id": "M3S1_ORIGINAL_AMBIGUOUS_PRODUCT",
+  "source": "[2034-03-05T09:00:00Z] 纪要: 棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。\n[2034-03-06T09:00:00Z] 纪要: 页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+  "question": "页面巡检现在由谁执行，交付日期定了吗？两次会议的安排有什么变化？",
+  "source_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+  "question_sha256": "fa7b900995f64c93f5f0b3035e450ec21fd88243c8c78f8ca1c7b8bcd4dbcc93",
+  "expected": {
+    "page_inspection_owner": null,
+    "page_inspection_deadline": null,
+    "deadline_role": "UNKNOWN",
+    "at_least_one_page_inspection_observation": true,
+    "independent_inspection_executed": true,
+    "reviewer_accepted": true,
+    "source_evidence_openable": true,
+    "unresolved_gaps_visible": true,
+    "formal_relations_created": false,
+    "trusted_date_delta": false,
+    "refresh_and_cold_provider_requests": 0,
+    "revocation_update_workspace_fail_closed": true
+  },
+  "provider": {
+    "model": "gemini-3.8-flash",
+    "sdk": "google-genai 2.22.0",
+    "thinking_level": "low",
+    "sdk_attempts": 1,
+    "request_timeout_seconds": 60
+  },
+  "budget": {
+    "prior_requests": 69,
+    "prior_reserved_usd_conservative": 19.43,
+    "new_max_requests": 12,
+    "new_max_reserved_usd": 3,
+    "project_max_usd": 50,
+    "max_input_tokens": 1000000,
+    "max_output_tokens": 65536,
+    "max_seconds": 600,
+    "uncertain_policy": "STOP_ALL_NEW_PAID_REQUESTS_NO_RETRY"
+  },
+  "note": "Original M3-S source and original question, unchanged; UNKNOWN is a successful investigated outcome, not a business authority grant.",
+  "prior_case_sha256": "6a31f461ca0535a3b999f1fcf40b07a66380194ffdf5f5119980fec36d5ca9c0",
+  "recheck_reason": "Known returned G output reused retained step ID; schema/ID instructions and UNKNOWN premise fix. One new full Product verification, no UNCERTAIN retry. Total reservation cap stays $3.",
+  "prior_attempt_requests": 3,
+  "prior_attempt_reserved_usd": 0.75
+}
