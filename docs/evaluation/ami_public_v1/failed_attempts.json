@@ -1,0 +1,26 @@
+{
+  "attempts": [
+    {
+      "attempt": "data (initial preparation)",
+      "reason": "New adapter retained 17 unsegmented words; first native-DA projection check wrongly included them. Corrected candidate/projection boundary; full source retained.",
+      "status": "FAILED_NOT_SCORED"
+    },
+    {
+      "attempt": "run-01",
+      "correction": "Exact interpreter-owned standard-library ZIP exception; all AMI/other ZIP and Gold data remain rejected.",
+      "reason": "Audit hook incorrectly rejected 30 Python standard library python313.zip probes. All 168 query-method executions completed in memory; original implementation did not persist those predictions.",
+      "status": "UNSEALED_NOT_SCORED"
+    },
+    {
+      "attempt": "score-01",
+      "reason": "Independent reviewer found provenance, selector consistency, partial-piece and unexecuted attribution flaws. Added red/green counterexamples, fixed scorer; all original numeric metrics unchanged in score-02 and final score-03.",
+      "status": "SUPERSEDED_SCORER_VERSION"
+    },
+    {
+      "attempt": "initial wheel build",
+      "reason": "Sandbox default TEMP write denied; offline retry using project work temp succeeded.",
+      "status": "ENVIRONMENT_FAILURE"
+    }
+  ],
+  "preservation": "All preparation, test, run and score directories are retained under work/; no original source/Gold/seal/ledger was overwritten."
+}

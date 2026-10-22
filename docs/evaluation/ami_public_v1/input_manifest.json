@@ -1,0 +1,276 @@
+{
+  "archive_filename_version": "1.6.2",
+  "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+  "candidate_scope": "all native same-meeting dialogue acts; no Gold-based filtering; words outside native DAs retained in canonical/F batches but outside this reference-matched DA benchmark",
+  "files": {
+    "passages.jsonl": "f85a204517c38b25a68fb718c1bde6e128cceb2d780e6905113c07170c8c7c36",
+    "queries.jsonl": "d3209488cdd2ee0d9f0d2e77e460ce9dc55be8d3810b460d86b3c633839d6c1d",
+    "transcripts/ES2002a.json": "97173e1d3c4284e6ad0735517b817b0f1d3e72e9ef6366135d8f27a8803db158",
+    "transcripts/ES2002b.json": "b9bde8a6f97226aaaf115fd8a8069343fc1d14f8fec76f6fcb9aba1ffb71f18d",
+    "transcripts/ES2002c.json": "4688f8c67a90bc8e835d9a596d2c6956204c94a5fb5fd43f597c25b672d779eb",
+    "transcripts/ES2002d.json": "74f70c9985a20c5402bd0adfbe31281578510800a9e8665e33a5686b46017bdd",
+    "transcripts/ES2005a.json": "ecde8407458298f0fc30dcf3bb57b9259e361778a4b088aea0f4721c497f1cc0",
+    "transcripts/ES2005b.json": "af7b52e00d587e55f6098134b30b5c7d64fd7a3000127ef03418968487600db6",
+    "transcripts/ES2005c.json": "0748a71fe6eaf511baa7e335110192e83b668405430b8e0ee24895e3bd65b048",
+    "transcripts/ES2005d.json": "9351c145ea7e31e969d09ed059245fe9db6872f1e7650bf26918562afcc7b085"
+  },
+  "internal_readme_release": "1.7 (2014-06-16)",
+  "inventory": [
+    {
+      "batch_chunks": 8,
+      "canonical_sha256": "46f938d9ece2c1f1de719cbaf39c0bbd0e3ebd4244fa1c5ab05dfaba4aae9a84",
+      "dialogue_acts": 475,
+      "empty_dialogue_acts": 41,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 8,
+        "native_words_checked": 3105,
+        "word_spans_checked": 3105
+      },
+      "meeting_id": "ES2002a",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2002a.A.dialog-act.xml": "d93241138d13614122d5137f6e184f16edac3247b4cde8f3a3fe14ec46168836",
+        "dialogueActs/ES2002a.B.dialog-act.xml": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084",
+        "dialogueActs/ES2002a.C.dialog-act.xml": "a1107181388d9ef4e45c8276ca34cee10bc6fc4b0789fe60bbc91fb6dce483a9",
+        "dialogueActs/ES2002a.D.dialog-act.xml": "9adf983bb5cb17306213bb0182eeedd04263baf45a07459f4597a8ce1b117743",
+        "words/ES2002a.A.words.xml": "03e7f37c4b3519ee78396779bbc90e2778b7b7ccd7a7388f7fa3a22cb31f7044",
+        "words/ES2002a.B.words.xml": "a51156e0b3f1b05d9d1a631206d523c5247d2d6fd851ecfe826317ab261cc17a",
+        "words/ES2002a.C.words.xml": "c539fca7b7183a2b56be43f2362432a91a4552512ed03df8c4ce96aee75f3330",
+        "words/ES2002a.D.words.xml": "d4f8b66e53de583c839424323f0e05d038a1426e5628042d03dcd2ee72e68b05"
+      },
+      "nontext_events": 113,
+      "series_id": "ES2002",
+      "split": "dev",
+      "unsegmented_utterances": 5,
+      "unsegmented_words": 5,
+      "words": 3105
+    },
+    {
+      "batch_chunks": 18,
+      "canonical_sha256": "1bdf529d0819f64871677206e75916f60db4146a8e9650cfd081fa09baced299",
+      "dialogue_acts": 1003,
+      "empty_dialogue_acts": 27,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 18,
+        "native_words_checked": 8110,
+        "word_spans_checked": 8110
+      },
+      "meeting_id": "ES2002b",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2002b.A.dialog-act.xml": "4cf128d635182804118f6e26a3c7638c4d12903f4f1d329f876361a1c1c0d04f",
+        "dialogueActs/ES2002b.B.dialog-act.xml": "02085787917411dffc7a8c052c553e578606fa84e9977eb3c18e2aa9ed32a3eb",
+        "dialogueActs/ES2002b.C.dialog-act.xml": "d93aa1b0744000c8f437ed371b0df4d24bd4bbcc924a9498e74d74ef20590fc4",
+        "dialogueActs/ES2002b.D.dialog-act.xml": "0a0454ce6778b583dfd653b6dd55bbeff4db928bcfb573e7c05c032353521832",
+        "words/ES2002b.A.words.xml": "93898e9ec972b01d8e3de9844cf21d811444bc785f961ab463d8345cfdec6a6a",
+        "words/ES2002b.B.words.xml": "48f85fbc050aa6e0e72ca3d38f486d5156dfe38f43f4ca80a744cd992c55b840",
+        "words/ES2002b.C.words.xml": "f03f094758214fa77caf3094a42f58a28b13885ade0a079fd871299f943b9ae2",
+        "words/ES2002b.D.words.xml": "4910c12f32c2218a5816e31260b6d33779656a647eeabc34e4d0430081a7162c"
+      },
+      "nontext_events": 220,
+      "series_id": "ES2002",
+      "split": "dev",
+      "unsegmented_utterances": 1,
+      "unsegmented_words": 1,
+      "words": 8110
+    },
+    {
+      "batch_chunks": 18,
+      "canonical_sha256": "6d521153b6e31354946ebae5a973788e9249db8a403abc8a66ef100b561a64b7",
+      "dialogue_acts": 1034,
+      "empty_dialogue_acts": 38,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 18,
+        "native_words_checked": 8757,
+        "word_spans_checked": 8757
+      },
+      "meeting_id": "ES2002c",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2002c.A.dialog-act.xml": "feac2ad6e2bcaa1b5010e8b1ee91f838dece97e9145c75efe272c468e5dfc10c",
+        "dialogueActs/ES2002c.B.dialog-act.xml": "8465a94d919fa2dc6f4f2e2af5b9f5bbb1c282a91135235576946cd30e2c34a3",
+        "dialogueActs/ES2002c.C.dialog-act.xml": "a92a29846805cf0adf9d970d4987d9b9646d84eee09c20e94b7eaef7b266dea3",
+        "dialogueActs/ES2002c.D.dialog-act.xml": "c511fbc433733da1bccc7b1c2f9177cb97da8ebd4bc7d569ffe1962649c3a933",
+        "words/ES2002c.A.words.xml": "915cd21e6614ca1de528393cb7d8fe3de9df09df5893f64c58c9d50add409196",
+        "words/ES2002c.B.words.xml": "75dc070a8c3a385c24914ac3f385af7838d527104abc97b61a28b8d2446a75e3",
+        "words/ES2002c.C.words.xml": "93faee68a49e0ff0f937313388da743a2f06ea9c4d177269e62fd8abf6d4c601",
+        "words/ES2002c.D.words.xml": "4c4e04583a90f9640739be59e7a90fd5a198fcd6aed1622efed769e262270014"
+      },
+      "nontext_events": 285,
+      "series_id": "ES2002",
+      "split": "dev",
+      "unsegmented_utterances": 4,
+      "unsegmented_words": 4,
+      "words": 8757
+    },
+    {
+      "batch_chunks": 23,
+      "canonical_sha256": "5d45590a19614aa99c119f0930119dc2b03905a6d1b737ecfcbdaf2cce14f61c",
+      "dialogue_acts": 1362,
+      "empty_dialogue_acts": 57,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 23,
+        "native_words_checked": 9075,
+        "word_spans_checked": 9075
+      },
+      "meeting_id": "ES2002d",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2002d.A.dialog-act.xml": "8490625b05d3ef27faf5cb71ce028d5c4b750937655efc243c65438cbdbf2126",
+        "dialogueActs/ES2002d.B.dialog-act.xml": "57badad6cff4217c0ed868c5f47378f64b2df67cd0f93d5008602a47fd586da3",
+        "dialogueActs/ES2002d.C.dialog-act.xml": "ebc90d69df676bd44f36d438855f8d56d04f7346c9f790455494c47707414e2b",
+        "dialogueActs/ES2002d.D.dialog-act.xml": "dc47f1aa56042450e437dfebe6e6a2bccfd046967ba33ae2546c89b22d110b42",
+        "words/ES2002d.A.words.xml": "46f12f5fedefb9bd9f731552891e934fb2131702c52e4db063fd39aa86c7bedd",
+        "words/ES2002d.B.words.xml": "4a198914f9dcd5977f40c18706ac25e4a858ff155a0e5d2f4dadffe790e9d618",
+        "words/ES2002d.C.words.xml": "00a4422b93c9889603245985da2e2639cba386e4ae9d3d99207b2d3b8c1fd91d",
+        "words/ES2002d.D.words.xml": "b62a33ff9a0e2f54cd146b5cfa1e336b25510949ae5747bbfada175a679b772c"
+      },
+      "nontext_events": 303,
+      "series_id": "ES2002",
+      "split": "dev",
+      "unsegmented_utterances": 3,
+      "unsegmented_words": 3,
+      "words": 9075
+    },
+    {
+      "batch_chunks": 3,
+      "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+      "dialogue_acts": 152,
+      "empty_dialogue_acts": 12,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 3,
+        "native_words_checked": 891,
+        "word_spans_checked": 891
+      },
+      "meeting_id": "ES2005a",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2005a.A.dialog-act.xml": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+        "dialogueActs/ES2005a.B.dialog-act.xml": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+        "dialogueActs/ES2005a.C.dialog-act.xml": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+        "dialogueActs/ES2005a.D.dialog-act.xml": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+        "words/ES2005a.A.words.xml": "678d6a3aed1cc8715195e2d52811849a9990a6a4f297f9807528327d4e23bcaa",
+        "words/ES2005a.B.words.xml": "6688e84d94fbb273961dcd1ae239f031f542029eac946f927b35ea3476f93825",
+        "words/ES2005a.C.words.xml": "3380c39fcd75accf138f280cb84809b29338b6bb5c9e0de29b86f3db947ec5fe",
+        "words/ES2005a.D.words.xml": "21e12eff9a08258a48f23e57cbd8b90fff5c9a3edd5c0db2e9ca52bdf59ace88"
+      },
+      "nontext_events": 52,
+      "series_id": "ES2005",
+      "split": "test",
+      "unsegmented_utterances": 0,
+      "unsegmented_words": 0,
+      "words": 891
+    },
+    {
+      "batch_chunks": 17,
+      "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+      "dialogue_acts": 969,
+      "empty_dialogue_acts": 94,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 17,
+        "native_words_checked": 7199,
+        "word_spans_checked": 7199
+      },
+      "meeting_id": "ES2005b",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2005b.A.dialog-act.xml": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+        "dialogueActs/ES2005b.B.dialog-act.xml": "5057abd31cd27688c7a755c1febd154af5efb88c52da003780a93ca682f7f004",
+        "dialogueActs/ES2005b.C.dialog-act.xml": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "dialogueActs/ES2005b.D.dialog-act.xml": "8f5c853406b7c03096c9cdd394b8672881872b4d6e276d64740ab251a01722d4",
+        "words/ES2005b.A.words.xml": "bbb7434d6de7c0d2ab3e201ef390fb84a07a3cc18b6bb08cd868ed86296c5399",
+        "words/ES2005b.B.words.xml": "9360a5f358f7b01ef58c8504578ff7e2a011be6dc35bcb8c1bac2c03784c0577",
+        "words/ES2005b.C.words.xml": "e3400662cd915cbab8ff66b8a86b28aa4217a8b0f8e2c745590e181d9ba3fa06",
+        "words/ES2005b.D.words.xml": "06ace058361a235d2c94fe82d124bcc7aad2194843f748382beb671aecfc4611"
+      },
+      "nontext_events": 334,
+      "series_id": "ES2005",
+      "split": "test",
+      "unsegmented_utterances": 2,
+      "unsegmented_words": 2,
+      "words": 7199
+    },
+    {
+      "batch_chunks": 20,
+      "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+      "dialogue_acts": 1181,
+      "empty_dialogue_acts": 80,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 20,
+        "native_words_checked": 8003,
+        "word_spans_checked": 8003
+      },
+      "meeting_id": "ES2005c",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2005c.A.dialog-act.xml": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+        "dialogueActs/ES2005c.B.dialog-act.xml": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6",
+        "dialogueActs/ES2005c.C.dialog-act.xml": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+        "dialogueActs/ES2005c.D.dialog-act.xml": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+        "words/ES2005c.A.words.xml": "dc3721f676bddf417f7c482860cfaa6b7fbb90a9ea2449b4cbe1664ded6f89f5",
+        "words/ES2005c.B.words.xml": "6b21eb6270f9184a57d6fa056f6d91eca0bcc61b16e4090cd1e8bb3b5b5b6edc",
+        "words/ES2005c.C.words.xml": "a9820c033d692e1916929c1ba531e1fed1e8b30da23e6a3c1250c40f16f49e57",
+        "words/ES2005c.D.words.xml": "8807bcd38d3471d928b534fc4abfb7eab98261f67eaa20fc4f1c8f29ef8bdf33"
+      },
+      "nontext_events": 430,
+      "series_id": "ES2005",
+      "split": "test",
+      "unsegmented_utterances": 2,
+      "unsegmented_words": 2,
+      "words": 8003
+    },
+    {
+      "batch_chunks": 13,
+      "canonical_sha256": "7c5428e4982bd19ead31282ce3996181b687777da9fa349a587d5f8525d071f0",
+      "dialogue_acts": 805,
+      "empty_dialogue_acts": 91,
+      "mapping_validation": {
+        "all_positions_hashes_and_budgets_valid": true,
+        "chunks_checked": 13,
+        "native_words_checked": 4666,
+        "word_spans_checked": 4666
+      },
+      "meeting_id": "ES2005d",
+      "members": {
+        "corpusResources/meetings.xml": "8ab6cdcf03ed863e839418f31c7380392397a2eed892d73b9bc1b438c7ec520a",
+        "dialogueActs/ES2005d.A.dialog-act.xml": "67878297f9007cdc0d1719970ebb18327e4fcd68c4ff7acffc56aa6cc19017e9",
+        "dialogueActs/ES2005d.B.dialog-act.xml": "5fccbc83a4983f540d5b3e2eb37b360c7d0052092d235cd157784ec1bae84439",
+        "dialogueActs/ES2005d.C.dialog-act.xml": "2e6eafe9dd47ee5196b9306a532c8d15389fee6d55ad335c96069c9b11d0d71d",
+        "dialogueActs/ES2005d.D.dialog-act.xml": "81bda7b01336906940f717f6dbf5dc8b566a9a3dc6024c7662ca31855d1befa6",
+        "words/ES2005d.A.words.xml": "c2ee0098a4c95172a721d223cfe67ecf069f64e62ee142a783d228e3305084f5",
+        "words/ES2005d.B.words.xml": "a1ab7beef4554d167cb4729b6868f7faef93fabf67f7cd889e41d1e976bf4c28",
+        "words/ES2005d.C.words.xml": "bc7e86c681421e8450d6f36fca36593d1eaeeacb1528c6f9e771c36dc79f5d1f",
+        "words/ES2005d.D.words.xml": "7c116b51aa107d358e2460d5ddc026eb978dde1f736e52530edb23f0183307f3"
+      },
+      "nontext_events": 310,
+      "series_id": "ES2005",
+      "split": "test",
+      "unsegmented_utterances": 0,
+      "unsegmented_words": 0,
+      "words": 4666
+    }
+  ],
+  "license": "CC BY 4.0; official LICENCE.txt retained in custodian metadata",
+  "normalization": "native word text preserved; ASCII single-space join; deterministic DA ordering",
+  "passages": 6981,
+  "queries": 56,
+  "query_protocol": "fixed official summary sentence is declared query text; no sections/links/qrels in prediction",
+  "reference_freeze_sha256": "044006b44535447eb8e38f94e6c15e1ce65c1eed8f4be0535e454ee79aa2cda5",
+  "retrieval_settings": {
+    "bm25": "existing BM25Index defaults, unchanged tokenizer",
+    "context": "existing ContextAssembler/ContextBudget/ContextPolicy defaults; no Gold groups",
+    "dense": "existing SentenceTransformerEmbedder default; local cache only",
+    "hybrid": "existing HybridRetriever candidate_k=20 rrf_k=60",
+    "top_k": 10
+  },
+  "series_policy": "ES2002 dev; ES2005 previously exposed diagnostic (legacy key test); both AMI SA train",
+  "source_url": "https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip",
+  "version": "ami-public-retrieval/v1"
+}

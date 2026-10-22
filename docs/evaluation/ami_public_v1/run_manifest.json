@@ -1,0 +1,116 @@
+{
+  "code_sha256": {
+    "linkloom/context/__init__.py": "500c89c409032955d44640f12eb87c5ee9e42d4224f38bb1250eb6abe0ceb4d8",
+    "linkloom/context/assembler.py": "8d6df4a6f03b679700ed630309e78bddf0abe1979012dbed31e6ccb12c0fdbbf",
+    "linkloom/context/manifest.py": "f808d5ae0401e6c031ff58e5849ed891dd41c49d7f0a480944d8fb1233210fd3",
+    "linkloom/context/models.py": "b40af9172b0c9fa03642f11de3dcf7d1864074381eced5eb67860ec8e0b25dea",
+    "linkloom/context/policy.py": "a3fa6aa3d3d5be4b0df82c20332cbd0118cbcd0d4f385b9526028e580ad4a653",
+    "linkloom/context/recovery.py": "48cacd188ac3de3dbf54652ebfb6928911a53175343c5fea853702905bf48fb8",
+    "linkloom/context/selection.py": "e6ad11ce15278846120034a2f264359419c5411b3cf6cca3e05956af433be899",
+    "linkloom/context/working.py": "56e8eb8e1d1f3c68021c88cb83d534b0e12f3acc821da2bd071a5e1ea0022f35",
+    "linkloom/evaluation/ami_public/__init__.py": "81c5a53f32038834b40506f03b210ecebad707a44485dbb45cbd3ba6c4bbfa53",
+    "linkloom/evaluation/ami_public/common.py": "c9734268b703842abd44530610b03815417d034c2c92f7d787776cbe6d054995",
+    "linkloom/evaluation/ami_public/predict.py": "cb15853d1c40ff1edb64486eea771aa180fe7db4c530f1523211a22364cbdf7e",
+    "linkloom/evaluation/ami_public/prepare.py": "5ef74cdcda2bbc7ebfb0ffc741bdb9db7f602e4eac386ddc280f27341d11bdeb",
+    "linkloom/evaluation/ami_public/score.py": "7c41aa9d472ac198daa2ce443054f00ba460ce98c96320c999f5bdcf3879458d",
+    "linkloom/indexing/__init__.py": "697aef9d37e424b3e3f9c62d2128560279c6e68f077c8186a0b406f4f15dd375",
+    "linkloom/indexing/bm25.py": "ca0411e275d7dfea936964d1638ae836f090b7857b254c7b86ad4015ee6f30e5",
+    "linkloom/indexing/coordinator.py": "7b564514a1003845d87cebd4212e05958efaed3c523f0175968790074401f504",
+    "linkloom/indexing/directory.py": "c667903da807510230d6c38005e47cb11e34bbad295acf057d811864b7f7cf04",
+    "linkloom/indexing/models.py": "dc32900a7f613d343a772907c9b227912e66d9330f4e3e1aeb5fa9f534b8dcd3",
+    "linkloom/indexing/reconcile.py": "2d93e6d15d1e4ad201d604693de72a6460b8a48ed3c6214c8f52866bf7995874",
+    "linkloom/indexing/vector.py": "047f63e6f4ea44a5e2da1763845f35e6e12ea24ca9cdfe3977c713ae3ba008d5",
+    "linkloom/retrieval_v2/__init__.py": "74f049c5bce797a4615068fa1dbd3fbd5694322c16aa1654f42f731adb791c1d",
+    "linkloom/retrieval_v2/benchmark.py": "4347886ee11842b1da85cb64f9b8207066d1d9b3d8f4a92ef26be4cc8159f954",
+    "linkloom/retrieval_v2/characterization.py": "f85c0f1039e0a51a295bb8f2c9da19e9b9262921be4b009e0b58b2d0f639e21a",
+    "linkloom/retrieval_v2/downstream_comparison.py": "432c4a6dd488fb2a19728d3555a72af3433853b3859bd7928ecef70831b995b0",
+    "linkloom/retrieval_v2/metrics.py": "80e9afb95fde8e74955d6fc820d9e57343864273993b508a29fb7996bb9a1c61",
+    "linkloom/retrieval_v2/models.py": "64c8faceafbad09d4c22a3d0d10058bbd5321832f3b225754a3d80a2bf4d62c5",
+    "linkloom/retrieval_v2/retrievers.py": "2d14b95d5d8a82d09fed928e49d069012b3507a7c7538dd42a68a5e0420f3904",
+    "linkloom/retrieval_v2/runtime_backend.py": "b60d1235d29c9e987207d3ec1c3f8934f1a98e1184ddf74d3046c39cc9e914c7",
+    "linkloom/retrieval_v2/subgoal_query_strategy.py": "3ab5849e395ff3b2717858466981fb60d6e57a37ff60b17610ac986bf20bdbff",
+    "linkloom/semantic_ingestion/ami_nxt.py": "f7259fa252ea2d0c0ec5d87331b592f443e539ad517a63968984cea15a221df0"
+  },
+  "component_run": true,
+  "evaluation_class": "PUBLIC_HUMAN_GOLD",
+  "git_head_at_run": "3dda2d25bb4806d64e4b1832cf2eb30d26d28856",
+  "input_files": {
+    "passages.jsonl": "f85a204517c38b25a68fb718c1bde6e128cceb2d780e6905113c07170c8c7c36",
+    "queries.jsonl": "d3209488cdd2ee0d9f0d2e77e460ce9dc55be8d3810b460d86b3c633839d6c1d"
+  },
+  "input_manifest_sha256": "5461887a15ffee37a469b18d7b586568bc137ca3d4506d863d86a6656a60410e",
+  "isolation": {
+    "allowed_stdlib_zip_probes": 127,
+    "denied_data_opens": 0,
+    "denied_files": [],
+    "input_files_opened": [
+      "manifest.json",
+      "queries.jsonl",
+      "passages.jsonl"
+    ],
+    "kind": "Python audit hook + strict payload whitelist; not OS sandbox",
+    "network_attempts": 0
+  },
+  "methods": {
+    "bm25": {
+      "status": "RUN"
+    },
+    "dense": {
+      "encoder_truncated_piece_ids": [],
+      "max_seq_length": 128,
+      "model_files_sha256": {
+        "1_Pooling/config.json": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
+        "README.md": "1e98ea05b0de579fcaad3d625b62ea55647142ed674d5f5ebf1440e4bbbb6f23",
+        "config.json": "6300193cb75e01cf80c96decef7187dfb33094d97cc1490b7ead6ff134476e4e",
+        "config_sentence_transformers.json": "b8c64b5cece00d8424b4896ea75b512b6008576088497609dfeb6bd63e6d36b8",
+        "model.safetensors": "eaa086f0ffee582aeb45b36e34cdd1fe2d6de2bef61f8a559a1bbc9bd955917b",
+        "modules.json": "8f4b264b80206c830bebbdcae377e137925650a433b689343a63bdc9b3145460",
+        "sentence_bert_config.json": "70f4448f31320443fe3557cacea5abf2dcc4915dda8c80646bec9f3bb0aa5a1f",
+        "special_tokens_map.json": "378eb3bf733eb16e65792d7e3fda5b8a4631387ca04d2015199c4d4f22ae554d",
+        "tokenizer.json": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8",
+        "tokenizer_config.json": "5036ea374ffedd706e3bef33e2e0d6953cb868ef8a490e76e32ba0faa37a6b9b"
+      },
+      "model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "sentence_transformers_version": "5.1.2",
+      "snapshot_revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+      "status": "RUN",
+      "torch_threads": 4
+    },
+    "hybrid": {
+      "candidate_k": 20,
+      "rrf_k": 60,
+      "status": "RUN"
+    }
+  },
+  "not_product_e2e": true,
+  "passage_count": 6981,
+  "pipeline": {
+    "assembler": "linkloom.context.assembler.ContextAssembler",
+    "budget": {
+      "max_chars": 12000,
+      "max_evidence": 5,
+      "max_experience": 2,
+      "max_memory": 3,
+      "max_tokens": 3000
+    },
+    "retrievers": {
+      "bm25": "linkloom.retrieval_v2.retrievers.BM25Retriever",
+      "dense": "linkloom.retrieval_v2.retrievers.DenseRetriever",
+      "hybrid": "linkloom.retrieval_v2.retrievers.HybridRetriever"
+    },
+    "selector": "linkloom.context.selection.select_evidence"
+  },
+  "provider_calls": 0,
+  "provider_cost_usd": 0,
+  "python_version": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+  "query_count": 56,
+  "rank_bm25_version": "0.2.2",
+  "settings": {
+    "bm25": "existing BM25Index defaults, unchanged tokenizer",
+    "context": "existing ContextAssembler/ContextBudget/ContextPolicy defaults; no Gold groups",
+    "dense": "existing SentenceTransformerEmbedder default; local cache only",
+    "hybrid": "existing HybridRetriever candidate_k=20 rrf_k=60",
+    "top_k": 10
+  },
+  "version": "ami-public-retrieval/v1"
+}

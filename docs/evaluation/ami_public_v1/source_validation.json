@@ -1,0 +1,57 @@
+{
+  "full_source_roundtrip": true,
+  "meetings": {
+    "ES2002a": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 8,
+      "native_words_checked": 3105,
+      "word_spans_checked": 3105
+    },
+    "ES2002b": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 18,
+      "native_words_checked": 8110,
+      "word_spans_checked": 8110
+    },
+    "ES2002c": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 18,
+      "native_words_checked": 8757,
+      "word_spans_checked": 8757
+    },
+    "ES2002d": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 23,
+      "native_words_checked": 9075,
+      "word_spans_checked": 9075
+    },
+    "ES2005a": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 3,
+      "native_words_checked": 891,
+      "word_spans_checked": 891
+    },
+    "ES2005b": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 17,
+      "native_words_checked": 7199,
+      "word_spans_checked": 7199
+    },
+    "ES2005c": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 20,
+      "native_words_checked": 8003,
+      "word_spans_checked": 8003
+    },
+    "ES2005d": {
+      "all_positions_hashes_and_budgets_valid": true,
+      "chunks_checked": 13,
+      "native_words_checked": 4666,
+      "word_spans_checked": 4666
+    }
+  },
+  "native_da_text_and_word_id_projection_matches_frozen_reference": true,
+  "retrieval_scope": "all native DAs; 17 unsegmented words preserved in canonical/F batches",
+  "total_chunks_checked": 120,
+  "total_words_checked": 49806
+}

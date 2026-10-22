@@ -1,0 +1,13 @@
+{
+  "eligible": 51,
+  "evaluation_class": "PUBLIC_HUMAN_GOLD",
+  "files": {
+    "provenance.jsonl": "4e0a5b41ef12ce7855df3fc1850b62b19a8bafa5639d63c9cac55ce10df7657c",
+    "qrels.jsonl": "1ea65a66af5f966ad289ff032f73df0d9d44874f14c4e951e5f6999212d258b0",
+    "upstream_metadata.json": "3e2bebc3afafc9e43ad02ad82af25589dd93f2f9923e9a20b47bf2703af03c90"
+  },
+  "input_manifest_sha256": "5461887a15ffee37a469b18d7b586568bc137ca3d4506d863d86a6656a60410e",
+  "mapping_version": "ami-official-summary-links/v1",
+  "not_evaluable": 5,
+  "source_reverified": true
+}

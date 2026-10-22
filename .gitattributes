@@ -3,3 +3,4 @@
 # New AMI frozen reference copies retain the original query/prediction/seal bytes.
 /evals/ami_public_v1/frozen/** -text
 /docs/evaluation/ami_public_v1/** -text
+/docs/requirements/ami-public-retrieval/REVIEW.md -text

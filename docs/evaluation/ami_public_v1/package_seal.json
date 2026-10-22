@@ -1,0 +1,22 @@
+{
+  "evaluation_class": "PUBLIC_HUMAN_GOLD",
+  "files_sha256": {
+    "REPORT.md": "68e61c23fc1d322e3012b34a7278bc5772ff0bb3fa06f1f37b6a94f992da6b28",
+    "bad_cases.json": "2f93e678ca14f4047175476e3063c17a94fd0df280109b17f8d6ac7bf0986788",
+    "failed_attempts.json": "334ba45c4e9e709ea5bea6b27155f5ff4ddcc834ef3cee8fb343f61187cce341",
+    "gold_manifest.json": "5a1c3d8c9dc2449bce06df5a69506f84094a5a3cfa85a90d1dc08bd5c55a4c2d",
+    "gold_provenance.jsonl": "4e0a5b41ef12ce7855df3fc1850b62b19a8bafa5639d63c9cac55ce10df7657c",
+    "input_manifest.json": "5461887a15ffee37a469b18d7b586568bc137ca3d4506d863d86a6656a60410e",
+    "offline-tests.xml": "0500578cb8abbafc8e5291b78f88b028b6c3aa0cee0b57a443db2f61820631c9",
+    "output_seal.json": "2315f1aff1fcafe00dcb495da186ae55abc608d3280293ac513c9f11d62d7b65",
+    "predictions.jsonl": "89738872bcc7f868b08d9883c4adc08fff46e6d70ebbaea8522e622bb5831e7e",
+    "run_manifest.json": "d42a533958b83e42557924ea8fce9ec5c2cb6cc29e770b91e17b7cd794945627",
+    "scores.json": "2f83459246f010069afc62bec772b305b2001eb9d0b699c48bc2c2faf0dc2f45",
+    "source_manifest.json": "76492f85343d2e1844fd5faebd77171819e2740929b8ba659042c43331932068",
+    "source_validation.json": "7edc82eb7a5fc045208a8fdecb1c356668f7595054f95e63d2121aa978b56d90",
+    "validation.json": "3f60c365e3db694fb309a34468aab3e2840d287c6facb657ca7dbad571dc75af"
+  },
+  "implementation_git_sha": "3dda2d25bb4806d64e4b1832cf2eb30d26d28856",
+  "review_sha256": "1a23514e35dc91aadae4334280b61866f35bca1ccc811b0cc9626a7d82b3624c",
+  "sealed": true
+}
