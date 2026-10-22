@@ -271,7 +271,7 @@ def _project(result, artifact, segments, *, task_profile=None):
         if proposal is None:
             fail("TASK_PROPOSAL_MISSING")
             continue
-        field_profile = task_profile == TaskDiscoveryProfile.FIELD_GROUNDED_V2
+        field_profile = task_profile in {TaskDiscoveryProfile.FIELD_GROUNDED_V2, TaskDiscoveryProfile.TASK_RECALL_V3}
         if field_profile != (proposal.field_bindings is not None):
             fail("TASK_PROFILE_MISMATCH")
             continue

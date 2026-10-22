@@ -1,0 +1,503 @@
+{
+  "authorization": "Explicit Integration D user task; one new synthetic combined acceptance",
+  "started_at": "2026-10-22T12:51:34.775808+00:00",
+  "case_sha256": "558e98383fb6c4e3338b608036b3c6b411ad1ea02d2dc880a3774776074e29ad",
+  "snapshot": {
+    "checked_at": "2026-10-22T12:51:34.775242+00:00",
+    "predecessor_checkpoint": {
+      "requests": 47,
+      "reserved_usd": 13.93
+    },
+    "current_journals": [
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s\\work\\m3s-live-20261022\\global-provider\\budget.json",
+        "sha256": "a6f9b5f016ae0c499648f23b4e1785ec8763d526be0aa3d06283a42046ed09aa",
+        "requests": 11,
+        "reserved_usd": 2.75,
+        "allocation_usd": 8,
+        "started_at": "2026-10-22T04:36:08.419311+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s\\work\\m3s-live-phase2-20261022\\global-provider\\budget.json",
+        "sha256": "06c194f886f7f66bc8ee484021a15aa40ac8026d4f25aa7e4e15d6f420e772b3",
+        "requests": 7,
+        "reserved_usd": 1.75,
+        "allocation_usd": 5.25,
+        "started_at": "2026-10-22T04:55:55.025860+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s\\work\\m3s-live-phase3-20261022\\global-provider\\budget.json",
+        "sha256": "829953e53d88fdeaa4a8684f7d95ef515ed7f535c2ce2e2ebe31fd6de3b5b77c",
+        "requests": 2,
+        "reserved_usd": 0.5,
+        "allocation_usd": 3.5,
+        "started_at": "2026-10-22T04:58:58.895897+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s\\work\\m3s-live-phase4-20261022\\global-provider\\budget.json",
+        "sha256": "44ed5c64b9f519d0f3e2d2c1c16bfb63f1d61b465a73f4fc1aa80fc1ff5cca75",
+        "requests": 2,
+        "reserved_usd": 0.5,
+        "allocation_usd": 3.0,
+        "started_at": "2026-10-22T05:01:47.601325+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "UNCERTAIN"
+        ],
+        "failure": "PROVIDER_UNCERTAIN"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s1\\work\\m3s1-live-20261022\\global-provider\\budget.json",
+        "sha256": "e1504c61c040f77bd2b0ee19f1847b09f36ac4b8eebd477cc2550850824f24df",
+        "requests": 3,
+        "reserved_usd": 0.75,
+        "allocation_usd": 3,
+        "started_at": "2026-10-22T10:49:06.851721+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s1\\work\\m3s1-live-recheck-20261022\\global-provider\\budget.json",
+        "sha256": "41d38b7acf6bae305005a9afdb9db6ce5a01f5a6a1639ccebd36901329f40b46",
+        "requests": 7,
+        "reserved_usd": 1.75,
+        "allocation_usd": 2.25,
+        "started_at": "2026-10-22T10:54:03.042204+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-followup\\f-provider\\budget.json",
+        "sha256": "ff127c6ec7f24604031c0f6915138610bac19e7226f5a6ef6b166b48f80a8a7e",
+        "requests": 1,
+        "reserved_usd": 0.25,
+        "allocation_usd": 0.5,
+        "started_at": "2026-10-22T12:06:27.498027+00:00",
+        "outcomes": [
+          "FAILED"
+        ],
+        "failure": "MODEL_UNAVAILABLE"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-followup\\product\\campaign-provider\\budget.json",
+        "sha256": "f1b29535ddec4cc2e7e40696af132b86bee1c6d1f0daf108e73fb6e5185eced2",
+        "requests": 5,
+        "reserved_usd": 1.25,
+        "allocation_usd": 1.5,
+        "started_at": "2026-10-22T12:07:38.746317+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-followup\\v3-unattempted\\f-provider\\budget.json",
+        "sha256": "fc45f92ffbcd899e4a9f90afa1626a262619594620c1562a29a744b63860d8d4",
+        "requests": 1,
+        "reserved_usd": 0.25,
+        "allocation_usd": 0.25,
+        "started_at": "2026-10-22T12:10:08.101844+00:00",
+        "outcomes": [
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-live\\provider\\budget.json",
+        "sha256": "d9c6114cb46bcbd226d819386dde2ccaaf30ae2c952e21bc7e02b3c8deb915d6",
+        "requests": 9,
+        "reserved_usd": 2.25,
+        "allocation_usd": 5,
+        "started_at": "2026-10-22T11:08:34.355072+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-product\\campaign-provider\\budget.json",
+        "sha256": "fd0827f0f30de93d443c7625a03baf7a8f14501ffbb3fdbbb58b3c316d857c18",
+        "requests": 2,
+        "reserved_usd": 0.5,
+        "allocation_usd": 1.5,
+        "started_at": "2026-10-22T11:19:48.591942+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-unattempted\\provider\\budget.json",
+        "sha256": "7a05506712f001a6c3cc33b3fc83f54c6128350c03cbe171e77b532ccdec4e2e",
+        "requests": 1,
+        "reserved_usd": 0.25,
+        "allocation_usd": 1.25,
+        "started_at": "2026-10-22T11:13:54.800852+00:00",
+        "outcomes": [
+          "FAILED"
+        ],
+        "failure": "MODEL_TRANSIENT_FAILURE"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-unattempted-2\\provider\\budget.json",
+        "sha256": "89f73b5157fb61ad79922e1862157b1e302b088b321ca7552a429d07d93ae25e",
+        "requests": 4,
+        "reserved_usd": 1.0,
+        "allocation_usd": 1,
+        "started_at": "2026-10-22T11:17:15.911096+00:00",
+        "outcomes": [
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED",
+          "SUCCEEDED"
+        ],
+        "failure": null
+      }
+    ],
+    "current_project_requests": 102,
+    "current_project_reserved_usd": 27.68,
+    "historical_campaign_envelopes": [
+      {
+        "name": "M3-S",
+        "max_usd": 8,
+        "reserved_usd": 5.5
+      },
+      {
+        "name": "M3-S1",
+        "max_usd": 3,
+        "reserved_usd": 2.5
+      },
+      {
+        "name": "M3-S2 initial",
+        "max_usd": 5,
+        "reserved_usd": 4.0
+      },
+      {
+        "name": "M3-S2 followup",
+        "max_usd": 2,
+        "reserved_usd": 1.75
+      }
+    ],
+    "historical_unspent_allocations_still_held_usd": 4.25,
+    "other_campaign_inventory": [
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\browser-m3q\\work\\investigations\\2650e20c91fc\\provider\\budget.json",
+        "sha256": "70fc3a14d5de1760923befeeaa53523e75100037e1be398801b1601eef07f7b7",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": null,
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\browser-m3q\\work\\investigations\\9b05eda44d6a\\provider\\budget.json",
+        "sha256": "8f63c6928bb8ae55270d0a3b20ea9ac78b692437556063b1237b3b21077a6741",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": null,
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\browser-m3q-final\\work\\investigations\\72f88c4b39d8\\provider\\budget.json",
+        "sha256": "349676ea26626ea4cf3d0c535270bfef063633aa74cd5fb844da9bb386d39da2",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": null,
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\browser-m3q-final\\work\\investigations\\8d43dc7402d8\\provider\\budget.json",
+        "sha256": "9ea739095dc311c6b5a6a9ad2e461026d4fd71fea733d4df5a4aa129cd282e6b",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": null,
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\http-m3q-closure\\work\\investigations\\244acf49fafa\\provider\\budget.json",
+        "sha256": "0b102f3853a7b917ed3519f9084697fbdde2af36ea6230aee311ca1c61b10d77",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": "2026-10-21T15:37:55.711153+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\http-m3q-closure\\work\\investigations\\d768c1b9a683\\provider\\budget.json",
+        "sha256": "93f203c7d9f94f16110b03c4afae8a0c66ec0b7b991a9c599be4dfe9be354c42",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": "2026-10-21T15:37:23.201417+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\http-m3q-final\\work\\investigations\\2dce0501538a\\provider\\budget.json",
+        "sha256": "32cd48a602b155488b63e90fa31590158c45e457633b2cd1c28f0e56785b7acf",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": null,
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\http-m3q-release\\work\\investigations\\b69f7dec6eb1\\provider\\budget.json",
+        "sha256": "b9eb86dab6bd132564f6a8be814662ef16d50008a14e894a3e9ca31fe376191f",
+        "requests": 8,
+        "reserved_usd": 0.8,
+        "allocation_usd": 2,
+        "started_at": "2026-10-21T13:38:16.342767+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r10\\work\\investigations\\4fd32bc7bf4d\\provider\\budget.json",
+        "sha256": "fc27016df3ec07893b984e864cae63687cd34cafbdd4608d0abf2c5fff56d41e",
+        "requests": 1,
+        "reserved_usd": 0.020324,
+        "allocation_usd": 8.0,
+        "started_at": "2026-10-21T17:46:52.435842+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": "MODEL_RESPONSE_MALFORMED",
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r11\\work\\investigations\\b913d9d2d9b8\\provider\\budget.json",
+        "sha256": "81dfb2553a9c4f82bc5ce11c5cf8de11338fc1c852228a455504715212d2f6ca",
+        "requests": 1,
+        "reserved_usd": 0.033124,
+        "allocation_usd": 8.0,
+        "started_at": "2026-10-21T17:50:25.129430+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": "PROVIDER_TIMEOUT_UNCERTAIN",
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r12\\work\\investigations\\dcf1c5cc5d1e\\provider\\budget.json",
+        "sha256": "156f8ebe225ccc7a03be4a121fce1851b1f5f252f499f7b37ecadc2fab840eef",
+        "requests": 1,
+        "reserved_usd": 0.033124,
+        "allocation_usd": 8.0,
+        "started_at": "2026-10-21T17:51:32.497213+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r13\\work\\investigations\\f83b2618d56d\\provider\\budget.json",
+        "sha256": "89c3dc476d6410560663362d0392a921bdf157dd830e0b5ec51f5b199fe3c134",
+        "requests": 1,
+        "reserved_usd": 0.033124,
+        "allocation_usd": 8.0,
+        "started_at": "2026-10-21T17:53:54.968843+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": "MODEL_RESPONSE_MALFORMED",
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r5\\work\\investigations\\df1f59866d58\\provider\\budget.json",
+        "sha256": "b4ad1ed2d6ebe60dc5b06de34b34e48ccf36711ccc91470073ef928c50fd6d67",
+        "requests": 3,
+        "reserved_usd": 0.078522,
+        "allocation_usd": 8.0,
+        "started_at": "2026-10-21T16:39:43.115821+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r6\\work\\investigations\\86dca7ff8ac8\\provider\\budget.json",
+        "sha256": "03dc654a7ad9bb3718db17b24042e7510b0c359fce0604a884b4076737594d8c",
+        "requests": 6,
+        "reserved_usd": 0.166117,
+        "allocation_usd": 5.0,
+        "started_at": "2026-10-21T16:46:53.514931+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r7\\work\\investigations\\3ad260da26e2\\provider\\budget.json",
+        "sha256": "21166d7ba795889af679cda0a93d0930f3096f984111b85b1d27ce45e46278e5",
+        "requests": 3,
+        "reserved_usd": 0.078662,
+        "allocation_usd": 5.0,
+        "started_at": "2026-10-21T16:54:13.287972+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3q\\work\\m3q-live-product-20261022-r8\\work\\investigations\\c5d1ea709a74\\provider\\budget.json",
+        "sha256": "f7544d4e4988158bc33d35bc9f58d62b2b2f6de686d6b8f7e279bb4ed7caaa4b",
+        "requests": 6,
+        "reserved_usd": 0.179262,
+        "allocation_usd": 5.0,
+        "started_at": "2026-10-21T16:58:33.135704+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3r\\work\\m3r-independent-live-20261022\\provider\\budget.json",
+        "sha256": "7ab9d9fbc56269ce37a0e612bae353895ba5f6ef3433f9e1e00e3fa1f954906d",
+        "requests": 6,
+        "reserved_usd": 1.5,
+        "allocation_usd": 1.75,
+        "started_at": "2026-10-22T00:12:39.454334+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3r\\work\\m3r-live-product-20261022\\work\\investigations\\15b4874f8bc2\\provider\\budget.json",
+        "sha256": "caa496625ced68997d0ef28f9bd46e977631e253cacedae82fbfed3b6c2f082c",
+        "requests": 8,
+        "reserved_usd": 0.300037,
+        "allocation_usd": 3.0,
+        "started_at": "2026-10-21T23:31:06.712317+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": false,
+        "failure": null,
+        "capacity_policy": "PRE_CHECKPOINT_TERMINATED_QUESTION; RESERVED_COST_RETAINED_IN_CANONICAL_CHECKPOINT"
+      },
+      {
+        "path": "D:\\webproject\\Linkloom\\work\\m3s2\\work\\m3s2-product\\work\\investigations\\60eee6a44cc7\\provider\\budget.json",
+        "sha256": "00780cff534ab8fc64fe70dbc3823935620c2200a2cee20de490e361b41a3049",
+        "requests": 2,
+        "reserved_usd": 0.5,
+        "allocation_usd": 1.5,
+        "started_at": "2026-10-22T11:19:50.100072+00:00",
+        "own_integration_d": false,
+        "newer_than_checkpoint": false,
+        "nested_copy_of_known_campaign": true,
+        "failure": null,
+        "capacity_policy": "NESTED_COPY_COUNTED_ONCE"
+      }
+    ],
+    "project_capacity_with_all_old_allocations_and_new_3_usd": 34.93,
+    "new_max_requests": 12,
+    "new_max_reserved_usd": 3,
+    "project_cap_usd": 50,
+    "nested_product_journals_counted_again": false,
+    "actual_bill_usd": null
+  },
+  "new_max_requests": 12,
+  "new_max_reserved_usd": 3,
+  "project_max_usd": 50,
+  "model": "gemini-3.8-flash",
+  "sdk": "2.22.0",
+  "thinking_level": "low",
+  "sdk_attempts": 1,
+  "failed_or_uncertain_automatic_retries": 0,
+  "historical_reservations_retained": true,
+  "actual_bill_usd": null,
+  "billing_project_verified": false
+}

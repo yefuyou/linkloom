@@ -1,0 +1,36 @@
+{
+  "product_run_id": "ui-2c99e40003f1",
+  "product_status": "PARTIAL",
+  "reviewer_accepted": true,
+  "original_harness": "FAIL_SOURCE_METADATA_RECONSTRUCTION; preserved",
+  "saved_verification": "PASS",
+  "new_requests": 5,
+  "new_reserved_usd": 1.25,
+  "stages": {
+    "semantic-extractor-v1": 1,
+    "question-planner": 1,
+    "retrieval_agent": 3
+  },
+  "outcomes": {
+    "SUCCEEDED": 5
+  },
+  "returned_usage": {
+    "input_tokens": 32919,
+    "output_tokens": 1705,
+    "total_tokens": 34899
+  },
+  "usage_missing_requests": 0,
+  "automatic_retries": 0,
+  "cumulative_requests": 107,
+  "cumulative_reserved_usd": 28.93,
+  "project_cap_usd": 50,
+  "model": "gemini-3.8-flash",
+  "sdk": "google-genai 2.22.0",
+  "thinking_level": "low on every actual SDK wire request",
+  "sdk_attempts": 1,
+  "actual_bill_usd": null,
+  "live_replan_hit": false,
+  "live_replan_claimed": false,
+  "additional_safety_provider_requests": 0,
+  "all_prior_journals_unchanged": true
+}

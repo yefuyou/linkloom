@@ -271,7 +271,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         max_output_tokens=4096 if models.execution_kind == 'LIVE' else 1536)
     discovery = TaskObservationDiscoveryService(extractor, source_registry=sources.registry,
         current_source=sources.current, limits=models.discovery_limits,
-        task_profile=TaskDiscoveryProfile.FIELD_GROUNDED_V2 if models.execution_kind == 'LIVE' else None).discover(
+        task_profile=TaskDiscoveryProfile.TASK_RECALL_V3 if models.execution_kind == 'LIVE' else None).discover(
             sources.artifacts, workspace_id=sources.workspace_id)
     observations = (*discovery.valid_observations, *discovery.partial_observations)
     spans = tuple((f'source_{i}:{j}', segment.evidence_span)

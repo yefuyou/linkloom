@@ -1,0 +1,18 @@
+{
+  "schema": "m3s2-fixed-cases/v1",
+  "fixed_before_live": true,
+  "cases": [
+    {"id":"N01","speaker":"许诺","text":"离线索引重建已经排进这一轮的执行清单，承办人还在协调，交付时间没有定。","expected":[{"anchor":"离线索引重建","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"N02","speaker":"Mira","text":"The accessibility audit is going ahead. Neither an assignee nor a delivery date has been agreed; I am only recording the minutes.","expected":[{"anchor":"accessibility audit","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"N03","speaker":"纪要","text":"密钥盘点照常执行，乔宁只提供背景资料；2036-02-11是开会日期，执行负责人和交付日期都空着。","expected":[{"anchor":"密钥盘点","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"N04","speaker":"记录","text":"若经费到账，可以考虑安排缓存压测；眼下尚未决定启动。","expected":[]},
+    {"id":"N05","speaker":"记录","text":"灾备切换已撤回，这轮不会执行，也不再指定承办人。","expected":[]},
+    {"id":"N06","speaker":"记录","text":"资料介绍了如何轮换令牌以及校验签名，这是培训背景，没有安排执行工作。","expected":[]},
+    {"id":"N07","speaker":"记录","text":"苏遥承接兼容矩阵核验，须在2036-04-17之前交齐结果。","expected":[{"anchor":"兼容矩阵核验","owner":"苏遥","deadline_text":"2036-04-17","deadline":"2036-04-17","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"N08","speaker":"Nora","text":"I will deliver the dependency inventory by 2036-05-19. The workshop on 2036-05-12 is background only.","expected":[{"anchor":"dependency inventory","owner":"Nora","deadline_text":"2036-05-19","deadline":"2036-05-19","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"N09","speaker":"记录","text":"姚蓁接下协议兼容验证，8月9日前收尾；记录里没有写年份。","expected":[{"anchor":"协议兼容验证","owner":"姚蓁","deadline_text":"8月9日","deadline":null,"precision":"MONTH_DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"N10","speaker":"记录","text":"单元隔离验证已确定要做；交付表误填2036-02-31，承办人尚缺。","expected":[{"anchor":"单元隔离验证","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"N11","speaker":"Noah","text":"Perhaps we should rebuild the search cache if the pilot succeeds. This is a suggestion, not an assigned work item.","expected":[]},
+    {"id":"N12","speaker":"记录","text":"旧手册引用了“周末完成权限核对”作为写作示例，今天只讲解这段话。","expected":[]}
+  ]
+}

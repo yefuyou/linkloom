@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="11.044" timestamp="2026-10-22T20:36:09.014193+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[A]" time="2.279"><failure message="AssertionError">tests\integration\test_m3d_combined.py:14: in test_combined_product_and_provider_free_cold_read
+    ws, result = start_case(base, case)
+tests\m3d_support.py:92: in start_case
+    assert denied == 403
+E   AssertionError</failure></testcase></testsuite></testsuites>

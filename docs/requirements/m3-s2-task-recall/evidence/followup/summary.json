@@ -1,0 +1,70 @@
+{
+  "authorization": "Explicit user continuation; bounded supplementary verification",
+  "base": "56732e316229744b6e2ebc60e68b2e22e1e6f510",
+  "new_requests": 7,
+  "new_reserved_usd": 1.75,
+  "outcomes": {
+    "FAILED": 1,
+    "SUCCEEDED": 6
+  },
+  "stages": {
+    "semantic-extractor-v1": 3,
+    "question-planner": 1,
+    "retrieval_agent": 3
+  },
+  "known_returned_usage": {
+    "input_tokens": 33638,
+    "output_tokens": 2697,
+    "total_tokens": 37029
+  },
+  "requests_without_returned_usage": 1,
+  "cumulative_requests": 102,
+  "cumulative_reserved_usd": 27.68,
+  "project_cap_usd": 50,
+  "actual_bill_usd": null,
+  "automatic_retries": 0,
+  "new_v3_full_case_coverage": {
+    "case_count": 12,
+    "statistics": {
+      "false_recalled_tasks": 0,
+      "negative_cases": 5,
+      "negative_cases_with_false_recall": 0,
+      "expected_tasks": 7,
+      "recalled_tasks": 7,
+      "CORRECT_ACCEPT": 6,
+      "CORRECT_UNKNOWN": 22
+    },
+    "note": "Supplementary coverage only; initial failed batch remains recorded, not replaced in initial first-attempt score."
+  },
+  "old_v2_gap": "N01-N04 remain unscorable: original malformed output, supplementary HTTP500; not retried.",
+  "product": {
+    "run_id": "ui-9c16cb1c55ef",
+    "mode": "REAL_F_G_RUNTIME",
+    "status": "PARTIAL",
+    "reviewer_accepted": true,
+    "tool_names": [
+      "inspect_task_context",
+      "query_task_relations"
+    ],
+    "cold_read": "PASS",
+    "workspace_isolation": 409,
+    "source_update_cold": "BLOCKED",
+    "extra_provider_calls": 0
+  },
+  "prior_s1_snapshot": [
+    {
+      "path": "..\\m3s1\\work\\m3s1-live-20261022\\global-provider\\budget.json",
+      "sha256": "e1504c61c040f77bd2b0ee19f1847b09f36ac4b8eebd477cc2550850824f24df",
+      "requests": 3,
+      "reserved_usd": 0.75,
+      "allocation_usd": 3
+    },
+    {
+      "path": "..\\m3s1\\work\\m3s1-live-recheck-20261022\\global-provider\\budget.json",
+      "sha256": "41d38b7acf6bae305005a9afdb9db6ce5a01f5a6a1639ccebd36901329f40b46",
+      "requests": 7,
+      "reserved_usd": 1.75,
+      "allocation_usd": 2.25
+    }
+  ]
+}

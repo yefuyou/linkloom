@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="6" failures="0" skipped="0" tests="6" time="33.452" timestamp="2026-10-22T20:33:33.008301+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[A]" time="0.022"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[B]" time="0.007"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[C]" time="0.008"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[source_update]" time="0.007"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[evidence_revoke]" time="0.007"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[workspace]" time="0.007"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'&quot;">self = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-initial')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'D:\\webproject\\Linkloom\\work\\m3s1-s2-combined\\work\\pytest-m3d-initial'
+
+D:\Anaconda\Lib\pathlib\_local.py:722: FileNotFoundError</error></testcase></testsuite></testsuites>
