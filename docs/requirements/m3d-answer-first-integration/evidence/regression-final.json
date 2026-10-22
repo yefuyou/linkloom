@@ -1,0 +1,842 @@
+{
+  "unique_tests": 162,
+  "passed": 162,
+  "failed": 0,
+  "receipts": [
+    {
+      "file": "regression.xml",
+      "count": 162,
+      "counts": {
+        "failed": 31,
+        "passed": 117,
+        "error": 14
+      }
+    },
+    {
+      "file": "http-retry.xml",
+      "count": 28,
+      "counts": {
+        "passed": 28
+      }
+    },
+    {
+      "file": "http-remaining.xml",
+      "count": 17,
+      "counts": {
+        "passed": 17
+      }
+    }
+  ],
+  "latest": [
+    {
+      "id": "tests.integration.test_task_answer_http::test_task_answer_assets_and_existing_result_contract[partial]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_task_answer_http::test_task_answer_assets_and_existing_result_contract[conflict]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_task_answer_http::test_task_answer_assets_and_existing_result_contract[model-conflict]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_task_answer_http::test_task_answer_assets_and_existing_result_contract[unknown]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_product_and_provider_free_cold_read[A]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_product_and_provider_free_cold_read[B]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_product_and_provider_free_cold_read[C]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_replanned_result_never_leaks_stale_evidence[source_update]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_replanned_result_never_leaks_stale_evidence[evidence_revoke]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3d_combined::test_combined_replanned_result_never_leaks_stale_evidence[workspace]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3s1_ambiguous_product::test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[False]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3s1_ambiguous_product::test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[True]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3s1_ambiguous_product::test_host_rejects_repeated_discovery_after_unknown_without_extra_provider_loop",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_offline_demo_rejects_a_user_named_database",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_partial_exposes_original_tasks_proposal_and_exact_block",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_explicit_tasks_domain_accepts_owner_field_in_original_question",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_new_service_reads_saved_result_without_model_calls",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_cold_read_requires_accepted_reviewer_and_complete_ledger[ledger_missing]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_cold_read_requires_accepted_reviewer_and_complete_ledger[reviewer_rejected]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[both]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[identity]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_trusted_p4_only_unlocks_matching_prerequisites[none]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[update]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[remove]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_http_hot_and_new_process_hide_invalidated_results[relation_retract]",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_same_name_separate_work_never_inherits_fields_or_model_identity",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_product_review::test_revoked_evidence_without_source_change_cannot_be_resurrected",
+      "status": "passed",
+      "receipt": "http-remaining.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[provider_unknown]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[budget]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[no_progress]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[workspace]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_m3p_execution_failures::test_task_http_execution_failure_never_becomes_accepted_partial[permission]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_unknown_task_and_date_mismatch_request_scope_without_starting_agent",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_investigation_without_as_of_uses_observed_current_scope",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_historical_investigation_uses_observed_state_without_fake_predecessor",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_unconfigured_agent_returns_safe_configuration_failure",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_provider_failure_never_exposes_a_final[fail-FAILED]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence]",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_unified_ask_flow::test_legacy_api_and_legacy_page_keep_their_existing_semantics",
+      "status": "passed",
+      "receipt": "http-retry.xml"
+    },
+    {
+      "id": "tests.integration.test_task_relation_authority_readback::test_reviewed_change_receipt_readback_and_source_claim_remain_separate",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_explicit_work_survives_all_unknown_fields_and_cold_read",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[CONDITIONAL]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[NEGATED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[REPORTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[HISTORICAL]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[WITHDRAWN]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[NOT_STATED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_nonasserted_work_is_not_promoted_by_unknown_field_recall[AMBIGUOUS]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036-04-17-2036-04-17-DAY]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036\\u5e744\\u670817\\u65e5-2036-04-17-DAY]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[8\\u67089\\u65e5-None-MONTH_DAY]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[2036\\u5e748\\u6708-None-MONTH]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_role_quote_is_distinct_from_literal_date_token[8\\u6708-None-MONTH]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-02-31-change0]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17\\u524d-change1]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change2]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change3]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change4]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_schema_never_replaces_local_calendar_role_or_source_validation[2036-04-17-change5]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_recall_protocol::test_profile_is_versioned_without_changing_historical_v2_request",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_original_saved_replan_fits_original_budget_without_repeating_bindings",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_replan_can_remove_discover_without_discarding_unknown_receipt",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_removed_source_or_changed_workspace_blocks_before_replan_provider",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_removed_operation_cannot_be_reintroduced_by_model_output",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_unknown_discovery_never_satisfies_dependent_inspection",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3s1_planning_context::test_replan_request_reserves_retained_ids_in_schema_and_context",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_roles_use_model_witnesses_without_legacy_phrase_grammar",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[AMBIGUOUS]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[CONDITIONAL]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[NEGATED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[HISTORICAL]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[REPORTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_noncurrent_or_uncertain_roles_remain_unknown[WITHDRAWN]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change0]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change1]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change2]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change3]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_name_presence_or_wrong_task_message_or_role_is_not_enough[change4]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_speaker_basis_requires_real_header_and_task_role_quote",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[3\\u670818\\u65e5-MONTH_DAY-None]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[2032\\u5e743\\u6708-MONTH-None]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_date_precision_is_structural_and_never_fills_year[2032-03-18-DAY-2032-03-18]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_meeting_date_role_and_invalid_calendar_are_not_deadlines",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_separate_role_and_work_witnesses_bind_within_one_task_message",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_first_person_and_deadline_role_clauses_need_not_repeat_work",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_tampered_field_or_source_does_not_verify",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_new_discovery_contract_preserves_bindings_and_legacy_wire_shape",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_new_discovery_never_silently_falls_back_to_legacy_roles",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_legacy_profile_rejects_injected_role_bindings_even_if_asserted",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_message_ordinal_256_is_valid_within_bounded_source",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_field_binding::test_field_profile_honors_explicit_extractor_output_bound",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_result_projection::test_task_review_keeps_invalid_model_proposal_visible_as_uncertain",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[FAKE-GeminiProviderAdapter]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[FAKE-DeepSeekProviderAdapter]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[REPLAY-GeminiProviderAdapter]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_offline_permissions::test_external_stage_cannot_be_relabelled_as_offline[REPLAY-DeepSeekProviderAdapter]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_fake_task_models_reject_known_external_provider_adapters[gemini]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_fake_task_models_reject_known_external_provider_adapters[deepseek]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_product_source_registry_requires_current_catalog_membership",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_query_projects_exact_p4_relation_and_replayed_comparison",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D01-revision-REVISES_PLAN-REFUTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[D07-identity-SAME_TASK-UNKNOWN]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_non_supported_p4_verdicts_remain_visible_and_block_dependents[V04-revision-REVISES_PLAN-CONFLICT]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_missing_sidecar_and_unsupported_scope_explain_blocked_steps",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_source_binding_and_for_run_configuration_are_preserved",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_p4_steps::test_source_scoped_steps_do_not_consume_unscoped_p4_reads",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_semantic_projection::test_source_bound_relation_is_available_to_semantic_proposal_but_not_p4_query",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_investigation_semantic_projection::test_task_relation_prompt_does_not_treat_empty_p4_as_reason_to_skip_semantics",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_single_model_turn_binds_host_refs_without_claim_authority",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch0]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch1]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_forged_handles_and_authority_are_rejected[patch2]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_missing_entities_can_be_discovered_with_no_endpoints",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_synonymous_owner_questions_have_one_execution_signature",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_context_and_input_budget_fail_before_provider_call",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_identity_revision_date_dependencies_convert_to_semantic_queries",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows0]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows1]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_missing_premises_and_forward_dependencies_fail[rows2]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_relation_and_subgoal_and_fanout_budgets",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_total_call_reservation_includes_invalid_outputs_without_retry",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_replan_preserves_goal_completed_step_and_exact_host_receipt",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_unverified_replan_receipt_and_goal_change_block_before_call",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_all_new_public_inputs_with_explicit_fake_outputs_are_contract_valid",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_candidate_absence_does_not_limit_relation_endpoints",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_three_relation_hops_remain_questions_and_budgeted",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_wrong_workspace_same_business_number_is_rejected_as_input",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[stale]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[revoked]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[unauthorized]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_source_boundary_checks_happen_before_model[truncated]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_source_change_during_provider_call_does_not_publish_plan",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_exact_request_guard_rejects_wrong_hash_and_wrong_guard",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_single_final_text_or_wrong_function_never_becomes_a_plan",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_total_token_reservation_blocks_before_call[limits0]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_total_token_reservation_blocks_before_call[limits1]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_replan_rejects_duplicate_completed_work_and_rechecks_old_receipts",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_multiple_replans_keep_all_earlier_verified_receipts",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_relation_types_and_symmetric_duplicate_are_checked",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_no_entity_schema_has_no_empty_enumerations",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_result_revalidation_detects_revocation_during_replan_call",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_provider_exception_is_charged_and_not_retried",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_provider_output_over_reservation_stops_session",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_plan_carries_limits_and_rejected_output_for_diagnostics",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_snapshot_output_token_budget_also_limits_request_and_reservation",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_guard_cannot_mutate_schema_after_authorizing_request",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_run_identity_distinguishes_sessions_and_survives_replan",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_task_relation_question_planner::test_provider_error_with_over_budget_usage_exhausts_session",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[SUPPORTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[REFUTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_two_sided_evidence_cannot_be_presented_as_one_sided_verdict[UNKNOWN]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[SUPPORTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[REFUTED]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[CONFLICT]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    },
+    {
+      "id": "tests.unit.test_m3q_semantic_polarity::test_valid_structured_states_remain_distinct_and_unconfirmed[UNKNOWN]",
+      "status": "passed",
+      "receipt": "regression.xml"
+    }
+  ]
+}
