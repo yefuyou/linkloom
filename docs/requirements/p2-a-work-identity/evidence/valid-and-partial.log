@@ -1,0 +1,7 @@
+.                                                                        [100%]
+- generated xml file: D:\webproject\Linkloom\work\m3d-fix-work-identity\docs\requirements\p2-a-work-identity\evidence\valid-and-partial.xml -
+1 passed in 18.19s
+Exception ignored in: <function Console.__del__ at 0x000002204A8A2200>
+Traceback (most recent call last):
+  File "C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pyreadline3\console\console.py", line 254, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008

@@ -1,0 +1,2905 @@
+{
+  "transport": "scripted; no network or paid model",
+  "post_http_status": 202,
+  "f_proposals": [
+    {
+      "claim_type": "PLAN",
+      "subject": null,
+      "relation": null,
+      "value": null,
+      "temporal_status": "NOT_STATED",
+      "valid_from": null,
+      "valid_to": null,
+      "confidence": {
+        "claim_type": 0.9,
+        "entity": 0.9,
+        "relation": 0.9,
+        "temporal": 0.9,
+        "overall": 0.9
+      },
+      "task": {
+        "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "description_parts": [
+          "兼容矩阵核验"
+        ],
+        "owner": "乔雨",
+        "project": null,
+        "vendor": null,
+        "deadline_text": "2037-08-19",
+        "work_state": "ASSERTED",
+        "field_bindings": [
+          {
+            "field": "owner",
+            "value": "乔雨",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "deadline",
+            "value": "2037-08-19",
+            "role": "TASK_DEADLINE",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "project",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "vendor",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "兼容矩阵核验",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          }
+        ]
+      }
+    },
+    {
+      "claim_type": "PLAN",
+      "subject": null,
+      "relation": null,
+      "value": null,
+      "temporal_status": "NOT_STATED",
+      "valid_from": null,
+      "valid_to": null,
+      "confidence": {
+        "claim_type": 0.9,
+        "entity": 0.9,
+        "relation": 0.9,
+        "temporal": 0.9,
+        "overall": 0.9
+      },
+      "task": {
+        "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "description_parts": [
+          "索引重建"
+        ],
+        "owner": "乔雨",
+        "project": null,
+        "vendor": null,
+        "deadline_text": "2037-08-19",
+        "work_state": "ASSERTED",
+        "field_bindings": [
+          {
+            "field": "owner",
+            "value": "乔雨",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "索引重建",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "deadline",
+            "value": "2037-08-19",
+            "role": "TASK_DEADLINE",
+            "state": "ASSERTED",
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "task_quote": "索引重建",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "project",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "索引重建",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          },
+          {
+            "field": "vendor",
+            "value": null,
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "quote": "",
+            "task_quote": "索引重建",
+            "basis": "SOURCE_TEXT",
+            "message_ordinal": 0
+          }
+        ]
+      }
+    }
+  ],
+  "built_observations": [
+    {
+      "observation_id": "task_observation_v1_546ededa0395efc434656458bb30a1026a98e918325b2bb39f7bb33c766d2632",
+      "provenance": {
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+        "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+        "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+        "source_ref": "linkloom://ws_87bcdd47519d4f459814162c1aa583d8/src_f47ae86edc614748a94dd23163cdbde0",
+        "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+        "ordinal": 0,
+        "message_id": "message_v1_bfeab0f76abfeb6d384dd3bd91af16df787f6066bb2f6ca7b7d2870b7d26e02c",
+        "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "char_start": 28,
+        "char_end": 66,
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822"
+      },
+      "raw_text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+      "description": "兼容矩阵核验",
+      "owner": "乔雨",
+      "deadline": "2037-08-19",
+      "deadline_text": "2037-08-19",
+      "deadline_precision": "DAY",
+      "deadline_role": "TASK_DEADLINE",
+      "project": null,
+      "vendor": null,
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "project",
+        "vendor"
+      ],
+      "validation_issues": [],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "兼容矩阵核验",
+          "char_start": 32,
+          "char_end": 38,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "deadline",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-22T15:00:34.128142+00:00",
+      "event_time": "2037-08-01T09:00:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY",
+      "field_bindings": [
+        {
+          "field": "owner",
+          "value": "乔雨",
+          "role": "CURRENT_OWNER",
+          "state": "ASSERTED",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "task_quote": "兼容矩阵核验",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "deadline",
+          "value": "2037-08-19",
+          "role": "TASK_DEADLINE",
+          "state": "ASSERTED",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "task_quote": "兼容矩阵核验",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "project",
+          "value": null,
+          "role": "UNKNOWN",
+          "state": "NOT_STATED",
+          "quote": "",
+          "task_quote": "兼容矩阵核验",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "vendor",
+          "value": null,
+          "role": "UNKNOWN",
+          "state": "NOT_STATED",
+          "quote": "",
+          "task_quote": "兼容矩阵核验",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        }
+      ],
+      "work_state": "ASSERTED"
+    },
+    {
+      "observation_id": "task_observation_v1_546ededa0395efc434656458bb30a1026a98e918325b2bb39f7bb33c766d2632",
+      "provenance": {
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+        "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+        "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+        "source_ref": "linkloom://ws_87bcdd47519d4f459814162c1aa583d8/src_f47ae86edc614748a94dd23163cdbde0",
+        "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+        "ordinal": 0,
+        "message_id": "message_v1_bfeab0f76abfeb6d384dd3bd91af16df787f6066bb2f6ca7b7d2870b7d26e02c",
+        "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "char_start": 28,
+        "char_end": 66,
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+        "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822"
+      },
+      "raw_text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+      "description": "索引重建",
+      "owner": "乔雨",
+      "deadline": "2037-08-19",
+      "deadline_text": "2037-08-19",
+      "deadline_precision": "DAY",
+      "deadline_role": "TASK_DEADLINE",
+      "project": null,
+      "vendor": null,
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "project",
+        "vendor"
+      ],
+      "validation_issues": [],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "索引重建",
+          "char_start": 39,
+          "char_end": 43,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "owner",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "deadline",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "char_start": 28,
+          "char_end": 66,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-22T15:00:34.128142+00:00",
+      "event_time": "2037-08-01T09:00:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY",
+      "field_bindings": [
+        {
+          "field": "owner",
+          "value": "乔雨",
+          "role": "CURRENT_OWNER",
+          "state": "ASSERTED",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "task_quote": "索引重建",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "deadline",
+          "value": "2037-08-19",
+          "role": "TASK_DEADLINE",
+          "state": "ASSERTED",
+          "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+          "task_quote": "索引重建",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "project",
+          "value": null,
+          "role": "UNKNOWN",
+          "state": "NOT_STATED",
+          "quote": "",
+          "task_quote": "索引重建",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        },
+        {
+          "field": "vendor",
+          "value": null,
+          "role": "UNKNOWN",
+          "state": "NOT_STATED",
+          "quote": "",
+          "task_quote": "索引重建",
+          "basis": "SOURCE_TEXT",
+          "message_ordinal": 0
+        }
+      ],
+      "work_state": "ASSERTED"
+    }
+  ],
+  "ids_collide": true,
+  "discovery": {
+    "coverage_policy": "bounded-document-single-pass/v1",
+    "coverage_complete": false,
+    "semantic_exhaustive": false,
+    "valid_observations": [],
+    "partial_observations": [],
+    "failures": [
+      {
+        "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+        "reason": "OBSERVATION_EXTRACTION_CONFLICT",
+        "proposal_index": 1
+      }
+    ],
+    "sources": [
+      {
+        "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+        "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+        "status": "NO_TASKS_DETECTED",
+        "reason": null
+      }
+    ],
+    "unprocessed_sources": [],
+    "groups": [
+      {
+        "group_id": "task_discovery_group_64efd01d0de7620f1197c49241ff7ce008ae8b97fe9abeb80935440e48b9a25e",
+        "observation_ids": [],
+        "source_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+        ],
+        "unbound_fields": [],
+        "status": "MODEL_PROPOSED",
+        "validation_issues": [
+          "OBSERVATIONS_WITHHELD"
+        ]
+      },
+      {
+        "group_id": "task_discovery_group_723c81aa11beabecae2876a144beebc9fcce915ef870998a46f41dcf5fa235a6",
+        "observation_ids": [],
+        "source_evidence_refs": [
+          "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+        ],
+        "unbound_fields": [],
+        "status": "MODEL_PROPOSED",
+        "validation_issues": [
+          "OBSERVATIONS_WITHHELD"
+        ]
+      }
+    ],
+    "extractions": [
+      {
+        "record_version": "semantic-extraction-result/v2",
+        "claims": [
+          {
+            "claim_type": "PLAN",
+            "subject": null,
+            "relation_phrase": null,
+            "value": null,
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.9,
+              "entity": 0.9,
+              "relation": 0.9,
+              "temporal": 0.9,
+              "overall": 0.9
+            },
+            "task": {
+              "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+              "description_parts": [
+                "兼容矩阵核验"
+              ],
+              "owner": "乔雨",
+              "deadline_text": "2037-08-19",
+              "project": null,
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "field": "owner",
+                  "value": "乔雨",
+                  "role": "CURRENT_OWNER",
+                  "state": "ASSERTED",
+                  "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "task_quote": "兼容矩阵核验",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "deadline",
+                  "value": "2037-08-19",
+                  "role": "TASK_DEADLINE",
+                  "state": "ASSERTED",
+                  "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "task_quote": "兼容矩阵核验",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "project",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "task_quote": "兼容矩阵核验",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "vendor",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "task_quote": "兼容矩阵核验",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                }
+              ],
+              "work_state": "ASSERTED"
+            }
+          },
+          {
+            "claim_type": "PLAN",
+            "subject": null,
+            "relation_phrase": null,
+            "value": null,
+            "temporal_status": "NOT_STATED",
+            "valid_from_raw": null,
+            "valid_to_raw": null,
+            "confidence": {
+              "claim_type": 0.9,
+              "entity": 0.9,
+              "relation": 0.9,
+              "temporal": 0.9,
+              "overall": 0.9
+            },
+            "task": {
+              "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+              "description_parts": [
+                "索引重建"
+              ],
+              "owner": "乔雨",
+              "deadline_text": "2037-08-19",
+              "project": null,
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "field": "owner",
+                  "value": "乔雨",
+                  "role": "CURRENT_OWNER",
+                  "state": "ASSERTED",
+                  "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "task_quote": "索引重建",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "deadline",
+                  "value": "2037-08-19",
+                  "role": "TASK_DEADLINE",
+                  "state": "ASSERTED",
+                  "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "task_quote": "索引重建",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "project",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "task_quote": "索引重建",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "vendor",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "task_quote": "索引重建",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0
+                }
+              ],
+              "work_state": "ASSERTED"
+            }
+          }
+        ],
+        "receipt": {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "product-task-host",
+          "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+          "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+          "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+          "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+          "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+          "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+          "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+          "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+              "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+              "provider_request_id": null,
+              "provider_response_id": null,
+              "usage": {
+                "input_tokens": 20,
+                "output_tokens": 10,
+                "total_tokens": 30,
+                "duration_ms": 5.412
+              },
+              "latency_ms": 180.53389999840874,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+              "estimated_cost_upper_bound_usd": 0.1
+            }
+          ],
+          "terminal_reason": null
+        },
+        "failure_code": null
+      }
+    ],
+    "receipts": [
+      {
+        "provider_id": "gemini",
+        "model_id": "gemini-3.8-flash",
+        "extractor_version": "provider-neutral-extractor/v1",
+        "schema_version": "semantic-candidate/v2",
+        "temporal_policy_version": "explicit-time-only/v1",
+        "request_guard_id": "product-task-host",
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+        "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+        "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+        "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+        "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+        "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+        "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+        "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+        "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+        "attempts": [
+          {
+            "attempt_number": 1,
+            "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+            "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+            "provider_request_id": null,
+            "provider_response_id": null,
+            "usage": {
+              "input_tokens": 20,
+              "output_tokens": 10,
+              "total_tokens": 30,
+              "duration_ms": 5.412
+            },
+            "latency_ms": 180.53389999840874,
+            "failure_code": null,
+            "outcome": "accepted_response",
+            "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+            "estimated_cost_upper_bound_usd": 0.1
+          }
+        ],
+        "terminal_reason": null
+      }
+    ],
+    "candidate_coverage": [
+      {
+        "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+        "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+        "verified_description_parts": []
+      }
+    ]
+  },
+  "g_payloads": [
+    {
+      "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+      "question": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+      "source_snapshot_hash": "7d758ae05c62e11cbcb78a9b8d6f1917d0616f2833afe034aed84808a8650d06",
+      "endpoints": [],
+      "allowed_evidence": [
+        {
+          "span_id": "source_0:1",
+          "source": {
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+            "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+            "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+            "source_ref": "linkloom://ws_87bcdd47519d4f459814162c1aa583d8/src_f47ae86edc614748a94dd23163cdbde0",
+            "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+            "ordinal": 0,
+            "message_id": "message_v1_bfeab0f76abfeb6d384dd3bd91af16df787f6066bb2f6ca7b7d2870b7d26e02c",
+            "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+            "char_start": 28,
+            "char_end": 66,
+            "line_start": 1,
+            "line_end": 1,
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822"
+          }
+        }
+      ],
+      "inventory_complete": true,
+      "truncated": false,
+      "scope": "Only the supplied bounded snapshot; not exhaustive discovery.",
+      "limits": {
+        "max_subgoals": 12,
+        "max_relation_queries": 8,
+        "max_fanout": 4,
+        "max_dependency_depth": 6,
+        "max_relation_hops": 3,
+        "max_input_tokens": 24000,
+        "max_output_tokens": 4096,
+        "max_provider_calls": 3,
+        "max_total_input_tokens": 73728,
+        "max_total_output_tokens": 12288
+      },
+      "candidate_discovery": {
+        "leads": [],
+        "recall": "UNKNOWN_NONEXHAUSTIVE"
+      },
+      "operation_capabilities": {
+        "supported_operations": [
+          "clarify",
+          "compare_dates",
+          "discover",
+          "inspect",
+          "relation"
+        ],
+        "reserved_step_ids": [],
+        "inspection_handles": [],
+        "inspection_fields": [
+          "owner",
+          "project",
+          "deadline",
+          "scope",
+          "evidence"
+        ],
+        "source_handles_are_endpoints": false,
+        "temporal_scope": "Inclusive ISO bounds retained on steps; Host tool binding required.",
+        "dependency_readiness": "Host-verified completion; relation premises require SUPPORTED.",
+        "host_execution": {
+          "inspect": {
+            "execution": "EXISTING_RUNTIME_TOOL",
+            "tool": "inspect_task_context",
+            "result": "COMPLETED inspection of UNCONFIRMED observations; no semantic approval",
+            "time_scope": "UNSUPPORTED; explicit gap, never silently dropped"
+          },
+          "discover": {
+            "execution": "BOUNDED_F_SNAPSHOT_ONLY",
+            "result": "UNKNOWN receipt; no second F scan and no evidence of absence"
+          },
+          "relation": {
+            "execution": "BOUNDED_SEMANTIC_PROPOSAL",
+            "tool": "analyze_task_semantics",
+            "result": "Unconfirmed proposal with evidence validation; no P4 premise is established",
+            "time_scope": "UNSUPPORTED",
+            "source_scope": "Candidate hints within the full authorized snapshot; source-scoped P4 execution remains unsupported"
+          },
+          "compare_dates": {
+            "execution": "TRUSTED_RELATIONS_REQUIRED",
+            "tool": "query_task_relations",
+            "result": "P4 can read existing verified relations; product F/G creates no such records"
+          },
+          "clarify": {
+            "execution": "VISIBLE_GAP_ONLY",
+            "result": "No tool or automatic user conversation"
+          }
+        }
+      },
+      "replan": {
+        "previous_plan": null,
+        "verified_results": [],
+        "gaps": []
+      }
+    }
+  ],
+  "http_result": {
+    "schema_version": "product-ask/v1",
+    "query": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+    "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+    "scope": {
+      "subject": "",
+      "relation": "",
+      "as_of": null
+    },
+    "path": "TASK_INVESTIGATION",
+    "route": {
+      "intent": "TASK_INVESTIGATION",
+      "code": "SOURCE_TASK_INVESTIGATION",
+      "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+      "admission": {
+        "origin": "USER_SCOPED",
+        "context": {
+          "domain": "tasks",
+          "snapshot_hash": "94f2b61e218f48b30d03bbf02c01b3b899cddf93527d1b479747575b575918e7"
+        }
+      }
+    },
+    "status": "UNKNOWN",
+    "conclusions": [],
+    "discovery": null,
+    "evidence": [],
+    "receipts": [],
+    "uncertainty": {
+      "unknown_fields": [
+        "semantic_acceptance"
+      ],
+      "statement": "Task observations and model analyses are unconfirmed; semantic and business acceptance are NOT_EVALUATED.",
+      "model_reported_gaps": [],
+      "stage_errors": []
+    },
+    "agent_run_id": "ui-8b8f8f3b7e36",
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_3d958422",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-22T15:00:47.336124+00:00",
+      "accepted": true
+    },
+    "timeline": null,
+    "progress": null,
+    "error": null,
+    "metrics": {
+      "model_turns": 3,
+      "tool_calls": 2,
+      "tool_errors": 0,
+      "max_model_turns": 12,
+      "max_provider_requests": 12
+    },
+    "trace": [
+      {
+        "sequence": 1,
+        "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+        "tool": "inspect_task_context",
+        "status": "completed",
+        "arguments": {
+          "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+        },
+        "result": {
+          "business_status": null,
+          "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+          "error": null,
+          "status": "ok",
+          "tool_id": "inspect_task_context",
+          "value": {
+            "discovery": {
+              "candidates": [],
+              "considered_candidates": 0,
+              "eligible_observations": 0,
+              "endpoint_fanout": {},
+              "generated_candidates": 0,
+              "input_counts": {
+                "artifact_rows": 1,
+                "context_signals": 0,
+                "current_workspace_artifacts": 1,
+                "observation_rows": 0,
+                "source_characters": 66
+              },
+              "limits": {
+                "max_artifacts": 64,
+                "max_candidates": 20,
+                "max_context_signals": 128,
+                "max_generated_candidates": 1000,
+                "max_observations": 128,
+                "max_per_observation": 10,
+                "max_source_chars": 500000
+              },
+              "max_endpoint_fanout": 0,
+              "rejected": [],
+              "returned_candidates": 0,
+              "truncated": false,
+              "truncation_reasons": []
+            },
+            "max_output_bytes": 32768,
+            "missing_context": [
+              "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED",
+              "NO_VERIFIABLE_TASK_OBSERVATIONS"
+            ],
+            "observations": [],
+            "observations_truncated": false,
+            "schema_version": "task-context/v1",
+            "semantic_proposals": {
+              "consumer": "future validated M3-A semantic proposal integration",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "status": "NOT_CONNECTED"
+            },
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          }
+        },
+        "error": null
+      },
+      {
+        "sequence": 2,
+        "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+        "tool": "query_task_relations",
+        "status": "completed",
+        "arguments": {
+          "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+        },
+        "result": {
+          "business_status": null,
+          "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+          "error": null,
+          "status": "ok",
+          "tool_id": "query_task_relations",
+          "value": {
+            "as_of": null,
+            "current_supported_in_snapshot": 0,
+            "evidence_spans": {},
+            "include_history": false,
+            "investigation_steps": [],
+            "max_output_bytes": 49152,
+            "max_plans": 4,
+            "max_relations": 64,
+            "missing_context": [
+              "NO_RELATION_RECORDS",
+              "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"
+            ],
+            "observation_refs": {},
+            "observation_snapshots": {},
+            "plans": [],
+            "relations": [],
+            "returned_investigation_steps": 0,
+            "returned_relations": 0,
+            "schema_version": "task-relations-query/v1",
+            "semantic_proposals": {
+              "consumer": "future validated M3-A semantic proposal integration",
+              "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+              "limitations": [
+                "DISCOVERY_IS_NOT_PROOF",
+                "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                "NO_AUTOMATIC_PERSISTENCE"
+              ],
+              "status": "NOT_CONNECTED"
+            },
+            "status": "NO_VERIFIED_RELATIONS",
+            "total_matching_relations": 0,
+            "truncated": false,
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          }
+        },
+        "error": null
+      }
+    ],
+    "preparation": {
+      "schema": "product-task-preparation/v1",
+      "question": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+      "status": "UNKNOWN",
+      "execution_kind": "LIVE",
+      "provider_id": "gemini",
+      "model_id": "gemini-3.8-flash",
+      "authority": "MODEL_PROPOSED_ONLY",
+      "proposal_scope": "ALL_PLANNED_RELATIONS",
+      "semantic_policy": {
+        "execution_kind": "LIVE",
+        "max_requests": 1,
+        "max_input_tokens": 32768,
+        "max_output_tokens": 8192,
+        "max_cost_usd": 3,
+        "request_cost_upper_bound_usd": 0.1,
+        "live_authorized": true
+      },
+      "operation_capabilities": {
+        "inspect": {
+          "execution": "EXISTING_RUNTIME_TOOL",
+          "tool": "inspect_task_context",
+          "result": "COMPLETED inspection of UNCONFIRMED observations; no semantic approval",
+          "time_scope": "UNSUPPORTED; explicit gap, never silently dropped"
+        },
+        "discover": {
+          "execution": "BOUNDED_F_SNAPSHOT_ONLY",
+          "result": "UNKNOWN receipt; no second F scan and no evidence of absence"
+        },
+        "relation": {
+          "execution": "BOUNDED_SEMANTIC_PROPOSAL",
+          "tool": "analyze_task_semantics",
+          "result": "Unconfirmed proposal with evidence validation; no P4 premise is established",
+          "time_scope": "UNSUPPORTED",
+          "source_scope": "Candidate hints within the full authorized snapshot; source-scoped P4 execution remains unsupported"
+        },
+        "compare_dates": {
+          "execution": "TRUSTED_RELATIONS_REQUIRED",
+          "tool": "query_task_relations",
+          "result": "P4 can read existing verified relations; product F/G creates no such records"
+        },
+        "clarify": {
+          "execution": "VISIBLE_GAP_ONLY",
+          "result": "No tool or automatic user conversation"
+        }
+      },
+      "ready_tool_operations": [],
+      "discovery": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": false,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [],
+        "failures": [
+          {
+            "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+            "reason": "OBSERVATION_EXTRACTION_CONFLICT",
+            "proposal_index": 1
+          }
+        ],
+        "sources": [
+          {
+            "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+            "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+            "status": "NO_TASKS_DETECTED",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_64efd01d0de7620f1197c49241ff7ce008ae8b97fe9abeb80935440e48b9a25e",
+            "observation_ids": [],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": [
+              "OBSERVATIONS_WITHHELD"
+            ]
+          },
+          {
+            "group_id": "task_discovery_group_723c81aa11beabecae2876a144beebc9fcce915ef870998a46f41dcf5fa235a6",
+            "observation_ids": [],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": [
+              "OBSERVATIONS_WITHHELD"
+            ]
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.9
+                },
+                "task": {
+                  "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "description_parts": [
+                    "兼容矩阵核验"
+                  ],
+                  "owner": "乔雨",
+                  "deadline_text": "2037-08-19",
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": "乔雨",
+                      "role": "CURRENT_OWNER",
+                      "state": "ASSERTED",
+                      "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                      "task_quote": "兼容矩阵核验",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "deadline",
+                      "value": "2037-08-19",
+                      "role": "TASK_DEADLINE",
+                      "state": "ASSERTED",
+                      "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                      "task_quote": "兼容矩阵核验",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "兼容矩阵核验",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "兼容矩阵核验",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.9,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.9
+                },
+                "task": {
+                  "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                  "description_parts": [
+                    "索引重建"
+                  ],
+                  "owner": "乔雨",
+                  "deadline_text": "2037-08-19",
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": "乔雨",
+                      "role": "CURRENT_OWNER",
+                      "state": "ASSERTED",
+                      "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                      "task_quote": "索引重建",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "deadline",
+                      "value": "2037-08-19",
+                      "role": "TASK_DEADLINE",
+                      "state": "ASSERTED",
+                      "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                      "task_quote": "索引重建",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "索引重建",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "索引重建",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+              "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+              "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+              "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+              "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+              "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+              "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+              "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                  "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+                  "provider_request_id": null,
+                  "provider_response_id": null,
+                  "usage": {
+                    "input_tokens": 20,
+                    "output_tokens": 10,
+                    "total_tokens": 30,
+                    "duration_ms": 5.412
+                  },
+                  "latency_ms": 180.53389999840874,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                  "estimated_cost_upper_bound_usd": 0.1
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+            "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+            "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+            "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+            "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+            "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+            "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+            "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+                "provider_request_id": null,
+                "provider_response_id": null,
+                "usage": {
+                  "input_tokens": 20,
+                  "output_tokens": 10,
+                  "total_tokens": 30,
+                  "duration_ms": 5.412
+                },
+                "latency_ms": 180.53389999840874,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                "estimated_cost_upper_bound_usd": 0.1
+              }
+            ],
+            "terminal_reason": null
+          }
+        ],
+        "candidate_coverage": [
+          {
+            "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+            "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+            "verified_description_parts": []
+          }
+        ]
+      },
+      "planning": [
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "PLANNED",
+          "plan": {
+            "plan_id": "investigation_v2_a56211f1b1c6ef6ea29454e283b25103467a39d665578a69e565aa1daf1512d6",
+            "needs_more_investigation": true,
+            "ready_step_ids": [
+              "missing"
+            ],
+            "schema": "task-investigation-plan/v2",
+            "goal": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+            "snapshot_hash": "7d758ae05c62e11cbcb78a9b8d6f1917d0616f2833afe034aed84808a8650d06",
+            "steps": [
+              {
+                "id": "missing",
+                "kind": "clarify",
+                "question": "需要核对哪些原始任务信息？",
+                "handles": [],
+                "endpoints": [],
+                "source_handles": [],
+                "depends_on": [],
+                "predicate": "",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [
+                  "两项任务的可验证观察"
+                ],
+                "execution_key": "224f4d00adecedd3f80efb7cce48e6331ba3508f90ccc0efcc4328f59d330c76",
+                "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+                    "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+                    "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+                    "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+                    "span_sha256": "f868b08089e2b67a5e1de8120700220becd1ab774841c1cc99a770afeba67c22"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              }
+            ],
+            "uncertainties": [],
+            "refusal_reasons": [],
+            "verified_results": [],
+            "parent_plan_id": null,
+            "gaps": [],
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24000,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            },
+            "authority": "ACTION_SUGGESTION_ONLY",
+            "publishable": false,
+            "conclusion_policy": "Evidence and independent Reviewer required."
+          },
+          "errors": [],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": 20,
+            "output_tokens": 10,
+            "total_tokens": 30,
+            "duration_ms": 4.271
+          },
+          "request_sha256": "99184e6a1e00fbbf938f4ed54ea18b41a7c6a8dbc0235c1dce6cd1c679f09644",
+          "response_sha256": "100fb65fd1c17a4d4d44a7c0587929010570832d64080c39a521cb2c5dfad763",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 12365,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "tool_calls",
+            "tool_calls": [
+              {
+                "tool_id": "emit_investigation_plan",
+                "arguments": {
+                  "steps": [
+                    {
+                      "id": "missing",
+                      "kind": "clarify",
+                      "question": "需要核对哪些原始任务信息？",
+                      "handles": [],
+                      "source_handles": [],
+                      "depends_on": [],
+                      "predicate": "",
+                      "field": "",
+                      "target_kind": "",
+                      "missing_entities": [
+                        "两项任务的可验证观察"
+                      ]
+                    }
+                  ],
+                  "uncertainties": [],
+                  "refusal_reasons": []
+                }
+              }
+            ]
+          },
+          "diagnostics": {
+            "proposed_steps": 1,
+            "accepted_steps": 1,
+            "excess_steps": 0,
+            "validation_issues": [],
+            "proposed_by_kind": {
+              "clarify": 1
+            },
+            "ready_steps": 1
+          }
+        }
+      ],
+      "source_mapping": {
+        "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48": {
+          "source_id": "src_f47ae86edc614748a94dd23163cdbde0",
+          "source_version": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+          "source_name": "two-work.txt",
+          "content_sha256": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9"
+        }
+      },
+      "source_snapshot_hash": "3ebb3144c1a9a420f5f898a74c937d038d7ac910e5fd6c3ab2dd39b415b0a4db",
+      "gaps": [
+        "DISCOVERY_COVERAGE_INCOMPLETE",
+        "NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN",
+        "UNRESOLVED_CLARIFY:missing"
+      ],
+      "stage_budget": {
+        "discovery_calls_reserved": 1,
+        "discovery_call_limit": 3,
+        "discovery_input_tokens_reserved_upper_bound": 14929,
+        "discovery_output_tokens_reserved": 4096,
+        "discovery_max_request_bytes": 49152,
+        "planning": {
+          "calls_reserved": 1,
+          "input_tokens_reserved": 12365,
+          "output_tokens_reserved": 4096,
+          "limits": {
+            "max_subgoals": 12,
+            "max_relation_queries": 8,
+            "max_fanout": 4,
+            "max_dependency_depth": 6,
+            "max_relation_hops": 3,
+            "max_input_tokens": 24576,
+            "max_output_tokens": 4096,
+            "max_provider_calls": 3,
+            "max_total_input_tokens": 73728,
+            "max_total_output_tokens": 12288
+          }
+        },
+        "semantic_call_limit": 0,
+        "new_billable_cost_usd": null
+      },
+      "evidence_layers": {
+        "component": "SEPARATE_TEST_EVIDENCE",
+        "integration": "LIVE",
+        "real_model_semantics": "NOT_EVALUATED",
+        "real_product_business_task": "NOT_EVALUATED"
+      }
+    },
+    "working_context_audit": {
+      "authorized_snapshot_id": "1e4fcf33703b67269b6039351d53d837adb9e81efaa455fe781513574cbb29c3",
+      "base_instruction_sha256": "726dc72638b49b2fbd864a076423c7287d579354d2cfd9d1082a2a6581e2852c",
+      "before_working_ref": {
+        "kind": "observation",
+        "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/before.json",
+        "sha256": "e86ea417363e6b9ed56bc791dfdadf187bda5bc761c9cf075d50b95402be4ecb",
+        "size_bytes": 2694
+      },
+      "budget": {
+        "actual_provider_tokens": false,
+        "context_window_tokens": 65536,
+        "input_bytes": 10734,
+        "input_tokens": 2763,
+        "max_request_bytes": 98304,
+        "normalized_request_bytes": 10478,
+        "output_reserve_tokens": 2048,
+        "segments": {
+          "compaction_summary": {
+            "bytes": 457,
+            "tokens": 115
+          },
+          "existing_verified_context": {
+            "bytes": 2,
+            "tokens": 1
+          },
+          "history": {
+            "bytes": 3719,
+            "tokens": 930
+          },
+          "instruction": {
+            "bytes": 616,
+            "tokens": 174
+          },
+          "latest_result": {
+            "bytes": 4,
+            "tokens": 1
+          },
+          "request_envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "tools": {
+            "bytes": 1284,
+            "tokens": 321
+          },
+          "verified_evidence": {
+            "bytes": 2186,
+            "tokens": 587
+          },
+          "working_context": {
+            "bytes": 1472,
+            "tokens": 388
+          }
+        },
+        "serialization_overhead_bytes": 738,
+        "token_count_kind": "MULTILINGUAL_HEURISTIC_V1",
+        "user_input_bytes": 4835
+      },
+      "compaction": null,
+      "config": {
+        "compactor_id": "DETERMINISTIC_FAKE_V1",
+        "envelope": {
+          "bytes": 256,
+          "tokens": 64
+        },
+        "history_soft_bytes": 24576,
+        "local_budget": {
+          "max_chars": 12000,
+          "max_evidence": 5,
+          "max_experience": 2,
+          "max_memory": 3,
+          "max_tokens": 3000
+        },
+        "policy": {
+          "context_window_tokens": 65536,
+          "max_candidates": 256,
+          "max_request_bytes": 98304,
+          "model_id": "offline-task-context",
+          "output_reserve_tokens": 2048,
+          "token_count_kind": "MULTILINGUAL_HEURISTIC_V1"
+        },
+        "tokenizer_id": "LINKLOOM_MULTILINGUAL_HEURISTIC_V1",
+        "tokenizer_probe": [
+          3,
+          11,
+          10
+        ],
+        "working_max_tokens": 4096
+      },
+      "coverage": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "coverage_before_compaction": [
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "sources_current"
+        },
+        {
+          "complete": true,
+          "missing_evidence_ids": [],
+          "reason": null,
+          "subgoal_id": "relations_pending"
+        }
+      ],
+      "errors": [],
+      "groups": [
+        {
+          "conflict": false,
+          "evidence_ids": [
+            "context_ev_v1_d5e5d8c8ef415d8de2e6f2d4b65996558e4b294d52d3917b849f87dfda657bf5"
+          ],
+          "group_id": "unclassified_investigation",
+          "subgoal_ids": [
+            "sources_current",
+            "relations_pending"
+          ]
+        }
+      ],
+      "mapping_ref": {
+        "kind": "observation",
+        "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/mapping.json",
+        "sha256": "1c8ade0618cd5e8bb73f2179709e0db2667906b1dac2be909cc3a0283e0954ad",
+        "size_bytes": 1759
+      },
+      "prepared_request_sha256": "ebba3817087be8f77ea7e4509fe3d59ff91691db60464fca1309bebf632a557b",
+      "recovery": {
+        "evidence": [
+          {
+            "historical": false,
+            "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+            "ref": {
+              "char_end": 66,
+              "char_start": 28,
+              "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+              "document_id": "src_f47ae86edc614748a94dd23163cdbde0",
+              "evidence_id": "context_ev_v1_d5e5d8c8ef415d8de2e6f2d4b65996558e4b294d52d3917b849f87dfda657bf5",
+              "line_end": 1,
+              "line_start": 1,
+              "logical_path": "/task-sources/src_f47ae86edc614748a94dd23163cdbde0",
+              "quote_hash": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+              "resource_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+              "source_ref": "linkloom://ws_87bcdd47519d4f459814162c1aa583d8/src_f47ae86edc614748a94dd23163cdbde0",
+              "source_version": 1,
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+            }
+          }
+        ],
+        "failures": [],
+        "status": "complete"
+      },
+      "request_usage": {
+        "bytes": 10289,
+        "tokens": 2612
+      },
+      "run_id": "run_p4_67c075db8f98",
+      "status": "COMPLETE",
+      "task_plan": {
+        "goal": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+        "subgoals": [
+          {
+            "depends_on": [],
+            "question": "Recover the declared authorized original sources.",
+            "subgoal_id": "sources_current"
+          },
+          {
+            "depends_on": [
+              "sources_current"
+            ],
+            "question": "Inspect relation receipts; semantic acceptance remains unresolved.",
+            "subgoal_id": "relations_pending"
+          }
+        ]
+      },
+      "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+      "turn_id": "run_p4_67c075db8f98:turn:3",
+      "working_ref": {
+        "kind": "observation",
+        "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/state.json",
+        "sha256": "e86ea417363e6b9ed56bc791dfdadf187bda5bc761c9cf075d50b95402be4ecb",
+        "size_bytes": 2694
+      }
+    },
+    "task_investigation": {
+      "answer_status": "PARTIAL",
+      "context": {
+        "discovery": {
+          "candidates": [],
+          "considered_candidates": 0,
+          "eligible_observations": 0,
+          "endpoint_fanout": {},
+          "generated_candidates": 0,
+          "input_counts": {
+            "artifact_rows": 1,
+            "context_signals": 0,
+            "current_workspace_artifacts": 1,
+            "observation_rows": 0,
+            "source_characters": 66
+          },
+          "limits": {
+            "max_artifacts": 64,
+            "max_candidates": 20,
+            "max_context_signals": 128,
+            "max_generated_candidates": 1000,
+            "max_observations": 128,
+            "max_per_observation": 10,
+            "max_source_chars": 500000
+          },
+          "max_endpoint_fanout": 0,
+          "rejected": [],
+          "returned_candidates": 0,
+          "truncated": false,
+          "truncation_reasons": []
+        },
+        "max_output_bytes": 32768,
+        "missing_context": [
+          "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED",
+          "NO_VERIFIABLE_TASK_OBSERVATIONS"
+        ],
+        "observations": [],
+        "observations_truncated": false,
+        "schema_version": "task-context/v1",
+        "semantic_proposals": {
+          "consumer": "future validated M3-A semantic proposal integration",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "status": "NOT_CONNECTED"
+        },
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+      },
+      "limitations": [
+        "BOUNDED_TOOL_RECEIPT_PROJECTION",
+        "LLM_SEMANTIC_PROPOSALS_NOT_CONNECTED",
+        "UNKNOWN_IS_NOT_BUSINESS_REFUTATION"
+      ],
+      "receipts": [
+        {
+          "arguments": {
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          },
+          "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+          "sequence": 1,
+          "tool_id": "inspect_task_context"
+        },
+        {
+          "arguments": {
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          },
+          "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+          "sequence": 2,
+          "tool_id": "query_task_relations"
+        }
+      ],
+      "relation_query": {
+        "as_of": null,
+        "current_supported_in_snapshot": 0,
+        "evidence_spans": {},
+        "include_history": false,
+        "investigation_steps": [],
+        "max_output_bytes": 49152,
+        "max_plans": 4,
+        "max_relations": 64,
+        "missing_context": [
+          "NO_RELATION_RECORDS",
+          "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"
+        ],
+        "observation_refs": {},
+        "observation_snapshots": {},
+        "plans": [],
+        "relations": [],
+        "returned_investigation_steps": 0,
+        "returned_relations": 0,
+        "schema_version": "task-relations-query/v1",
+        "semantic_proposals": {
+          "consumer": "future validated M3-A semantic proposal integration",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "status": "NOT_CONNECTED"
+        },
+        "status": "NO_VERIFIED_RELATIONS",
+        "total_matching_relations": 0,
+        "truncated": false,
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+      },
+      "schema_version": "task-relations-result/v1",
+      "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+    },
+    "task_review": {
+      "observations": [],
+      "proposals": [],
+      "relations": [],
+      "steps": [
+        {
+          "step_id": "missing",
+          "kind": "clarify",
+          "predicate": "",
+          "depends_on": [],
+          "status": "BLOCKED",
+          "blocking_reasons": [
+            "NO_EXECUTABLE_OPERATION"
+          ],
+          "question": "需要核对哪些原始任务信息？",
+          "endpoints": []
+        }
+      ],
+      "unresolved": [
+        {
+          "step_id": "missing",
+          "question": "需要核对哪些原始任务信息？",
+          "reasons": [
+            "NO_EXECUTABLE_OPERATION"
+          ],
+          "depends_on": []
+        }
+      ],
+      "next_actions": [
+        {
+          "kind": "PROVIDE_TASK_SOURCE"
+        }
+      ],
+      "executed_tools": [
+        {
+          "tool": "inspect_task_context",
+          "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+          "status": "completed"
+        },
+        {
+          "tool": "query_task_relations",
+          "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+          "status": "completed"
+        }
+      ],
+      "human_review": {
+        "available": false,
+        "reason": "NO_AUTHENTICATED_RELATION_REVIEW_INTERFACE"
+      },
+      "authority": "SOURCE_OBSERVATIONS_AND_SEPARATE_P4_READS",
+      "scope": "BOUNDED_SNAPSHOT; NO_GLOBAL_CURRENT_OWNER_OR_DEADLINE_CLAIM"
+    }
+  },
+  "cold_http_status": 200,
+  "cold_body": {
+    "result": {
+      "schema_version": "product-ask/v1",
+      "query": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+      "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+      "scope": {
+        "subject": "",
+        "relation": "",
+        "as_of": null
+      },
+      "path": "TASK_INVESTIGATION",
+      "route": {
+        "intent": "TASK_INVESTIGATION",
+        "code": "SOURCE_TASK_INVESTIGATION",
+        "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+        "admission": {
+          "origin": "USER_SCOPED",
+          "context": {
+            "domain": "tasks",
+            "snapshot_hash": "94f2b61e218f48b30d03bbf02c01b3b899cddf93527d1b479747575b575918e7"
+          }
+        }
+      },
+      "status": "UNKNOWN",
+      "conclusions": [],
+      "discovery": null,
+      "evidence": [],
+      "receipts": [],
+      "uncertainty": {
+        "unknown_fields": [
+          "semantic_acceptance"
+        ],
+        "statement": "Task observations and model analyses are unconfirmed; semantic and business acceptance are NOT_EVALUATED.",
+        "model_reported_gaps": [],
+        "stage_errors": []
+      },
+      "agent_run_id": "ui-8b8f8f3b7e36",
+      "reviewer": {
+        "performed": true,
+        "review_id": "review_3d958422",
+        "reviewer_agent_id": "reviewer_agent",
+        "decision": "evidence_sufficient",
+        "checks": [
+          {
+            "checks": [
+              "CURRENT_SOURCE_VERSIONS",
+              "P4_LIFECYCLE_REPLAY",
+              "RECEIPT_PROJECTION"
+            ],
+            "result_type": "task-relations-result/v1",
+            "status": "pass"
+          }
+        ],
+        "reason": "All validation passed",
+        "created_at": "2026-10-22T15:00:47.336124+00:00",
+        "accepted": true
+      },
+      "timeline": null,
+      "progress": null,
+      "error": null,
+      "metrics": {
+        "model_turns": 3,
+        "tool_calls": 2,
+        "tool_errors": 0
+      },
+      "trace": [
+        {
+          "sequence": 1,
+          "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+          "tool": "inspect_task_context",
+          "status": "completed",
+          "arguments": {
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          },
+          "result": {
+            "business_status": null,
+            "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+            "error": null,
+            "status": "ok",
+            "tool_id": "inspect_task_context",
+            "value": {
+              "discovery": {
+                "candidates": [],
+                "considered_candidates": 0,
+                "eligible_observations": 0,
+                "endpoint_fanout": {},
+                "generated_candidates": 0,
+                "input_counts": {
+                  "artifact_rows": 1,
+                  "context_signals": 0,
+                  "current_workspace_artifacts": 1,
+                  "observation_rows": 0,
+                  "source_characters": 66
+                },
+                "limits": {
+                  "max_artifacts": 64,
+                  "max_candidates": 20,
+                  "max_context_signals": 128,
+                  "max_generated_candidates": 1000,
+                  "max_observations": 128,
+                  "max_per_observation": 10,
+                  "max_source_chars": 500000
+                },
+                "max_endpoint_fanout": 0,
+                "rejected": [],
+                "returned_candidates": 0,
+                "truncated": false,
+                "truncation_reasons": []
+              },
+              "max_output_bytes": 32768,
+              "missing_context": [
+                "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED",
+                "NO_VERIFIABLE_TASK_OBSERVATIONS"
+              ],
+              "observations": [],
+              "observations_truncated": false,
+              "schema_version": "task-context/v1",
+              "semantic_proposals": {
+                "consumer": "future validated M3-A semantic proposal integration",
+                "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+                "limitations": [
+                  "DISCOVERY_IS_NOT_PROOF",
+                  "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                  "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                  "NO_AUTOMATIC_PERSISTENCE"
+                ],
+                "status": "NOT_CONNECTED"
+              },
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+            }
+          },
+          "error": null
+        },
+        {
+          "sequence": 2,
+          "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+          "tool": "query_task_relations",
+          "status": "completed",
+          "arguments": {
+            "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+          },
+          "result": {
+            "business_status": null,
+            "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+            "error": null,
+            "status": "ok",
+            "tool_id": "query_task_relations",
+            "value": {
+              "as_of": null,
+              "current_supported_in_snapshot": 0,
+              "evidence_spans": {},
+              "include_history": false,
+              "investigation_steps": [],
+              "max_output_bytes": 49152,
+              "max_plans": 4,
+              "max_relations": 64,
+              "missing_context": [
+                "NO_RELATION_RECORDS",
+                "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"
+              ],
+              "observation_refs": {},
+              "observation_snapshots": {},
+              "plans": [],
+              "relations": [],
+              "returned_investigation_steps": 0,
+              "returned_relations": 0,
+              "schema_version": "task-relations-query/v1",
+              "semantic_proposals": {
+                "consumer": "future validated M3-A semantic proposal integration",
+                "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+                "limitations": [
+                  "DISCOVERY_IS_NOT_PROOF",
+                  "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+                  "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+                  "NO_AUTOMATIC_PERSISTENCE"
+                ],
+                "status": "NOT_CONNECTED"
+              },
+              "status": "NO_VERIFIED_RELATIONS",
+              "total_matching_relations": 0,
+              "truncated": false,
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+            }
+          },
+          "error": null
+        }
+      ],
+      "preparation": {
+        "schema": "product-task-preparation/v1",
+        "question": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+        "status": "UNKNOWN",
+        "execution_kind": "LIVE",
+        "provider_id": "gemini",
+        "model_id": "gemini-3.8-flash",
+        "authority": "MODEL_PROPOSED_ONLY",
+        "proposal_scope": "ALL_PLANNED_RELATIONS",
+        "semantic_policy": {
+          "execution_kind": "LIVE",
+          "max_requests": 1,
+          "max_input_tokens": 32768,
+          "max_output_tokens": 8192,
+          "max_cost_usd": 3,
+          "request_cost_upper_bound_usd": 0.1,
+          "live_authorized": true
+        },
+        "operation_capabilities": {
+          "inspect": {
+            "execution": "EXISTING_RUNTIME_TOOL",
+            "tool": "inspect_task_context",
+            "result": "COMPLETED inspection of UNCONFIRMED observations; no semantic approval",
+            "time_scope": "UNSUPPORTED; explicit gap, never silently dropped"
+          },
+          "discover": {
+            "execution": "BOUNDED_F_SNAPSHOT_ONLY",
+            "result": "UNKNOWN receipt; no second F scan and no evidence of absence"
+          },
+          "relation": {
+            "execution": "BOUNDED_SEMANTIC_PROPOSAL",
+            "tool": "analyze_task_semantics",
+            "result": "Unconfirmed proposal with evidence validation; no P4 premise is established",
+            "time_scope": "UNSUPPORTED",
+            "source_scope": "Candidate hints within the full authorized snapshot; source-scoped P4 execution remains unsupported"
+          },
+          "compare_dates": {
+            "execution": "TRUSTED_RELATIONS_REQUIRED",
+            "tool": "query_task_relations",
+            "result": "P4 can read existing verified relations; product F/G creates no such records"
+          },
+          "clarify": {
+            "execution": "VISIBLE_GAP_ONLY",
+            "result": "No tool or automatic user conversation"
+          }
+        },
+        "ready_tool_operations": [],
+        "discovery": {
+          "coverage_policy": "bounded-document-single-pass/v1",
+          "coverage_complete": false,
+          "semantic_exhaustive": false,
+          "valid_observations": [],
+          "partial_observations": [],
+          "failures": [
+            {
+              "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+              "reason": "OBSERVATION_EXTRACTION_CONFLICT",
+              "proposal_index": 1
+            }
+          ],
+          "sources": [
+            {
+              "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+              "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+              "status": "NO_TASKS_DETECTED",
+              "reason": null
+            }
+          ],
+          "unprocessed_sources": [],
+          "groups": [
+            {
+              "group_id": "task_discovery_group_64efd01d0de7620f1197c49241ff7ce008ae8b97fe9abeb80935440e48b9a25e",
+              "observation_ids": [],
+              "source_evidence_refs": [
+                "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+              ],
+              "unbound_fields": [],
+              "status": "MODEL_PROPOSED",
+              "validation_issues": [
+                "OBSERVATIONS_WITHHELD"
+              ]
+            },
+            {
+              "group_id": "task_discovery_group_723c81aa11beabecae2876a144beebc9fcce915ef870998a46f41dcf5fa235a6",
+              "observation_ids": [],
+              "source_evidence_refs": [
+                "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b"
+              ],
+              "unbound_fields": [],
+              "status": "MODEL_PROPOSED",
+              "validation_issues": [
+                "OBSERVATIONS_WITHHELD"
+              ]
+            }
+          ],
+          "extractions": [
+            {
+              "record_version": "semantic-extraction-result/v2",
+              "claims": [
+                {
+                  "claim_type": "PLAN",
+                  "subject": null,
+                  "relation_phrase": null,
+                  "value": null,
+                  "temporal_status": "NOT_STATED",
+                  "valid_from_raw": null,
+                  "valid_to_raw": null,
+                  "confidence": {
+                    "claim_type": 0.9,
+                    "entity": 0.9,
+                    "relation": 0.9,
+                    "temporal": 0.9,
+                    "overall": 0.9
+                  },
+                  "task": {
+                    "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                    "description_parts": [
+                      "兼容矩阵核验"
+                    ],
+                    "owner": "乔雨",
+                    "deadline_text": "2037-08-19",
+                    "project": null,
+                    "vendor": null,
+                    "field_bindings": [
+                      {
+                        "field": "owner",
+                        "value": "乔雨",
+                        "role": "CURRENT_OWNER",
+                        "state": "ASSERTED",
+                        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                        "task_quote": "兼容矩阵核验",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "deadline",
+                        "value": "2037-08-19",
+                        "role": "TASK_DEADLINE",
+                        "state": "ASSERTED",
+                        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                        "task_quote": "兼容矩阵核验",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "project",
+                        "value": null,
+                        "role": "UNKNOWN",
+                        "state": "NOT_STATED",
+                        "quote": "",
+                        "task_quote": "兼容矩阵核验",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "vendor",
+                        "value": null,
+                        "role": "UNKNOWN",
+                        "state": "NOT_STATED",
+                        "quote": "",
+                        "task_quote": "兼容矩阵核验",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      }
+                    ],
+                    "work_state": "ASSERTED"
+                  }
+                },
+                {
+                  "claim_type": "PLAN",
+                  "subject": null,
+                  "relation_phrase": null,
+                  "value": null,
+                  "temporal_status": "NOT_STATED",
+                  "valid_from_raw": null,
+                  "valid_to_raw": null,
+                  "confidence": {
+                    "claim_type": 0.9,
+                    "entity": 0.9,
+                    "relation": 0.9,
+                    "temporal": 0.9,
+                    "overall": 0.9
+                  },
+                  "task": {
+                    "text": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                    "description_parts": [
+                      "索引重建"
+                    ],
+                    "owner": "乔雨",
+                    "deadline_text": "2037-08-19",
+                    "project": null,
+                    "vendor": null,
+                    "field_bindings": [
+                      {
+                        "field": "owner",
+                        "value": "乔雨",
+                        "role": "CURRENT_OWNER",
+                        "state": "ASSERTED",
+                        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                        "task_quote": "索引重建",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "deadline",
+                        "value": "2037-08-19",
+                        "role": "TASK_DEADLINE",
+                        "state": "ASSERTED",
+                        "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+                        "task_quote": "索引重建",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "project",
+                        "value": null,
+                        "role": "UNKNOWN",
+                        "state": "NOT_STATED",
+                        "quote": "",
+                        "task_quote": "索引重建",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      },
+                      {
+                        "field": "vendor",
+                        "value": null,
+                        "role": "UNKNOWN",
+                        "state": "NOT_STATED",
+                        "quote": "",
+                        "task_quote": "索引重建",
+                        "basis": "SOURCE_TEXT",
+                        "message_ordinal": 0
+                      }
+                    ],
+                    "work_state": "ASSERTED"
+                  }
+                }
+              ],
+              "receipt": {
+                "provider_id": "gemini",
+                "model_id": "gemini-3.8-flash",
+                "extractor_version": "provider-neutral-extractor/v1",
+                "schema_version": "semantic-candidate/v2",
+                "temporal_policy_version": "explicit-time-only/v1",
+                "request_guard_id": "product-task-host",
+                "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+                "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+                "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+                "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+                "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+                "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+                "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+                "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+                "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+                "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+                "attempts": [
+                  {
+                    "attempt_number": 1,
+                    "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                    "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+                    "provider_request_id": null,
+                    "provider_response_id": null,
+                    "usage": {
+                      "input_tokens": 20,
+                      "output_tokens": 10,
+                      "total_tokens": 30,
+                      "duration_ms": 5.412
+                    },
+                    "latency_ms": 180.53389999840874,
+                    "failure_code": null,
+                    "outcome": "accepted_response",
+                    "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                    "estimated_cost_upper_bound_usd": 0.1
+                  }
+                ],
+                "terminal_reason": null
+              },
+              "failure_code": null
+            }
+          ],
+          "receipts": [
+            {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+              "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+              "segment_id": "segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+              "quote_sha256": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "a1215ee2b020c81b61ebdb0449f9ef5dc3c5aeaae35b803b3c37280d4185b81d",
+              "schema_sha256": "33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df",
+              "config_sha256": "ed37982dfbc6f6875df1020734837bf67ca7641a127ad136a7690c2cf88e06b1",
+              "extraction_fingerprint": "04f6bd3afad6ed205eb4343a1c0910a3aa471d7f573331b00a3680b905adb34c",
+              "claims_sha256": "4bb002a17f66c4f3f56169c0866a1fe5187e24e478a26fd715ed634ad0aa5189",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                  "response_sha256": "e2cfb1f2de737724f8c6c4cdc30b46ef5136fa8e52374646ae52ff689ec9ac31",
+                  "provider_request_id": null,
+                  "provider_response_id": null,
+                  "usage": {
+                    "input_tokens": 20,
+                    "output_tokens": 10,
+                    "total_tokens": 30,
+                    "duration_ms": 5.412
+                  },
+                  "latency_ms": 180.53389999840874,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "c56422b803baaa61cccd9e743e88362575bd9025344cbdbc4da8edd2bc91ad62",
+                  "estimated_cost_upper_bound_usd": 0.1
+                }
+              ],
+              "terminal_reason": null
+            }
+          ],
+          "candidate_coverage": [
+            {
+              "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+              "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+              "verified_description_parts": []
+            }
+          ]
+        },
+        "planning": [
+          {
+            "schema": "task-investigation-result/v1",
+            "status": "PLANNED",
+            "plan": {
+              "plan_id": "investigation_v2_a56211f1b1c6ef6ea29454e283b25103467a39d665578a69e565aa1daf1512d6",
+              "needs_more_investigation": true,
+              "ready_step_ids": [
+                "missing"
+              ],
+              "schema": "task-investigation-plan/v2",
+              "goal": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+              "snapshot_hash": "7d758ae05c62e11cbcb78a9b8d6f1917d0616f2833afe034aed84808a8650d06",
+              "steps": [
+                {
+                  "id": "missing",
+                  "kind": "clarify",
+                  "question": "需要核对哪些原始任务信息？",
+                  "handles": [],
+                  "endpoints": [],
+                  "source_handles": [],
+                  "depends_on": [],
+                  "predicate": "",
+                  "field": "",
+                  "target_kind": "",
+                  "missing_entities": [
+                    "两项任务的可验证观察"
+                  ],
+                  "execution_key": "224f4d00adecedd3f80efb7cce48e6331ba3508f90ccc0efcc4328f59d330c76",
+                  "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+                  "source_bindings": [
+                    {
+                      "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8",
+                      "artifact_id": "src_f47ae86edc614748a94dd23163cdbde0",
+                      "artifact_version_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+                      "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_72876400afab49289cb473be50ce97bdb884a63b95dc30a1eab2f5f3d2970c7b",
+                      "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+                      "span_sha256": "f868b08089e2b67a5e1de8120700220becd1ab774841c1cc99a770afeba67c22"
+                    }
+                  ],
+                  "time_scope": {
+                    "start": "",
+                    "end": ""
+                  },
+                  "premise_keys": [],
+                  "evidence_gap": ""
+                }
+              ],
+              "uncertainties": [],
+              "refusal_reasons": [],
+              "verified_results": [],
+              "parent_plan_id": null,
+              "gaps": [],
+              "limits": {
+                "max_subgoals": 12,
+                "max_relation_queries": 8,
+                "max_fanout": 4,
+                "max_dependency_depth": 6,
+                "max_relation_hops": 3,
+                "max_input_tokens": 24000,
+                "max_output_tokens": 4096,
+                "max_provider_calls": 3,
+                "max_total_input_tokens": 73728,
+                "max_total_output_tokens": 12288
+              },
+              "authority": "ACTION_SUGGESTION_ONLY",
+              "publishable": false,
+              "conclusion_policy": "Evidence and independent Reviewer required."
+            },
+            "errors": [],
+            "provider_calls": 1,
+            "usage": {
+              "input_tokens": 20,
+              "output_tokens": 10,
+              "total_tokens": 30,
+              "duration_ms": 4.271
+            },
+            "request_sha256": "99184e6a1e00fbbf938f4ed54ea18b41a7c6a8dbc0235c1dce6cd1c679f09644",
+            "response_sha256": "100fb65fd1c17a4d4d44a7c0587929010570832d64080c39a521cb2c5dfad763",
+            "model_id": "gemini-3.8-flash",
+            "actual_model_version": "gemini-3.8-flash",
+            "budget": {
+              "calls_reserved": 1,
+              "input_tokens_reserved": 12365,
+              "output_tokens_reserved": 4096,
+              "limits": {
+                "max_subgoals": 12,
+                "max_relation_queries": 8,
+                "max_fanout": 4,
+                "max_dependency_depth": 6,
+                "max_relation_hops": 3,
+                "max_input_tokens": 24576,
+                "max_output_tokens": 4096,
+                "max_provider_calls": 3,
+                "max_total_input_tokens": 73728,
+                "max_total_output_tokens": 12288
+              }
+            },
+            "untrusted_output": {
+              "kind": "tool_calls",
+              "tool_calls": [
+                {
+                  "tool_id": "emit_investigation_plan",
+                  "arguments": {
+                    "steps": [
+                      {
+                        "id": "missing",
+                        "kind": "clarify",
+                        "question": "需要核对哪些原始任务信息？",
+                        "handles": [],
+                        "source_handles": [],
+                        "depends_on": [],
+                        "predicate": "",
+                        "field": "",
+                        "target_kind": "",
+                        "missing_entities": [
+                          "两项任务的可验证观察"
+                        ]
+                      }
+                    ],
+                    "uncertainties": [],
+                    "refusal_reasons": []
+                  }
+                }
+              ]
+            },
+            "diagnostics": {
+              "proposed_steps": 1,
+              "accepted_steps": 1,
+              "excess_steps": 0,
+              "validation_issues": [],
+              "proposed_by_kind": {
+                "clarify": 1
+              },
+              "ready_steps": 1
+            }
+          }
+        ],
+        "source_mapping": {
+          "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48": {
+            "source_id": "src_f47ae86edc614748a94dd23163cdbde0",
+            "source_version": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+            "source_name": "two-work.txt",
+            "content_sha256": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9"
+          }
+        },
+        "source_snapshot_hash": "3ebb3144c1a9a420f5f898a74c937d038d7ac910e5fd6c3ab2dd39b415b0a4db",
+        "gaps": [
+          "DISCOVERY_COVERAGE_INCOMPLETE",
+          "NO_TASK_CANDIDATES; ABSENCE_NOT_PROVEN",
+          "UNRESOLVED_CLARIFY:missing"
+        ],
+        "stage_budget": {
+          "discovery_calls_reserved": 1,
+          "discovery_call_limit": 3,
+          "discovery_input_tokens_reserved_upper_bound": 14929,
+          "discovery_output_tokens_reserved": 4096,
+          "discovery_max_request_bytes": 49152,
+          "planning": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 12365,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "semantic_call_limit": 0,
+          "new_billable_cost_usd": null
+        },
+        "evidence_layers": {
+          "component": "SEPARATE_TEST_EVIDENCE",
+          "integration": "LIVE",
+          "real_model_semantics": "NOT_EVALUATED",
+          "real_product_business_task": "NOT_EVALUATED"
+        }
+      },
+      "working_context_audit": {
+        "authorized_snapshot_id": "1e4fcf33703b67269b6039351d53d837adb9e81efaa455fe781513574cbb29c3",
+        "base_instruction_sha256": "726dc72638b49b2fbd864a076423c7287d579354d2cfd9d1082a2a6581e2852c",
+        "before_working_ref": {
+          "kind": "observation",
+          "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/before.json",
+          "sha256": "e86ea417363e6b9ed56bc791dfdadf187bda5bc761c9cf075d50b95402be4ecb",
+          "size_bytes": 2694
+        },
+        "budget": {
+          "actual_provider_tokens": false,
+          "context_window_tokens": 65536,
+          "input_bytes": 10734,
+          "input_tokens": 2763,
+          "max_request_bytes": 98304,
+          "normalized_request_bytes": 10478,
+          "output_reserve_tokens": 2048,
+          "segments": {
+            "compaction_summary": {
+              "bytes": 457,
+              "tokens": 115
+            },
+            "existing_verified_context": {
+              "bytes": 2,
+              "tokens": 1
+            },
+            "history": {
+              "bytes": 3719,
+              "tokens": 930
+            },
+            "instruction": {
+              "bytes": 616,
+              "tokens": 174
+            },
+            "latest_result": {
+              "bytes": 4,
+              "tokens": 1
+            },
+            "request_envelope": {
+              "bytes": 256,
+              "tokens": 64
+            },
+            "tools": {
+              "bytes": 1284,
+              "tokens": 321
+            },
+            "verified_evidence": {
+              "bytes": 2186,
+              "tokens": 587
+            },
+            "working_context": {
+              "bytes": 1472,
+              "tokens": 388
+            }
+          },
+          "serialization_overhead_bytes": 738,
+          "token_count_kind": "MULTILINGUAL_HEURISTIC_V1",
+          "user_input_bytes": 4835
+        },
+        "compaction": null,
+        "config": {
+          "compactor_id": "DETERMINISTIC_FAKE_V1",
+          "envelope": {
+            "bytes": 256,
+            "tokens": 64
+          },
+          "history_soft_bytes": 24576,
+          "local_budget": {
+            "max_chars": 12000,
+            "max_evidence": 5,
+            "max_experience": 2,
+            "max_memory": 3,
+            "max_tokens": 3000
+          },
+          "policy": {
+            "context_window_tokens": 65536,
+            "max_candidates": 256,
+            "max_request_bytes": 98304,
+            "model_id": "offline-task-context",
+            "output_reserve_tokens": 2048,
+            "token_count_kind": "MULTILINGUAL_HEURISTIC_V1"
+          },
+          "tokenizer_id": "LINKLOOM_MULTILINGUAL_HEURISTIC_V1",
+          "tokenizer_probe": [
+            3,
+            11,
+            10
+          ],
+          "working_max_tokens": 4096
+        },
+        "coverage": [
+          {
+            "complete": true,
+            "missing_evidence_ids": [],
+            "reason": null,
+            "subgoal_id": "sources_current"
+          },
+          {
+            "complete": true,
+            "missing_evidence_ids": [],
+            "reason": null,
+            "subgoal_id": "relations_pending"
+          }
+        ],
+        "coverage_before_compaction": [
+          {
+            "complete": true,
+            "missing_evidence_ids": [],
+            "reason": null,
+            "subgoal_id": "sources_current"
+          },
+          {
+            "complete": true,
+            "missing_evidence_ids": [],
+            "reason": null,
+            "subgoal_id": "relations_pending"
+          }
+        ],
+        "errors": [],
+        "groups": [
+          {
+            "conflict": false,
+            "evidence_ids": [
+              "context_ev_v1_d5e5d8c8ef415d8de2e6f2d4b65996558e4b294d52d3917b849f87dfda657bf5"
+            ],
+            "group_id": "unclassified_investigation",
+            "subgoal_ids": [
+              "sources_current",
+              "relations_pending"
+            ]
+          }
+        ],
+        "mapping_ref": {
+          "kind": "observation",
+          "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/mapping.json",
+          "sha256": "1c8ade0618cd5e8bb73f2179709e0db2667906b1dac2be909cc3a0283e0954ad",
+          "size_bytes": 1759
+        },
+        "prepared_request_sha256": "ebba3817087be8f77ea7e4509fe3d59ff91691db60464fca1309bebf632a557b",
+        "recovery": {
+          "evidence": [
+            {
+              "historical": false,
+              "quote": "乔雨负责兼容矩阵核验和索引重建，这两项工作都在2037-08-19之前交齐。",
+              "ref": {
+                "char_end": 66,
+                "char_start": 28,
+                "content_hash": "c6660b0e3acbe627fd285443cdfc60b6a0a77ffaf3206216237c26ac863937f9",
+                "document_id": "src_f47ae86edc614748a94dd23163cdbde0",
+                "evidence_id": "context_ev_v1_d5e5d8c8ef415d8de2e6f2d4b65996558e4b294d52d3917b849f87dfda657bf5",
+                "line_end": 1,
+                "line_start": 1,
+                "logical_path": "/task-sources/src_f47ae86edc614748a94dd23163cdbde0",
+                "quote_hash": "a3b0cd08aa2497b199a6f763a9b2e0545340212919d07a99d225938f18b68822",
+                "resource_id": "artifact_v1_e5f3bea02ab15049dd19fdcbe12730dd25559807bcaae19b399b8226463dbc48",
+                "source_ref": "linkloom://ws_87bcdd47519d4f459814162c1aa583d8/src_f47ae86edc614748a94dd23163cdbde0",
+                "source_version": 1,
+                "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+              }
+            }
+          ],
+          "failures": [],
+          "status": "complete"
+        },
+        "request_usage": {
+          "bytes": 10289,
+          "tokens": 2612
+        },
+        "run_id": "run_p4_67c075db8f98",
+        "status": "COMPLETE",
+        "task_plan": {
+          "goal": "请分别核对兼容矩阵核验和索引重建的负责人及交付日期。",
+          "subgoals": [
+            {
+              "depends_on": [],
+              "question": "Recover the declared authorized original sources.",
+              "subgoal_id": "sources_current"
+            },
+            {
+              "depends_on": [
+                "sources_current"
+              ],
+              "question": "Inspect relation receipts; semantic acceptance remains unresolved.",
+              "subgoal_id": "relations_pending"
+            }
+          ]
+        },
+        "task_plan_scope": "OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",
+        "turn_id": "run_p4_67c075db8f98:turn:3",
+        "working_ref": {
+          "kind": "observation",
+          "ref": "working/0e909b6153b26adfdfb3/3-6c3dcf8a19dd6a2b/state.json",
+          "sha256": "e86ea417363e6b9ed56bc791dfdadf187bda5bc761c9cf075d50b95402be4ecb",
+          "size_bytes": 2694
+        }
+      },
+      "task_investigation": {
+        "answer_status": "PARTIAL",
+        "context": {
+          "discovery": {
+            "candidates": [],
+            "considered_candidates": 0,
+            "eligible_observations": 0,
+            "endpoint_fanout": {},
+            "generated_candidates": 0,
+            "input_counts": {
+              "artifact_rows": 1,
+              "context_signals": 0,
+              "current_workspace_artifacts": 1,
+              "observation_rows": 0,
+              "source_characters": 66
+            },
+            "limits": {
+              "max_artifacts": 64,
+              "max_candidates": 20,
+              "max_context_signals": 128,
+              "max_generated_candidates": 1000,
+              "max_observations": 128,
+              "max_per_observation": 10,
+              "max_source_chars": 500000
+            },
+            "max_endpoint_fanout": 0,
+            "rejected": [],
+            "returned_candidates": 0,
+            "truncated": false,
+            "truncation_reasons": []
+          },
+          "max_output_bytes": 32768,
+          "missing_context": [
+            "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED",
+            "NO_VERIFIABLE_TASK_OBSERVATIONS"
+          ],
+          "observations": [],
+          "observations_truncated": false,
+          "schema_version": "task-context/v1",
+          "semantic_proposals": {
+            "consumer": "future validated M3-A semantic proposal integration",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "status": "NOT_CONNECTED"
+          },
+          "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+        },
+        "limitations": [
+          "BOUNDED_TOOL_RECEIPT_PROJECTION",
+          "LLM_SEMANTIC_PROPOSALS_NOT_CONNECTED",
+          "UNKNOWN_IS_NOT_BUSINESS_REFUTATION"
+        ],
+        "receipts": [
+          {
+            "arguments": {
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+            },
+            "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+            "sequence": 1,
+            "tool_id": "inspect_task_context"
+          },
+          {
+            "arguments": {
+              "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+            },
+            "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+            "sequence": 2,
+            "tool_id": "query_task_relations"
+          }
+        ],
+        "relation_query": {
+          "as_of": null,
+          "current_supported_in_snapshot": 0,
+          "evidence_spans": {},
+          "include_history": false,
+          "investigation_steps": [],
+          "max_output_bytes": 49152,
+          "max_plans": 4,
+          "max_relations": 64,
+          "missing_context": [
+            "NO_RELATION_RECORDS",
+            "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"
+          ],
+          "observation_refs": {},
+          "observation_snapshots": {},
+          "plans": [],
+          "relations": [],
+          "returned_investigation_steps": 0,
+          "returned_relations": 0,
+          "schema_version": "task-relations-query/v1",
+          "semantic_proposals": {
+            "consumer": "future validated M3-A semantic proposal integration",
+            "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+            "limitations": [
+              "DISCOVERY_IS_NOT_PROOF",
+              "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+              "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+              "NO_AUTOMATIC_PERSISTENCE"
+            ],
+            "status": "NOT_CONNECTED"
+          },
+          "status": "NO_VERIFIED_RELATIONS",
+          "total_matching_relations": 0,
+          "truncated": false,
+          "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+        },
+        "schema_version": "task-relations-result/v1",
+        "workspace_id": "ws_87bcdd47519d4f459814162c1aa583d8"
+      },
+      "task_review": {
+        "observations": [],
+        "proposals": [],
+        "relations": [],
+        "steps": [
+          {
+            "step_id": "missing",
+            "kind": "clarify",
+            "predicate": "",
+            "depends_on": [],
+            "status": "BLOCKED",
+            "blocking_reasons": [
+              "NO_EXECUTABLE_OPERATION"
+            ],
+            "question": "需要核对哪些原始任务信息？",
+            "endpoints": []
+          }
+        ],
+        "unresolved": [
+          {
+            "step_id": "missing",
+            "question": "需要核对哪些原始任务信息？",
+            "reasons": [
+              "NO_EXECUTABLE_OPERATION"
+            ],
+            "depends_on": []
+          }
+        ],
+        "next_actions": [
+          {
+            "kind": "PROVIDE_TASK_SOURCE"
+          }
+        ],
+        "executed_tools": [
+          {
+            "tool": "inspect_task_context",
+            "call_id": "rtc_733c356d6fadcee9e25984af795fd573",
+            "status": "completed"
+          },
+          {
+            "tool": "query_task_relations",
+            "call_id": "rtc_01c14be27b4f633d78154c43eccb6555",
+            "status": "completed"
+          }
+        ],
+        "human_review": {
+          "available": false,
+          "reason": "NO_AUTHENTICATED_RELATION_REVIEW_INTERFACE"
+        },
+        "authority": "SOURCE_OBSERVATIONS_AND_SEPARATE_P4_READS",
+        "scope": "BOUNDED_SNAPSHOT; NO_GLOBAL_CURRENT_OWNER_OR_DEADLINE_CLAIM"
+      },
+      "recovery": {
+        "mode": "SAVED_RESULT_READ_ONLY",
+        "session_resumed": false
+      }
+    }
+  },
+  "transport_requests": 5
+}

@@ -272,6 +272,7 @@ def _project(result, artifact, segments, *, task_profile=None):
             fail("TASK_PROPOSAL_MISSING")
             continue
         field_profile = task_profile in {TaskDiscoveryProfile.FIELD_GROUNDED_V2, TaskDiscoveryProfile.TASK_RECALL_V3}
+        work_identity = task_profile == TaskDiscoveryProfile.TASK_RECALL_V3
         if field_profile != (proposal.field_bindings is not None):
             fail("TASK_PROFILE_MISMATCH")
             continue
@@ -281,7 +282,8 @@ def _project(result, artifact, segments, *, task_profile=None):
             continue
         proposals_seen.add(signature)
         if (not proposal.description_parts or artifact.content.count(proposal.text) != 1
-                or any(part not in proposal.text for part in proposal.description_parts)):
+                or any(part not in proposal.text or (work_identity and proposal.text.count(part) != 1)
+                       for part in proposal.description_parts)):
             fail("TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS")
             continue
         start = artifact.content.index(proposal.text)
@@ -304,7 +306,8 @@ def _project(result, artifact, segments, *, task_profile=None):
             bound_parts.update(parts)
             projected = TaskProposal(fragment, parts, proposal.owner, proposal.deadline_text,
                                      proposal.project, proposal.vendor, proposal.field_bindings, proposal.work_state)
-            observation = build_task_observation(projected, segment, artifact)
+            observation = build_task_observation(projected, segment, artifact,
+                                                 identity_version='v2' if work_identity else 'v1')
             if observation.validation_status == "INVALID" or not observation.verify(artifact):
                 fail("M1_VALIDATION_FAILED")
                 continue
@@ -326,5 +329,6 @@ def _project(result, artifact, segments, *, task_profile=None):
         group_id = hashlib.sha256((artifact.artifact_version_id + signature).encode("utf-8")).hexdigest()
         groups.append(DiscoveryGroup("task_discovery_group_" + group_id,
             tuple(o.observation_id for o in projections), tuple(refs), unbound))
-    # An immutable location cannot silently acquire competing extractions.
+    # Quarantine only competing extractions of one work identity. Independent
+    # work witnesses can share the same raw fragment and must survive together.
     return [o for key, o in found.items() if key not in conflicted], groups, failures
