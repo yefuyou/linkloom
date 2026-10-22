@@ -121,13 +121,14 @@ def test_pre_authorization_failures_do_not_create_ledger_records_or_execute(call
     assert policy.call_count == 0
 
 
-def test_unknown_tool_does_not_create_pending_record():
+@pytest.mark.parametrize('tool_id', ['does_not_exist', 'analyze_task_semantics'])
+def test_unknown_tool_does_not_create_pending_record(tool_id):
     ledger = ToolExecutionLedger()
     runtime = _runtime(lambda arguments: [], ledger)
     policy = _policy()
     call = ToolCall(
         call_id="unknown_tool_call",
-        tool_id="does_not_exist",
+        tool_id=tool_id,
         arguments={"query": "state"},
         run_id="run_runtime_1",
         task_id="task_runtime_1",
