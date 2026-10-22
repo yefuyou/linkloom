@@ -1,0 +1,9 @@
+{
+  "fixed_by_independent_readonly_auditor": true,
+  "revealed_after_initial_implementation_and_offline_contracts": true,
+  "cases": [
+    {"id":"H01","expected":[{"anchor":"交付灰度结果","owner":"赵宁","deadline_text":"2029-07-03","deadline":"2029-07-03","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"H02","expected":[{"anchor":"完成回归测试","owner":"林悦","deadline_text":"2029-07-06","deadline":"2029-07-06","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"H03","expected":[{"anchor":"完成灰度发布","owner":"周敏","deadline_text":"2029-07-12","deadline":"2029-07-12","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]}
+  ]
+}

@@ -110,6 +110,59 @@ def empty_provider_product(root):
     return app, compose_task_provider(app, GeminiProviderAdapter(transport), budget), transport
 
 
+def test_explicit_product_discovery_output_exceeding_budget_never_reaches_provider(tmp_path):
+    app, service, transport, _, ws = provider_product(tmp_path)
+    service.task_models = replace(service.task_models,
+        provider_limits=replace(service.task_models.provider_limits, max_output_tokens=3000))
+    try:
+        with product_http(app, service) as base:
+            _, body = ask_request(base, ws, authorized=True)
+            result = poll(base, ws, body['result'])
+            assert result['status']=='BLOCKED', result
+            assert not transport.requests
+    finally:
+        app.close()
+
+
+def test_cold_read_rejects_dual_field_and_role_binding_tamper(tmp_path):
+    from linkloom.semantic_ingestion.task_observation import TaskObservation, TaskProposal, build_task_observation
+    from linkloom.semantic_ingestion.artifacts import RawArtifact
+    from linkloom.semantic_ingestion.document_text import parse_source_text
+    app, service, transport, _, ws = provider_product(tmp_path)
+    try:
+        with product_http(app, service) as base:
+            _, body = ask_request(base, ws, authorized=True)
+            result = poll(base, ws, body['result'])
+            assert result['status']=='PARTIAL', result
+            run_id=result['agent_run_id']
+            directory=tmp_path/'work'/'investigations'
+            pointer=json.loads((directory/(run_id+'.json')).read_text(encoding='utf8'))
+            manifest_path=directory/pointer['root']/'preparation'/'preparation.json'
+            manifest=json.loads(manifest_path.read_text(encoding='utf8'))
+            key=next(k for k in ('valid_observations','partial_observations') if manifest['discovery'][k])
+            original=TaskObservation.from_dict(manifest['discovery'][key][0])
+            # Name 青竹 exists as a project. An internally consistent false owner
+            # declaration can pass source replay; that does not prove semantics.
+            bindings=tuple(replace(b,value='青竹',quote=original.raw_text,basis='SOURCE_TEXT')
+                           if b.field=='owner' else b for b in original.field_bindings)
+            proposal=TaskProposal(original.raw_text,
+                tuple(e.quote for e in original.field_evidence if e.field=='description'),
+                '青竹',original.deadline_text,original.project,original.vendor,bindings,'ASSERTED')
+            artifact=RawArtifact(ws,original.provenance.artifact_id,'timestamped_text',TEXTS[0])
+            altered=build_task_observation(proposal,parse_source_text(artifact).segments[0],artifact)
+            assert altered.owner=='青竹' and altered.verify(artifact)
+            manifest['discovery'][key][0]=altered.to_dict()
+            manifest_path.write_text(json.dumps(manifest,ensure_ascii=False),encoding='utf8')
+            count=len(transport.requests)
+            status,cold=cold_read(app.repository.database_path,run_id,ws)
+            assert status==200 and cold['result']['status']=='BLOCKED',cold
+            assert not cold['result']['evidence'] and not cold['result']['trace']
+            assert not cold['result'].get('task_review')
+            assert len(transport.requests)==count
+    finally:
+        app.close()
+
+
 def test_normal_http_import_does_not_send_sources_before_ask_authorization(tmp_path):
     app, service, transport = empty_provider_product(tmp_path)
     try:
@@ -127,7 +180,8 @@ def test_normal_http_import_does_not_send_sources_before_ask_authorization(tmp_p
             result = poll(base, ws, body['result'])
             assert result['status'] == 'PARTIAL', result
             assert {o['owner'] for o in result['task_review']['observations']} == {'林枫'}
-            assert result['task_review']['observations'][1]['deadline_role'] == 'UNKNOWN'
+            assert result['task_review']['observations'][1]['deadline_role'] == 'TASK_DEADLINE'
+            assert result['task_review']['observations'][1]['deadline'] == '2029-06-24'
     finally:
         app.close()
 

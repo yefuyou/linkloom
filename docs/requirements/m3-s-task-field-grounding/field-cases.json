@@ -1,0 +1,24 @@
+{
+  "schema": "m3s-field-cases/v1",
+  "fixed_before_live": true,
+  "cases": [
+    {"id":"F01","speaker":"纪要","text":"银杉计划的证书轮换这件事交给顾言统筹，2033年2月18日交付；本项由云渡供货。","expected":[{"anchor":"证书轮换","owner":"顾言","deadline_text":"2033年2月18日","deadline":"2033-02-18","precision":"DAY","role":"TASK_DEADLINE","project":"银杉计划","vendor":"云渡"}]},
+    {"id":"F02","speaker":"纪要","text":"浅湾工程的备份演练还是由许晴继续照管，交付落在2033-03-09；松桥是这项工作的供货方。","expected":[{"anchor":"备份演练","owner":"许晴","deadline_text":"2033-03-09","deadline":"2033-03-09","precision":"DAY","role":"TASK_DEADLINE","project":"浅湾工程","vendor":"松桥"}]},
+    {"id":"F03","speaker":"简宁","text":"签名适配这一块我接下来兜底，4月16日把验收结果交齐。","expected":[{"anchor":"签名适配","owner":"简宁","deadline_text":"4月16日","deadline":null,"precision":"MONTH_DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F04","speaker":"叶宸","text":"迁移排练是本周要做的工作。我今天仅来通报准备情况，谁担责和哪天交付仍未确定。","expected":[{"anchor":"迁移排练","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"F05","speaker":"纪要","text":"容量报告此前是黎安经手的；本轮交付由苏珂接棒，苏珂在2033年5月21日交齐容量报告。","expected":[{"anchor":"容量报告","owner":"苏珂","deadline_text":"2033年5月21日","deadline":"2033-05-21","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F06","speaker":"纪要","text":"文档巡检照常开展。程泉只是旁听者，并非这项工作的执行人；本轮没有指定接办者，交付时间也空缺。","expected":[{"anchor":"文档巡检","owner":null,"deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"F07","speaker":"纪要","text":"陈柯接着负责索引回填，交付是8月23日；年份没有在本记录中说明。","expected":[{"anchor":"索引回填","owner":"陈柯","deadline_text":"8月23日","deadline":null,"precision":"MONTH_DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F08","speaker":"纪要","text":"周薇来完成配额盘点，约定在11月交付；本条没有写年份，也没有约定具体日。","expected":[{"anchor":"配额盘点","owner":"周薇","deadline_text":"11月","deadline":null,"precision":"MONTH","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F09","speaker":"纪要","text":"会议在2033-06-02举行。审计归档交由宋岚处理，交付日明确为2033-06-08。","expected":[{"anchor":"审计归档","owner":"宋岚","deadline_text":"2033-06-08","deadline":"2033-06-08","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F10","speaker":"纪要","text":"压测窗口是2033-07-03至2033-07-05；陈朔负责的容量验收须在2033-07-08交付，窗口结束并不是交付日。","expected":[{"anchor":"容量验收","owner":"陈朔","deadline_text":"2033-07-08","deadline":"2033-07-08","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]},
+    {"id":"F11","speaker":"纪要","text":"许旸接手告警复核。两个小组分别主张2033-08-12和2033-08-15交付，尚未决定采用哪一天。","expected":[{"anchor":"告警复核","owner":"许旸","deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"F12","speaker":"纪要","text":"陆溪承担镜像签名工作。交付日只是暂拟2033-09-18，要等审计批准后才确定；目前没有已确认的交付日期。","expected":[{"anchor":"镜像签名","owner":"陆溪","deadline_text":null,"deadline":null,"precision":"UNKNOWN","role":"UNKNOWN","project":null,"vendor":null}]},
+    {"id":"F13","speaker":"纪要","text":"闻舟承担前端清单核对，2033-10-04交齐前端清单。姚月承担后端清单核对，2033-10-07交齐后端清单。","expected":[{"anchor":"前端清单","owner":"闻舟","deadline_text":"2033-10-04","deadline":"2033-10-04","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null},{"anchor":"后端清单","owner":"姚月","deadline_text":"2033-10-07","deadline":"2033-10-07","precision":"DAY","role":"TASK_DEADLINE","project":null,"vendor":null}]}
+  ],
+  "holdout_inputs_fixed_before_expectation_reveal": [
+    {"id":"H01","speaker":"赵宁","text":"上线检查这件事我来扛，2029-07-03前交付灰度结果。","anchor":"交付灰度结果"},
+    {"id":"H02","speaker":"记录","text":"昨日回归测试由周辰负责；今日改由林悦接手，2029-07-06前完成回归测试。","anchor":"完成回归测试"},
+    {"id":"H03","speaker":"记录","text":"窗口期为2029-07-10至2029-07-12；交付日期定为2029-07-12，周敏负责完成灰度发布。","anchor":"完成灰度发布"}
+  ]
+}

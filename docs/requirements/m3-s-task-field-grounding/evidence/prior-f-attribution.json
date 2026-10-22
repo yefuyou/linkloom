@@ -1,0 +1,218 @@
+{
+  "actual_f_receipts": [
+    {
+      "original_file": "..\\m3r\\work\\m3r-live-product-20261022\\work\\investigations\\15b4874f8bc2\\preparation\\discovery-1.json",
+      "original_file_sha256": "b963ae63a464f238a5b10f6363cfd2bc0749e69e760d33b14a59d61af9310003",
+      "source_segment": {
+        "event_time": "2029-06-01T09:00:00+00:00",
+        "speaker": "林枫",
+        "text": "负责项目上线检查任务。原计划的截止日期是2029-06-20；这一天是会议记录日期，不是截止日期。"
+      },
+      "task_claims": [
+        {
+          "valid_from": null,
+          "confidence": {
+            "claim_type": 0.9,
+            "temporal": 0.9,
+            "overall": 0.85,
+            "entity": 0.8,
+            "relation": 0.85
+          },
+          "task": {
+            "owner": "林枫",
+            "deadline_text": null,
+            "project": null,
+            "vendor": null,
+            "description_parts": [
+              "负责项目上线检查任务"
+            ],
+            "text": "负责项目上线检查任务。"
+          },
+          "subject": "林枫",
+          "valid_to": null,
+          "value": "项目上线检查任务",
+          "relation": "负责",
+          "temporal_status": "NOT_STATED",
+          "claim_type": "ACTION"
+        }
+      ],
+      "provider_response_id": "QkvZavaDAs3fytMP-aToqQs",
+      "usage": {
+        "input_tokens": 1348,
+        "output_tokens": 381,
+        "total_tokens": 1729,
+        "duration_ms": 5771.314
+      },
+      "request_sha256": "061f7a5cc0b5091f0776106431a8327abc3d9f14a4a1bcfee8260324817c4a40",
+      "discovery_profile": null
+    },
+    {
+      "original_file": "..\\m3r\\work\\m3r-live-product-20261022\\work\\investigations\\15b4874f8bc2\\preparation\\discovery-2.json",
+      "original_file_sha256": "e4ad9506393bf8b4be085295d6e3fd02dee44f46466b5406cfdfc31a1a6d3b99",
+      "source_segment": {
+        "event_time": "2029-06-04T09:00:00+00:00",
+        "speaker": "会议记录",
+        "text": "讨论此前任务的修订；林枫继续负责项目上线检查。新的计划日期提到2029-06-24，同时有人只是在讨论中普通提及2029-06-26；原文没有写明哪一个日期是正式截止日期，也没有完整的替代关系证明。"
+      },
+      "task_claims": [
+        {
+          "relation": "task_owner",
+          "claim_type": "PLAN",
+          "value": "林枫",
+          "task": {
+            "project": null,
+            "description_parts": [
+              "项目上线检查"
+            ],
+            "owner": "林枫",
+            "deadline_text": null,
+            "vendor": null,
+            "text": "林枫继续负责项目上线检查。"
+          },
+          "valid_to": null,
+          "confidence": {
+            "claim_type": 0.95,
+            "entity": 0.95,
+            "relation": 0.9,
+            "temporal": 0.85,
+            "overall": 0.92
+          },
+          "subject": "项目上线检查",
+          "temporal_status": "NOT_STATED",
+          "valid_from": null
+        }
+      ],
+      "provider_response_id": "RkvZarSbAYCfuMYPydK7qQk",
+      "usage": {
+        "input_tokens": 1380,
+        "output_tokens": 153,
+        "total_tokens": 1533,
+        "duration_ms": 2457.097
+      },
+      "request_sha256": "ffb6f8169101b210350f9fbf7a62254b06d4ff91dfb3c85f47d29e23aba6586e",
+      "discovery_profile": null
+    }
+  ],
+  "observations": [
+    {
+      "observation_id": "task_observation_v1_0cc3cd61e059c354434e3f9ab0d99ca346658698161459aedd954a41c198453c",
+      "provenance": {
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd",
+        "artifact_id": "src_aba67d03b83f41c5b9aa3871d8205441",
+        "artifact_version_id": "artifact_v1_8c4616cb02ade2388b7e0d27255b1538f56a8841e0495113aeb93bddd3d932bf",
+        "source_ref": "linkloom://ws_21bd06232c1a459c8423be7cd48447dd/src_aba67d03b83f41c5b9aa3871d8205441",
+        "content_hash": "a3f0f1159664ae616f0aaa7e0b71829c4db7f3aa07b60855323d09f8f8f88775",
+        "ordinal": 0,
+        "message_id": "message_v1_7d16f5885667b7e979d99a0085ca6bac9c74927434c02b0ea703f7928621b61e",
+        "segment_id": "segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2755d43c862fb788adee7abc09923932cf4da7609101e18af3f3cdaa893c5b69",
+        "char_start": 27,
+        "char_end": 76,
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "负责项目上线检查任务。原计划的截止日期是2029-06-20；这一天是会议记录日期，不是截止日期。",
+        "quote_sha256": "fe720c4b60d089f9220bfdcaadfa315160a02c1410a7e68647f9250a573abf2b"
+      },
+      "raw_text": "负责项目上线检查任务。",
+      "description": "负责项目上线检查任务",
+      "owner": null,
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_precision": "UNKNOWN",
+      "deadline_role": "UNKNOWN",
+      "project": null,
+      "vendor": null,
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "owner",
+        "deadline",
+        "project",
+        "vendor"
+      ],
+      "validation_issues": [
+        "OWNER_UNGROUNDED"
+      ],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "负责项目上线检查任务。",
+          "char_start": 27,
+          "char_end": 38,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "负责项目上线检查任务",
+          "char_start": 27,
+          "char_end": 37,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-21T23:31:05.602900+00:00",
+      "event_time": "2029-06-01T09:00:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY"
+    },
+    {
+      "observation_id": "task_observation_v1_9e55f320883d5a6acc7ce5df0279e59de57cd0e4663c56b408a19d43aedcc78f",
+      "provenance": {
+        "workspace_id": "ws_21bd06232c1a459c8423be7cd48447dd",
+        "artifact_id": "src_6b1f73b70ffb43a6b6d275cb903f3119",
+        "artifact_version_id": "artifact_v1_4ab325fed52a64dab418ebad59a31bc57782f665ceb20fcae42661594c1941a9",
+        "source_ref": "linkloom://ws_21bd06232c1a459c8423be7cd48447dd/src_6b1f73b70ffb43a6b6d275cb903f3119",
+        "content_hash": "d3846be5f6ec93a0ade332fc75b3dd6ab4a3e8f574a05ac9631d06ec1791aaee",
+        "ordinal": 0,
+        "message_id": "message_v1_51292bd70bb06576f42f53e280725b90b33f3ccd49e0957d215546d0022d5c76",
+        "segment_id": "segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+        "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6dd5962ed2fb54725ecebf407870b1ed4a0721a3638420250d01b66474241138",
+        "char_start": 29,
+        "char_end": 128,
+        "line_start": 1,
+        "line_end": 1,
+        "quote": "讨论此前任务的修订；林枫继续负责项目上线检查。新的计划日期提到2029-06-24，同时有人只是在讨论中普通提及2029-06-26；原文没有写明哪一个日期是正式截止日期，也没有完整的替代关系证明。",
+        "quote_sha256": "c53bc3bed072f0103878a29d3ee9f402b4a4daa167854e7930ddeb170d3f805c"
+      },
+      "raw_text": "林枫继续负责项目上线检查。",
+      "description": "项目上线检查",
+      "owner": null,
+      "deadline": null,
+      "deadline_text": null,
+      "deadline_precision": "UNKNOWN",
+      "deadline_role": "UNKNOWN",
+      "project": null,
+      "vendor": null,
+      "extraction_status": "EXTRACTED",
+      "validation_status": "PARTIAL",
+      "unknown_fields": [
+        "owner",
+        "deadline",
+        "project",
+        "vendor"
+      ],
+      "validation_issues": [
+        "OWNER_UNGROUNDED"
+      ],
+      "field_evidence": [
+        {
+          "field": "raw_text",
+          "quote": "林枫继续负责项目上线检查。",
+          "char_start": 39,
+          "char_end": 52,
+          "basis": "SOURCE_TEXT"
+        },
+        {
+          "field": "description",
+          "quote": "项目上线检查",
+          "char_start": 45,
+          "char_end": 51,
+          "basis": "SOURCE_TEXT"
+        }
+      ],
+      "recorded_at": "2026-10-21T23:31:05.846034+00:00",
+      "event_time": "2029-06-04T09:00:00+00:00",
+      "relation_status": "UNCONFIRMED",
+      "authority": "SUPPORTING_ONLY"
+    }
+  ]
+}

@@ -46,6 +46,20 @@ class ScriptedStage:
             arguments = {'claims': [] if self.missing else [claim(text, '完成日志迁移', owner='林枫' if source_index < 2 else None,
                 project='青竹' if source_index < 2 else None,
                 deadline_text=('2029-06-24' if source_index == 1 else '2029-06-20'))]}
+            if 'task-field-grounding/v2' in request.user_input:
+                # Explicit scripted role declarations for the new LIVE schema;
+                # legacy/offline fixtures retain their original wire payload.
+                from linkloom.semantic_ingestion.task_field_binding import FIELD_ROLES
+                for row in arguments['claims']:
+                    task = row['task']
+                    task['work_state'] = 'ASSERTED'
+                    task['field_bindings'] = []
+                    for field, role in FIELD_ROLES.items():
+                        value = task['deadline_text' if field == 'deadline' else field]
+                        task['field_bindings'].append(dict(field=field, value=value,
+                            role=role if value else 'UNKNOWN',
+                            state='AMBIGUOUS' if field == 'deadline' and source_index == 2 else 'ASSERTED' if value else 'NOT_STATED',
+                            quote=text if value else '', task_quote='完成日志迁移', basis='SOURCE_TEXT', message_ordinal=0))
         else:
             marker = 'INPUT_JSON\n' if self.stage == 'planning' else 'AUTHORIZED_SNAPSHOT_JSON\n'
             payload = json.loads(request.user_input.split(marker, 1)[1])

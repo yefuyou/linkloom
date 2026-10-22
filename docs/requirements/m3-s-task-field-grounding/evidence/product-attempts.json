@@ -1,0 +1,3534 @@
+{
+  "note": "Includes failures; only clear completed Runtime/Reviewer. Scoped follow-up is a changed question, not a timeout retry.",
+  "attempts": [
+    {
+      "campaign": "m3s-live-20261022",
+      "original_file": "work\\m3s-live-20261022\\clear\\work\\investigations\\394b5af9a2d3\\preparation\\preparation.json",
+      "original_file_sha256": "9227f370ededf2cae0f464f4c6921c330a58946f65101e4f8a1cb18679fb3133",
+      "question": "闻夏的上线核查后来调整了吗？现在记录的负责人和交付日期是什么？与原来差几天？",
+      "status": "BLOCKED",
+      "gaps": [
+        "EVIDENCE_GAP_REQUIRED"
+      ],
+      "discovery": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_b8f53f9bbc657ff314eabe7e4b338e70e082570ff5e4d1a5181ba15fff5d1b10",
+            "provenance": {
+              "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+              "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+              "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+              "source_ref": "linkloom://ws_a00a27809c7d47e587665d0dd6f1d943/src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+              "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+              "ordinal": 1,
+              "message_id": "message_v1_d9c2a6a04b51ba192063cea5117a4c711cb6f7337ad8a3ac1d6bc1c92ac714bf",
+              "segment_id": "segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+              "char_start": 87,
+              "char_end": 152,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+              "quote_sha256": "ee5a85bded18bb91134060cd2d1eeb8cb8f8a6deb7241fabd0c92759302a8258"
+            },
+            "raw_text": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+            "description": "上线核查",
+            "owner": "闻夏",
+            "deadline": "2034-02-20",
+            "deadline_text": "2034-02-20",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+                "char_start": 87,
+                "char_end": 152,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "上线核查",
+                "char_start": 90,
+                "char_end": 94,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "上次的上线核查仍由闻夏接着做",
+                "char_start": 87,
+                "char_end": 101,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20",
+                "char_start": 87,
+                "char_end": 119,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T04:37:10.343771+00:00",
+            "event_time": "2034-02-03T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": "闻夏",
+                "role": "CURRENT_OWNER",
+                "state": "ASSERTED",
+                "quote": "上次的上线核查仍由闻夏接着做",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "deadline",
+                "value": "2034-02-20",
+                "role": "TASK_DEADLINE",
+                "state": "ASSERTED",
+                "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "project",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              }
+            ],
+            "work_state": "ASSERTED"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+            "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_59364ebf61fb28f0dae5a16584ea415a4129336b867e4e6b3cac2eece73fdb5d",
+            "observation_ids": [
+              "task_observation_v1_b8f53f9bbc657ff314eabe7e4b338e70e082570ff5e4d1a5181ba15fff5d1b10"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+                  "description_parts": [
+                    "上线核查"
+                  ],
+                  "owner": "闻夏",
+                  "deadline_text": "2034-02-20",
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": "闻夏",
+                      "role": "CURRENT_OWNER",
+                      "state": "ASSERTED",
+                      "quote": "上次的上线核查仍由闻夏接着做",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "deadline",
+                      "value": "2034-02-20",
+                      "role": "TASK_DEADLINE",
+                      "state": "ASSERTED",
+                      "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+              "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+              "segment_id": "segment_v1_6281275e42c6a984d3c983b39be17c4e1e31ef6589c89f49e8fdf3570e8b8d57",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6281275e42c6a984d3c983b39be17c4e1e31ef6589c89f49e8fdf3570e8b8d57",
+              "quote_sha256": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "212a67261189a285f5b7976e55836649c78a120eb53f9b72025cd18722c9600c",
+              "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+              "config_sha256": "8bf7aa4bf63a2f2a7cec31c5502ccecea575c6ed3db709939c53c73e41f7e20f",
+              "extraction_fingerprint": "590d65a071736b79f77daa23bcd86b31627c8a92e3daef8655f83026309a147d",
+              "claims_sha256": "d458c0eb645755c6f3e4bf527d6a2e26064eaa8f4a9eccb4f43c93d99f0706c6",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "2c6715d6bb378e33bd3da7bef6b900ffe186be06d3493d8c77b9f4104cc3819f",
+                  "response_sha256": "1c239949c72abba0d50fd06d2dbb6714f287b84896bf2fa4250115225222bed5",
+                  "provider_request_id": null,
+                  "provider_response_id": "_JLZapuTENGvytMP8umrwQU",
+                  "usage": {
+                    "input_tokens": 2168,
+                    "output_tokens": 482,
+                    "total_tokens": 2650,
+                    "duration_ms": 4364.361
+                  },
+                  "latency_ms": 4410.148200000549,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "2c6715d6bb378e33bd3da7bef6b900ffe186be06d3493d8c77b9f4104cc3819f",
+                  "estimated_cost_upper_bound_usd": 0.25
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+            "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+            "segment_id": "segment_v1_6281275e42c6a984d3c983b39be17c4e1e31ef6589c89f49e8fdf3570e8b8d57",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_6281275e42c6a984d3c983b39be17c4e1e31ef6589c89f49e8fdf3570e8b8d57",
+            "quote_sha256": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "212a67261189a285f5b7976e55836649c78a120eb53f9b72025cd18722c9600c",
+            "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+            "config_sha256": "8bf7aa4bf63a2f2a7cec31c5502ccecea575c6ed3db709939c53c73e41f7e20f",
+            "extraction_fingerprint": "590d65a071736b79f77daa23bcd86b31627c8a92e3daef8655f83026309a147d",
+            "claims_sha256": "d458c0eb645755c6f3e4bf527d6a2e26064eaa8f4a9eccb4f43c93d99f0706c6",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "2c6715d6bb378e33bd3da7bef6b900ffe186be06d3493d8c77b9f4104cc3819f",
+                "response_sha256": "1c239949c72abba0d50fd06d2dbb6714f287b84896bf2fa4250115225222bed5",
+                "provider_request_id": null,
+                "provider_response_id": "_JLZapuTENGvytMP8umrwQU",
+                "usage": {
+                  "input_tokens": 2168,
+                  "output_tokens": 482,
+                  "total_tokens": 2650,
+                  "duration_ms": 4364.361
+                },
+                "latency_ms": 4410.148200000549,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "2c6715d6bb378e33bd3da7bef6b900ffe186be06d3493d8c77b9f4104cc3819f",
+                "estimated_cost_upper_bound_usd": 0.25
+              }
+            ],
+            "terminal_reason": null
+          }
+        ],
+        "candidate_coverage": [
+          {
+            "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+            "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eb663d91911f301904fa1ffbd443518e1fd496a1caf2ddd5aec2499c7ede926",
+            "verified_description_parts": []
+          },
+          {
+            "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+            "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+            "verified_description_parts": [
+              "上线核查"
+            ]
+          }
+        ]
+      },
+      "planning": [
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "PLANNED",
+          "plan": {
+            "plan_id": "investigation_v2_71fa61901fd2a3006a0fbf8abd93d9b6a94342d15a79bbf2328de66e41357cd8",
+            "needs_more_investigation": true,
+            "ready_step_ids": [
+              "step_inspect_owner",
+              "step_inspect_deadline",
+              "step_discover_old_task"
+            ],
+            "schema": "task-investigation-plan/v2",
+            "goal": "闻夏的上线核查后来调整了吗？现在记录的负责人和交付日期是什么？与原来差几天？",
+            "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+            "snapshot_hash": "114e4957753a477a2236a6acf8ce49fcfc3a4e3f16993f4f5fe832d293a6c94d",
+            "steps": [
+              {
+                "id": "step_inspect_owner",
+                "kind": "inspect",
+                "question": "核查任务task_0当前记录的负责人是谁？",
+                "handles": [
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "observation_id": "task_observation_v1_b8f53f9bbc657ff314eabe7e4b338e70e082570ff5e4d1a5181ba15fff5d1b10",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "ced2d3a97719bd0b8515d0fd34af0b1c643794eda008fd01036af2352558c743"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "owner",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "4bbefe4273d1e2c1cd085a20ff0cbb4701aa8fab877b6a58e78d8bc1aa8e934e",
+                "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "78c33ffd9df51329a6763c1b92bd938287f89d1255f11ba64f931cac7ddb9c02"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_inspect_deadline",
+                "kind": "inspect",
+                "question": "核查任务task_0当前记录的交付日期是什么？",
+                "handles": [
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "observation_id": "task_observation_v1_b8f53f9bbc657ff314eabe7e4b338e70e082570ff5e4d1a5181ba15fff5d1b10",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "ced2d3a97719bd0b8515d0fd34af0b1c643794eda008fd01036af2352558c743"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "deadline",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "efd93adafe75074f6b93659d6d5cbe401d6caf35ef74171fa68cdef2d6950447",
+                "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "78c33ffd9df51329a6763c1b92bd938287f89d1255f11ba64f931cac7ddb9c02"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_discover_old_task",
+                "kind": "discover",
+                "question": "在证据中检索闻夏上线核查的初始安排任务记录。",
+                "handles": [
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "observation_id": "task_observation_v1_b8f53f9bbc657ff314eabe7e4b338e70e082570ff5e4d1a5181ba15fff5d1b10",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d9b7aad5f0eedaabb470a6ed502f5b8c984590f142cd9184cc6dbb72b3e14a0d",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "ced2d3a97719bd0b8515d0fd34af0b1c643794eda008fd01036af2352558c743"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "",
+                "target_kind": "task",
+                "missing_entities": [
+                  "上线核查初始任务"
+                ],
+                "execution_key": "9ae9238e36331ff9a1d80f5e0e36ee8bf1cfd55bee0a39851c013906de2f5bea",
+                "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_a00a27809c7d47e587665d0dd6f1d943",
+                    "artifact_id": "src_60e6ccbe1eeb4aa9820ed3e0cb657021",
+                    "artifact_version_id": "artifact_v1_d60760f460e846a59d1689613eeb32aaa810105be674db817a2a6f75eda884a5",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eb663d91911f301904fa1ffbd443518e1fd496a1caf2ddd5aec2499c7ede926",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "c6e791000795d2d19140df8f1e6438bc1454d423064c14564687fc3c4f072c1d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": "需要寻找原先关于闻夏上线核查的初始任务记录，以核对是否存在计划调整及原始交付日期。"
+              }
+            ],
+            "uncertainties": [
+              "缺少初始任务句柄，需等待发现返回后建立同一任务与计划调整关系并比对日期差。"
+            ],
+            "refusal_reasons": [],
+            "verified_results": [],
+            "parent_plan_id": null,
+            "gaps": [],
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24000,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            },
+            "authority": "ACTION_SUGGESTION_ONLY",
+            "publishable": false,
+            "conclusion_policy": "Evidence and independent Reviewer required."
+          },
+          "errors": [],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": 4027,
+            "output_tokens": 401,
+            "total_tokens": 4428,
+            "duration_ms": 4789.446
+          },
+          "request_sha256": "5d5e82609305c52f3dcc489e16a24401802b5ca427f93ed913ec576fc98782b9",
+          "response_sha256": "30a2c0947b2e56791293045c23b6f792cec64c3164333678a55257d64991c565",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 13685,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "tool_calls",
+            "tool_calls": [
+              {
+                "tool_id": "emit_investigation_plan",
+                "arguments": {
+                  "refusal_reasons": [],
+                  "steps": [
+                    {
+                      "handles": [
+                        "task_0"
+                      ],
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "predicate": "",
+                      "id": "step_inspect_owner",
+                      "field": "owner",
+                      "kind": "inspect",
+                      "target_kind": "",
+                      "evidence_gap": "",
+                      "missing_entities": [],
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "depends_on": [],
+                      "question": "核查任务task_0当前记录的负责人是谁？"
+                    },
+                    {
+                      "predicate": "",
+                      "evidence_gap": "",
+                      "target_kind": "",
+                      "handles": [
+                        "task_0"
+                      ],
+                      "question": "核查任务task_0当前记录的交付日期是什么？",
+                      "missing_entities": [],
+                      "kind": "inspect",
+                      "depends_on": [],
+                      "field": "deadline",
+                      "id": "step_inspect_deadline",
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      }
+                    },
+                    {
+                      "predicate": "",
+                      "field": "",
+                      "target_kind": "task",
+                      "kind": "discover",
+                      "handles": [
+                        "task_0"
+                      ],
+                      "question": "在证据中检索闻夏上线核查的初始安排任务记录。",
+                      "evidence_gap": "需要寻找原先关于闻夏上线核查的初始任务记录，以核对是否存在计划调整及原始交付日期。",
+                      "source_handles": [
+                        "source_0:1"
+                      ],
+                      "missing_entities": [
+                        "上线核查初始任务"
+                      ],
+                      "depends_on": [],
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "id": "step_discover_old_task"
+                    }
+                  ],
+                  "uncertainties": [
+                    "缺少初始任务句柄，需等待发现返回后建立同一任务与计划调整关系并比对日期差。"
+                  ]
+                }
+              }
+            ]
+          },
+          "diagnostics": {
+            "proposed_steps": 3,
+            "accepted_steps": 3,
+            "excess_steps": 0,
+            "validation_issues": [],
+            "proposed_by_kind": {
+              "inspect": 2,
+              "discover": 1
+            },
+            "ready_steps": 3
+          }
+        },
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "OUTPUT_INVALID",
+          "plan": null,
+          "errors": [
+            "EVIDENCE_GAP_REQUIRED"
+          ],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": 7755,
+            "output_tokens": 417,
+            "total_tokens": 8172,
+            "duration_ms": 4975.273
+          },
+          "request_sha256": "7d50e640466b4ab95757a753c534489cdf4913b72442d5c888a0394edfd9e44b",
+          "response_sha256": "bb5bfc257a01e6c07637d1b85df87480a1b1b486ac5fcc414afb29a8f1c631cc",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "budget": {
+            "calls_reserved": 2,
+            "input_tokens_reserved": 34562,
+            "output_tokens_reserved": 8192,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "tool_calls",
+            "tool_calls": [
+              {
+                "tool_id": "emit_investigation_plan",
+                "arguments": {
+                  "steps": [
+                    {
+                      "handles": [
+                        "task_0"
+                      ],
+                      "evidence_gap": "",
+                      "id": "step_inspect_owner",
+                      "question": "核查任务task_0当前记录的负责人是谁？",
+                      "target_kind": "",
+                      "missing_entities": [],
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "predicate": "",
+                      "field": "owner",
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "kind": "inspect",
+                      "depends_on": []
+                    },
+                    {
+                      "field": "deadline",
+                      "target_kind": "",
+                      "kind": "inspect",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "handles": [
+                        "task_0"
+                      ],
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "question": "核查任务task_0当前记录的交付日期是什么？",
+                      "id": "step_inspect_deadline",
+                      "predicate": "",
+                      "depends_on": [],
+                      "missing_entities": [],
+                      "evidence_gap": ""
+                    },
+                    {
+                      "missing_entities": [
+                        "上线核查初始任务"
+                      ],
+                      "depends_on": [],
+                      "handles": [
+                        "task_0"
+                      ],
+                      "id": "step_clarify_old_task",
+                      "field": "",
+                      "kind": "clarify",
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "predicate": "",
+                      "question": "请确认是否存在闻夏上线核查的初始任务记录或补充其具体排期信息？",
+                      "target_kind": "",
+                      "evidence_gap": "前次尝试在有限快照中检索初始任务返回UNKNOWN，需要向用户澄清或确认是否存在原始上线核查任务记录以便比对调整和计算日期差。",
+                      "source_handles": []
+                    }
+                  ],
+                  "uncertainties": [
+                    "初始任务实体仍未建立，无法在当前已验证实体间执行SAME_TASK/REVISES_PLAN关联及日期差比对。"
+                  ],
+                  "refusal_reasons": []
+                }
+              }
+            ]
+          },
+          "diagnostics": {
+            "proposed_steps": 3,
+            "accepted_steps": 0,
+            "excess_steps": 2,
+            "validation_issues": [
+              {
+                "code": "EVIDENCE_GAP_REQUIRED",
+                "step_id": "step_inspect_owner",
+                "violations": []
+              },
+              {
+                "code": "EVIDENCE_GAP_REQUIRED",
+                "step_id": "step_inspect_deadline",
+                "violations": []
+              }
+            ],
+            "proposed_by_kind": {
+              "inspect": 2,
+              "clarify": 1
+            },
+            "quality_scope": "ALL_STEPS"
+          }
+        }
+      ]
+    },
+    {
+      "campaign": "m3s-live-phase2-20261022",
+      "original_file": "work\\m3s-live-phase2-20261022\\clear\\work\\investigations\\195a597d1fa6\\preparation\\preparation.json",
+      "original_file_sha256": "286318478ad4cdfc3727298f3284190a4708c89a9ea8f736ad32f5e2174a1f91",
+      "question": "闻夏的上线核查后来调整了吗？现在记录的负责人和交付日期是什么？与原来差几天？",
+      "status": "PARTIAL",
+      "gaps": [
+        "UNSATISFIED_PREMISE:step_1",
+        "UNSATISFIED_PREMISE:step_4"
+      ],
+      "discovery": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_7c3a3309f581147833515d96904cf9a65890aeac9d8e3e4e06d6ddca5d08120e",
+            "provenance": {
+              "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+              "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+              "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+              "source_ref": "linkloom://ws_83d1cb2210024b52953a4c46a81b15f7/src_c378559a23b94cd9b47930ba284d9ca5",
+              "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+              "ordinal": 0,
+              "message_id": "message_v1_3a6d044109420c8d482fff42ff83d8f9cf0c6fdd52bd62c0a3f285adbbf88833",
+              "segment_id": "segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+              "char_start": 27,
+              "char_end": 59,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "晓汀项目的上线核查交给闻夏来掌舵，交付锁定2034-02-16。",
+              "quote_sha256": "7539e20d41ae3665e9666d8f9cf47c1221323c33154e4a3e9b96c694902551f4"
+            },
+            "raw_text": "晓汀项目的上线核查交给闻夏来掌舵，交付锁定2034-02-16。",
+            "description": "上线核查",
+            "owner": "闻夏",
+            "deadline": "2034-02-16",
+            "deadline_text": "2034-02-16",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": "晓汀",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "晓汀项目的上线核查交给闻夏来掌舵，交付锁定2034-02-16。",
+                "char_start": 27,
+                "char_end": 59,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "上线核查",
+                "char_start": 32,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "上线核查交给闻夏来掌舵",
+                "char_start": 32,
+                "char_end": 43,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "交付锁定2034-02-16",
+                "char_start": 44,
+                "char_end": 58,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "晓汀项目的上线核查",
+                "char_start": 27,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T04:55:57.786867+00:00",
+            "event_time": "2034-02-01T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": "闻夏",
+                "role": "CURRENT_OWNER",
+                "state": "ASSERTED",
+                "quote": "上线核查交给闻夏来掌舵",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "deadline",
+                "value": "2034-02-16",
+                "role": "TASK_DEADLINE",
+                "state": "ASSERTED",
+                "quote": "交付锁定2034-02-16",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "project",
+                "value": "晓汀",
+                "role": "TASK_PROJECT",
+                "state": "ASSERTED",
+                "quote": "晓汀项目的上线核查",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              }
+            ],
+            "work_state": "ASSERTED"
+          },
+          {
+            "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+            "provenance": {
+              "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+              "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+              "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+              "source_ref": "linkloom://ws_83d1cb2210024b52953a4c46a81b15f7/src_c378559a23b94cd9b47930ba284d9ca5",
+              "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+              "ordinal": 1,
+              "message_id": "message_v1_dcf511008453d721e152512f97f565bda930026ebf773e038ef677324ffb15db",
+              "segment_id": "segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+              "char_start": 87,
+              "char_end": 152,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+              "quote_sha256": "ee5a85bded18bb91134060cd2d1eeb8cb8f8a6deb7241fabd0c92759302a8258"
+            },
+            "raw_text": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+            "description": "上线核查",
+            "owner": "闻夏",
+            "deadline": "2034-02-20",
+            "deadline_text": "2034-02-20",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+                "char_start": 87,
+                "char_end": 152,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "上线核查",
+                "char_start": 90,
+                "char_end": 94,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "owner",
+                "quote": "上次的上线核查仍由闻夏接着做",
+                "char_start": 87,
+                "char_end": 101,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "deadline",
+                "quote": "交付这一栏现填2034-02-20",
+                "char_start": 102,
+                "char_end": 119,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T04:55:57.786867+00:00",
+            "event_time": "2034-02-03T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": "闻夏",
+                "role": "CURRENT_OWNER",
+                "state": "ASSERTED",
+                "quote": "上次的上线核查仍由闻夏接着做",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "deadline",
+                "value": "2034-02-20",
+                "role": "TASK_DEADLINE",
+                "state": "ASSERTED",
+                "quote": "交付这一栏现填2034-02-20",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "project",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "上线核查",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              }
+            ],
+            "work_state": "ASSERTED"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+            "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_10e94245739cd441d3d19e03be513fe3d78a6cd2882e5f55e3b150ed2b634cfc",
+            "observation_ids": [
+              "task_observation_v1_7c3a3309f581147833515d96904cf9a65890aeac9d8e3e4e06d6ddca5d08120e"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_1fc3b90df8c3d2d9220ce01fc3137c3219aa155b313ab117120596ed24947a67",
+            "observation_ids": [
+              "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.95,
+                  "temporal": 0.95,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "晓汀项目的上线核查交给闻夏来掌舵，交付锁定2034-02-16。",
+                  "description_parts": [
+                    "上线核查"
+                  ],
+                  "owner": "闻夏",
+                  "deadline_text": "2034-02-16",
+                  "project": "晓汀",
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": "闻夏",
+                      "role": "CURRENT_OWNER",
+                      "state": "ASSERTED",
+                      "quote": "上线核查交给闻夏来掌舵",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "deadline",
+                      "value": "2034-02-16",
+                      "role": "TASK_DEADLINE",
+                      "state": "ASSERTED",
+                      "quote": "交付锁定2034-02-16",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "project",
+                      "value": "晓汀",
+                      "role": "TASK_PROJECT",
+                      "state": "ASSERTED",
+                      "quote": "晓汀项目的上线核查",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.95,
+                  "relation": 0.95,
+                  "temporal": 0.95,
+                  "overall": 0.95
+                },
+                "task": {
+                  "text": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+                  "description_parts": [
+                    "上线核查"
+                  ],
+                  "owner": "闻夏",
+                  "deadline_text": "2034-02-20",
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": "闻夏",
+                      "role": "CURRENT_OWNER",
+                      "state": "ASSERTED",
+                      "quote": "上次的上线核查仍由闻夏接着做",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "deadline",
+                      "value": "2034-02-20",
+                      "role": "TASK_DEADLINE",
+                      "state": "ASSERTED",
+                      "quote": "交付这一栏现填2034-02-20",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "上线核查",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+              "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+              "segment_id": "segment_v1_d998b7c17d250ffcb7db8fa0dac31e93a1fe28c6b8c21d2cc23270b720ab30f7",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d998b7c17d250ffcb7db8fa0dac31e93a1fe28c6b8c21d2cc23270b720ab30f7",
+              "quote_sha256": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "8cb6310f4c144d9be8deed9dc4a17932da20c6ef2c9f55a7f89a2a3ca2956a7b",
+              "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+              "config_sha256": "68bc8692f7110d330a27bae2b6e6928ec02abcc8bb0ba6dca6c55df4bdf1834b",
+              "extraction_fingerprint": "3ad98d20f12c4d524e27c5b37967c40c687fea4e2730fc065ca1148d7a4544b7",
+              "claims_sha256": "bc5e6c706b9f210830afe8ff00299b266413d3b5378f605f6fc824524e41799c",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "146f65e27db37470bd24d118c995b9e2960c66f7927f1c78d155c90e2c865010",
+                  "response_sha256": "78f469ba2ffb42c0727de5eee87b2e525b696f404205f1987d82ec3c304f196a",
+                  "provider_request_id": null,
+                  "provider_response_id": "Z5fZauHHJJPcytMPhM7W4QM",
+                  "usage": {
+                    "input_tokens": 1967,
+                    "output_tokens": 908,
+                    "total_tokens": 2875,
+                    "duration_ms": 10941.188
+                  },
+                  "latency_ms": 10983.531999998377,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "146f65e27db37470bd24d118c995b9e2960c66f7927f1c78d155c90e2c865010",
+                  "estimated_cost_upper_bound_usd": 0.25
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+            "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+            "segment_id": "segment_v1_d998b7c17d250ffcb7db8fa0dac31e93a1fe28c6b8c21d2cc23270b720ab30f7",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d998b7c17d250ffcb7db8fa0dac31e93a1fe28c6b8c21d2cc23270b720ab30f7",
+            "quote_sha256": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "8cb6310f4c144d9be8deed9dc4a17932da20c6ef2c9f55a7f89a2a3ca2956a7b",
+            "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+            "config_sha256": "68bc8692f7110d330a27bae2b6e6928ec02abcc8bb0ba6dca6c55df4bdf1834b",
+            "extraction_fingerprint": "3ad98d20f12c4d524e27c5b37967c40c687fea4e2730fc065ca1148d7a4544b7",
+            "claims_sha256": "bc5e6c706b9f210830afe8ff00299b266413d3b5378f605f6fc824524e41799c",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "146f65e27db37470bd24d118c995b9e2960c66f7927f1c78d155c90e2c865010",
+                "response_sha256": "78f469ba2ffb42c0727de5eee87b2e525b696f404205f1987d82ec3c304f196a",
+                "provider_request_id": null,
+                "provider_response_id": "Z5fZauHHJJPcytMPhM7W4QM",
+                "usage": {
+                  "input_tokens": 1967,
+                  "output_tokens": 908,
+                  "total_tokens": 2875,
+                  "duration_ms": 10941.188
+                },
+                "latency_ms": 10983.531999998377,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "146f65e27db37470bd24d118c995b9e2960c66f7927f1c78d155c90e2c865010",
+                "estimated_cost_upper_bound_usd": 0.25
+              }
+            ],
+            "terminal_reason": null
+          }
+        ],
+        "candidate_coverage": [
+          {
+            "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+            "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+            "verified_description_parts": [
+              "上线核查"
+            ]
+          },
+          {
+            "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+            "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+            "verified_description_parts": [
+              "上线核查"
+            ]
+          }
+        ]
+      },
+      "planning": [
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "PLANNED",
+          "plan": {
+            "plan_id": "investigation_v2_3f76aa507b533dc49d944c0e2b2a4b17ede9b82a40f5a531a583fa0c7bb36a84",
+            "needs_more_investigation": true,
+            "ready_step_ids": [
+              "step_0",
+              "step_2",
+              "step_3"
+            ],
+            "schema": "task-investigation-plan/v2",
+            "goal": "闻夏的上线核查后来调整了吗？现在记录的负责人和交付日期是什么？与原来差几天？",
+            "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+            "snapshot_hash": "d5c2d0b2c938caaeb60b95b4fbf02c6e3e56bf652a4f9f2f388462fed8d936a0",
+            "steps": [
+              {
+                "id": "step_0",
+                "kind": "relation",
+                "question": "task_1 与 task_0 是否指同一上线核查任务？",
+                "handles": [
+                  "task_1",
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "36017e86bb82827aca4dc55f604ddb408cd176a408f50ccd2047eb2e5623df0e"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_7c3a3309f581147833515d96904cf9a65890aeac9d8e3e4e06d6ddca5d08120e",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "8d7b371a830f54520d622197380cee3d32e0a0c0bde6d68a21dd48f354211d78"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "SAME_TASK",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "d74edaed3a7c9cc6c71e509d73a61f45827e29dd9fd5629e97a8af344fc3c29f",
+                "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "31727bb54f12470dce98c706f93bb9584e532163ecc42a42ffab440649e4264b"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "148ce103b01afe31961f268f673e729dff4481cb5da31e7f5df3fc2bf9f86cdd"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_1",
+                "kind": "relation",
+                "question": "task_1 是否修订了 task_0 的执行计划？",
+                "handles": [
+                  "task_1",
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "36017e86bb82827aca4dc55f604ddb408cd176a408f50ccd2047eb2e5623df0e"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_7c3a3309f581147833515d96904cf9a65890aeac9d8e3e4e06d6ddca5d08120e",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "8d7b371a830f54520d622197380cee3d32e0a0c0bde6d68a21dd48f354211d78"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [
+                  "step_0"
+                ],
+                "predicate": "REVISES_PLAN",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "c25e97127de4966a69d33160f1fcceb538e8e82da868706a8567598dd7457289",
+                "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "31727bb54f12470dce98c706f93bb9584e532163ecc42a42ffab440649e4264b"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "148ce103b01afe31961f268f673e729dff4481cb5da31e7f5df3fc2bf9f86cdd"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [
+                  "d74edaed3a7c9cc6c71e509d73a61f45827e29dd9fd5629e97a8af344fc3c29f"
+                ],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_2",
+                "kind": "inspect",
+                "question": "task_1 当前记录的负责人是谁？",
+                "handles": [
+                  "task_1"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "36017e86bb82827aca4dc55f604ddb408cd176a408f50ccd2047eb2e5623df0e"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "owner",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "89631c1dcf35908a27f0c9f2200cb77b15ad197f28ee332bf86f7c0afe06ffc3",
+                "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "148ce103b01afe31961f268f673e729dff4481cb5da31e7f5df3fc2bf9f86cdd"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_3",
+                "kind": "inspect",
+                "question": "task_1 当前记录的交付日期是什么？",
+                "handles": [
+                  "task_1"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "36017e86bb82827aca4dc55f604ddb408cd176a408f50ccd2047eb2e5623df0e"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "deadline",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "38d7fe7ce6f1334e1de7d62806b96dfb158270edc0673540ac40ebc7b4b88339",
+                "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "148ce103b01afe31961f268f673e729dff4481cb5da31e7f5df3fc2bf9f86cdd"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_4",
+                "kind": "compare_dates",
+                "question": "task_1 与 task_0 的交付日期相差几天？",
+                "handles": [
+                  "task_1",
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_f50d41099d90e99703f9c7920a303cfc69ec5cea3882630b181dfabd73ad96b4",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "36017e86bb82827aca4dc55f604ddb408cd176a408f50ccd2047eb2e5623df0e"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "observation_id": "task_observation_v1_7c3a3309f581147833515d96904cf9a65890aeac9d8e3e4e06d6ddca5d08120e",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "payload_hash": "8d7b371a830f54520d622197380cee3d32e0a0c0bde6d68a21dd48f354211d78"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [
+                  "step_0",
+                  "step_1"
+                ],
+                "predicate": "",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "8e5aee65383fde975411943847479fed52819bf3b5add71548dcafe168f2a681",
+                "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_095f63215d20ebc7cc76a117a586aca3cf83b035482b10f77703c829fbae039c",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "31727bb54f12470dce98c706f93bb9584e532163ecc42a42ffab440649e4264b"
+                  },
+                  {
+                    "workspace_id": "ws_83d1cb2210024b52953a4c46a81b15f7",
+                    "artifact_id": "src_c378559a23b94cd9b47930ba284d9ca5",
+                    "artifact_version_id": "artifact_v1_75922c5d14d9ef9ed2f94d8c4fdcdfed834c701f1b0a9495a1cf7824632b1a47",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d2f9f9aea01a7589129190142fa6ef2a45ab895f475541e32df82a45aec7d053",
+                    "content_hash": "f34f5224b4d565dd7caeddf217d8387427392404d30d95a6adcc79305ef8066a",
+                    "span_sha256": "148ce103b01afe31961f268f673e729dff4481cb5da31e7f5df3fc2bf9f86cdd"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [
+                  "d74edaed3a7c9cc6c71e509d73a61f45827e29dd9fd5629e97a8af344fc3c29f",
+                  "c25e97127de4966a69d33160f1fcceb538e8e82da868706a8567598dd7457289"
+                ],
+                "evidence_gap": ""
+              }
+            ],
+            "uncertainties": [
+              "task_1 是否确认为 task_0 的有效调整版本尚待关系判定验证。"
+            ],
+            "refusal_reasons": [],
+            "verified_results": [],
+            "parent_plan_id": null,
+            "gaps": [],
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24000,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            },
+            "authority": "ACTION_SUGGESTION_ONLY",
+            "publishable": false,
+            "conclusion_policy": "Evidence and independent Reviewer required."
+          },
+          "errors": [],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": 4622,
+            "output_tokens": 619,
+            "total_tokens": 5241,
+            "duration_ms": 6136.608
+          },
+          "request_sha256": "1dc39efc97d4ae74024677366b6622c73428315498af5129e00b4d7789bd7c5d",
+          "response_sha256": "94404db286d11ad78acc05cbd4a70985e031b168af706be694342007f8304bb1",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 14718,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "tool_calls",
+            "tool_calls": [
+              {
+                "tool_id": "emit_investigation_plan",
+                "arguments": {
+                  "refusal_reasons": [],
+                  "uncertainties": [
+                    "task_1 是否确认为 task_0 的有效调整版本尚待关系判定验证。"
+                  ],
+                  "steps": [
+                    {
+                      "evidence_gap": "",
+                      "predicate": "SAME_TASK",
+                      "kind": "relation",
+                      "id": "step_0",
+                      "handles": [
+                        "task_1",
+                        "task_0"
+                      ],
+                      "missing_entities": [],
+                      "field": "",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "depends_on": [],
+                      "question": "task_1 与 task_0 是否指同一上线核查任务？",
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ],
+                      "target_kind": ""
+                    },
+                    {
+                      "target_kind": "",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "depends_on": [
+                        "step_0"
+                      ],
+                      "field": "",
+                      "predicate": "REVISES_PLAN",
+                      "id": "step_1",
+                      "missing_entities": [],
+                      "question": "task_1 是否修订了 task_0 的执行计划？",
+                      "evidence_gap": "",
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ],
+                      "handles": [
+                        "task_1",
+                        "task_0"
+                      ],
+                      "kind": "relation"
+                    },
+                    {
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "predicate": "",
+                      "field": "owner",
+                      "kind": "inspect",
+                      "target_kind": "",
+                      "depends_on": [],
+                      "handles": [
+                        "task_1"
+                      ],
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "missing_entities": [],
+                      "id": "step_2",
+                      "question": "task_1 当前记录的负责人是谁？",
+                      "evidence_gap": ""
+                    },
+                    {
+                      "evidence_gap": "",
+                      "target_kind": "",
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "predicate": "",
+                      "kind": "inspect",
+                      "id": "step_3",
+                      "handles": [
+                        "task_1"
+                      ],
+                      "missing_entities": [],
+                      "field": "deadline",
+                      "depends_on": [],
+                      "question": "task_1 当前记录的交付日期是什么？",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      }
+                    },
+                    {
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ],
+                      "evidence_gap": "",
+                      "field": "",
+                      "id": "step_4",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "missing_entities": [],
+                      "depends_on": [
+                        "step_0",
+                        "step_1"
+                      ],
+                      "handles": [
+                        "task_1",
+                        "task_0"
+                      ],
+                      "predicate": "",
+                      "question": "task_1 与 task_0 的交付日期相差几天？",
+                      "kind": "compare_dates",
+                      "target_kind": ""
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "diagnostics": {
+            "proposed_steps": 5,
+            "accepted_steps": 5,
+            "excess_steps": 0,
+            "validation_issues": [],
+            "proposed_by_kind": {
+              "relation": 2,
+              "inspect": 2,
+              "compare_dates": 1
+            },
+            "ready_steps": 3
+          }
+        }
+      ]
+    },
+    {
+      "campaign": "m3s-live-phase3-20261022",
+      "original_file": "work\\m3s-live-phase3-20261022\\ambiguous\\work\\investigations\\fccf63d6d5dd\\preparation\\preparation.json",
+      "original_file_sha256": "ff99dd91c9d5290a0d08557ce74589fc3d2300d00ddeb4fd4f94717972689766",
+      "question": "页面巡检现在由谁执行，交付日期定了吗？两次会议的安排有什么变化？",
+      "status": "BLOCKED",
+      "gaps": [
+        "INPUT_BUDGET_EXCEEDED"
+      ],
+      "discovery": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a",
+            "provenance": {
+              "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+              "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+              "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+              "source_ref": "linkloom://ws_167d0a7809394b8abc894e93ac880fcf/src_cc01a519d00f4acc9412f495f9ebe9a4",
+              "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "ordinal": 0,
+              "message_id": "message_v1_55476cb5766a5275e71bde8d760c51f65b710e68f9c2a7cee0d9c1dd40925582",
+              "segment_id": "segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+              "char_start": 27,
+              "char_end": 90,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+              "quote_sha256": "c55f8d7431079d89438cd47568f45331b8651ba82ade4fa1ffb6cfe54a04cd0b"
+            },
+            "raw_text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+            "description": "页面巡检",
+            "owner": null,
+            "deadline": null,
+            "deadline_text": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "project": "棠原",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+                "char_start": 27,
+                "char_end": 90,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "页面巡检",
+                "char_start": 32,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "棠原项目的页面巡检",
+                "char_start": 27,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T04:59:02.340143+00:00",
+            "event_time": "2034-03-05T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "韩桥只负责报进度，实际执行人尚未定",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "deadline",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "交付日期尚无约定",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "project",
+                "value": "棠原",
+                "role": "TASK_PROJECT",
+                "state": "ASSERTED",
+                "quote": "棠原项目的页面巡检",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              }
+            ],
+            "work_state": "ASSERTED"
+          },
+          {
+            "observation_id": "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217",
+            "provenance": {
+              "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+              "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+              "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+              "source_ref": "linkloom://ws_167d0a7809394b8abc894e93ac880fcf/src_cc01a519d00f4acc9412f495f9ebe9a4",
+              "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "ordinal": 1,
+              "message_id": "message_v1_047eb036bac77f2328e0784893462f011c4f135a487160cc8c4ee0ff5fcd4051",
+              "segment_id": "segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+              "char_start": 118,
+              "char_end": 191,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+              "quote_sha256": "d6f011cd14cb386719c6fe45ee32a9423790aadf7b80b20466c17eefe4fab27a"
+            },
+            "raw_text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+            "description": "页面巡检",
+            "owner": null,
+            "deadline": null,
+            "deadline_text": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+                "char_start": 118,
+                "char_end": 191,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "页面巡检",
+                "char_start": 118,
+                "char_end": 122,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T04:59:02.340143+00:00",
+            "event_time": "2034-03-06T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": null,
+                "role": "CANDIDATE_OWNER",
+                "state": "AMBIGUOUS",
+                "quote": "待确认由韩桥还是易秋执行",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "deadline",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "AMBIGUOUS",
+                "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "project",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              }
+            ],
+            "work_state": "ASSERTED"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+            "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_17a36002c04871d101adcd746e61e3f7adddb7f0da99bd7f8d73ccf7b45de239",
+            "observation_ids": [
+              "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_ac1a9b9531b5946dedfc3520b6e35162b2951c145d2140c6bde18557108b5851",
+            "observation_ids": [
+              "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.85,
+                  "temporal": 0.9,
+                  "overall": 0.9
+                },
+                "task": {
+                  "text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+                  "description_parts": [
+                    "页面巡检"
+                  ],
+                  "owner": null,
+                  "deadline_text": null,
+                  "project": "棠原",
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "韩桥只负责报进度，实际执行人尚未定",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "deadline",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "交付日期尚无约定",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "project",
+                      "value": "棠原",
+                      "role": "TASK_PROJECT",
+                      "state": "ASSERTED",
+                      "quote": "棠原项目的页面巡检",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.85,
+                  "temporal": 0.9,
+                  "overall": 0.9
+                },
+                "task": {
+                  "text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+                  "description_parts": [
+                    "页面巡检"
+                  ],
+                  "owner": null,
+                  "deadline_text": null,
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": null,
+                      "role": "CANDIDATE_OWNER",
+                      "state": "AMBIGUOUS",
+                      "quote": "待确认由韩桥还是易秋执行",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "deadline",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "AMBIGUOUS",
+                      "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+              "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+              "segment_id": "segment_v1_920e9282c8debf7e8265603c0757393a785adc70ae7551845816a4b08f4dd4ef",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_920e9282c8debf7e8265603c0757393a785adc70ae7551845816a4b08f4dd4ef",
+              "quote_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "db91fe889927eb653b8cdc3e523c7cc771c519a71e377193e2ec414b67855220",
+              "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+              "config_sha256": "4d11ac2fc153533a5fafd321d1ebe23df973814c802bba75f8a1dec748cf78ab",
+              "extraction_fingerprint": "18da289906fb09a3193dd810f3dc003cbb9ef4014ca7f008ed1e6756c60d76fc",
+              "claims_sha256": "b8a6979bc443ef872b63d95d7b4fad325946f07c1906aab3cb9d8817a42d9bbe",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "59f0a95bbdb7f9f0347f41d16c9d7a14d5f2bd0e85403f6acbf13501ec744ae8",
+                  "response_sha256": "e9e9de57df18df6606be9c20c12d4a428a97698beed8b486b8f875b0b4fa4c04",
+                  "provider_request_id": null,
+                  "provider_response_id": "IJjZao2wFv7bytMPjdjXiQg",
+                  "usage": {
+                    "input_tokens": 1994,
+                    "output_tokens": 879,
+                    "total_tokens": 2873,
+                    "duration_ms": 10972.961
+                  },
+                  "latency_ms": 11028.301800000918,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "59f0a95bbdb7f9f0347f41d16c9d7a14d5f2bd0e85403f6acbf13501ec744ae8",
+                  "estimated_cost_upper_bound_usd": 0.25
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+            "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+            "segment_id": "segment_v1_920e9282c8debf7e8265603c0757393a785adc70ae7551845816a4b08f4dd4ef",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_920e9282c8debf7e8265603c0757393a785adc70ae7551845816a4b08f4dd4ef",
+            "quote_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "db91fe889927eb653b8cdc3e523c7cc771c519a71e377193e2ec414b67855220",
+            "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+            "config_sha256": "4d11ac2fc153533a5fafd321d1ebe23df973814c802bba75f8a1dec748cf78ab",
+            "extraction_fingerprint": "18da289906fb09a3193dd810f3dc003cbb9ef4014ca7f008ed1e6756c60d76fc",
+            "claims_sha256": "b8a6979bc443ef872b63d95d7b4fad325946f07c1906aab3cb9d8817a42d9bbe",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "59f0a95bbdb7f9f0347f41d16c9d7a14d5f2bd0e85403f6acbf13501ec744ae8",
+                "response_sha256": "e9e9de57df18df6606be9c20c12d4a428a97698beed8b486b8f875b0b4fa4c04",
+                "provider_request_id": null,
+                "provider_response_id": "IJjZao2wFv7bytMPjdjXiQg",
+                "usage": {
+                  "input_tokens": 1994,
+                  "output_tokens": 879,
+                  "total_tokens": 2873,
+                  "duration_ms": 10972.961
+                },
+                "latency_ms": 11028.301800000918,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "59f0a95bbdb7f9f0347f41d16c9d7a14d5f2bd0e85403f6acbf13501ec744ae8",
+                "estimated_cost_upper_bound_usd": 0.25
+              }
+            ],
+            "terminal_reason": null
+          }
+        ],
+        "candidate_coverage": [
+          {
+            "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+            "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+            "verified_description_parts": [
+              "页面巡检"
+            ]
+          },
+          {
+            "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+            "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+            "verified_description_parts": [
+              "页面巡检"
+            ]
+          }
+        ]
+      },
+      "planning": [
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "PLANNED",
+          "plan": {
+            "plan_id": "investigation_v2_24b0d929b32aae1a4404fb72114050111a2c0e76a047f9606c5af6a8c0028379",
+            "needs_more_investigation": true,
+            "ready_step_ids": [
+              "step_0",
+              "step_1",
+              "step_2",
+              "step_3",
+              "step_6"
+            ],
+            "schema": "task-investigation-plan/v2",
+            "goal": "页面巡检现在由谁执行，交付日期定了吗？两次会议的安排有什么变化？",
+            "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+            "snapshot_hash": "a47c3660dd317833f19f7b665c1a12aa2b560487bf6876503dfcc03bb2dbc3a5",
+            "steps": [
+              {
+                "id": "step_0",
+                "kind": "inspect",
+                "question": "核查 task_0 的页面巡检执行人及分工情况。",
+                "handles": [
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "295630871c22917370d58e51b9cc19cbd4720486cfe946cfce30e183bf302857"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "owner",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "a1294013d3f52a8cff3984b09a123788022fc26dce7a3f3ddfb0468e331fa0eb",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "c6b54f68a952c66afd7ddf1df0b0a1ae9987b713dd14f4c15edd731af919f820"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_1",
+                "kind": "inspect",
+                "question": "核查 task_0 的交付日期及会议日期记录。",
+                "handles": [
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "295630871c22917370d58e51b9cc19cbd4720486cfe946cfce30e183bf302857"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "deadline",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "cc2f6b71930e843093e5ac2b006b5602e55e98a537b640473657fa2885253e78",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "c6b54f68a952c66afd7ddf1df0b0a1ae9987b713dd14f4c15edd731af919f820"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_2",
+                "kind": "inspect",
+                "question": "核查 task_1 的页面巡检候选执行人信息。",
+                "handles": [
+                  "task_1"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "f40f801d9a9061bfb00a61a89c28647c89d7ee744529b35bdf1a9e2a8134f5d8"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "owner",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "c023485e85242b64780a00a32c948fbfc9cd593e9153f8bdf71093a76693c29f",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "58b14e4cb269ed61f43b02b2e3d9ed98848af8d4286248522bd2aef6fb1f974d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_3",
+                "kind": "inspect",
+                "question": "核查 task_1 的交付日期讨论选项及定案状态。",
+                "handles": [
+                  "task_1"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "f40f801d9a9061bfb00a61a89c28647c89d7ee744529b35bdf1a9e2a8134f5d8"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "deadline",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "2b2b7413727ad30d82e6d49e98a81d255e49c73886e76283ac9387714253b6dd",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "58b14e4cb269ed61f43b02b2e3d9ed98848af8d4286248522bd2aef6fb1f974d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_4",
+                "kind": "relation",
+                "question": "验证 task_0 与 task_1 是否指向同一个页面巡检任务。",
+                "handles": [
+                  "task_0",
+                  "task_1"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "295630871c22917370d58e51b9cc19cbd4720486cfe946cfce30e183bf302857"
+                  },
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "f40f801d9a9061bfb00a61a89c28647c89d7ee744529b35bdf1a9e2a8134f5d8"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [
+                  "step_0",
+                  "step_2"
+                ],
+                "predicate": "SAME_TASK",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "ef1493a72d5c72917816646bd4d4994b7086586bbec58df8e82657bd67f54ed6",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "c6b54f68a952c66afd7ddf1df0b0a1ae9987b713dd14f4c15edd731af919f820"
+                  },
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "58b14e4cb269ed61f43b02b2e3d9ed98848af8d4286248522bd2aef6fb1f974d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [
+                  "a1294013d3f52a8cff3984b09a123788022fc26dce7a3f3ddfb0468e331fa0eb",
+                  "c023485e85242b64780a00a32c948fbfc9cd593e9153f8bdf71093a76693c29f"
+                ],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_5",
+                "kind": "relation",
+                "question": "验证 task_1 是否修订了 task_0 的执行人与交付规划。",
+                "handles": [
+                  "task_1",
+                  "task_0"
+                ],
+                "endpoints": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_628dd89e509828a823fd4f355f43444b221d62b3b724e3b5d6dc211067056217",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "f40f801d9a9061bfb00a61a89c28647c89d7ee744529b35bdf1a9e2a8134f5d8"
+                  },
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "observation_id": "task_observation_v1_19a6a3c58e168cb734c84a2f35d1c0b3a40f8cc272fa8f836638e7f9db693e7a",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "payload_hash": "295630871c22917370d58e51b9cc19cbd4720486cfe946cfce30e183bf302857"
+                  }
+                ],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [
+                  "step_4"
+                ],
+                "predicate": "REVISES_PLAN",
+                "field": "",
+                "target_kind": "",
+                "missing_entities": [],
+                "execution_key": "1106c80713028d414fc0ca420caf8ceb0a67e0456fbb39c4b0819e812f812e46",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "c6b54f68a952c66afd7ddf1df0b0a1ae9987b713dd14f4c15edd731af919f820"
+                  },
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "58b14e4cb269ed61f43b02b2e3d9ed98848af8d4286248522bd2aef6fb1f974d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [
+                  "ef1493a72d5c72917816646bd4d4994b7086586bbec58df8e82657bd67f54ed6"
+                ],
+                "evidence_gap": ""
+              },
+              {
+                "id": "step_6",
+                "kind": "discover",
+                "question": "在工作区快照中检索关于两次会议安排及其变更的记录。",
+                "handles": [],
+                "endpoints": [],
+                "source_handles": [
+                  "source_0:1",
+                  "source_0:2"
+                ],
+                "depends_on": [],
+                "predicate": "",
+                "field": "",
+                "target_kind": "change",
+                "missing_entities": [
+                  "两次会议安排变更"
+                ],
+                "execution_key": "69a0a71b61ac07cbdf76d9116f68410ccda9c62d24e16cb9b95b4673eeabc6b1",
+                "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                "source_bindings": [
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_40ca1fda64625261814e2d3038d778dca4f9f52abe96cf82aeb5b3bdaaf15229",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "c6b54f68a952c66afd7ddf1df0b0a1ae9987b713dd14f4c15edd731af919f820"
+                  },
+                  {
+                    "workspace_id": "ws_167d0a7809394b8abc894e93ac880fcf",
+                    "artifact_id": "src_cc01a519d00f4acc9412f495f9ebe9a4",
+                    "artifact_version_id": "artifact_v1_c1af938c2d142b39943016dc2ca737ee36e19f113d8c6e511cfe12a127b36de0",
+                    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d7f831418a1f8c6f8ecb89260d8763f66ac3708b7b6eef36d89551e0be1dc1ed",
+                    "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+                    "span_sha256": "58b14e4cb269ed61f43b02b2e3d9ed98848af8d4286248522bd2aef6fb1f974d"
+                  }
+                ],
+                "time_scope": {
+                  "start": "",
+                  "end": ""
+                },
+                "premise_keys": [],
+                "evidence_gap": "用户提及两次会议的安排变化，但当前数据中仅见一次讨论会议记录，缺少另一次会议的实体或变更记录。"
+              }
+            ],
+            "uncertainties": [
+              "页面巡检的执行人和交付日期目前在文本中均处于未定状态，存在讨论选项但无最终定案。",
+              "当前快照中仅记录了 2034-03-05 的一次讨论会议，未见第二次会议及两次会议安排变化的具体信息。"
+            ],
+            "refusal_reasons": [],
+            "verified_results": [],
+            "parent_plan_id": null,
+            "gaps": [],
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24000,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            },
+            "authority": "ACTION_SUGGESTION_ONLY",
+            "publishable": false,
+            "conclusion_policy": "Evidence and independent Reviewer required."
+          },
+          "errors": [],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": 4582,
+            "output_tokens": 912,
+            "total_tokens": 5494,
+            "duration_ms": 7887.18
+          },
+          "request_sha256": "000d018cc8f80f588320860e86afd7d5d2e298b1136cece88c0cbc4b7c3a7194",
+          "response_sha256": "b4cb8147df0d73500974745fbd9888f74937537f28fa331eea50c2900df4dc2d",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": "gemini-3.8-flash",
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 14879,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "tool_calls",
+            "tool_calls": [
+              {
+                "tool_id": "emit_investigation_plan",
+                "arguments": {
+                  "uncertainties": [
+                    "页面巡检的执行人和交付日期目前在文本中均处于未定状态，存在讨论选项但无最终定案。",
+                    "当前快照中仅记录了 2034-03-05 的一次讨论会议，未见第二次会议及两次会议安排变化的具体信息。"
+                  ],
+                  "refusal_reasons": [],
+                  "steps": [
+                    {
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "source_handles": [
+                        "source_0:1"
+                      ],
+                      "field": "owner",
+                      "missing_entities": [],
+                      "kind": "inspect",
+                      "question": "核查 task_0 的页面巡检执行人及分工情况。",
+                      "predicate": "",
+                      "id": "step_0",
+                      "target_kind": "",
+                      "evidence_gap": "",
+                      "depends_on": [],
+                      "handles": [
+                        "task_0"
+                      ]
+                    },
+                    {
+                      "kind": "inspect",
+                      "missing_entities": [],
+                      "depends_on": [],
+                      "source_handles": [
+                        "source_0:1"
+                      ],
+                      "id": "step_1",
+                      "field": "deadline",
+                      "target_kind": "",
+                      "predicate": "",
+                      "evidence_gap": "",
+                      "handles": [
+                        "task_0"
+                      ],
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "question": "核查 task_0 的交付日期及会议日期记录。"
+                    },
+                    {
+                      "target_kind": "",
+                      "id": "step_2",
+                      "evidence_gap": "",
+                      "field": "owner",
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "kind": "inspect",
+                      "missing_entities": [],
+                      "depends_on": [],
+                      "handles": [
+                        "task_1"
+                      ],
+                      "predicate": "",
+                      "question": "核查 task_1 的页面巡检候选执行人信息。",
+                      "source_handles": [
+                        "source_0:2"
+                      ]
+                    },
+                    {
+                      "kind": "inspect",
+                      "field": "deadline",
+                      "question": "核查 task_1 的交付日期讨论选项及定案状态。",
+                      "handles": [
+                        "task_1"
+                      ],
+                      "missing_entities": [],
+                      "depends_on": [],
+                      "id": "step_3",
+                      "target_kind": "",
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "predicate": "",
+                      "source_handles": [
+                        "source_0:2"
+                      ],
+                      "evidence_gap": ""
+                    },
+                    {
+                      "question": "验证 task_0 与 task_1 是否指向同一个页面巡检任务。",
+                      "kind": "relation",
+                      "time_scope": {
+                        "end": "",
+                        "start": ""
+                      },
+                      "evidence_gap": "",
+                      "field": "",
+                      "target_kind": "",
+                      "depends_on": [
+                        "step_0",
+                        "step_2"
+                      ],
+                      "predicate": "SAME_TASK",
+                      "handles": [
+                        "task_0",
+                        "task_1"
+                      ],
+                      "missing_entities": [],
+                      "id": "step_4",
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ]
+                    },
+                    {
+                      "id": "step_5",
+                      "kind": "relation",
+                      "handles": [
+                        "task_1",
+                        "task_0"
+                      ],
+                      "depends_on": [
+                        "step_4"
+                      ],
+                      "missing_entities": [],
+                      "question": "验证 task_1 是否修订了 task_0 的执行人与交付规划。",
+                      "target_kind": "",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "predicate": "REVISES_PLAN",
+                      "field": "",
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ],
+                      "evidence_gap": ""
+                    },
+                    {
+                      "target_kind": "change",
+                      "depends_on": [],
+                      "question": "在工作区快照中检索关于两次会议安排及其变更的记录。",
+                      "predicate": "",
+                      "handles": [],
+                      "field": "",
+                      "time_scope": {
+                        "start": "",
+                        "end": ""
+                      },
+                      "id": "step_6",
+                      "missing_entities": [
+                        "两次会议安排变更"
+                      ],
+                      "kind": "discover",
+                      "source_handles": [
+                        "source_0:1",
+                        "source_0:2"
+                      ],
+                      "evidence_gap": "用户提及两次会议的安排变化，但当前数据中仅见一次讨论会议记录，缺少另一次会议的实体或变更记录。"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "diagnostics": {
+            "proposed_steps": 7,
+            "accepted_steps": 7,
+            "excess_steps": 0,
+            "validation_issues": [],
+            "proposed_by_kind": {
+              "inspect": 4,
+              "relation": 2,
+              "discover": 1
+            },
+            "ready_steps": 5
+          }
+        },
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "BLOCKED",
+          "plan": null,
+          "errors": [
+            "INPUT_BUDGET_EXCEEDED"
+          ],
+          "provider_calls": 0,
+          "usage": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "total_tokens": null,
+            "duration_ms": null
+          },
+          "request_sha256": "f5f46a687bd0ffa13a7b3f2c79957b3e5a008b2b058df84006052ac7405e685b",
+          "response_sha256": null,
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": null,
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 14879,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": null,
+          "diagnostics": {}
+        }
+      ]
+    },
+    {
+      "campaign": "m3s-live-phase4-20261022",
+      "original_file": "work\\m3s-live-phase4-20261022\\ambiguous-fields\\work\\investigations\\5f4e51d3b957\\preparation\\preparation.json",
+      "original_file_sha256": "2f913e9b8ce1cd874678795dd2e2a7115a1a68fbc2cd8da9bd46c3d0e9748b00",
+      "question": "只核对所选会议记录各自写明的页面巡检执行人和交付日期；没有定案的字段请注明未知，并给出原文。无需调查跨会议关系。",
+      "status": "BLOCKED",
+      "gaps": [
+        "MODEL_UNKNOWN_FAILURE"
+      ],
+      "discovery": {
+        "coverage_policy": "bounded-document-single-pass/v1",
+        "coverage_complete": true,
+        "semantic_exhaustive": false,
+        "valid_observations": [],
+        "partial_observations": [
+          {
+            "observation_id": "task_observation_v1_6ae2fb253dbfef0aad45d109bdf80f451e99ed18162ee071af61b1cefa404993",
+            "provenance": {
+              "workspace_id": "ws_69e192b31dbf4fad9eb693609c71eb71",
+              "artifact_id": "src_83e0b79becf7416a929be6530f88136e",
+              "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+              "source_ref": "linkloom://ws_69e192b31dbf4fad9eb693609c71eb71/src_83e0b79becf7416a929be6530f88136e",
+              "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "ordinal": 0,
+              "message_id": "message_v1_a772bb35e4679d17dbf8592169386c75e68b2b077d826d6f2b28e78f45f56c84",
+              "segment_id": "segment_v1_9dd4b29ad9f36d5605c59101b0155ed96584de956159574ae67502e9fdd847a6",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9dd4b29ad9f36d5605c59101b0155ed96584de956159574ae67502e9fdd847a6",
+              "char_start": 27,
+              "char_end": 90,
+              "line_start": 1,
+              "line_end": 1,
+              "quote": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+              "quote_sha256": "c55f8d7431079d89438cd47568f45331b8651ba82ade4fa1ffb6cfe54a04cd0b"
+            },
+            "raw_text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+            "description": "页面巡检",
+            "owner": null,
+            "deadline": null,
+            "deadline_text": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "project": "棠原",
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+                "char_start": 27,
+                "char_end": 90,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "页面巡检",
+                "char_start": 32,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "project",
+                "quote": "棠原项目的页面巡检",
+                "char_start": 27,
+                "char_end": 36,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T05:01:50.459424+00:00",
+            "event_time": "2034-03-05T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": null,
+                "role": "OTHER",
+                "state": "AMBIGUOUS",
+                "quote": "韩桥只负责报进度，实际执行人尚未定",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "deadline",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "交付日期尚无约定",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "project",
+                "value": "棠原",
+                "role": "TASK_PROJECT",
+                "state": "ASSERTED",
+                "quote": "棠原项目的页面巡检",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 0
+              }
+            ],
+            "work_state": "ASSERTED"
+          },
+          {
+            "observation_id": "task_observation_v1_ac89865b829ad577e74c0f9b7ae575e27b573ee1ac34203d82569698a63e445d",
+            "provenance": {
+              "workspace_id": "ws_69e192b31dbf4fad9eb693609c71eb71",
+              "artifact_id": "src_83e0b79becf7416a929be6530f88136e",
+              "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+              "source_ref": "linkloom://ws_69e192b31dbf4fad9eb693609c71eb71/src_83e0b79becf7416a929be6530f88136e",
+              "content_hash": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "ordinal": 1,
+              "message_id": "message_v1_694bc5d58bd2aee06e6793b71864cf2e9b0cbb3f83adf96fd09183b0058e521c",
+              "segment_id": "segment_v1_8ab80af494bf491ba10d1dea0ffba7a2fd7c1d708d7b494dad5e7a99601f2dca",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8ab80af494bf491ba10d1dea0ffba7a2fd7c1d708d7b494dad5e7a99601f2dca",
+              "char_start": 118,
+              "char_end": 191,
+              "line_start": 2,
+              "line_end": 2,
+              "quote": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+              "quote_sha256": "d6f011cd14cb386719c6fe45ee32a9423790aadf7b80b20466c17eefe4fab27a"
+            },
+            "raw_text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+            "description": "页面巡检",
+            "owner": null,
+            "deadline": null,
+            "deadline_text": null,
+            "deadline_precision": "UNKNOWN",
+            "deadline_role": "UNKNOWN",
+            "project": null,
+            "vendor": null,
+            "extraction_status": "EXTRACTED",
+            "validation_status": "PARTIAL",
+            "unknown_fields": [
+              "owner",
+              "deadline",
+              "project",
+              "vendor"
+            ],
+            "validation_issues": [],
+            "field_evidence": [
+              {
+                "field": "raw_text",
+                "quote": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+                "char_start": 118,
+                "char_end": 191,
+                "basis": "SOURCE_TEXT"
+              },
+              {
+                "field": "description",
+                "quote": "页面巡检",
+                "char_start": 118,
+                "char_end": 122,
+                "basis": "SOURCE_TEXT"
+              }
+            ],
+            "recorded_at": "2026-10-22T05:01:50.459424+00:00",
+            "event_time": "2034-03-06T09:00:00+00:00",
+            "relation_status": "UNCONFIRMED",
+            "authority": "SUPPORTING_ONLY",
+            "field_bindings": [
+              {
+                "field": "owner",
+                "value": null,
+                "role": "CANDIDATE_OWNER",
+                "state": "AMBIGUOUS",
+                "quote": "待确认由韩桥还是易秋执行",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "deadline",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "AMBIGUOUS",
+                "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "project",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              },
+              {
+                "field": "vendor",
+                "value": null,
+                "role": "UNKNOWN",
+                "state": "NOT_STATED",
+                "quote": "",
+                "task_quote": "页面巡检",
+                "basis": "SOURCE_TEXT",
+                "message_ordinal": 1
+              }
+            ],
+            "work_state": "ASSERTED"
+          }
+        ],
+        "failures": [],
+        "sources": [
+          {
+            "artifact_id": "src_83e0b79becf7416a929be6530f88136e",
+            "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+            "status": "OBSERVATIONS_FOUND",
+            "reason": null
+          }
+        ],
+        "unprocessed_sources": [],
+        "groups": [
+          {
+            "group_id": "task_discovery_group_eacb0afdfe75a67ebc090e17b118c340baa33e8aebac2f678112aa34c4481a22",
+            "observation_ids": [
+              "task_observation_v1_6ae2fb253dbfef0aad45d109bdf80f451e99ed18162ee071af61b1cefa404993"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_9dd4b29ad9f36d5605c59101b0155ed96584de956159574ae67502e9fdd847a6"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          },
+          {
+            "group_id": "task_discovery_group_5455b4b79f63f54506be3e86f2b03a39fe8d83dda085daa46161ae96aa81d7ec",
+            "observation_ids": [
+              "task_observation_v1_ac89865b829ad577e74c0f9b7ae575e27b573ee1ac34203d82569698a63e445d"
+            ],
+            "source_evidence_refs": [
+              "evidence:semantic-ingestion:v1:segment_v1_8ab80af494bf491ba10d1dea0ffba7a2fd7c1d708d7b494dad5e7a99601f2dca"
+            ],
+            "unbound_fields": [],
+            "status": "MODEL_PROPOSED",
+            "validation_issues": []
+          }
+        ],
+        "extractions": [
+          {
+            "record_version": "semantic-extraction-result/v2",
+            "claims": [
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.92
+                },
+                "task": {
+                  "text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+                  "description_parts": [
+                    "页面巡检"
+                  ],
+                  "owner": null,
+                  "deadline_text": null,
+                  "project": "棠原",
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": null,
+                      "role": "OTHER",
+                      "state": "AMBIGUOUS",
+                      "quote": "韩桥只负责报进度，实际执行人尚未定",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "deadline",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "交付日期尚无约定",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "project",
+                      "value": "棠原",
+                      "role": "TASK_PROJECT",
+                      "state": "ASSERTED",
+                      "quote": "棠原项目的页面巡检",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 0
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              },
+              {
+                "claim_type": "PLAN",
+                "subject": null,
+                "relation_phrase": null,
+                "value": null,
+                "temporal_status": "NOT_STATED",
+                "valid_from_raw": null,
+                "valid_to_raw": null,
+                "confidence": {
+                  "claim_type": 0.95,
+                  "entity": 0.9,
+                  "relation": 0.9,
+                  "temporal": 0.9,
+                  "overall": 0.92
+                },
+                "task": {
+                  "text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+                  "description_parts": [
+                    "页面巡检"
+                  ],
+                  "owner": null,
+                  "deadline_text": null,
+                  "project": null,
+                  "vendor": null,
+                  "field_bindings": [
+                    {
+                      "field": "owner",
+                      "value": null,
+                      "role": "CANDIDATE_OWNER",
+                      "state": "AMBIGUOUS",
+                      "quote": "待确认由韩桥还是易秋执行",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "deadline",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "AMBIGUOUS",
+                      "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "project",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    },
+                    {
+                      "field": "vendor",
+                      "value": null,
+                      "role": "UNKNOWN",
+                      "state": "NOT_STATED",
+                      "quote": "",
+                      "task_quote": "页面巡检",
+                      "basis": "SOURCE_TEXT",
+                      "message_ordinal": 1
+                    }
+                  ],
+                  "work_state": "ASSERTED"
+                }
+              }
+            ],
+            "receipt": {
+              "provider_id": "gemini",
+              "model_id": "gemini-3.8-flash",
+              "extractor_version": "provider-neutral-extractor/v1",
+              "schema_version": "semantic-candidate/v2",
+              "temporal_policy_version": "explicit-time-only/v1",
+              "request_guard_id": "product-task-host",
+              "workspace_id": "ws_69e192b31dbf4fad9eb693609c71eb71",
+              "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+              "segment_id": "segment_v1_2ed8324e29ae5fa6c5ae50fdbc619da80d3ac7b2ade398f56134921a4588aa33",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2ed8324e29ae5fa6c5ae50fdbc619da80d3ac7b2ade398f56134921a4588aa33",
+              "quote_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+              "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+              "prompt_sha256": "db91fe889927eb653b8cdc3e523c7cc771c519a71e377193e2ec414b67855220",
+              "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+              "config_sha256": "4d11ac2fc153533a5fafd321d1ebe23df973814c802bba75f8a1dec748cf78ab",
+              "extraction_fingerprint": "56a669ed565dc7df245bff8632cea97997f2655e66425bf4d9024dc8458933ec",
+              "claims_sha256": "b1c37fe74b1e88c3e2b634e21ed7b91a24a93c43b77870d3e32bb12f0b536431",
+              "attempts": [
+                {
+                  "attempt_number": 1,
+                  "request_sha256": "98d2066bd37e1c97c43d999043120736dbaa271ca9dfb6715406cdac1305e310",
+                  "response_sha256": "35945573af0bb90edcfdf848015ebbf55a54df248b65cffb424192d7b6e7a2b8",
+                  "provider_request_id": null,
+                  "provider_response_id": "xpjZaoKPL-TcytMP7LDL4Q0",
+                  "usage": {
+                    "input_tokens": 1994,
+                    "output_tokens": 878,
+                    "total_tokens": 2872,
+                    "duration_ms": 8673.714
+                  },
+                  "latency_ms": 8717.631499999698,
+                  "failure_code": null,
+                  "outcome": "accepted_response",
+                  "budget_reservation_id": "98d2066bd37e1c97c43d999043120736dbaa271ca9dfb6715406cdac1305e310",
+                  "estimated_cost_upper_bound_usd": 0.25
+                }
+              ],
+              "terminal_reason": null
+            },
+            "failure_code": null
+          }
+        ],
+        "receipts": [
+          {
+            "provider_id": "gemini",
+            "model_id": "gemini-3.8-flash",
+            "extractor_version": "provider-neutral-extractor/v1",
+            "schema_version": "semantic-candidate/v2",
+            "temporal_policy_version": "explicit-time-only/v1",
+            "request_guard_id": "product-task-host",
+            "workspace_id": "ws_69e192b31dbf4fad9eb693609c71eb71",
+            "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+            "segment_id": "segment_v1_2ed8324e29ae5fa6c5ae50fdbc619da80d3ac7b2ade398f56134921a4588aa33",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2ed8324e29ae5fa6c5ae50fdbc619da80d3ac7b2ade398f56134921a4588aa33",
+            "quote_sha256": "aaa627070219888e9214db52cfbba1b3ddbac73d9a22f4556b1268c588f79113",
+            "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+            "prompt_sha256": "db91fe889927eb653b8cdc3e523c7cc771c519a71e377193e2ec414b67855220",
+            "schema_sha256": "30b44a8d1b94486889dd0672bda72d868281c7fc7c55ee5fc7781c0d7b9072c3",
+            "config_sha256": "4d11ac2fc153533a5fafd321d1ebe23df973814c802bba75f8a1dec748cf78ab",
+            "extraction_fingerprint": "56a669ed565dc7df245bff8632cea97997f2655e66425bf4d9024dc8458933ec",
+            "claims_sha256": "b1c37fe74b1e88c3e2b634e21ed7b91a24a93c43b77870d3e32bb12f0b536431",
+            "attempts": [
+              {
+                "attempt_number": 1,
+                "request_sha256": "98d2066bd37e1c97c43d999043120736dbaa271ca9dfb6715406cdac1305e310",
+                "response_sha256": "35945573af0bb90edcfdf848015ebbf55a54df248b65cffb424192d7b6e7a2b8",
+                "provider_request_id": null,
+                "provider_response_id": "xpjZaoKPL-TcytMP7LDL4Q0",
+                "usage": {
+                  "input_tokens": 1994,
+                  "output_tokens": 878,
+                  "total_tokens": 2872,
+                  "duration_ms": 8673.714
+                },
+                "latency_ms": 8717.631499999698,
+                "failure_code": null,
+                "outcome": "accepted_response",
+                "budget_reservation_id": "98d2066bd37e1c97c43d999043120736dbaa271ca9dfb6715406cdac1305e310",
+                "estimated_cost_upper_bound_usd": 0.25
+              }
+            ],
+            "terminal_reason": null
+          }
+        ],
+        "candidate_coverage": [
+          {
+            "artifact_id": "src_83e0b79becf7416a929be6530f88136e",
+            "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9dd4b29ad9f36d5605c59101b0155ed96584de956159574ae67502e9fdd847a6",
+            "verified_description_parts": [
+              "页面巡检"
+            ]
+          },
+          {
+            "artifact_id": "src_83e0b79becf7416a929be6530f88136e",
+            "artifact_version_id": "artifact_v1_5a7896e821c6baf8908bb2cab12a04d771053c95b19f802a3d32fd505a031d04",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8ab80af494bf491ba10d1dea0ffba7a2fd7c1d708d7b494dad5e7a99601f2dca",
+            "verified_description_parts": [
+              "页面巡检"
+            ]
+          }
+        ]
+      },
+      "planning": [
+        {
+          "schema": "task-investigation-result/v1",
+          "status": "PROVIDER_FAILED",
+          "plan": null,
+          "errors": [
+            "MODEL_UNKNOWN_FAILURE"
+          ],
+          "provider_calls": 1,
+          "usage": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "total_tokens": null,
+            "duration_ms": null
+          },
+          "request_sha256": "86258ed866785f3eda5bb59ec21c35193c8786f753ff5d9c5388d6e6d923e87e",
+          "response_sha256": "b500601d59898acf3a5e225fa84ebb9bf527aa740d28fbedc09a46a017df38ba",
+          "model_id": "gemini-3.8-flash",
+          "actual_model_version": null,
+          "budget": {
+            "calls_reserved": 1,
+            "input_tokens_reserved": 14951,
+            "output_tokens_reserved": 4096,
+            "limits": {
+              "max_subgoals": 12,
+              "max_relation_queries": 8,
+              "max_fanout": 4,
+              "max_dependency_depth": 6,
+              "max_relation_hops": 3,
+              "max_input_tokens": 24576,
+              "max_output_tokens": 4096,
+              "max_provider_calls": 3,
+              "max_total_input_tokens": 73728,
+              "max_total_output_tokens": 12288
+            }
+          },
+          "untrusted_output": {
+            "kind": "provider_error",
+            "tool_calls": []
+          },
+          "diagnostics": {}
+        }
+      ]
+    }
+  ]
+}

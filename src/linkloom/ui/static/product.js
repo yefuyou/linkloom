@@ -531,6 +531,7 @@
             <dl><dt>${t("Recorded owner", "原文负责人")}</dt><dd>${escapeHtml(o.owner || t("Unknown", "未知"))}</dd>
             <dt>${t("Recorded deadline", "原文截止日期")}</dt><dd>${escapeHtml(o.deadline_text || t("Unknown", "未知"))}</dd>
             <dt>${t("Deadline role", "日期角色")}</dt><dd>${escapeHtml(o.deadline_role || "UNKNOWN")}</dd></dl>
+            ${o.field_bindings ? `<p class="hint">${t("Field roles are model interpretations bound to checked source quotes; they are not approved business data.", "字段角色由模型解释并绑定已核验原文，尚未成为正式确认的业务数据。")}</p>` : ""}
             ${unknownFields.length ? `<p class="hint"><strong>${t("Unknown fields", "未知字段")}</strong>: ${escapeHtml(unknownFields.join(" · "))}</p>` : ""}
             ${validationIssues.length ? `<p class="hint"><strong>${t("Validation issues", "校验问题")}</strong>: ${escapeHtml(validationIssues.join(" · "))}</p>` : ""}
             <details><summary>${t("Original message and field evidence", "展开原始消息与字段证据")}</summary><blockquote class="quote">${escapeHtml(o.provenance.quote)}</blockquote>

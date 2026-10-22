@@ -224,7 +224,7 @@ class TaskObservationDiscoveryService:
             if len(result.claims) == 20:
                 complete = False
                 failures.append(DiscoveryFailure(artifact.artifact_id, "CLAIM_LIMIT_REACHED"))
-            found, proposed_groups, rejected = _project(result, artifact, parsed.segments)
+            found, proposed_groups, rejected = _project(result, artifact, parsed.segments, task_profile=self.task_profile)
             admitted.append((artifact, parsed.segments))
             observations.extend(found)
             groups.extend(proposed_groups)
@@ -257,7 +257,7 @@ class TaskObservationDiscoveryService:
             candidate_coverage=candidate_coverage)
 
 
-def _project(result, artifact, segments):
+def _project(result, artifact, segments, *, task_profile=None):
     found, groups, failures = {}, [], []
     conflicted, proposals_seen = set(), set()
     for index, claim in enumerate(result.claims):
@@ -271,6 +271,10 @@ def _project(result, artifact, segments):
         if proposal is None:
             fail("TASK_PROPOSAL_MISSING")
             continue
+        field_profile = task_profile == TaskDiscoveryProfile.FIELD_GROUNDED_V2
+        if field_profile != (proposal.field_bindings is not None):
+            fail("TASK_PROFILE_MISMATCH")
+            continue
         signature = json.dumps(proposal.to_dict(), ensure_ascii=False, sort_keys=True)
         if signature in proposals_seen:
             fail("DUPLICATE_TASK_PROPOSAL")
@@ -282,7 +286,8 @@ def _project(result, artifact, segments):
             continue
         start = artifact.content.index(proposal.text)
         end = start + len(proposal.text)
-        if non_asserted(artifact.content, proposal.description_parts, start, end):
+        if (proposal.work_state != 'ASSERTED' if field_profile else
+                non_asserted(artifact.content, proposal.description_parts, start, end)):
             fail("NON_ASSERTED_TASK")
             continue
         projections, refs, bound_parts = [], [], set()
@@ -298,7 +303,7 @@ def _project(result, artifact, segments):
                 continue
             bound_parts.update(parts)
             projected = TaskProposal(fragment, parts, proposal.owner, proposal.deadline_text,
-                                     proposal.project, proposal.vendor)
+                                     proposal.project, proposal.vendor, proposal.field_bindings, proposal.work_state)
             observation = build_task_observation(projected, segment, artifact)
             if observation.validation_status == "INVALID" or not observation.verify(artifact):
                 fail("M1_VALIDATION_FAILED")
