@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="13.706" timestamp="2026-10-22T23:01:44.575246+08:00" hostname="beagle"><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_inspect_unblocks_only_matching_current_p4_relation" time="6.968"><failure message="AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}&#10;  &#10;  Differing items:&#10;  {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3d-fix-inspect-ledger-dependency/work/p2b-before-runtime2/test_completed_inspect_unblock0')
+
+    def test_completed_inspect_unblocks_only_matching_current_p4_relation(tmp_path):
+        tools, _, _, runtime, policy, ledger, checkpoint, call = setup_chain(tmp_path)
+        inspected = runtime.execute(call('inspect_task_context', 1), policy)
+        assert inspected.status == 'ok'
+        persisted = ToolExecutionLedger(json.loads(checkpoint.read_text(encoding='utf8')))
+        assert persisted.get('p2b_1').status == 'completed'
+        assert tools.inspection_receipts_from_record(persisted.get('p2b_1'))
+        queried = runtime.execute(call('query_task_relations', 2), policy)
+        assert queried.status == 'ok'
+        assert len(json.loads(checkpoint.read_text(encoding='utf8'))) == 2
+        row = queried.value['investigation_steps'][0]
+&gt;       assert row['dependency_outcomes'] == {'inspect_owner': 'COMPLETED'}
+E       AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}
+E         
+E         Differing items:
+E         {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}
+E         Use -v to get more diff
+
+tests\unit\test_inspect_ledger_host.py:49: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="42.094" timestamp="2026-10-22T23:35:32.668739+08:00" hostname="beagle"><testcase classname="tests.unit.test_inspect_ledger_host" name="test_uncertain_in_memory_inspection_cannot_be_laundered_by_later_checkpoint" time="10.247"><failure message="AssertionError: assert {'inspect_owner': 'COMPLETED'} == {'inspect_owner': 'BLOCKED'}&#10;  &#10;  Differing items:&#10;  {'inspect_owner': 'COMPLETED'} != {'inspect_owner': 'BLOCKED'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-p2-red/test_uncertain_in_memory_inspe0')
+
+    def test_uncertain_in_memory_inspection_cannot_be_laundered_by_later_checkpoint(tmp_path):
+        _, _, _, runtime, policy, ledger, checkpoint, call = setup_chain(tmp_path)
+        persist = runtime.checkpoint_callback
+        def fail_terminal(current):
+            if current.get('p2b_1').status == 'completed':
+                raise OSError('synthetic terminal checkpoint outage')
+            persist(current)
+        result = runtime.execute(call('inspect_task_context', 1), policy, checkpoint_callback=fail_terminal)
+        assert result.error.code == 'TOOL_TERMINAL_CHECKPOINT_FAILED'
+&gt;       assert_blocked(runtime.execute(call('query_task_relations', 2), policy))
+
+tests\unit\test_inspect_ledger_host.py:206: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+result = ToolResult(call_id='p2b_2', tool_id='query_task_relations', status='ok', value={'schema_version': 'task-relations-quer...7b0f663084f96cd9079c025ef02d24a7364d7a66d4b664ac66295'}}, 'max_output_bytes': 49152}, error=None, business_status=None)
+
+    def assert_blocked(result):
+        assert result.status == 'ok'
+        row = result.value['investigation_steps'][0]
+&gt;       assert row['dependency_outcomes'] == {'inspect_owner': 'BLOCKED'}
+E       AssertionError: assert {'inspect_owner': 'COMPLETED'} == {'inspect_owner': 'BLOCKED'}
+E         
+E         Differing items:
+E         {'inspect_owner': 'COMPLETED'} != {'inspect_owner': 'BLOCKED'}
+E         Use -v to get more diff
+
+tests\unit\test_inspect_ledger_host.py:60: AssertionError</failure></testcase><testcase classname="tests.unit.test_inspect_ledger_host" name="test_reviewer_cannot_derive_task_authority_from_self_consistent_ledger" time="19.881"><failure message="AssertionError: assert 'pass' == 'fail'&#10;  &#10;  - fail&#10;  + pass">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-p2-red/test_reviewer_cannot_derive_ta0')
+
+    def test_reviewer_cannot_derive_task_authority_from_self_consistent_ledger(tmp_path):
+        from linkloom.agents.task_relation_result import project_task_relation_result, review_task_relation_result
+        tools, _, _, runtime, policy, ledger, _, call = setup_chain(tmp_path)
+        assert runtime.execute(call('inspect_task_context', 1), policy).status == 'ok'
+        assert runtime.execute(call('query_task_relations', 2), policy).status == 'ok'
+        records = [replace(r, task_id='foreign_task') for r in ledger.to_list()]
+        payload = project_task_relation_result(json.dumps(dict(context_call_id='p2b_1', relations_call_id='p2b_2')),
+            records, [r.result for r in records], tools.workspace_id)
+&gt;       assert review_task_relation_result(payload, tools, records=records, run_id='run_p2b')['status'] == 'fail'
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+tests\unit\test_inspect_ledger_host.py:220: AssertionError</failure></testcase></testsuite></testsuites>

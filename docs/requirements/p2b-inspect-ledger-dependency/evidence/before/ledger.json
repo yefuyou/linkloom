@@ -1,0 +1,1073 @@
+[
+  {
+    "call_id": "run_p4_b3cf1546c38b:turn:1:tool",
+    "run_id": "run_p4_b3cf1546c38b",
+    "task_id": "task_8d55ee25",
+    "agent_id": "retrieval_agent",
+    "tool_id": "inspect_task_context",
+    "sequence": 1,
+    "status": "completed",
+    "arguments": {
+      "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+    },
+    "result": {
+      "business_status": null,
+      "call_id": "run_p4_b3cf1546c38b:turn:1:tool",
+      "error": null,
+      "status": "ok",
+      "tool_id": "inspect_task_context",
+      "value": {
+        "discovery": {
+          "candidates": [],
+          "considered_candidates": 0,
+          "eligible_observations": 1,
+          "endpoint_fanout": {
+            "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247": 0
+          },
+          "generated_candidates": 0,
+          "input_counts": {
+            "artifact_rows": 2,
+            "context_signals": 0,
+            "current_workspace_artifacts": 2,
+            "observation_rows": 1,
+            "source_characters": 188
+          },
+          "limits": {
+            "max_artifacts": 64,
+            "max_candidates": 20,
+            "max_context_signals": 128,
+            "max_generated_candidates": 1000,
+            "max_observations": 128,
+            "max_per_observation": 10,
+            "max_source_chars": 500000
+          },
+          "max_endpoint_fanout": 0,
+          "rejected": [],
+          "returned_candidates": 0,
+          "truncated": false,
+          "truncation_reasons": []
+        },
+        "investigation_receipts": [
+          {
+            "outcome": "COMPLETED",
+            "plan_id": "investigation_v2_ebfe0bbd6a3a8ea87eca3fbb26ffe452ecaf6c4bb46b412c02e173fb4323e141",
+            "receipt_id": "inspection_c7f472c554efcdc2612f712556af3c7358b9e35e1124631b0b4509cbcc9adfa0",
+            "result_sha256": "85924e64bc2bb5feb1c1b6901e1258b80876d69091703818a0e3c01b265f5860",
+            "step_id": "inspect_owner",
+            "summary": "Read-only inspection completed; task observations remain UNCONFIRMED."
+          }
+        ],
+        "max_output_bytes": 32768,
+        "missing_context": [
+          "SEMANTIC_PROPOSAL_CONSUMER_NOT_CONNECTED"
+        ],
+        "observations": [
+          {
+            "observation": {
+              "authority": "SUPPORTING_ONLY",
+              "deadline": "2026-10-14",
+              "deadline_precision": "DAY",
+              "deadline_role": "TASK_DEADLINE",
+              "deadline_text": "2026年10月14日",
+              "description": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "event_time": "2026-10-10T01:00:00+00:00",
+              "extraction_status": "EXTRACTED",
+              "field_evidence": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 74,
+                  "char_start": 32,
+                  "field": "raw_text",
+                  "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 74,
+                  "char_start": 32,
+                  "field": "description",
+                  "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 35,
+                  "char_start": 32,
+                  "field": "owner",
+                  "quote": "我负责"
+                },
+                {
+                  "basis": "SPEAKER",
+                  "char_end": 30,
+                  "char_start": 28,
+                  "field": "owner",
+                  "quote": "陈晨"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 39,
+                  "char_start": 35,
+                  "field": "project",
+                  "quote": "星河项目"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "char_end": 73,
+                  "char_start": 59,
+                  "field": "deadline",
+                  "quote": "2026年10月14日前完成"
+                }
+              ],
+              "observation_id": "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247",
+              "owner": "陈晨",
+              "project": "星河项目",
+              "provenance": {
+                "artifact_id": "src_c29c3c71a13444bbb1f4ac4ee84a0a3b",
+                "artifact_version_id": "artifact_v1_deb21e7a35dd3706dd22a81c89692ab036ec87b4707e54a27bcca9850b883bc6",
+                "char_end": 74,
+                "char_start": 32,
+                "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+                "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+                "line_end": 1,
+                "line_start": 1,
+                "message_id": "message_v1_bc148202c12c306af613bf9e54495e83d995489bc7dbc5352b9564a82d1d1a52",
+                "ordinal": 0,
+                "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+                "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a",
+                "segment_id": "segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+                "source_ref": "A.md",
+                "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+              },
+              "raw_text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+              "recorded_at": "2026-10-22T15:07:28.469465+00:00",
+              "relation_status": "UNCONFIRMED",
+              "unknown_fields": [
+                "vendor"
+              ],
+              "validation_issues": [],
+              "validation_status": "PARTIAL",
+              "vendor": null
+            },
+            "ref": {
+              "artifact_id": "src_c29c3c71a13444bbb1f4ac4ee84a0a3b",
+              "artifact_version_id": "artifact_v1_deb21e7a35dd3706dd22a81c89692ab036ec87b4707e54a27bcca9850b883bc6",
+              "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+              "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+              "observation_id": "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247",
+              "payload_hash": "fc07f24f688f2188000ddca30e30b83eeab87f4186ec3307a5dd3928a1853d4b",
+              "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+            }
+          }
+        ],
+        "observations_truncated": false,
+        "schema_version": "task-context/v1",
+        "semantic_proposals": {
+          "consumer": "future validated M3-A semantic proposal integration",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "status": "NOT_CONNECTED"
+        },
+        "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+      }
+    },
+    "error": null,
+    "idempotency_key": null,
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "call_id": "run_p4_b3cf1546c38b:turn:2:tool",
+    "run_id": "run_p4_b3cf1546c38b",
+    "task_id": "task_8d55ee25",
+    "agent_id": "retrieval_agent",
+    "tool_id": "query_task_relations",
+    "sequence": 2,
+    "status": "completed",
+    "arguments": {
+      "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+    },
+    "result": {
+      "business_status": null,
+      "call_id": "run_p4_b3cf1546c38b:turn:2:tool",
+      "error": null,
+      "status": "ok",
+      "tool_id": "query_task_relations",
+      "value": {
+        "as_of": null,
+        "current_supported_in_snapshot": 2,
+        "evidence_spans": {
+          "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711": {
+            "artifact_id": "src_5f73ec8db6114422885dbcd729c3b985",
+            "artifact_version_id": "artifact_v1_ddb47d3d902bb8f9bc9567678c0a4e49576221bc6387ca4ec1ecda85c1abd0d3",
+            "char_end": 112,
+            "char_start": 32,
+            "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b1b687d51bf3a6fb62f4f3ecab318a10ec5dbc356d80284bba6d9c03e1b9c0fb",
+            "line_end": 1,
+            "line_start": 1,
+            "message_id": "message_v1_65c02014bc48676ecf48d18f1271bbc95d891862b0a281497629aabbcdf93c46",
+            "ordinal": 0,
+            "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "quote_sha256": "b5358343e146ab96bbc749fb766e5b5ddfc217c2079333bf0937969931defd41",
+            "segment_id": "segment_v1_b1b687d51bf3a6fb62f4f3ecab318a10ec5dbc356d80284bba6d9c03e1b9c0fb",
+            "source_ref": "B.md",
+            "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+          },
+          "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3": {
+            "artifact_id": "src_c29c3c71a13444bbb1f4ac4ee84a0a3b",
+            "artifact_version_id": "artifact_v1_deb21e7a35dd3706dd22a81c89692ab036ec87b4707e54a27bcca9850b883bc6",
+            "char_end": 74,
+            "char_start": 32,
+            "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+            "line_end": 1,
+            "line_start": 1,
+            "message_id": "message_v1_bc148202c12c306af613bf9e54495e83d995489bc7dbc5352b9564a82d1d1a52",
+            "ordinal": 0,
+            "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "quote_sha256": "35ac574ae1b478d2a9be319c05aa8a0bcf5b34d3f98f1f9987da9ca8200e112a",
+            "segment_id": "segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+            "source_ref": "A.md",
+            "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+          }
+        },
+        "include_history": false,
+        "investigation_steps": [
+          {
+            "assessment_ids": [
+              "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0"
+            ],
+            "blocking_reasons": [
+              "DEPENDENCY_NOT_SUPPORTED:inspect_owner"
+            ],
+            "current_supported": true,
+            "dependency_outcomes": {
+              "inspect_owner": "BLOCKED"
+            },
+            "depends_on": [
+              "inspect_owner"
+            ],
+            "endpoints": [
+              {
+                "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+              },
+              {
+                "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+              }
+            ],
+            "kind": "relation",
+            "lifecycle": "ACTIVE",
+            "predicate": "SAME_TASK",
+            "relation_reads": [
+              {
+                "assessment_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                "blocking_reasons": [],
+                "category": "CURRENT_CONFIRMED",
+                "current_supported": true,
+                "evidence_state": "VERIFIED",
+                "object": {
+                  "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                },
+                "persistent_lifecycle": "ACTIVE",
+                "predicate": "SAME_TASK",
+                "subject": {
+                  "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                },
+                "verdict": "SUPPORTED"
+              }
+            ],
+            "status": "BLOCKED",
+            "step_id": "identity"
+          }
+        ],
+        "max_output_bytes": 49152,
+        "max_plans": 4,
+        "max_relations": 64,
+        "missing_context": [],
+        "observation_refs": {
+          "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22": {
+            "artifact_id": "src_5f73ec8db6114422885dbcd729c3b985",
+            "artifact_version_id": "artifact_v1_ddb47d3d902bb8f9bc9567678c0a4e49576221bc6387ca4ec1ecda85c1abd0d3",
+            "content_hash": "20fd3f55d9f72258ace32757206e7514c424b4970cd74545d31288216ca644ac",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b1b687d51bf3a6fb62f4f3ecab318a10ec5dbc356d80284bba6d9c03e1b9c0fb",
+            "observation_id": "task_observation_v1_a6e4de114fa6e865be88b9c6287dfb280061b073ba137a2c9cf6dd877553c218",
+            "payload_hash": "e42ad9130bbfdedf3f43bdf94c6a07f2704d63e8d17c1651c3a4a7eec00b65e5",
+            "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+          },
+          "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737": {
+            "artifact_id": "src_c29c3c71a13444bbb1f4ac4ee84a0a3b",
+            "artifact_version_id": "artifact_v1_deb21e7a35dd3706dd22a81c89692ab036ec87b4707e54a27bcca9850b883bc6",
+            "content_hash": "7ed1f68cfa65f67b5fe84a07d6fabb7ce1cbeb3bf91e49282f3962d7cd4a7d2f",
+            "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3eaa32b9c1dd6b140cc0842606361498ee72e64ec5ded4c15782e6315c9f5010",
+            "observation_id": "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247",
+            "payload_hash": "fc07f24f688f2188000ddca30e30b83eeab87f4186ec3307a5dd3928a1853d4b",
+            "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+          }
+        },
+        "observation_snapshots": {
+          "observation_51d798f2f64a34b5453ca1d7ac813af4e3953bdb3573035569a2be37c09f8f18": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": "2026-10-14",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "deadline_text": "2026年10月14日",
+            "description": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "event_time": "2026-10-10T01:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 74,
+                "char_start": 32,
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 74,
+                "char_start": 32,
+                "field": "description",
+                "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 35,
+                "char_start": 32,
+                "field": "owner",
+                "quote": "我负责"
+              },
+              {
+                "basis": "SPEAKER",
+                "char_end": 30,
+                "char_start": 28,
+                "field": "owner",
+                "quote": "陈晨"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 39,
+                "char_start": 35,
+                "field": "project",
+                "quote": "星河项目"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 73,
+                "char_start": 59,
+                "field": "deadline",
+                "quote": "2026年10月14日前完成"
+              }
+            ],
+            "observation_id": "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247",
+            "owner": "陈晨",
+            "project": "星河项目",
+            "provenance": {
+              "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+            },
+            "raw_text": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+            "recorded_at": "2026-10-22T15:07:28.469465+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          },
+          "observation_92511244cc83afa89d99a0e44136186190b8229becd735744fe5a39c3db9ac96": {
+            "authority": "SUPPORTING_ONLY",
+            "deadline": "2026-10-18",
+            "deadline_precision": "DAY",
+            "deadline_role": "TASK_DEADLINE",
+            "deadline_text": "2026年10月18日",
+            "description": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "event_time": "2026-10-15T01:00:00+00:00",
+            "extraction_status": "EXTRACTED",
+            "field_evidence": [
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 112,
+                "char_start": 32,
+                "field": "raw_text",
+                "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 112,
+                "char_start": 32,
+                "field": "description",
+                "quote": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 35,
+                "char_start": 32,
+                "field": "owner",
+                "quote": "我负责"
+              },
+              {
+                "basis": "SPEAKER",
+                "char_end": 30,
+                "char_start": 28,
+                "field": "owner",
+                "quote": "陈晨"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 39,
+                "char_start": 35,
+                "field": "project",
+                "quote": "星河项目"
+              },
+              {
+                "basis": "SOURCE_TEXT",
+                "char_end": 102,
+                "char_start": 88,
+                "field": "deadline",
+                "quote": "2026年10月18日前完成"
+              }
+            ],
+            "observation_id": "task_observation_v1_a6e4de114fa6e865be88b9c6287dfb280061b073ba137a2c9cf6dd877553c218",
+            "owner": "陈晨",
+            "project": "星河项目",
+            "provenance": {
+              "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+            },
+            "raw_text": "我负责星河项目任务 API-4；本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+            "recorded_at": "2026-10-22T15:07:28.496178+00:00",
+            "relation_status": "UNCONFIRMED",
+            "unknown_fields": [
+              "vendor"
+            ],
+            "validation_issues": [],
+            "validation_status": "PARTIAL",
+            "vendor": null
+          }
+        },
+        "plans": [
+          {
+            "as_of": null,
+            "blocking_reasons": [],
+            "comparisons": [
+              {
+                "blocking_reasons": [],
+                "current_comparison": {
+                  "as_of": null,
+                  "asserted_effective_at": null,
+                  "authority": "SUPPORTING_ONLY",
+                  "comparison_id": "revision_comparison_v1_ba69b5c01efdf20d555a387e920847b41cfc6d2f5aada0ed5d3bfc7590fcd871",
+                  "delta_calendar_days": 4,
+                  "dependencies": [
+                    {
+                      "observation": {
+                        "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                      },
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                      }
+                    },
+                    {
+                      "observation": {
+                        "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                      },
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                      }
+                    },
+                    {
+                      "observation": null,
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                      }
+                    },
+                    {
+                      "observation": null,
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                      }
+                    }
+                  ],
+                  "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+                  "new_deadline": {
+                    "bound": "BEFORE",
+                    "evidence": [
+                      {
+                        "char_end": 102,
+                        "char_start": 88,
+                        "quote": "2026年10月18日前完成",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                        }
+                      },
+                      {
+                        "char_end": 112,
+                        "char_start": 48,
+                        "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                        }
+                      }
+                    ],
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-10-18"
+                  },
+                  "object": {
+                    "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                  },
+                  "old_deadline": {
+                    "bound": "BEFORE",
+                    "evidence": [
+                      {
+                        "char_end": 73,
+                        "char_start": 59,
+                        "quote": "2026年10月14日前完成",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                        }
+                      },
+                      {
+                        "char_end": 74,
+                        "char_start": 32,
+                        "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                        }
+                      }
+                    ],
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-10-14"
+                  },
+                  "plan_currentness": "NOT_ESTABLISHED",
+                  "reason_codes": [
+                    "VERIFIED_PLAN_BOUNDARIES"
+                  ],
+                  "revision_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+                  "same_task_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                  "schema_version": "revision-comparison/v1",
+                  "status": "COMPUTABLE",
+                  "subject": {
+                    "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                  }
+                },
+                "current_valid": true,
+                "historical_comparison": {
+                  "as_of": null,
+                  "asserted_effective_at": null,
+                  "authority": "SUPPORTING_ONLY",
+                  "comparison_id": "revision_comparison_v1_ba69b5c01efdf20d555a387e920847b41cfc6d2f5aada0ed5d3bfc7590fcd871",
+                  "delta_calendar_days": 4,
+                  "dependencies": [
+                    {
+                      "observation": {
+                        "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                      },
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                      }
+                    },
+                    {
+                      "observation": {
+                        "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                      },
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                      }
+                    },
+                    {
+                      "observation": null,
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                      }
+                    },
+                    {
+                      "observation": null,
+                      "observation_valid": true,
+                      "readback_ok": true,
+                      "source_status": "CURRENT",
+                      "span": {
+                        "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                      }
+                    }
+                  ],
+                  "interpretation": "PLAN_DEADLINE_BOUNDARY_CHANGE_ONLY",
+                  "new_deadline": {
+                    "bound": "BEFORE",
+                    "evidence": [
+                      {
+                        "char_end": 102,
+                        "char_start": 88,
+                        "quote": "2026年10月18日前完成",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                        }
+                      },
+                      {
+                        "char_end": 112,
+                        "char_start": 48,
+                        "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                        }
+                      }
+                    ],
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-10-18"
+                  },
+                  "object": {
+                    "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                  },
+                  "old_deadline": {
+                    "bound": "BEFORE",
+                    "evidence": [
+                      {
+                        "char_end": 73,
+                        "char_start": 59,
+                        "quote": "2026年10月14日前完成",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                        }
+                      },
+                      {
+                        "char_end": 74,
+                        "char_start": 32,
+                        "quote": "我负责星河项目任务 API-4 的签名接口联调，计划在2026年10月14日前完成。",
+                        "role": "DEADLINE_BOUND",
+                        "span": {
+                          "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                        }
+                      }
+                    ],
+                    "precision": "DAY",
+                    "role": "TASK_DEADLINE",
+                    "value": "2026-10-14"
+                  },
+                  "plan_currentness": "NOT_ESTABLISHED",
+                  "reason_codes": [
+                    "VERIFIED_PLAN_BOUNDARIES"
+                  ],
+                  "revision_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+                  "same_task_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                  "schema_version": "revision-comparison/v1",
+                  "status": "COMPUTABLE",
+                  "subject": {
+                    "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                  }
+                },
+                "historical_scope": "CAPTURED_COMPARISON; NOT_CURRENT_UNLESS_REVALIDATED",
+                "premise_states": [
+                  {
+                    "assessment_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                    "blocking_reasons": [],
+                    "current_supported": true,
+                    "evidence_state": "VERIFIED",
+                    "persistent_lifecycle": "ACTIVE",
+                    "verdict": "SUPPORTED"
+                  },
+                  {
+                    "assessment_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+                    "blocking_reasons": [],
+                    "current_supported": true,
+                    "evidence_state": "VERIFIED",
+                    "persistent_lifecycle": "ACTIVE",
+                    "verdict": "SUPPORTED"
+                  }
+                ]
+              }
+            ],
+            "declared_terminal": {
+              "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+            },
+            "effective_plan": null,
+            "future_plans": [],
+            "observation_id": "task_observation_v1_810629bd0c6091d540945ceb2694115ad47be2329aff09ca32cac4320c725247",
+            "revisions": [
+              {
+                "assessment_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+                "blocking_reasons": [],
+                "category": "CURRENT_CONFIRMED",
+                "current_supported": true
+              }
+            ],
+            "scope": "BOUNDED_VERIFIED_REVISION_CHAIN; NO_GLOBAL_CURRENT_PLAN_CLAIM",
+            "status": "EFFECTIVE_TIME_UNKNOWN",
+            "unknown_effective_plans": [
+              {
+                "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+              }
+            ]
+          }
+        ],
+        "relations": [
+          {
+            "assessment": {
+              "assessed_at": "2026-10-22T15:07:28.552939+00:00",
+              "assessment_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+              "authority": "SUPPORTING_ONLY",
+              "context_evidence": [],
+              "counter_evidence": [],
+              "dependencies": [
+                {
+                  "observation": {
+                    "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                  },
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                },
+                {
+                  "observation": {
+                    "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                  },
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                  }
+                }
+              ],
+              "evidence_validity": true,
+              "lifecycle": "ACTIVE",
+              "missing_evidence": [],
+              "object": {
+                "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+              },
+              "observations": [
+                {
+                  "observation_snapshot_ref": "observation_92511244cc83afa89d99a0e44136186190b8229becd735744fe5a39c3db9ac96"
+                },
+                {
+                  "observation_snapshot_ref": "observation_51d798f2f64a34b5453ca1d7ac813af4e3953bdb3573035569a2be37c09f8f18"
+                }
+              ],
+              "phase": "ASSESSED",
+              "predicate": "SAME_TASK",
+              "reason_codes": [
+                "EXPLICIT_TASK_REFERENCE"
+              ],
+              "rule_version": "same-task-rules/v1",
+              "schema_version": "task-relation-assessment/v1",
+              "subject": {
+                "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+              },
+              "supporting_evidence": [
+                {
+                  "char_end": 47,
+                  "char_start": 39,
+                  "quote": "任务 API-4",
+                  "role": "TASK_KEY",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                },
+                {
+                  "char_end": 39,
+                  "char_start": 35,
+                  "quote": "星河项目",
+                  "role": "PROJECT_SCOPE",
+                  "span": {
+                    "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                  }
+                },
+                {
+                  "char_end": 47,
+                  "char_start": 39,
+                  "quote": "任务 API-4",
+                  "role": "TASK_KEY",
+                  "span": {
+                    "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                  }
+                },
+                {
+                  "char_end": 39,
+                  "char_start": 35,
+                  "quote": "星河项目",
+                  "role": "PROJECT_SCOPE",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                },
+                {
+                  "char_end": 112,
+                  "char_start": 48,
+                  "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+                  "role": "IDENTITY_ASSERTION",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                }
+              ],
+              "verdict": "SUPPORTED"
+            },
+            "blocking_reasons": [],
+            "category": "CURRENT_CONFIRMED",
+            "context_recheck": null,
+            "current_supported": true,
+            "events": [
+              {
+                "actor": "system:relation-store",
+                "assessment_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                "event_id": "relation_event_v1_df4394d5ce2d16e40410f305c43b2b16eeb14340daec8b27cf92fb0786db19f6",
+                "event_type": "ACTIVE",
+                "evidence": [],
+                "previous_event_id": null,
+                "reason": "IMMUTABLE_RECORD_CAPTURED",
+                "recorded_at": "2026-10-22T15:07:28.552939+00:00",
+                "replacement_id": null,
+                "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+              }
+            ],
+            "evidence_state": "VERIFIED",
+            "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION",
+            "persistent_lifecycle": "ACTIVE",
+            "premise_states": [],
+            "source_checks": [
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                }
+              },
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                }
+              }
+            ]
+          },
+          {
+            "assessment": {
+              "asserted_effective_at": null,
+              "assessed_at": "2026-10-22T15:07:28.583285+00:00",
+              "assessment_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+              "authority": "SUPPORTING_ONLY",
+              "authority_checks": [],
+              "changed_fields": [
+                "deadline"
+              ],
+              "context_evidence": [],
+              "counter_evidence": [],
+              "dependencies": [
+                {
+                  "observation": {
+                    "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+                  },
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                },
+                {
+                  "observation": {
+                    "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+                  },
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                  }
+                },
+                {
+                  "observation": null,
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                },
+                {
+                  "observation": null,
+                  "observation_valid": true,
+                  "readback_ok": true,
+                  "source_status": "CURRENT",
+                  "span": {
+                    "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                  }
+                }
+              ],
+              "evidence_validity": true,
+              "lifecycle": "ACTIVE",
+              "missing_evidence": [],
+              "object": {
+                "observation_ref": "ref_d67c1c5a1b5d04dcec9f55e8dd49841cf54cb058b1d05ebd2e22783fbc440737"
+              },
+              "observations": [
+                {
+                  "observation_snapshot_ref": "observation_92511244cc83afa89d99a0e44136186190b8229becd735744fe5a39c3db9ac96"
+                },
+                {
+                  "observation_snapshot_ref": "observation_51d798f2f64a34b5453ca1d7ac813af4e3953bdb3573035569a2be37c09f8f18"
+                }
+              ],
+              "phase": "ASSESSED",
+              "predicate": "REVISES_PLAN",
+              "premise_ids": [
+                "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0"
+              ],
+              "reason_codes": [
+                "EXPLICIT_PLAN_REPLACEMENT"
+              ],
+              "relation_detail": "BUSINESS_PLAN_REVISION",
+              "rule_version": "plan-revision-rules/v1",
+              "schema_version": "task-relation-assessment/v3",
+              "subject": {
+                "observation_ref": "ref_72ecccb82ef6a87a4d52823f611ab7f5b43bd978d3255c5ae2fdc11f94848a22"
+              },
+              "supporting_evidence": [
+                {
+                  "char_end": 112,
+                  "char_start": 48,
+                  "quote": "本条就是A.md的同一任务，现修订其计划，将原定2026年10月14日前完成改为2026年10月18日前完成，本计划替代原计划。",
+                  "role": "PLAN_REVISION",
+                  "span": {
+                    "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                  }
+                }
+              ],
+              "verdict": "SUPPORTED"
+            },
+            "blocking_reasons": [],
+            "category": "CURRENT_CONFIRMED",
+            "context_recheck": null,
+            "current_supported": true,
+            "events": [
+              {
+                "actor": "system:relation-store",
+                "assessment_id": "task_assessment_v3_d4487b69edb15b7c4bbdfeef2e0a6444e4213cee0cc10a097be39f3fb47e4a12",
+                "event_id": "relation_event_v1_2f177e1b480bae8492e90444ccce086ff6d4be799f55078aace4195d66fe3383",
+                "event_type": "ACTIVE",
+                "evidence": [],
+                "previous_event_id": null,
+                "reason": "IMMUTABLE_RECORD_CAPTURED",
+                "recorded_at": "2026-10-22T15:07:28.583285+00:00",
+                "replacement_id": null,
+                "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+              }
+            ],
+            "evidence_state": "VERIFIED",
+            "historical_scope": "CAPTURED_RECORD_WITH_CURRENT_VALIDATION; NOT_AN_AS_OF_DATABASE_RECONSTRUCTION",
+            "persistent_lifecycle": "ACTIVE",
+            "premise_states": [
+              {
+                "assessment_id": "task_assessment_v1_f4e6c5fe324c5f11ed1bcd36b2f4fdd36c5184458e425be7719ee672c7aadec0",
+                "blocking_reasons": [],
+                "current_supported": true,
+                "evidence_state": "VERIFIED",
+                "persistent_lifecycle": "ACTIVE",
+                "verdict": "SUPPORTED"
+              }
+            ],
+            "source_checks": [
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                }
+              },
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                }
+              },
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_814cd4921d3a4d09c154d80f0685328a72e49214dde31c0323583a63d03cc711"
+                }
+              },
+              {
+                "observation": null,
+                "observation_valid": true,
+                "readback_ok": true,
+                "source_status": "CURRENT",
+                "span": {
+                  "span_ref": "span_e4bce862e3759dd3ed76b94e22ea7c5e3b06fd53ceac101875ebac7274a548b3"
+                }
+              }
+            ]
+          }
+        ],
+        "returned_investigation_steps": 1,
+        "returned_relations": 2,
+        "schema_version": "task-relations-query/v1",
+        "semantic_proposals": {
+          "consumer": "future validated M3-A semantic proposal integration",
+          "input_boundary": "version-bound ObservationRef, evidence and M2 candidate endpoints",
+          "limitations": [
+            "DISCOVERY_IS_NOT_PROOF",
+            "P4_REPLAYS_EXISTING_P1_P2_P3_RULES",
+            "RULE_UNKNOWN_IS_NOT_BUSINESS_REFUTATION",
+            "NO_AUTOMATIC_PERSISTENCE"
+          ],
+          "status": "NOT_CONNECTED"
+        },
+        "status": "VERIFIED_RELATIONS_AVAILABLE",
+        "total_matching_relations": 2,
+        "truncated": false,
+        "workspace_id": "ws_4e06c071270a47129fe3157138479d04"
+      }
+    },
+    "error": null,
+    "idempotency_key": null,
+    "created_at": "",
+    "updated_at": ""
+  }
+]

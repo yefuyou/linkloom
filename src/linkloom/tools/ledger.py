@@ -211,5 +211,17 @@ class ToolExecutionLedger:
                 actual_status=result.status,
             )
 
+    def record_checkpoint_uncertain(self, call: ToolCall, error: ToolError) -> None:
+        """Keep executor completion, but prevent reuse as a verified success.
+
+        A failed terminal checkpoint must not be laundered into success by a
+        later checkpoint of the same in-memory Ledger. The existing error field
+        carries this uncertainty alongside the original local executor result.
+        """
+        record = self._existing(call)
+        if record.status != 'completed' or not isinstance(error, ToolError):
+            raise ValidationError('Checkpoint uncertainty requires a completed execution and ToolError.')
+        self._records[self._index[call.call_id]] = replace(record, error=deepcopy(error.to_dict()))
+
 
 __all__ = ["ToolExecutionLedger"]
