@@ -1,0 +1,74 @@
+"""Gold-free fixed lexical retrieval baseline. No LLM or repository imports."""
+from pathlib import Path
+import argparse
+import hashlib
+import importlib.metadata
+import json
+import re
+import time
+from rank_bm25 import BM25Okapi
+
+ROOT = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser()
+parser.add_argument("--output", type=Path, default=ROOT / "runs/public-bm25-v1")
+OUT = parser.parse_args().output.resolve()
+OUT.mkdir(parents=True, exist_ok=False)
+CONFIG = {"algorithm": "rank_bm25.BM25Okapi", "k1": 1.5, "b": 0.75, "epsilon": 0.25,
+          "tokenizer": "lowercase [a-z0-9]+; no stemming/stopword removal", "top_k": 10,
+          "tie_break": "dialogue_act_id ascending", "corpus_scope": "same_meeting_all_dialogue_acts",
+          "evaluation_class": "PUBLIC_HUMAN_GOLD", "model_calls": 0, "gold_reads_during_retrieval": 0}
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def rows(path):
+    return [json.loads(line) for line in path.read_text(encoding="utf8").splitlines() if line]
+
+
+def tokenize(text):
+    return re.findall(r"[a-z0-9]+", text.lower())
+
+
+queries_path = ROOT / "query_inputs/retrieval_queries.jsonl"
+queries = rows(queries_path)
+seen_queries = set()
+for query in queries:
+    if set(query) != {"query_id", "meeting_id", "split", "query_text", "query_origin", "task"}:
+        raise ValueError("unexpected query fields; potential Gold contamination")
+    if query["query_id"] in seen_queries:
+        raise ValueError("duplicate query")
+    seen_queries.add(query["query_id"])
+corpora, indices, sources = {}, {}, {}
+for query in queries:
+    meeting = query["meeting_id"]
+    if meeting in corpora:
+        continue
+    path = ROOT / "inference_inputs" / query["split"] / meeting / "dialogue_acts.jsonl"
+    data = rows(path)
+    if any(any(field in row for field in ("mapped_label", "summary_text", "relevant_dialogue_act_ids", "verdict")) for row in data):
+        raise ValueError("Gold field in inference corpus")
+    data.sort(key=lambda row: row["dialogue_act_id"])
+    corpora[meeting] = data
+    indices[meeting] = BM25Okapi([tokenize(row["text"]) for row in data], k1=1.5, b=0.75, epsilon=0.25)
+    sources[meeting] = {"path": path.relative_to(ROOT).as_posix(), "sha256": digest(path.read_bytes()), "documents": len(data)}
+outputs = []
+for query in queries:
+    start = time.perf_counter()
+    values = indices[query["meeting_id"]].get_scores(tokenize(query["query_text"]))
+    candidates = sorted(zip(corpora[query["meeting_id"]], map(float, values)), key=lambda pair: (-pair[1], pair[0]["dialogue_act_id"]))[:10]
+    outputs.append({"query_id": query["query_id"], "meeting_id": query["meeting_id"], "split": query["split"],
+                    "execution_status": "SUCCESS", "latency_ms": (time.perf_counter() - start) * 1000,
+                    "ranked": [{"dialogue_act_id": row["dialogue_act_id"], "score": score} for row, score in candidates]})
+payload = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in outputs).encode("utf8")
+(OUT / "predictions.jsonl").write_bytes(payload)
+manifest = {"config": CONFIG, "rank_bm25_version": importlib.metadata.version("rank-bm25"),
+            "runner_sha256": digest(Path(__file__).read_bytes()), "query_input_sha256": digest(queries_path.read_bytes()),
+            "sources": sources, "queries_scheduled": len(queries), "queries_completed": len(outputs),
+            "result_sha256": digest(payload), "gold_access": "NO evaluator_only paths opened by this program",
+            "limitation": "Process/code-level separation; not an OS sandbox or a product Host run."}
+(OUT / "run_manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf8")
+(OUT / "output_seal.json").write_text(json.dumps({"sealed": True, "predictions_sha256": digest(payload),
+    "run_manifest_sha256": digest((OUT / "run_manifest.json").read_bytes())}, indent=2), encoding="utf8")
+print(json.dumps({"scheduled": len(queries), "completed": len(outputs), "provider_calls": 0, "output": str(OUT)}))

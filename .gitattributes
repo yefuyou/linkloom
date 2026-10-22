@@ -1,2 +1,5 @@
 # Preserve the single reconstructed ledger's bytes verified by its original seal.
 /docs/evaluation/public_memory_benchmark_clean/e2_revised_mh_only_20261005/final_evaluation_v1_20261005/formal_rehearsal_budget_ledger.json -text
+# New AMI frozen reference copies retain the original query/prediction/seal bytes.
+/evals/ami_public_v1/frozen/** -text
+/docs/evaluation/ami_public_v1/** -text

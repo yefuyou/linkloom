@@ -1,0 +1,73 @@
+"""Post-seal scoring against official human summary links; no inference."""
+from pathlib import Path
+import argparse
+import hashlib
+import json
+
+ROOT = Path(__file__).resolve().parent
+parser = argparse.ArgumentParser()
+parser.add_argument("--run", type=Path, default=ROOT / "runs/public-bm25-v1")
+RUN = parser.parse_args().run.resolve()
+
+
+def rows(path):
+    return [json.loads(line) for line in path.read_text(encoding="utf8").splitlines() if line]
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+seal = json.loads((RUN / "output_seal.json").read_text(encoding="utf8"))
+if not seal["sealed"] or seal["predictions_sha256"] != sha(RUN / "predictions.jsonl") or seal["run_manifest_sha256"] != sha(RUN / "run_manifest.json"):
+    raise ValueError("output seal mismatch; Gold remains locked")
+predictions = {row["query_id"]: row for row in rows(RUN / "predictions.jsonl")}
+qrels_path = ROOT / "evaluator_only/public_human_gold/retrieval_qrels.jsonl"
+gold = rows(qrels_path)  # first official qrel access is after seal verification
+results = []
+for expected in gold:
+    row = predictions.get(expected["query_id"])
+    relevant = set(expected["relevant_dialogue_act_ids"])
+    base = {"query_id": expected["query_id"], "meeting_id": expected["meeting_id"], "split": expected["split"],
+            "official_relevant_count": len(relevant), "execution_status": row["execution_status"] if row else "NOT_STARTED"}
+    if not relevant:
+        results.append(dict(base, stage_status="NOT_EVALUATED", reason="NO_OFFICIAL_SUMMARY_LINK", metrics=None))
+        continue
+    ranked = [hit["dialogue_act_id"] for hit in row["ranked"]] if row else []
+    if len(ranked) != len(set(ranked)):
+        raise ValueError("duplicate retrieval IDs")
+    first = next((i + 1 for i, item in enumerate(ranked) if item in relevant), None)
+    metrics = {f"recall@{k}": len(set(ranked[:k]) & relevant) / len(relevant) for k in (1, 5, 10)}
+    metrics.update({f"hit@{k}": int(bool(set(ranked[:k]) & relevant)) for k in (1, 5, 10)})
+    metrics["mrr@10"] = 1 / first if first else 0
+    results.append(dict(base, stage_status="EVALUATED" if row else "NOT_EVALUATED",
+                        reason=None if row else "NOT_STARTED", metrics=metrics))
+
+
+def aggregate(scope):
+    selected = [row for row in results if scope == "all" or row["split"] == scope]
+    eligible = [row for row in selected if row["official_relevant_count"] > 0]
+    reached = [row for row in eligible if row["execution_status"] == "SUCCESS"]
+    keys = ["recall@1", "recall@5", "recall@10", "hit@1", "hit@5", "hit@10", "mrr@10"]
+    return {"scheduled_queries": len(selected), "official_link_eligible_queries": len(eligible),
+            "completed_eligible_queries": len(reached), "no_official_link_not_evaluated": len(selected) - len(eligible),
+            "metrics_mean_query": {key: {"numerator_sum": sum(row["metrics"][key] for row in eligible),
+                                        "denominator": len(eligible),
+                                        "value": sum(row["metrics"][key] for row in eligible) / len(eligible) if eligible else None}
+                                   for key in keys}}
+
+
+report = {"evaluation_class": "PUBLIC_HUMAN_GOLD", "task": "official_summary_sentence_to_linked_dialogue_act_retrieval",
+          "system": "fixed offline BM25 reference; not LinkLoom F/G/Product acceptance", "mapping_version": "ami-official-summary-links/v1",
+          "gold_source": "AMI human summlink annotation; deterministic mapping only",
+          "query_provenance": "official summary sentence is the declared query input; section labels/qrels are evaluator-only",
+          "qrels_sha256": sha(qrels_path), "output_seal_sha256": sha(RUN / "output_seal.json"),
+          "scorer_sha256": sha(Path(__file__)), "gold_read_after_output_seal": True,
+          "splits": {scope: aggregate(scope) for scope in ("dev", "test", "all")}, "per_query": results,
+          "limitations": ["summary links are non-exhaustive relevance judgments; unlinked is not irrelevant",
+                         "no precision/false-task/owner/deadline/cross-meeting semantic score",
+                         "test has one whole-series cluster; both selected series are official AMI SA train",
+                         "no tuning performed; this is the first recorded fixed configuration on this prepared subset"],
+          "provider_calls": 0, "provider_cost_usd": 0}
+(RUN / "scores.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
+print(json.dumps({"evaluation_class": report["evaluation_class"], "splits": report["splits"], "provider_calls": 0}, ensure_ascii=False))

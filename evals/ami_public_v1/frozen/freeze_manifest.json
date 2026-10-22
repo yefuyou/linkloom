@@ -1,0 +1,18 @@
+{
+  "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+  "evaluation_class": "PUBLIC_HUMAN_GOLD",
+  "files": {
+    "LICENCE.txt": "d52fd9c7c19eec9f0bec3107554c10937203e261259d73b01637a61501fec7f7",
+    "corpus_projection.json": "32dc3a6355100cfd7a540f8c82b89f18c123c9c62e950adef95892232e51b772",
+    "evaluator_only/public_human_gold/retrieval_qrels.jsonl": "6a7dc4ddafd93d065103a1d4b7a38252feb3bda2203ac06686b0e95a53af761e",
+    "query_inputs/retrieval_queries.jsonl": "d3209488cdd2ee0d9f0d2e77e460ce9dc55be8d3810b460d86b3c633839d6c1d",
+    "reference_code/run_public_retrieval_baseline.py.txt": "f51a7b896537bb7f564d25940c2cf36198c4db1781d63e8b69157217fb95c7fa",
+    "reference_code/score_public_retrieval_baseline.py.txt": "0153e22bba0344e8cdd2d3e378a60cf9d06bfa56fb4129cce3aceb8a576fa04b",
+    "reference_run/output_seal.json": "6a3e8ef48f22d14c017ef45b65e8adf7116adb48f5cf472cec6b7e98e551fdbe",
+    "reference_run/predictions.jsonl": "13791f302d6f0dbcd26da3d05279309d88dfd383cc2878d9cab11cfa79a4b132",
+    "reference_run/run_manifest.json": "34dd279738d178d3c90a5a8e2ed522036a971f6bd1e796a65afecd89a7bb6b8b"
+  },
+  "mapping_version": "ami-official-summary-links/v1",
+  "reference": "Public offline reference, not LinkLoom Product; already-exposed series",
+  "source_url": "https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip"
+}
