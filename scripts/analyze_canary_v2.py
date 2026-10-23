@@ -69,6 +69,8 @@ def replay(inputs, historical_run, output):
     sources, _ = load_sources(inputs)
     original_requests = rows(historical_run / 'actual_requests.jsonl')
     original_models = rows(historical_run / 'model_responses.jsonl')
+    if len(original_requests) != 28 or len(original_models) != 28:
+        raise ValueError('historical replay request/response population must each be exactly 28')
     cursor, batches = 0, []
 
     def authorize(request):

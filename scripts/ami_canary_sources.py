@@ -40,12 +40,18 @@ def load_sources(inputs):
             raise ValueError('incomplete meeting chunk population')
         if ''.join(c['text'] for c in chunks) != transcript['canonical_text']:
             raise ValueError('incomplete transcript chunks')
+        cursor = 0
         for index, chunk in enumerate(chunks):
             text = chunk['text']
-            if (transcript['canonical_text'][chunk['start']:chunk['end']] != text
+            start, end = chunk['start'], chunk['end']
+            if (type(start) is not int or type(end) is not int
+                    or not 0 <= start <= end <= len(transcript['canonical_text'])
+                    or start != cursor or end != start + len(text)
+                    or transcript['canonical_text'][start:end] != text
                     or digest(text.encode('utf8')) != chunk['sha256']
                     or len(text) > 8000 or len(text.encode('utf8')) > 16000):
                 raise ValueError('chunk hash/span/budget mismatch')
+            cursor = end
             artifact = RawArtifact(workspace_id=meeting, artifact_id=f'{meeting}:chunk:{index:04d}',
                 source_type='manual_text', content=text,
                 ingestion_time=datetime(2026, 10, 23, tzinfo=UTC))

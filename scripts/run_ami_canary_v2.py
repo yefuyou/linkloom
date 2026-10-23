@@ -27,7 +27,7 @@ def code_identity():
     files = list((ROOT / 'src/linkloom').rglob('*.py'))
     files += list((ROOT / 'tests').rglob('*.py'))
     files += [ROOT / 'scripts' / name for name in
-              ('ami_canary_sources.py', 'run_ami_canary_v2.py', 'analyze_canary_v2.py', 'analyze_sprint_trust_v2.py', 'prepare_canary_gate.py', 'run_canary_checks.py')]
+              ('ami_canary_sources.py', 'run_ami_canary_v2.py', 'analyze_canary_v2.py', 'analyze_sprint_trust_v2.py', 'prepare_canary_gate.py', 'run_canary_checks.py', 'pytest_windows_tempdir.py')]
     return {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in sorted(files)}
 
 

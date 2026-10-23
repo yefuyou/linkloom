@@ -135,12 +135,11 @@ def _usage_present(value: Any) -> bool:
 
 
 def _run_count(budget: dict[str, Any], closed: dict[str, Any] | None) -> int:
-    count = budget.get("requests_reserved")
-    if type(count) is int:
-        return count
-    if isinstance(closed, dict) and type(closed.get("requests")) is int:
-        return closed["requests"]
-    return 0
+    counts = [count for count in (budget.get('requests_reserved'), (closed or {}).get('requests'))
+              if count is not None]
+    if any(type(count) is not int or count < 0 for count in counts) or len(set(counts)) > 1:
+        raise ValueError('historical reservation count mismatch or invalid count')
+    return counts[0] if counts else 0
 
 
 def _attempt_row(
@@ -175,7 +174,7 @@ def _attempt_row(
         and prewire_value.get('missing_second_wire_proven_by_replay') is True
         and prewire_value.get('known_error') == 'MODEL_INVALID_REQUEST'
         and (prewire_value.get('details') or {}).get('reason') == 'temperature_unsupported_for_gemini_3'
-        and wire_request not in names and wire_response not in names
+        and wire_request not in names and wire_response not in names and wire_error not in names
     )
     if prewire_applies:
         evidence = {
@@ -187,8 +186,10 @@ def _attempt_row(
             "basis": "prewire-resolution plus absent second wire request",
         }
     elif wire_response_value is not None:
+        raw_response = wire_response_value.get('response', wire_response_value)
         evidence = {
             "provider_response_received": True,
+            "provider_error_received": isinstance(raw_response, dict) and isinstance(raw_response.get('error'), dict),
             "http_status": http_status,
             "http_response_observed": http_status is not None,
             "provider_response_id": provider_id,
@@ -317,7 +318,7 @@ def _source_gaps(zf: ZipFile, names: set[str]) -> list[dict[str, Any]]:
             "expected_declared_script_sha256": declared,
             "available_actual_member": FINAL_RUNNER_MEMBER if final_ref else None,
             "available_actual_sha256": final_hash,
-            "status": "VERIFIED" if recorded and final_hash == recorded else "NOT_VERIFIED",
+            "status": "VERIFIED" if recorded == declared == final_hash else "NOT_VERIFIED",
             "gap": "historical source bytes for the declared hash are absent; only the final archived support file is available",
         })
 
@@ -333,7 +334,7 @@ def _source_gaps(zf: ZipFile, names: set[str]) -> list[dict[str, Any]]:
         "expected_declared_adapter_sha256": EARLY_ADAPTER_SHA256,
         "available_actual_member": FINAL_ADAPTER_MEMBER if adapter_ref else None,
         "available_actual_sha256": adapter_hash,
-        "status": "NOT_VERIFIED" if adapter_hash != EARLY_ADAPTER_SHA256 else "VERIFIED",
+        "status": "VERIFIED" if recorded_adapter == EARLY_ADAPTER_SHA256 == adapter_hash else "NOT_VERIFIED",
         "gap": "initial adapter source bytes do not match the archived final adapter",
     })
     return gaps

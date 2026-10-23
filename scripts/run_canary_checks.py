@@ -9,8 +9,11 @@ from linkloom.evaluation.canary_trust import save_new, sha
 from scripts.run_ami_canary_v2 import ROOT, code_identity, head, runtime_identity
 
 SUITES = {
-    'quote': ['tests/unit/test_canary_quote_scopes.py'],
-    'runner': ['tests/unit/test_canary_trust_v2.py', 'tests/unit/test_ami_canary_v2.py', 'tests/unit/test_sprint_trust_v2.py'],
+    'quote': ['tests/unit/test_canary_quote_scopes.py', 'tests/unit/test_text_scopes.py',
+              'tests/unit/test_quote_nesting_p2.py', 'tests/unit/test_quote_integration.py'],
+    'runner': ['tests/unit/test_canary_trust_v2.py', 'tests/unit/test_ami_canary_v2.py',
+               'tests/unit/test_sprint_trust_v2.py', 'tests/unit/test_canary_integration_contracts.py',
+               'tests/unit/test_canary_source_gap_identity.py'],
     'safety': ['tests/unit/test_task_observation_discovery.py', 'tests/unit/test_task_recall_protocol.py',
                'tests/unit/test_task_field_binding.py', 'tests/unit/test_task_offline_permissions.py',
                'tests/unit/test_task_investigation_p4_steps.py', 'tests/unit/test_task_result_projection.py',
