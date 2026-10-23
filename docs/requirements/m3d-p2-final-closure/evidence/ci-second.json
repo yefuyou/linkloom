@@ -1,0 +1,459 @@
+{
+  "run_id": "39878953136",
+  "url": "https://github.com/yefuyou/linkloom/actions/runs/39878953136",
+  "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+  "event": "workflow_dispatch",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 120171397296,
+      "name": "Frozen ledger bytes (windows-latest)",
+      "conclusion": "success",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install 'pytest>=8.0'",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify committed blob, native checkout, seal and Git clean/checkout filters",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": 120171397534,
+      "name": "Task investigation (offline Product HTTP)",
+      "conclusion": "failure",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install -e '.[dev,smoke]'",
+          "conclusion": "success"
+        },
+        {
+          "name": "M3-R Product semantic tool chain (offline, loopback HTTP only)",
+          "conclusion": "success"
+        },
+        {
+          "name": "M3-S and S2 field binding and task recall",
+          "conclusion": "success"
+        },
+        {
+          "name": "M3-S1 bounded replanning through Runtime and Reviewer",
+          "conclusion": "success"
+        },
+        {
+          "name": "M3-D combined F v3 and G replanning contracts",
+          "conclusion": "success"
+        },
+        {
+          "name": "P2-A work identity through Product HTTP and cold read",
+          "conclusion": "success"
+        },
+        {
+          "name": "P2-B Host ledger authentication and dependency replay",
+          "conclusion": "success"
+        },
+        {
+          "name": "P2-A and P2-B joint Product execution",
+          "conclusion": "success"
+        },
+        {
+          "name": "Observation, planning, proof, context, Runtime and HTTP contracts",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Explicit offline product entry",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": [
+        "2026-10-23T00:38:26.8268472Z ##[error]Process completed with exit code 1."
+      ]
+    },
+    {
+      "id": 120171397551,
+      "name": "Legacy Historical Gate (original temporal fixtures)",
+      "conclusion": "success",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install -e '.[dev]'",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify and replay exact original synthetic inputs (no provider)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": 120171397561,
+      "name": "core (2)",
+      "conclusion": "success",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install core and test dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify launch entry points",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build wheel",
+          "conclusion": "success"
+        },
+        {
+          "name": "Core product and safety regressions (no provider SDK or keys)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Ask DOM and JavaScript syntax",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": 120171397579,
+      "name": "Frozen ledger bytes (ubuntu-latest)",
+      "conclusion": "success",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install 'pytest>=8.0'",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify committed blob, native checkout, seal and Git clean/checkout filters",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": 120171397735,
+      "name": "core (1)",
+      "conclusion": "success",
+      "head_sha": "67baa1a632259271e802ab16296762f52fb64882",
+      "exact_sha_in_checkout_log": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install core and test dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify launch entry points",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build wheel",
+          "conclusion": "success"
+        },
+        {
+          "name": "Core product and safety regressions (no provider SDK or keys)",
+          "conclusion": "success"
+        },
+        {
+          "name": "Ask DOM and JavaScript syntax",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "junit": [
+    {
+      "path": "artifacts\\frozen-ledger-results-ubuntu-latest\\frozen-ledger.xml",
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\frozen-ledger-results-windows-latest\\frozen-ledger.xml",
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\legacy-temporal-results\\legacy-temporal.xml",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\offline-core-results-1\\offline-core.xml",
+      "tests": 303,
+      "passed": 303,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\offline-core-results-2\\offline-core.xml",
+      "tests": 303,
+      "passed": 303,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\m3d-combined.xml",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\m3r-semantic-chain.xml",
+      "tests": 46,
+      "passed": 46,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\m3s-field-recall.xml",
+      "tests": 45,
+      "passed": 45,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\m3s1-replanning.xml",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\p2-joint-product.xml",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\p2a-work-identity.xml",
+      "tests": 22,
+      "passed": 22,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\p2b-inspect-ledger.xml",
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "artifacts\\task-investigation-results\\task-investigation.xml",
+      "tests": 564,
+      "passed": 563,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "distinct_cases": 1048,
+  "distinct_nonpassing": [
+    {
+      "classname": "tests.unit.test_task_relation_tools",
+      "name": "test_final_accepts_json_wrapped_in_one_markdown_code_fence",
+      "outcomes": [
+        "failed"
+      ]
+    }
+  ]
+}

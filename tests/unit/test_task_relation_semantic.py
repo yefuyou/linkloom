@@ -76,6 +76,8 @@ def test_admission_rejects_scope_budget_and_unauthorized_sources_before_call():
     context=selected_context()
     for broken in (replace(context,workspace_id='foreign'),
                    replace(context,authorized_artifact_versions=frozenset()),
+                   replace(context,authorized_artifact_versions=frozenset(
+                       [context.artifacts[0].artifact_version_id])),
                    replace(context,limits=SemanticLimits(max_input_tokens=1))):
         result,fake=run(broken)
         assert result.status=='BLOCKED' and not fake.requests

@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="6.006" timestamp="2026-10-23T08:33:20.347147+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3q_provider_host" name="test_m3r_source_bound_product_chain_matches_durable_tool_receipts" time="4.640" /></testsuite></testsuites>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="28.167" timestamp="2026-10-22T23:00:23.537685+08:00" hostname="beagle"><testcase classname="tests.integration.test_p2_work_identity_http" name="test_two_work_http_identity_runtime_reviewer_and_cold_read" time="16.488"><failure message="AssertionError: [{'artifact_id': 'src_f47ae86edc614748a94dd23163cdbde0', 'proposal_index': 1, 'reason': 'OBSERVATION_EXTRACTION_CONFLICT'}]&#10;assert 0 == 2&#10; +  where 0 = len([])">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-before-short/test_two_work_http_identity_ru0')
+
+    def test_two_work_http_identity_runtime_reviewer_and_cold_read(tmp_path):
+        rows = [task(w) for w in WORK]
+        app, service, transport, stages = run_product(tmp_path, rows)
+        try:
+            with product_http(app, service) as base:
+                ws, post_code, result = start(base)
+                manifest = manifest_for(tmp_path, result['agent_run_id'])
+                from linkloom.ui.task_investigation import ProductTaskSources
+                artifact = ProductTaskSources(ws, app.snapshot_investigation_sources(ws)[1],
+                    lambda: app.snapshot_investigation_sources(ws)[1]).artifacts[0]
+                segment = parse_source_text(artifact).segments[0]
+                proposed = [build_task_observation(TaskProposal.from_dict(r['task']), segment, artifact) for r in rows]
+                cold_code, cold = cold_read(app.repository.database_path, result['agent_run_id'], ws)
+                receipt = dict(transport='scripted; no network or paid model', post_http_status=post_code,
+                    f_proposals=rows, built_observations=[o.to_dict() for o in proposed],
+                    ids_collide=proposed[0].observation_id == proposed[1].observation_id,
+                    discovery=manifest['discovery'], g_payloads=stages[1].payloads,
+                    http_result=result, cold_http_status=cold_code, cold_body=cold,
+                    transport_requests=len(transport.requests))
+                if os.environ.get('LINKLOOM_P2_RECEIPT'):
+                    Path(os.environ['LINKLOOM_P2_RECEIPT']).write_text(
+                        json.dumps(receipt, ensure_ascii=False, indent=2), encoding='utf8')
+&gt;               assert len(result['task_review']['observations']) == 2, receipt['discovery']['failures']
+E               AssertionError: [{'artifact_id': 'src_f47ae86edc614748a94dd23163cdbde0', 'proposal_index': 1, 'reason': 'OBSERVATION_EXTRACTION_CONFLICT'}]
+E               assert 0 == 2
+E                +  where 0 = len([])
+
+tests\integration\test_p2_work_identity_http.py:112: AssertionError</failure></testcase></testsuite></testsuites>

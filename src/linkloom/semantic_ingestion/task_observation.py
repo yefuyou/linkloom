@@ -94,8 +94,24 @@ class TaskFieldEvidence:
 
 
 def _observation_id(span, start, end):
+    """Frozen v1 contract, including the original JSON encoding."""
     identity = [span.workspace_id, span.artifact_version_id, span.evidence_ref, start, end]
     return "task_observation_v1_" + hashlib.sha256(json.dumps(identity, ensure_ascii=False).encode()).hexdigest()
+
+
+def _identity_version(observation_id):
+    for version in ('v1', 'v2'):
+        if isinstance(observation_id, str) and observation_id.startswith(f'task_observation_{version}_'):
+            return version
+    raise ValueError('unsupported task identity version')
+
+
+def _work_observation_id(span, evidence):
+    # Message identity and exact, source-verified work ranges; neither model
+    # order, raw-window size nor mutable field interpretations identify work.
+    ranges = sorted({(e.char_start, e.char_end) for e in evidence if e.field == 'description'})
+    identity = [span.workspace_id, span.artifact_version_id, span.evidence_ref, span.message_id, ranges]
+    return 'task_observation_v2_' + hashlib.sha256(json.dumps(identity, ensure_ascii=False).encode()).hexdigest()
 
 
 @dataclass(frozen=True, slots=True)
@@ -154,13 +170,24 @@ class TaskObservation:
         raw = [e for e in self.field_evidence if e.field == "raw_text"]
         if len(raw) != 1 or raw[0].quote != self.raw_text:
             raise ValueError("task text must have exact evidence")
-        if self.observation_id != _observation_id(self.provenance, raw[0].char_start, raw[0].char_end):
-            raise ValueError("task identity does not match its immutable source location")
         for evidence in self.field_evidence:
             if evidence.basis == "SOURCE_TEXT":
                 start = evidence.char_start - self.provenance.char_start
                 if start < 0 or self.provenance.quote[start:start + len(evidence.quote)] != evidence.quote:
                     raise ValueError("task field is outside its source evidence")
+        version = _identity_version(self.observation_id)
+        if version == 'v2':
+            work = [e for e in self.field_evidence if e.field == 'description']
+            if (not work and self.validation_status != 'INVALID') or any(
+                e.basis != 'SOURCE_TEXT' or self.raw_text.count(e.quote) != 1
+                or e.char_start != raw[0].char_start + self.raw_text.index(e.quote) for e in work
+            ):
+                raise ValueError('task identity needs unambiguous work evidence inside its raw source range')
+            expected_id = _work_observation_id(self.provenance, self.field_evidence)
+        else:
+            expected_id = _observation_id(self.provenance, raw[0].char_start, raw[0].char_end)
+        if self.observation_id != expected_id:
+            raise ValueError("task identity does not match its immutable source location and work")
 
     def to_dict(self):
         result = asdict(self)
@@ -212,12 +239,14 @@ class TaskObservation:
                     dict(owner=self.owner, deadline=self.deadline_text, project=self.project, vendor=self.vendor))
         proposal = TaskProposal(self.raw_text, tuple(e.quote for e in self.field_evidence if e.field == "description"),
                                 proposed['owner'], proposed['deadline'], proposed['project'], proposed['vendor'], self.field_bindings, self.work_state)
-        expected = build_task_observation(proposal, segment, artifact)
+        # Saved field-bound v1 records must replay v1, not acquire a new P4 ref.
+        expected = build_task_observation(proposal, segment, artifact,
+                                          identity_version=_identity_version(self.observation_id))
         if self.field_bindings is not None and any(getattr(self, name) != getattr(expected, name) for name in
                 ('deadline_text', 'validation_status', 'validation_issues', 'unknown_fields', 'work_state')):
             return False
         return all(getattr(self, name) == getattr(expected, name) for name in
-                   ("description", "owner", "deadline", "deadline_precision", "deadline_role", "project", "vendor",
+                   ("observation_id", "description", "owner", "deadline", "deadline_precision", "deadline_role", "project", "vendor",
                     "field_evidence", "event_time"))
 
 
@@ -348,7 +377,11 @@ def _model_fields(proposal, raw, segment, artifact, bind, issues):
 
 
 def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment,
-                           artifact: RawArtifact) -> TaskObservation:
+                           artifact: RawArtifact, *, identity_version: str | None = None) -> TaskObservation:
+    # Legacy profile generation and all stored payload shapes stay unchanged.
+    version = identity_version or ('v2' if proposal and proposal.field_bindings is not None else 'v1')
+    if version not in {'v1', 'v2'}:
+        raise ValueError('unsupported task identity version')
     if not segment.evidence_span.verify(artifact):
         raise ValueError("task source does not match immutable evidence")
     span = segment.evidence_span
@@ -371,7 +404,9 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
 
     parts = proposal.description_parts if proposal else ()
     description = None
-    if parts and all(part in raw for part in parts):
+    if parts and all(part in raw and (version == 'v1' or raw.count(part) == 1) for part in parts):
+        if version == 'v2':
+            parts = tuple(sorted(set(parts), key=raw.index))
         for part in parts:
             bind("description", part)
         description = "；".join(parts)
@@ -427,7 +462,8 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
     values = {"description": description, "owner": owner, "deadline": deadline, "project": project, "vendor": vendor}
     unknown = tuple(name for name, value in values.items() if value is None)
     return TaskObservation(
-        _observation_id(span, start, start + len(raw)), span, raw, description, owner,
+        (_work_observation_id(span, evidence) if version == 'v2' else _observation_id(span, start, start + len(raw))),
+        span, raw, description, owner,
         deadline, deadline_text, precision, role, project, vendor,
         "EXTRACTED" if proposal_supplied else "NOT_PROVIDED", "INVALID" if description is None else "PARTIAL" if unknown or issues else "VALID",
         unknown, tuple(issues), tuple(evidence), artifact.ingestion_time,

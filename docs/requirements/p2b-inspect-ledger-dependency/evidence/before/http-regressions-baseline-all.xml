@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="6" time="110.134" timestamp="2026-10-22T23:46:10.819924+08:00" hostname="beagle"><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_inspection_receipt_unblocks_dependent_relation" time="23.732"><failure message="AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}&#10;  &#10;  Differing items:&#10;  {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3d-fix-inspect-ledger-dependency/work/pytest-p2b-http-baseline-all/test_product_http_inspection_r0')
+
+    def test_product_http_inspection_receipt_unblocks_dependent_relation(tmp_path):
+        """A real completed inspect record is the premise for SAME_TASK."""
+    
+        http_result, ledger, reviewer, cold, _planning_requests = _run_http_case(tmp_path)
+    
+        assert http_result["status"] == "PARTIAL", http_result
+        assert [row["tool"] for row in http_result["trace"]] == [
+            "inspect_task_context",
+            "query_task_relations",
+        ]
+        assert [row["tool_id"] for row in ledger] == [
+            "inspect_task_context",
+            "query_task_relations",
+        ]
+        assert [row["status"] for row in ledger] == ["completed", "completed"]
+        inspect_record = ledger[0]
+        assert inspect_record["result"]["status"] == "ok"
+        assert inspect_record["result"]["value"]["investigation_receipts"]
+    
+        steps = {row["step_id"]: row for row in http_result["task_review"]["steps"]}
+        identity = steps["identity"]
+&gt;       assert identity["dependency_outcomes"] == {"inspect_owner": "COMPLETED"}
+E       AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}
+E         
+E         Differing items:
+E         {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}
+E         Use -v to get more diff
+
+tests\integration\test_inspect_ledger_dependency.py:215: AssertionError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_cold_replay_fails_closed_after_source_version_update" time="18.781" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_cold_replay_fails_closed_after_source_evidence_revoke" time="22.201" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_nonpositive_p4_relation_keeps_inspection_receipt_but_blocks_relation" time="7.192"><failure message="AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}&#10;  &#10;  Differing items:&#10;  {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3d-fix-inspect-ledger-dependency/work/pytest-p2b-http-baseline-all/test_product_http_nonpositive_0')
+
+    def test_product_http_nonpositive_p4_relation_keeps_inspection_receipt_but_blocks_relation(tmp_path):
+        result, ledger, reviewer, cold, _ = _run_http_case(tmp_path, records="none")
+    
+        assert result["status"] == "PARTIAL", result
+        assert [row["status"] for row in ledger] == ["completed", "completed"]
+        steps = {row["step_id"]: row for row in result["task_review"]["steps"]}
+        identity = steps["identity"]
+&gt;       assert identity["dependency_outcomes"] == {"inspect_owner": "COMPLETED"}
+E       AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}
+E         
+E         Differing items:
+E         {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}
+E         Use -v to get more diff
+
+tests\integration\test_inspect_ledger_dependency.py:259: AssertionError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_query_before_inspection_does_not_retroactively_unlock_relation" time="19.704" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_failed_inspection_does_not_unlock_relation" time="12.836" /></testsuite></testsuites>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="63" time="454.505" timestamp="2026-10-23T07:49:16.761567+08:00" hostname="beagle"><testcase classname="tests.unit.test_p2_work_identity" name="test_shared_raw_text_has_distinct_verified_work_ids_and_unknown_fields_survive" time="0.031" /><testcase classname="tests.unit.test_p2_work_identity" name="test_candidate_order_and_reimport_time_do_not_change_work_identity" time="0.041" /><testcase classname="tests.unit.test_p2_work_identity" name="test_partial_work_and_fully_populated_valid_work_share_one_raw_fragment" time="0.019" /><testcase classname="tests.unit.test_p2_work_identity" name="test_duplicate_work_is_one_observation_even_if_description_part_is_repeated" time="0.019" /><testcase classname="tests.unit.test_p2_work_identity" name="test_conflicting_same_work_is_quarantined_without_losing_other_work" time="0.043" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_witness_is_independent_of_raw_window_and_field_values" time="0.007" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_evidence_order_is_canonical_and_not_a_new_task" time="0.006" /><testcase classname="tests.unit.test_p2_work_identity" name="test_ambiguous_work_occurrence_cannot_be_bound_to_first_match" time="0.013" /><testcase classname="tests.unit.test_p2_work_identity" name="test_v2_cannot_forge_location_or_identity_version_or_move_work_outside_raw" time="0.005" /><testcase classname="tests.unit.test_p2_work_identity" name="test_baseline_v1_payload_and_external_ref_are_exactly_preserved" time="0.014" /><testcase classname="tests.unit.test_p2_work_identity" name="test_v2_does_not_inherit_or_rewrite_persisted_v1_p4_relations" time="0.663" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_profile_source_checks_remain_fail_closed[update]" time="0.006" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_profile_source_checks_remain_fail_closed[revoke]" time="0.005" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_profile_source_checks_remain_fail_closed[foreign]" time="0.005" /><testcase classname="tests.unit.test_p2_work_identity" name="test_work_profile_source_checks_remain_fail_closed[during_call]" time="0.026" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_two_work_http_identity_runtime_reviewer_and_cold_read[False-False]" time="4.807" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_two_work_http_identity_runtime_reviewer_and_cold_read[True-False]" time="4.721" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_two_work_http_identity_runtime_reviewer_and_cold_read[False-True]" time="5.807" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_work_identity_hot_and_cold_permissions[update]" time="5.204" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_work_identity_hot_and_cold_permissions[revoke]" time="7.821" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_work_identity_hot_and_cold_permissions[foreign]" time="6.331" /><testcase classname="tests.integration.test_p2_work_identity_http" name="test_legacy_profile_stored_v1_product_cold_read" time="4.597" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_inspect_unblocks_only_matching_current_p4_relation" time="5.723" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_unexecuted_inspection_and_later_completion_do_not_rewrite_earlier_query" time="9.261" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_real_failed_inspection_is_durable_and_cannot_satisfy_dependency" time="4.527" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_uncertain_inspection_reloads_as_pending_and_cannot_unblock" time="5.376" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[run_id]" time="5.856" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[task_id]" time="5.607" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[agent_id]" time="4.860" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[workspace_id]" time="4.543" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[plan]" time="5.179" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_foreign_inspection_cannot_satisfy_current_dependency[sequence]" time="4.916" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[call_id]" time="7.473" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[tool_id]" time="7.237" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[result_hash]" time="5.770" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[receipt_id]" time="4.908" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[duplicate_receipt]" time="4.804" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[duplicate_step]" time="6.083" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[arguments]" time="6.178" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_completed_record_tampering_never_becomes_execution_proof[source_version]" time="9.125" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_source_rechecked_between_completed_inspection_and_query[revoke]" time="2.767" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_source_rechecked_between_completed_inspection_and_query[version]" time="2.562" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_reviewer_replays_persisted_ledger_and_rejects_self_consistent_wrong_view" time="25.897" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_tool_schema_never_accepts_model_supplied_execution_projection" time="0.836" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_plan_only_completion_cannot_replace_the_current_run_ledger" time="6.823" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_uncertain_in_memory_inspection_cannot_be_laundered_by_later_checkpoint" time="9.219" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_reviewer_cannot_derive_task_authority_from_self_consistent_ledger" time="9.497" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_self_consistent_foreign_plan_metadata_is_rejected_before_execution[workspace_id]" time="1.712" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_self_consistent_foreign_plan_metadata_is_rejected_before_execution[snapshot_hash]" time="3.556" /><testcase classname="tests.unit.test_inspect_ledger_host" name="test_uncertain_query_cannot_pass_host_or_context_lifecycle_replay" time="11.098" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_inspection_receipt_unblocks_dependent_relation" time="7.517"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_inspection_r0')
+
+    def test_product_http_inspection_receipt_unblocks_dependent_relation(tmp_path):
+        """A real completed inspect record is the premise for SAME_TASK."""
+    
+&gt;       http_result, ledger, reviewer, cold, _planning_requests = _run_http_case(tmp_path)
+
+tests\integration\test_inspect_ledger_dependency.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_inspect_ledger_dependency.py:118: in _run_http_case
+    http_result = http_ask(base, workspace)
+tests\m3p_support.py:165: in http_ask
+    status, payload = _client(base, '/api/product/ask', method='POST',
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x000001DCDF8B0D30&gt;
+b = &lt;memory at 0x000001DCDFA77AC0&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_cold_replay_fails_closed_after_source_version_update" time="26.852"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_cold_replay_0')
+
+    def test_product_http_cold_replay_fails_closed_after_source_version_update(tmp_path):
+&gt;       _, reads = _run_http_case_then_mutate(tmp_path, _update_first_source)
+
+tests\integration\test_inspect_ledger_dependency.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_inspect_ledger_dependency.py:154: in _run_http_case_then_mutate
+    http_result = http_ask(base, workspace)
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x000001DCDF50F910&gt;
+b = &lt;memory at 0x000001DCDFA76680&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_cold_replay_fails_closed_after_source_evidence_revoke" time="30.917" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_nonpositive_p4_relation_keeps_inspection_receipt_but_blocks_relation" time="11.578" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_query_before_inspection_does_not_retroactively_unlock_relation" time="17.102" /><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_failed_inspection_does_not_unlock_relation" time="17.712" /><testcase classname="tests.integration.test_inspect_ledger_cold_process" name="test_product_http_cold_read_replays_in_fresh_python_process" time="26.166"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_cold_read_re0')
+
+    def test_product_http_cold_read_replays_in_fresh_python_process(tmp_path):
+        app, service, _stages, workspace, _identity, _revision, _comparison = revision_product(tmp_path)
+        planner = InspectThenRelationPlanner()
+        service.task_models = replace(service.task_models, planner=planner)
+        relation_path = tmp_path / "relations.sqlite"
+        try:
+            with product_http(app, service) as base:
+&gt;               http_result = http_ask(base, workspace)
+
+tests\integration\test_inspect_ledger_cold_process.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x000001DCDF9E6980&gt;
+b = &lt;memory at 0x000001DCDFA74DC0&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_cold_process" name="test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process" time="29.729"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_saved_run_rejects0')
+
+    def test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process(tmp_path):
+        """Cold Product validation binds both tool records to model task identity."""
+    
+        app, service, _stages, workspace, _identity, _revision, _comparison = revision_product(tmp_path)
+        planner = InspectThenRelationPlanner()
+        service.task_models = replace(service.task_models, planner=planner)
+        relation_path = tmp_path / "relations.sqlite"
+        try:
+            with product_http(app, service) as base:
+&gt;               http_result = http_ask(base, workspace)
+
+tests\integration\test_inspect_ledger_cold_process.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x000001DCDF5BE800&gt;
+b = &lt;memory at 0x000001DCDF5DB280&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_nonpositive" name="test_completed_inspection_keeps_nonpositive_same_task_and_blocks_positive_dependents[UNKNOWN]" time="6.735" /><testcase classname="tests.integration.test_inspect_ledger_nonpositive" name="test_completed_inspection_keeps_nonpositive_same_task_and_blocks_positive_dependents[REFUTED]" time="6.300" /><testcase classname="tests.integration.test_inspect_ledger_nonpositive" name="test_completed_inspection_keeps_nonpositive_same_task_and_blocks_positive_dependents[CONFLICT]" time="5.243" /><testcase classname="tests.integration.test_inspect_ledger_plan_binding" name="test_cold_preparation_rejects_self_consistent_foreign_plan[workspace_id]" time="3.055" /><testcase classname="tests.integration.test_inspect_ledger_plan_binding" name="test_cold_preparation_rejects_self_consistent_foreign_plan[snapshot_hash]" time="3.720" /></testsuite></testsuites>

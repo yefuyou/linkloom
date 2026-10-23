@@ -1,0 +1,129 @@
+{
+  "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+  "executable": "D:\\Anaconda\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "environment": {
+    "PYTHONPATH": "src;.;tests/integration",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "LINKLOOM_RETRIEVAL_MODE": "bm25",
+    "PYTHONUTF8": "1",
+    "OPENAI_API_KEY": "",
+    "OPENAI_BASE_URL": "",
+    "GEMINI_API_KEY": "",
+    "GOOGLE_API_KEY": "",
+    "DEEPSEEK_API_KEY": ""
+  },
+  "nodeids": [
+    "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+    "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+    "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_capture_failure_does_not_fail_successful_team_decision",
+    "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+    "tests/integration/test_runtime_agent_memory_capture.py::test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent"
+  ],
+  "runs": [
+    {
+      "checkout": "D:\\webproject\\Linkloom\\work\\m3d-p2-baseline",
+      "head": "33390e2eeaad71d215e279b2f724cae672ea4f80",
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--basetemp=D:\\webproject\\Linkloom\\work\\p2-memory-baseline-1",
+        "--junitxml=D:\\webproject\\Linkloom\\work\\m3d-p2-final-closure\\docs\\requirements\\m3d-p2-final-closure\\evidence\\memory-baseline.xml",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_capture_failure_does_not_fail_successful_team_decision",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent"
+      ],
+      "exit_code": 1,
+      "cases": [
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+          "status": "failed",
+          "message": "AssertionError: {'fake_model_errors': [], 'result': {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_note...on': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_capture_failure_does_not_fail_successful_team_decision",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent",
+          "status": "failed",
+          "message": "Failed: DID NOT RAISE <class 'test_runtime_agent_memory_capture.SimulatedProcessCrash'>"
+        }
+      ]
+    },
+    {
+      "checkout": "D:\\webproject\\Linkloom\\work\\m3d-p2-final-closure",
+      "head": "73600459e3b6279c8577d9332db03b72b3ab4c82",
+      "command": [
+        "D:\\Anaconda\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--basetemp=D:\\webproject\\Linkloom\\work\\p2-memory-combined-1",
+        "--junitxml=D:\\webproject\\Linkloom\\work\\m3d-p2-final-closure\\docs\\requirements\\m3d-p2-final-closure\\evidence\\memory-combined.xml",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_capture_failure_does_not_fail_successful_team_decision",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+        "tests/integration/test_runtime_agent_memory_capture.py::test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent"
+      ],
+      "exit_code": 1,
+      "cases": [
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_team_decision_is_captured_as_durable_non_authoritative_candidate",
+          "status": "failed",
+          "message": "AssertionError: {'fake_model_errors': [], 'result': {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_note...on': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_store_initialization_failure_does_not_fail_successful_answer",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_capture_failure_does_not_fail_successful_team_decision",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_runtime_does_not_capture_when_grounding_or_reviewer_fails[grounding]",
+          "status": "failed",
+          "message": "AssertionError: {'agent_tasks': [{'agent_id': 'retrieval_agent', 'allowed_tool_ids': ['search_notes', 'read_verified_note', 'search_de...son': 'semantic_mismatch', 'tool_id': 'search_notes'}, ...}, 'errors': ['TOOL_INVALID_ARGUMENTS'], 'evidence': [], ...}\nassert 'failed' == 'completed'\n  \n  - completed\n  + failed"
+        },
+        {
+          "classname": "tests.integration.test_runtime_agent_memory_capture",
+          "name": "test_cold_recovery_reuses_persistent_store_and_replay_is_idempotent",
+          "status": "failed",
+          "message": "Failed: DID NOT RAISE <class 'test_runtime_agent_memory_capture.SimulatedProcessCrash'>"
+        }
+      ]
+    }
+  ],
+  "same_nodeids_status_and_failure_messages": true,
+  "classification": "BASELINE_EXISTING_FAILURES",
+  "distinct_cases": 5,
+  "new_failures": []
+}

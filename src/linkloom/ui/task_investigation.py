@@ -220,6 +220,8 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
     context = SemanticContext(sources.workspace_id, manifest['question'], sources.artifacts, observations,
         tuple((f'task_{i}', ObservationRef.from_observation(o)) for i, o in enumerate(observations)),
         spans, sources.registry, frozenset(artifacts), True, False)
+    if plan.workspace_id != sources.workspace_id or plan.snapshot_hash != context.source_snapshot_hash:
+        raise ValueError('SAVED_PLAN_CONTEXT_MISMATCH')
     queries = _proposal_queries(plan, complete=manifest.get('proposal_scope') == 'ALL_PLANNED_RELATIONS')
     semantic = None
     if queries:
@@ -234,7 +236,8 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
                 execution_kind=manifest['execution_kind'], max_cost_usd=0, request_cost_upper_bound_usd=0))))
     raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
     tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
-        relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan)
+        relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan,
+        inspection_snapshot_hash=context.source_snapshot_hash)
     return TaskPreparation(sources, tools, manifest)
 
 
@@ -359,6 +362,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
             stage_adapter(models.semantics, 'semantics'), model_id=models.model_id, policy=semantic_policy)
     tools = TaskRelationTools(sources.workspace_id, current_raw, relation_path=relation_path, semantic_analysis=semantic,
         inspection_plan=planning.plan,
+        inspection_snapshot_hash=context.source_snapshot_hash,
         execution_blocked_reason='UNSUPPORTED_OPERATION_SCOPE' if execution_blocked else None)
     manifest = dict(schema='product-task-preparation/v1', question=question,
         status='BLOCKED' if planning.status != 'PLANNED' or execution_blocked else 'UNKNOWN' if not observations else 'PARTIAL',

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="46" time="51.200" timestamp="2026-10-23T00:30:37.998708+00:00" hostname="runnervm8k3b6"><testcase classname="tests.integration.test_m3q_provider_host" name="test_explicit_product_discovery_output_exceeding_budget_never_reaches_provider" time="0.548" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_cold_read_rejects_dual_field_and_role_binding_tamper" time="2.634" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_import_does_not_send_sources_before_ask_authorization" time="2.060" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_composed_hot_and_cold_reads_revalidate_current_authority[source_update]" time="2.596" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_composed_hot_and_cold_reads_revalidate_current_authority[evidence_revoke]" time="2.650" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_composed_hot_and_cold_reads_revalidate_current_authority[workspace]" time="2.632" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_host_requires_source_permission_then_runs_actual_adapter" time="2.548" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_m3r_source_bound_product_chain_matches_durable_tool_receipts" time="2.030"><failure message="AssertionError: REVIEWER&#10;assert 'fail' == 'pass'&#10;  &#10;  - pass&#10;  + fail">tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_m3r_source_bound_product_0')
+
+    def test_m3r_source_bound_product_chain_matches_durable_tool_receipts(tmp_path):
+        """M3-Q regression oracle: F -&gt; G(source_handles) -&gt; Host -&gt; real tools -&gt; UI.
+    
+        LIVE *composition* uses scripted wire responses, not a live model. Never
+        replace preparation, registration, Runtime execution or Reviewer with mocks.
+        """
+        from linkloom.runtime.artifacts import ModelArtifactStore
+        from linkloom.runtime.checkpoint import SQLiteCheckpointer
+        from linkloom.agents.task_relation_result import review_task_relation_result
+    
+        app, service, transport, stages, ws = provider_product(tmp_path)
+        # A missing explicit sidecar must stay missing, rather than acquiring P4
+        # records as a side effect of a SUPPORTED model proposal.
+        sidecar = tmp_path / 'relations.sqlite'
+        service.task_relation_paths[ws] = sidecar
+        try:
+            with product_http(app, service) as base:
+                code, body = ask_request(base, ws, authorized=True)
+                assert code in {200, 202}, ('PLANNING', body)
+                result = poll(base, ws, body['result'])
+                manifests = list(tmp_path.rglob('preparation.json'))
+                assert len(manifests) == 1, 'PREPARATION: missing durable Host manifest'
+                manifest = json.loads(manifests[0].read_text(encoding='utf8'))
+                observations = (manifest['discovery']['valid_observations']
+                                + manifest['discovery']['partial_observations'])
+                assert len(observations) == 2, 'PLANNING: F did not yield both task observations'
+                plan = manifest['planning'][-1]
+                assert plan['status'] == 'PLANNED', ('PLANNING', plan)
+                relations = [s for s in plan['plan']['steps'] if s['kind'] == 'relation']
+                assert {s['predicate'] for s in relations} == {'SAME_TASK', 'REVISES_PLAN'}, 'PLANNING'
+                assert all(s['source_handles'] and s['source_bindings'] for s in relations), 'PLANNING: trigger lost'
+                assert manifest['status'] == 'PARTIAL', ('PREPARATION', manifest['gaps'])
+                job = service._jobs[result['agent_run_id']]
+                assert job.task_preparation.tools.semantic_analysis is not None, 'PREPARATION: no SemanticAnalysis'
+    
+                # Read a new checkpoint reader, not an in-memory fake ledger.
+                root = manifests[0].parent.parent
+                pointer = json.loads((root.parent / (result['agent_run_id'] + '.json')).read_text(encoding='utf8'))
+                state = SQLiteCheckpointer(root / 'runtime').get_latest(pointer['thread_id'])
+                assert state is not None and state.model_executions, 'TOOL_REGISTRATION: Runtime produced no model turn'
+                store = ModelArtifactStore(root / 'runtime' / 'models')
+                first = state.model_executions[0]
+                request = store.read(first.request_ref, expected_sha256=first.request_sha256)['model_request']
+                assert 'analyze_task_semantics' in {t['tool_id'] for t in request['available_tools']}, 'TOOL_REGISTRATION'
+                assert 'plus semantic_call_id' in request['user_input'], 'PREPARATION: semantic_analysis_enabled was false'
+                records = state.tool_ledger
+                assert [r.tool_id for r in records] == [
+                    'inspect_task_context', 'query_task_relations', 'analyze_task_semantics'], 'TOOL_EXECUTION'
+                assert all(r.status == 'completed' and r.result['status'] == 'ok' for r in records), 'TOOL_EXECUTION'
+                assert all(r.run_id == state.run_id and r.agent_id == 'retrieval_agent' for r in records), 'TOOL_EXECUTION'
+                semantic = records[-1]
+                assert semantic.arguments == dict(workspace_id=ws, investigation_id='product-investigation'), 'TOOL_EXECUTION'
+                analysis = semantic.result['value']
+                assert analysis['analysis_status'] == 'EXECUTED', ('TOOL_EXECUTION', analysis)
+                assert analysis['outer_call_id'] == semantic.call_id, 'TOOL_EXECUTION'
+                assert len(stages[2].requests) == 1, 'TOOL_EXECUTION: semantic provider missing or repeated'
+                artifact = store.read(analysis['result_artifact']['ref'], expected_sha256=analysis['result_artifact']['sha256'])
+                inner = store.read(artifact['request_artifact']['ref'], expected_sha256=artifact['request_artifact']['sha256'])
+                assert inner['outer_tool_call']['call_id'] == semantic.call_id, 'TOOL_EXECUTION'
+                assert inner['outer_tool_call']['arguments'] == semantic.arguments, 'TOOL_EXECUTION'
+                assert {p['predicate'] for p in analysis['proposals']} == {'SAME_TASK', 'REVISES_PLAN'}, 'EVIDENCE_VALIDATION'
+                assert all(p['evidence_status'] == 'EVIDENCE_VALID' for p in analysis['proposals']), 'EVIDENCE_VALIDATION'
+                payload = result['task_investigation']
+                assert payload['semantic_analysis'] == analysis, 'PRODUCT_PROJECTION: result differs from Ledger'
+                assert payload['receipts'] == [dict(call_id=r.call_id, tool_id=r.tool_id,
+                    arguments=r.arguments, sequence=r.sequence) for r in records], 'REVIEWER: receipt mismatch'
+                tools = job.task_preparation.tools.for_run(state.run_id, store, QUESTION)
+&gt;               assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id)['status'] == 'pass', 'REVIEWER'
+E               AssertionError: REVIEWER
+E               assert 'fail' == 'pass'
+E                 
+E                 - pass
+E                 + fail
+
+tests/integration/test_m3q_provider_host.py:391: AssertionError</failure></testcase><testcase classname="tests.integration.test_m3q_provider_host" name="test_m3r_no_task_candidates_cannot_manufacture_relation_or_semantic_call" time="0.540" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[missing]" time="2.623" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[UNCERTAIN]" time="2.595" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[PENDING]" time="2.595" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[FAILED]" time="2.582" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[WITHHELD]" time="2.628" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[counters]" time="2.636" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_live_hot_and_cold_reads_require_complete_provider_receipts[malformed]" time="2.618" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[SUPPORTED]" time="2.045" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[REFUTED]" time="2.013" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[CONFLICT]" time="2.060" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4[UNKNOWN]" time="2.001" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[discovery_timeout]" time="0.541" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[semantics_timeout]" time="1.319" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[budget]" time="1.157" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_http_failures_never_release_successful_partial_or_old_trace[reviewer]" time="1.888" /><testcase classname="tests.unit.test_task_investigation_semantic_projection" name="test_source_bound_relation_is_available_to_semantic_proposal_but_not_p4_query" time="0.001" /><testcase classname="tests.unit.test_task_investigation_semantic_projection" name="test_task_relation_prompt_does_not_treat_empty_p4_as_reason_to_skip_semantics" time="0.000" /><testcase classname="tests.unit.test_task_result_projection" name="test_task_review_keeps_invalid_model_proposal_visible_as_uncertain" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u5f53\u524d\u6b63\u5f0f\u91c7\u7528\u4ec0\u4e48\u65b9\u6848\uff1f-DECISION]" time="0.001" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[What supplier are we currently using?-DECISION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u67d0\u65e5\u671f\u6b63\u5f0f\u91c7\u7528\u4ec0\u4e48\u65b9\u6848\uff1f-DECISION]" time="0.001" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[What is the effective date of this reviewed decision?-DECISION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u67e5\u770b\u5ba1\u6279\u6536\u636e\u548c\u6765\u6e90-DECISION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u4e3a\u4ec0\u4e48\u4ece A \u6362\u6210 B\uff1f-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[Which original sources support this change?-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u5386\u53f2\u8ba8\u8bba\u548c\u6b63\u5f0f\u51b3\u7b56\u4e4b\u95f4\u6709\u4ec0\u4e48\u533a\u522b\uff1f-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u591a\u4efd\u6587\u6863\u7684\u4fe1\u606f\u662f\u5426\u51b2\u7a81\uff1f-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[\u54ea\u4e9b\u7ed3\u8bba\u786e\u5b9a\uff0c\u54ea\u4e9b\u4ecd\u65e0\u6cd5\u8bc1\u5b9e\uff1f-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[Current decision and why was A replaced?-INVESTIGATION]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[Write a poem-UNKNOWN]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_bounded_capability_routing[Launch supplier-UNKNOWN]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_rejected_final_keeps_the_actual_runtime_review_record" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_same_quote_citations_only_merge_when_source_versions_match[version-new-1]" time="0.001" /><testcase classname="tests.unit.test_unified_ask" name="test_same_quote_citations_only_merge_when_source_versions_match[version-old-2]" time="0.000" /><testcase classname="tests.unit.test_unified_ask" name="test_executed_semantic_candidate_remains_visible_when_one_proposal_is_unverified" time="0.000" /><testcase classname="tests.unit.test_tool_ledger_runtime" name="test_unknown_tool_does_not_create_pending_record[does_not_exist]" time="0.001" /><testcase classname="tests.unit.test_tool_ledger_runtime" name="test_unknown_tool_does_not_create_pending_record[analyze_task_semantics]" time="0.001" /></testsuite></testsuites>
