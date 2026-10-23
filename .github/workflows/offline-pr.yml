@@ -175,6 +175,18 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install -e '.[dev,smoke]'
+      - name: Joint quote and Canary Runner contracts (no Provider)
+        run: >-
+          python -m pytest -q --junitxml=quote-runner.xml
+          tests/unit/test_text_scopes.py
+          tests/unit/test_quote_nesting_p2.py
+          tests/unit/test_canary_quote_scopes.py
+          tests/unit/test_quote_integration.py
+          tests/unit/test_canary_trust_v2.py
+          tests/unit/test_ami_canary_v2.py
+          tests/unit/test_sprint_trust_v2.py
+          tests/unit/test_canary_integration_contracts.py
+          tests/unit/test_canary_source_gap_identity.py
       # Scripted wire transport; production F/G/Host/Runtime/Reviewer are used.
       # Keep this separate so the source_handles regression has a clear receipt.
       - name: M3-R Product semantic tool chain (offline, loopback HTTP only)
@@ -267,6 +279,7 @@ jobs:
         with:
           name: task-investigation-results
           path: |
+            quote-runner.xml
             m3r-semantic-chain.xml
             m3s-field-recall.xml
             m3s1-replanning.xml
