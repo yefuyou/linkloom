@@ -1,0 +1,27 @@
+{
+  "model": "gemini-3.8-flash",
+  "meetings": [
+    "ES2002a",
+    "ES2005c"
+  ],
+  "requests": 28,
+  "limits": {
+    "max_requests": 28,
+    "max_input_tokens": 1400000,
+    "max_output_tokens": 114688,
+    "max_cost_usd": 2.8,
+    "max_seconds": 2700,
+    "request_timeout_seconds": 90,
+    "request_cost_upper_bound_usd": 0.1,
+    "input_usd_per_million": 1,
+    "output_usd_per_million": 5
+  },
+  "input_tokens_upper_bound": 575592,
+  "estimated_cost_upper_bound_usd": 2.8,
+  "provider_attempts": 1,
+  "sdk_attempts": 1,
+  "task_profile": null,
+  "credit_verification": "USER_CONFIRMED",
+  "product_e2e": "NOT_RUN",
+  "git_head": "8ce79f519832f3d5f4eb0655bb8a85e1b7cc55a6"
+}

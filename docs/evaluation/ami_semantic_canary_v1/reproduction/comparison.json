@@ -1,0 +1,19 @@
+{
+  "base_head": "8ce79f519832f3d5f4eb0655bb8a85e1b7cc55a6",
+  "fresh_prepare": {
+    "meetings": 8,
+    "scheduled": 56,
+    "eligible": 51,
+    "not_evaluable": 5,
+    "passages": 6981
+  },
+  "method_split_metrics_equal": {
+    "bm25": true,
+    "dense": true,
+    "hybrid": true
+  },
+  "source_code_sha256": {
+    "scripts/run_ami_semantic_canary.py": "d93e91965dc00eede4ba4ba436f44f973ae137a413f1e38daa82e5f0f20d605b",
+    "scripts/analyze_ami_semantic_canary.py": "7fc3094da8802f90749ed02047ff0b27a14262e846c82f2c34546f8ea2fc68ae"
+  }
+}

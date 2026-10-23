@@ -1,0 +1,898 @@
+[
+  {
+    "sequence": 1,
+    "model": "gemini-3.8-flash",
+    "response_id": "m6TaaqLwH-TcytMP7LDL4Q0",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 476,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5322,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5322
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5798,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5322,
+      "output_tokens": 476,
+      "total_tokens": 5798,
+      "duration_ms": 9663.887
+    },
+    "estimated_list_price_usd": 0.0057765,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 2,
+    "model": "gemini-3.8-flash",
+    "response_id": "oKTaatCRJduuytMPu6Hy2AQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 15,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5625,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5625
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5640,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5625,
+      "output_tokens": 15,
+      "total_tokens": 5640,
+      "duration_ms": 2228.352
+    },
+    "estimated_list_price_usd": 0.004275,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 3,
+    "model": "gemini-3.8-flash",
+    "response_id": "oqTaaumhN4KEytMP5NGGmQQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 636,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5467,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5467
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 6103,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5467,
+      "output_tokens": 636,
+      "total_tokens": 6103,
+      "duration_ms": 5344.606
+    },
+    "estimated_list_price_usd": 0.00648525,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 4,
+    "model": "gemini-3.8-flash",
+    "response_id": "qKTaatXRIOOH1sgP5re0yQs",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 15,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5365,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5365
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5380,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5365,
+      "output_tokens": 15,
+      "total_tokens": 5380,
+      "duration_ms": 2563.447
+    },
+    "estimated_list_price_usd": 0.00408,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 5,
+    "model": "gemini-3.8-flash",
+    "response_id": "q6Taap36Co2PytMP3JSTqAo",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 15,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5347,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5347
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5362,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5347,
+      "output_tokens": 15,
+      "total_tokens": 5362,
+      "duration_ms": 2022.274
+    },
+    "estimated_list_price_usd": 0.0040665,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 6,
+    "model": "gemini-3.8-flash",
+    "response_id": "raTaavaKEJStuMYP29iGmAQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 407,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5343,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5343
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5750,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5343,
+      "output_tokens": 407,
+      "total_tokens": 5750,
+      "duration_ms": 4485.234
+    },
+    "estimated_list_price_usd": 0.0055335,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 7,
+    "model": "gemini-3.8-flash",
+    "response_id": "saTaarSTNcGjytMPyIHxyQ8",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 163,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5367,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5367
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5530,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5367,
+      "output_tokens": 163,
+      "total_tokens": 5530,
+      "duration_ms": 2631.95
+    },
+    "estimated_list_price_usd": 0.0046365,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 8,
+    "model": "gemini-3.8-flash",
+    "response_id": "tKTaaoftJ_-FytMP5N-BwAc",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 228,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 4121,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 4121
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 4349,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 4121,
+      "output_tokens": 228,
+      "total_tokens": 4349,
+      "duration_ms": 3364.868
+    },
+    "estimated_list_price_usd": 0.00394575,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 9,
+    "model": "gemini-3.8-flash",
+    "response_id": "uKTaaoOLDOaOytMPrcvesAk",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 438,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5007,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5007
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5445,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5007,
+      "output_tokens": 438,
+      "total_tokens": 5445,
+      "duration_ms": 4060.056
+    },
+    "estimated_list_price_usd": 0.00539775,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 10,
+    "model": "gemini-3.8-flash",
+    "response_id": "vKTaaqj6Gq6tuMYPsKf8yAs",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 531,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5461,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5461
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5992,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5461,
+      "output_tokens": 531,
+      "total_tokens": 5992,
+      "duration_ms": 4432.283
+    },
+    "estimated_list_price_usd": 0.006087,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 11,
+    "model": "gemini-3.8-flash",
+    "response_id": "wKTaapzFPPrhytMP4d31uAc",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 428,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5457,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5457
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5885,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5457,
+      "output_tokens": 428,
+      "total_tokens": 5885,
+      "duration_ms": 4216.837
+    },
+    "estimated_list_price_usd": 0.00569775,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 12,
+    "model": "gemini-3.8-flash",
+    "response_id": "xaTaar2eF4qE1sgP0J6z6As",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 126,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5392,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5392
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5518,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5392,
+      "output_tokens": 126,
+      "total_tokens": 5518,
+      "duration_ms": 2911.074
+    },
+    "estimated_list_price_usd": 0.0045165,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 13,
+    "model": "gemini-3.8-flash",
+    "response_id": "yKTaarqEH8aiytMP2JCrmQ8",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 417,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5361,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5361
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5778,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5361,
+      "output_tokens": 417,
+      "total_tokens": 5778,
+      "duration_ms": 4257.764
+    },
+    "estimated_list_price_usd": 0.0055845,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 14,
+    "model": "gemini-3.8-flash",
+    "response_id": "zKTaatn_NJuquMYPnc_ZgQQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 215,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5314,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5314
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5529,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5314,
+      "output_tokens": 215,
+      "total_tokens": 5529,
+      "duration_ms": 3086.857
+    },
+    "estimated_list_price_usd": 0.00479175,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 15,
+    "model": "gemini-3.8-flash",
+    "response_id": "0KTaauygBs-oytMP2_u1sA8",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 772,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5462,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5462
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 6234,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5462,
+      "output_tokens": 772,
+      "total_tokens": 6234,
+      "duration_ms": 5603.272
+    },
+    "estimated_list_price_usd": 0.0069915,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 16,
+    "model": "gemini-3.8-flash",
+    "response_id": "1aTaaurCNdq-uMYPuq-E4Qw",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 444,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5364,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5364
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5808,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5364,
+      "output_tokens": 444,
+      "total_tokens": 5808,
+      "duration_ms": 3981.208
+    },
+    "estimated_list_price_usd": 0.005688,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 17,
+    "model": "gemini-3.8-flash",
+    "response_id": "2aTaaouFO5PcytMPhM7W4QM",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 586,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5517,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5517
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 6103,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5517,
+      "output_tokens": 586,
+      "total_tokens": 6103,
+      "duration_ms": 4798.884
+    },
+    "estimated_list_price_usd": 0.00633525,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 18,
+    "model": "gemini-3.8-flash",
+    "response_id": "3qTaarP8NYGwytMPpZv22AI",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 209,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5639,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5639
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5848,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5639,
+      "output_tokens": 209,
+      "total_tokens": 5848,
+      "duration_ms": 2901.365
+    },
+    "estimated_list_price_usd": 0.005013,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 19,
+    "model": "gemini-3.8-flash",
+    "response_id": "4aTaasabN_bdytMP1emSsQo",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 125,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5551,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5551
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5676,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5551,
+      "output_tokens": 125,
+      "total_tokens": 5676,
+      "duration_ms": 2556.359
+    },
+    "estimated_list_price_usd": 0.004632,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 20,
+    "model": "gemini-3.8-flash",
+    "response_id": "5KTaasf2I4_cytMPr9bc-Ag",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 15,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5708,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5708
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5723,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5708,
+      "output_tokens": 15,
+      "total_tokens": 5723,
+      "duration_ms": 2076.247
+    },
+    "estimated_list_price_usd": 0.00433725,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 21,
+    "model": "gemini-3.8-flash",
+    "response_id": "5qTaauHuLq-iytMP2ryW4As",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 409,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5539,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5539
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5948,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5539,
+      "output_tokens": 409,
+      "total_tokens": 5948,
+      "duration_ms": 3720.339
+    },
+    "estimated_list_price_usd": 0.005688,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 22,
+    "model": "gemini-3.8-flash",
+    "response_id": "6qTaaoSTJMm9ytMP0K6q6As",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 260,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5288,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5288
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5548,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5288,
+      "output_tokens": 260,
+      "total_tokens": 5548,
+      "duration_ms": 3431.91
+    },
+    "estimated_list_price_usd": 0.004941,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 23,
+    "model": "gemini-3.8-flash",
+    "response_id": "7qTaaobBCsm0ytMPis6iqQQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 313,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5455,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5455
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5768,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5455,
+      "output_tokens": 313,
+      "total_tokens": 5768,
+      "duration_ms": 3860.811
+    },
+    "estimated_list_price_usd": 0.005265,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 24,
+    "model": "gemini-3.8-flash",
+    "response_id": "8qTaasnlBvPhytMP7a3HsQs",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 405,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5473,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5473
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5878,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5473,
+      "output_tokens": 405,
+      "total_tokens": 5878,
+      "duration_ms": 3800.478
+    },
+    "estimated_list_price_usd": 0.0056235,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 25,
+    "model": "gemini-3.8-flash",
+    "response_id": "9qTaavHrAtaco_UPgfvI6AU",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 209,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5611,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5611
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5820,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5611,
+      "output_tokens": 209,
+      "total_tokens": 5820,
+      "duration_ms": 3051.935
+    },
+    "estimated_list_price_usd": 0.004992,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 26,
+    "model": "gemini-3.8-flash",
+    "response_id": "-aTaat6yEP_6ytMPsfOJoQs",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 262,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5607,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5607
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5869,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5607,
+      "output_tokens": 262,
+      "total_tokens": 5869,
+      "duration_ms": 3619.133
+    },
+    "estimated_list_price_usd": 0.00518775,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 27,
+    "model": "gemini-3.8-flash",
+    "response_id": "_aTaasfpAoCfuMYPydK7qQk",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 111,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 5683,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 5683
+        }
+      ],
+      "thoughts_token_count": null,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 5794,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 5683,
+      "output_tokens": 111,
+      "total_tokens": 5794,
+      "duration_ms": 3541.898
+    },
+    "estimated_list_price_usd": 0.0046785,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  },
+  {
+    "sequence": 28,
+    "model": "gemini-3.8-flash",
+    "response_id": "AKXaapr7JseDuMYP6dyIoQQ",
+    "usage": {
+      "cache_tokens_details": null,
+      "cached_content_token_count": null,
+      "candidates_token_count": 15,
+      "candidates_tokens_details": null,
+      "prompt_token_count": 1844,
+      "prompt_tokens_details": [
+        {
+          "modality": "TEXT",
+          "token_count": 1844
+        }
+      ],
+      "thoughts_token_count": 117,
+      "tool_use_prompt_token_count": null,
+      "tool_use_prompt_tokens_details": null,
+      "total_token_count": 1976,
+      "traffic_type": null
+    },
+    "normalized_usage": {
+      "input_tokens": 1844,
+      "output_tokens": 15,
+      "total_tokens": 1976,
+      "duration_ms": 3652.85
+    },
+    "estimated_list_price_usd": 0.001878,
+    "thought_count_policy": "null is not reported; total minus prompt minus candidates used to check",
+    "finish_reason": "STOP"
+  }
+]

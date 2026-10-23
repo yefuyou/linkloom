@@ -4,3 +4,6 @@
 /evals/ami_public_v1/frozen/** -text
 /docs/evaluation/ami_public_v1/** -text
 /docs/requirements/ami-public-retrieval/REVIEW.md -text
+
+# Preserve byte-sealed AMI real-provider evidence across checkouts.
+/docs/evaluation/ami_semantic_canary_v1/** -text whitespace=cr-at-eol

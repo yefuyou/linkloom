@@ -1,0 +1,3791 @@
+[
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 44,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 37,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.48",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 29,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 23,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.34",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 64,
+        "item_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005a.A.dialog-act.vkaraisk.5",
+      "ES2005a.B.dialog-act.vkaraisk.5",
+      "ES2005a.B.dialog-act.vkaraisk.6",
+      "ES2005a.C.dialog-act.vkaraisk.17",
+      "ES2005a.C.dialog-act.vkaraisk.45"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": true,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005a.JacquelinePalmer.s.6",
+    "meeting_id": "ES2005a",
+    "meeting_scope_is_given": true,
+    "method": "bm25",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 1.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.14285714285714285,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.5,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005a:ES2005a.JacquelinePalmer.s.6",
+    "query_text": "The User Interface Designer will research possible shapes and colors for the device.",
+    "reason": null,
+    "required_count": 2,
+    "retrieved_count": 1,
+    "selection_count": 0,
+    "selection_drop_reasons": [
+      "LOW_RANK"
+    ],
+    "selection_lost": [
+      "ES2005a.C.dialog-act.vkaraisk.48"
+    ],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 14819,
+        "canonical_char_start": 14756,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+        "missing_retrieval_piece_ids": [],
+        "native_word_ids": [
+          "ES2005a.C.words299",
+          "ES2005a.C.words300",
+          "ES2005a.C.words301",
+          "ES2005a.C.words302",
+          "ES2005a.C.words304",
+          "ES2005a.C.words305",
+          "ES2005a.C.words306",
+          "ES2005a.C.words307",
+          "ES2005a.C.words308",
+          "ES2005a.C.words309",
+          "ES2005a.C.words310",
+          "ES2005a.C.words311"
+        ],
+        "original_hrefs": [
+          "ES2005a.C.words.xml#id(ES2005a.C.words299)..id(ES2005a.C.words311)"
+        ],
+        "possible_causes": [
+          "SELECTION_LOW_RANK"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.48"
+        ],
+        "retrieval_piece_coverage": 1.0,
+        "retrieved": true,
+        "retrieved_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.48"
+        ],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "and",
+          "shapes"
+        ],
+        "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "Shapes and colours and um basically how to make it attractive .",
+        "utterance_id": "ES2005a.C.dialog-act.vkaraisk.48"
+      },
+      {
+        "canonical_char_end": 14658,
+        "canonical_char_start": 14600,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+        "missing_retrieval_piece_ids": [
+          "ES2005a.D.dialog-act.vkaraisk.38"
+        ],
+        "native_word_ids": [
+          "ES2005a.D.words191",
+          "ES2005a.D.words192",
+          "ES2005a.D.words193",
+          "ES2005a.D.words194",
+          "ES2005a.D.words195",
+          "ES2005a.D.words196",
+          "ES2005a.D.words197",
+          "ES2005a.D.words198",
+          "ES2005a.D.words199",
+          "ES2005a.D.words200",
+          "ES2005a.D.words201",
+          "ES2005a.D.words202",
+          "ES2005a.D.words203"
+        ],
+        "original_hrefs": [
+          "ES2005a.D.words.xml#id(ES2005a.D.words191)..id(ES2005a.D.words203)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005a.D.dialog-act.vkaraisk.38"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "and",
+          "shapes"
+        ],
+        "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+        "speaker": "D",
+        "text": "So you want me to look at shapes and everything you said ?",
+        "utterance_id": "ES2005a.D.dialog-act.vkaraisk.38"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 14156,
+          "char_start": 14086,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "quote_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And obviously , other instructions will come from the personal coach .",
+          "text_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "utterance_end": 70,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 1,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "retrieval_channel": "bm25",
+        "score": 7.3355128299760235,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.45)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 5358,
+          "char_start": 5328,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "quote_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "The the keyrings , yeah yeah .",
+          "text_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "utterance_end": 30,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 2,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "retrieval_channel": "bm25",
+        "score": 6.506613884373033,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.17)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6328,
+          "char_start": 6284,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "quote_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "like what is the competition in the market ?",
+          "text_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "utterance_end": 44,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 3,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 5.471688553721652,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6497,
+          "char_start": 6423,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "quote_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "What are the available prices of the other remote controls in the prices ?",
+          "text_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "utterance_end": 74,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 4,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 5.44425837047378,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 965,
+          "char_start": 887,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+          "piece_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "quote_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "source_member": "dialogueActs/ES2005a.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "The only the only remote controls I've used usually come with the television ,",
+          "text_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "utterance_end": 78,
+          "utterance_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 5,
+        "resource_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 5.259294742330729,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.A.dialog-act.xml#id(ES2005a.A.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1713,
+          "char_start": 1620,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "quote_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "I think the the only ones that I've seen that you buy are the sort of one for all type things",
+          "text_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "utterance_end": 93,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 6,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 5.189363473522274,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.48",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 14819,
+          "char_start": 14756,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.48",
+          "quote_sha256": "2e5316a478bc5d4dd842b84f66dae11f7858476f183f696a39ca8fa2164689ca",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "Shapes and colours and um basically how to make it attractive .",
+          "text_sha256": "2e5316a478bc5d4dd842b84f66dae11f7858476f183f696a39ca8fa2164689ca",
+          "utterance_end": 63,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.48",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 7,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.48",
+        "retrieval_channel": "bm25",
+        "score": 4.765983059909981,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.48)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1840,
+          "char_start": 1808,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "quote_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Yeah the universal ones . Yeah .",
+          "text_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "utterance_end": 32,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 8,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 4.571315505217138,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.4)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.34",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 11527,
+          "char_start": 11517,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.34",
+          "quote_sha256": "b0dbbcffdd1631d587621ec4f77fb8ff08b5a96bc58872ec0be3dff12031c57b",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "For for uh",
+          "text_sha256": "b0dbbcffdd1631d587621ec4f77fb8ff08b5a96bc58872ec0be3dff12031c57b",
+          "utterance_end": 10,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.34",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 9,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.34",
+        "retrieval_channel": "bm25",
+        "score": 4.302141108892244,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.34)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6189,
+          "char_start": 6014,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "quote_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "being as a Marketing Exper Expert I will like to say like before deciding the cost of this remote control or any other things we must see the market potential for this product",
+          "text_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "utterance_end": 175,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 10,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 4.204407404521893,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.4)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 33,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 32,
+        "item_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 40,
+        "item_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 44,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 29,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005a.B.dialog-act.vkaraisk.4",
+      "ES2005a.B.dialog-act.vkaraisk.6",
+      "ES2005a.C.dialog-act.vkaraisk.17",
+      "ES2005a.C.dialog-act.vkaraisk.45",
+      "ES2005a.C.dialog-act.vkaraisk.50"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": false,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005a.JacquelinePalmer.s.5",
+    "meeting_id": "ES2005a",
+    "meeting_scope_is_given": true,
+    "method": "bm25",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 0.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.0,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005a:ES2005a.JacquelinePalmer.s.5",
+    "query_text": "The Marketing Expert will examine the features and design of competitors' remotes.",
+    "reason": null,
+    "required_count": 1,
+    "retrieved_count": 0,
+    "selection_count": 0,
+    "selection_drop_reasons": [],
+    "selection_lost": [],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 13451,
+        "canonical_char_start": 13396,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+        "missing_retrieval_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.42"
+        ],
+        "native_word_ids": [
+          "ES2005a.C.words214",
+          "ES2005a.C.words215",
+          "ES2005a.C.words216",
+          "ES2005a.C.words217",
+          "ES2005a.C.words218",
+          "ES2005a.C.words219",
+          "ES2005a.C.words220",
+          "ES2005a.C.words221",
+          "ES2005a.C.words222",
+          "ES2005a.C.words223",
+          "ES2005a.C.words224"
+        ],
+        "original_hrefs": [
+          "ES2005a.C.words.xml#id(ES2005a.C.words214)..id(ES2005a.C.words224)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.42"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "the"
+        ],
+        "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "So you do the looking around at other remote controls .",
+        "utterance_id": "ES2005a.C.dialog-act.vkaraisk.42"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 14156,
+          "char_start": 14086,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "quote_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And obviously , other instructions will come from the personal coach .",
+          "text_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "utterance_end": 70,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 1,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "retrieval_channel": "bm25",
+        "score": 7.335512829976024,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.45)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6497,
+          "char_start": 6423,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "quote_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "What are the available prices of the other remote controls in the prices ?",
+          "text_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "utterance_end": 74,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 2,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 6.990100857148811,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6189,
+          "char_start": 6014,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "quote_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "being as a Marketing Exper Expert I will like to say like before deciding the cost of this remote control or any other things we must see the market potential for this product",
+          "text_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "utterance_end": 175,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 3,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 6.890392775838727,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.4)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 5358,
+          "char_start": 5328,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "quote_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "The the keyrings , yeah yeah .",
+          "text_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "utterance_end": 30,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 4,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "retrieval_channel": "bm25",
+        "score": 6.506613884373033,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.17)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.50",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 15375,
+          "char_start": 15335,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.50",
+          "quote_sha256": "0db583b3c50dc02e00efb39a5161cc965fc7d548dcdb1fe37b9df654efaed566",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And you look at competition and design .",
+          "text_sha256": "0db583b3c50dc02e00efb39a5161cc965fc7d548dcdb1fe37b9df654efaed566",
+          "utterance_end": 40,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.50",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 5,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.50",
+        "retrieval_channel": "bm25",
+        "score": 6.319921723698004,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.50)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 12255,
+          "char_start": 12207,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.35",
+          "quote_sha256": "cc8979cd58202c6860eced77545e7acbfaa14175de5d32b093a061e245e4fb54",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "I wasn't thinking of the screen of like a P_D_A_",
+          "text_sha256": "cc8979cd58202c6860eced77545e7acbfaa14175de5d32b093a061e245e4fb54",
+          "utterance_end": 48,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.35",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 6,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "retrieval_channel": "bm25",
+        "score": 5.712575810314309,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.35)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6328,
+          "char_start": 6284,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "quote_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "like what is the competition in the market ?",
+          "text_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "utterance_end": 44,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 7,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 5.471688553721652,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 965,
+          "char_start": 887,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+          "piece_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "quote_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "source_member": "dialogueActs/ES2005a.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "The only the only remote controls I've used usually come with the television ,",
+          "text_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "utterance_end": 78,
+          "utterance_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 8,
+        "resource_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 5.259294742330729,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.A.dialog-act.xml#id(ES2005a.A.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1713,
+          "char_start": 1620,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "quote_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "I think the the only ones that I've seen that you buy are the sort of one for all type things",
+          "text_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "utterance_end": 93,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 9,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 5.189363473522274,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1840,
+          "char_start": 1808,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "quote_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Yeah the universal ones . Yeah .",
+          "text_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "utterance_end": 32,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 10,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 4.571315505217138,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.4)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 47,
+        "item_id": "ES2005b.C.dialog-act.dharshi.261",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 37,
+        "item_id": "ES2005b.C.dialog-act.dharshi.255",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 51,
+        "item_id": "ES2005b.B.dialog-act.dharshi.127",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 47,
+        "item_id": "ES2005b.C.dialog-act.dharshi.201",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 52,
+        "item_id": "ES2005b.A.dialog-act.dharshi.150",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005b.A.dialog-act.dharshi.93",
+      "ES2005b.C.dialog-act.dharshi.245",
+      "ES2005b.C.dialog-act.dharshi.260",
+      "ES2005b.D.dialog-act.dharshi.165",
+      "ES2005b.D.dialog-act.dharshi.236"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": true,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005b.JacquelinePalmer.s.13",
+    "meeting_id": "ES2005b",
+    "meeting_scope_is_given": true,
+    "method": "dense",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 1.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.16666666666666666,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.25,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005b:ES2005b.JacquelinePalmer.s.13",
+    "query_text": "The remote will have an organic shape and feature some yellow coloring and glow-in-the-dark material.",
+    "reason": null,
+    "required_count": 4,
+    "retrieved_count": 1,
+    "selection_count": 0,
+    "selection_drop_reasons": [
+      "LOW_RANK"
+    ],
+    "selection_lost": [
+      "ES2005b.C.dialog-act.dharshi.261"
+    ],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 107882,
+        "canonical_char_start": 107868,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "5057abd31cd27688c7a755c1febd154af5efb88c52da003780a93ca682f7f004",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.B.dialog-act.dharshi.136"
+        ],
+        "native_word_ids": [
+          "ES2005b.B.words1330",
+          "ES2005b.B.words1331",
+          "ES2005b.B.words1332",
+          "ES2005b.B.words1333"
+        ],
+        "original_hrefs": [
+          "ES2005b.B.words.xml#id(ES2005b.B.words1330)..id(ES2005b.B.words1333)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.B.dialog-act.dharshi.136"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "dark",
+          "glow",
+          "in"
+        ],
+        "source_member": "dialogueActs/ES2005b.B.dialog-act.xml",
+        "speaker": "B",
+        "text": "Glow in dark .",
+        "utterance_id": "ES2005b.B.dialog-act.dharshi.136"
+      },
+      {
+        "canonical_char_end": 98103,
+        "canonical_char_start": 97997,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "missing_retrieval_piece_ids": [],
+        "native_word_ids": [
+          "ES2005b.C.words1817",
+          "ES2005b.C.words1818",
+          "ES2005b.C.words1819",
+          "ES2005b.C.words1820",
+          "ES2005b.C.words1821",
+          "ES2005b.C.words1822",
+          "ES2005b.C.words1823",
+          "ES2005b.C.words1824",
+          "ES2005b.C.words1825",
+          "ES2005b.C.words1826",
+          "ES2005b.C.words1827",
+          "ES2005b.C.words1828",
+          "ES2005b.C.words1829",
+          "ES2005b.C.words1830",
+          "ES2005b.C.words1831",
+          "ES2005b.C.words1832",
+          "ES2005b.C.words1833",
+          "ES2005b.C.words1834",
+          "ES2005b.C.words1835",
+          "ES2005b.C.words1836",
+          "ES2005b.C.words1837",
+          "ES2005b.C.words1838",
+          "ES2005b.C.words1839",
+          "ES2005b.C.words1840",
+          "ES2005b.C.words1841"
+        ],
+        "original_hrefs": [
+          "ES2005b.C.words.xml#id(ES2005b.C.words1817)..id(ES2005b.C.words1841)"
+        ],
+        "possible_causes": [
+          "SELECTION_LOW_RANK"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.261"
+        ],
+        "retrieval_piece_coverage": 1.0,
+        "retrieved": true,
+        "retrieved_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.261"
+        ],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "and",
+          "dark",
+          "glow",
+          "have",
+          "in",
+          "material",
+          "the"
+        ],
+        "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "and we can have sort of a a a trimming as well , of the glow in the dark material , just as gimmickyness .",
+        "utterance_id": "ES2005b.C.dialog-act.dharshi.261"
+      },
+      {
+        "canonical_char_end": 107355,
+        "canonical_char_start": 107295,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.300"
+        ],
+        "native_word_ids": [
+          "ES2005b.C.words2130",
+          "ES2005b.C.words2131",
+          "ES2005b.C.words2132",
+          "ES2005b.C.words2133",
+          "ES2005b.C.words2134",
+          "ES2005b.C.words2135",
+          "ES2005b.C.words2136",
+          "ES2005b.C.words2137",
+          "ES2005b.C.words2138",
+          "ES2005b.C.words2139",
+          "ES2005b.C.words2140"
+        ],
+        "original_hrefs": [
+          "ES2005b.C.words.xml#id(ES2005b.C.words2130)..id(ES2005b.C.words2140)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.300"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "organic"
+        ],
+        "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "Um , speech recognition , limited buttons , organic design .",
+        "utterance_id": "ES2005b.C.dialog-act.dharshi.300"
+      },
+      {
+        "canonical_char_end": 108142,
+        "canonical_char_start": 108085,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "8f5c853406b7c03096c9cdd394b8672881872b4d6e276d64740ab251a01722d4",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.D.dialog-act.dharshi.215"
+        ],
+        "native_word_ids": [
+          "ES2005b.D.words1393",
+          "ES2005b.D.words1394",
+          "ES2005b.D.words1395",
+          "ES2005b.D.words1396",
+          "ES2005b.D.words1397",
+          "ES2005b.D.words1398",
+          "ES2005b.D.words1399",
+          "ES2005b.D.words1400",
+          "ES2005b.D.words1401",
+          "ES2005b.D.words1402",
+          "ES2005b.D.words1403",
+          "ES2005b.D.words1404",
+          "ES2005b.D.words1405"
+        ],
+        "original_hrefs": [
+          "ES2005b.D.words.xml#id(ES2005b.D.words1393)..id(ES2005b.D.words1405)"
+        ],
+        "possible_causes": [
+          "NO_SHARED_QUERY_TERMS"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.D.dialog-act.dharshi.215"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [],
+        "source_member": "dialogueActs/ES2005b.D.dialog-act.xml",
+        "speaker": "D",
+        "text": "if it's not too expensive s I think it's a good gimmick .",
+        "utterance_id": "ES2005b.D.dialog-act.dharshi.215"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005b.D.dialog-act.dharshi.236",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 120510,
+          "char_start": 120435,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "8f5c853406b7c03096c9cdd394b8672881872b4d6e276d64740ab251a01722d4",
+          "piece_id": "ES2005b.D.dialog-act.dharshi.236",
+          "quote_sha256": "63f87bdae6a2bd77dce4095203a17d0e8dcfc23a497fd0191c3d5c23b054e68a",
+          "source_member": "dialogueActs/ES2005b.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Yeah , d with the colour , um does it have to be all yellow , do you know ?",
+          "text_sha256": "63f87bdae6a2bd77dce4095203a17d0e8dcfc23a497fd0191c3d5c23b054e68a",
+          "utterance_end": 75,
+          "utterance_id": "ES2005b.D.dialog-act.dharshi.236",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 1,
+        "resource_id": "ES2005b.D.dialog-act.dharshi.236",
+        "retrieval_channel": "dense",
+        "score": 0.590056836605072,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.D.dialog-act.xml#id(ES2005b.D.dialog-act.dharshi.236)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.93",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 62044,
+          "char_start": 61962,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.93",
+          "quote_sha256": "0f760bfca45777ee84c8e4f7d6d52bbd22394749d1458142947bbf431626fd02",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "Um as you can see the the remote control have parts and those parts look like that",
+          "text_sha256": "0f760bfca45777ee84c8e4f7d6d52bbd22394749d1458142947bbf431626fd02",
+          "utterance_end": 82,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.93",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 2,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.93",
+        "retrieval_channel": "dense",
+        "score": 0.58714759349823,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.93)"
+      },
+      {
+        "evidence_id": "ES2005b.C.dialog-act.dharshi.260",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 97897,
+          "char_start": 97830,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+          "piece_id": "ES2005b.C.dialog-act.dharshi.260",
+          "quote_sha256": "a930e3d481c92a448d4149d4e9712ec33806a8e5291ae7e813e3c6a6f903bb93",
+          "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "Uh then you know they're gonna be fairly brightly coloured anyway ,",
+          "text_sha256": "a930e3d481c92a448d4149d4e9712ec33806a8e5291ae7e813e3c6a6f903bb93",
+          "utterance_end": 67,
+          "utterance_id": "ES2005b.C.dialog-act.dharshi.260",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 3,
+        "resource_id": "ES2005b.C.dialog-act.dharshi.260",
+        "retrieval_channel": "dense",
+        "score": 0.5586299896240234,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.C.dialog-act.xml#id(ES2005b.C.dialog-act.dharshi.260)"
+      },
+      {
+        "evidence_id": "ES2005b.C.dialog-act.dharshi.245",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 94080,
+          "char_start": 94027,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+          "piece_id": "ES2005b.C.dialog-act.dharshi.245",
+          "quote_sha256": "a98db26865e1917725f68dce996d36825464ecd6f1ddfad9952423036e840788",
+          "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "and how are you about the glow in the dark material ?",
+          "text_sha256": "a98db26865e1917725f68dce996d36825464ecd6f1ddfad9952423036e840788",
+          "utterance_end": 53,
+          "utterance_id": "ES2005b.C.dialog-act.dharshi.245",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 4,
+        "resource_id": "ES2005b.C.dialog-act.dharshi.245",
+        "retrieval_channel": "dense",
+        "score": 0.5400598049163818,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.C.dialog-act.xml#id(ES2005b.C.dialog-act.dharshi.245)"
+      },
+      {
+        "evidence_id": "ES2005b.D.dialog-act.dharshi.165",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 77705,
+          "char_start": 77663,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "8f5c853406b7c03096c9cdd394b8672881872b4d6e276d64740ab251a01722d4",
+          "piece_id": "ES2005b.D.dialog-act.dharshi.165",
+          "quote_sha256": "c4c5509d5b11460de62454b788c3703e584c42c943a0baf0481bb8066686ba9a",
+          "source_member": "dialogueActs/ES2005b.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Glow in the dark material I was thinking .",
+          "text_sha256": "c4c5509d5b11460de62454b788c3703e584c42c943a0baf0481bb8066686ba9a",
+          "utterance_end": 42,
+          "utterance_id": "ES2005b.D.dialog-act.dharshi.165",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 5,
+        "resource_id": "ES2005b.D.dialog-act.dharshi.165",
+        "retrieval_channel": "dense",
+        "score": 0.525294840335846,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.D.dialog-act.xml#id(ES2005b.D.dialog-act.dharshi.165)"
+      },
+      {
+        "evidence_id": "ES2005b.C.dialog-act.dharshi.261",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 98103,
+          "char_start": 97997,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+          "piece_id": "ES2005b.C.dialog-act.dharshi.261",
+          "quote_sha256": "237b2e37a4dbb3a8ecc42c99292ed59638fad48f308e980bdbda5e8188e83983",
+          "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "and we can have sort of a a a trimming as well , of the glow in the dark material , just as gimmickyness .",
+          "text_sha256": "237b2e37a4dbb3a8ecc42c99292ed59638fad48f308e980bdbda5e8188e83983",
+          "utterance_end": 106,
+          "utterance_id": "ES2005b.C.dialog-act.dharshi.261",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 6,
+        "resource_id": "ES2005b.C.dialog-act.dharshi.261",
+        "retrieval_channel": "dense",
+        "score": 0.5225464105606079,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.C.dialog-act.xml#id(ES2005b.C.dialog-act.dharshi.261)"
+      },
+      {
+        "evidence_id": "ES2005b.C.dialog-act.dharshi.255",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 96878,
+          "char_start": 96814,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+          "piece_id": "ES2005b.C.dialog-act.dharshi.255",
+          "quote_sha256": "b1a6ba7dce60f0872a8c7a7010a7b4b9f614065d32bc12ed28dbafc2449ec28a",
+          "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "we can still use the glow in the dark as a gimmick essentially ,",
+          "text_sha256": "b1a6ba7dce60f0872a8c7a7010a7b4b9f614065d32bc12ed28dbafc2449ec28a",
+          "utterance_end": 64,
+          "utterance_id": "ES2005b.C.dialog-act.dharshi.255",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 7,
+        "resource_id": "ES2005b.C.dialog-act.dharshi.255",
+        "retrieval_channel": "dense",
+        "score": 0.520251989364624,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.C.dialog-act.xml#id(ES2005b.C.dialog-act.dharshi.255)"
+      },
+      {
+        "evidence_id": "ES2005b.B.dialog-act.dharshi.127",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 80333,
+          "char_start": 80213,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "5057abd31cd27688c7a755c1febd154af5efb88c52da003780a93ca682f7f004",
+          "piece_id": "ES2005b.B.dialog-act.dharshi.127",
+          "quote_sha256": "69055117bec37f7c7b30fe89ef3638ec0fd765a223aeeb0d67e77ca46a1961d0",
+          "source_member": "dialogueActs/ES2005b.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "like if they come and speak something at the remote control uh replies to something something and it glows in the dark .",
+          "text_sha256": "69055117bec37f7c7b30fe89ef3638ec0fd765a223aeeb0d67e77ca46a1961d0",
+          "utterance_end": 120,
+          "utterance_id": "ES2005b.B.dialog-act.dharshi.127",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 8,
+        "resource_id": "ES2005b.B.dialog-act.dharshi.127",
+        "retrieval_channel": "dense",
+        "score": 0.5067750215530396,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.B.dialog-act.xml#id(ES2005b.B.dialog-act.dharshi.127)"
+      },
+      {
+        "evidence_id": "ES2005b.C.dialog-act.dharshi.201",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 77357,
+          "char_start": 77252,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+          "piece_id": "ES2005b.C.dialog-act.dharshi.201",
+          "quote_sha256": "b9e5da02303cdefcdd09b19584abfcfaaca8cfb1bba42160c7080bf2a47f3dae",
+          "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "Um glow in the dark , is that sort of with a light inside it or is it sort of glow in the dark material ?",
+          "text_sha256": "b9e5da02303cdefcdd09b19584abfcfaaca8cfb1bba42160c7080bf2a47f3dae",
+          "utterance_end": 105,
+          "utterance_id": "ES2005b.C.dialog-act.dharshi.201",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 9,
+        "resource_id": "ES2005b.C.dialog-act.dharshi.201",
+        "retrieval_channel": "dense",
+        "score": 0.5054728388786316,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.C.dialog-act.xml#id(ES2005b.C.dialog-act.dharshi.201)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.150",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 95243,
+          "char_start": 95118,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.150",
+          "quote_sha256": "b9b35f69db628473a897d982b8b5404de5dd51a7abaae6f88a09c767cebcf170",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "Yeah , no th the material's cheap but it's just uh the the glow in the dark material needs some light to charge it you know ,",
+          "text_sha256": "b9b35f69db628473a897d982b8b5404de5dd51a7abaae6f88a09c767cebcf170",
+          "utterance_end": 125,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.150",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 10,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.150",
+        "retrieval_channel": "dense",
+        "score": 0.5038106441497803,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.150)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 45,
+        "item_id": "ES2005b.B.dialog-act.dharshi.76",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 43,
+        "item_id": "ES2005b.A.dialog-act.dharshi.130",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 41,
+        "item_id": "ES2005b.A.dialog-act.dharshi.93",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 47,
+        "item_id": "ES2005b.A.dialog-act.dharshi.116",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 39,
+        "item_id": "ES2005b.A.dialog-act.dharshi.142",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005b.A.dialog-act.dharshi.128",
+      "ES2005b.A.dialog-act.dharshi.135",
+      "ES2005b.A.dialog-act.dharshi.37",
+      "ES2005b.B.dialog-act.dharshi.126",
+      "ES2005b.D.dialog-act.dharshi.186"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": false,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005b.JacquelinePalmer.s.11",
+    "meeting_id": "ES2005b",
+    "meeting_scope_is_given": true,
+    "method": "dense",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 0.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.0,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005b:ES2005b.JacquelinePalmer.s.11",
+    "query_text": "The remote will feature speech recognition and programmable channel and volume preferences.",
+    "reason": null,
+    "required_count": 3,
+    "retrieved_count": 0,
+    "selection_count": 0,
+    "selection_drop_reasons": [],
+    "selection_lost": [],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 102573,
+        "canonical_char_start": 102493,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.277"
+        ],
+        "native_word_ids": [
+          "ES2005b.C.words1987",
+          "ES2005b.C.words1988",
+          "ES2005b.C.words1989",
+          "ES2005b.C.words1990",
+          "ES2005b.C.words1991",
+          "ES2005b.C.words1992",
+          "ES2005b.C.words1993",
+          "ES2005b.C.words1994",
+          "ES2005b.C.words1995",
+          "ES2005b.C.words1996",
+          "ES2005b.C.words1997",
+          "ES2005b.C.words1998",
+          "ES2005b.C.words1999",
+          "ES2005b.C.words2000",
+          "ES2005b.C.words2001",
+          "ES2005b.C.words2002"
+        ],
+        "original_hrefs": [
+          "ES2005b.C.words.xml#id(ES2005b.C.words1987)..id(ES2005b.C.words2002)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.277"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "the"
+        ],
+        "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "So we'll stick with sort of programmability um for the buttons that we do have .",
+        "utterance_id": "ES2005b.C.dialog-act.dharshi.277"
+      },
+      {
+        "canonical_char_end": 106863,
+        "canonical_char_start": 106819,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.299"
+        ],
+        "native_word_ids": [
+          "ES2005b.C.words2121",
+          "ES2005b.C.words2122",
+          "ES2005b.C.words2123",
+          "ES2005b.C.words2124",
+          "ES2005b.C.words2125",
+          "ES2005b.C.words2126",
+          "ES2005b.C.words2127",
+          "ES2005b.C.words2128",
+          "ES2005b.C.words2129"
+        ],
+        "original_hrefs": [
+          "ES2005b.C.words.xml#id(ES2005b.C.words2121)..id(ES2005b.C.words2129)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.299"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "recognition",
+          "speech"
+        ],
+        "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "so we'll go with speech recognition , yeah ?",
+        "utterance_id": "ES2005b.C.dialog-act.dharshi.299"
+      },
+      {
+        "canonical_char_end": 107355,
+        "canonical_char_start": 107295,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "0d7fcf09d2cc1fbb239a21b40fd7a7fd0fcd9c2322c4fbf7da64fac768a5ecb2",
+        "missing_retrieval_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.300"
+        ],
+        "native_word_ids": [
+          "ES2005b.C.words2130",
+          "ES2005b.C.words2131",
+          "ES2005b.C.words2132",
+          "ES2005b.C.words2133",
+          "ES2005b.C.words2134",
+          "ES2005b.C.words2135",
+          "ES2005b.C.words2136",
+          "ES2005b.C.words2137",
+          "ES2005b.C.words2138",
+          "ES2005b.C.words2139",
+          "ES2005b.C.words2140"
+        ],
+        "original_hrefs": [
+          "ES2005b.C.words.xml#id(ES2005b.C.words2130)..id(ES2005b.C.words2140)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005b.C.dialog-act.dharshi.300"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "recognition",
+          "speech"
+        ],
+        "source_member": "dialogueActs/ES2005b.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "Um , speech recognition , limited buttons , organic design .",
+        "utterance_id": "ES2005b.C.dialog-act.dharshi.300"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.37",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 46775,
+          "char_start": 46616,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.37",
+          "quote_sha256": "f5abc8a81b932899eb0f9c3065c85aa14fb2c42de22107bce71e0b2bfc5ee523",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "And uh a novel feature which uh we just brought up was this this automatic speech recognition feature or noise detection feature for when you lose the remote ,",
+          "text_sha256": "f5abc8a81b932899eb0f9c3065c85aa14fb2c42de22107bce71e0b2bfc5ee523",
+          "utterance_end": 159,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.37",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 1,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.37",
+        "retrieval_channel": "dense",
+        "score": 0.7171632051467896,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.37)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.128",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 86987,
+          "char_start": 86902,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.128",
+          "quote_sha256": "d4d5cc46b5bedfd7b7c13c800acb98e265c081a3f418ed0112d1dabb972d118d",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "What you could do then would be you have uh a remote controlled by the T_V_ speaker ,",
+          "text_sha256": "d4d5cc46b5bedfd7b7c13c800acb98e265c081a3f418ed0112d1dabb972d118d",
+          "utterance_end": 85,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.128",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 2,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.128",
+        "retrieval_channel": "dense",
+        "score": 0.6870742440223694,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.128)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.135",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 88697,
+          "char_start": 88614,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.135",
+          "quote_sha256": "92c25a24882f70588d3bc3b68928a81b5b80771ae3f148e25d60f1e1399affab",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "and then the remote control would know um what's being produced by the television .",
+          "text_sha256": "92c25a24882f70588d3bc3b68928a81b5b80771ae3f148e25d60f1e1399affab",
+          "utterance_end": 83,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.135",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 3,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.135",
+        "retrieval_channel": "dense",
+        "score": 0.6530261039733887,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.135)"
+      },
+      {
+        "evidence_id": "ES2005b.B.dialog-act.dharshi.126",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 80005,
+          "char_start": 79875,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "5057abd31cd27688c7a755c1febd154af5efb88c52da003780a93ca682f7f004",
+          "piece_id": "ES2005b.B.dialog-act.dharshi.126",
+          "quote_sha256": "d762b3626dd72da4b9c663639fa2e6b4bea1fabefbaf7f45017ce44bae1e3dc7",
+          "source_member": "dialogueActs/ES2005b.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "But if we add speech recognition as well as glow in the dark then both these factors will help their locating the remote control ,",
+          "text_sha256": "d762b3626dd72da4b9c663639fa2e6b4bea1fabefbaf7f45017ce44bae1e3dc7",
+          "utterance_end": 130,
+          "utterance_id": "ES2005b.B.dialog-act.dharshi.126",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 4,
+        "resource_id": "ES2005b.B.dialog-act.dharshi.126",
+        "retrieval_channel": "dense",
+        "score": 0.6416043639183044,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.B.dialog-act.xml#id(ES2005b.B.dialog-act.dharshi.126)"
+      },
+      {
+        "evidence_id": "ES2005b.D.dialog-act.dharshi.186",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 88195,
+          "char_start": 88159,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "8f5c853406b7c03096c9cdd394b8672881872b4d6e276d64740ab251a01722d4",
+          "piece_id": "ES2005b.D.dialog-act.dharshi.186",
+          "quote_sha256": "890527b64fa704c5521b3388923f673363bc85b6300abe045f70d931f6cf9295",
+          "source_member": "dialogueActs/ES2005b.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "That comes with our remote control .",
+          "text_sha256": "890527b64fa704c5521b3388923f673363bc85b6300abe045f70d931f6cf9295",
+          "utterance_end": 36,
+          "utterance_id": "ES2005b.D.dialog-act.dharshi.186",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 5,
+        "resource_id": "ES2005b.D.dialog-act.dharshi.186",
+        "retrieval_channel": "dense",
+        "score": 0.6312494277954102,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.D.dialog-act.xml#id(ES2005b.D.dialog-act.dharshi.186)"
+      },
+      {
+        "evidence_id": "ES2005b.B.dialog-act.dharshi.76",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 18257,
+          "char_start": 18159,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "5057abd31cd27688c7a755c1febd154af5efb88c52da003780a93ca682f7f004",
+          "piece_id": "ES2005b.B.dialog-act.dharshi.76",
+          "quote_sha256": "727b436997f9d2dfd000b30a301fb6933c4154d491fdd4754a6969e21078430c",
+          "source_member": "dialogueActs/ES2005b.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "So it should be in such a way that it should be easy to learn how to operate these remote controls",
+          "text_sha256": "727b436997f9d2dfd000b30a301fb6933c4154d491fdd4754a6969e21078430c",
+          "utterance_end": 98,
+          "utterance_id": "ES2005b.B.dialog-act.dharshi.76",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 6,
+        "resource_id": "ES2005b.B.dialog-act.dharshi.76",
+        "retrieval_channel": "dense",
+        "score": 0.6285572052001953,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.B.dialog-act.xml#id(ES2005b.B.dialog-act.dharshi.76)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.130",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 87301,
+          "char_start": 87212,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.130",
+          "quote_sha256": "ab50d6e18a27d15bfef85ea510d39ae4d7d00fbe1e2973c2e25334a1f138e0bf",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "a microphone by the T_V_ speaker and a transmitter there that sends back to your remote ,",
+          "text_sha256": "ab50d6e18a27d15bfef85ea510d39ae4d7d00fbe1e2973c2e25334a1f138e0bf",
+          "utterance_end": 89,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.130",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 7,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.130",
+        "retrieval_channel": "dense",
+        "score": 0.6230126619338989,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.130)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.93",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 62044,
+          "char_start": 61962,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.93",
+          "quote_sha256": "0f760bfca45777ee84c8e4f7d6d52bbd22394749d1458142947bbf431626fd02",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "Um as you can see the the remote control have parts and those parts look like that",
+          "text_sha256": "0f760bfca45777ee84c8e4f7d6d52bbd22394749d1458142947bbf431626fd02",
+          "utterance_end": 82,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.93",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 8,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.93",
+        "retrieval_channel": "dense",
+        "score": 0.6092207431793213,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.93)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.116",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 82541,
+          "char_start": 82438,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.116",
+          "quote_sha256": "f149c9e1314e762da0c99b3910375b09322463df20c378aad560415c2b45ec17",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "there was a remote control that came out two years ago that had a some basic speech recognition on it .",
+          "text_sha256": "f149c9e1314e762da0c99b3910375b09322463df20c378aad560415c2b45ec17",
+          "utterance_end": 103,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.116",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 9,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.116",
+        "retrieval_channel": "dense",
+        "score": 0.608939528465271,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.116)"
+      },
+      {
+        "evidence_id": "ES2005b.A.dialog-act.dharshi.142",
+        "logical_path": "/ami/ES2005b/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "char_end": 90085,
+          "char_start": 90011,
+          "content_hash": "f3577462dd15eec0c4cfca38a1d339aad73a7c1abdef595a2de7dd84c8624368",
+          "meeting_id": "ES2005b",
+          "member_sha256": "e7a2bda9be32293af22941ed45d07ff6226442c4f79aa5c97b29b1344b666b22",
+          "piece_id": "ES2005b.A.dialog-act.dharshi.142",
+          "quote_sha256": "6bd28ae676fc777bc7bebc881d3c72ff87f6c7d725798c9454c8e073acd0b88d",
+          "source_member": "dialogueActs/ES2005b.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "You just say you know , um whatever you whatever you want the remote for ,",
+          "text_sha256": "6bd28ae676fc777bc7bebc881d3c72ff87f6c7d725798c9454c8e073acd0b88d",
+          "utterance_end": 74,
+          "utterance_id": "ES2005b.A.dialog-act.dharshi.142",
+          "utterance_start": 0,
+          "workspace_id": "ES2005b"
+        },
+        "rank": 10,
+        "resource_id": "ES2005b.A.dialog-act.dharshi.142",
+        "retrieval_channel": "dense",
+        "score": 0.6051278114318848,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005b.A.dialog-act.xml#id(ES2005b.A.dialog-act.dharshi.142)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 35,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.42",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 50,
+        "item_id": "ES2005a.B.dialog-act.vkaraisk.8",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 40,
+        "item_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 43,
+        "item_id": "ES2005a.A.dialog-act.vkaraisk.14",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 33,
+        "item_id": "ES2005a.B.dialog-act.vkaraisk.7",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005a.B.dialog-act.vkaraisk.4",
+      "ES2005a.B.dialog-act.vkaraisk.5",
+      "ES2005a.B.dialog-act.vkaraisk.6",
+      "ES2005a.C.dialog-act.vkaraisk.45",
+      "ES2005a.C.dialog-act.vkaraisk.50"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": true,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005a.JacquelinePalmer.s.5",
+    "meeting_id": "ES2005a",
+    "meeting_scope_is_given": true,
+    "method": "hybrid",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 1.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.16666666666666666,
+      "recall_at_1": 0.0,
+      "recall_at_10": 1.0,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005a:ES2005a.JacquelinePalmer.s.5",
+    "query_text": "The Marketing Expert will examine the features and design of competitors' remotes.",
+    "reason": null,
+    "required_count": 1,
+    "retrieved_count": 1,
+    "selection_count": 0,
+    "selection_drop_reasons": [
+      "LOW_RANK"
+    ],
+    "selection_lost": [
+      "ES2005a.C.dialog-act.vkaraisk.42"
+    ],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 13451,
+        "canonical_char_start": 13396,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+        "missing_retrieval_piece_ids": [],
+        "native_word_ids": [
+          "ES2005a.C.words214",
+          "ES2005a.C.words215",
+          "ES2005a.C.words216",
+          "ES2005a.C.words217",
+          "ES2005a.C.words218",
+          "ES2005a.C.words219",
+          "ES2005a.C.words220",
+          "ES2005a.C.words221",
+          "ES2005a.C.words222",
+          "ES2005a.C.words223",
+          "ES2005a.C.words224"
+        ],
+        "original_hrefs": [
+          "ES2005a.C.words.xml#id(ES2005a.C.words214)..id(ES2005a.C.words224)"
+        ],
+        "possible_causes": [
+          "SELECTION_LOW_RANK"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.42"
+        ],
+        "retrieval_piece_coverage": 1.0,
+        "retrieved": true,
+        "retrieved_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.42"
+        ],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "the"
+        ],
+        "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "So you do the looking around at other remote controls .",
+        "utterance_id": "ES2005a.C.dialog-act.vkaraisk.42"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 3,
+            "dense": 1
+          },
+          "channel_scores": {
+            "bm25": 6.890392775838727,
+            "dense": 0.7224432229995728
+          },
+          "char_end": 6189,
+          "char_start": 6014,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "quote_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "being as a Marketing Exper Expert I will like to say like before deciding the cost of this remote control or any other things we must see the market potential for this product",
+          "text_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "utterance_end": 175,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 1,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "retrieval_channel": "hybrid",
+        "score": 0.032266458495966696,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.4)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 2,
+            "dense": 5
+          },
+          "channel_scores": {
+            "bm25": 6.990100857148811,
+            "dense": 0.524108350276947
+          },
+          "char_end": 6497,
+          "char_start": 6423,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "quote_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "What are the available prices of the other remote controls in the prices ?",
+          "text_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "utterance_end": 74,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 2,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "retrieval_channel": "hybrid",
+        "score": 0.0315136476426799,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.50",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 5,
+            "dense": 6
+          },
+          "channel_scores": {
+            "bm25": 6.319921723698004,
+            "dense": 0.509263277053833
+          },
+          "char_end": 15375,
+          "char_start": 15335,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.50",
+          "quote_sha256": "0db583b3c50dc02e00efb39a5161cc965fc7d548dcdb1fe37b9df654efaed566",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And you look at competition and design .",
+          "text_sha256": "0db583b3c50dc02e00efb39a5161cc965fc7d548dcdb1fe37b9df654efaed566",
+          "utterance_end": 40,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.50",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 3,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.50",
+        "retrieval_channel": "hybrid",
+        "score": 0.030536130536130537,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.50)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 1,
+            "dense": 14
+          },
+          "channel_scores": {
+            "bm25": 7.335512829976024,
+            "dense": 0.2689955234527588
+          },
+          "char_end": 14156,
+          "char_start": 14086,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "quote_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And obviously , other instructions will come from the personal coach .",
+          "text_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "utterance_end": 70,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 4,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "retrieval_channel": "hybrid",
+        "score": 0.029906956136464335,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.45)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 7,
+            "dense": 9
+          },
+          "channel_scores": {
+            "bm25": 5.471688553721652,
+            "dense": 0.321353554725647
+          },
+          "char_end": 6328,
+          "char_start": 6284,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "quote_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "like what is the competition in the market ?",
+          "text_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "utterance_end": 44,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 5,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "retrieval_channel": "hybrid",
+        "score": 0.029418126757516764,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.42",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 13,
+            "dense": 4
+          },
+          "channel_scores": {
+            "bm25": 3.1680394054197576,
+            "dense": 0.5277039408683777
+          },
+          "char_end": 13451,
+          "char_start": 13396,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.42",
+          "quote_sha256": "5a4eac5444eec1fcd0b64bce77d71e71f15ca0741e6fb8278a1d32ef3d8a8f9f",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "So you do the looking around at other remote controls .",
+          "text_sha256": "5a4eac5444eec1fcd0b64bce77d71e71f15ca0741e6fb8278a1d32ef3d8a8f9f",
+          "utterance_end": 55,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.42",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 6,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.42",
+        "retrieval_channel": "hybrid",
+        "score": 0.0293236301369863,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.42)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.8",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 16,
+            "dense": 2
+          },
+          "channel_scores": {
+            "bm25": 2.912212727905026,
+            "dense": 0.6158928871154785
+          },
+          "char_end": 6955,
+          "char_start": 6838,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.8",
+          "quote_sha256": "e2df0dfd406dd3558ceb51c519cf8fe3abd2ec19a3fd8204b0e18cd2856e642c",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "and how complicated it is to use these remote controls as compared to other remote controls available in the market .",
+          "text_sha256": "e2df0dfd406dd3558ceb51c519cf8fe3abd2ec19a3fd8204b0e18cd2856e642c",
+          "utterance_end": 117,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.8",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 7,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.8",
+        "retrieval_channel": "hybrid",
+        "score": 0.02928692699490662,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.8)"
+      },
+      {
+        "evidence_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 8,
+            "dense": 15
+          },
+          "channel_scores": {
+            "bm25": 5.259294742330729,
+            "dense": 0.26429253816604614
+          },
+          "char_end": 965,
+          "char_start": 887,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+          "piece_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "quote_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "The only the only remote controls I've used usually come with the television ,",
+          "text_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "utterance_end": 78,
+          "utterance_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 8,
+        "resource_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "retrieval_channel": "hybrid",
+        "score": 0.02803921568627451,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.A.dialog-act.xml#id(ES2005a.A.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.A.dialog-act.vkaraisk.14",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "bm25": 14,
+            "dense": 12
+          },
+          "channel_scores": {
+            "bm25": 3.027374519307409,
+            "dense": 0.2852649390697479
+          },
+          "char_end": 10082,
+          "char_start": 9993,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+          "piece_id": "ES2005a.A.dialog-act.vkaraisk.14",
+          "quote_sha256": "bc8ee919d211ef612918ba3044b7bce242a710c88cab5ae7bc8527d7cfa995f4",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "'Cause I I know as you add more buttons to the remote it sometimes gets so big and clunky",
+          "text_sha256": "bc8ee919d211ef612918ba3044b7bce242a710c88cab5ae7bc8527d7cfa995f4",
+          "utterance_end": 89,
+          "utterance_id": "ES2005a.A.dialog-act.vkaraisk.14",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 9,
+        "resource_id": "ES2005a.A.dialog-act.vkaraisk.14",
+        "retrieval_channel": "hybrid",
+        "score": 0.027402402402402402,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.A.dialog-act.xml#id(ES2005a.A.dialog-act.vkaraisk.14)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.7",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "channel_ranks": {
+            "dense": 3
+          },
+          "channel_scores": {
+            "dense": 0.5416458249092102
+          },
+          "char_end": 6742,
+          "char_start": 6694,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.7",
+          "quote_sha256": "fc3a3226c43b901de886442673a28a36fffc486f3e2bbd4131fbfd6a5653a836",
+          "rrf_k": 60,
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "What speciality other remote controls are having",
+          "text_sha256": "fc3a3226c43b901de886442673a28a36fffc486f3e2bbd4131fbfd6a5653a836",
+          "utterance_end": 48,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.7",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 10,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.7",
+        "retrieval_channel": "hybrid",
+        "score": 0.015873015873015872,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.7)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 44,
+        "item_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 33,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 29,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 30,
+        "item_id": "ES2005a.D.dialog-act.vkaraisk.10",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 64,
+        "item_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005a.A.dialog-act.vkaraisk.5",
+      "ES2005a.B.dialog-act.vkaraisk.5",
+      "ES2005a.B.dialog-act.vkaraisk.6",
+      "ES2005a.C.dialog-act.vkaraisk.17",
+      "ES2005a.C.dialog-act.vkaraisk.45"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": false,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005a.JacquelinePalmer.s.7",
+    "meeting_id": "ES2005a",
+    "meeting_scope_is_given": true,
+    "method": "bm25",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 0.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.0,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005a:ES2005a.JacquelinePalmer.s.7",
+    "query_text": "The Industrial Designer will research possible materials and the necessary internal components of the device.",
+    "reason": null,
+    "required_count": 1,
+    "retrieved_count": 0,
+    "selection_count": 0,
+    "selection_drop_reasons": [],
+    "selection_lost": [],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 13989,
+        "canonical_char_start": 13837,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+        "missing_retrieval_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.44"
+        ],
+        "native_word_ids": [
+          "ES2005a.C.words243",
+          "ES2005a.C.words244",
+          "ES2005a.C.words245",
+          "ES2005a.C.words246",
+          "ES2005a.C.words247",
+          "ES2005a.C.words248",
+          "ES2005a.C.words250",
+          "ES2005a.C.words251",
+          "ES2005a.C.words252",
+          "ES2005a.C.words253",
+          "ES2005a.C.words254",
+          "ES2005a.C.words255",
+          "ES2005a.C.words256",
+          "ES2005a.C.words257",
+          "ES2005a.C.words258",
+          "ES2005a.C.words259",
+          "ES2005a.C.words260",
+          "ES2005a.C.words261",
+          "ES2005a.C.words262",
+          "ES2005a.C.words263",
+          "ES2005a.C.words264",
+          "ES2005a.C.words265",
+          "ES2005a.C.words267",
+          "ES2005a.C.words268",
+          "ES2005a.C.words269",
+          "ES2005a.C.words270",
+          "ES2005a.C.words271",
+          "ES2005a.C.words272",
+          "ES2005a.C.words273",
+          "ES2005a.C.words274",
+          "ES2005a.C.words275",
+          "ES2005a.C.words276"
+        ],
+        "original_hrefs": [
+          "ES2005a.C.words.xml#id(ES2005a.C.words243)..id(ES2005a.C.words276)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005a.C.dialog-act.vkaraisk.44"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "and",
+          "materials",
+          "of"
+        ],
+        "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "and you could look into um basically how how it's made I_E_ like how you make it all in one , how what sort of materials are available to you whatever .",
+        "utterance_id": "ES2005a.C.dialog-act.vkaraisk.44"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 5358,
+          "char_start": 5328,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "quote_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "The the keyrings , yeah yeah .",
+          "text_sha256": "db20b29c5778800dacc33c482f28cff5d1eab0840ec86c37af52baf8b3b5c6fd",
+          "utterance_end": 30,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.17",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 1,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.17",
+        "retrieval_channel": "bm25",
+        "score": 9.75992082655955,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.17)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6497,
+          "char_start": 6423,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "quote_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "What are the available prices of the other remote controls in the prices ?",
+          "text_sha256": "983ef20d3d2ed935d12e3e7699a082726b1ccacfb934770566a2c24ddf106492",
+          "utterance_end": 74,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 2,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 9.7122300423857,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 14156,
+          "char_start": 14086,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "quote_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "And obviously , other instructions will come from the personal coach .",
+          "text_sha256": "98f45284fd70b95f6007d742931935da006a1398317b92d5d6ddba73fcb5bca6",
+          "utterance_end": 70,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.45",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 3,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.45",
+        "retrieval_channel": "bm25",
+        "score": 8.919532532685903,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.45)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6328,
+          "char_start": 6284,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "quote_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "like what is the competition in the market ?",
+          "text_sha256": "4c39fb685663f343bd772ac725dad83ec15649d5b2ab1285e1c0ce8ca3fceb30",
+          "utterance_end": 44,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 4,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 8.207532830582478,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 965,
+          "char_start": 887,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "2bba19589907c81b885b626fd7292ebcf974c80ed12380815e7ad05d88a11c26",
+          "piece_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "quote_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "source_member": "dialogueActs/ES2005a.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "The only the only remote controls I've used usually come with the television ,",
+          "text_sha256": "dc56f919a172dd8c78eb81c5a3d742a33fc3f320c5e0d68683fd0465b28585b0",
+          "utterance_end": 78,
+          "utterance_id": "ES2005a.A.dialog-act.vkaraisk.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 5,
+        "resource_id": "ES2005a.A.dialog-act.vkaraisk.5",
+        "retrieval_channel": "bm25",
+        "score": 7.8889421134960935,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.A.dialog-act.xml#id(ES2005a.A.dialog-act.vkaraisk.5)"
+      },
+      {
+        "evidence_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1713,
+          "char_start": 1620,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "9464c0f45e4e3b02b79cd0f1aa297cff5c73832e5f867274dbf2632096220007",
+          "piece_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "quote_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "source_member": "dialogueActs/ES2005a.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "I think the the only ones that I've seen that you buy are the sort of one for all type things",
+          "text_sha256": "59ab7d02a4ed9b095fb5b2535cc8c02e9b9770b183a46f8e208050c76a665fcf",
+          "utterance_end": 93,
+          "utterance_id": "ES2005a.C.dialog-act.vkaraisk.6",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 6,
+        "resource_id": "ES2005a.C.dialog-act.vkaraisk.6",
+        "retrieval_channel": "bm25",
+        "score": 7.257033480305022,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.C.dialog-act.xml#id(ES2005a.C.dialog-act.vkaraisk.6)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 12255,
+          "char_start": 12207,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.35",
+          "quote_sha256": "cc8979cd58202c6860eced77545e7acbfaa14175de5d32b093a061e245e4fb54",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "I wasn't thinking of the screen of like a P_D_A_",
+          "text_sha256": "cc8979cd58202c6860eced77545e7acbfaa14175de5d32b093a061e245e4fb54",
+          "utterance_end": 48,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.35",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 7,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.35",
+        "retrieval_channel": "bm25",
+        "score": 7.204970187302957,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.35)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 1840,
+          "char_start": 1808,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "quote_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Yeah the universal ones . Yeah .",
+          "text_sha256": "03bc2f795ad7f51dfd2af8044bdadac1ac8153186a9e8a114972d01f120c4752",
+          "utterance_end": 32,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 8,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 6.8569732578257065,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.4)"
+      },
+      {
+        "evidence_id": "ES2005a.D.dialog-act.vkaraisk.10",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 3924,
+          "char_start": 3889,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "28d9136da3d6b1dc9e8290768f0f7bda4b35fe76278bffb543158c7da0ddf1ae",
+          "piece_id": "ES2005a.D.dialog-act.vkaraisk.10",
+          "quote_sha256": "8c76c3bd379bef6f9e39054dfb9476c1e04d4db10097b763d376af55de2402f9",
+          "source_member": "dialogueActs/ES2005a.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "As you said they come with the T_V_",
+          "text_sha256": "8c76c3bd379bef6f9e39054dfb9476c1e04d4db10097b763d376af55de2402f9",
+          "utterance_end": 35,
+          "utterance_id": "ES2005a.D.dialog-act.vkaraisk.10",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 9,
+        "resource_id": "ES2005a.D.dialog-act.vkaraisk.10",
+        "retrieval_channel": "bm25",
+        "score": 5.41724040966666,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.D.dialog-act.xml#id(ES2005a.D.dialog-act.vkaraisk.10)"
+      },
+      {
+        "evidence_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "logical_path": "/ami/ES2005a/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "char_end": 6189,
+          "char_start": 6014,
+          "content_hash": "8ce0f4bf72d0f9819ac92c579194e846855ec205a5b10dbac905d2ef12ae907b",
+          "meeting_id": "ES2005a",
+          "member_sha256": "6e2edeed1f9234fe99d4bde8cb89014686cea616d91eeac6e4e47a69d145d988",
+          "piece_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "quote_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "source_member": "dialogueActs/ES2005a.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "being as a Marketing Exper Expert I will like to say like before deciding the cost of this remote control or any other things we must see the market potential for this product",
+          "text_sha256": "5bff562d5c03e004d20930113b6aabb74e64217bc8a2c947e8fb462060afdd3b",
+          "utterance_end": 175,
+          "utterance_id": "ES2005a.B.dialog-act.vkaraisk.4",
+          "utterance_start": 0,
+          "workspace_id": "ES2005a"
+        },
+        "rank": 10,
+        "resource_id": "ES2005a.B.dialog-act.vkaraisk.4",
+        "retrieval_channel": "bm25",
+        "score": 5.380872422880665,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005a.B.dialog-act.xml#id(ES2005a.B.dialog-act.vkaraisk.4)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 30,
+        "item_id": "ES2005c.D.dialog-act.dharshi.52",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 22,
+        "item_id": "ES2005c.B.dialog-act.dharshi.87",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 37,
+        "item_id": "ES2005c.C.dialog-act.dharshi.5",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 37,
+        "item_id": "ES2005c.A.dialog-act.dharshi.72",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 30,
+        "item_id": "ES2005c.A.dialog-act.dharshi.106",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005c.A.dialog-act.dharshi.215",
+      "ES2005c.A.dialog-act.dharshi.231",
+      "ES2005c.C.dialog-act.dharshi.2",
+      "ES2005c.D.dialog-act.dharshi.197",
+      "ES2005c.D.dialog-act.dharshi.53"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": false,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005c.JacquelinePalmer.s.12",
+    "meeting_id": "ES2005c",
+    "meeting_scope_is_given": true,
+    "method": "bm25",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 0.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.0,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.0,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.12",
+    "query_text": "The User Interface Designer and the Industrial Designer will build a prototype out of clay for the next meeting.",
+    "reason": null,
+    "required_count": 1,
+    "retrieved_count": 0,
+    "selection_count": 0,
+    "selection_drop_reasons": [],
+    "selection_lost": [],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 136104,
+        "canonical_char_start": 136029,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+        "missing_retrieval_piece_ids": [
+          "ES2005c.C.dialog-act.dharshi.303"
+        ],
+        "native_word_ids": [
+          "ES2005c.C.words2187",
+          "ES2005c.C.words2188",
+          "ES2005c.C.words2189",
+          "ES2005c.C.words2190",
+          "ES2005c.C.words2191",
+          "ES2005c.C.words2192",
+          "ES2005c.C.words2193",
+          "ES2005c.C.words2194",
+          "ES2005c.C.words2195",
+          "ES2005c.C.words2196",
+          "ES2005c.C.words2197",
+          "ES2005c.C.words2198",
+          "ES2005c.C.words2199",
+          "ES2005c.C.words2200",
+          "ES2005c.C.words2201",
+          "ES2005c.C.words2202",
+          "ES2005c.C.words2203",
+          "ES2005c.C.words2204",
+          "ES2005c.C.words2205"
+        ],
+        "original_hrefs": [
+          "ES2005c.C.words.xml#id(ES2005c.C.words2187)..id(ES2005c.C.words2205)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005c.C.dialog-act.dharshi.303"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "a",
+          "and",
+          "clay"
+        ],
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "and what I would like you guys to do is work on giving me a model in clay .",
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.303"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.197",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 52926,
+          "char_start": 52895,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.197",
+          "quote_sha256": "951ddfc2216e6adf5d9e3947aaab9fe92e974c68bf57adf22d84633fbe4e9bb9",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "So that's um the user interface",
+          "text_sha256": "951ddfc2216e6adf5d9e3947aaab9fe92e974c68bf57adf22d84633fbe4e9bb9",
+          "utterance_end": 31,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.197",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 1,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.197",
+        "retrieval_channel": "bm25",
+        "score": 14.897874608612918,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.197)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.215",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 129076,
+          "char_start": 129000,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.215",
+          "quote_sha256": "fd1bba7d53691d27a83fd118468154aaddabb80a353532f13b66a23628251301",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "Um the user interface , the buttons , I guess we talked about this already .",
+          "text_sha256": "fd1bba7d53691d27a83fd118468154aaddabb80a353532f13b66a23628251301",
+          "utterance_end": 76,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.215",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 2,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.215",
+        "retrieval_channel": "bm25",
+        "score": 12.360054277760097,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.215)"
+      },
+      {
+        "evidence_id": "ES2005c.C.dialog-act.dharshi.2",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 261,
+          "char_start": 196,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+          "piece_id": "ES2005c.C.dialog-act.dharshi.2",
+          "quote_sha256": "eaea6389fa7063221ba12c46c3bedb4a2f53c64c023d9edefc85d87f1cffd660",
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "So the meeting will have about the same format as the last time .",
+          "text_sha256": "eaea6389fa7063221ba12c46c3bedb4a2f53c64c023d9edefc85d87f1cffd660",
+          "utterance_end": 65,
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.2",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 3,
+        "resource_id": "ES2005c.C.dialog-act.dharshi.2",
+        "retrieval_channel": "bm25",
+        "score": 12.10457618916316,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.C.dialog-act.xml#id(ES2005c.C.dialog-act.dharshi.2)"
+      },
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.53",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 20552,
+          "char_start": 20516,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.53",
+          "quote_sha256": "0d625c38042750a606e7e0356bd181530c603a1f19e168f818f7d3cf9262522c",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "Yeah . The interface specification ,",
+          "text_sha256": "0d625c38042750a606e7e0356bd181530c603a1f19e168f818f7d3cf9262522c",
+          "utterance_end": 36,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.53",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 4,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.53",
+        "retrieval_channel": "bm25",
+        "score": 12.03473458933148,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.53)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.231",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 132613,
+          "char_start": 132578,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.231",
+          "quote_sha256": "20c07542b7b534231fdf8ec7542403662150e2405342aa8d9c8bb6ec33c1b476",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "and keeping the L_C_D_ screen out .",
+          "text_sha256": "20c07542b7b534231fdf8ec7542403662150e2405342aa8d9c8bb6ec33c1b476",
+          "utterance_end": 35,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.231",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 5,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.231",
+        "retrieval_channel": "bm25",
+        "score": 11.434060458822879,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.231)"
+      },
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.52",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 20419,
+          "char_start": 20383,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.52",
+          "quote_sha256": "4a67d769722debbfb76d9bdc933729056c44a9474c7fa28bd574954dda4b6c7a",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "okay , so the interface concept um .",
+          "text_sha256": "4a67d769722debbfb76d9bdc933729056c44a9474c7fa28bd574954dda4b6c7a",
+          "utterance_end": 36,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.52",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 6,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.52",
+        "retrieval_channel": "bm25",
+        "score": 10.221643621676355,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.52)"
+      },
+      {
+        "evidence_id": "ES2005c.B.dialog-act.dharshi.87",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 45198,
+          "char_start": 45191,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6",
+          "piece_id": "ES2005c.B.dialog-act.dharshi.87",
+          "quote_sha256": "9475bd8c26ebef44f3a8bab2f0d628ed6a2c9b88547a6147c76141fc914fd8f3",
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "And the",
+          "text_sha256": "9475bd8c26ebef44f3a8bab2f0d628ed6a2c9b88547a6147c76141fc914fd8f3",
+          "utterance_end": 7,
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.87",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 7,
+        "resource_id": "ES2005c.B.dialog-act.dharshi.87",
+        "retrieval_channel": "bm25",
+        "score": 10.003297455124242,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.B.dialog-act.xml#id(ES2005c.B.dialog-act.dharshi.87)"
+      },
+      {
+        "evidence_id": "ES2005c.C.dialog-act.dharshi.5",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 769,
+          "char_start": 704,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+          "piece_id": "ES2005c.C.dialog-act.dharshi.5",
+          "quote_sha256": "00fdc5e11f841749cb58bbe3e0e14e86867eb8a221a708911df542e33c198d6e",
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "mailed you the minutes of the last meeting uh just to save time .",
+          "text_sha256": "00fdc5e11f841749cb58bbe3e0e14e86867eb8a221a708911df542e33c198d6e",
+          "utterance_end": 65,
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.5",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 8,
+        "resource_id": "ES2005c.C.dialog-act.dharshi.5",
+        "retrieval_channel": "bm25",
+        "score": 9.93172053343165,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.C.dialog-act.xml#id(ES2005c.C.dialog-act.dharshi.5)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.72",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 59113,
+          "char_start": 59046,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.72",
+          "quote_sha256": "e9ba565b2dbe7ba8ef87143b375c2a01b4f374d9b6134868cb1250657b55b914",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "and that sends out the infrared uh light signal to the television .",
+          "text_sha256": "e9ba565b2dbe7ba8ef87143b375c2a01b4f374d9b6134868cb1250657b55b914",
+          "utterance_end": 67,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.72",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 9,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.72",
+        "retrieval_channel": "bm25",
+        "score": 9.78621498472575,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.72)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.106",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 68740,
+          "char_start": 68702,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.106",
+          "quote_sha256": "2760b649f1f6ddbcf42bec7cf4139beddafec6e7fbfa04fbac3927ba94a7c561",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "and then what colour for the buttons ?",
+          "text_sha256": "2760b649f1f6ddbcf42bec7cf4139beddafec6e7fbfa04fbac3927ba94a7c561",
+          "utterance_end": 38,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.106",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 10,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.106",
+        "retrieval_channel": "bm25",
+        "score": 9.774928401320125,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.106)"
+      }
+    ],
+    "truncated": []
+  },
+  {
+    "assembly_lost": [],
+    "chunk_lost": [],
+    "context_count": 0,
+    "context_dropped": [
+      {
+        "estimated_tokens": 38,
+        "item_id": "ES2005c.B.dialog-act.dharshi.38",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 39,
+        "item_id": "ES2005c.D.dialog-act.dharshi.73",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 41,
+        "item_id": "ES2005c.C.dialog-act.dharshi.121",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 33,
+        "item_id": "ES2005c.A.dialog-act.dharshi.188",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      },
+      {
+        "estimated_tokens": 35,
+        "item_id": "ES2005c.B.dialog-act.dharshi.42",
+        "reason": "LOW_RANK",
+        "source_type": "evidence"
+      }
+    ],
+    "context_selected_ids": [
+      "ES2005c.A.dialog-act.dharshi.51",
+      "ES2005c.A.dialog-act.dharshi.56",
+      "ES2005c.B.dialog-act.dharshi.111",
+      "ES2005c.D.dialog-act.dharshi.218",
+      "ES2005c.D.dialog-act.dharshi.38"
+    ],
+    "correct_meeting_in_top10": true,
+    "correct_native_text_in_top10": true,
+    "encoder_truncated": [],
+    "evaluation_status": "EVALUATED",
+    "execution_status": "SUCCESS",
+    "gold_id": "ES2005c.JacquelinePalmer.s.13",
+    "meeting_id": "ES2005c",
+    "meeting_scope_is_given": true,
+    "method": "dense",
+    "metrics": {
+      "hit_at_1": 0.0,
+      "hit_at_10": 1.0,
+      "hit_at_5": 0.0,
+      "mrr_at_10": 0.125,
+      "recall_at_1": 0.0,
+      "recall_at_10": 0.5,
+      "recall_at_5": 0.0
+    },
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.13",
+    "query_text": "The remote will feature a rubber or latex casing.",
+    "reason": null,
+    "required_count": 4,
+    "retrieved_count": 2,
+    "selection_count": 0,
+    "selection_drop_reasons": [
+      "LOW_RANK",
+      "LOW_RANK"
+    ],
+    "selection_lost": [
+      "ES2005c.A.dialog-act.dharshi.188",
+      "ES2005c.C.dialog-act.dharshi.121"
+    ],
+    "split": "test",
+    "status": "ELIGIBLE",
+    "targets": [
+      {
+        "canonical_char_end": 112004,
+        "canonical_char_start": 111970,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+        "missing_retrieval_piece_ids": [
+          "ES2005c.A.dialog-act.dharshi.186"
+        ],
+        "native_word_ids": [
+          "ES2005c.A.words1154",
+          "ES2005c.A.words1155",
+          "ES2005c.A.words1156",
+          "ES2005c.A.words1157",
+          "ES2005c.A.words1158",
+          "ES2005c.A.words1159",
+          "ES2005c.A.words1160",
+          "ES2005c.A.words1161"
+        ],
+        "original_hrefs": [
+          "ES2005c.A.words.xml#id(ES2005c.A.words1154)..id(ES2005c.A.words1161)"
+        ],
+        "possible_causes": [
+          "NO_SHARED_QUERY_TERMS"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005c.A.dialog-act.dharshi.186"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [],
+        "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+        "speaker": "A",
+        "text": "s I guess we decided on material ,",
+        "utterance_id": "ES2005c.A.dialog-act.dharshi.186"
+      },
+      {
+        "canonical_char_end": 112261,
+        "canonical_char_start": 112211,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+        "missing_retrieval_piece_ids": [],
+        "native_word_ids": [
+          "ES2005c.A.words1164",
+          "ES2005c.A.words1165",
+          "ES2005c.A.words1166",
+          "ES2005c.A.words1167",
+          "ES2005c.A.words1168",
+          "ES2005c.A.words1169",
+          "ES2005c.A.words1170",
+          "ES2005c.A.words1171",
+          "ES2005c.A.words1172"
+        ],
+        "original_hrefs": [
+          "ES2005c.A.words.xml#id(ES2005c.A.words1164)..id(ES2005c.A.words1172)"
+        ],
+        "possible_causes": [
+          "SELECTION_LOW_RANK"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005c.A.dialog-act.dharshi.188"
+        ],
+        "retrieval_piece_coverage": 1.0,
+        "retrieved": true,
+        "retrieved_piece_ids": [
+          "ES2005c.A.dialog-act.dharshi.188"
+        ],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "latex",
+          "rubber"
+        ],
+        "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+        "speaker": "A",
+        "text": "So that that spongy latex rubber everything feel ,",
+        "utterance_id": "ES2005c.A.dialog-act.dharshi.188"
+      },
+      {
+        "canonical_char_end": 64695,
+        "canonical_char_start": 64615,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+        "missing_retrieval_piece_ids": [],
+        "native_word_ids": [
+          "ES2005c.C.words784",
+          "ES2005c.C.words785",
+          "ES2005c.C.words786",
+          "ES2005c.C.words787",
+          "ES2005c.C.words788",
+          "ES2005c.C.words789",
+          "ES2005c.C.words790",
+          "ES2005c.C.words791",
+          "ES2005c.C.words792",
+          "ES2005c.C.words794",
+          "ES2005c.C.words795",
+          "ES2005c.C.words796",
+          "ES2005c.C.words797",
+          "ES2005c.C.words798",
+          "ES2005c.C.words799",
+          "ES2005c.C.words800",
+          "ES2005c.C.words801",
+          "ES2005c.C.words802"
+        ],
+        "original_hrefs": [
+          "ES2005c.C.words.xml#id(ES2005c.C.words784)..id(ES2005c.C.words802)"
+        ],
+        "possible_causes": [
+          "SELECTION_LOW_RANK"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005c.C.dialog-act.dharshi.121"
+        ],
+        "retrieval_piece_coverage": 1.0,
+        "retrieved": true,
+        "retrieved_piece_ids": [
+          "ES2005c.C.dialog-act.dharshi.121"
+        ],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "a",
+          "latex"
+        ],
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "speaker": "C",
+        "text": "so maybe s uh a sort of uh plastic initial plastic with a a latex kinda sheath ?",
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.121"
+      },
+      {
+        "canonical_char_end": 65082,
+        "canonical_char_start": 65034,
+        "cause_limit": "lexical overlap/rank and component trace evidence; no semantic judge",
+        "in_final_context": false,
+        "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+        "missing_retrieval_piece_ids": [
+          "ES2005c.D.dialog-act.dharshi.209"
+        ],
+        "native_word_ids": [
+          "ES2005c.D.words1496",
+          "ES2005c.D.words1497",
+          "ES2005c.D.words1498",
+          "ES2005c.D.words1499",
+          "ES2005c.D.words1500",
+          "ES2005c.D.words1501",
+          "ES2005c.D.words1502",
+          "ES2005c.D.words1503",
+          "ES2005c.D.words1504",
+          "ES2005c.D.words1505",
+          "ES2005c.D.words1506",
+          "ES2005c.D.words1507"
+        ],
+        "original_hrefs": [
+          "ES2005c.D.words.xml#id(ES2005c.D.words1496)..id(ES2005c.D.words1507)"
+        ],
+        "possible_causes": [
+          "RANKED_OUTSIDE_TOP10"
+        ],
+        "rendered_piece_ids": [],
+        "required_piece_ids": [
+          "ES2005c.D.dialog-act.dharshi.209"
+        ],
+        "retrieval_piece_coverage": 0.0,
+        "retrieved": false,
+        "retrieved_piece_ids": [],
+        "selected": false,
+        "selected_piece_ids": [],
+        "shared_query_terms": [
+          "rubber",
+          "the"
+        ],
+        "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+        "speaker": "D",
+        "text": "I like the rubber , the stress balls , I think ,",
+        "utterance_id": "ES2005c.D.dialog-act.dharshi.209"
+      }
+    ],
+    "top10": [
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.218",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 67913,
+          "char_start": 67775,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.218",
+          "quote_sha256": "e14679c5d517dcedf337dd004be6b58b9f4d62badd954762fb764360163a56fb",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "w like , 'cause there's gonna be the the cover the the rubber or the plastic casing and then the buttons in probably two different colours",
+          "text_sha256": "e14679c5d517dcedf337dd004be6b58b9f4d62badd954762fb764360163a56fb",
+          "utterance_end": 138,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.218",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 1,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.218",
+        "retrieval_channel": "dense",
+        "score": 0.6248091459274292,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.218)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.51",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 55470,
+          "char_start": 55365,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.51",
+          "quote_sha256": "54c8acb9d6c00b118598c5bcba34dfd288b0a7b22a27b565e313e91821742533",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "the way I'm gonna do this is uh we're gonna take a look at some old remote controls , see how they work ,",
+          "text_sha256": "54c8acb9d6c00b118598c5bcba34dfd288b0a7b22a27b565e313e91821742533",
+          "utterance_end": 105,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.51",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 2,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.51",
+        "retrieval_channel": "dense",
+        "score": 0.6101058721542358,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.51)"
+      },
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.38",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 16802,
+          "char_start": 16777,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.38",
+          "quote_sha256": "1595066ecd86ea21b70102e6e8b42f324c404fca20459be1916998cb3610a75e",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "A remote control ? Yeah .",
+          "text_sha256": "1595066ecd86ea21b70102e6e8b42f324c404fca20459be1916998cb3610a75e",
+          "utterance_end": 25,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.38",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 3,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.38",
+        "retrieval_channel": "dense",
+        "score": 0.6074842810630798,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.38)"
+      },
+      {
+        "evidence_id": "ES2005c.B.dialog-act.dharshi.111",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 102860,
+          "char_start": 102783,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6",
+          "piece_id": "ES2005c.B.dialog-act.dharshi.111",
+          "quote_sha256": "ea2c5fc9b597b8510a76deadf2f5944e9c143196aa7dbd8618198b8c39ff8a25",
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "we can just have a remote control and casings of different different shapes ,",
+          "text_sha256": "ea2c5fc9b597b8510a76deadf2f5944e9c143196aa7dbd8618198b8c39ff8a25",
+          "utterance_end": 77,
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.111",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 4,
+        "resource_id": "ES2005c.B.dialog-act.dharshi.111",
+        "retrieval_channel": "dense",
+        "score": 0.6000003814697266,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.B.dialog-act.xml#id(ES2005c.B.dialog-act.dharshi.111)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.56",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 56262,
+          "char_start": 56202,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.56",
+          "quote_sha256": "a815b03352835d681ae874e192c5c500d1b6ba81dac3fc55ed60662471f047f9",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "So uh yeah , looking inside a a very simple remote control .",
+          "text_sha256": "a815b03352835d681ae874e192c5c500d1b6ba81dac3fc55ed60662471f047f9",
+          "utterance_end": 60,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.56",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 5,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.56",
+        "retrieval_channel": "dense",
+        "score": 0.59865403175354,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.56)"
+      },
+      {
+        "evidence_id": "ES2005c.B.dialog-act.dharshi.38",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 7718,
+          "char_start": 7650,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6",
+          "piece_id": "ES2005c.B.dialog-act.dharshi.38",
+          "quote_sha256": "289154965f4234a3fca3606c3976846e8d7c56352e4a2bef0c24eee10af264c1",
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "there shouldn't be too many buttons on this mobi uh remote control ,",
+          "text_sha256": "289154965f4234a3fca3606c3976846e8d7c56352e4a2bef0c24eee10af264c1",
+          "utterance_end": 68,
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.38",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 6,
+        "resource_id": "ES2005c.B.dialog-act.dharshi.38",
+        "retrieval_channel": "dense",
+        "score": 0.5876026153564453,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.B.dialog-act.xml#id(ES2005c.B.dialog-act.dharshi.38)"
+      },
+      {
+        "evidence_id": "ES2005c.D.dialog-act.dharshi.73",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 24168,
+          "char_start": 24096,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0",
+          "piece_id": "ES2005c.D.dialog-act.dharshi.73",
+          "quote_sha256": "eeaf690e95a568407a04db7604c48398810ba022957f75bc7be5b224786a1cf4",
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "speaker": "D",
+          "text": "And we've got some pictures of some uh new remote controls to show you .",
+          "text_sha256": "eeaf690e95a568407a04db7604c48398810ba022957f75bc7be5b224786a1cf4",
+          "utterance_end": 72,
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.73",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 7,
+        "resource_id": "ES2005c.D.dialog-act.dharshi.73",
+        "retrieval_channel": "dense",
+        "score": 0.5719500780105591,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.D.dialog-act.xml#id(ES2005c.D.dialog-act.dharshi.73)"
+      },
+      {
+        "evidence_id": "ES2005c.C.dialog-act.dharshi.121",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 64695,
+          "char_start": 64615,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95",
+          "piece_id": "ES2005c.C.dialog-act.dharshi.121",
+          "quote_sha256": "3f03801c891410473a4d80091d9574bc8ee875fdc4862c0f74f3c62bfe175cd8",
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "speaker": "C",
+          "text": "so maybe s uh a sort of uh plastic initial plastic with a a latex kinda sheath ?",
+          "text_sha256": "3f03801c891410473a4d80091d9574bc8ee875fdc4862c0f74f3c62bfe175cd8",
+          "utterance_end": 80,
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.121",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 8,
+        "resource_id": "ES2005c.C.dialog-act.dharshi.121",
+        "retrieval_channel": "dense",
+        "score": 0.5474700927734375,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.C.dialog-act.xml#id(ES2005c.C.dialog-act.dharshi.121)"
+      },
+      {
+        "evidence_id": "ES2005c.A.dialog-act.dharshi.188",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 112261,
+          "char_start": 112211,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49",
+          "piece_id": "ES2005c.A.dialog-act.dharshi.188",
+          "quote_sha256": "5cc0ad43d750aefa426f1c5e1b9dfcdbf24ecf6b365c96238cf163f0c55a47ce",
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "speaker": "A",
+          "text": "So that that spongy latex rubber everything feel ,",
+          "text_sha256": "5cc0ad43d750aefa426f1c5e1b9dfcdbf24ecf6b365c96238cf163f0c55a47ce",
+          "utterance_end": 50,
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.188",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 9,
+        "resource_id": "ES2005c.A.dialog-act.dharshi.188",
+        "retrieval_channel": "dense",
+        "score": 0.5470414161682129,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.A.dialog-act.xml#id(ES2005c.A.dialog-act.dharshi.188)"
+      },
+      {
+        "evidence_id": "ES2005c.B.dialog-act.dharshi.42",
+        "logical_path": "/ami/ES2005c/transcript.txt",
+        "metadata": {
+          "archive_sha256": "b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d",
+          "canonical_sha256": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "char_end": 8342,
+          "char_start": 8284,
+          "content_hash": "451cb410e1a9b66a1992dac07eb226e1d05ca806505de5da8b4100228f6caa41",
+          "meeting_id": "ES2005c",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6",
+          "piece_id": "ES2005c.B.dialog-act.dharshi.42",
+          "quote_sha256": "db771ec5fea8cc6040bd95e5c0a1a66151c53b400a45363edf39d7bcf124b76b",
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "speaker": "B",
+          "text": "So that they could know how to use these remote controls .",
+          "text_sha256": "db771ec5fea8cc6040bd95e5c0a1a66151c53b400a45363edf39d7bcf124b76b",
+          "utterance_end": 58,
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.42",
+          "utterance_start": 0,
+          "workspace_id": "ES2005c"
+        },
+        "rank": 10,
+        "resource_id": "ES2005c.B.dialog-act.dharshi.42",
+        "retrieval_channel": "dense",
+        "score": 0.5415025949478149,
+        "source_ref": "ami:b56e5babb2496b8795deeeda7e71178d7fbc9963f94276cf2a3f4b56ebbc9f9d:dialogueActs/ES2005c.B.dialog-act.xml#id(ES2005c.B.dialog-act.dharshi.42)"
+      }
+    ],
+    "truncated": []
+  }
+]

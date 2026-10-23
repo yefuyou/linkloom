@@ -1,0 +1,1478 @@
+[
+  {
+    "claim_id": "ES2002a:chunk:0000:claim:0",
+    "artifact_id": "ES2002a:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+    "claim_type": "FACT",
+    "subject": "Laura",
+    "relation_phrase": "role",
+    "value": "project manager",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.9,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0000:claim:1",
+    "artifact_id": "ES2002a:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+    "claim_type": "FACT",
+    "subject": "David",
+    "relation_phrase": "role",
+    "value": "industrial designer",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.9,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0000:claim:2",
+    "artifact_id": "ES2002a:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+    "claim_type": "FACT",
+    "subject": "Andrew",
+    "relation_phrase": "role",
+    "value": "marketing expert",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.9,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0000:claim:3",
+    "artifact_id": "ES2002a:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+    "claim_type": "FACT",
+    "subject": "Craig",
+    "relation_phrase": "role",
+    "value": "User Interface",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.9,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0000:claim:4",
+    "artifact_id": "ES2002a:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+    "claim_type": "FACT",
+    "subject": "project",
+    "relation_phrase": "project objective",
+    "value": "designing a new remote control",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:0",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "PLAN",
+    "subject": "team",
+    "relation_phrase": "next_agenda_item",
+    "value": "discuss project finance",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "we now need to discuss the project finance .",
+      "description_parts": [
+        "discuss the project finance"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:1",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "FACT",
+    "subject": "remote control",
+    "relation_phrase": "selling_price",
+    "value": "25 Euro",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.95,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:2",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "FACT",
+    "subject": "remote control",
+    "relation_phrase": "target_profit_or_revenue",
+    "value": "50 million Euro",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:3",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "FACT",
+    "subject": "remote control",
+    "relation_phrase": "market_scope",
+    "value": "international scale",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:4",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "FACT",
+    "subject": "remote control",
+    "relation_phrase": "maximum_cost",
+    "value": "12.50 Euros",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.95,
+      "temporal": 0.95,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:5",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "QUESTION",
+    "subject": "selling price",
+    "relation_phrase": "pricing_type_inquiry",
+    "value": "wholesale or retail",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0005:claim:0",
+    "artifact_id": "ES2002a:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bcb320d818905b8bb434fb7031acb4942b59cfecc69814639b1425829ea78964",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "main_design_aim",
+    "value": "combine as many uses",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0005:claim:1",
+    "artifact_id": "ES2002a:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bcb320d818905b8bb434fb7031acb4942b59cfecc69814639b1425829ea78964",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "feature_candidate",
+    "value": "controlling house lighting",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.8,
+      "temporal": 0.9,
+      "overall": 0.8
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0005:claim:2",
+    "artifact_id": "ES2002a:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bcb320d818905b8bb434fb7031acb4942b59cfecc69814639b1425829ea78964",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "feature_candidate",
+    "value": "notes about what you wanna watch",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.8,
+      "temporal": 0.9,
+      "overall": 0.8
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0005:claim:3",
+    "artifact_id": "ES2002a:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bcb320d818905b8bb434fb7031acb4942b59cfecc69814639b1425829ea78964",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "feature_candidate",
+    "value": "beeping when whistled at or on a high-pitched noise",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.85,
+      "entity": 0.8,
+      "relation": 0.8,
+      "temporal": 0.9,
+      "overall": 0.8
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0006:claim:0",
+    "artifact_id": "ES2002a:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9a726fd2600b42ccf219594d9332482e0a0b5228cbcc54421e97818adc722291",
+    "claim_type": "PLAN",
+    "subject": "next meeting",
+    "relation_phrase": "scheduled_time",
+    "value": "in thirty minutes",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    },
+    "task": {
+      "text": "the next meeting's gonna be in thirty minutes .",
+      "description_parts": [
+        "the next meeting's gonna be in thirty minutes"
+      ],
+      "owner": null,
+      "deadline_text": "in thirty minutes",
+      "project": null,
+      "vendor": null
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0007:claim:0",
+    "artifact_id": "ES2002a:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8e3b013b0cbf1a00b54016493d7102ce5b0e05e44b4c0e88475451eaa62cbbbf",
+    "claim_type": "QUESTION",
+    "subject": "television remote control",
+    "relation_phrase": "scope_of_features",
+    "value": "whether remote control features go beyond television or maintain design commitment to television features",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2002a:chunk:0007:claim:1",
+    "artifact_id": "ES2002a:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8e3b013b0cbf1a00b54016493d7102ce5b0e05e44b4c0e88475451eaa62cbbbf",
+    "claim_type": "OPINION",
+    "subject": "television remote control",
+    "relation_phrase": "main_factor_in_features",
+    "value": "production cost due to a cap on price",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0000:claim:0",
+    "artifact_id": "ES2005c:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1de22482501467aea1ca48588e8372a0198d17d23e2f1bd86fae028552c3fa5",
+    "claim_type": "FACT",
+    "subject": "remote control market survey",
+    "relation_phrase": "market_survey_finding",
+    "value": "people have preference for fancy remote controls which look and feel very good rather than having a functional look and feel good",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.95
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0000:claim:1",
+    "artifact_id": "ES2005c:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1de22482501467aea1ca48588e8372a0198d17d23e2f1bd86fae028552c3fa5",
+    "claim_type": "OPINION",
+    "subject": "remote control design",
+    "relation_phrase": "most_important_design_factor",
+    "value": "fancy outlook and design",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0000:claim:2",
+    "artifact_id": "ES2005c:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1de22482501467aea1ca48588e8372a0198d17d23e2f1bd86fae028552c3fa5",
+    "claim_type": "OPINION",
+    "subject": "remote control design",
+    "relation_phrase": "second_most_important_aspect",
+    "value": "technologically innovative",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0000:claim:3",
+    "artifact_id": "ES2005c:chunk:0000",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1de22482501467aea1ca48588e8372a0198d17d23e2f1bd86fae028552c3fa5",
+    "claim_type": "OPINION",
+    "subject": "remote control design",
+    "relation_phrase": "third_most_important_aspect",
+    "value": "easy to use",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0001:claim:0",
+    "artifact_id": "ES2005c:chunk:0001",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7f3ab51499c226ff13bf1f8cd6a08d4456f949a976a2a05acb02d8b81176e476",
+    "claim_type": "PROPOSAL",
+    "subject": "remote controls",
+    "relation_phrase": "proposed_documentation_feature",
+    "value": "manuals that is easy to understand in their local language",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0001:claim:1",
+    "artifact_id": "ES2005c:chunk:0001",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7f3ab51499c226ff13bf1f8cd6a08d4456f949a976a2a05acb02d8b81176e476",
+    "claim_type": "PROPOSAL",
+    "subject": "remote controls",
+    "relation_phrase": "proposed_design",
+    "value": "big sponge lemon and yellow",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0001:claim:2",
+    "artifact_id": "ES2005c:chunk:0001",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7f3ab51499c226ff13bf1f8cd6a08d4456f949a976a2a05acb02d8b81176e476",
+    "claim_type": "OPINION",
+    "subject": "material",
+    "relation_phrase": "expected_material_feel",
+    "value": "spongy rather than hard plastic look",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0001:claim:3",
+    "artifact_id": "ES2005c:chunk:0001",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7f3ab51499c226ff13bf1f8cd6a08d4456f949a976a2a05acb02d8b81176e476",
+    "claim_type": "QUESTION",
+    "subject": "remote controls",
+    "relation_phrase": "query_material_preference",
+    "value": "whether rubber would be good or gel kind of stuff",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0001:claim:4",
+    "artifact_id": "ES2005c:chunk:0001",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7f3ab51499c226ff13bf1f8cd6a08d4456f949a976a2a05acb02d8b81176e476",
+    "claim_type": "PROPOSAL",
+    "subject": "remote controls",
+    "relation_phrase": "proposed_material",
+    "value": "rubber which is good for health and quite disposable",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0002:claim:0",
+    "artifact_id": "ES2005c:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_593e52bb39e8c1af12979f67e9df9fe22716fe3bec1a840f5023b9473f5457c7",
+    "claim_type": "FACT",
+    "subject": "survey",
+    "relation_phrase": "finding_on_unwanted_factors",
+    "value": "no factors identified as not wanted",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0002:claim:1",
+    "artifact_id": "ES2005c:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_593e52bb39e8c1af12979f67e9df9fe22716fe3bec1a840f5023b9473f5457c7",
+    "claim_type": "FACT",
+    "subject": "most remote controls",
+    "relation_phrase": "interface_type",
+    "value": "graphical interface where you have buttons and point it",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0002:claim:2",
+    "artifact_id": "ES2005c:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_593e52bb39e8c1af12979f67e9df9fe22716fe3bec1a840f5023b9473f5457c7",
+    "claim_type": "FACT",
+    "subject": "remote controls",
+    "relation_phrase": "finding_on_layout",
+    "value": "inconsistent layout makes it confusing",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0002:claim:3",
+    "artifact_id": "ES2005c:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_593e52bb39e8c1af12979f67e9df9fe22716fe3bec1a840f5023b9473f5457c7",
+    "claim_type": "OPINION",
+    "subject": "remote control",
+    "relation_phrase": "design_recommendation",
+    "value": "standard shape and buttons like top right for on and off are important because it makes it easy to use",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0003:claim:0",
+    "artifact_id": "ES2005c:chunk:0003",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_98ebfe8f569eae3fad7be759c3bcfe921c94a0ccc594ce4b63c4ac163b504e54",
+    "claim_type": "OPINION",
+    "subject": "remote control design",
+    "relation_phrase": "assessment",
+    "value": "programmable organic shape design is really easy to use, bright, and good for our design",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0004:claim:0",
+    "artifact_id": "ES2005c:chunk:0004",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a812ddb5ecddb480f5dfcf1761aa0cc3fe190acb24389358ebc127e2d9f60c38",
+    "claim_type": "PROPOSAL",
+    "subject": "cover",
+    "relation_phrase": "hinge rather than clip on",
+    "value": "hinge rather than clip on",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.88
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0004:claim:1",
+    "artifact_id": "ES2005c:chunk:0004",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a812ddb5ecddb480f5dfcf1761aa0cc3fe190acb24389358ebc127e2d9f60c38",
+    "claim_type": "FACT",
+    "subject": "technical department",
+    "relation_phrase": "has breakthrough in",
+    "value": "new speech recognition software that you can program in",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.92
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0004:claim:2",
+    "artifact_id": "ES2005c:chunk:0004",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a812ddb5ecddb480f5dfcf1761aa0cc3fe190acb24389358ebc127e2d9f60c38",
+    "claim_type": "PROPOSAL",
+    "subject": "speech recognition software",
+    "relation_phrase": "incorporate into design",
+    "value": "incorporating that in our design",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.92,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.88
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0004:claim:3",
+    "artifact_id": "ES2005c:chunk:0004",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_a812ddb5ecddb480f5dfcf1761aa0cc3fe190acb24389358ebc127e2d9f60c38",
+    "claim_type": "QUESTION",
+    "subject": "LCD",
+    "relation_phrase": "expensive for budget",
+    "value": "a bit too expensive for our budget",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0005:claim:0",
+    "artifact_id": "ES2005c:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_694a53912f492b26f20fac353d7411c2d6eec728bb21a0c6876e24cec794179c",
+    "claim_type": "FACT",
+    "subject": "remote control",
+    "relation_phrase": "manufacturing_budget",
+    "value": "12.50 Euros",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0005:claim:1",
+    "artifact_id": "ES2005c:chunk:0005",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_694a53912f492b26f20fac353d7411c2d6eec728bb21a0c6876e24cec794179c",
+    "claim_type": "OPINION",
+    "subject": "LCD screen",
+    "relation_phrase": "suitability",
+    "value": "not suitable due to budget and ease of use requirements",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:0",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "shape_proposal",
+    "value": "vegetabley kind of round shape",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:1",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "shape_proposal",
+    "value": "carrot",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:2",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "OPINION",
+    "subject": "remote control",
+    "relation_phrase": "shape_evaluation",
+    "value": "lemon wasn't that far s",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:3",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "FACT",
+    "subject": "target market",
+    "relation_phrase": "target_market_age_demographic",
+    "value": "twenty five to thirty five",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.95,
+      "temporal": 0.95,
+      "overall": 0.92
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:4",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PLAN",
+    "subject": "technical considerations",
+    "relation_phrase": "presentation_plan",
+    "value": "give technical considerations",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "and I'll I'll give you the uh , I guess , technical considerations for those .",
+      "description_parts": [
+        "I'll give you the uh , I guess , technical considerations for those"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:5",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PLAN",
+    "subject": "remote controls",
+    "relation_phrase": "action_plan",
+    "value": "examine old remote controls and reuse essential pieces",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "the way I'm gonna do this is uh we're gonna take a look at some old remote controls , see how they work , uh reuse the the vital kind of um essential pieces of it ,",
+      "description_parts": [
+        "we're gonna take a look at some old remote controls , see how they work",
+        "reuse the the vital kind of um essential pieces of it"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0007:claim:0",
+    "artifact_id": "ES2005c:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8d1c99ee2ea6ed7c1defc5367f369d3bacd63e79b4dc9d4c71f70ddea4aac116",
+    "claim_type": "QUESTION",
+    "subject": "remote control",
+    "relation_phrase": "allows_arbitrary_or_minimum_size",
+    "value": "whether remote controls can be made to any size or have a minimum size",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0007:claim:1",
+    "artifact_id": "ES2005c:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8d1c99ee2ea6ed7c1defc5367f369d3bacd63e79b4dc9d4c71f70ddea4aac116",
+    "claim_type": "SPECULATION",
+    "subject": "remote control",
+    "relation_phrase": "processor_choice",
+    "value": "more advanced processor than the competition",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0007:claim:2",
+    "artifact_id": "ES2005c:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8d1c99ee2ea6ed7c1defc5367f369d3bacd63e79b4dc9d4c71f70ddea4aac116",
+    "claim_type": "QUESTION",
+    "subject": "remote control casing",
+    "relation_phrase": "casing_material_opinion",
+    "value": "what team members think regarding material options including wood, titanium, rubber, plastic, and latex",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0007:claim:3",
+    "artifact_id": "ES2005c:chunk:0007",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8d1c99ee2ea6ed7c1defc5367f369d3bacd63e79b4dc9d4c71f70ddea4aac116",
+    "claim_type": "OPINION",
+    "subject": "sponge",
+    "relation_phrase": "opinion_on_material",
+    "value": "uncertain about sponge for casing",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:0",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "casing_material",
+    "value": "plastic with latex sheath",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:1",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "OPINION",
+    "subject": "remote control",
+    "relation_phrase": "material_preference",
+    "value": "rubber",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:2",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "QUESTION",
+    "subject": "remote control",
+    "relation_phrase": "colour",
+    "value": "yellow",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:3",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "QUESTION",
+    "subject": "remote control buttons",
+    "relation_phrase": "button_colour",
+    "value": null,
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:4",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "OPINION",
+    "subject": "remote control buttons",
+    "relation_phrase": "button_colour_preference",
+    "value": "multi-coloured",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0008:claim:5",
+    "artifact_id": "ES2005c:chunk:0008",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c54b140c177758c55b35e9a10dc177dfc2eb036840c467c43152778dacce7fd6",
+    "claim_type": "OPINION",
+    "subject": "remote control",
+    "relation_phrase": "shape_preference",
+    "value": "double-curved",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0009:claim:0",
+    "artifact_id": "ES2005c:chunk:0009",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b6f904fa6ae1b4309a215cc082c3ac4b960fe429d45798d40a673c1480858d66",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "design_shape",
+    "value": "banana shaped",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0009:claim:1",
+    "artifact_id": "ES2005c:chunk:0009",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_b6f904fa6ae1b4309a215cc082c3ac4b960fe429d45798d40a673c1480858d66",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "design_shape",
+    "value": "unidentifiable fruit or vegetable",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0010:claim:0",
+    "artifact_id": "ES2005c:chunk:0010",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_bafc0bea3de1c8037c00d8776d2416334723c8b64042d61808601ece863cd413",
+    "claim_type": "DECISION",
+    "subject": "team",
+    "relation_phrase": "agreed_approach",
+    "value": "design two to three shapes and conduct a public survey to let the public choose what they want",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0012:claim:0",
+    "artifact_id": "ES2005c:chunk:0012",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3cb5ebdeeba3c3ad4ba05776292264ffb2258325ff4089638efc053af6b7239",
+    "claim_type": "QUESTION",
+    "subject": "remote control",
+    "relation_phrase": "has_question",
+    "value": "whether to include buttons at all",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0012:claim:1",
+    "artifact_id": "ES2005c:chunk:0012",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3cb5ebdeeba3c3ad4ba05776292264ffb2258325ff4089638efc053af6b7239",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "shape",
+    "value": "apple shape",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.85,
+      "temporal": 0.9,
+      "overall": 0.88
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0012:claim:2",
+    "artifact_id": "ES2005c:chunk:0012",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3cb5ebdeeba3c3ad4ba05776292264ffb2258325ff4089638efc053af6b7239",
+    "claim_type": "FACT",
+    "subject": "speech recognition",
+    "relation_phrase": "capability",
+    "value": "can sit at a distance and pick up speech without being handheld",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.92
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0012:claim:3",
+    "artifact_id": "ES2005c:chunk:0012",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e3cb5ebdeeba3c3ad4ba05776292264ffb2258325ff4089638efc053af6b7239",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "design_feature",
+    "value": "interchangeable casings of different fruit shapes that fit onto a general piece",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0013:claim:0",
+    "artifact_id": "ES2005c:chunk:0013",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_da44282655a8ff2eab019d1bcb16da06b6baed3da2946a7fc5815c392305881d",
+    "claim_type": "PROPOSAL",
+    "subject": "mobile phone",
+    "relation_phrase": "casing design",
+    "value": "selection of fruit-shaped casings (such as banana or apple shape) covering half of the mobile phone on the lower side while buttons remain on the upper side",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0013:claim:1",
+    "artifact_id": "ES2005c:chunk:0013",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_da44282655a8ff2eab019d1bcb16da06b6baed3da2946a7fc5815c392305881d",
+    "claim_type": "OPINION",
+    "subject": "facia",
+    "relation_phrase": "facia design consideration",
+    "value": "facia should go over the buttons or be placed face down with a microphone so the user can see it when using the phone",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0014:claim:0",
+    "artifact_id": "ES2005c:chunk:0014",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5991a740a909ffa154facb4d2e006351ce446a8d9bd1cee03f96120c3f6d2e0e",
+    "claim_type": "DECISION",
+    "subject": "remote control",
+    "relation_phrase": "has_material",
+    "value": "spongy latex rubber",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0014:claim:1",
+    "artifact_id": "ES2005c:chunk:0014",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5991a740a909ffa154facb4d2e006351ce446a8d9bd1cee03f96120c3f6d2e0e",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "has_color_scheme",
+    "value": "main body blue with yellow logo and slogan",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.85,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.8
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0014:claim:2",
+    "artifact_id": "ES2005c:chunk:0014",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_5991a740a909ffa154facb4d2e006351ce446a8d9bd1cee03f96120c3f6d2e0e",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "has_energy_source",
+    "value": "hand-dynamo",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0015:claim:0",
+    "artifact_id": "ES2005c:chunk:0015",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_79e2b40b83720756e909945cbbc0c3626e08aa020773e78a765bb1ca6dc677dd",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "power_source_option",
+    "value": "dynamo",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0015:claim:1",
+    "artifact_id": "ES2005c:chunk:0015",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_79e2b40b83720756e909945cbbc0c3626e08aa020773e78a765bb1ca6dc677dd",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "power_source_option",
+    "value": "solar power",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0015:claim:2",
+    "artifact_id": "ES2005c:chunk:0015",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_79e2b40b83720756e909945cbbc0c3626e08aa020773e78a765bb1ca6dc677dd",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "power_source_option",
+    "value": "rechargeable battery",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0015:claim:3",
+    "artifact_id": "ES2005c:chunk:0015",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_79e2b40b83720756e909945cbbc0c3626e08aa020773e78a765bb1ca6dc677dd",
+    "claim_type": "PROPOSAL",
+    "subject": "remote control",
+    "relation_phrase": "feature_option",
+    "value": "rechargeable stand",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.95,
+      "overall": 0.85
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0016:claim:0",
+    "artifact_id": "ES2005c:chunk:0016",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c042c3606d79dbc1248da1497496af304b46cdac014d63d0d76edc7ce6cd0ffa",
+    "claim_type": "DECISION",
+    "subject": "remote control",
+    "relation_phrase": "battery_type",
+    "value": "rechargeable battery",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.95,
+      "relation": 0.9,
+      "temporal": 0.85,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0016:claim:1",
+    "artifact_id": "ES2005c:chunk:0016",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_c042c3606d79dbc1248da1497496af304b46cdac014d63d0d76edc7ce6cd0ffa",
+    "claim_type": "DECISION",
+    "subject": "remote control",
+    "relation_phrase": "screen_inclusion",
+    "value": "keeping the LCD screen out",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.85,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0017:claim:0",
+    "artifact_id": "ES2005c:chunk:0017",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0490eb6d63d2b1df5b181b54aae73d6c116a70f88e46a1012b52bd519863b261",
+    "claim_type": "PLAN",
+    "subject": "team",
+    "relation_phrase": "assigned_task",
+    "value": "work on giving me a model in clay",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.85,
+      "overall": 0.85
+    },
+    "task": {
+      "text": "and what I would like you guys to do is work on giving me a model in clay .",
+      "description_parts": [
+        "work on giving me a model in clay"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0017:claim:1",
+    "artifact_id": "ES2005c:chunk:0017",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0490eb6d63d2b1df5b181b54aae73d6c116a70f88e46a1012b52bd519863b261",
+    "claim_type": "FACT",
+    "subject": "next meeting",
+    "relation_phrase": "timing",
+    "value": "in half an hour",
+    "temporal_status": "UNRESOLVED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.9
+    }
+  },
+  {
+    "claim_id": "ES2005c:chunk:0018:claim:0",
+    "artifact_id": "ES2005c:chunk:0018",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d33dab9403be071c9770d31ca127842bebcc16d470c6e43162082eb2c69e6152",
+    "claim_type": "DECISION",
+    "subject": "remote control",
+    "relation_phrase": "chip_set",
+    "value": "basic chip set",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.85,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    }
+  }
+]

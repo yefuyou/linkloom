@@ -1,0 +1,61 @@
+[
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:0",
+    "exact_quote_start": 6200,
+    "full_chunk_non_asserted": true,
+    "isolated_quote_non_asserted": false,
+    "overlapping_quote_scopes": [
+      {
+        "start": 4441,
+        "end": 7922,
+        "opening": "'round the living room .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.48 sta"
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2002a:chunk:0006:claim:0",
+    "exact_quote_start": 4755,
+    "full_chunk_non_asserted": true,
+    "isolated_quote_non_asserted": false,
+    "overlapping_quote_scopes": [
+      {
+        "start": 2994,
+        "end": 7928,
+        "opening": "'Cause it could b it could it could be that f\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dial"
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:4",
+    "exact_quote_start": 6610,
+    "full_chunk_non_asserted": true,
+    "isolated_quote_non_asserted": false,
+    "overlapping_quote_scopes": [
+      {
+        "start": 5357,
+        "end": 7959,
+        "opening": "'Kay .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.198 start=911.38 end=911"
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:5",
+    "exact_quote_start": -1,
+    "full_chunk_non_asserted": true,
+    "isolated_quote_non_asserted": false,
+    "overlapping_quote_scopes": []
+  },
+  {
+    "claim_id": "ES2005c:chunk:0017:claim:0",
+    "exact_quote_start": 974,
+    "full_chunk_non_asserted": true,
+    "isolated_quote_non_asserted": false,
+    "overlapping_quote_scopes": [
+      {
+        "start": 868,
+        "end": 7945,
+        "opening": "'Kay .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.303 start=2039.16 end=20"
+      }
+    ]
+  }
+]

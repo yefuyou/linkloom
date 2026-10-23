@@ -1,0 +1,516 @@
+[
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.4",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.4",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The industrial designer will work on the working design of the remote.",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.196"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "actions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.196",
+        "speaker": "B",
+        "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+        "char_start": 52553,
+        "char_end": 52683,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "exact_work_quote_eligible": true,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.5",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.5",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The user interface designer will work on the technical functions of the remote.",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.199"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "actions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.199",
+        "speaker": "B",
+        "text": "Um for user interface , technical functions ,",
+        "char_start": 53021,
+        "char_end": 53066,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.6",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.6",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The marketing executive will work on what requirements the remote has to fulfill",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.202",
+      "ES2002a.B.dialog-act.dharshi.203"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "actions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.202",
+        "speaker": "B",
+        "text": "Um and uh marketing executive ,",
+        "char_start": 53450,
+        "char_end": 53481,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      },
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.203",
+        "speaker": "B",
+        "text": "you'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+        "char_start": 53581,
+        "char_end": 53687,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.7",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.7",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will sell for 25 Euro.",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.129",
+      "ES2002a.B.dialog-act.dharshi.89"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.129",
+        "speaker": "B",
+        "text": "Well twenty five Euro , I mean that's um that's about like eighteen pounds or something ,",
+        "char_start": 32800,
+        "char_end": 32889,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      },
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.89",
+        "speaker": "B",
+        "text": "Um so according to the brief um we're gonna be selling this remote control for twenty five Euro ,",
+        "char_start": 22144,
+        "char_end": 22241,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.8",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.8",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will be sold on an international scale.",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.100",
+      "ES2002a.D.dialog-act.dharshi.66"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.100",
+        "speaker": "B",
+        "text": "I mean do you think the fact that it's going to be sold internationally will have a bearing on how we design it at all ?",
+        "char_start": 25278,
+        "char_end": 25398,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      },
+      {
+        "utterance_id": "ES2002a.D.dialog-act.dharshi.66",
+        "speaker": "D",
+        "text": "Well right away I'm wondering if there's um th th uh , like with D_V_D_ players , if there are zones .",
+        "char_start": 26127,
+        "char_end": 26229,
+        "source_member": "dialogueActs/ES2002a.D.dialog-act.xml",
+        "member_sha256": "9adf983bb5cb17306213bb0182eeedd04263baf45a07459f4597a8ce1b117743"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2002a.rdhillon.s.9",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2002a",
+    "query_id": "ES2002a:ES2002a.rdhillon.s.9",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The production costs cannot exceed 12.50 Euro.",
+    "relevant_dialogue_act_ids": [
+      "ES2002a.B.dialog-act.dharshi.92"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "dev",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.92",
+        "speaker": "B",
+        "text": "And uh we don't want it to cost any more than uh twelve fifty Euros , so fifty percent of the selling price .",
+        "char_start": 22640,
+        "char_end": 22749,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.12",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.12",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The User Interface Designer and the Industrial Designer will build a prototype out of clay for the next meeting.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.C.dialog-act.dharshi.303"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "actions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.303",
+        "speaker": "C",
+        "text": "and what I would like you guys to do is work on giving me a model in clay .",
+        "char_start": 136029,
+        "char_end": 136104,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      }
+    ],
+    "exact_work_quote_eligible": true,
+    "exact_work_quote_claim_ids": [
+      "ES2005c:chunk:0017:claim:0"
+    ],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.13",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.13",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will feature a rubber or latex casing.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.A.dialog-act.dharshi.186",
+      "ES2005c.A.dialog-act.dharshi.188",
+      "ES2005c.C.dialog-act.dharshi.121",
+      "ES2005c.D.dialog-act.dharshi.209"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.A.dialog-act.dharshi.186",
+        "speaker": "A",
+        "text": "s I guess we decided on material ,",
+        "char_start": 111970,
+        "char_end": 112004,
+        "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+        "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49"
+      },
+      {
+        "utterance_id": "ES2005c.A.dialog-act.dharshi.188",
+        "speaker": "A",
+        "text": "So that that spongy latex rubber everything feel ,",
+        "char_start": 112211,
+        "char_end": 112261,
+        "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+        "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.121",
+        "speaker": "C",
+        "text": "so maybe s uh a sort of uh plastic initial plastic with a a latex kinda sheath ?",
+        "char_start": 64615,
+        "char_end": 64695,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.D.dialog-act.dharshi.209",
+        "speaker": "D",
+        "text": "I like the rubber , the stress balls , I think ,",
+        "char_start": 65034,
+        "char_end": 65082,
+        "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+        "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.14",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.14",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "Several shapes will be designed and shown to the public so that the most popular shape is chosen.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.B.dialog-act.dharshi.103",
+      "ES2005c.C.dialog-act.dharshi.167"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.B.dialog-act.dharshi.103",
+        "speaker": "B",
+        "text": "Or we can do something , we can design two three shapes and we can have a public survey , let the public choose what they want .",
+        "char_start": 84490,
+        "char_end": 84618,
+        "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+        "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.167",
+        "speaker": "C",
+        "text": "There's a good man . There's a good idea .",
+        "char_start": 84826,
+        "char_end": 84868,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.15",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.15",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will be yellow or partially yellow and have an organic shape.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.C.dialog-act.dharshi.245",
+      "ES2005c.C.dialog-act.dharshi.249",
+      "ES2005c.C.dialog-act.dharshi.251",
+      "ES2005c.D.dialog-act.dharshi.345",
+      "ES2005c.D.dialog-act.dharshi.346"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.245",
+        "speaker": "C",
+        "text": "So again I mean like we could have , uh I mean , we could quite easily have the the main body be a different",
+        "char_start": 115967,
+        "char_end": 116075,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.249",
+        "speaker": "C",
+        "text": "I mean not necessarily that the um the whole body has to be of the company colour ,",
+        "char_start": 117070,
+        "char_end": 117153,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.251",
+        "speaker": "C",
+        "text": "So you have the main body blue with the yellow logo and slogan running up one side of it kind of thing .",
+        "char_start": 117522,
+        "char_end": 117626,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.D.dialog-act.dharshi.345",
+        "speaker": "D",
+        "text": "but something ergonomically shaped and organic , like good to hold , based on fruits and natural things like that ,",
+        "char_start": 114649,
+        "char_end": 114764,
+        "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+        "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+      },
+      {
+        "utterance_id": "ES2005c.D.dialog-act.dharshi.346",
+        "speaker": "D",
+        "text": "because al already we're going a bit gaudy with the yellow , you know .",
+        "char_start": 114972,
+        "char_end": 115043,
+        "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+        "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.16",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.16",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will feature speech recognition.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.C.dialog-act.dharshi.176",
+      "ES2005c.D.dialog-act.dharshi.151"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.176",
+        "speaker": "C",
+        "text": "Uh speech recognition , I think ,",
+        "char_start": 88146,
+        "char_end": 88179,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.D.dialog-act.dharshi.151",
+        "speaker": "D",
+        "text": "'cause I think we're definitely going for the speech recognition ,",
+        "char_start": 40229,
+        "char_end": 40295,
+        "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+        "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  },
+  {
+    "evaluation_class": "PUBLIC_HUMAN_GOLD",
+    "gold_summary_id": "ES2005c.JacquelinePalmer.s.17",
+    "mapping_version": "ami-official-summary-links/v1",
+    "meeting_id": "ES2005c",
+    "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.17",
+    "query_origin": "OFFICIAL_ABSTRACTIVE_SUMMARY_SENTENCE",
+    "query_text": "The remote will be powered by rechargeable batteries and come with a recharging stand.",
+    "relevant_dialogue_act_ids": [
+      "ES2005c.B.dialog-act.dharshi.152",
+      "ES2005c.C.dialog-act.dharshi.274",
+      "ES2005c.C.dialog-act.dharshi.276"
+    ],
+    "score_status": "ELIGIBLE",
+    "split": "test",
+    "task": "QUERY_TO_OFFICIAL_LINKED_DIALOGUE_ACT_RETRIEVAL",
+    "section": "decisions",
+    "native_targets": [
+      {
+        "utterance_id": "ES2005c.B.dialog-act.dharshi.152",
+        "speaker": "B",
+        "text": "I think we should a rechargeable battery will be a good idea .",
+        "char_start": 125512,
+        "char_end": 125574,
+        "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+        "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.274",
+        "speaker": "C",
+        "text": "having a rechargeable stand ,",
+        "char_start": 126932,
+        "char_end": 126961,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      },
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.276",
+        "speaker": "C",
+        "text": "so that not only it doubles as a stand , but um for using it as uh recharging it , but also for using it as sound recognition .",
+        "char_start": 127166,
+        "char_end": 127293,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      }
+    ],
+    "exact_work_quote_eligible": false,
+    "exact_work_quote_claim_ids": [],
+    "extraction_semantic_precision": null,
+    "extraction_semantic_recall": null
+  }
+]
