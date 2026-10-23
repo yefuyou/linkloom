@@ -1,0 +1,51 @@
+{
+  "status": "BLOCKED_OFFLINE_GATE",
+  "production_sha": "ba51b3586135f1ef52a32b5e9945d14b058bac38",
+  "runner_sha": "693ab81c134fcc3af76e4e1861a90f97a2bde734",
+  "source_snapshot_sha256": "fbd502967707886f9bca4bf15f0e19b062972a7b52bb8e8063325269d22de135",
+  "quote_tests": {
+    "passed": 143,
+    "failed": 1,
+    "total": 144,
+    "failures": [
+      {
+        "testcase": "test_same_ascii_quote_pairs_support_a_nested_quoted_claim",
+        "classname": "tests.unit.test_canary_quote_scopes",
+        "message": "assert False\n +  where False = _non_asserted(\"同事说：'outer says '安排部署任务' outer task remains inside'。当前任务已安排。\", '安排部署任务')"
+      }
+    ]
+  },
+  "other_contracts_passed": 162,
+  "historical_outputs_replayed": 28,
+  "first_round_requests_identical": true,
+  "live": {
+    "provider_calls": 0,
+    "smoke_calls": 0,
+    "actual_reservation_usd": 0,
+    "estimated_new_cost_usd": 0,
+    "attempted_chunks": 0,
+    "unattempted_chunks": 28,
+    "status": "N/E",
+    "reason": "NESTED_QUOTE_SAFETY_GATE_FAILED"
+  },
+  "plan": {
+    "meetings": {
+      "ES2002a": 8,
+      "ES2005c": 20
+    },
+    "profile": null,
+    "model": "gemini-3.8-flash",
+    "max_output_tokens": 4096,
+    "thinking": "low",
+    "temperature": null,
+    "planned_reservation_usd": 7,
+    "budget_limit_usd": 8,
+    "runner_request_limit": 30,
+    "user_request_ceiling": 32,
+    "retries": 0
+  },
+  "production_changed": false,
+  "F_prompt_changed": false,
+  "Compactor_or_PR19_changed": false,
+  "independent_review": "See archived review if present; otherwise NOT_VERIFIED"
+}
