@@ -36,10 +36,15 @@ Discovery accepted 0 valid and 0 partial tasks and rejected all five PLAN
 candidates: four `NON_ASSERTED_TASK`, one
 `TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS`.  The clay-model task was
 found in ES2005c chunk 17 but rejected by the apostrophe quote-scope filter.
-The industrial-design assignment was missed; the UI/interface case was an
-incomplete cross-turn fragment; the marketing role/work candidate failed exact
-grounding; and the speech-recognition decision was not emitted despite an
+The industrial-design and marketing assignments were not emitted as task
+proposals in this null-profile run; the UI/interface case was an incomplete
+cross-turn fragment; and the speech-recognition decision was not emitted despite an
 explicit “definitely going for” utterance.  Other observed decisions included
 the latex/rubber shell and multiple-shape public choice.  These are
 `DEV_DIAGNOSTIC` observations, not semantic Gold scores; independent review
 remains `INDEPENDENT_REVIEW_NOT_VERIFIED`.
+
+The separate A–E sprint's B run did emit a marketing role/work task that failed
+exact grounding. That result must not be attributed to the 28-call null-profile
+AMI run. The frozen source `1ade9b2b359b0249ed21678ad09e6aa4d5e82c83` is the
+code used for the new Canary; this follow-up changes the addendum wording only.
