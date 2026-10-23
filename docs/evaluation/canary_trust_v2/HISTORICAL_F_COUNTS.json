@@ -1,0 +1,1801 @@
+{
+  "version": "historical-f-raw/1.0",
+  "source_sha256": "445acf1d43a8aad4711697371f005b302f02af45fe793169b944237d9e775709",
+  "archive_sha256": "61d2c582df96d1e0f399ac06128f4cfd8e231c2e9ce0bf5440cc9e707711d5ac",
+  "counts": {
+    "A": {
+      "f_calls": 3,
+      "raw_claims": 6,
+      "raw_tasks": 6,
+      "raw_decisions": 0,
+      "raw_types": {
+        "PLAN": 6
+      }
+    },
+    "B": {
+      "f_calls": 14,
+      "raw_claims": 13,
+      "raw_tasks": 13,
+      "raw_decisions": 0,
+      "raw_types": {
+        "PLAN": 11,
+        "ACTION": 2
+      }
+    },
+    "D": {
+      "f_calls": 2,
+      "raw_claims": 3,
+      "raw_tasks": 3,
+      "raw_decisions": 0,
+      "raw_types": {
+        "PLAN": 3
+      }
+    }
+  },
+  "calls": {
+    "A": [
+      {
+        "root": "work/cloud-credit-sprint-20261023/batch-a",
+        "sequence": 1,
+        "model": "gemini-3.8-flash",
+        "response_id": "qDzaavPvEYKEytMP5NGGmQQ",
+        "claims": [
+          {
+            "claim_type": "PLAN",
+            "valid_from": null,
+            "relation": null,
+            "value": null,
+            "valid_to": null,
+            "subject": null,
+            "confidence": {
+              "claim_type": 0.95,
+              "overall": 0.95,
+              "entity": 0.95,
+              "relation": 0.95,
+              "temporal": 0.95
+            },
+            "task": {
+              "text": "晓汀项目的上线核查交给闻夏来掌舵，交付锁定2034-02-16。",
+              "vendor": null,
+              "deadline_text": "2034-02-16",
+              "project": "晓汀",
+              "description_parts": [
+                "上线核查"
+              ],
+              "field_bindings": [
+                {
+                  "quote": "交给闻夏来掌舵",
+                  "role": "CURRENT_OWNER",
+                  "message_ordinal": 0,
+                  "state": "ASSERTED",
+                  "basis": "SOURCE_TEXT",
+                  "value": "闻夏",
+                  "task_quote": "上线核查",
+                  "field": "owner"
+                },
+                {
+                  "task_quote": "上线核查",
+                  "role": "TASK_DEADLINE",
+                  "field": "deadline",
+                  "basis": "SOURCE_TEXT",
+                  "value": "2034-02-16",
+                  "state": "ASSERTED",
+                  "quote": "交付锁定2034-02-16",
+                  "message_ordinal": 0
+                },
+                {
+                  "message_ordinal": 0,
+                  "role": "TASK_PROJECT",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "value": "晓汀",
+                  "state": "ASSERTED",
+                  "task_quote": "上线核查",
+                  "quote": "晓汀项目的上线核查"
+                },
+                {
+                  "task_quote": "上线核查",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "field": "vendor",
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "message_ordinal": 0,
+                  "state": "NOT_STATED"
+                }
+              ],
+              "owner": "闻夏",
+              "work_state": "ASSERTED"
+            },
+            "temporal_status": "NOT_STATED"
+          },
+          {
+            "valid_from": null,
+            "claim_type": "PLAN",
+            "valid_to": null,
+            "value": null,
+            "task": {
+              "project": null,
+              "deadline_text": "2034-02-20",
+              "work_state": "ASSERTED",
+              "owner": "闻夏",
+              "field_bindings": [
+                {
+                  "message_ordinal": 1,
+                  "basis": "SOURCE_TEXT",
+                  "value": "闻夏",
+                  "role": "CURRENT_OWNER",
+                  "field": "owner",
+                  "quote": "仍由闻夏接着做",
+                  "task_quote": "上线核查",
+                  "state": "ASSERTED"
+                },
+                {
+                  "message_ordinal": 1,
+                  "state": "ASSERTED",
+                  "quote": "交付这一栏现填2034-02-20",
+                  "task_quote": "上线核查",
+                  "field": "deadline",
+                  "basis": "SOURCE_TEXT",
+                  "value": "2034-02-20",
+                  "role": "TASK_DEADLINE"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "message_ordinal": 1,
+                  "task_quote": "上线核查",
+                  "role": "UNKNOWN"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "message_ordinal": 1,
+                  "field": "vendor",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "task_quote": "上线核查"
+                }
+              ],
+              "description_parts": [
+                "上线核查"
+              ],
+              "text": "上次的上线核查仍由闻夏接着做。交付这一栏现填2034-02-20，原来2034-02-16的那档安排取消；本条接续前场的核查工作。",
+              "vendor": null
+            },
+            "relation": null,
+            "confidence": {
+              "temporal": 0.95,
+              "claim_type": 0.95,
+              "relation": 0.95,
+              "entity": 0.95,
+              "overall": 0.95
+            },
+            "temporal_status": "NOT_STATED",
+            "subject": null
+          }
+        ],
+        "evidence": {
+          "bytes": 9440,
+          "member": "work/cloud-credit-sprint-20261023/batch-a/wire/001-response.json",
+          "sha256": "ef25da09204748139f551ab4af2c58c88bfa649e6581455dca034708551f2efd"
+        }
+      },
+      {
+        "root": "work/cloud-credit-sprint-20261023/batch-a",
+        "sequence": 8,
+        "model": "gemini-3.8-flash",
+        "response_id": "0Tzaapm7NoCfuMYPydK7qQk",
+        "claims": [
+          {
+            "valid_from": null,
+            "temporal_status": "NOT_STATED",
+            "confidence": {
+              "claim_type": 0.95,
+              "overall": 0.92,
+              "relation": 0.9,
+              "entity": 0.9,
+              "temporal": 0.9
+            },
+            "subject": null,
+            "relation": null,
+            "claim_type": "PLAN",
+            "task": {
+              "project": "棠原项目",
+              "text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "task_quote": "页面巡检已经列入本轮工作",
+                  "message_ordinal": 0,
+                  "state": "AMBIGUOUS",
+                  "value": null,
+                  "role": "OTHER",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "quote": "韩桥只负责报进度，实际执行人尚未定"
+                },
+                {
+                  "quote": "交付日期尚无约定",
+                  "field": "deadline",
+                  "basis": "SOURCE_TEXT",
+                  "role": "TASK_DEADLINE",
+                  "message_ordinal": 0,
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "task_quote": "页面巡检已经列入本轮工作"
+                },
+                {
+                  "task_quote": "页面巡检已经列入本轮工作",
+                  "message_ordinal": 0,
+                  "state": "ASSERTED",
+                  "value": "棠原项目",
+                  "role": "TASK_PROJECT",
+                  "quote": "棠原项目的页面巡检",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "field": "vendor",
+                  "quote": "",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0,
+                  "task_quote": "页面巡检已经列入本轮工作"
+                }
+              ],
+              "description_parts": [
+                "页面巡检已经列入本轮工作"
+              ],
+              "work_state": "ASSERTED",
+              "owner": null,
+              "deadline_text": null
+            },
+            "value": null,
+            "valid_to": null
+          },
+          {
+            "subject": null,
+            "relation": null,
+            "temporal_status": "NOT_STATED",
+            "task": {
+              "work_state": "ASSERTED",
+              "owner": null,
+              "description_parts": [
+                "巡检任务本身照常推进"
+              ],
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "task_quote": "巡检任务本身照常推进",
+                  "message_ordinal": 1,
+                  "state": "AMBIGUOUS",
+                  "value": null,
+                  "role": "CANDIDATE_OWNER",
+                  "quote": "页面巡检这件事待确认由韩桥还是易秋执行",
+                  "field": "owner",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "state": "AMBIGUOUS",
+                  "value": null,
+                  "task_quote": "巡检任务本身照常推进",
+                  "role": "TASK_DEADLINE",
+                  "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                  "field": "deadline",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1
+                },
+                {
+                  "message_ordinal": 1,
+                  "basis": "SOURCE_TEXT",
+                  "field": "project",
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "task_quote": "巡检任务本身照常推进"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "task_quote": "巡检任务本身照常推进",
+                  "role": "UNKNOWN",
+                  "quote": "",
+                  "field": "vendor",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1
+                }
+              ],
+              "deadline_text": null,
+              "project": null,
+              "text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。"
+            },
+            "claim_type": "PLAN",
+            "value": null,
+            "valid_to": null,
+            "confidence": {
+              "entity": 0.9,
+              "relation": 0.9,
+              "temporal": 0.9,
+              "overall": 0.92,
+              "claim_type": 0.95
+            },
+            "valid_from": null
+          }
+        ],
+        "evidence": {
+          "bytes": 9822,
+          "member": "work/cloud-credit-sprint-20261023/batch-a/wire/008-response.json",
+          "sha256": "76983a64295bc73c8648227ccef4d3bcbdadd986b44170128edc34f3a710c47b"
+        }
+      },
+      {
+        "root": "work/cloud-credit-sprint-20261023/a3",
+        "sequence": 1,
+        "model": "gemini-3.8-flash",
+        "response_id": "qT3aaoSDBa6tuMYPsKf8yAs",
+        "claims": [
+          {
+            "subject": null,
+            "valid_from": null,
+            "relation": null,
+            "value": null,
+            "claim_type": "PLAN",
+            "confidence": {
+              "overall": 0.92,
+              "claim_type": 0.95,
+              "temporal": 0.9,
+              "relation": 0.9,
+              "entity": 0.9
+            },
+            "task": {
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "message_ordinal": 0,
+                  "field": "owner",
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "quote": "实际执行人尚未定",
+                  "task_quote": "页面巡检",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN"
+                },
+                {
+                  "role": "UNKNOWN",
+                  "message_ordinal": 0,
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "页面巡检",
+                  "value": null,
+                  "quote": "交付日期尚无约定",
+                  "field": "deadline",
+                  "state": "NOT_STATED"
+                },
+                {
+                  "field": "project",
+                  "state": "ASSERTED",
+                  "message_ordinal": 0,
+                  "quote": "棠原项目的页面巡检",
+                  "value": "棠原",
+                  "task_quote": "页面巡检",
+                  "basis": "SOURCE_TEXT",
+                  "role": "TASK_PROJECT"
+                },
+                {
+                  "message_ordinal": 0,
+                  "task_quote": "页面巡检",
+                  "role": "UNKNOWN",
+                  "field": "vendor",
+                  "state": "NOT_STATED",
+                  "quote": "",
+                  "value": null,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "text": "棠原项目的页面巡检已经列入本轮工作，韩桥只负责报进度，实际执行人尚未定。2034-03-05是讨论会议日期，交付日期尚无约定。",
+              "work_state": "ASSERTED",
+              "owner": null,
+              "deadline_text": null,
+              "project": "棠原",
+              "description_parts": [
+                "页面巡检"
+              ]
+            },
+            "temporal_status": "NOT_STATED",
+            "valid_to": null
+          },
+          {
+            "valid_from": null,
+            "value": null,
+            "task": {
+              "project": null,
+              "deadline_text": null,
+              "description_parts": [
+                "页面巡检"
+              ],
+              "text": "页面巡检这件事待确认由韩桥还是易秋执行；交付也有2034-03-12和2034-03-15两种说法，均未定案。只是讨论选项，巡检任务本身照常推进。",
+              "work_state": "ASSERTED",
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "field": "owner",
+                  "state": "AMBIGUOUS",
+                  "role": "CANDIDATE_OWNER",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1,
+                  "task_quote": "页面巡检",
+                  "value": null,
+                  "quote": "页面巡检这件事待确认由韩桥还是易秋执行"
+                },
+                {
+                  "value": null,
+                  "quote": "交付也有2034-03-12和2034-03-15两种说法，均未定案",
+                  "task_quote": "页面巡检",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1,
+                  "field": "deadline",
+                  "state": "AMBIGUOUS",
+                  "role": "TASK_DEADLINE"
+                },
+                {
+                  "message_ordinal": 1,
+                  "task_quote": "页面巡检",
+                  "value": null,
+                  "quote": "",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "field": "project",
+                  "state": "NOT_STATED"
+                },
+                {
+                  "message_ordinal": 1,
+                  "field": "vendor",
+                  "state": "NOT_STATED",
+                  "value": null,
+                  "quote": "",
+                  "task_quote": "页面巡检",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN"
+                }
+              ],
+              "owner": null
+            },
+            "subject": null,
+            "claim_type": "PLAN",
+            "valid_to": null,
+            "confidence": {
+              "entity": 0.9,
+              "temporal": 0.9,
+              "relation": 0.9,
+              "claim_type": 0.95,
+              "overall": 0.92
+            },
+            "temporal_status": "NOT_STATED",
+            "relation": null
+          }
+        ],
+        "evidence": {
+          "bytes": 9569,
+          "member": "work/cloud-credit-sprint-20261023/a3/wire/001-response.json",
+          "sha256": "9f6cda46c1d436510908c52e7e979ff7f7d3d74825e29603464a533eb2b981ed"
+        }
+      }
+    ],
+    "B": [
+      {
+        "root": "work/ce-b-20261023-tls-recheck",
+        "sequence": 1,
+        "model": "gemini-3.8-flash",
+        "response_id": "WqXaapWnEaW2uMYPoa__mAQ",
+        "claims": [
+          {
+            "temporal_status": "NOT_STATED",
+            "confidence": {
+              "relation": 0.95,
+              "temporal": 0.95,
+              "overall": 0.95,
+              "entity": 0.95,
+              "claim_type": 0.95
+            },
+            "subject": null,
+            "claim_type": "PLAN",
+            "relation": null,
+            "value": null,
+            "task": {
+              "vendor": null,
+              "text": "黎舟负责完成缓存迁移，并由孟岚验证恢复流程；两项均在2038-05-20前提交。",
+              "owner": "黎舟",
+              "description_parts": [
+                "完成缓存迁移"
+              ],
+              "project": null,
+              "work_state": "ASSERTED",
+              "deadline_text": "2038-05-20",
+              "field_bindings": [
+                {
+                  "field": "owner",
+                  "task_quote": "完成缓存迁移",
+                  "basis": "SOURCE_TEXT",
+                  "state": "ASSERTED",
+                  "message_ordinal": 0,
+                  "value": "黎舟",
+                  "quote": "黎舟负责完成缓存迁移",
+                  "role": "CURRENT_OWNER"
+                },
+                {
+                  "message_ordinal": 0,
+                  "role": "TASK_DEADLINE",
+                  "quote": "在2038-05-20前提交",
+                  "task_quote": "完成缓存迁移",
+                  "value": "2038-05-20",
+                  "state": "ASSERTED",
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline"
+                },
+                {
+                  "value": null,
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "完成缓存迁移",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "field": "vendor",
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "quote": "",
+                  "message_ordinal": 0,
+                  "value": null,
+                  "task_quote": "完成缓存迁移"
+                }
+              ]
+            },
+            "valid_from": null,
+            "valid_to": null
+          },
+          {
+            "subject": null,
+            "claim_type": "PLAN",
+            "valid_to": null,
+            "task": {
+              "owner": "孟岚",
+              "text": "黎舟负责完成缓存迁移，并由孟岚验证恢复流程；两项均在2038-05-20前提交。",
+              "vendor": null,
+              "project": null,
+              "description_parts": [
+                "验证恢复流程"
+              ],
+              "deadline_text": "2038-05-20",
+              "work_state": "ASSERTED",
+              "field_bindings": [
+                {
+                  "state": "ASSERTED",
+                  "field": "owner",
+                  "role": "CURRENT_OWNER",
+                  "basis": "SOURCE_TEXT",
+                  "quote": "由孟岚验证恢复流程",
+                  "task_quote": "验证恢复流程",
+                  "value": "孟岚",
+                  "message_ordinal": 0
+                },
+                {
+                  "state": "ASSERTED",
+                  "field": "deadline",
+                  "message_ordinal": 0,
+                  "basis": "SOURCE_TEXT",
+                  "role": "TASK_DEADLINE",
+                  "task_quote": "验证恢复流程",
+                  "quote": "两项均在2038-05-20前提交",
+                  "value": "2038-05-20"
+                },
+                {
+                  "quote": "",
+                  "message_ordinal": 0,
+                  "value": null,
+                  "state": "NOT_STATED",
+                  "task_quote": "验证恢复流程",
+                  "basis": "SOURCE_TEXT",
+                  "field": "project",
+                  "role": "UNKNOWN"
+                },
+                {
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "task_quote": "验证恢复流程",
+                  "basis": "SOURCE_TEXT",
+                  "field": "vendor"
+                }
+              ]
+            },
+            "confidence": {
+              "claim_type": 0.95,
+              "entity": 0.95,
+              "overall": 0.95,
+              "relation": 0.95,
+              "temporal": 0.95
+            },
+            "relation": null,
+            "valid_from": null,
+            "value": null,
+            "temporal_status": "NOT_STATED"
+          },
+          {
+            "task": {
+              "project": null,
+              "vendor": null,
+              "text": "搜索索引重建确定照常做，负责人尚未敲定，完成日期也未约定。",
+              "description_parts": [
+                "搜索索引重建"
+              ],
+              "owner": null,
+              "work_state": "ASSERTED",
+              "deadline_text": null,
+              "field_bindings": [
+                {
+                  "role": "UNKNOWN",
+                  "quote": "负责人尚未敲定",
+                  "message_ordinal": 1,
+                  "value": null,
+                  "state": "NOT_STATED",
+                  "task_quote": "搜索索引重建",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner"
+                },
+                {
+                  "message_ordinal": 1,
+                  "quote": "完成日期也未约定",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "field": "deadline",
+                  "task_quote": "搜索索引重建",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "quote": "",
+                  "task_quote": "搜索索引重建",
+                  "value": null,
+                  "message_ordinal": 1
+                },
+                {
+                  "field": "vendor",
+                  "task_quote": "搜索索引重建",
+                  "message_ordinal": 1,
+                  "basis": "SOURCE_TEXT",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "quote": ""
+                }
+              ]
+            },
+            "confidence": {
+              "claim_type": 0.9,
+              "temporal": 0.9,
+              "entity": 0.9,
+              "relation": 0.9,
+              "overall": 0.9
+            },
+            "claim_type": "PLAN",
+            "relation": null,
+            "valid_from": null,
+            "value": null,
+            "subject": null,
+            "temporal_status": "NOT_STATED",
+            "valid_to": null
+          },
+          {
+            "confidence": {
+              "entity": 0.95,
+              "relation": 0.95,
+              "claim_type": 0.95,
+              "temporal": 0.95,
+              "overall": 0.95
+            },
+            "subject": null,
+            "temporal_status": "NOT_STATED",
+            "claim_type": "PLAN",
+            "valid_to": null,
+            "value": null,
+            "task": {
+              "vendor": null,
+              "owner": "许诺",
+              "deadline_text": "2038-06-14",
+              "work_state": "ASSERTED",
+              "description_parts": [
+                "证书轮换"
+              ],
+              "text": "明辰负责的证书轮换现转由许诺接手，明辰只继续提供资料；交付日改为2038-06-14。",
+              "project": null,
+              "field_bindings": [
+                {
+                  "quote": "现转由许诺接手",
+                  "role": "CURRENT_OWNER",
+                  "value": "许诺",
+                  "state": "ASSERTED",
+                  "task_quote": "证书轮换",
+                  "message_ordinal": 2,
+                  "field": "owner",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "field": "deadline",
+                  "basis": "SOURCE_TEXT",
+                  "role": "TASK_DEADLINE",
+                  "state": "ASSERTED",
+                  "value": "2038-06-14",
+                  "task_quote": "证书轮换",
+                  "message_ordinal": 2,
+                  "quote": "交付日改为2038-06-14"
+                },
+                {
+                  "message_ordinal": 2,
+                  "quote": "",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "field": "project",
+                  "task_quote": "证书轮换",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "quote": "",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "task_quote": "证书轮换",
+                  "message_ordinal": 2,
+                  "state": "NOT_STATED",
+                  "field": "vendor",
+                  "basis": "SOURCE_TEXT"
+                }
+              ]
+            },
+            "valid_from": null,
+            "relation": null
+          },
+          {
+            "valid_from": null,
+            "relation": null,
+            "temporal_status": "NOT_STATED",
+            "valid_to": null,
+            "confidence": {
+              "claim_type": 0.9,
+              "overall": 0.9,
+              "temporal": 0.9,
+              "relation": 0.9,
+              "entity": 0.9
+            },
+            "subject": null,
+            "task": {
+              "vendor": null,
+              "text": "温禾承接镜像同步，下周五前交付，具体是哪天未写明。",
+              "owner": "温禾",
+              "description_parts": [
+                "镜像同步"
+              ],
+              "field_bindings": [
+                {
+                  "value": "温禾",
+                  "task_quote": "镜像同步",
+                  "quote": "温禾承接镜像同步",
+                  "role": "CURRENT_OWNER",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "state": "ASSERTED",
+                  "message_ordinal": 3
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "task_quote": "镜像同步",
+                  "quote": "下周五前交付，具体是哪天未写明",
+                  "message_ordinal": 3
+                },
+                {
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "task_quote": "镜像同步",
+                  "message_ordinal": 3,
+                  "state": "NOT_STATED",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "quote": "",
+                  "message_ordinal": 3,
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "镜像同步",
+                  "field": "vendor",
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "work_state": "ASSERTED",
+              "deadline_text": null,
+              "project": null
+            },
+            "claim_type": "PLAN",
+            "value": null
+          }
+        ],
+        "evidence": {
+          "bytes": 18814,
+          "member": "work/ce-b-20261023-tls-recheck/wire/001-response.json",
+          "sha256": "873cca842c32d703209199090832f5a14421a4aa4557fb0271db9db466b85125"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 1,
+        "model": "gemini-3.8-flash",
+        "response_id": "5KPaatzqL7qPytMP3oPO8Qs",
+        "claims": [
+          {
+            "relation": null,
+            "valid_to": null,
+            "confidence": {
+              "relation": 0.95,
+              "overall": 0.95,
+              "entity": 0.95,
+              "temporal": 0.95,
+              "claim_type": 0.95
+            },
+            "value": null,
+            "subject": null,
+            "temporal_status": "NOT_STATED",
+            "claim_type": "PLAN",
+            "valid_from": null,
+            "task": {
+              "text": "许诺负责完成证书盘点，2038-06-20前交齐",
+              "description_parts": [
+                "完成证书盘点"
+              ],
+              "project": null,
+              "vendor": null,
+              "owner": "许诺",
+              "field_bindings": [
+                {
+                  "message_ordinal": 0,
+                  "task_quote": "完成证书盘点",
+                  "state": "ASSERTED",
+                  "role": "CURRENT_OWNER",
+                  "field": "owner",
+                  "quote": "许诺负责完成证书盘点",
+                  "value": "许诺",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "role": "TASK_DEADLINE",
+                  "state": "ASSERTED",
+                  "message_ordinal": 0,
+                  "task_quote": "完成证书盘点",
+                  "quote": "2038-06-20前交齐",
+                  "field": "deadline",
+                  "value": "2038-06-20",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "quote": "",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "完成证书盘点",
+                  "value": null,
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN"
+                },
+                {
+                  "task_quote": "完成证书盘点",
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "field": "vendor",
+                  "quote": "",
+                  "value": null,
+                  "basis": "SOURCE_TEXT"
+                }
+              ],
+              "deadline_text": "2038-06-20",
+              "work_state": "ASSERTED"
+            }
+          },
+          {
+            "confidence": {
+              "temporal": 0.95,
+              "relation": 0.95,
+              "claim_type": 0.95,
+              "overall": 0.95,
+              "entity": 0.95
+            },
+            "temporal_status": "NOT_STATED",
+            "value": null,
+            "task": {
+              "deadline_text": null,
+              "vendor": null,
+              "text": "回滚演练确定执行；执行人和截止日均暂缺",
+              "project": null,
+              "work_state": "ASSERTED",
+              "field_bindings": [
+                {
+                  "message_ordinal": 1,
+                  "task_quote": "回滚演练",
+                  "quote": "执行人和截止日均暂缺",
+                  "field": "owner",
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "task_quote": "回滚演练",
+                  "message_ordinal": 1,
+                  "role": "UNKNOWN",
+                  "quote": "执行人和截止日均暂缺",
+                  "field": "deadline",
+                  "value": null,
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "task_quote": "回滚演练",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "message_ordinal": 1,
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "field": "project",
+                  "quote": ""
+                },
+                {
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1,
+                  "field": "vendor",
+                  "quote": "",
+                  "task_quote": "回滚演练",
+                  "state": "NOT_STATED"
+                }
+              ],
+              "description_parts": [
+                "回滚演练"
+              ],
+              "owner": null
+            },
+            "valid_from": null,
+            "claim_type": "PLAN",
+            "subject": null,
+            "relation": null,
+            "valid_to": null
+          },
+          {
+            "valid_to": null,
+            "relation": null,
+            "claim_type": "PLAN",
+            "value": null,
+            "valid_from": null,
+            "confidence": {
+              "temporal": 0.95,
+              "overall": 0.95,
+              "claim_type": 0.95,
+              "relation": 0.95,
+              "entity": 0.95
+            },
+            "temporal_status": "NOT_STATED",
+            "subject": null,
+            "task": {
+              "text": "雁栖项目：韩枫负责上线核查，2038-07-02交付",
+              "description_parts": [
+                "上线核查"
+              ],
+              "project": "雁栖项目",
+              "work_state": "ASSERTED",
+              "deadline_text": "2038-07-02",
+              "field_bindings": [
+                {
+                  "role": "CURRENT_OWNER",
+                  "value": "韩枫",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "quote": "韩枫负责上线核查",
+                  "message_ordinal": 2,
+                  "task_quote": "上线核查",
+                  "state": "ASSERTED"
+                },
+                {
+                  "value": "2038-07-02",
+                  "role": "TASK_DEADLINE",
+                  "task_quote": "上线核查",
+                  "basis": "SOURCE_TEXT",
+                  "quote": "2038-07-02交付",
+                  "field": "deadline",
+                  "message_ordinal": 2,
+                  "state": "ASSERTED"
+                },
+                {
+                  "role": "TASK_PROJECT",
+                  "message_ordinal": 2,
+                  "state": "ASSERTED",
+                  "task_quote": "上线核查",
+                  "value": "雁栖项目",
+                  "basis": "SOURCE_TEXT",
+                  "quote": "雁栖项目：韩枫负责上线核查",
+                  "field": "project"
+                },
+                {
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "上线核查",
+                  "quote": "",
+                  "field": "vendor",
+                  "message_ordinal": 2,
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED"
+                }
+              ],
+              "vendor": null,
+              "owner": "韩枫"
+            }
+          },
+          {
+            "temporal_status": "NOT_STATED",
+            "confidence": {
+              "temporal": 0.95,
+              "entity": 0.95,
+              "claim_type": 0.95,
+              "overall": 0.95,
+              "relation": 0.95
+            },
+            "subject": null,
+            "valid_from": null,
+            "claim_type": "PLAN",
+            "value": null,
+            "valid_to": null,
+            "relation": null,
+            "task": {
+              "project": "青禾项目",
+              "text": "青禾项目：韩枫负责上线核查，2038-07-02交付",
+              "deadline_text": "2038-07-02",
+              "owner": "韩枫",
+              "work_state": "ASSERTED",
+              "vendor": null,
+              "description_parts": [
+                "上线核查"
+              ],
+              "field_bindings": [
+                {
+                  "quote": "韩枫负责上线核查",
+                  "field": "owner",
+                  "value": "韩枫",
+                  "basis": "SOURCE_TEXT",
+                  "state": "ASSERTED",
+                  "task_quote": "上线核查",
+                  "role": "CURRENT_OWNER",
+                  "message_ordinal": 3
+                },
+                {
+                  "state": "ASSERTED",
+                  "message_ordinal": 3,
+                  "role": "TASK_DEADLINE",
+                  "field": "deadline",
+                  "quote": "2038-07-02交付",
+                  "task_quote": "上线核查",
+                  "value": "2038-07-02",
+                  "basis": "SOURCE_TEXT"
+                },
+                {
+                  "message_ordinal": 3,
+                  "role": "TASK_PROJECT",
+                  "state": "ASSERTED",
+                  "task_quote": "上线核查",
+                  "field": "project",
+                  "quote": "青禾项目：韩枫负责上线核查",
+                  "basis": "SOURCE_TEXT",
+                  "value": "青禾项目"
+                },
+                {
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "上线核查",
+                  "message_ordinal": 3,
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "quote": "",
+                  "field": "vendor"
+                }
+              ]
+            }
+          }
+        ],
+        "evidence": {
+          "bytes": 15591,
+          "member": "work/ce-b-20261023-unattempted/wire/001-response.json",
+          "sha256": "6784330a3ecbe53badc8fe2a254f9f784f5e2c5c46d511524f0bb4883203f674"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 2,
+        "model": "gemini-3.8-flash",
+        "response_id": "76PaauKcN6-iytMP2ryW4As",
+        "claims": [],
+        "evidence": {
+          "bytes": 3076,
+          "member": "work/ce-b-20261023-unattempted/wire/002-response.json",
+          "sha256": "3c3f6e5b417865f82973b2f04808cb46d978ee62566762e64d204a7ada315033"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 3,
+        "model": "gemini-3.8-flash",
+        "response_id": "86PaapubINubo_UP4uPOuAQ",
+        "claims": [],
+        "evidence": {
+          "bytes": 3078,
+          "member": "work/ce-b-20261023-unattempted/wire/003-response.json",
+          "sha256": "d2971863b8cf6a3aa1fd862365e23a864e9824999005f30283a55afe55e62ae2"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 4,
+        "model": "gemini-3.8-flash",
+        "response_id": "9qPaapDTEs6G1sgPsICWwQw",
+        "claims": [],
+        "evidence": {
+          "bytes": 3078,
+          "member": "work/ce-b-20261023-unattempted/wire/004-response.json",
+          "sha256": "4327adc8a3dda4d61a1589f7c02df30dfbdbdaf8695c40d33733d641e371b8c1"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 5,
+        "model": "gemini-3.8-flash",
+        "response_id": "-aPaaqHtDfbnytMP_IqnOA",
+        "claims": [],
+        "evidence": {
+          "bytes": 3077,
+          "member": "work/ce-b-20261023-unattempted/wire/005-response.json",
+          "sha256": "95db51e61f03aa118489946d6628087bb7e78c1f4ff014da1558d1874169b131"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 6,
+        "model": "gemini-3.8-flash",
+        "response_id": "_KPaarjAKvfdytMPnqGD0Qs",
+        "claims": [],
+        "evidence": {
+          "bytes": 3078,
+          "member": "work/ce-b-20261023-unattempted/wire/006-response.json",
+          "sha256": "664d205c2109948166235c3c058952e4c762a5956b42162a3dfea4c090505873"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 7,
+        "model": "gemini-3.8-flash",
+        "response_id": "_6PaapDRLrfgytMPueiF2As",
+        "claims": [],
+        "evidence": {
+          "bytes": 3077,
+          "member": "work/ce-b-20261023-unattempted/wire/007-response.json",
+          "sha256": "e0471aec7317623fce82506b5e14191d4d702bd56910c6041ecde7f2800dd54b"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 8,
+        "model": "gemini-3.8-flash",
+        "response_id": "AqTaarmJM_7bytMPjdjXiQg",
+        "claims": [
+          {
+            "temporal_status": "NOT_STATED",
+            "value": null,
+            "confidence": {
+              "entity": 0.8,
+              "overall": 0.85,
+              "relation": 0.8,
+              "claim_type": 0.95,
+              "temporal": 0.8
+            },
+            "claim_type": "ACTION",
+            "valid_from": null,
+            "relation": null,
+            "task": {
+              "description_parts": [
+                "working on you know the actual working design of it"
+              ],
+              "project": null,
+              "work_state": "ASSERTED",
+              "deadline_text": null,
+              "vendor": null,
+              "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "field_bindings": [
+                {
+                  "state": "ASSERTED",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "value": "industrial designer",
+                  "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+                  "task_quote": "working on you know the actual working design of it",
+                  "role": "CURRENT_OWNER",
+                  "message_ordinal": 0
+                },
+                {
+                  "quote": "",
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "task_quote": "working on you know the actual working design of it",
+                  "value": null
+                },
+                {
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "field": "project",
+                  "state": "NOT_STATED",
+                  "task_quote": "working on you know the actual working design of it",
+                  "quote": ""
+                },
+                {
+                  "state": "NOT_STATED",
+                  "field": "vendor",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "task_quote": "working on you know the actual working design of it",
+                  "role": "UNKNOWN"
+                }
+              ],
+              "owner": "industrial designer"
+            },
+            "valid_to": null,
+            "subject": null
+          },
+          {
+            "value": null,
+            "claim_type": "ACTION",
+            "confidence": {
+              "temporal": 0.8,
+              "entity": 0.8,
+              "relation": 0.8,
+              "overall": 0.85,
+              "claim_type": 0.9
+            },
+            "temporal_status": "NOT_STATED",
+            "subject": null,
+            "valid_to": null,
+            "task": {
+              "work_state": "ASSERTED",
+              "owner": "marketing executive",
+              "project": null,
+              "text": "Um and uh marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "vendor": null,
+              "field_bindings": [
+                {
+                  "message_ordinal": 0,
+                  "quote": "marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "role": "CURRENT_OWNER",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "value": "marketing executive",
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "state": "ASSERTED"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline",
+                  "value": null,
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "field": "project",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "quote": "",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "basis": "SOURCE_TEXT",
+                  "field": "vendor",
+                  "value": null,
+                  "quote": "",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+                }
+              ],
+              "description_parts": [
+                "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+              ],
+              "deadline_text": null
+            },
+            "relation": null,
+            "valid_from": null
+          }
+        ],
+        "evidence": {
+          "bytes": 10170,
+          "member": "work/ce-b-20261023-unattempted/wire/008-response.json",
+          "sha256": "be1111117f1167252b3400b3daa87b3511ef2a5bea53793904c1957f526079f2"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 9,
+        "model": "gemini-3.8-flash",
+        "response_id": "CaTaaoOmMYaiuMYPtYmy2AQ",
+        "claims": [],
+        "evidence": {
+          "bytes": 3077,
+          "member": "work/ce-b-20261023-unattempted/wire/009-response.json",
+          "sha256": "dcdb56a5c7639f0e7c179d56769ddb98bc0f256a3fbf590a361a26f75df66b8d"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 10,
+        "model": "gemini-3.8-flash",
+        "response_id": "DaTaaqTkCO6PytMPkoWE-Qs",
+        "claims": [],
+        "evidence": {
+          "bytes": 3077,
+          "member": "work/ce-b-20261023-unattempted/wire/010-response.json",
+          "sha256": "e436a193ab1dd1ba1857ebdc399953b82a788b870a97682daa1252d4a810cb11"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 11,
+        "model": "gemini-3.8-flash",
+        "response_id": "EaTaav7fCY3gytMPo-z84Aw",
+        "claims": [],
+        "evidence": {
+          "bytes": 3077,
+          "member": "work/ce-b-20261023-unattempted/wire/011-response.json",
+          "sha256": "601a5d28ae2bdca3263857776853d3889edfa340ca42de594064ea638cf5de9a"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 12,
+        "model": "gemini-3.8-flash",
+        "response_id": "E6Taat2vNo6OytMPjpy52Qs",
+        "claims": [],
+        "evidence": {
+          "bytes": 3078,
+          "member": "work/ce-b-20261023-unattempted/wire/012-response.json",
+          "sha256": "244285f2f05499695c063b850ac91578e9ae56c155d07d31ff531feb2b6de7ef"
+        }
+      },
+      {
+        "root": "work/ce-b-20261023-unattempted",
+        "sequence": 13,
+        "model": "gemini-3.8-flash",
+        "response_id": "GqTaapzlGaLKytMP6qqY2As",
+        "claims": [
+          {
+            "value": null,
+            "valid_to": null,
+            "relation": null,
+            "subject": null,
+            "temporal_status": "NOT_STATED",
+            "valid_from": null,
+            "task": {
+              "vendor": null,
+              "project": null,
+              "field_bindings": [
+                {
+                  "state": "NOT_STATED",
+                  "field": "owner",
+                  "quote": "承办人和交付日仍未确定",
+                  "task_quote": "语料清点",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "value": null
+                },
+                {
+                  "quote": "承办人和交付日仍未确定",
+                  "field": "deadline",
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "task_quote": "语料清点"
+                },
+                {
+                  "quote": "",
+                  "field": "project",
+                  "state": "NOT_STATED",
+                  "task_quote": "语料清点",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "value": null
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "field": "vendor",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "语料清点"
+                }
+              ],
+              "owner": null,
+              "text": "语料清点确定执行，承办人和交付日仍未确定。",
+              "deadline_text": null,
+              "work_state": "ASSERTED",
+              "description_parts": [
+                "语料清点"
+              ]
+            },
+            "confidence": {
+              "claim_type": 0.95,
+              "relation": 0.9,
+              "entity": 0.9,
+              "temporal": 0.9,
+              "overall": 0.95
+            },
+            "claim_type": "PLAN"
+          },
+          {
+            "temporal_status": "NOT_STATED",
+            "value": null,
+            "valid_from": null,
+            "confidence": {
+              "relation": 0.9,
+              "entity": 0.9,
+              "temporal": 0.9,
+              "overall": 0.95,
+              "claim_type": 0.95
+            },
+            "claim_type": "PLAN",
+            "task": {
+              "project": null,
+              "work_state": "ASSERTED",
+              "owner": null,
+              "text": "接续前场的语料清点继续推进，负责人和交付日期依然未定。",
+              "field_bindings": [
+                {
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "task_quote": "语料清点",
+                  "message_ordinal": 1,
+                  "state": "NOT_STATED",
+                  "field": "owner",
+                  "quote": "负责人和交付日期依然未定"
+                },
+                {
+                  "message_ordinal": 1,
+                  "state": "NOT_STATED",
+                  "quote": "负责人和交付日期依然未定",
+                  "field": "deadline",
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "语料清点"
+                },
+                {
+                  "value": null,
+                  "task_quote": "语料清点",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "message_ordinal": 1,
+                  "state": "NOT_STATED",
+                  "field": "project",
+                  "quote": ""
+                },
+                {
+                  "task_quote": "语料清点",
+                  "quote": "",
+                  "field": "vendor",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "message_ordinal": 1,
+                  "value": null
+                }
+              ],
+              "description_parts": [
+                "语料清点"
+              ],
+              "vendor": null,
+              "deadline_text": null
+            },
+            "valid_to": null,
+            "relation": null,
+            "subject": null
+          }
+        ],
+        "evidence": {
+          "bytes": 9287,
+          "member": "work/ce-b-20261023-unattempted/wire/013-response.json",
+          "sha256": "10b17ea854f3594242d757bc9b8338da708ac9097153e662fc2f000789ce1a98"
+        }
+      }
+    ],
+    "D": [
+      {
+        "root": "work/ce-d-20261023-parameter-repair",
+        "sequence": 1,
+        "model": "gemini-4-argon",
+        "response_id": "gajaav3PFPfdytMPnqGD0Qs",
+        "claims": [
+          {
+            "valid_to": null,
+            "confidence": {
+              "temporal": 0.8,
+              "relation": 0.8,
+              "entity": 0.9,
+              "claim_type": 0.9,
+              "overall": 0.9
+            },
+            "value": null,
+            "claim_type": "PLAN",
+            "valid_from": null,
+            "task": {
+              "owner": "industrial designer",
+              "deadline_text": null,
+              "description_parts": [
+                "working on you know the actual working design of it"
+              ],
+              "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "field_bindings": [
+                {
+                  "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+                  "field": "owner",
+                  "value": "industrial designer",
+                  "task_quote": "working on you know the actual working design of it",
+                  "role": "CURRENT_OWNER",
+                  "basis": "SOURCE_TEXT",
+                  "state": "ASSERTED",
+                  "message_ordinal": 0
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "state": "NOT_STATED",
+                  "field": "deadline",
+                  "quote": "",
+                  "task_quote": "working on you know the actual working design of it",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "value": null
+                },
+                {
+                  "value": null,
+                  "role": "UNKNOWN",
+                  "field": "project",
+                  "quote": "",
+                  "state": "NOT_STATED",
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "working on you know the actual working design of it",
+                  "message_ordinal": 0
+                },
+                {
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "value": null,
+                  "quote": "",
+                  "field": "vendor",
+                  "task_quote": "working on you know the actual working design of it"
+                }
+              ],
+              "project": null,
+              "work_state": "ASSERTED",
+              "vendor": null
+            },
+            "subject": "industrial designer",
+            "temporal_status": "NOT_STATED",
+            "relation": null
+          },
+          {
+            "task": {
+              "text": "Um for user interface , technical functions ,\\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.200 start=1000.99 end=1003.16\\nI guess that's you know like what we've been talking about ,\\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.201 start=1003.16 end=1004.08\\nwhat it'll actually do .",
+              "owner": null,
+              "description_parts": [
+                "for user interface , technical functions",
+                "what it'll actually do"
+              ],
+              "project": null,
+              "deadline_text": null,
+              "field_bindings": [
+                {
+                  "value": null,
+                  "message_ordinal": 0,
+                  "field": "owner",
+                  "quote": "",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "for user interface , technical functions"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0,
+                  "task_quote": "for user interface , technical functions",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "quote": "",
+                  "field": "deadline"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "for user interface , technical functions",
+                  "state": "NOT_STATED",
+                  "role": "UNKNOWN",
+                  "field": "project",
+                  "quote": "",
+                  "value": null,
+                  "message_ordinal": 0
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "state": "NOT_STATED",
+                  "field": "vendor",
+                  "quote": "",
+                  "task_quote": "for user interface , technical functions",
+                  "message_ordinal": 0,
+                  "role": "UNKNOWN",
+                  "value": null
+                }
+              ],
+              "vendor": null,
+              "work_state": "ASSERTED"
+            },
+            "relation": null,
+            "temporal_status": "NOT_STATED",
+            "confidence": {
+              "temporal": 0.8,
+              "entity": 0.8,
+              "overall": 0.8,
+              "relation": 0.75,
+              "claim_type": 0.85
+            },
+            "valid_to": null,
+            "value": null,
+            "claim_type": "PLAN",
+            "subject": null,
+            "valid_from": null
+          },
+          {
+            "task": {
+              "vendor": null,
+              "work_state": "ASSERTED",
+              "project": null,
+              "deadline_text": null,
+              "field_bindings": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "state": "ASSERTED",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "role": "CURRENT_OWNER",
+                  "quote": "Um and uh marketing executive ,\\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.203 start=1010.02 end=1016.48\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "field": "owner",
+                  "message_ordinal": 0,
+                  "value": "marketing executive"
+                },
+                {
+                  "quote": "",
+                  "field": "deadline",
+                  "message_ordinal": 0,
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED"
+                },
+                {
+                  "state": "NOT_STATED",
+                  "basis": "SOURCE_TEXT",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "quote": "",
+                  "field": "project",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "message_ordinal": 0
+                },
+                {
+                  "field": "vendor",
+                  "quote": "",
+                  "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+                  "role": "UNKNOWN",
+                  "value": null,
+                  "basis": "SOURCE_TEXT",
+                  "state": "NOT_STATED",
+                  "message_ordinal": 0
+                }
+              ],
+              "text": "Um and uh marketing executive ,\\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.203 start=1010.02 end=1016.48\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "description_parts": [
+                "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+              ],
+              "owner": "marketing executive"
+            },
+            "relation": null,
+            "subject": "marketing executive",
+            "valid_to": null,
+            "valid_from": null,
+            "claim_type": "PLAN",
+            "temporal_status": "NOT_STATED",
+            "value": null,
+            "confidence": {
+              "temporal": 0.8,
+              "claim_type": 0.9,
+              "entity": 0.9,
+              "overall": 0.9,
+              "relation": 0.8
+            }
+          }
+        ],
+        "evidence": {
+          "bytes": 13964,
+          "member": "work/ce-d-20261023-parameter-repair/wire/001-response.json",
+          "sha256": "d78d5412055001264f2bd7a701fd346c7e2f268c8a46e6a48c35cbdc4d82de2e"
+        }
+      },
+      {
+        "root": "work/ce-d-20261023-parameter-repair",
+        "sequence": 2,
+        "model": "gemini-4-argon",
+        "response_id": "kqjaasvqBYTjytMPiPP0qAU",
+        "claims": [],
+        "evidence": {
+          "bytes": 3143,
+          "member": "work/ce-d-20261023-parameter-repair/wire/002-response.json",
+          "sha256": "46518425bb460881a9a429c235a80605abad8aae583f7f3b15ca64adcd34b927"
+        }
+      }
+    ]
+  },
+  "status": "DEV_DIAGNOSTIC",
+  "independent_review": "INDEPENDENT_REVIEW_NOT_VERIFIED",
+  "scoring_policy": "Raw counts only; phases/models/profiles must never be combined into semantic scores"
+}

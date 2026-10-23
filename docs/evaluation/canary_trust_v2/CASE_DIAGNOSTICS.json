@@ -1,0 +1,2012 @@
+{
+  "version": "ami-postseal-diagnostic/1.0",
+  "source_sha256": "4364c0594038055f2dc438094e03d61033091c08ebdd9fc56a6ab3b01f34693b",
+  "frozen_runner_sha": "1ade9b2b359b0249ed21678ad09e6aa4d5e82c83",
+  "analyzer_git_sha": "1ade9b2b359b0249ed21678ad09e6aa4d5e82c83",
+  "config_sha256": "79ee21bb32a2a6a2c513fb5c09ab1bee12ec0f371e8e0d9feb64baf1401987e1",
+  "run_id": "f7023e44-4511-4865-b884-f0d001dfd885",
+  "historical_raw_claim_types": {
+    "FACT": 18,
+    "PLAN": 5,
+    "QUESTION": 9,
+    "PROPOSAL": 23,
+    "OPINION": 14,
+    "SPECULATION": 1,
+    "DECISION": 5
+  },
+  "historical_raw_task_proposals": 5,
+  "raw_claim_types": {
+    "ACTION": 4,
+    "PLAN": 1
+  },
+  "parsed_f_claim_types": {
+    "ACTION": 4,
+    "PLAN": 1
+  },
+  "raw_task_proposals": 5,
+  "raw_decision_proposals": 0,
+  "f_failures": [],
+  "raw_tasks": [
+    {
+      "artifact_id": "ES2002a:chunk:0000",
+      "sequence": 1,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.9,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "record who's here"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I have to record who's here actually .",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "record who's here",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Oh I have to record who's here actually .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      },
+      "exact_unique_quote": true,
+      "canonical_start": 2325,
+      "parts_exact": true
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "sequence": 7,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.9,
+          "entity": 0.8,
+          "overall": 0.85,
+          "relation": 0.8,
+          "temporal": 0.5
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "working on you know the actual working design of it"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": "industrial designer"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            }
+          ],
+          "owner": "industrial designer",
+          "project": null,
+          "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      },
+      "exact_unique_quote": true,
+      "canonical_start": 52553,
+      "parts_exact": true
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "sequence": 7,
+      "raw_index": 1,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.85,
+          "entity": 0.75,
+          "overall": 0.8,
+          "relation": 0.75,
+          "temporal": 0.5
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": "marketing executive"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            }
+          ],
+          "owner": "marketing executive",
+          "project": null,
+          "text": "Um and uh marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      },
+      "exact_unique_quote": false,
+      "canonical_start": null,
+      "parts_exact": false
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0010",
+      "sequence": 19,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.92,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "have a public survey"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I will be happy to do that",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "have a public survey",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Or we can do something , we can design two three shapes and we can have a public survey , let the public choose what they want .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.266 start=1363.78 end=1364.27\\nUh-huh .\\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.167 start=1364.71 end=1366.44\\nThere's a good man . There's a good idea .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.137 start=1364.87 end=1365.26\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.267 start=1366.4 end=1366.98\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.138 start=1367.01 end=1369.62\\nOkay um , I guess , since you're the marketing guy .\\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.104 start=1369.66 end=1372.01\\nYeah , sure . I will be happy to do that .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      },
+      "exact_unique_quote": false,
+      "canonical_start": null,
+      "parts_exact": false
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0017",
+      "sequence": 26,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "PLAN",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.8,
+          "overall": 0.9,
+          "relation": 0.8,
+          "temporal": 0.8
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "work on giving me a model in clay"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "you guys",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "work on giving me a model in clay",
+              "value": "you guys"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            }
+          ],
+          "owner": "you guys",
+          "project": null,
+          "text": "what I would like you guys to do is work on giving me a model in clay .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      },
+      "exact_unique_quote": true,
+      "canonical_start": 136033,
+      "parts_exact": true
+    }
+  ],
+  "raw_claims": [
+    {
+      "artifact_id": "ES2002a:chunk:0000",
+      "sequence": 1,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.9,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "record who's here"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I have to record who's here actually .",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "record who's here",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Oh I have to record who's here actually .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "sequence": 7,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.9,
+          "entity": 0.8,
+          "overall": 0.85,
+          "relation": 0.8,
+          "temporal": 0.5
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "working on you know the actual working design of it"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": "industrial designer"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            }
+          ],
+          "owner": "industrial designer",
+          "project": null,
+          "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "sequence": 7,
+      "raw_index": 1,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.85,
+          "entity": 0.75,
+          "overall": 0.8,
+          "relation": 0.75,
+          "temporal": 0.5
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": "marketing executive"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            }
+          ],
+          "owner": "marketing executive",
+          "project": null,
+          "text": "Um and uh marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0010",
+      "sequence": 19,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.92,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "have a public survey"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I will be happy to do that",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "have a public survey",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Or we can do something , we can design two three shapes and we can have a public survey , let the public choose what they want .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.266 start=1363.78 end=1364.27\\nUh-huh .\\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.167 start=1364.71 end=1366.44\\nThere's a good man . There's a good idea .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.137 start=1364.87 end=1365.26\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.267 start=1366.4 end=1366.98\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.138 start=1367.01 end=1369.62\\nOkay um , I guess , since you're the marketing guy .\\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.104 start=1369.66 end=1372.01\\nYeah , sure . I will be happy to do that .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0017",
+      "sequence": 26,
+      "raw_index": 0,
+      "claim": {
+        "claim_type": "PLAN",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.8,
+          "overall": 0.9,
+          "relation": 0.8,
+          "temporal": 0.8
+        },
+        "relation": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "work on giving me a model in clay"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "you guys",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "work on giving me a model in clay",
+              "value": "you guys"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            }
+          ],
+          "owner": "you guys",
+          "project": null,
+          "text": "what I would like you guys to do is work on giving me a model in clay .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from": null,
+        "valid_to": null,
+        "value": null
+      }
+    }
+  ],
+  "parsed_claims": [
+    {
+      "artifact_id": "ES2002a:chunk:0000",
+      "parsed_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.9,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation_phrase": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "record who's here"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I have to record who's here actually .",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "record who's here",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "record who's here",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Oh I have to record who's here actually .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from_raw": null,
+        "valid_to_raw": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "parsed_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.9,
+          "entity": 0.8,
+          "overall": 0.85,
+          "relation": 0.8,
+          "temporal": 0.5
+        },
+        "relation_phrase": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "working on you know the actual working design of it"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": "industrial designer"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "working on you know the actual working design of it",
+              "value": null
+            }
+          ],
+          "owner": "industrial designer",
+          "project": null,
+          "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from_raw": null,
+        "valid_to_raw": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2002a:chunk:0006",
+      "parsed_index": 1,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.85,
+          "entity": 0.75,
+          "overall": 0.8,
+          "relation": 0.75,
+          "temporal": 0.5
+        },
+        "relation_phrase": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "thinking about what it actually what , you know , what requirements it has to has to fulfil"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": "marketing executive"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "thinking about what it actually what , you know , what requirements it has to has to fulfil",
+              "value": null
+            }
+          ],
+          "owner": "marketing executive",
+          "project": null,
+          "text": "Um and uh marketing executive ,\\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from_raw": null,
+        "valid_to_raw": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0010",
+      "parsed_index": 0,
+      "claim": {
+        "claim_type": "ACTION",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.95,
+          "overall": 0.92,
+          "relation": 0.9,
+          "temporal": 0.9
+        },
+        "relation_phrase": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "have a public survey"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SPEAKER",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "I will be happy to do that",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "have a public survey",
+              "value": "B"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "have a public survey",
+              "value": null
+            }
+          ],
+          "owner": "B",
+          "project": null,
+          "text": "Or we can do something , we can design two three shapes and we can have a public survey , let the public choose what they want .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.266 start=1363.78 end=1364.27\\nUh-huh .\\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.167 start=1364.71 end=1366.44\\nThere's a good man . There's a good idea .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.137 start=1364.87 end=1365.26\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.267 start=1366.4 end=1366.98\\nOkay .\\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.138 start=1367.01 end=1369.62\\nOkay um , I guess , since you're the marketing guy .\\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.104 start=1369.66 end=1372.01\\nYeah , sure . I will be happy to do that .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from_raw": null,
+        "valid_to_raw": null,
+        "value": null
+      }
+    },
+    {
+      "artifact_id": "ES2005c:chunk:0017",
+      "parsed_index": 0,
+      "claim": {
+        "claim_type": "PLAN",
+        "confidence": {
+          "claim_type": 0.95,
+          "entity": 0.8,
+          "overall": 0.9,
+          "relation": 0.8,
+          "temporal": 0.8
+        },
+        "relation_phrase": null,
+        "subject": null,
+        "task": {
+          "deadline_text": null,
+          "description_parts": [
+            "work on giving me a model in clay"
+          ],
+          "field_bindings": [
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "owner",
+              "message_ordinal": 0,
+              "quote": "you guys",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "task_quote": "work on giving me a model in clay",
+              "value": "you guys"
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "deadline",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "project",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            },
+            {
+              "basis": "SOURCE_TEXT",
+              "field": "vendor",
+              "message_ordinal": 0,
+              "quote": "",
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "task_quote": "work on giving me a model in clay",
+              "value": null
+            }
+          ],
+          "owner": "you guys",
+          "project": null,
+          "text": "what I would like you guys to do is work on giving me a model in clay .",
+          "vendor": null,
+          "work_state": "ASSERTED"
+        },
+        "temporal_status": "NOT_STATED",
+        "valid_from_raw": null,
+        "valid_to_raw": null,
+        "value": null
+      }
+    }
+  ],
+  "accepted_observations": [
+    {
+      "kind": "partial_observations",
+      "observation": {
+        "authority": "SUPPORTING_ONLY",
+        "deadline": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "deadline_text": null,
+        "description": "record who's here",
+        "event_time": null,
+        "extraction_status": "EXTRACTED",
+        "field_bindings": [
+          {
+            "basis": "SPEAKER",
+            "field": "owner",
+            "message_ordinal": 0,
+            "quote": "I have to record who's here actually .",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "task_quote": "record who's here",
+            "value": "B"
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "deadline",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "record who's here",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "project",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "record who's here",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "vendor",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "record who's here",
+            "value": null
+          }
+        ],
+        "field_evidence": [
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 2366,
+            "char_start": 2325,
+            "field": "raw_text",
+            "quote": "Oh I have to record who's here actually ."
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 2355,
+            "char_start": 2338,
+            "field": "description",
+            "quote": "record who's here"
+          }
+        ],
+        "observation_id": "task_observation_v2_52d89a106a32fc1895f5e518d76f23ada385c7be1d38fbf71c990ccb38831130",
+        "owner": null,
+        "project": null,
+        "provenance": {
+          "artifact_id": "ES2002a:chunk:0000",
+          "artifact_version_id": "artifact_v1_bf6f1cbc8a9dad972a77f22942731e433dfe41c462b8d72e320e9a9982ac953b",
+          "char_end": 7866,
+          "char_start": 0,
+          "content_hash": "496340474ebdef76b379d7b441192aeb08e255df8b0ba3e41c6c3be3ba5780ad",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+          "line_end": 124,
+          "line_start": 1,
+          "message_id": "message_v1_7d71615dd3ec038d82265ad2c13ceda0e1ed6de9e9b0dfbadad59e56a17c5e32",
+          "ordinal": 0,
+          "quote": "ami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.1 start=50.42 end=50.99\nOkay\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.2 start=53.56 end=53.96\nRight\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.3 start=55.415 end=60.35\nUm well this is the kick-off meeting for our our project .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.16 start=60.35 end=64.16\nUm and um\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.17 start=64.16 end=67.55\nthis is just what we're gonna be doing over the next twenty five minutes .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.1 start=67.21 end=67.45\nMm-hmm .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.6 start=67.55 end=72.79\nUm so first of all , just to kind of make sure that we all know each other ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.9 start=72.79 end=74.42\nI'm Laura and I'm the project manager .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.7 start=74.42 end=77.29\nDo you want to introduce yourself again ?\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.2 start=74.89 end=75.24\nGreat .\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.1 start=77.44 end=80.87\nHi , I'm David and I'm supposed to be an industrial designer .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.8 start=80.81 end=81.26\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.3 start=82.08 end=84.46\nAnd I'm Andrew and I'm uh our marketing\nami-nxt/v1 meeting=ES2002a speaker=C id=ES2002a.C.dialog-act.dharshi.1 start=85.99 end=88.71\nUm I'm Craig and I'm User Interface .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.4 start=86.07 end=86.5\nexpert .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.10 start=89.3 end=90.01\nGreat .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.11 start=90.01 end=92.79\nOkay . Um\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.12 start=92.79 end=96.34\nso we're designing a new remote control and um\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.13 start=96.34 end=98.57\nOh I have to record who's here actually .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.14 start=98.57 end=101.76\nSo that's David , Andrew and Craig , isn't it ?\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.15 start=104.89 end=106.58\nAnd you all arrived on time .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.18 start=108.96 end=111.72\nUm yeah so des uh design a new remote control .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.19 start=111.72 end=116.66\nUm , as you can see it's supposed to be original , trendy and user friendly .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.21 start=116.66 end=120.98\nUm so that's kind of our our brief , as it were .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.22 start=120.98 end=126.12\nUm and so there are three different stages to the design .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.23 start=126.12 end=131.36\nUm I'm not really sure what what you guys have already received um in your emails .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.24 start=131.36 end=132.03\nWhat did you get ?\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.2 start=132.57 end=136.68\nUm , I just got the project announcement about what the project is .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.20 start=135.08 end=135.44\nMm-hmm .\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.3 start=136.68 end=138.2\nDesigning a remote control .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.5 start=137.12 end=137.39\nMm-hmm .\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.4 start=138.2 end=140.77\nThat's about it , didn't get anything else .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.6 start=138.96 end=140.56\nMm-hmm . Yeah , that's that's it .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.25 start=140.1 end=141.53\nIs that what everybody got ?\nami-nxt/v1 meeting=ES2002a speaker=C id=ES2002a.C.dialog-act.dharshi.2 start=140.47 end=140.83\nYeah .\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.5 start=140.77 end=141.98\nDid you get the same thing ?\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.29 start=141.53 end=142.66\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.7 start=141.8 end=141.95\nYeah .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.26 start=142.66 end=144.43\nUm .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.28 start=144.43 end=147.92\nSo we're gonna have like individual work and then a meeting about it .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.31 start=147.92 end=151.79\nAnd repeat that process three times .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.32 start=151.79 end=158.41\nUm and at this point we get try out the whiteboard over there .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.27 start=158.41 end=159.59\nUm .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.33 start=159.59 end=165.91\nSo uh you get to draw your favourite animal and sum up your favourite characteristics of it .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.30 start=165.91 end=167.31\nSo who would like to go first ?\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.8 start=166.67 end=167.81\nI will go . That's fine .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.34 start=167.84 end=169.072\nVery good .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.9 start=174.2 end=176.816\nAlright . So\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.10 start=177.952 end=180.064\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.11 start=181.39 end=182.34\nThis one here , right ?\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.35 start=183.26 end=184.24\nMm-hmm .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.14 start=183.93 end=186.46\nOkay . Very nice .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.15 start=186.46 end=187.46\nAlright .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.16 start=187.46 end=192.021\nMy favourite animal is like\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.12 start=192.021 end=194.611\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.13 start=198.421 end=199.124\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.17 start=203.45 end=204.24\nA beagle .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.36 start=205.28 end=206.672\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.18 start=211.97 end=213.16\nUm\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.20 start=213.16 end=216.46\ncharac favourite characteristics of it ? Is that right ?\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.37 start=215.95 end=216.77\nYeah . Yeah .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.23 start=216.46 end=229.16\nUh , right , well basically um high priority for any animal for me is that they be willing to take a lot of physical affection from their family .\n",
+          "quote_sha256": "496340474ebdef76b379d7b441192aeb08e255df8b0ba3e41c6c3be3ba5780ad",
+          "segment_id": "segment_v1_d8c118883afa32548a58af70652a3e616a264703f30a894d5e4adbd6f3867edb",
+          "source_ref": "artifact://ES2002a/ES2002a%3Achunk%3A0000",
+          "workspace_id": "ES2002a"
+        },
+        "raw_text": "Oh I have to record who's here actually .",
+        "recorded_at": "2026-10-23T00:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [
+          "OWNER_EVIDENCE_INVALID"
+        ],
+        "validation_status": "PARTIAL",
+        "vendor": null,
+        "work_state": "ASSERTED"
+      }
+    },
+    {
+      "kind": "partial_observations",
+      "observation": {
+        "authority": "SUPPORTING_ONLY",
+        "deadline": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "deadline_text": null,
+        "description": "working on you know the actual working design of it",
+        "event_time": null,
+        "extraction_status": "EXTRACTED",
+        "field_bindings": [
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "owner",
+            "message_ordinal": 0,
+            "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "task_quote": "working on you know the actual working design of it",
+            "value": "industrial designer"
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "deadline",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "working on you know the actual working design of it",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "project",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "working on you know the actual working design of it",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "vendor",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "working on you know the actual working design of it",
+            "value": null
+          }
+        ],
+        "field_evidence": [
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 5180,
+            "char_start": 5050,
+            "field": "raw_text",
+            "quote": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it"
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 5180,
+            "char_start": 5129,
+            "field": "description",
+            "quote": "working on you know the actual working design of it"
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 5180,
+            "char_start": 5084,
+            "field": "owner",
+            "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it"
+          }
+        ],
+        "observation_id": "task_observation_v2_dbcfe02c59c52a5479fc8c126eea2a39b8020607e70d749d7677a0425ce1cfa8",
+        "owner": "industrial designer",
+        "project": null,
+        "provenance": {
+          "artifact_id": "ES2002a:chunk:0006",
+          "artifact_version_id": "artifact_v1_68dd1b9b197fc7b859ba2c5d6d55f089ff43bd8671fc0264a4c536c96b9746ea",
+          "char_end": 7928,
+          "char_start": 0,
+          "content_hash": "3243f4f62d3bded61930f7fbf4a23b8b9af987868e8d4406910f1bdd1583c320",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9a726fd2600b42ccf219594d9332482e0a0b5228cbcc54421e97818adc722291",
+          "line_end": 120,
+          "line_start": 1,
+          "message_id": "message_v1_d00ac85e9c4bf99e8bbb472044198b0ac0fb836577d95b4e1e90a99c8e61c5a2",
+          "ordinal": 0,
+          "quote": "ami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.179 start=920.04 end=920.5\nThere\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.180 start=920.5 end=922.53\nI mean is that something we'd want to include , do you think ?\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.154 start=924.35 end=925.74\nUh ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.181 start=925.37 end=926.64\nDunno .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.155 start=925.74 end=927.64\nsure .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.182 start=926.64 end=927.869\nOkay maybe .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.151 start=927.64 end=932.01\nI remember when the first remote control my my family had was on a cable .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.152 start=932.01 end=933.48\nActually had a cable between it and the T_V_\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.176 start=932.64 end=933.296\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.153 start=933.48 end=937.36\nand big like buttons that sort of like , like on a blender or something .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.177 start=937.0 end=937.62\nMy goodness .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.159 start=937.36 end=938.4\nAnd um , you know ,\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.160 start=938.4 end=940.72\nwhen I think about what they are now , it's better ,\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.161 start=940.72 end=946.4\nbut actually it's still kind of , I dunno , like a massive junky thing on the table .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.183 start=946.26 end=948.04\nStill feels quite primitive .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.158 start=946.4 end=952.63\nMaybe we could think about how , could be more , you know , streamlined . S\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.184 start=951.41 end=952.78\nMaybe like a touch screen or something ?\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.162 start=953.06 end=954.2\nSomething like that , yeah .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.185 start=954.09 end=954.42\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.163 start=954.2 end=956.35\nOr whatever would be technologically reasonable .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.186 start=956.36 end=957.42\nUh-huh , okay .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.187 start=957.42 end=959.3\nWell I guess that's up to our industrial designer .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.166 start=957.54 end=959.24\n'Cause it could b it could it could be that f\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.167 start=959.24 end=961.34\nit could be that functionally that doesn't make it any better ,\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.168 start=961.34 end=963.91\nbut that just the appeal of of not having\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.189 start=962.22 end=963.35\nIt looks better .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.169 start=963.91 end=969.56\nYou know , these days there's a r pe things in people's homes are becoming more and more like chic , you know .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.190 start=969.0 end=969.47\nYeah .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.170 start=969.56 end=971.36\nUm , nicer materials\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.171 start=971.36 end=972.96\nand might be\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.191 start=971.85 end=972.39\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.192 start=975.24 end=975.63\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.172 start=975.57 end=976.83\nbe worth exploring anyway .\nami-nxt/v1 meeting=ES2002a speaker=C id=ES2002a.C.dialog-act.dharshi.21 start=976.66 end=976.73\nUh .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.198 start=977.17 end=978.62\nRight , well um\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.193 start=978.62 end=979.73\nso just to wrap up\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.194 start=979.73 end=981.67\nthe next meeting's gonna be in thirty minutes .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.195 start=981.67 end=985.49\nSo that's about um about ten to twelve by my watch .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.196 start=985.49 end=994.81\nUm so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it\nami-nxt/v1 meeting=ES2002a speaker=A id=ES2002a.A.dialog-act.dharshi.42 start=993.88 end=994.02\nYep .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.197 start=994.81 end=996.69\nso y you know what you're doing there .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.199 start=996.69 end=1000.99\nUm for user interface , technical functions ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.200 start=1000.99 end=1003.16\nI guess that's you know like what we've been talking about ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.201 start=1003.16 end=1004.08\nwhat it'll actually do .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.202 start=1004.08 end=1008.75\nUm and uh marketing executive ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.203 start=1010.02 end=1016.48\nyou'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.204 start=1016.48 end=1019.31\nand you'll all get instructions emailed to you , I guess .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.173 start=1019.67 end=1020.01\nOkay .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.205 start=1021.55 end=1022.56\nUm .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.164 start=1024.032 end=1025.056\n\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.206 start=1028.05 end=1031.66\nYeah , so it's th the functional design stage is next , I guess .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.188 start=1032.573 end=1033.164\n\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.207 start=1034.47 end=1035.27\nAnd uh\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.208 start=1036.47 end=1037.69\nand that's the end of the meeting .\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.209 start=1039.12 end=1042.624\nSo I got that little message a lot sooner than I thought I would , so\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.174 start=1039.8 end=1041.248\nUm .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.165 start=1044.944 end=1045.136\n\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.175 start=1047.17 end=1050.09\nBefore we wrap up , just to make sure we're all on the same page here ,\nami-nxt/v1 meeting=ES2002a speaker=B id=ES2002a.B.dialog-act.dharshi.210 start=1049.54 end=1050.04\nMm-hmm .\nami-nxt/v1 meeting=ES2002a speaker=D id=ES2002a.D.dialog-act.dharshi.176 start=1050.09 end=1052.89\num , do we\n",
+          "quote_sha256": "3243f4f62d3bded61930f7fbf4a23b8b9af987868e8d4406910f1bdd1583c320",
+          "segment_id": "segment_v1_9a726fd2600b42ccf219594d9332482e0a0b5228cbcc54421e97818adc722291",
+          "source_ref": "artifact://ES2002a/ES2002a%3Achunk%3A0006",
+          "workspace_id": "ES2002a"
+        },
+        "raw_text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+        "recorded_at": "2026-10-23T00:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "unknown_fields": [
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [],
+        "validation_status": "PARTIAL",
+        "vendor": null,
+        "work_state": "ASSERTED"
+      }
+    },
+    {
+      "kind": "partial_observations",
+      "observation": {
+        "authority": "SUPPORTING_ONLY",
+        "deadline": null,
+        "deadline_precision": "UNKNOWN",
+        "deadline_role": "UNKNOWN",
+        "deadline_text": null,
+        "description": "work on giving me a model in clay",
+        "event_time": null,
+        "extraction_status": "EXTRACTED",
+        "field_bindings": [
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "owner",
+            "message_ordinal": 0,
+            "quote": "you guys",
+            "role": "CURRENT_OWNER",
+            "state": "ASSERTED",
+            "task_quote": "work on giving me a model in clay",
+            "value": "you guys"
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "deadline",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "work on giving me a model in clay",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "project",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "work on giving me a model in clay",
+            "value": null
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "field": "vendor",
+            "message_ordinal": 0,
+            "quote": "",
+            "role": "UNKNOWN",
+            "state": "NOT_STATED",
+            "task_quote": "work on giving me a model in clay",
+            "value": null
+          }
+        ],
+        "field_evidence": [
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 1049,
+            "char_start": 978,
+            "field": "raw_text",
+            "quote": "what I would like you guys to do is work on giving me a model in clay ."
+          },
+          {
+            "basis": "SOURCE_TEXT",
+            "char_end": 1047,
+            "char_start": 1014,
+            "field": "description",
+            "quote": "work on giving me a model in clay"
+          }
+        ],
+        "observation_id": "task_observation_v2_2bc24344565ad523b79518855be9ea43750b49e360611c6050d454dd9585fc00",
+        "owner": null,
+        "project": null,
+        "provenance": {
+          "artifact_id": "ES2005c:chunk:0017",
+          "artifact_version_id": "artifact_v1_1961c03d2d7cd0904b5328c4e0062b0c70fd45593de39b4694e6ab747d12054d",
+          "char_end": 7945,
+          "char_start": 0,
+          "content_hash": "54c23e78fa1057ec7590fa7559ee0633bbdc44f8b359ad42f844b603dd9ea75b",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0490eb6d63d2b1df5b181b54aae73d6c116a70f88e46a1012b52bd519863b261",
+          "line_end": 128,
+          "line_start": 1,
+          "message_id": "message_v1_cd8cdb44bc02b2bdc2e6465353d8163addc60ebdb691b90a31461d0238eeb9b0",
+          "ordinal": 0,
+          "quote": "ami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.297 start=2029.616 end=2030.83\nIt's actually shut down .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.160 start=2030.0 end=2030.17\nNo ?\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.379 start=2030.97 end=2032.9\nIt's on , but there's nothing on the screen .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.301 start=2032.16 end=2036.39\nOkay , um now what we have\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.236 start=2034.74 end=2036.41\nTry uh flipping the screen down .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.302 start=2036.39 end=2039.16\nuh our next meeting's in half an hour\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.237 start=2038.88 end=2039.09\n'Kay .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.303 start=2039.16 end=2047.13\nand what I would like you guys to do is work on giving me a model in clay .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.238 start=2049.48 end=2050.35\nOh ,\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.378 start=2049.76 end=2050.448\n\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.239 start=2050.35 end=2051.12\nI get to do it , too .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.304 start=2050.528 end=2053.59\nYeah . It's you guys . Yeah .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.383 start=2052.07 end=2054.381\nCool .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.240 start=2052.28 end=2053.11\nOh neat .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.305 start=2053.59 end=2059.73\nSo um , you know I mean , luckily we chose a nice simple shape .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.384 start=2058.0 end=2059.12\nYeah . Mm .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.241 start=2058.23 end=2058.85\nYeah , yeah .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.306 start=2059.73 end=2063.27\nUm and further instructions will be sent by your personal coaches .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.385 start=2063.13 end=2063.69\nOkay .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.161 start=2063.648 end=2064.73\nThat's great .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.242 start=2063.97 end=2067.41\nOkay . Save everything to the shared documents , is that right ?\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.307 start=2067.38 end=2068.17\nUh yeah ,\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.308 start=2068.17 end=2072.83\nI hope I can recover this , 'cause I've accidentally deleted it .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.386 start=2068.31 end=2068.67\nYeah .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.162 start=2072.11 end=2072.48\nMm-hmm .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.309 start=2072.83 end=2074.35\nWhich doesn't really help me much .\nami-nxt/v1 meeting=ES2005c speaker=D id=ES2005c.D.dialog-act.dharshi.387 start=2074.42 end=2075.98\nI think , I've saved mine already .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.310 start=2077.49 end=2081.32\nYeah , can you save that uh send that last one again , please , Raj ,\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.311 start=2081.32 end=2082.992\nas I still can't find it on the\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.163 start=2081.77 end=2082.05\nYeah .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.164 start=2083.58 end=2085.31\nUh it was under a different name .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.312 start=2083.961 end=2084.582\n\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.165 start=2085.31 end=2086.22\nI will show you ,\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.166 start=2086.22 end=2087.27\nin shared documents .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.313 start=2087.49 end=2088.32\nOkay .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.167 start=2089.31 end=2092.96\nUh working components .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.168 start=2092.96 end=2095.84\nOh , you didn't get that .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.314 start=2095.36 end=2096.68\nNo .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.169 start=2095.84 end=2097.28\nI will send new .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.315 start=2096.68 end=2097.31\nOkay , thank you .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.170 start=2097.28 end=2099.76\nUh I'll put it in shared documents , again .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.316 start=2101.18 end=2103.27\nUm yeah , Project , Project Documents .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.171 start=2102.78 end=2103.61\nProject documents ,\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.172 start=2103.61 end=2103.89\nsorry ,\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.173 start=2103.89 end=2105.65\nI put it in the shared documents .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.317 start=2106.2 end=2106.6\nUh right ,\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.318 start=2106.6 end=2107.6\nthat's that's the that\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.174 start=2106.79 end=2107.29\nUh yeah .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.319 start=2107.6 end=2109.96\nit goes there automatically if you put it in Project Documents .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.320 start=2109.96 end=2113.74\nProject Documents is on the um desktop .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.175 start=2113.94 end=2115.61\nRight , that's great .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.176 start=2115.61 end=2120.31\nBut I cou can't open that , because it w asks uh for some username or password .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.243 start=2121.25 end=2121.63\nOh .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.321 start=2122.55 end=2124.518\nReally ?\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.177 start=2123.264 end=2124.39\nI'll show you .\nami-nxt/v1 meeting=ES2005c speaker=A id=ES2005c.A.dialog-act.dharshi.244 start=2130.19 end=2132.57\nUh these lapel mics are trouble .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.178 start=2133.7 end=2134.07\nTs\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.322 start=2134.12 end=2134.62\nOh right ,\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.323 start=2134.62 end=2136.08\nI think um\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.324 start=2136.08 end=2140.36\nHold on .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.179 start=2136.47 end=2136.78\nSorry .\nami-nxt/v1 meeting=ES2005c speaker=B id=ES2005c.B.dialog-act.dharshi.180 start=2138.48 end=2138.91\nUh .\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.325 start=2140.36 end=2141.25\nYeah , I don't know if y\nami-nxt/v1 meeting=ES2005c speaker=C id=ES2005c.C.dialog-act.dharshi.326 start=2141.25 end=2144.11\nit it just ca it just came up on my um\n",
+          "quote_sha256": "54c23e78fa1057ec7590fa7559ee0633bbdc44f8b359ad42f844b603dd9ea75b",
+          "segment_id": "segment_v1_0490eb6d63d2b1df5b181b54aae73d6c116a70f88e46a1012b52bd519863b261",
+          "source_ref": "artifact://ES2005c/ES2005c%3Achunk%3A0017",
+          "workspace_id": "ES2005c"
+        },
+        "raw_text": "what I would like you guys to do is work on giving me a model in clay .",
+        "recorded_at": "2026-10-23T00:00:00+00:00",
+        "relation_status": "UNCONFIRMED",
+        "unknown_fields": [
+          "owner",
+          "deadline",
+          "project",
+          "vendor"
+        ],
+        "validation_issues": [
+          "OWNER_EVIDENCE_INVALID"
+        ],
+        "validation_status": "PARTIAL",
+        "vendor": null,
+        "work_state": "ASSERTED"
+      }
+    }
+  ],
+  "official_cases": [
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.4",
+      "meeting_id": "ES2002a",
+      "section": "actions",
+      "query_text": "The industrial designer will work on the working design of the remote.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.196",
+          "speaker": "B",
+          "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+          "char_start": 52553,
+          "char_end": 52683,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        }
+      ],
+      "raw_task_anchor_overlaps": [
+        {
+          "artifact_id": "ES2002a:chunk:0006",
+          "sequence": 7,
+          "raw_index": 0,
+          "claim": {
+            "claim_type": "ACTION",
+            "confidence": {
+              "claim_type": 0.9,
+              "entity": 0.8,
+              "overall": 0.85,
+              "relation": 0.8,
+              "temporal": 0.5
+            },
+            "relation": null,
+            "subject": null,
+            "task": {
+              "deadline_text": null,
+              "description_parts": [
+                "working on you know the actual working design of it"
+              ],
+              "field_bindings": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "message_ordinal": 0,
+                  "quote": "as the industrial designer , you're gonna be working on you know the actual working design of it",
+                  "role": "CURRENT_OWNER",
+                  "state": "ASSERTED",
+                  "task_quote": "working on you know the actual working design of it",
+                  "value": "industrial designer"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "working on you know the actual working design of it",
+                  "value": null
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "project",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "working on you know the actual working design of it",
+                  "value": null
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "vendor",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "working on you know the actual working design of it",
+                  "value": null
+                }
+              ],
+              "owner": "industrial designer",
+              "project": null,
+              "text": "Um so inbetween now and then , um as the industrial designer , you're gonna be working on you know the actual working design of it",
+              "vendor": null,
+              "work_state": "ASSERTED"
+            },
+            "temporal_status": "NOT_STATED",
+            "valid_from": null,
+            "valid_to": null,
+            "value": null
+          },
+          "exact_unique_quote": true,
+          "canonical_start": 52553,
+          "parts_exact": true
+        }
+      ],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.5",
+      "meeting_id": "ES2002a",
+      "section": "actions",
+      "query_text": "The user interface designer will work on the technical functions of the remote.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.199",
+          "speaker": "B",
+          "text": "Um for user interface , technical functions ,",
+          "char_start": 53021,
+          "char_end": 53066,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.6",
+      "meeting_id": "ES2002a",
+      "section": "actions",
+      "query_text": "The marketing executive will work on what requirements the remote has to fulfill",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.202",
+          "speaker": "B",
+          "text": "Um and uh marketing executive ,",
+          "char_start": 53450,
+          "char_end": 53481,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        },
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.203",
+          "speaker": "B",
+          "text": "you'll be just thinking about what it actually what , you know , what requirements it has to has to fulfil",
+          "char_start": 53581,
+          "char_end": 53687,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.7",
+      "meeting_id": "ES2002a",
+      "section": "decisions",
+      "query_text": "The remote will sell for 25 Euro.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.129",
+          "speaker": "B",
+          "text": "Well twenty five Euro , I mean that's um that's about like eighteen pounds or something ,",
+          "char_start": 32800,
+          "char_end": 32889,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        },
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.89",
+          "speaker": "B",
+          "text": "Um so according to the brief um we're gonna be selling this remote control for twenty five Euro ,",
+          "char_start": 22144,
+          "char_end": 22241,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.8",
+      "meeting_id": "ES2002a",
+      "section": "decisions",
+      "query_text": "The remote will be sold on an international scale.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.100",
+          "speaker": "B",
+          "text": "I mean do you think the fact that it's going to be sold internationally will have a bearing on how we design it at all ?",
+          "char_start": 25278,
+          "char_end": 25398,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        },
+        {
+          "utterance_id": "ES2002a.D.dialog-act.dharshi.66",
+          "speaker": "D",
+          "text": "Well right away I'm wondering if there's um th th uh , like with D_V_D_ players , if there are zones .",
+          "char_start": 26127,
+          "char_end": 26229,
+          "source_member": "dialogueActs/ES2002a.D.dialog-act.xml",
+          "member_sha256": "9adf983bb5cb17306213bb0182eeedd04263baf45a07459f4597a8ce1b117743"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2002a:ES2002a.rdhillon.s.9",
+      "meeting_id": "ES2002a",
+      "section": "decisions",
+      "query_text": "The production costs cannot exceed 12.50 Euro.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2002a.B.dialog-act.dharshi.92",
+          "speaker": "B",
+          "text": "And uh we don't want it to cost any more than uh twelve fifty Euros , so fifty percent of the selling price .",
+          "char_start": 22640,
+          "char_end": 22749,
+          "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+          "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.12",
+      "meeting_id": "ES2005c",
+      "section": "actions",
+      "query_text": "The User Interface Designer and the Industrial Designer will build a prototype out of clay for the next meeting.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.303",
+          "speaker": "C",
+          "text": "and what I would like you guys to do is work on giving me a model in clay .",
+          "char_start": 136029,
+          "char_end": 136104,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        }
+      ],
+      "raw_task_anchor_overlaps": [
+        {
+          "artifact_id": "ES2005c:chunk:0017",
+          "sequence": 26,
+          "raw_index": 0,
+          "claim": {
+            "claim_type": "PLAN",
+            "confidence": {
+              "claim_type": 0.95,
+              "entity": 0.8,
+              "overall": 0.9,
+              "relation": 0.8,
+              "temporal": 0.8
+            },
+            "relation": null,
+            "subject": null,
+            "task": {
+              "deadline_text": null,
+              "description_parts": [
+                "work on giving me a model in clay"
+              ],
+              "field_bindings": [
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "owner",
+                  "message_ordinal": 0,
+                  "quote": "you guys",
+                  "role": "CURRENT_OWNER",
+                  "state": "ASSERTED",
+                  "task_quote": "work on giving me a model in clay",
+                  "value": "you guys"
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "deadline",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "work on giving me a model in clay",
+                  "value": null
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "project",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "work on giving me a model in clay",
+                  "value": null
+                },
+                {
+                  "basis": "SOURCE_TEXT",
+                  "field": "vendor",
+                  "message_ordinal": 0,
+                  "quote": "",
+                  "role": "UNKNOWN",
+                  "state": "NOT_STATED",
+                  "task_quote": "work on giving me a model in clay",
+                  "value": null
+                }
+              ],
+              "owner": "you guys",
+              "project": null,
+              "text": "what I would like you guys to do is work on giving me a model in clay .",
+              "vendor": null,
+              "work_state": "ASSERTED"
+            },
+            "temporal_status": "NOT_STATED",
+            "valid_from": null,
+            "valid_to": null,
+            "value": null
+          },
+          "exact_unique_quote": true,
+          "canonical_start": 136033,
+          "parts_exact": true
+        }
+      ],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.13",
+      "meeting_id": "ES2005c",
+      "section": "decisions",
+      "query_text": "The remote will feature a rubber or latex casing.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.186",
+          "speaker": "A",
+          "text": "s I guess we decided on material ,",
+          "char_start": 111970,
+          "char_end": 112004,
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49"
+        },
+        {
+          "utterance_id": "ES2005c.A.dialog-act.dharshi.188",
+          "speaker": "A",
+          "text": "So that that spongy latex rubber everything feel ,",
+          "char_start": 112211,
+          "char_end": 112261,
+          "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+          "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.121",
+          "speaker": "C",
+          "text": "so maybe s uh a sort of uh plastic initial plastic with a a latex kinda sheath ?",
+          "char_start": 64615,
+          "char_end": 64695,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.209",
+          "speaker": "D",
+          "text": "I like the rubber , the stress balls , I think ,",
+          "char_start": 65034,
+          "char_end": 65082,
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.14",
+      "meeting_id": "ES2005c",
+      "section": "decisions",
+      "query_text": "Several shapes will be designed and shown to the public so that the most popular shape is chosen.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.103",
+          "speaker": "B",
+          "text": "Or we can do something , we can design two three shapes and we can have a public survey , let the public choose what they want .",
+          "char_start": 84490,
+          "char_end": 84618,
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.167",
+          "speaker": "C",
+          "text": "There's a good man . There's a good idea .",
+          "char_start": 84826,
+          "char_end": 84868,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.15",
+      "meeting_id": "ES2005c",
+      "section": "decisions",
+      "query_text": "The remote will be yellow or partially yellow and have an organic shape.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.245",
+          "speaker": "C",
+          "text": "So again I mean like we could have , uh I mean , we could quite easily have the the main body be a different",
+          "char_start": 115967,
+          "char_end": 116075,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.249",
+          "speaker": "C",
+          "text": "I mean not necessarily that the um the whole body has to be of the company colour ,",
+          "char_start": 117070,
+          "char_end": 117153,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.251",
+          "speaker": "C",
+          "text": "So you have the main body blue with the yellow logo and slogan running up one side of it kind of thing .",
+          "char_start": 117522,
+          "char_end": 117626,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.345",
+          "speaker": "D",
+          "text": "but something ergonomically shaped and organic , like good to hold , based on fruits and natural things like that ,",
+          "char_start": 114649,
+          "char_end": 114764,
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+        },
+        {
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.346",
+          "speaker": "D",
+          "text": "because al already we're going a bit gaudy with the yellow , you know .",
+          "char_start": 114972,
+          "char_end": 115043,
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.16",
+      "meeting_id": "ES2005c",
+      "section": "decisions",
+      "query_text": "The remote will feature speech recognition.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.176",
+          "speaker": "C",
+          "text": "Uh speech recognition , I think ,",
+          "char_start": 88146,
+          "char_end": 88179,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.D.dialog-act.dharshi.151",
+          "speaker": "D",
+          "text": "'cause I think we're definitely going for the speech recognition ,",
+          "char_start": 40229,
+          "char_end": 40295,
+          "source_member": "dialogueActs/ES2005c.D.dialog-act.xml",
+          "member_sha256": "85e74bd4a2089aedd6574151ade8b3c27e2527696767c5b0dd5f6b66b0a337b0"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    },
+    {
+      "query_id": "ES2005c:ES2005c.JacquelinePalmer.s.17",
+      "meeting_id": "ES2005c",
+      "section": "decisions",
+      "query_text": "The remote will be powered by rechargeable batteries and come with a recharging stand.",
+      "native_targets": [
+        {
+          "utterance_id": "ES2005c.B.dialog-act.dharshi.152",
+          "speaker": "B",
+          "text": "I think we should a rechargeable battery will be a good idea .",
+          "char_start": 125512,
+          "char_end": 125574,
+          "source_member": "dialogueActs/ES2005c.B.dialog-act.xml",
+          "member_sha256": "c155b00405390ffc461a54a082d32caebc0aaa06461f4e20d81c5d0617b6d1e6"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.274",
+          "speaker": "C",
+          "text": "having a rechargeable stand ,",
+          "char_start": 126932,
+          "char_end": 126961,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        },
+        {
+          "utterance_id": "ES2005c.C.dialog-act.dharshi.276",
+          "speaker": "C",
+          "text": "so that not only it doubles as a stand , but um for using it as uh recharging it , but also for using it as sound recognition .",
+          "char_start": 127166,
+          "char_end": 127293,
+          "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+          "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+        }
+      ],
+      "raw_task_anchor_overlaps": [],
+      "semantic_qualification": "NOT_EVALUATED"
+    }
+  ],
+  "discovery_rejections": {
+    "TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS": 2
+  },
+  "quote_validation": {
+    "numerator": 3,
+    "denominator": 5
+  },
+  "verdict_consistency": {
+    "status": "NOT_EVALUATED",
+    "numerator": null,
+    "denominator": null
+  },
+  "semantic_qualification": {
+    "status": "NOT_EVALUATED",
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "business_approval_accuracy": null
+  },
+  "status": "DEV_DIAGNOSTIC",
+  "independent_review": "INDEPENDENT_REVIEW_NOT_VERIFIED"
+}
