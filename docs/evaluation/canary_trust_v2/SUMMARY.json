@@ -1,0 +1,67 @@
+{
+  "status": "DEV_DIAGNOSTIC",
+  "independent_review": "INDEPENDENT_REVIEW_NOT_VERIFIED",
+  "remote_master_at_start": "71ccecf937ffc0deb127e252eeff56df00dd4723",
+  "frozen_source_sha": "1ade9b2b359b0249ed21678ad09e6aa4d5e82c83",
+  "run_id": "f7023e44-4511-4865-b884-f0d001dfd885",
+  "runtime": {
+    "google_genai": "2.22.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.5"
+  },
+  "config_sha256": "4e80b17aeaa945a9f937471e3c69b851feafac8b6f64e7181e981f55f203396e",
+  "task_profile": "TASK_RECALL_V3",
+  "compactor": false,
+  "meetings": {
+    "ES2002a": 8,
+    "ES2005c": 20
+  },
+  "actual_provider_attempts": 28,
+  "outcomes": {
+    "SENT_SUCCEEDED": 28
+  },
+  "retries": 0,
+  "not_sent": 0,
+  "sent_failed": 0,
+  "outcome_unknown": 0,
+  "not_evaluated_planned_requests": 0,
+  "reservation_usd": 7.0,
+  "estimated_list_price_usd": 0.14216775,
+  "actual_billed_usd": null,
+  "raw_f_task_proposals": 5,
+  "raw_f_decision_proposals": 0,
+  "decision_coverage": "N/E_TASK_ONLY_PROFILE",
+  "discovery_valid": 0,
+  "discovery_partial": 3,
+  "discovery_rejections": {
+    "TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS": 2
+  },
+  "quote_validation": {
+    "numerator": 3,
+    "denominator": 5
+  },
+  "verdict_consistency": {
+    "status": "NOT_EVALUATED",
+    "numerator": null,
+    "denominator": null
+  },
+  "semantic_qualification": {
+    "status": "NOT_EVALUATED",
+    "precision": null,
+    "recall": null,
+    "f1": null,
+    "business_approval_accuracy": null
+  },
+  "frozen_launch_checks": {
+    "quote": 20,
+    "runner_history": 27,
+    "source_unknown_p4": 134
+  },
+  "bootstrap_import_failure": {
+    "provider_attempts": 0,
+    "classification": "NOT_STARTED_PRE_SDK",
+    "response": "preserved earlier worktree; recreated exact committed source and reran frozen checks"
+  },
+  "independent_review_qualification": "NOT_VERIFIED",
+  "product_e2e": "NOT_RUN"
+}

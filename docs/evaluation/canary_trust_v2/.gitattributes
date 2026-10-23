@@ -1,0 +1,5 @@
+.gitattributes -text
+*.json -text
+*.py -text
+*.zip binary
+*.md text eol=lf
