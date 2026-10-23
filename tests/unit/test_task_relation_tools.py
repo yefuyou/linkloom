@@ -106,7 +106,7 @@ def test_final_rejects_unseen_receipts_and_free_text_claims():
     from linkloom.agents.task_relation_result import project_task_relation_result
     from linkloom.runtime.errors import ValidationError
     import json
-    records = [SimpleNamespace(call_id=tool, tool_id=tool, status="completed", sequence=index,
+    records = [SimpleNamespace(call_id=tool, tool_id=tool, status="completed", error=None, sequence=index,
         result={"status": "ok", "value": {"workspace_id": "w"}}, arguments={"workspace_id": "w"})
         for index, tool in enumerate(("inspect_task_context", "query_task_relations"))]
     final = {"context_call_id": records[0].call_id, "relations_call_id": records[1].call_id}
@@ -121,7 +121,7 @@ def test_final_accepts_json_wrapped_in_one_markdown_code_fence():
     from types import SimpleNamespace
     from linkloom.agents.task_relation_result import project_task_relation_result
     import json
-    records = [SimpleNamespace(call_id=tool, tool_id=tool, status="completed", sequence=index,
+    records = [SimpleNamespace(call_id=tool, tool_id=tool, status="completed", error=None, sequence=index,
         result={"status": "ok", "value": {"workspace_id": "w"}}, arguments={"workspace_id": "w"})
         for index, tool in enumerate(("inspect_task_context", "query_task_relations"))]
     final = {"context_call_id": records[0].call_id, "relations_call_id": records[1].call_id}

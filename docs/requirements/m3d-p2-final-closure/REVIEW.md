@@ -72,3 +72,13 @@ P4 查询只按计划 predicate 与完整 subject/object `ObservationRef` 匹配
 生产契约与此适配一致：`task_relation_task_id` 要求当前 run/retrieval_agent 的 model execution 恰好导出一个 task identity（`src/linkloom/agents/task_relation_result.py:57-63`）；Reviewer 在存在 inspection plan 且缺少 task_id 时拒绝，并要求每条记录与 Host task identity 一致（`:66-89`），随后以该 identity 重放 query（`:97-109`）。
 
 追加结论：**P1=0，P2=0；该适配是必要的最小测试修正，不放宽 Reviewer，不改变生产行为。** 主 Agent 报告真实 HTTP 专项本地 `1 passed / 6s`；本独立复审未重复运行已通过用例。CI 首轮失败日志/JUnit 应保留为“旧测试调用不符合新 Host canonical task contract”的证据，不应通过删除或放宽断言处理。
+
+## 追加复审：HEAD 67baa1a6 的 Ledger error 字段测试适配
+
+复审对象仅为 `tests/unit/test_task_relation_tools.py` 的当前 2 行有效修改（diff 显示 4 行上下文变化）；生产代码和其他测试未修改。
+
+两处 `SimpleNamespace`（正例 `test_final_accepts_json_wrapped_in_one_markdown_code_fence` 与相邻负例 `test_final_rejects_unseen_receipts_and_free_text_claims`）均显式加入 `error=None`（`tests/unit/test_task_relation_tools.py:109-110,124-126`）。这是对 P2-B Ledger record shape 的最小 fixture 修正：生产 `project_task_relation_result` 明确要求 `record.error is None`，并同时检查 completed、result status、workspace 和 visible result（`src/linkloom/agents/task_relation_result.py:28-36`）。
+
+修正后正例验证 JSON code fence 在真实 successful record shape 下可接受；负例继续因 unseen receipt/free-text claim 被拒绝。此前缺少 `error` 会先触发意外 `AttributeError`，被统一捕获为 `ValidationError`，使负例看似通过但没有验证真实 `record.error` 门禁；本修正没有放宽任何断言。
+
+追加结论：**P1=0，P2=0；这是必要且最小的测试 fixture 适配，不改变生产行为或 Reviewer 门禁。** CI run `39878953136` 中 M3R、S/S2、S1、D、P2A、P2B 与 joint 均通过；主 Agent 报告该文件本地 `10 passed`。本独立复审未重复执行已通过测试。
