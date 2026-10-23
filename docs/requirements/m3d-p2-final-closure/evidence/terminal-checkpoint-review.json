@@ -1,0 +1,24 @@
+{
+  "product": {
+    "script": "D:\\webproject\\Linkloom\\work\\p2_terminal_uncertainty_repro.py",
+    "scratch": "D:\\webproject\\Linkloom\\work\\p2-terminal-0zyzo7sd",
+    "injected_post_commit_raises": 1,
+    "hot_status": "BLOCKED",
+    "hot_error": "TOOL_TERMINAL_CHECKPOINT_FAILED",
+    "runtime_state_status": "failed",
+    "latest_inspect_ledger_status": "pending",
+    "persisted_cold_status": "BLOCKED",
+    "persisted_cold_error": "SAVED_RESULT_REVALIDATION_FAILED",
+    "fresh_cold_status": "BLOCKED",
+    "fresh_cold_error": "SAVED_RESULT_REVALIDATION_FAILED"
+  },
+  "direct_helper": {
+    "script": "D:\\webproject\\Linkloom\\work\\p2_terminal_direct_repro.py",
+    "scratch": "D:\\webproject\\Linkloom\\work\\p2-terminal-direct-x5hb4z3_",
+    "caller_error": "TOOL_TERMINAL_CHECKPOINT_FAILED",
+    "disk_record_status": "completed",
+    "disk_record_error": null,
+    "isolated_query_status": "SUPPORTED",
+    "classification": "low-level isolated callback contract observation; no Product route bypass"
+  }
+}

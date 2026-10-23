@@ -1,0 +1,48 @@
+{
+  "case_sha256": "6a31f461ca0535a3b999f1fcf40b07a66380194ffdf5f5119980fec36d5ca9c0",
+  "started_at": "2026-10-22T10:49:06.846964+00:00",
+  "prior_requests": 69,
+  "prior_reserved_usd_conservative": 19.43,
+  "new_max_requests": 10,
+  "new_max_reserved_usd": 3,
+  "project_max_usd": 50,
+  "previous_unknown_reservation_retained": true,
+  "authorization": "Explicit new M3-S1 user task; not an automatic retry of M3-S UNCERTAIN",
+  "prior_journals": [
+    {
+      "path": "..\\m3s\\work\\m3s-live-20261022\\global-provider\\budget.json",
+      "sha256": "a6f9b5f016ae0c499648f23b4e1785ec8763d526be0aa3d06283a42046ed09aa",
+      "requests": 11,
+      "reserved_usd": 2.75,
+      "failure": null
+    },
+    {
+      "path": "..\\m3s\\work\\m3s-live-phase2-20261022\\global-provider\\budget.json",
+      "sha256": "06c194f886f7f66bc8ee484021a15aa40ac8026d4f25aa7e4e15d6f420e772b3",
+      "requests": 7,
+      "reserved_usd": 1.75,
+      "failure": null
+    },
+    {
+      "path": "..\\m3s\\work\\m3s-live-phase3-20261022\\global-provider\\budget.json",
+      "sha256": "829953e53d88fdeaa4a8684f7d95ef515ed7f535c2ce2e2ebe31fd6de3b5b77c",
+      "requests": 2,
+      "reserved_usd": 0.5,
+      "failure": null
+    },
+    {
+      "path": "..\\m3s\\work\\m3s-live-phase4-20261022\\global-provider\\budget.json",
+      "sha256": "44ed5c64b9f519d0f3e2d2c1c16bfb63f1d61b465a73f4fc1aa80fc1ff5cca75",
+      "requests": 2,
+      "reserved_usd": 0.5,
+      "failure": "PROVIDER_UNCERTAIN"
+    }
+  ],
+  "model": "gemini-3.8-flash",
+  "sdk": "2.22.0",
+  "thinking_level": "low",
+  "sdk_attempts": 1,
+  "billing_project_verified": false,
+  "actual_bill_usd": null,
+  "promotional_credit_deduction_usd": null
+}

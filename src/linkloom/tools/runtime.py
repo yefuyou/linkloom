@@ -11,7 +11,7 @@ from linkloom.runtime.errors import ValidationError, ToolArgumentValidationError
 from linkloom.runtime.models import _assert_json_safe_primitive
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
-from linkloom.tools.registry import CallBoundExecutor, ToolRegistry
+from linkloom.tools.registry import CallBoundExecutor, LedgerBoundExecutor, ToolRegistry
 from linkloom.tools.tool_policy import ToolPolicyEnforcer
 
 
@@ -294,6 +294,8 @@ def _persist_terminal(
                 "Tool execution reached a terminal state, but its checkpoint is uncertain.",
                 details,
             )
+            if result.status == 'ok':
+                ledger.record_checkpoint_uncertain(call, uncertain.error)
             _emit_tool_event(event_sink, "tool.failed", "failed", call, uncertain.error)
             return uncertain
 
@@ -581,7 +583,12 @@ class ToolRuntime:
             )
 
         try:
-            raw_result = executor.execute_call(call) if isinstance(executor, CallBoundExecutor) else executor(call.arguments)
+            if isinstance(executor, LedgerBoundExecutor):
+                raw_result = executor.execute_call(call, active_ledger.to_list())
+            elif isinstance(executor, CallBoundExecutor):
+                raw_result = executor.execute_call(call)
+            else:
+                raw_result = executor(call.arguments)
         except ToolArgumentValidationError as error:
             return _record_failed_and_persist(
                 call, "TOOL_INVALID_ARGUMENTS", "input",

@@ -1,0 +1,56 @@
+{
+  "fresh_process": true,
+  "python": "D:\\Anaconda\\python.exe",
+  "command_module": "tests.m3p_support",
+  "status_code": 200,
+  "payload": {
+    "result": {
+      "schema_version": "product-ask/v1",
+      "query": "请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？",
+      "workspace_id": "ws_3dbceeeaeb4d415f89d18024fcdbca76",
+      "scope": {
+        "subject": "",
+        "relation": "",
+        "as_of": null
+      },
+      "path": "TASK_INVESTIGATION",
+      "route": {
+        "intent": "TASK_INVESTIGATION",
+        "code": "SOURCE_TASK_INVESTIGATION",
+        "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+        "admission": {
+          "origin": "USER_SCOPED",
+          "context": {
+            "domain": "tasks",
+            "snapshot_hash": "f746ce170110ae966819bb7f396544afd588088a2c5bc927cc530823f0fa1626"
+          }
+        }
+      },
+      "status": "BLOCKED",
+      "conclusions": [],
+      "discovery": null,
+      "evidence": [],
+      "receipts": [],
+      "uncertainty": {
+        "unknown_fields": [],
+        "statement": ""
+      },
+      "agent_run_id": "ui-fe567ff65376",
+      "reviewer": {
+        "performed": false,
+        "accepted": false
+      },
+      "timeline": null,
+      "progress": null,
+      "error": {
+        "code": "SAVED_RESULT_REVALIDATION_FAILED",
+        "classification": "validation",
+        "message": "Task execution or saved evidence did not pass revalidation; no conclusion was released."
+      },
+      "metrics": {},
+      "trace": [],
+      "preparation": null,
+      "working_context_audit": null
+    }
+  }
+}

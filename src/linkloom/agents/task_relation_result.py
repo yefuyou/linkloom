@@ -29,7 +29,7 @@ def project_task_relation_result(final_answer, records, visible_results, workspa
         selected = [by_id[final[key]] for key in keys]
         for record, tool_id in zip(selected, tool_ids):
             visible = list(visible_results) + (list(prior_visible_results) if require_semantic and tool_id != "analyze_task_semantics" else [])
-            if (record.tool_id != tool_id or record.status != "completed"
+            if (record.tool_id != tool_id or record.status != "completed" or record.error is not None
                     or record.result.get("status") != "ok"
                     or record.result.get("value", {}).get("workspace_id") != workspace_id
                     or record.result not in visible):
@@ -54,23 +54,38 @@ def project_task_relation_result(final_answer, records, visible_results, workspa
         raise ValidationError("Task relation Final must select observed successful receipts.") from error
 
 
-def review_task_relation_result(payload, tools, *, records, run_id):
+def task_relation_task_id(model_records, run_id):
+    """Canonical retrieval identity comes from Host model turns, not tool rows."""
+    identities = {r.task_id for r in model_records
+                  if r.run_id == run_id and r.agent_id == 'retrieval_agent'}
+    if len(identities) != 1:
+        raise ValueError('MISSING_OR_AMBIGUOUS_RETRIEVAL_TASK')
+    return next(iter(identities))
+
+
+def review_task_relation_result(payload, tools, *, records, run_id, task_id=None):
     """Re-read source and lifecycle views; no semantic assertion is supplied by the model."""
     semantic_checks = []
     try:
+        records = tuple(records)
+        if tools.inspection_plan is not None and not task_id:
+            raise ValueError('canonical retrieval task is required for inspection plans')
         if payload.get("schema_version") != "task-relations-result/v1" or payload["workspace_id"] != tools.workspace_id:
             raise ValueError("workspace or schema mismatch")
         fields = ("context", "relation_query", "semantic_analysis") if tools.semantic_analysis is not None else ("context", "relation_query")
         if len(payload["receipts"]) != len(fields):
             raise ValueError("missing receipts")
         by_id = {r.call_id: r for r in records if r.run_id == run_id and r.agent_id == "retrieval_agent"}
+        if len({r.call_id for r in records}) != len(records):
+            raise ValueError("duplicate ledger receipt identity")
         selected = [by_id[r["call_id"]] for r in payload["receipts"]]
         for receipt, record, field in zip(payload["receipts"], selected, fields):
             if (receipt != dict(call_id=record.call_id, tool_id=record.tool_id,
                                 arguments=record.arguments, sequence=record.sequence)
-                    or record.status != "completed" or record.result.get("status") != "ok"
+                    or record.status != "completed" or record.error is not None or record.result.get("status") != "ok"
                     or record.result.get("value") != payload[field]
-                    or record.task_id != selected[0].task_id):
+                    or record.task_id != selected[0].task_id
+                    or (task_id is not None and record.task_id != task_id)):
                 raise ValueError("receipt differs from current run ledger")
         if any(a.sequence >= b.sequence for a, b in zip(selected, selected[1:])):
             raise ValueError("receipt sequence changed")
@@ -80,11 +95,17 @@ def review_task_relation_result(payload, tools, *, records, run_id):
         if payload != expected_payload:
             raise ValueError("result differs from its fixed ledger projection")
         expected = (("inspect_task_context", "context"), ("query_task_relations", "relation_query"))
-        for receipt, (tool_id, field) in zip(payload["receipts"], expected):
+        for record, receipt, (tool_id, field) in zip(selected, payload["receipts"], expected):
             if receipt["tool_id"] != tool_id:
                 raise ValueError("unexpected receipt tool")
-            executor = getattr(tools, tool_id)
-            if executor(**receipt["arguments"]) != payload[field]:
+            if tool_id == 'query_task_relations':
+                replayed = tools.query_task_relations_from_record(record, records,
+                    run_id=run_id, task_id=task_id or selected[0].task_id)
+            else:
+                replayed = tools.inspect_task_context(**receipt['arguments'])
+                if tools.inspection_plan is not None:
+                    tools.inspection_receipts_from_record(record)
+            if replayed != payload[field]:
                 return {"status": "fail", "reason": "task_source_or_lifecycle_changed"}
         semantic = tools.semantic_analysis
         if len(payload["receipts"]) != (3 if semantic is not None else 2):
@@ -100,4 +121,5 @@ def review_task_relation_result(payload, tools, *, records, run_id):
     except (ValueError, KeyError, TypeError, AttributeError):
         return {"status": "fail", "reason": "task_relation_review_failed"}
     return {"status": "pass", "result_type": "task-relations-result/v1",
-            "checks": ["CURRENT_SOURCE_VERSIONS", "P4_LIFECYCLE_REPLAY", "RECEIPT_PROJECTION", *semantic_checks]}
+            "checks": ["CURRENT_SOURCE_VERSIONS", "P4_LIFECYCLE_REPLAY", "RECEIPT_PROJECTION",
+                       "HOST_LEDGER_INSPECTION_REPLAY", *semantic_checks]}

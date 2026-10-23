@@ -10,6 +10,11 @@ from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.semantic_ingestion.task_relation_semantic_models import Endpoint, SemanticQuery
 
 
+def premise_satisfied(kind, outcome):
+    """A bounded attempt ending UNKNOWN is terminal, not a positive premise."""
+    return outcome == 'SUPPORTED' if kind == 'relation' else outcome in {'COMPLETED', 'SUPPORTED'}
+
+
 @dataclass(frozen=True, slots=True)
 class PlanningLimits:
     max_subgoals: int = 12
@@ -155,7 +160,7 @@ class InvestigationPlan:
         def satisfied(identity):
             receipt = receipts.get(identity)
             return (receipt is not None and
-                    (steps[identity].kind != 'relation' or receipt.outcome == 'SUPPORTED') and
+                    premise_satisfied(steps[identity].kind, receipt.outcome) and
                     all(satisfied(parent) for parent in steps[identity].depends_on))
 
         return tuple(s for s in self.steps if s.id not in receipts and all(satisfied(p) for p in s.depends_on))

@@ -35,7 +35,7 @@ from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.document_text import DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, parse_source_text
 from linkloom.semantic_ingestion.timestamped_text import ParseStatus
-from linkloom.semantic_ingestion.task_observation import TaskProposal
+from linkloom.semantic_ingestion.task_observation import TaskProposal, DATE_TOKEN_PATTERN
 from linkloom.semantic_ingestion.task_field_binding import binding_schema, STATES
 from linkloom.tools.contracts import ToolCall, ToolDefinition
 
@@ -208,6 +208,7 @@ class ProviderRequestAuthorization:
 class TaskDiscoveryProfile(StrEnum):
     CROSS_MESSAGE_V1 = "task-discovery-cross-message/v1"
     FIELD_GROUNDED_V2 = 'task-field-grounding/v2'
+    TASK_RECALL_V3 = 'task-recall/v3'
 
 
 @dataclass(frozen=True, slots=True)
@@ -465,6 +466,49 @@ def _field_schema():
     return schema
 
 
+def _recall_prompt(segment, task_input):
+    return '''WORK DISCOVERY CONTRACT:
+Work existence and field availability are independent. First inventory concrete
+work actually asserted in EACH canonical message; then interpret its fields.
+An explicitly adopted work item remains ASSERTED even if nobody is assigned,
+the delivery date is undecided, or all four fields are null. Emit that task with
+its exact work witness and four null/UNKNOWN bindings as appropriate. A narrator
+or progress reporter is not automatically its owner. Field-level uncertainty,
+negation, tentative dates or a rejected owner must not erase asserted work.
+Apply conditionality and cancellation to the work they actually qualify. Do not
+turn proposals, conditional suggestions, rejected work, questions, quoted
+examples, historical accounts or background action descriptions into tasks.
+Do not create work just because an action verb occurs. Before returning, check
+each message for omitted asserted work and each proposed task for real assertion.
+This check is internal: return only the existing structured tool output once.
+
+DATE OUTPUT CONTRACT:
+Keep three distinct layers: (1) binding.quote is a verbatim role-bearing source
+excerpt, including boundary words; (2) task.deadline_text and the deadline
+binding.value are the SAME bare date token copied from that excerpt; (3) binding
+role/state explain whether it is an asserted task deadline or an unrelated,
+uncertain or historical date. Date-token syntax is YYYY-MM-DD, Y年M月D日/号,
+M月D日/号, Y年M月 or M月. Never append before/after/by or other role words to
+the token. Never normalize the token into a different source spelling, repair an
+invalid date, or fill missing precision. Program code resolves complete calendar
+days independently; partial dates remain partial. Non-deadline/uncertain dates
+leave the deadline field null; put any explanation in the role/state, not token.
+
+''' + _field_prompt(segment, task_input)
+
+
+def _recall_schema():
+    schema = _field_schema()
+    task = schema['properties']['claims']['items']['properties']['task']['properties']
+    task['deadline_text'] = dict(type=['string', 'null'], maxLength=40,
+        pattern=DATE_TOKEN_PATTERN, description='Bare source date token only; no boundary words. Null when unknown. Preserve source precision and spelling.')
+    task['work_state']['description'] = 'Assertion of the work itself, independently of missing or uncertain fields.'
+    binding = task['field_bindings']['items']['properties']
+    binding['value']['description'] = 'For deadline, equal task.deadline_text: a bare source date token, never role or boundary words.'
+    binding['quote']['description'] = 'Exact source role witness including boundary words; distinct from the bare date token.'
+    return schema
+
+
 def _request_ids(fingerprint: str, attempt: int) -> tuple[str, str, str, str]:
     run_id = f"semrun_{fingerprint[:24]}"
     turn_id = f"semturn_{fingerprint[:20]}_{attempt}"
@@ -661,10 +705,11 @@ class ProviderNeutralSemanticExtractor:
 
         task_input = (context.task_discovery.input_for(segment, context.expected_workspace_id)
                       if context.task_discovery is not None else None)
-        field_profile = task_input is not None and task_input['profile'] == TaskDiscoveryProfile.FIELD_GROUNDED_V2.value
-        schema = _field_schema() if field_profile else _EXTRACTION_SCHEMA
+        recall_profile = task_input is not None and task_input['profile'] == TaskDiscoveryProfile.TASK_RECALL_V3.value
+        field_profile = recall_profile or (task_input is not None and task_input['profile'] == TaskDiscoveryProfile.FIELD_GROUNDED_V2.value)
+        schema = _recall_schema() if recall_profile else _field_schema() if field_profile else _EXTRACTION_SCHEMA
         schema_sha256 = _sha256(_canonical_json(schema)) if field_profile else _EXTRACTION_SCHEMA_SHA256
-        prompt = (_field_prompt(segment, task_input) if field_profile else _task_prompt(segment, task_input) if task_input is not None
+        prompt = (_recall_prompt(segment, task_input) if recall_profile else _field_prompt(segment, task_input) if field_profile else _task_prompt(segment, task_input) if task_input is not None
                   else _prompt(segment, context, self.prompt_version))
         prompt_sha256 = _sha256(prompt.encode("utf-8"))
         generation_options = self.generation_options

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="6" time="133.790" timestamp="2026-10-22T19:24:21.230097+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3p_product_review" name="test_new_service_reads_saved_result_without_model_calls" time="7.523" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[update]" time="11.565" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[remove]" time="24.949" /><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[relation_retract]" time="15.287"><failure message="TimeoutError: timed out">tests\integration\test_m3p_product_review.py:176: in test_http_hot_and_new_process_hide_invalidated_results
+    result = http_ask(base, ws)
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+D:\Anaconda\Lib\socket.py:719: in readinto
+    return self._sock.recv_into(b)
+E   TimeoutError: timed out</failure></testcase><testcase classname="tests.integration.test_m3p_product_review" name="test_revoked_evidence_without_source_change_cannot_be_resurrected" time="31.702" /><testcase classname="tests.integration.test_m3q_provider_host" name="test_normal_host_requires_source_permission_then_runs_actual_adapter" time="22.427"><failure message="AssertionError: assert 'db46c5a015af...83321827468e4' == '33193a384008...e6300c2d5e7df'&#10;  &#10;  - 33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df&#10;  + db46c5a015af3c46828290cfebd462e80ddb3f8fcf27a6f2f2983321827468e4">tests\integration\test_m3q_provider_host.py:265: in test_normal_host_requires_source_permission_then_runs_actual_adapter
+    assert canonical_hash(schema) == canonical_hash(_recall_schema())
+E   AssertionError: assert 'db46c5a015af...83321827468e4' == '33193a384008...e6300c2d5e7df'
+E
+E     - 33193a38400807ca392a1d58fa1a2d10590f8d85230ddcc7994e6300c2d5e7df
+E     + db46c5a015af3c46828290cfebd462e80ddb3f8fcf27a6f2f2983321827468e4</failure></testcase></testsuite></testsuites>

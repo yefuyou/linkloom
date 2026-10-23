@@ -1,0 +1,77 @@
+{
+  "limits": {
+    "max_requests": 10,
+    "max_input_tokens": 1000000,
+    "max_output_tokens": 65536,
+    "max_cost_usd": 3,
+    "max_seconds": 600,
+    "request_timeout_seconds": 65,
+    "request_cost_upper_bound_usd": 0.25,
+    "input_usd_per_million": 1.0,
+    "output_usd_per_million": 5.0
+  },
+  "requests_reserved": 3,
+  "started_at": "2026-10-22T10:49:06.851721+00:00",
+  "input_tokens_reserved": 58226,
+  "output_tokens_reserved": 12288,
+  "cost_reserved_usd": 0.75,
+  "actual_cost_usd": null,
+  "elapsed_seconds": 36.18,
+  "failure": null,
+  "attempts": [
+    {
+      "sequence": 1,
+      "stage": "semantic-extractor-v1",
+      "request_sha256": "59780253b0dd8e724d1ad0052717832f9f2ca33618cfe568cbe64dfe999f7b2a",
+      "input_reserved": 15368,
+      "output_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "482ef285e173bb0aa56b021dddd2fb18966c1577f82cce8a926946d108e78133",
+      "usage": {
+        "input_tokens": 1994,
+        "output_tokens": 880,
+        "total_tokens": 2874,
+        "duration_ms": 9709.664
+      },
+      "provider_request_id": null,
+      "provider_response_id": "N-rZauSdHqfgytMPkKDZoAs"
+    },
+    {
+      "sequence": 2,
+      "stage": "question-planner",
+      "request_sha256": "cd5adaf84cae34733054d6c962ecf4f5de82b743f7a90ef694c052ecb5fef2a9",
+      "input_reserved": 18592,
+      "output_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "6e472e43cf1000d9d1f782a348ff53ed78c26c08f383f822c701a36226a93fd8",
+      "usage": {
+        "input_tokens": 4701,
+        "output_tokens": 829,
+        "total_tokens": 5530,
+        "duration_ms": 7792.956
+      },
+      "provider_request_id": null,
+      "provider_response_id": "PurZauShMKGoytMPm4yuwQg"
+    },
+    {
+      "sequence": 3,
+      "stage": "question-planner",
+      "request_sha256": "b766cf1735d14377316335d211df87817a91cd69d34c1094776d6ddb7ae2b3d7",
+      "input_reserved": 24266,
+      "output_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "outcome": "SUCCEEDED",
+      "response_sha256": "05ac367153de97df094dcd6c2ea5d287794bf4d96d9d6be800d8b3887308ab7e",
+      "usage": {
+        "input_tokens": 6753,
+        "output_tokens": 854,
+        "total_tokens": 7607,
+        "duration_ms": 7356.433
+      },
+      "provider_request_id": null,
+      "provider_response_id": "RurZav7-MPuLytMPpPCg8Ao"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+_ test_shared_raw_text_has_distinct_verified_work_ids_and_unknown_fields_survive _
+
+    def test_shared_raw_text_has_distinct_verified_work_ids_and_unknown_fields_survive():
+        artifact = source()
+        rows = [task(WORK[0], unknown=True), task(WORK[1])]
+        observations = released(discover(artifact, rows))
+>       assert len(observations) == 2
+E       assert 0 == 2
+E        +  where 0 = len(())
+
+tests\unit\test_p2_work_identity.py:42: AssertionError
+_____ test_candidate_order_and_reimport_time_do_not_change_work_identity ______
+
+    def test_candidate_order_and_reimport_time_do_not_change_work_identity():
+        artifact = source()
+        rows = [task(w) for w in WORK]
+        first, second = discover(artifact, rows), discover(artifact, list(reversed(rows)))
+        refs = lambda result: {o.description: ObservationRef.from_observation(o) for o in released(result)}
+>       assert len(refs(first)) == 2 and refs(first) == refs(second)
+E       AssertionError: assert (0 == 2)
+E        +  where 0 = len({})
+E        +    where {} = <function test_candidate_order_and_reimport_time_do_not_change_work_identity.<locals>.<lambda> at 0x0000016954DBC5E0>(TaskDiscoveryResult(valid_observations=(), partial_observations=(), failures=(DiscoveryFailure(artifact_id='p2-work', ...tion:v1:segment_v1_0764ef45932c935c363dfb0effcb673b05e5d8acff18ba72db2fd3c2cd03c5c5', verified_description_parts=()),)))
+
+tests\unit\test_p2_work_identity.py:59: AssertionError
+_ test_duplicate_work_is_one_observation_even_if_description_part_is_repeated _
+
+    def test_duplicate_work_is_one_observation_even_if_description_part_is_repeated():
+        artifact = source()
+        row = task(WORK[0])
+        duplicate = json.loads(json.dumps(row))
+        duplicate['task']['description_parts'] *= 2
+        result = discover(artifact, [row, row, duplicate, task(WORK[1])])
+>       assert {o.description for o in released(result)} == set(WORK)
+E       AssertionError: assert set() == {'���ݾ������', '�����ؽ�'}
+E         
+E         Extra items in the right set:
+E         '���ݾ������'
+E         '�����ؽ�'
+E         Use -v to get more diff
+
+tests\unit\test_p2_work_identity.py:71: AssertionError
+_____ test_conflicting_same_work_is_quarantined_without_losing_other_work _____
+
+    def test_conflicting_same_work_is_quarantined_without_losing_other_work():
+        artifact = source()
+        original, conflict = task(WORK[0]), task(WORK[0])
+        conflict['task']['field_bindings'][0]['role'] = 'HISTORICAL_OWNER'
+        assert observe(artifact, original).observation_id == observe(artifact, conflict).observation_id
+        for rows in ([original, conflict, task(WORK[1])], [task(WORK[1]), conflict, original]):
+            result = discover(artifact, rows)
+>           assert [o.description for o in released(result)] == [WORK[1]]
+E           AssertionError: assert [] == ['�����ؽ�']
+E             
+E             Right contains one more item: '�����ؽ�'
+E             Use -v to get more diff
+
+tests\unit\test_p2_work_identity.py:83: AssertionError
+_______ test_work_witness_is_independent_of_raw_window_and_field_values _______
+
+    def test_work_witness_is_independent_of_raw_window_and_field_values():
+        artifact = source()
+        row = task(WORK[0])
+        original = observe(artifact, row)
+        row['task']['text'] = WORK[0]
+        cropped = observe(artifact, row)
+>       assert original.observation_id == cropped.observation_id
+E       AssertionError: assert 'task_observa...561057841024b' == 'task_observa...7eb69179d2f4d'
+E         
+E         - task_observation_v1_59641e2036bac6bb068d79ded9d9e4d6172b18c8b687bca3bc07eb69179d2f4d
+E         + task_observation_v1_0623af4fb52dbf98ca12d357914fd744979d82e65a3db75910a561057841024b
+
+tests\unit\test_p2_work_identity.py:96: AssertionError
+__________ test_work_evidence_order_is_canonical_and_not_a_new_task ___________
+
+    def test_work_evidence_order_is_canonical_and_not_a_new_task():
+        artifact = source()
+        row = task(WORK[0])
+        row['task']['description_parts'] = list(WORK)
+        original = observe(artifact, row)
+        row['task']['description_parts'].reverse()
+        reordered = observe(artifact, row)
+>       assert original == reordered and original.verify(artifact)
+E       AssertionError: assert (TaskObservati...te='ASSERTED') == TaskObservati...te='ASSERTED')
+E         
+E         Omitting 20 identical items, use -vv to show
+E         Differing attributes:
+E         ['description', 'field_evidence']
+E         
+E         Drill down into differing attribute description:
+E           description: '���ݾ�����飻�����ؽ�' != '�����ؽ������ݾ������'...
+E         
+E         ...Full output truncated (7 lines hidden), use '-vv' to show)
+
+tests\unit\test_p2_work_identity.py:109: AssertionError
+________ test_ambiguous_work_occurrence_cannot_be_bound_to_first_match ________
+
+    def test_ambiguous_work_occurrence_cannot_be_bound_to_first_match():
+        artifact = replace(source(), content=SOURCE + WORK[0])
+        row = task(WORK[0])
+        row['task']['text'] = TEXT + WORK[0]
+        result = discover(artifact, [row])
+>       assert not released(result)
+E       AssertionError: assert not (TaskObservation(observation_id='task_observation_v1_c22899d5da693af3f3bd5bd1aa5a00069e163cd501b8fe3e01e194e7b58d9cdc'..., state='NOT_STATED', quote='', task_quote='���ݾ������', basis='SOURCE_TEXT', message_ordinal=0)), work_state='ASSERTED'),)
+E        +  where (TaskObservation(observation_id='task_observation_v1_c22899d5da693af3f3bd5bd1aa5a00069e163cd501b8fe3e01e194e7b58d9cdc'..., state='NOT_STATED', quote='', task_quote='���ݾ������', basis='SOURCE_TEXT', message_ordinal=0)), work_state='ASSERTED'),) = released(TaskDiscoveryResult(valid_observations=(), partial_observations=(TaskObservation(observation_id='task_observation_v1_c...egment_v1_731ab079a2bb5d7967fb7a18457ac964497af6ab456aaae8e595fdaa07592a4d', verified_description_parts=('���ݾ������',)),)))
+
+tests\unit\test_p2_work_identity.py:117: AssertionError
+_ test_v2_cannot_forge_location_or_identity_version_or_move_work_outside_raw __
+
+    def test_v2_cannot_forge_location_or_identity_version_or_move_work_outside_raw():
+        artifact = source()
+        observation = observe(artifact, task(WORK[0]))
+>       assert observation.observation_id.startswith('task_observation_v2_')
+E       AssertionError: assert False
+E        +  where False = <built-in method startswith of str object at 0x0000016958E4C9B0>('task_observation_v2_')
+E        +    where <built-in method startswith of str object at 0x0000016958E4C9B0> = 'task_observation_v1_0623af4fb52dbf98ca12d357914fd744979d82e65a3db75910a561057841024b'.startswith
+E        +      where 'task_observation_v1_0623af4fb52dbf98ca12d357914fd744979d82e65a3db75910a561057841024b' = TaskObservation(observation_id='task_observation_v1_0623af4fb52dbf98ca12d357914fd744979d82e65a3db75910a561057841024b',...N', state='NOT_STATED', quote='', task_quote='���ݾ������', basis='SOURCE_TEXT', message_ordinal=0)), work_state='ASSERTED').observation_id
+
+tests\unit\test_p2_work_identity.py:124: AssertionError
+_______ test_baseline_v1_payload_and_external_ref_are_exactly_preserved _______
+
+    def test_baseline_v1_payload_and_external_ref_are_exactly_preserved():
+        fixture = json.loads((Path(__file__).parents[1] / 'fixtures' / 'p2_work_identity_v1.json').read_text(encoding='utf8'))
+        data = fixture['source']
+        artifact = RawArtifact(**dict(data, ingestion_time=datetime.fromisoformat(data['ingestion_time'])))
+        for saved in fixture['observations']:
+            o = TaskObservation.from_dict(saved['observation'])
+            assert o.verify(artifact) and o.to_dict() == saved['observation']
+            assert ObservationRef.from_observation(o).to_dict() == saved['ref']
+            raw = next(e for e in o.field_evidence if e.field == 'raw_text')
+            expected = [o.provenance.workspace_id, o.provenance.artifact_version_id,
+                        o.provenance.evidence_ref, raw.char_start, raw.char_end]
+            assert o.observation_id == 'task_observation_v1_' + hashlib.sha256(json.dumps(expected, ensure_ascii=False).encode()).hexdigest()
+            with pytest.raises(ValueError, match='identity'):
+                replace(o, observation_id='task_observation_v1_' + 'f' * 64)
+            assert not o.verify(replace(artifact, content=artifact.content + '����'))
+        old_bound = TaskObservation.from_dict(fixture['observations'][1]['observation'])
+        new = observe(artifact, task(WORK[0]))
+>       assert new.observation_id != old_bound.observation_id
+E       AssertionError: assert 'task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee' != 'task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee'
+E        +  where 'task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee' = TaskObservation(observation_id='task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee',...N', state='NOT_STATED', quote='', task_quote='���ݾ������', basis='SOURCE_TEXT', message_ordinal=0)), work_state='ASSERTED').observation_id
+E        +  and   'task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee' = TaskObservation(observation_id='task_observation_v1_6d27c0edef7866cb9fdb24d1566aba301e0d9721406d951c1f9c12881ea8d1ee',...N', state='NOT_STATED', quote='', task_quote='���ݾ������', basis='SOURCE_TEXT', message_ordinal=0)), work_state='ASSERTED').observation_id
+
+tests\unit\test_p2_work_identity.py:155: AssertionError
+- generated xml file: D:\webproject\Linkloom\work\m3d-fix-work-identity\docs\requirements\p2-a-work-identity\evidence\before-contract.xml -
+=========================== short test summary info ===========================
+FAILED tests/unit/test_p2_work_identity.py::test_shared_raw_text_has_distinct_verified_work_ids_and_unknown_fields_survive
+FAILED tests/unit/test_p2_work_identity.py::test_candidate_order_and_reimport_time_do_not_change_work_identity
+FAILED tests/unit/test_p2_work_identity.py::test_duplicate_work_is_one_observation_even_if_description_part_is_repeated
+FAILED tests/unit/test_p2_work_identity.py::test_conflicting_same_work_is_quarantined_without_losing_other_work
+FAILED tests/unit/test_p2_work_identity.py::test_work_witness_is_independent_of_raw_window_and_field_values
+FAILED tests/unit/test_p2_work_identity.py::test_work_evidence_order_is_canonical_and_not_a_new_task
+FAILED tests/unit/test_p2_work_identity.py::test_ambiguous_work_occurrence_cannot_be_bound_to_first_match
+FAILED tests/unit/test_p2_work_identity.py::test_v2_cannot_forge_location_or_identity_version_or_move_work_outside_raw
+FAILED tests/unit/test_p2_work_identity.py::test_baseline_v1_payload_and_external_ref_are_exactly_preserved
+9 failed in 11.37s
+Exception ignored in: <function Console.__del__ at 0x00000169566DB100>
+Traceback (most recent call last):
+  File "C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pyreadline3\console\console.py", line 254, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008

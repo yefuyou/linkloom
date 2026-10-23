@@ -1,0 +1,514 @@
+[
+  {
+    "path": "work\\m3s2-live\\provider\\budget.json",
+    "sha256": "d9c6114cb46bcbd226d819386dde2ccaaf30ae2c952e21bc7e02b3c8deb915d6",
+    "budget": {
+      "limits": {
+        "max_requests": 20,
+        "max_input_tokens": 1500000,
+        "max_output_tokens": 100000,
+        "max_cost_usd": 5,
+        "max_seconds": 1000,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 9,
+      "started_at": "2026-10-22T11:08:34.355072+00:00",
+      "input_tokens_reserved": 161928,
+      "output_tokens_reserved": 36864,
+      "cost_reserved_usd": 2.25,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 74.346,
+      "failure": null,
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "61810f6a94c668cf8df7d056a54faa73374dae7f69a393ea7e3dd283d6e04866",
+          "input_reserved": 18279,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "f42ccbc9163bab2882769acbf636efe072bb5d534bc88396f7183fcb417a02e9",
+          "usage": {
+            "input_tokens": 2524,
+            "output_tokens": 932,
+            "total_tokens": 3456,
+            "duration_ms": 10954.268
+          },
+          "provider_request_id": null,
+          "provider_response_id": "u-7ZarnAK8Kx5NoPqpaZwAc"
+        },
+        {
+          "sequence": 2,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "07fdea946888e4b784c76d7525f7077a8bf12a44bc479320f00efaed42c4b3b9",
+          "input_reserved": 18244,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "c5f36451c46db9a9cb30b47d539e4209b2f98100775d0dcf1f4ff2ded8f35cfb",
+          "usage": {
+            "input_tokens": 2501,
+            "output_tokens": 913,
+            "total_tokens": 3414,
+            "duration_ms": 7724.965
+          },
+          "provider_request_id": null,
+          "provider_response_id": "xO7Zap6IErSg5NoP3Oin-AY"
+        },
+        {
+          "sequence": 3,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "7d75bc9cbc2d999e38b5a44b78745d89c6917bc14d100283b0703614a305aca7",
+          "input_reserved": 18308,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "bb7b27ab2fcbebe7d5485f8287f355fb049c6148b592c3c762a3886cb56e4da2",
+          "usage": {
+            "input_tokens": 2522,
+            "output_tokens": 834,
+            "total_tokens": 3356,
+            "duration_ms": 7347.29
+          },
+          "provider_request_id": null,
+          "provider_response_id": "zO7Zape_A9XRiLMPwvey2AY"
+        },
+        {
+          "sequence": 4,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "d6881464fe911f571864876886ace0138db95253ce88a212fb8aa84e2d95eb52",
+          "input_reserved": 18249,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "0165de1e3e9e49685d56ba6ee487823e39e745375a4aef99192cc4760541e384",
+          "usage": {
+            "input_tokens": 2501,
+            "output_tokens": 804,
+            "total_tokens": 3305,
+            "duration_ms": 6342.433
+          },
+          "provider_request_id": null,
+          "provider_response_id": "0-7Zau6LHbaj5NoP7fnqiAc"
+        },
+        {
+          "sequence": 5,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "fa96a7e3f4a01d0a154117c4e63908c80a0a52ec112d1068d92d1971a7796154",
+          "input_reserved": 18273,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "509ebf1ae19a5bb40171d2b12215ffad61552a328526921bb4b33eea4aee2b0d",
+          "usage": {
+            "input_tokens": 2543,
+            "output_tokens": 874,
+            "total_tokens": 3417,
+            "duration_ms": 7318.846
+          },
+          "provider_request_id": null,
+          "provider_response_id": "2e7ZauWKN6eqiLMP69nh6AY"
+        },
+        {
+          "sequence": 6,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "34d6c5adc21f4d9313b9a8451f583015cc594386b610489f57743ae7cec3814b",
+          "input_reserved": 18308,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "4210196681627f97ae261606ff83421c305bfbf63277cccce8f8dbb2c437de45",
+          "usage": {
+            "input_tokens": 2536,
+            "output_tokens": 879,
+            "total_tokens": 3415,
+            "duration_ms": 6928.449
+          },
+          "provider_request_id": null,
+          "provider_response_id": "4e7ZatLDEp7QiLMPnKmVsAY"
+        },
+        {
+          "sequence": 7,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "5e00ea68ff29a236e5a26f4744b7b07fb06f2ad01d21f4913ca9258aee5927a2",
+          "input_reserved": 18251,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "6fbe899773743c9b2570c3fff2716fbf655b125bf4d6a64fa2118c5b490cf77b",
+          "usage": {
+            "input_tokens": 2522,
+            "output_tokens": 1305,
+            "total_tokens": 3827,
+            "duration_ms": 9618.602
+          },
+          "provider_request_id": null,
+          "provider_response_id": "6O7ZasvVDfC3xdIPo4732A4"
+        },
+        {
+          "sequence": 8,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "2124b113f774ded20135114673c89037262f41e433502a9de8f2f8237bc3f4fd",
+          "input_reserved": 18254,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "8fbe63a8a578494b40214439ec8d55f4b3cebadf8959a71300d5b77b5255d381",
+          "usage": {
+            "input_tokens": 2527,
+            "output_tokens": 847,
+            "total_tokens": 3374,
+            "duration_ms": 6975.329
+          },
+          "provider_request_id": null,
+          "provider_response_id": "8e7ZarHkNp3b0_gPiMW4gAg"
+        },
+        {
+          "sequence": 9,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "ac008c99829abb5354ce8b650792b3087d49fe54c084e61e3e3767a732a75a76",
+          "input_reserved": 15762,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "756a13cc87205390415b8c9385c9a38fd9f38c8c72dcd6b190244ff6a1eed4bf",
+          "usage": {
+            "input_tokens": 2153,
+            "output_tokens": 1535,
+            "total_tokens": 3688,
+            "duration_ms": 10680.403
+          },
+          "provider_request_id": null,
+          "provider_response_id": "-O7ZaqOQOf68xdIP6d2f4A0"
+        }
+      ]
+    }
+  },
+  {
+    "path": "work\\m3s2-unattempted\\provider\\budget.json",
+    "sha256": "7a05506712f001a6c3cc33b3fc83f54c6128350c03cbe171e77b532ccdec4e2e",
+    "budget": {
+      "limits": {
+        "max_requests": 5,
+        "max_input_tokens": 1500000,
+        "max_output_tokens": 100000,
+        "max_cost_usd": 1.25,
+        "max_seconds": 1000,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 1,
+      "started_at": "2026-10-22T11:13:54.800852+00:00",
+      "input_tokens_reserved": 18798,
+      "output_tokens_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 13.054,
+      "failure": "MODEL_TRANSIENT_FAILURE",
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "811eb1267d6b979cef34eccda490a8043faaa9f21454668e352d162b8f7ba855",
+          "input_reserved": 18798,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "FAILED",
+          "response_sha256": "2620db28bf6face290ab6d66c272349364adc77fc28d7ab8fbbf2c48bf09ed74",
+          "usage": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "total_tokens": null,
+            "duration_ms": null
+          },
+          "provider_request_id": null,
+          "provider_response_id": null,
+          "code": "MODEL_TRANSIENT_FAILURE",
+          "error": {
+            "code": "MODEL_TRANSIENT_FAILURE",
+            "category": "transient",
+            "message": "The Gemini provider failed transiently.",
+            "retryable": true,
+            "outcome": "known_failure",
+            "provider_request_id": null,
+            "provider_metadata": {
+              "provider": "gemini",
+              "model": "gemini-3.8-flash"
+            },
+            "details": {
+              "reason": "provider_exception",
+              "provider": "gemini",
+              "model": "gemini-3.8-flash",
+              "high_level_outcome": "MODEL_TRANSIENT_FAILURE",
+              "low_level_failure_class": "TRANSPORT_TLS",
+              "failure_layer": "TRANSPORT",
+              "exception_type": "ConnectError",
+              "exception_message_safe": "[SSL: UNEXPECTED_EOF_WHILE_READING] EOF [REDACTED]red in violation of protocol (_ssl.c:1028)",
+              "exception_repr_safe": "ConnectError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF [REDACTED]red in violation of protocol (_ssl.c:1028)')",
+              "nested_cause_chain": [
+                {
+                  "relation": "cause",
+                  "exception_type": "ConnectError",
+                  "exception_repr": "ConnectError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF [REDACTED]red in violation of protocol (_ssl.c:1028)')",
+                  "errno": null,
+                  "winerror": null
+                },
+                {
+                  "relation": "context",
+                  "exception_type": "SSLEOFError",
+                  "exception_repr": "SSLEOFError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF [REDACTED]red in violation of protocol (_ssl.c:1028)')",
+                  "errno": 8,
+                  "winerror": null
+                },
+                {
+                  "relation": "reason",
+                  "exception_type": null,
+                  "exception_repr": "UNEXPECTED_EOF_WHILE_READING",
+                  "errno": null,
+                  "winerror": null
+                }
+              ],
+              "exception_fqcn": "httpx.ConnectError",
+              "sdk_exception_fqcn": null,
+              "exception_cause_chain": [
+                {
+                  "relation": "cause",
+                  "exception_fqcn": "httpcore.ConnectError"
+                },
+                {
+                  "relation": "context",
+                  "exception_fqcn": "ssl.SSLEOFError"
+                },
+                {
+                  "relation": "reason",
+                  "exception_fqcn": null
+                }
+              ],
+              "http_status": null,
+              "provider_error_code": null,
+              "provider_error_status": null,
+              "provider_error_message_safe": null,
+              "provider_error_details": null,
+              "provider_error_details_truncated": false,
+              "field_violations": [],
+              "unknown_field_paths": [],
+              "request_id": null,
+              "trace_id": null,
+              "wire_payload_sha256": null,
+              "wire_schema_subtree_sha256": null,
+              "wire_tool_config_sha256": null,
+              "response_status": null,
+              "finish_reason": null,
+              "timeout_type": null,
+              "errno": null,
+              "winerror": null,
+              "target_hostname": "generativelanguage.googleapis.com",
+              "target_port": 443,
+              "configured_proxy_hostname": null,
+              "configured_proxy_port": null,
+              "connection_phase": "TLS",
+              "elapsed_ms": 12074.833,
+              "request_shape_summary": {
+                "contents_count": 1,
+                "role_counts": {
+                  "user": 1
+                },
+                "part_type_counts": {
+                  "text": 1
+                },
+                "system_instruction_present": false,
+                "tool_declaration_count": 1,
+                "thought_signature_count": 0,
+                "provider_continuation_present": false,
+                "generation_config_fields": [
+                  "automatic_function_calling",
+                  "max_output_tokens",
+                  "thinking_config",
+                  "tool_config",
+                  "tools"
+                ]
+              },
+              "failure_stage": "GENERATION",
+              "failure_category": "TRANSPORT_ERROR",
+              "retry_classification": "TRANSPORT_TLS",
+              "retryable": true,
+              "attempt_number": 1,
+              "request_fingerprint": "811eb1267d6b979cef34eccda490a8043faaa9f21454668e352d162b8f7ba855",
+              "response_accepted": false,
+              "api_endpoint_hostname": "generativelanguage.googleapis.com",
+              "api_endpoint_port": 443
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "path": "work\\m3s2-unattempted-2\\provider\\budget.json",
+    "sha256": "89f73b5157fb61ad79922e1862157b1e302b088b321ca7552a429d07d93ae25e",
+    "budget": {
+      "limits": {
+        "max_requests": 4,
+        "max_input_tokens": 1500000,
+        "max_output_tokens": 100000,
+        "max_cost_usd": 1,
+        "max_seconds": 1000,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 4,
+      "started_at": "2026-10-22T11:17:15.911096+00:00",
+      "input_tokens_reserved": 68798,
+      "output_tokens_reserved": 16384,
+      "cost_reserved_usd": 1.0,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 32.662,
+      "failure": null,
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "b9424a0b8b12ae81c8587d2e016db0d7ad09067a39658916db4e0ee8f9644787",
+          "input_reserved": 18704,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "053d836744978b05fc2fcbfbfb505c436eb501a4589d668772e8a5abc5b3ac24",
+          "usage": {
+            "input_tokens": 2709,
+            "output_tokens": 863,
+            "total_tokens": 3572,
+            "duration_ms": 10779.169
+          },
+          "provider_request_id": null,
+          "provider_response_id": "xvDZao6SAqS9wbUP39i6gAc"
+        },
+        {
+          "sequence": 2,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "2c96d5c6eb99890ce0670c1908b24b1d90331042e0dd9b35deff58294876ed0f",
+          "input_reserved": 18731,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "3b936803c64a2a271387a42c870a3057c206b81e2830c93edbd36baff3d8c20c",
+          "usage": {
+            "input_tokens": 2701,
+            "output_tokens": 795,
+            "total_tokens": 3496,
+            "duration_ms": 6809.074
+          },
+          "provider_request_id": null,
+          "provider_response_id": "zfDZat6TO7qe5NoPg5jqiQc"
+        },
+        {
+          "sequence": 3,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "21d90f5503f8f3904906c86cb83ce03017d1df60d82f1b3f7fbd3d338eab3d5a",
+          "input_reserved": 15668,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "7a4be23a2875cd27a0c4a34da82bbd94b26f9d23e175cc7ccf909db14b102852",
+          "usage": {
+            "input_tokens": 2145,
+            "output_tokens": 865,
+            "total_tokens": 3010,
+            "duration_ms": 6926.13
+          },
+          "provider_request_id": null,
+          "provider_response_id": "1fDZaslHmJ7k2g-C0sSIBw"
+        },
+        {
+          "sequence": 4,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "95e3ac7f573827723097736f5d1ea92b27ea0a02a5aa5cae8802c732a34ec9f9",
+          "input_reserved": 15695,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "593f68906ff7e953b2153dea91fc1c7ecf9719493ff1c1df7d5cdd9e6f6a4512",
+          "usage": {
+            "input_tokens": 2137,
+            "output_tokens": 801,
+            "total_tokens": 2938,
+            "duration_ms": 7209.657
+          },
+          "provider_request_id": null,
+          "provider_response_id": "3PDZavXMFoLl5NoP7aeX6AY"
+        }
+      ]
+    }
+  },
+  {
+    "path": "work\\m3s2-product\\campaign-provider\\budget.json",
+    "sha256": "fd0827f0f30de93d443c7625a03baf7a8f14501ffbb3fdbbb58b3c316d857c18",
+    "budget": {
+      "limits": {
+        "max_requests": 6,
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 30000,
+        "max_cost_usd": 1.5,
+        "max_seconds": 300,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 2,
+      "started_at": "2026-10-22T11:19:48.591942+00:00",
+      "input_tokens_reserved": 35872,
+      "output_tokens_reserved": 8192,
+      "cost_reserved_usd": 0.5,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 18.263,
+      "failure": null,
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "6c29c570e4a54866d8507c19ea472f55e4b16f4b79e85c212de9ab6e0e767ffc",
+          "input_reserved": 18230,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "2f05a425bdd30a8dfffc741e58778d631a44a0d24434aca00c0689ab8f193b1f",
+          "usage": {
+            "input_tokens": 2500,
+            "output_tokens": 828,
+            "total_tokens": 3328,
+            "duration_ms": 10961.818
+          },
+          "provider_request_id": null,
+          "provider_response_id": "YfHZat_fIe2_uMYPhdbl8QE"
+        },
+        {
+          "sequence": 2,
+          "stage": "question-planner",
+          "request_sha256": "dc625f62924166e9d0da8a271fac1a79ad5288ee357c01d0acc32b1b1b9ac4b3",
+          "input_reserved": 17642,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "6d190f62faa902bc6f6ff6262f538930a121ac0d084a11ec36edbb7eaa2a861c",
+          "usage": {
+            "input_tokens": 4474,
+            "output_tokens": 484,
+            "total_tokens": 4958,
+            "duration_ms": 5172.618
+          },
+          "provider_request_id": null,
+          "provider_response_id": "aPHZat6uL8m9ytMP0K6q6As"
+        }
+      ]
+    }
+  }
+]

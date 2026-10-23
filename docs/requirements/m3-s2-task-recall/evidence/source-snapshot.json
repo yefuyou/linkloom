@@ -1,0 +1,14 @@
+{
+  "base": "bde9d9e2b88c2e69132cf48d1534dc28d4fca764",
+  "files": {
+    "src/linkloom/semantic_ingestion/extraction.py": "63ba8b413e8962b64fd17ee22429c4ce652ee5a027e7384547a77c2a941d433c",
+    "src/linkloom/semantic_ingestion/task_observation.py": "b82f3c7fb20d55880a475d4335c54bf968dd58a80825c8279fec53a77905ae97",
+    "src/linkloom/semantic_ingestion/task_observation_discovery.py": "5f06bc3a39ba3b691a312eeff18bf5f861fd498fb0a88eef154fd341598a2bf0",
+    "src/linkloom/ui/task_investigation.py": "92cbdbdcb7bdbcad3b560ead8720b5abef0ef97f340b3847ee1fd6797f40818f",
+    "tests/unit/test_task_recall_protocol.py": "ac213edefee6247840ca137ba2b35bd36d9071e44afc575d6bd53a6ae52b0019",
+    "tests/integration/test_m3q_provider_host.py": "78bfb2371941bb52978aacf652022151e327ba82933a781f7cd8c127218fafac",
+    "tests/m3p_support.py": "18c664778f299f106e3dc91e82ed3156a2094dac19c0761319ae6ec26266e490",
+    "scripts/run_m3s2_acceptance.py": "0293e4fb0e0c159a7c4c9d1a1cfa28df5c63249118168904c64ac2b3e77dedeb",
+    "scripts/run_m3s2_product.py": "7a762c79808a82405b8f42bcbd4a3b8096fc1e9089baff8bf405e16f6a9ea510"
+  }
+}

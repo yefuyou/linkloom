@@ -1,0 +1,98 @@
+[
+  {
+    "path": ".gitattributes",
+    "sha256": "1d3c3c9f3fe0e9da4245bdb6ffdebac3fc380eee62a0e20d1dcfd1ff7e73a1bb"
+  },
+  {
+    "path": "combined-http3.xml",
+    "sha256": "27123c585109a040e040e57abbb8f791d83251b83f000a59a34d90d184a8dd86"
+  },
+  {
+    "path": "combined-http4.xml",
+    "sha256": "30d970e49d16e54dc1fa566d0af94330c5c6a28cab2889bffeed1fd51caadb3a"
+  },
+  {
+    "path": "combined-http5.xml",
+    "sha256": "999478ef7c1676d13c7b918b6ea00503a81e1f4c80c3d66187670e90dfed4e4c"
+  },
+  {
+    "path": "combined-initial.xml",
+    "sha256": "fa995ec9c390207f6031a7be8593447953c54a8bb51ea55f0ef1e2f65dab4d02"
+  },
+  {
+    "path": "combined-run2.xml",
+    "sha256": "35f375295eedf09d372d9c3bff21f0cc324d12878940bea208e7d930cb4fe420"
+  },
+  {
+    "path": "integration-checks.json",
+    "sha256": "bb0087845b5ce88fd1d699d87e206eae7fbdc727ae744bd5e50f5495796b411d"
+  },
+  {
+    "path": "live-fields.png",
+    "sha256": "e435a5c8bea65392b5ae90ddc390837b47fa5c6b1f13c0c4c1ed32daf246ce86"
+  },
+  {
+    "path": "live-original-manifest.json",
+    "sha256": "947faa4676474659e7a82fed453108ae06c6b68e7ea2089ec3b2f1a60fda8886"
+  },
+  {
+    "path": "live-reservation.json",
+    "sha256": "980fb5ef2e8b2562122962e21873987f4d00552308ebf712de6cb84ceadcd469"
+  },
+  {
+    "path": "live-result.json",
+    "sha256": "f486319a183a3f9ab327ed9855322b0f68aecbdef6960d0e210d7712cd8ac5a7"
+  },
+  {
+    "path": "live-saved-verification.json",
+    "sha256": "1dc4325c3872575c546f86d3736263cbecdfdbcfe6be68c4cee5a6e0bc56f80e"
+  },
+  {
+    "path": "live-source.png",
+    "sha256": "1fd8683ae3527bedfcc1e5defaa8e9bfec2c56daf8b0ea50e0c8391f53e86e4f"
+  },
+  {
+    "path": "live-summary.json",
+    "sha256": "fa3a5ef2de83ca50b3ba092a909614b4953089e8eb21c5eb253e93bd8d40c116"
+  },
+  {
+    "path": "offline-A.json",
+    "sha256": "50d29edd2b9b239fd084fd9ae998568a0d4a7e2c9dc187a5f61ba3128b223713"
+  },
+  {
+    "path": "offline-B.json",
+    "sha256": "0c44a1aeb1e86ce13144da51fe9fa4db66631c68a4818a9f39132be5ce00a050"
+  },
+  {
+    "path": "offline-browser.json",
+    "sha256": "d9496c4522b1f214d9e2c93184991c46d4048a8d8f519e72d9ef06349bfe6d42"
+  },
+  {
+    "path": "offline-C-fields.png",
+    "sha256": "6d6052f435be111eb6ce428c035643177db84c5e99d03160747e2c6a6d26cce8"
+  },
+  {
+    "path": "offline-C.json",
+    "sha256": "75215f404cf4e66b2490f3c8c4a44a346b952d651f3f20c47e2c95a2bb1f08fd"
+  },
+  {
+    "path": "prelive-budget-audit.json",
+    "sha256": "befe0c5b9e06d596afc3350203c231ef06c08441c7f442194f27c6062484fc78"
+  },
+  {
+    "path": "regression-final.json",
+    "sha256": "80e57d49e43c391cff398661aa466ed41ce1f76c42aceb495bf0e58ea4442111"
+  },
+  {
+    "path": "regression-selection.json",
+    "sha256": "33652bd6aeb3b8688568bbff36cedaacea9ab0a4c1c6cc9edc8d9485dc1fd008"
+  },
+  {
+    "path": "regression-short-path.xml",
+    "sha256": "d28e777f5472a7cb695851fd41f27b685756b06bfc888510923bfa1f78a63973"
+  },
+  {
+    "path": "regression.xml",
+    "sha256": "7a759aa09f40533f2c210d0d3c6d8fa3448fb66a304c53d566488c0a301caadb"
+  }
+]

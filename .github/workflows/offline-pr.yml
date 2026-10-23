@@ -8,6 +8,12 @@ on:
 permissions:
   contents: read
 
+env:
+  OPENAI_API_KEY: ""
+  OPENAI_BASE_URL: ""
+  GOOGLE_API_KEY: ""
+  PYTHONUTF8: "1"
+
 jobs:
   frozen-ledger:
     name: Frozen ledger bytes (${{ matrix.os }})
@@ -167,6 +173,47 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install -e '.[dev,smoke]'
+      # Scripted wire transport; production F/G/Host/Runtime/Reviewer are used.
+      # Keep this separate so the source_handles regression has a clear receipt.
+      - name: M3-R Product semantic tool chain (offline, loopback HTTP only)
+        run: >-
+          python -m pytest -q --junitxml=m3r-semantic-chain.xml
+          tests/integration/test_m3q_provider_host.py
+          tests/unit/test_task_investigation_semantic_projection.py
+          tests/unit/test_task_result_projection.py
+          tests/unit/test_unified_ask.py
+          tests/unit/test_tool_ledger_runtime.py::test_unknown_tool_does_not_create_pending_record
+      - name: M3-S and S2 field binding and task recall
+        run: >-
+          python -m pytest -q --junitxml=m3s-field-recall.xml
+          tests/unit/test_task_field_binding.py
+          tests/unit/test_task_recall_protocol.py
+      - name: M3-S1 bounded replanning through Runtime and Reviewer
+        run: >-
+          python -m pytest -q --junitxml=m3s1-replanning.xml
+          tests/unit/test_m3s1_planning_context.py
+          tests/integration/test_m3s1_ambiguous_product.py
+      - name: M3-D combined F v3 and G replanning contracts
+        run: >-
+          python -m pytest -q --junitxml=m3d-combined.xml
+          tests/integration/test_m3d_combined.py
+      - name: P2-A work identity through Product HTTP and cold read
+        run: >-
+          python -m pytest -q --junitxml=p2a-work-identity.xml
+          tests/unit/test_p2_work_identity.py
+          tests/integration/test_p2_work_identity_http.py
+      - name: P2-B Host ledger authentication and dependency replay
+        run: >-
+          python -m pytest -q --junitxml=p2b-inspect-ledger.xml
+          tests/unit/test_inspect_ledger_host.py
+          tests/integration/test_inspect_ledger_dependency.py
+          tests/integration/test_inspect_ledger_cold_process.py
+          tests/integration/test_inspect_ledger_nonpositive.py
+          tests/integration/test_inspect_ledger_plan_binding.py
+      - name: P2-A and P2-B joint Product execution
+        run: >-
+          python -m pytest -q --junitxml=p2-joint-product.xml
+          tests/integration/test_p2_joint_product.py
       - name: Observation, planning, proof, context, Runtime and HTTP contracts
         run: >-
           python -m pytest -q --junitxml=task-investigation.xml
@@ -198,7 +245,6 @@ jobs:
           tests/unit/test_m3q_gemini_receipts.py
           tests/unit/test_m3q_cli_config.py
           tests/unit/test_m3q_semantic_polarity.py
-          tests/integration/test_m3q_provider_host.py
           tests/integration/test_context_runtime_failures_resume.py
           tests/integration/test_context_runtime_integration.py
           tests/integration/test_m3p_product_review.py
@@ -217,5 +263,12 @@ jobs:
         with:
           name: task-investigation-results
           path: |
+            m3r-semantic-chain.xml
+            m3s-field-recall.xml
+            m3s1-replanning.xml
+            m3d-combined.xml
+            p2a-work-identity.xml
+            p2b-inspect-ledger.xml
+            p2-joint-product.xml
             task-investigation.xml
             work/ci-task-http

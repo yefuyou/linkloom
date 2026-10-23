@@ -220,6 +220,8 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
     context = SemanticContext(sources.workspace_id, manifest['question'], sources.artifacts, observations,
         tuple((f'task_{i}', ObservationRef.from_observation(o)) for i, o in enumerate(observations)),
         spans, sources.registry, frozenset(artifacts), True, False)
+    if plan.workspace_id != sources.workspace_id or plan.snapshot_hash != context.source_snapshot_hash:
+        raise ValueError('SAVED_PLAN_CONTEXT_MISMATCH')
     queries = _proposal_queries(plan, complete=manifest.get('proposal_scope') == 'ALL_PLANNED_RELATIONS')
     semantic = None
     if queries:
@@ -234,7 +236,8 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
                 execution_kind=manifest['execution_kind'], max_cost_usd=0, request_cost_upper_bound_usd=0))))
     raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
     tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
-        relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan)
+        relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan,
+        inspection_snapshot_hash=context.source_snapshot_hash)
     return TaskPreparation(sources, tools, manifest)
 
 
@@ -271,7 +274,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         max_output_tokens=4096 if models.execution_kind == 'LIVE' else 1536)
     discovery = TaskObservationDiscoveryService(extractor, source_registry=sources.registry,
         current_source=sources.current, limits=models.discovery_limits,
-        task_profile=TaskDiscoveryProfile.FIELD_GROUNDED_V2 if models.execution_kind == 'LIVE' else None).discover(
+        task_profile=TaskDiscoveryProfile.TASK_RECALL_V3 if models.execution_kind == 'LIVE' else None).discover(
             sources.artifacts, workspace_id=sources.workspace_id)
     observations = (*discovery.valid_observations, *discovery.partial_observations)
     spans = tuple((f'source_{i}:{j}', segment.evidence_span)
@@ -304,7 +307,8 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
             receipts[receipt.receipt_id] = receipt
             verified.append(receipt)
         planning = planner.plan(context, previous=planning.plan, verified_results=tuple(verified),
-            gaps=('BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE',))
+            gaps=('BOUNDED_DISCOVERY_CANNOT_ESTABLISH_MISSING_ENTITY_ABSENCE',),
+            unavailable_operations=('discover',))
         plans.append(planning.to_dict())
     gaps = list(planning.plan.gaps) if planning.plan else []
     if not discovery.coverage_complete:
@@ -358,6 +362,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
             stage_adapter(models.semantics, 'semantics'), model_id=models.model_id, policy=semantic_policy)
     tools = TaskRelationTools(sources.workspace_id, current_raw, relation_path=relation_path, semantic_analysis=semantic,
         inspection_plan=planning.plan,
+        inspection_snapshot_hash=context.source_snapshot_hash,
         execution_blocked_reason='UNSUPPORTED_OPERATION_SCOPE' if execution_blocked else None)
     manifest = dict(schema='product-task-preparation/v1', question=question,
         status='BLOCKED' if planning.status != 'PLANNED' or execution_blocked else 'UNKNOWN' if not observations else 'PARTIAL',

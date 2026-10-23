@@ -1,0 +1,8 @@
+........................................................................ [ 73%]
+..........................                                               [100%]
+- generated xml file: D:\webproject\Linkloom\work\m3d-fix-work-identity\docs\requirements\p2-a-work-identity\evidence\after-contract.xml -
+98 passed in 7.45s
+Exception ignored in: <function Console.__del__ at 0x0000018430C3B6A0>
+Traceback (most recent call last):
+  File "C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pyreadline3\console\console.py", line 254, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008

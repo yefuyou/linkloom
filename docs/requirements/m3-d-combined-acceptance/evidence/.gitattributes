@@ -1,0 +1,4 @@
+.gitattributes -text
+*.json -text -whitespace
+*.xml -text -whitespace
+*.png binary

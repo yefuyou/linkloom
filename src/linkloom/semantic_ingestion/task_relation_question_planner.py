@@ -14,7 +14,7 @@ from linkloom.semantic_ingestion.extraction import ProviderRequestAuthorization
 from linkloom.semantic_ingestion.task_relation_candidates import DiscoveryResult
 from linkloom.semantic_ingestion.task_relation_models import ObservationRef, canonical_hash
 from linkloom.semantic_ingestion.task_relation_question_models import (
-    InvestigationPlan, InvestigationStep, PlanningLimits, PlanningResult, VerifiedStepResult,
+    InvestigationPlan, InvestigationStep, PlanningLimits, PlanningResult, VerifiedStepResult, premise_satisfied,
 )
 from linkloom.semantic_ingestion.task_relation_semantic_models import PREDICATES, SemanticContext
 from linkloom.semantic_ingestion.task_relation_semantic_validation import context_errors, endpoint_shape
@@ -56,6 +56,18 @@ on a retained completed step ID. No business object: clarify. Unsupported or
 unsafe request: no steps and nonempty refusal_reasons. Explain uncertainty in
 short public terms. Do not emit private reasoning or extra fields.
 
+Previous-plan handles resolve through the current endpoint/evidence tables;
+source_binding_handles preserve the exact prior source scope. Host retains the
+full plan and all reference identities. An UNKNOWN discovery receipt means a
+bounded attempt yielded no new handles, never proof of absence. If discover is
+unavailable, keep independent legal inspections and clarify unresolved gaps;
+do not repeat discovery or invent its results. Unknown fields are valid outcomes.
+Re-emitting a previously planned but unexecuted operation still requires an
+evidence_gap describing its remaining need; planned work is not executed work.
+Retained step IDs in reserved_step_ids are occupied, even if their outcome is
+UNKNOWN. Never reuse one for a replacement/clarify step. Give that new step a
+fresh ID. Retained steps are already included by Host; do not emit them again.
+
 Plan only work needed for the original goal. Do not investigate every fact in
 the source inventory. For a simple owner question, inspect the admitted task;
 discover another task only if current ownership has an explicit evidence gap.
@@ -80,6 +92,32 @@ depends_on are required premises: relation receipts must be SUPPORTED before
 dependent work becomes ready. UNKNOWN/CONFLICT/REFUTED cannot satisfy premises.
 Different scope/premises are different work only with a concrete new evidence gap.
 '''
+
+
+def _model_previous_plan(previous, context):
+    """Lossless handle projection; full plans remain Host-owned audit state.
+
+    Reuse the endpoint/evidence tables already supplied by SemanticContext.
+    Never summarize quotes or silently rebind a historical handle to a new ref.
+    """
+    if previous is None:
+        return None
+    refs, sources = dict(context.endpoints), dict(context.allowed_spans)
+    source_handles = {span: handle for handle, span in context.allowed_spans}
+    result = previous.to_dict()
+    result['verified_receipt_ids'] = [r.receipt_id for r in previous.verified_results]
+    result.pop('verified_results')  # Full cumulative receipts are in replan.verified_results.
+    for step, row in zip(previous.steps, result['steps']):
+        if any(refs.get(h) != ref for h, ref in zip(step.handles, step.endpoints)):
+            raise ValueError('PREVIOUS_ENDPOINT_NOT_CURRENT')
+        if (any(span not in source_handles for span in step.source_bindings)
+                or any(sources.get(h) != span for h, span in zip(step.source_handles, step.source_bindings))):
+            raise ValueError('PREVIOUS_SOURCE_NOT_CURRENT')
+        row['source_binding_handles'] = [source_handles[span] for span in step.source_bindings]
+        row.pop('endpoints')
+        row.pop('source_bindings')
+        row.pop('workspace_id')  # Identical to the protected plan-level workspace.
+    return result
 
 
 class PlanValidationError(ValueError):
@@ -126,7 +164,7 @@ def _strings(values, limit=16):
     return tuple(values)
 
 
-def _schema(context, limits, supported_operations=OPERATIONS):
+def _schema(context, limits, supported_operations=OPERATIONS, reserved_step_ids=()):
     string = dict(type='string')
     strings = dict(type='array', items=string, maxItems=16)
     def handle_array(bindings):
@@ -137,7 +175,8 @@ def _schema(context, limits, supported_operations=OPERATIONS):
     handles['description'] = ('Inspect: Exactly one ObservationRef from inspection_handles; never project/change/source. '
                               'Relation/compare_dates: exactly two correctly typed endpoints. Discover/clarify: optional anchors.')
     sources['description'] = 'Authorized version-bound evidence only; inspect must include its task provenance when nonempty.'
-    props = dict(id=string, kind=dict(type='string', enum=sorted(supported_operations)),
+    props = dict(id=dict(type='string',description='Unique new step ID. Occupied retained IDs: '+', '.join(reserved_step_ids)),
+                 kind=dict(type='string', enum=sorted(supported_operations)),
                  question=string, handles=handles, source_handles=sources, depends_on=strings,
                  predicate=dict(type='string', enum=['', *sorted(PREDICATES)]),
                  field=dict(type='string', enum=['', 'owner', 'project', 'deadline', 'scope', 'evidence']),
@@ -374,11 +413,11 @@ class InvestigationPlanner:
         return dict(calls_reserved=self._calls, input_tokens_reserved=self._input,
                     output_tokens_reserved=self._output, limits=asdict(self.limits))
 
-    def plan(self, context, *, discovery=None, previous=None, verified_results=(), gaps=()):
+    def plan(self, context, *, discovery=None, previous=None, verified_results=(), gaps=(), unavailable_operations=()):
         if not self._lock.acquire(blocking=False):
             return PlanningResult('BLOCKED', errors=('PLANNING_SESSION_BUSY',))
         try:
-            return self._plan(context, discovery, previous, verified_results, gaps)
+            return self._plan(context, discovery, previous, verified_results, gaps, unavailable_operations)
         finally:
             self._lock.release()
 
@@ -425,18 +464,23 @@ class InvestigationPlanner:
         # A completion receipt cannot skip the positive semantic prerequisites
         # needed to execute a dependent operation in the first place.
         receipt_map = {r.step_id: r for r in receipts}
-        if any(steps[d].kind == 'relation' and receipt_map[d].outcome != 'SUPPORTED'
+        if any(not premise_satisfied(steps[d].kind, receipt_map[d].outcome)
                for step in retained for d in step.depends_on):
             raise ValueError('VERIFIED_PREMISE_NOT_SUPPORTED')
         return retained, tuple(receipts), gap_values
 
-    def _plan(self, context, discovery, previous, verified_results, gaps):
+    def _plan(self, context, discovery, previous, verified_results, gaps, unavailable_operations):
         errors = _admit(context)
         if errors:
             return PlanningResult('BLOCKED', errors=tuple(sorted(errors)), budget=self._budget())
         try:
+            if (not isinstance(unavailable_operations, tuple)
+                    or not set(unavailable_operations) <= self.supported_operations):
+                raise ValueError('INVALID_UNAVAILABLE_OPERATIONS')
+            operations = self.supported_operations - set(unavailable_operations)
             retained, receipts, gaps = self._replan_state(context, previous, verified_results, gaps)
             leads = _discovery_input(discovery, context)
+            previous_input = _model_previous_plan(previous, context)
         except Exception as exc:
             return PlanningResult('BLOCKED', errors=(str(exc) if isinstance(exc, ValueError)
                                                     else 'HOST_RESULT_VERIFICATION_FAILED',), budget=self._budget())
@@ -449,7 +493,8 @@ class InvestigationPlanner:
         payload['limits'] = asdict(effective_limits)
         payload['candidate_discovery'] = leads
         payload['operation_capabilities'] = dict(
-            supported_operations=sorted(self.supported_operations),
+            supported_operations=sorted(operations),
+            reserved_step_ids=[s.id for s in retained],
             inspection_handles=[h for h, ref in context.endpoints if isinstance(ref, ObservationRef)],
             inspection_fields=['owner', 'project', 'deadline', 'scope', 'evidence'],
             source_handles_are_endpoints=False,
@@ -457,10 +502,10 @@ class InvestigationPlanner:
             dependency_readiness='Host-verified completion; relation premises require SUPPORTED.')
         if self.host_capabilities is not None:
             payload['operation_capabilities']['host_execution'] = self.host_capabilities
-        payload['replan'] = dict(previous_plan=previous.to_dict() if previous else None,
+        payload['replan'] = dict(previous_plan=previous_input,
                                 verified_results=[asdict(r) for r in receipts], gaps=list(gaps))
         tool = ToolDefinition(TOOL_ID, '2', 'Emit action suggestions without executing work.',
-                              _schema(context, self.limits, self.supported_operations), dict(type='object'))
+                              _schema(context, self.limits, operations, tuple(s.id for s in retained)), dict(type='object'))
         request = ModelTurnRequest(run_id=self._run_id,
             turn_id='planning-' + str(self._calls + 1), task_id='investigation', agent_id='question-planner',
             sequence=self._calls + 1, user_input=INSTRUCTIONS + '\nINPUT_JSON\n' + json.dumps(payload, ensure_ascii=False),
@@ -542,7 +587,7 @@ class InvestigationPlanner:
                                    if isinstance(raw_rows, list) else {})
             base = replace(base, diagnostics=diagnostics)
             steps, uncertainty, refusal = _decode(calls[0].arguments, context, self.limits, retained,
-                                                   receipts, self.supported_operations,
+                                                   receipts, operations,
                                                    previous.steps if previous else (), quality_issues)
         except (ValueError, TypeError, KeyError, AttributeError) as exc:
             issues = list(quality_issues)

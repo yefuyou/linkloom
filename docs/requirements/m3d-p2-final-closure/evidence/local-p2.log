@@ -1,0 +1,405 @@
+Traceback (most recent call last):
+  File "D:\Anaconda\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 211, in do_POST
+    self._send_json({"result": result}, status=status)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 79, in _send_json
+    self._send_bytes(
+    ~~~~~~~~~~~~~~~~^
+        body,
+        ^^^^^
+        status=status,
+        ^^^^^^^^^^^^^^
+        content_type="application/json; charset=utf-8",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 73, in _send_bytes
+    self.wfile.write(body)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+----------------------------------------
+Traceback (most recent call last):
+  File "D:\Anaconda\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 138, in do_GET
+    self._send_json({"result": result}, status=status)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 79, in _send_json
+    self._send_bytes(
+    ~~~~~~~~~~~~~~~~^
+        body,
+        ^^^^^
+        status=status,
+        ^^^^^^^^^^^^^^
+        content_type="application/json; charset=utf-8",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 73, in _send_bytes
+    self.wfile.write(body)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+----------------------------------------
+Traceback (most recent call last):
+  File "D:\Anaconda\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 138, in do_GET
+    self._send_json({"result": result}, status=status)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 79, in _send_json
+    self._send_bytes(
+    ~~~~~~~~~~~~~~~~^
+        body,
+        ^^^^^
+        status=status,
+        ^^^^^^^^^^^^^^
+        content_type="application/json; charset=utf-8",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 73, in _send_bytes
+    self.wfile.write(body)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+----------------------------------------
+..................................................FF....FF.....          [100%]
+================================== FAILURES ===================================
+______ test_product_http_inspection_receipt_unblocks_dependent_relation _______
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_inspection_r0')
+
+    def test_product_http_inspection_receipt_unblocks_dependent_relation(tmp_path):
+        """A real completed inspect record is the premise for SAME_TASK."""
+    
+>       http_result, ledger, reviewer, cold, _planning_requests = _run_http_case(tmp_path)
+
+tests\integration\test_inspect_ledger_dependency.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_inspect_ledger_dependency.py:118: in _run_http_case
+    http_result = http_ask(base, workspace)
+tests\m3p_support.py:165: in http_ask
+    status, payload = _client(base, '/api/product/ask', method='POST',
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <socket.SocketIO object at 0x000001DCDF8B0D30>
+b = <memory at 0x000001DCDFA77AC0>
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+>           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError
+---------------------------- Captured stderr call -----------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 1371)
+___ test_product_http_cold_replay_fails_closed_after_source_version_update ____
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_cold_replay_0')
+
+    def test_product_http_cold_replay_fails_closed_after_source_version_update(tmp_path):
+>       _, reads = _run_http_case_then_mutate(tmp_path, _update_first_source)
+
+tests\integration\test_inspect_ledger_dependency.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_inspect_ledger_dependency.py:154: in _run_http_case_then_mutate
+    http_result = http_ask(base, workspace)
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <socket.SocketIO object at 0x000001DCDF50F910>
+b = <memory at 0x000001DCDFA76680>
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+>           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError
+---------------------------- Captured stderr call -----------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 8437)
+Traceback (most recent call last):
+  File "D:\Anaconda\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\Anaconda\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 138, in do_GET
+    self._send_json({"result": result}, status=status)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 79, in _send_json
+    self._send_bytes(
+    ~~~~~~~~~~~~~~~~^
+        body,
+        ^^^^^
+        status=status,
+        ^^^^^^^^^^^^^^
+        content_type="application/json; charset=utf-8",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\webproject\Linkloom\work\m3d-p2-final-closure\src\linkloom\ui\server.py", line 73, in _send_bytes
+    self.wfile.write(body)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "D:\Anaconda\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+    ~~~~~~~~~~~~~~~~~~^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+----------------------------------------
+_________ test_product_http_cold_read_replays_in_fresh_python_process _________
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_http_cold_read_re0')
+
+    def test_product_http_cold_read_replays_in_fresh_python_process(tmp_path):
+        app, service, _stages, workspace, _identity, _revision, _comparison = revision_product(tmp_path)
+        planner = InspectThenRelationPlanner()
+        service.task_models = replace(service.task_models, planner=planner)
+        relation_path = tmp_path / "relations.sqlite"
+        try:
+            with product_http(app, service) as base:
+>               http_result = http_ask(base, workspace)
+
+tests\integration\test_inspect_ledger_cold_process.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <socket.SocketIO object at 0x000001DCDF9E6980>
+b = <memory at 0x000001DCDFA74DC0>
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+>           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError
+---------------------------- Captured stderr call -----------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 4349)
+___ test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process ___
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-final-tests1/test_product_saved_run_rejects0')
+
+    def test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process(tmp_path):
+        """Cold Product validation binds both tool records to model task identity."""
+    
+        app, service, _stages, workspace, _identity, _revision, _comparison = revision_product(tmp_path)
+        planner = InspectThenRelationPlanner()
+        service.task_models = replace(service.task_models, planner=planner)
+        relation_path = tmp_path / "relations.sqlite"
+        try:
+            with product_http(app, service) as base:
+>               http_result = http_ask(base, workspace)
+
+tests\integration\test_inspect_ledger_cold_process.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <socket.SocketIO object at 0x000001DCDF5BE800>
+b = <memory at 0x000001DCDF5DB280>
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+>           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError
+---------------------------- Captured stderr call -----------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 13488)
+- generated xml file: D:\webproject\Linkloom\work\m3d-p2-final-closure\docs\requirements\m3d-p2-final-closure\evidence\local-p2.xml -
+=========================== short test summary info ===========================
+FAILED tests/integration/test_inspect_ledger_dependency.py::test_product_http_inspection_receipt_unblocks_dependent_relation
+FAILED tests/integration/test_inspect_ledger_dependency.py::test_product_http_cold_replay_fails_closed_after_source_version_update
+FAILED tests/integration/test_inspect_ledger_cold_process.py::test_product_http_cold_read_replays_in_fresh_python_process
+FAILED tests/integration/test_inspect_ledger_cold_process.py::test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process
+4 failed, 59 passed in 454.65s (0:07:34)

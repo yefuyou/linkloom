@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="20.058" timestamp="2026-10-23T00:18:13.733260+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3p_product_review" name="test_http_hot_and_new_process_hide_invalidated_results[update]" time="17.566" /></testsuite></testsuites>

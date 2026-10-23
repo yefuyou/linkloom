@@ -1,0 +1,126 @@
+{
+  "production_merge_head": "73600459e3b6279c8577d9332db03b72b3ab4c82",
+  "distinct_p2_cases": 65,
+  "distinct_cases_with_passing_evidence": 65,
+  "runs": [
+    {
+      "receipt": "local-p2.xml",
+      "cases": 63,
+      "passed": 59,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0
+    },
+    {
+      "receipt": "combined-http-control.xml",
+      "cases": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0
+    },
+    {
+      "receipt": "local-final-cross.xml",
+      "cases": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0
+    },
+    {
+      "receipt": "joint-final-process.xml",
+      "cases": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0
+    }
+  ],
+  "initial_environment_failures": [
+    {
+      "classname": "tests.integration.test_inspect_ledger_dependency",
+      "name": "test_product_http_inspection_receipt_unblocks_dependent_relation",
+      "history": [
+        {
+          "receipt": "local-p2.xml",
+          "status": "failed"
+        },
+        {
+          "receipt": "combined-http-control.xml",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "classname": "tests.integration.test_inspect_ledger_dependency",
+      "name": "test_product_http_cold_replay_fails_closed_after_source_version_update",
+      "history": [
+        {
+          "receipt": "local-p2.xml",
+          "status": "failed"
+        },
+        {
+          "receipt": "local-final-cross.xml",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "classname": "tests.integration.test_inspect_ledger_cold_process",
+      "name": "test_product_http_cold_read_replays_in_fresh_python_process",
+      "history": [
+        {
+          "receipt": "local-p2.xml",
+          "status": "failed"
+        },
+        {
+          "receipt": "local-final-cross.xml",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "classname": "tests.integration.test_inspect_ledger_cold_process",
+      "name": "test_product_saved_run_rejects_foreign_ledger_task_ids_in_fresh_process",
+      "history": [
+        {
+          "receipt": "local-p2.xml",
+          "status": "failed"
+        },
+        {
+          "receipt": "local-final-cross.xml",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "baseline_memory_cases": 5,
+  "baseline_memory_failures": 5,
+  "new_memory_failures": 0,
+  "paid_provider_calls": 0,
+  "provider_mode": "scripted Gemini wire transport; production adapters/Host/Runtime/Reviewer",
+  "note": "65 distinct P2 cases; repeated executions are not added. Initial four 3-second HTTP polling timeouts are retained, with targeted passing evidence. The five Memory fixture failures remain failures, reconciled separately against the exact baseline.",
+  "receipt_sha256": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "combined-http-control.log": "8b045c65333af44c52181c378f487f5ac7fd415060273aab776ed268cb6aa0d0",
+    "combined-http-control.xml": "e7aa26b2e189e2430888c692df0fb119beb1c1fecfe69844ffe7757594d0ecca",
+    "joint-after-source-change.json": "70a56a4efecb329f5b6780d96de67aceab887ed0fe169abbbdb434f4cef45e94",
+    "joint-after.json": "b200eed3d80012cd61c4161419e146d0a91c46db23d20369eb88dec6e157fa35",
+    "joint-before-a-only.json": "750b71b0c78a03f422922de08216ad2cfcf0138a75b9bb37ab1e6805212ab5c0",
+    "joint-before-a-only.log": "00cff09dc5b58c28d80bfdd5f6a04522c3ec08ce4608a947c1262fec42c465c7",
+    "joint-before-a-only.xml": "7b0e898a13467cc614a2fc92f8bf111c333f5be1ff80a96e1dae43959c76a5d1",
+    "joint-final-process.log": "b0ab6236a2b2b815ea135a3195f8e737e6d1bb21927a412a616407c3d9240bda",
+    "joint-final-process.xml": "31b0b915e73f14e3742efda1a40a545481459b0fe2656d83735def45ffe9df53",
+    "local-final-cross.log": "3bb2a4e78b23a629bf327883d3be57c17b28bd9a7728cc1a56c82c95d321e84d",
+    "local-final-cross.xml": "b9d3c0b407efc22ce710a4745b0d14face19914fce5ed16dfd4400acf892b8ac",
+    "local-p2.log": "d1bdce026b62a0775ddbba15a91a97b24adb17b20426f2a7d1bb551d3cf4d61a",
+    "local-p2.xml": "d66c6b83528de6fe0c7f9950542a28fc571f7891121ece7994f1b75d17f6f54b",
+    "memory-baseline.log": "47db508b64a4c1b73e1e63d72c4d7ccbe19bb7813f5337eab0e9f905fc9fad36",
+    "memory-baseline.xml": "1ee948e6a63c380066f76768623f42c08f46a47756fb1de42e3683968c5ecaed",
+    "memory-combined.log": "644beb8ad521c33079c8193e0718b776366c10bd68b7f0561fb438c058426669",
+    "memory-combined.xml": "771af064167bf12d4bb5f9950f639dd9004e9c842302dd7c257c72dddad666fa",
+    "memory-reconciliation.json": "8e45150ef8c81ee042661e666ea326cb773fedcf972d4e5bfb90a005eea16273",
+    "source-integration.json": "d5a7541d707e6f16f0c0a54d3f9ca449440480673a86c5f43abe0ecc98ae2f8d",
+    "terminal-checkpoint-review.json": "36d40261429310005189bef31f30bba4ad6d83753569930a38054bd4531d79d8"
+  }
+}

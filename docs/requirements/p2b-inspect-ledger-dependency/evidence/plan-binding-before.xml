@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="53.388" timestamp="2026-10-23T00:00:37.143291+08:00" hostname="beagle"><testcase classname="tests.unit.test_inspect_ledger_host" name="test_self_consistent_foreign_plan_metadata_is_rejected_before_execution[workspace_id]" time="2.844"><failure message="AssertionError: assert 'ok' == 'error'&#10;  &#10;  - error&#10;  + ok">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-plan-red/test_self_consistent_foreign_p0')
+metadata = 'workspace_id'
+
+    @pytest.mark.parametrize('metadata', ['workspace_id', 'snapshot_hash'])
+    def test_self_consistent_foreign_plan_metadata_is_rejected_before_execution(tmp_path, metadata):
+        tools, _, plan, runtime, policy, _, _, call = setup_chain(tmp_path)
+        tools.inspection_plan = replace(plan, **{metadata: 'foreign-workspace' if metadata == 'workspace_id' else '0' * 64})
+&gt;       assert runtime.execute(call('inspect_task_context', 1), policy).status == 'error'
+E       AssertionError: assert 'ok' == 'error'
+E         
+E         - error
+E         + ok
+
+tests\unit\test_inspect_ledger_host.py:229: AssertionError</failure></testcase><testcase classname="tests.unit.test_inspect_ledger_host" name="test_self_consistent_foreign_plan_metadata_is_rejected_before_execution[snapshot_hash]" time="2.342"><failure message="AssertionError: assert 'ok' == 'error'&#10;  &#10;  - error&#10;  + ok">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-plan-red/test_self_consistent_foreign_p1')
+metadata = 'snapshot_hash'
+
+    @pytest.mark.parametrize('metadata', ['workspace_id', 'snapshot_hash'])
+    def test_self_consistent_foreign_plan_metadata_is_rejected_before_execution(tmp_path, metadata):
+        tools, _, plan, runtime, policy, _, _, call = setup_chain(tmp_path)
+        tools.inspection_plan = replace(plan, **{metadata: 'foreign-workspace' if metadata == 'workspace_id' else '0' * 64})
+&gt;       assert runtime.execute(call('inspect_task_context', 1), policy).status == 'error'
+E       AssertionError: assert 'ok' == 'error'
+E         
+E         - error
+E         + ok
+
+tests\unit\test_inspect_ledger_host.py:229: AssertionError</failure></testcase><testcase classname="tests.unit.test_inspect_ledger_host" name="test_uncertain_query_cannot_pass_host_or_context_lifecycle_replay" time="19.561"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-plan-red/test_uncertain_query_cannot_pa0')
+
+    def test_uncertain_query_cannot_pass_host_or_context_lifecycle_replay(tmp_path):
+        from types import SimpleNamespace
+        from linkloom.runtime.context_engineering import RuntimeWorkingContext
+        from linkloom.runtime.errors import ValidationError
+        tools, _, _, runtime, policy, ledger, _, call = setup_chain(tmp_path)
+        assert runtime.execute(call('inspect_task_context', 1), policy).status == 'ok'
+        def fail_terminal(current):
+            if current.get('p2b_2').status == 'completed':
+                raise OSError('synthetic query terminal checkpoint outage')
+        assert runtime.execute(call('query_task_relations', 2), policy,
+            checkpoint_callback=fail_terminal).error.code == 'TOOL_TERMINAL_CHECKPOINT_FAILED'
+&gt;       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\unit\test_inspect_ledger_host.py:244: Failed</failure></testcase></testsuite></testsuites>

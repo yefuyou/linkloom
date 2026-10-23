@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="49.936" timestamp="2026-10-22T23:37:47.460479+08:00" hostname="beagle"><testcase classname="tests.integration.test_inspect_ledger_dependency" name="test_product_http_inspection_receipt_unblocks_dependent_relation" time="42.951"><failure message="AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}&#10;  &#10;  Differing items:&#10;  {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3d-fix-inspect-ledger-dependency/work/pytest-p2b-http-baseline-precise/test_product_http_inspection_r0')
+
+    def test_product_http_inspection_receipt_unblocks_dependent_relation(tmp_path):
+        """A real completed inspect record is the premise for SAME_TASK."""
+    
+        http_result, ledger, reviewer, cold, _planning_requests = _run_http_case(tmp_path)
+    
+        assert http_result["status"] == "PARTIAL", http_result
+        assert [row["tool"] for row in http_result["trace"]] == [
+            "inspect_task_context",
+            "query_task_relations",
+        ]
+        assert [row["tool_id"] for row in ledger] == [
+            "inspect_task_context",
+            "query_task_relations",
+        ]
+        assert [row["status"] for row in ledger] == ["completed", "completed"]
+        inspect_record = ledger[0]
+        assert inspect_record["result"]["status"] == "ok"
+        assert inspect_record["result"]["value"]["investigation_receipts"]
+    
+        steps = {row["step_id"]: row for row in http_result["task_review"]["steps"]}
+        identity = steps["identity"]
+&gt;       assert identity["dependency_outcomes"] == {"inspect_owner": "COMPLETED"}
+E       AssertionError: assert {'inspect_owner': 'BLOCKED'} == {'inspect_owner': 'COMPLETED'}
+E         
+E         Differing items:
+E         {'inspect_owner': 'BLOCKED'} != {'inspect_owner': 'COMPLETED'}
+E         Use -v to get more diff
+
+tests\integration\test_inspect_ledger_dependency.py:215: AssertionError</failure></testcase></testsuite></testsuites>

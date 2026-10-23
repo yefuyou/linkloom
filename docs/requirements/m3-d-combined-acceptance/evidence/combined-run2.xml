@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="53.239" timestamp="2026-10-22T20:34:47.740652+08:00" hostname="beagle"><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[A]" time="1.880"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EB4830&gt;, http_conn_args = {}
+host = '127.0.0.1:8719'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EB57F0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8719', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 8719), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_product_and_prov0')
+case = 'A'
+
+    @pytest.mark.parametrize('case', ['A', 'B', 'C'])
+    def test_combined_product_and_provider_free_cold_read(tmp_path, case):
+        app, service, transport, stages = combined_product(tmp_path, case)
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, case)
+
+tests\integration\test_m3d_combined.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EB4830&gt;, http_conn_args = {}
+host = '127.0.0.1:8719'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EB57F0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8719', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[B]" time="1.208"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EFC910&gt;, http_conn_args = {}
+host = '127.0.0.1:14722'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EFCA50&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:14722', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 14722), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_product_and_prov1')
+case = 'B'
+
+    @pytest.mark.parametrize('case', ['A', 'B', 'C'])
+    def test_combined_product_and_provider_free_cold_read(tmp_path, case):
+        app, service, transport, stages = combined_product(tmp_path, case)
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, case)
+
+tests\integration\test_m3d_combined.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EFC910&gt;, http_conn_args = {}
+host = '127.0.0.1:14722'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EFCA50&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:14722', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_product_and_provider_free_cold_read[C]" time="1.313"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EFE5D0&gt;, http_conn_args = {}
+host = '127.0.0.1:7521'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EFE710&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:7521', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 7521), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_product_and_prov2')
+case = 'C'
+
+    @pytest.mark.parametrize('case', ['A', 'B', 'C'])
+    def test_combined_product_and_provider_free_cold_read(tmp_path, case):
+        app, service, transport, stages = combined_product(tmp_path, case)
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, case)
+
+tests\integration\test_m3d_combined.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EFE5D0&gt;, http_conn_args = {}
+host = '127.0.0.1:7521'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EFE710&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:7521', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[source_update]" time="1.394"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97F10E90&gt;, http_conn_args = {}
+host = '127.0.0.1:13082'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97F10FC0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:13082', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 13082), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_replanned_result0')
+mutation = 'source_update'
+
+    @pytest.mark.parametrize('mutation', ['source_update', 'evidence_revoke', 'workspace'])
+    def test_combined_replanned_result_never_leaks_stale_evidence(tmp_path, mutation):
+        app, service, transport, _ = combined_product(tmp_path, 'C')
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, 'C')
+
+tests\integration\test_m3d_combined.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97F10E90&gt;, http_conn_args = {}
+host = '127.0.0.1:13082'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97F10FC0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:13082', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[evidence_revoke]" time="1.071"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97F11A70&gt;, http_conn_args = {}
+host = '127.0.0.1:5344'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97F11BA0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:5344', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 5344), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_replanned_result1')
+mutation = 'evidence_revoke'
+
+    @pytest.mark.parametrize('mutation', ['source_update', 'evidence_revoke', 'workspace'])
+    def test_combined_replanned_result_never_leaks_stale_evidence(tmp_path, mutation):
+        app, service, transport, _ = combined_product(tmp_path, 'C')
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, 'C')
+
+tests\integration\test_m3d_combined.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97F11A70&gt;, http_conn_args = {}
+host = '127.0.0.1:5344'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97F11BA0&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:5344', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase><testcase classname="tests.integration.test_m3d_combined" name="test_combined_replanned_result_never_leaks_stale_evidence[workspace]" time="1.032"><failure message="urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;">self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EAED50&gt;, http_conn_args = {}
+host = '127.0.0.1:13215'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EAEF90&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:13215', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+&gt;               h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+
+D:\Anaconda\Lib\urllib\request.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+address = ('127.0.0.1', 13215), timeout = 3, source_address = None
+
+    def create_connection(address, timeout=_GLOBAL_DEFAULT_TIMEOUT,
+                          source_address=None, *, all_errors=False):
+        """Connect to *address* and return the socket object.
+    
+        Convenience function.  Connect to *address* (a 2-tuple ``(host,
+        port)``) and return the socket object.  Passing the optional
+        *timeout* parameter will set the timeout on the socket instance
+        before attempting to connect.  If no *timeout* is supplied, the
+        global default timeout setting returned by :func:`getdefaulttimeout`
+        is used.  If *source_address* is set it must be a tuple of (host, port)
+        for the socket to bind as a source address before making the connection.
+        A host of '' or port 0 tells the OS to use the default. When a connection
+        cannot be created, raises the last error if *all_errors* is False,
+        and an ExceptionGroup of all errors if *all_errors* is True.
+        """
+    
+        host, port = address
+        exceptions = []
+        for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+            af, socktype, proto, canonname, sa = res
+            sock = None
+            try:
+                sock = socket(af, socktype, proto)
+                if timeout is not _GLOBAL_DEFAULT_TIMEOUT:
+                    sock.settimeout(timeout)
+                if source_address:
+                    sock.bind(source_address)
+&gt;               sock.connect(sa)
+E               PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+D:\Anaconda\Lib\socket.py:849: PermissionError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/m3s1-s2-combined/work/pytest-m3d-run2/test_combined_replanned_result2')
+mutation = 'workspace'
+
+    @pytest.mark.parametrize('mutation', ['source_update', 'evidence_revoke', 'workspace'])
+    def test_combined_replanned_result_never_leaks_stale_evidence(tmp_path, mutation):
+        app, service, transport, _ = combined_product(tmp_path, 'C')
+        try:
+            with product_http(app, service) as base:
+&gt;               ws, result = start_case(base, 'C')
+
+tests\integration\test_m3d_combined.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;urllib.request.HTTPHandler object at 0x0000018A97EB4D70&gt;
+http_class = &lt;class 'http.client.HTTPConnection'&gt;
+req = &lt;urllib.request.Request object at 0x0000018A97EAED50&gt;, http_conn_args = {}
+host = '127.0.0.1:13215'
+h = &lt;http.client.HTTPConnection object at 0x0000018A97EAEF90&gt;
+headers = {'Connection': 'close', 'Content-Length': '27', 'Content-Type': 'application/json', 'Host': '127.0.0.1:13215', ...}
+
+    def do_open(self, http_class, req, **http_conn_args):
+        """Return an HTTPResponse object for the request, using http_class.
+    
+        http_class must implement the HTTPConnection API from http.client.
+        """
+        host = req.host
+        if not host:
+            raise URLError('no host given')
+    
+        # will parse host:port
+        h = http_class(host, timeout=req.timeout, **http_conn_args)
+        h.set_debuglevel(self._debuglevel)
+    
+        headers = dict(req.unredirected_hdrs)
+        headers.update({k: v for k, v in req.headers.items()
+                        if k not in headers})
+    
+        # TODO(jhylton): Should this be redesigned to handle
+        # persistent connections?
+    
+        # We want to make an HTTP/1.1 request, but the addinfourl
+        # class isn't prepared to deal with a persistent connection.
+        # It will try to read all remaining data from the socket,
+        # which will block while the server waits for the next request.
+        # So make sure the connection gets closed after the (only)
+        # request.
+        headers["Connection"] = "close"
+        headers = {name.title(): val for name, val in headers.items()}
+    
+        if req._tunnel_host:
+            tunnel_headers = {}
+            proxy_auth_hdr = "Proxy-Authorization"
+            if proxy_auth_hdr in headers:
+                tunnel_headers[proxy_auth_hdr] = headers[proxy_auth_hdr]
+                # Proxy-Authorization should not be sent to origin
+                # server.
+                del headers[proxy_auth_hdr]
+            h.set_tunnel(req._tunnel_host, headers=tunnel_headers)
+    
+        try:
+            try:
+                h.request(req.get_method(), req.selector, req.data, headers,
+                          encode_chunked=req.has_header('Transfer-encoding'))
+            except OSError as err: # timeout error
+&gt;               raise URLError(err)
+E               urllib.error.URLError: &lt;urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。&gt;
+
+D:\Anaconda\Lib\urllib\request.py:1322: URLError</failure></testcase></testsuite></testsuites>

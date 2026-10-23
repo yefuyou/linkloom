@@ -1,0 +1,23 @@
+{
+  "original_request_sha256": "f5f46a687bd0ffa13a7b3f2c79957b3e5a008b2b058df84006052ac7405e685b",
+  "original_request_hash_reproduced": true,
+  "original_first_reserved": 14879,
+  "original_replan_reserved": 31756,
+  "token_upper_bound": 24576,
+  "byte_upper_bound": 24000,
+  "original_previous_plan_bytes": 15394,
+  "new_previous_plan_bytes": 5095,
+  "new_replan_reserved": 21897,
+  "original_source_bytes": 2202,
+  "new_source_bytes": 2202,
+  "source_tables_unchanged": true,
+  "original_endpoint_count": 2,
+  "new_endpoint_count": 2,
+  "semantic_fields_unchanged": true,
+  "host_full_previous_plan_unchanged": true,
+  "terminal_discovery_outcome": "UNKNOWN",
+  "live": false,
+  "pre_protocol_fix_replan_reserved": 21554,
+  "actual_first_live_replan_reserved": 21194,
+  "final_projection_checked_under_original_byte_limit": true
+}

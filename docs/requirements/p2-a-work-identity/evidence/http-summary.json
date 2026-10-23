@@ -1,0 +1,78 @@
+{
+  "before-http.json": {
+    "sha256": "a4ce42dd492d3e7eb1c6f91f5a5c04e3cb11808ba4d61345656246453f9304b1",
+    "post_http_status": 202,
+    "cold_http_status": 200,
+    "product_status": "UNKNOWN",
+    "observation_ids": [
+      "task_observation_v1_546ededa0395efc434656458bb30a1026a98e918325b2bb39f7bb33c766d2632",
+      "task_observation_v1_546ededa0395efc434656458bb30a1026a98e918325b2bb39f7bb33c766d2632"
+    ],
+    "observation_count": 0,
+    "planner_endpoints": 0,
+    "failures": [
+      "OBSERVATION_EXTRACTION_CONFLICT"
+    ],
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_3d958422",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-22T15:00:47.336124+00:00",
+      "accepted": true
+    }
+  },
+  "after-http.json": {
+    "sha256": "752285e1ffe7bf3e04f927c5a56fb8e0a19e7be9e4aac9ccc15726dd8326ffac",
+    "post_http_status": 202,
+    "cold_http_status": 200,
+    "product_status": "PARTIAL",
+    "observation_ids": [
+      "task_observation_v2_497e55c86d153d2b692409e10bcf3d21a98b431de35806195690be3735aaa488",
+      "task_observation_v2_bd83320ac03cbe27537bb88a0a4c820a7869a4189b453007322652fddbdca343"
+    ],
+    "observation_count": 2,
+    "planner_endpoints": 2,
+    "failures": [],
+    "reviewer": {
+      "performed": true,
+      "review_id": "review_ededbf35",
+      "reviewer_agent_id": "reviewer_agent",
+      "decision": "evidence_sufficient",
+      "checks": [
+        {
+          "checks": [
+            "CURRENT_SOURCE_VERSIONS",
+            "P4_LIFECYCLE_REPLAY",
+            "RECEIPT_PROJECTION"
+          ],
+          "result_type": "task-relations-result/v1",
+          "status": "pass"
+        }
+      ],
+      "reason": "All validation passed",
+      "created_at": "2026-10-22T15:08:57.545573+00:00",
+      "accepted": true
+    }
+  },
+  "baseline-v1-http.json": {
+    "sha256": "aab6dede7339b34981a68ab651a9f9d615832d09220fe9e145a9862e5f6044c2",
+    "observation_id": "task_observation_v1_598ecb4e1960beb4c945aa810d6e031460df56f740b3aabb4cc460ce920dc874"
+  },
+  "legacy-v1-cold.json": {
+    "sha256": "057964c2e6f3c7a31802663ef054667be48ac1cd6320b387835e72dd6509ecb9",
+    "observation_id": "task_observation_v1_598ecb4e1960beb4c945aa810d6e031460df56f740b3aabb4cc460ce920dc874"
+  }
+}

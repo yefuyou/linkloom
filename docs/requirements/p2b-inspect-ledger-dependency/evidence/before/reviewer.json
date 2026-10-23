@@ -1,0 +1,20 @@
+{
+  "performed": true,
+  "review_id": "review_923dfd57",
+  "reviewer_agent_id": "reviewer_agent",
+  "decision": "evidence_sufficient",
+  "checks": [
+    {
+      "checks": [
+        "CURRENT_SOURCE_VERSIONS",
+        "P4_LIFECYCLE_REPLAY",
+        "RECEIPT_PROJECTION"
+      ],
+      "result_type": "task-relations-result/v1",
+      "status": "pass"
+    }
+  ],
+  "reason": "All validation passed",
+  "created_at": "2026-10-22T15:07:32.005769+00:00",
+  "accepted": true
+}

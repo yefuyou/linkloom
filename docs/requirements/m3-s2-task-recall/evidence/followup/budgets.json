@@ -1,0 +1,291 @@
+[
+  {
+    "path": "work\\m3s2-followup\\f-provider\\budget.json",
+    "sha256": "ff127c6ec7f24604031c0f6915138610bac19e7226f5a6ef6b166b48f80a8a7e",
+    "budget": {
+      "limits": {
+        "max_requests": 2,
+        "max_input_tokens": 250000,
+        "max_output_tokens": 8192,
+        "max_cost_usd": 0.5,
+        "max_seconds": 150,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 1,
+      "started_at": "2026-10-22T12:06:27.498027+00:00",
+      "input_tokens_reserved": 15762,
+      "output_tokens_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 3.782,
+      "failure": "MODEL_UNAVAILABLE",
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "751a235aeec3b98a7b29559a7cf142b3bedccd0eae30020066c3a44d88f37534",
+          "input_reserved": 15762,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "FAILED",
+          "response_sha256": "f79141eea99393bdbbc1bc6412f1d590e830f69d32fc3029003653086b4c5e86",
+          "usage": {
+            "input_tokens": null,
+            "output_tokens": null,
+            "total_tokens": null,
+            "duration_ms": null
+          },
+          "provider_request_id": null,
+          "provider_response_id": null,
+          "code": "MODEL_UNAVAILABLE",
+          "error": {
+            "code": "MODEL_UNAVAILABLE",
+            "category": "unavailable_model",
+            "message": "The requested Gemini model was unavailable.",
+            "retryable": true,
+            "outcome": "known_failure",
+            "provider_request_id": null,
+            "provider_metadata": {
+              "provider": "gemini",
+              "model": "gemini-3.8-flash",
+              "http_status": 500
+            },
+            "details": {
+              "reason": "provider_exception",
+              "provider": "gemini",
+              "model": "gemini-3.8-flash",
+              "high_level_outcome": "MODEL_UNAVAILABLE",
+              "low_level_failure_class": "HTTP_5XX",
+              "failure_layer": "HTTP",
+              "exception_type": "ServerError",
+              "exception_message_safe": "500 INTERNAL. {'error': {'code': 500, '[REDACTED]': 'Internal error encountered.', 'status': 'INTERNAL'}}",
+              "exception_repr_safe": "ServerError(\"500 INTERNAL. {'error': {'code': 500, '[REDACTED]': 'Internal error encountered.', 'status': 'INTERNAL'}}\")",
+              "nested_cause_chain": [],
+              "exception_fqcn": "google.genai.errors.ServerError",
+              "sdk_exception_fqcn": "google.genai.errors.ServerError",
+              "exception_cause_chain": [],
+              "http_status": 500,
+              "provider_error_code": "INTERNAL",
+              "provider_error_status": "INTERNAL",
+              "provider_error_message_safe": "Internal error encountered.",
+              "provider_error_details": null,
+              "provider_error_details_truncated": false,
+              "field_violations": [],
+              "unknown_field_paths": [],
+              "request_id": null,
+              "trace_id": null,
+              "wire_payload_sha256": null,
+              "wire_schema_subtree_sha256": null,
+              "wire_tool_config_sha256": null,
+              "response_status": null,
+              "finish_reason": null,
+              "timeout_type": null,
+              "errno": null,
+              "winerror": null,
+              "target_hostname": "generativelanguage.googleapis.com",
+              "target_port": 443,
+              "configured_proxy_hostname": null,
+              "configured_proxy_port": null,
+              "connection_phase": "RESPONSE_HEADERS",
+              "elapsed_ms": 3753.576,
+              "request_shape_summary": {
+                "contents_count": 1,
+                "role_counts": {
+                  "user": 1
+                },
+                "part_type_counts": {
+                  "text": 1
+                },
+                "system_instruction_present": false,
+                "tool_declaration_count": 1,
+                "thought_signature_count": 0,
+                "provider_continuation_present": false,
+                "generation_config_fields": [
+                  "automatic_function_calling",
+                  "max_output_tokens",
+                  "thinking_config",
+                  "tool_config",
+                  "tools"
+                ]
+              },
+              "failure_stage": "GENERATION",
+              "failure_category": "PROVIDER_SERVER_ERROR",
+              "retry_classification": "HTTP_500",
+              "retryable": true,
+              "attempt_number": 1,
+              "request_fingerprint": "751a235aeec3b98a7b29559a7cf142b3bedccd0eae30020066c3a44d88f37534",
+              "response_accepted": false,
+              "api_endpoint_hostname": "generativelanguage.googleapis.com",
+              "api_endpoint_port": 443
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "path": "work\\m3s2-followup\\v3-unattempted\\f-provider\\budget.json",
+    "sha256": "fc45f92ffbcd899e4a9f90afa1626a262619594620c1562a29a744b63860d8d4",
+    "budget": {
+      "limits": {
+        "max_requests": 1,
+        "max_input_tokens": 250000,
+        "max_output_tokens": 8192,
+        "max_cost_usd": 0.25,
+        "max_seconds": 150,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 1,
+      "started_at": "2026-10-22T12:10:08.101844+00:00",
+      "input_tokens_reserved": 18798,
+      "output_tokens_reserved": 4096,
+      "cost_reserved_usd": 0.25,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 11.618,
+      "failure": null,
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "7fb771f95488fe0f7bb0ffea62a1758719f161532f17488e3826f137a778e558",
+          "input_reserved": 18798,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "e0b494bfd87a10a2f13aba1b93b3e84742521190e241f68394d4e06e80a80459",
+          "usage": {
+            "input_tokens": 2717,
+            "output_tokens": 1189,
+            "total_tokens": 3906,
+            "duration_ms": 11577.916
+          },
+          "provider_request_id": null,
+          "provider_response_id": "Kf3Zatm4LOij5NoPtJLGkQc"
+        }
+      ]
+    }
+  },
+  {
+    "path": "work\\m3s2-followup\\product\\campaign-provider\\budget.json",
+    "sha256": "f1b29535ddec4cc2e7e40696af132b86bee1c6d1f0daf108e73fb6e5185eced2",
+    "budget": {
+      "limits": {
+        "max_requests": 6,
+        "max_input_tokens": 1000000,
+        "max_output_tokens": 30000,
+        "max_cost_usd": 1.5,
+        "max_seconds": 300,
+        "request_timeout_seconds": 50,
+        "request_cost_upper_bound_usd": 0.25,
+        "input_usd_per_million": 1.0,
+        "output_usd_per_million": 5.0
+      },
+      "requests_reserved": 5,
+      "started_at": "2026-10-22T12:07:38.746317+00:00",
+      "input_tokens_reserved": 105630,
+      "output_tokens_reserved": 14336,
+      "cost_reserved_usd": 1.25,
+      "actual_cost_usd": null,
+      "elapsed_seconds": 27.099,
+      "failure": null,
+      "attempts": [
+        {
+          "sequence": 1,
+          "stage": "semantic-extractor-v1",
+          "request_sha256": "7edf13a9f4b7e5c1cabb3fe2ffa1909037e339470cee8a97f33675de2740f6cb",
+          "input_reserved": 18230,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "5cd5b389816e77b0dd9dbfbe49256406b6d7887acb6c2c11e3ce09c8f12848d2",
+          "usage": {
+            "input_tokens": 2500,
+            "output_tokens": 826,
+            "total_tokens": 3326,
+            "duration_ms": 7745.906
+          },
+          "provider_request_id": null,
+          "provider_response_id": "lPzZaqfYIcaiytMP2JCrmQ8"
+        },
+        {
+          "sequence": 2,
+          "stage": "question-planner",
+          "request_sha256": "5b2e724e2a642c9351659e99b7ba229760e01f511216a856d7cfe4f24c469da2",
+          "input_reserved": 17642,
+          "output_reserved": 4096,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "8f4a6870db39a575ba008743e422725689914193d62b0342556145a218bc459b",
+          "usage": {
+            "input_tokens": 4482,
+            "output_tokens": 492,
+            "total_tokens": 4974,
+            "duration_ms": 4477.989
+          },
+          "provider_request_id": null,
+          "provider_response_id": "mfzZatLqPOzAytMP2-ajqAQ"
+        },
+        {
+          "sequence": 3,
+          "stage": "retrieval_agent",
+          "request_sha256": "84d08560aa444b0eb0ffa0ec9a8396fcc735996b8634cdedb5293060eee92be1",
+          "input_reserved": 13250,
+          "output_reserved": 2048,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "9eb3e8406c6aa6f10dd7647a2ffd38f3d6b5be5aea497fc33d930c040a356ce4",
+          "usage": {
+            "input_tokens": 4121,
+            "output_tokens": 50,
+            "total_tokens": 4441,
+            "duration_ms": 4253.38
+          },
+          "provider_request_id": null,
+          "provider_response_id": "nvzZaofHLdqB1sgPm5z8kAQ"
+        },
+        {
+          "sequence": 4,
+          "stage": "retrieval_agent",
+          "request_sha256": "b2c977755acf920a0377241c7367ff1e6e6ebc509330cfe86d6c3c4189ef66b1",
+          "input_reserved": 26564,
+          "output_reserved": 2048,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "fefd31bee79c6458ec34819cf784e4da4f77d74d77796edc0c2b27f4394ace3f",
+          "usage": {
+            "input_tokens": 9568,
+            "output_tokens": 50,
+            "total_tokens": 9762,
+            "duration_ms": 2710.063
+          },
+          "provider_request_id": null,
+          "provider_response_id": "o_zZapzAHqeM1sgPl_aikAQ"
+        },
+        {
+          "sequence": 5,
+          "stage": "retrieval_agent",
+          "request_sha256": "eff313bd78f19a815ee318e8d82c9119a7c457df1e48fbfa8fa6cf9fef6bd5bd",
+          "input_reserved": 29944,
+          "output_reserved": 2048,
+          "cost_reserved_usd": 0.25,
+          "outcome": "SUCCEEDED",
+          "response_sha256": "1a53eddfcec5139e16be6b770d9d57b83072c089f7dc8ccd31e7deb1641cf04d",
+          "usage": {
+            "input_tokens": 10250,
+            "output_tokens": 90,
+            "total_tokens": 10620,
+            "duration_ms": 6281.029
+          },
+          "provider_request_id": null,
+          "provider_response_id": "pvzZauKVJ6-iytMP2ryW4As"
+        }
+      ]
+    }
+  }
+]

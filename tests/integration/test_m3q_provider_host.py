@@ -3,6 +3,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 import json
 import pytest
+import socket
 from time import monotonic, sleep
 
 from linkloom.agents.providers import GeminiProviderAdapter, GEMINI_38_FLASH_MODEL_ID
@@ -10,6 +11,42 @@ from linkloom.ui.task_provider import compose_task_provider
 from tests.m3p_support import product_case, product_http, QUESTION, cold_read, TEXTS, ScriptedStage
 from tests.integration.test_product_application_flow import _client
 from tests.unit.test_m3q_provider_budget import limits
+
+
+@pytest.fixture(autouse=True)
+def loopback_only(monkeypatch):
+    """HTTP is real; any accidental non-local Provider connection is a failure."""
+    connect = socket.socket.connect
+    connect_ex = socket.socket.connect_ex
+
+    def checked(original):
+        def call(sock, address):
+            assert address[0] in {'127.0.0.1', '::1'}, 'TOOL_EXECUTION: offline gate attempted network'
+            return original(sock, address)
+        return call
+
+    monkeypatch.setattr(socket.socket, 'connect', checked(connect))
+    monkeypatch.setattr(socket.socket, 'connect_ex', checked(connect_ex))
+
+
+class SourceBoundPlanningStage(ScriptedStage):
+    """G's wire output reproduces M3-Q's trigger, using current F handles.
+
+    Only scripted model output changes. Host preparation, tool registration,
+    Runtime, ledger, evidence validation and Reviewer remain production code.
+    """
+    def __init__(self):
+        super().__init__('planning')
+
+    def complete(self, request):
+        response = super().complete(request)
+        payload = json.loads(request.user_input.split('INPUT_JSON\n', 1)[1])
+        steps = response.action.tool_call.arguments['steps']
+        for step in steps:
+            step['source_handles'] = [e['span_id'] for e in payload['allowed_evidence']]
+        steps.append(dict(steps[-1], id='dates', kind='compare_dates', predicate='',
+            question='正式日期差值是否可发布？', depends_on=['identity', 'revision']))
+        return response
 
 
 class ScriptedGeminiTransport:
@@ -92,6 +129,9 @@ class ScriptedGeminiTransport:
 
 def provider_product(root):
     app, _service, _ask, stages, ws = product_case(root)
+    # All existing Host permission/freshness/failure tests now cover the exact
+    # source-bound LIVE composition that M3-Q's unscoped fixture missed.
+    stages[1] = SourceBoundPlanningStage()
     transport = ScriptedGeminiTransport(stages)
     provider = GeminiProviderAdapter(transport)
     budget = replace(limits(), max_requests=16, max_input_tokens=500000,
@@ -209,13 +249,17 @@ def test_live_composed_hot_and_cold_reads_revalidate_current_authority(tmp_path,
             count = len(transport.requests)
             code, body = _client(base, f"/api/product/ask/runs/{result['agent_run_id']}?workspace_id={ws}")
             if mutation == 'workspace':
-                assert code == 409
-            else:
-                assert code == 200 and body['result']['status'] == 'BLOCKED', body
-                assert not body['result']['evidence'] and not body['result']['trace']
+                assert code == 409, ('SOURCE_FRESHNESS', body)
                 code, body = cold_read(app.repository.database_path, result['agent_run_id'], ws)
-                assert code == 200 and body['result']['status'] == 'BLOCKED', body
+                assert code == 409, ('SOURCE_FRESHNESS', body)
+            else:
+                assert code == 200 and body['result']['status'] == 'BLOCKED', ('SOURCE_FRESHNESS', body)
                 assert not body['result']['evidence'] and not body['result']['trace']
+                assert not any(body['result'].get(k) for k in ('task_review', 'task_investigation', 'preparation')), 'SOURCE_FRESHNESS'
+                code, body = cold_read(app.repository.database_path, result['agent_run_id'], ws)
+                assert code == 200 and body['result']['status'] == 'BLOCKED', ('SOURCE_FRESHNESS', body)
+                assert not body['result']['evidence'] and not body['result']['trace']
+                assert not any(body['result'].get(k) for k in ('task_review', 'task_investigation', 'preparation')), 'SOURCE_FRESHNESS'
             assert count == len(transport.requests)
     finally:
         app.close()
@@ -254,12 +298,140 @@ def test_normal_host_requires_source_permission_then_runs_actual_adapter(tmp_pat
             assert result['status'] == 'PARTIAL', result
             assert result['reviewer']['accepted']
             assert len(result['task_review']['observations']) == 2
+            discovery_calls = [r for r in transport.requests if 'emit_semantic_candidates' in str(r['config'])]
+            assert len(discovery_calls) == 2
+            from linkloom.semantic_ingestion.extraction import _recall_schema
+            for request in discovery_calls:
+                assert 'task-recall/v3' in json.dumps(request['contents'], ensure_ascii=False)
+                declaration = request['config']['tools'][0]['function_declarations'][0]
+                schema = declaration.get('parameters_json_schema', declaration.get('parameters'))
+                date_schema = schema['properties']['claims']['items']['properties']['task']['properties']['deadline_text']
+                expected = _recall_schema()['properties']['claims']['items']['properties']['task']['properties']['deadline_text']
+                # Gemini's wire mapping rewrites nullable/type spelling; the
+                # F-specific token constraint must survive that translation.
+                assert date_schema['pattern'] == expected['pattern']
+                assert date_schema['description'] == expected['description']
             assert stages[2].requests
             assert {p['predicate'] for p in result['task_review']['proposals']} == {'SAME_TASK', 'REVISES_PLAN'}
             count = len(transport.requests)
             status, cold = cold_read(app.repository.database_path, result['agent_run_id'], ws)
             assert status == 200 and cold['result']['status'] == 'PARTIAL', cold
             assert count == len(transport.requests)
+    finally:
+        app.close()
+
+
+def test_m3r_source_bound_product_chain_matches_durable_tool_receipts(tmp_path):
+    """M3-Q regression oracle: F -> G(source_handles) -> Host -> real tools -> UI.
+
+    LIVE *composition* uses scripted wire responses, not a live model. Never
+    replace preparation, registration, Runtime execution or Reviewer with mocks.
+    """
+    from linkloom.runtime.artifacts import ModelArtifactStore
+    from linkloom.runtime.checkpoint import SQLiteCheckpointer
+    from linkloom.agents.task_relation_result import review_task_relation_result, task_relation_task_id
+
+    app, service, transport, stages, ws = provider_product(tmp_path)
+    # A missing explicit sidecar must stay missing, rather than acquiring P4
+    # records as a side effect of a SUPPORTED model proposal.
+    sidecar = tmp_path / 'relations.sqlite'
+    service.task_relation_paths[ws] = sidecar
+    try:
+        with product_http(app, service) as base:
+            code, body = ask_request(base, ws, authorized=True)
+            assert code in {200, 202}, ('PLANNING', body)
+            result = poll(base, ws, body['result'])
+            manifests = list(tmp_path.rglob('preparation.json'))
+            assert len(manifests) == 1, 'PREPARATION: missing durable Host manifest'
+            manifest = json.loads(manifests[0].read_text(encoding='utf8'))
+            observations = (manifest['discovery']['valid_observations']
+                            + manifest['discovery']['partial_observations'])
+            assert len(observations) == 2, 'PLANNING: F did not yield both task observations'
+            plan = manifest['planning'][-1]
+            assert plan['status'] == 'PLANNED', ('PLANNING', plan)
+            relations = [s for s in plan['plan']['steps'] if s['kind'] == 'relation']
+            assert {s['predicate'] for s in relations} == {'SAME_TASK', 'REVISES_PLAN'}, 'PLANNING'
+            assert all(s['source_handles'] and s['source_bindings'] for s in relations), 'PLANNING: trigger lost'
+            assert manifest['status'] == 'PARTIAL', ('PREPARATION', manifest['gaps'])
+            job = service._jobs[result['agent_run_id']]
+            assert job.task_preparation.tools.semantic_analysis is not None, 'PREPARATION: no SemanticAnalysis'
+
+            # Read a new checkpoint reader, not an in-memory fake ledger.
+            root = manifests[0].parent.parent
+            pointer = json.loads((root.parent / (result['agent_run_id'] + '.json')).read_text(encoding='utf8'))
+            state = SQLiteCheckpointer(root / 'runtime').get_latest(pointer['thread_id'])
+            assert state is not None and state.model_executions, 'TOOL_REGISTRATION: Runtime produced no model turn'
+            store = ModelArtifactStore(root / 'runtime' / 'models')
+            first = state.model_executions[0]
+            request = store.read(first.request_ref, expected_sha256=first.request_sha256)['model_request']
+            assert 'analyze_task_semantics' in {t['tool_id'] for t in request['available_tools']}, 'TOOL_REGISTRATION'
+            assert 'plus semantic_call_id' in request['user_input'], 'PREPARATION: semantic_analysis_enabled was false'
+            records = state.tool_ledger
+            assert [r.tool_id for r in records] == [
+                'inspect_task_context', 'query_task_relations', 'analyze_task_semantics'], 'TOOL_EXECUTION'
+            assert all(r.status == 'completed' and r.result['status'] == 'ok' for r in records), 'TOOL_EXECUTION'
+            assert all(r.run_id == state.run_id and r.agent_id == 'retrieval_agent' for r in records), 'TOOL_EXECUTION'
+            semantic = records[-1]
+            assert semantic.arguments == dict(workspace_id=ws, investigation_id='product-investigation'), 'TOOL_EXECUTION'
+            analysis = semantic.result['value']
+            assert analysis['analysis_status'] == 'EXECUTED', ('TOOL_EXECUTION', analysis)
+            assert analysis['outer_call_id'] == semantic.call_id, 'TOOL_EXECUTION'
+            assert len(stages[2].requests) == 1, 'TOOL_EXECUTION: semantic provider missing or repeated'
+            artifact = store.read(analysis['result_artifact']['ref'], expected_sha256=analysis['result_artifact']['sha256'])
+            inner = store.read(artifact['request_artifact']['ref'], expected_sha256=artifact['request_artifact']['sha256'])
+            assert inner['outer_tool_call']['call_id'] == semantic.call_id, 'TOOL_EXECUTION'
+            assert inner['outer_tool_call']['arguments'] == semantic.arguments, 'TOOL_EXECUTION'
+            assert {p['predicate'] for p in analysis['proposals']} == {'SAME_TASK', 'REVISES_PLAN'}, 'EVIDENCE_VALIDATION'
+            assert all(p['evidence_status'] == 'EVIDENCE_VALID' for p in analysis['proposals']), 'EVIDENCE_VALIDATION'
+            payload = result['task_investigation']
+            assert payload['semantic_analysis'] == analysis, 'PRODUCT_PROJECTION: result differs from Ledger'
+            assert payload['receipts'] == [dict(call_id=r.call_id, tool_id=r.tool_id,
+                arguments=r.arguments, sequence=r.sequence) for r in records], 'REVIEWER: receipt mismatch'
+            tools = job.task_preparation.tools.for_run(state.run_id, store, QUESTION)
+            # P2-B requires the independent Host model-turn task identity.
+            assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id)['status'] == 'fail', 'REVIEWER: missing Host task identity'
+            task_id = task_relation_task_id(state.model_executions, state.run_id)
+            assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id,
+                task_id=task_id)['status'] == 'pass', 'REVIEWER'
+            assert result['reviewer']['accepted'], 'REVIEWER'
+            view = result['task_review']
+            assert result['status'] == 'PARTIAL' and len(view['proposals']) == 2, 'PRODUCT_PROJECTION'
+            for proposal in view['proposals']:
+                assert proposal['proposed_verdict'] == 'SUPPORTED', 'PRODUCT_PROJECTION'
+                assert proposal['semantic_status'] == 'SEMANTIC_NOT_EVALUATED' and not proposal['publishable'], 'REVIEWER: semantic promotion'
+                assert proposal['supporting_evidence'], 'PRODUCT_PROJECTION: no original evidence'
+                for citation in proposal['supporting_evidence']:
+                    span = citation['span']
+                    source = next(a for a in job.task_preparation.sources.artifacts
+                                  if a.artifact_version_id == span['artifact_version_id'])
+                    assert source.content[span['char_start']:span['char_end']] == citation['quote'], 'EVIDENCE_VALIDATION'
+            assert not view['relations'] and not result['conclusions'] and not sidecar.exists(), 'REVIEWER: P4 promotion'
+            assert all(s['status'] == 'BLOCKED' and not s['assessment_ids'] for s in view['steps']), 'REVIEWER: P4 unlocked'
+            assert all('SOURCE_SCOPED_OPERATION_UNSUPPORTED' in s['blocking_reasons'] for s in view['steps']), 'REVIEWER: P4 scope weakened'
+            dates = next(s for s in view['steps'] if s['kind'] == 'compare_dates')
+            assert not dates['comparisons'] and not dates['comparison_current_valid'], 'PRODUCT_PROJECTION: formal date delta'
+
+            count = len(transport.requests)
+            code, cold = cold_read(app.repository.database_path, result['agent_run_id'], ws, sidecar)
+            assert code == 200 and cold['result']['status'] == 'PARTIAL', ('SOURCE_FRESHNESS', cold)
+            assert cold['result']['task_review'] == view, 'PRODUCT_PROJECTION: cold read differs'
+            assert cold['result']['recovery'] == dict(mode='SAVED_RESULT_READ_ONLY', session_resumed=False), 'TOOL_EXECUTION: cold resume'
+            assert len(transport.requests) == count and len(stages[2].requests) == 1, 'TOOL_EXECUTION: repeated Provider'
+    finally:
+        app.close()
+
+
+def test_m3r_no_task_candidates_cannot_manufacture_relation_or_semantic_call(tmp_path):
+    app, service, transport, stages, ws = provider_product(tmp_path)
+    stages[0].missing = True
+    try:
+        with product_http(app, service) as base:
+            _, body = ask_request(base, ws, authorized=True)
+            result = poll(base, ws, body['result'])
+            assert result['status'] == 'BLOCKED', ('PLANNING', result)
+            assert not result['conclusions'] and not result.get('task_review'), 'PRODUCT_PROJECTION'
+            assert not stages[2].requests, 'TOOL_EXECUTION: no valid endpoints'
+            assert len(transport.requests) <= 3, 'PLANNING: unbounded retry'
     finally:
         app.close()
 

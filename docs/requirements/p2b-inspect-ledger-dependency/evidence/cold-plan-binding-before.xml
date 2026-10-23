@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="27.839" timestamp="2026-10-23T00:01:29.556994+08:00" hostname="beagle"><testcase classname="tests.integration.test_inspect_ledger_plan_binding" name="test_cold_preparation_rejects_self_consistent_foreign_plan[workspace_id]" time="4.344"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-cold-plan-red/test_cold_preparation_rejects_0')
+metadata = 'workspace_id'
+
+    @pytest.mark.parametrize('metadata', ['workspace_id', 'snapshot_hash'])
+    def test_cold_preparation_rejects_self_consistent_foreign_plan(tmp_path, metadata):
+        app, service, _, workspace, *_ = revision_product(tmp_path)
+        try:
+            sources = ProductTaskSources(workspace, app.snapshot_investigation_sources(workspace)[1],
+                lambda: app.snapshot_investigation_sources(workspace)[1])
+            prepared = prepare_task_investigation(QUESTION, sources,
+                replace(service.task_models, planner=InspectThenRelationPlanner()), tmp_path / 'preparation',
+                relation_path=tmp_path / 'relations.sqlite')
+            assert restore_task_preparation(sources, prepared.manifest).tools.inspection_plan == prepared.tools.inspection_plan
+            manifest = deepcopy(prepared.manifest)
+            foreign = replace(prepared.tools.inspection_plan,
+                **{metadata: 'foreign-workspace' if metadata == 'workspace_id' else '0' * 64})
+            manifest['planning'][-1]['plan'] = foreign.to_dict()
+&gt;           with pytest.raises(ValueError):
+E           Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\integration\test_inspect_ledger_plan_binding.py:26: Failed</failure></testcase><testcase classname="tests.integration.test_inspect_ledger_plan_binding" name="test_cold_preparation_rejects_self_consistent_foreign_plan[snapshot_hash]" time="2.921"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2b-cold-plan-red/test_cold_preparation_rejects_1')
+metadata = 'snapshot_hash'
+
+    @pytest.mark.parametrize('metadata', ['workspace_id', 'snapshot_hash'])
+    def test_cold_preparation_rejects_self_consistent_foreign_plan(tmp_path, metadata):
+        app, service, _, workspace, *_ = revision_product(tmp_path)
+        try:
+            sources = ProductTaskSources(workspace, app.snapshot_investigation_sources(workspace)[1],
+                lambda: app.snapshot_investigation_sources(workspace)[1])
+            prepared = prepare_task_investigation(QUESTION, sources,
+                replace(service.task_models, planner=InspectThenRelationPlanner()), tmp_path / 'preparation',
+                relation_path=tmp_path / 'relations.sqlite')
+            assert restore_task_preparation(sources, prepared.manifest).tools.inspection_plan == prepared.tools.inspection_plan
+            manifest = deepcopy(prepared.manifest)
+            foreign = replace(prepared.tools.inspection_plan,
+                **{metadata: 'foreign-workspace' if metadata == 'workspace_id' else '0' * 64})
+            manifest['planning'][-1]['plan'] = foreign.to_dict()
+&gt;           with pytest.raises(ValueError):
+E           Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\integration\test_inspect_ledger_plan_binding.py:26: Failed</failure></testcase></testsuite></testsuites>

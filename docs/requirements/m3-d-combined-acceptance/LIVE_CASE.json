@@ -1,0 +1,13 @@
+{
+  "source": "[2037-08-01T09:00:00Z] 记录员: 兼容矩阵核验列入本轮执行，由乔雨负责，在2037-08-19之前交齐。\n[2037-08-02T09:00:00Z] 记录员: 索引重建列入本轮执行，承办人和交付日期尚未确定。",
+  "question": "请调查兼容矩阵核验和索引重建这两条任务观察，各自的负责人、交付日期及原文证据是什么？未确定的字段请明确写未知。",
+  "expected": {
+    "tasks": 2,
+    "known_owner": "乔雨",
+    "known_deadline": "2037-08-19",
+    "unknown_task": "索引重建",
+    "unknown_fields": ["owner", "deadline", "project", "vendor"]
+  },
+  "live_replan_required": false,
+  "scope": "New combined A/B Product. C requires a complete offline trace. Any LIVE replan claim requires actual Provider and Host branch evidence."
+}

@@ -352,11 +352,12 @@ class ProductInvestigationService:
             validate_task_provider_receipt(root / 'provider' / 'budget.json', state.updated_at)
         payload = snapshot.get('task_investigation')
         if payload:
-            from linkloom.agents.task_relation_result import review_task_relation_result
+            from linkloom.agents.task_relation_result import review_task_relation_result, task_relation_task_id
             from linkloom.runtime.artifacts import ModelArtifactStore
             tools = preparation.tools.for_run(state.run_id, ModelArtifactStore(root / 'runtime' / 'models'),
                                              preparation.manifest['question'])
-            check = review_task_relation_result(payload, tools, records=state.tool_ledger, run_id=state.run_id)
+            check = review_task_relation_result(payload, tools, records=state.tool_ledger, run_id=state.run_id,
+                task_id=task_relation_task_id(state.model_executions, state.run_id))
             if check['status'] != 'pass':
                 raise ValueError('RELATION_OR_SOURCE_CHANGED')
 

@@ -1,0 +1,63 @@
+{
+  "before.xml": {
+    "tests": 1,
+    "failures": 1,
+    "errors": 0,
+    "sha256": "2dbe84bcd09087c75aa96f8f1ca3c7ae7d3ad33cebd24cdafa2038e9e4f58043"
+  },
+  "before-contract.xml": {
+    "tests": 9,
+    "failures": 9,
+    "errors": 0,
+    "sha256": "05155076d5d0c203312c9f80443cbe32c0d1fe3f64bea76b031d1e1499fad9d5"
+  },
+  "after-contract.xml": {
+    "tests": 98,
+    "failures": 0,
+    "errors": 0,
+    "sha256": "7c8e06c8e8275577cd3a513d74fd5394571e0abc2a1e2a440da4a4ab908f3c93"
+  },
+  "extra-contract.xml": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "sha256": "20d49f0857f4665efc3239b32e689d9ae671ae29e6a7e610bd66598098e64a49"
+  },
+  "after-http.xml": {
+    "tests": 7,
+    "failures": 0,
+    "errors": 0,
+    "sha256": "e0aff53ea17137f85a03484197fb574dfa0a4df74e319f31bc426c0fe79e34f8"
+  },
+  "valid-and-partial.xml": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "sha256": "407976d55e1e95f3e25a6bb86b276a2684a6e247352379253bdeeba84c70bf50"
+  },
+  "regression.xml": {
+    "tests": 680,
+    "failures": 5,
+    "errors": 0,
+    "sha256": "1e5318b7158b017526c4ae0cb3c2085237145d92e83b262b9eb956ff55900d7d"
+  },
+  "cold-subprocess-utf8.xml": {
+    "tests": 5,
+    "failures": 3,
+    "errors": 0,
+    "sha256": "67023a92258e6c324ec4759653258105b3fe405af80a742245e1c0e79020be31"
+  },
+  "cold-subprocess-serial.xml": {
+    "tests": 3,
+    "failures": 0,
+    "errors": 0,
+    "sha256": "de4f0b9eadeb4d15d23608984da15bde84d96988d66d20a1c1e199b02c336c6f"
+  },
+  "unique_gate_and_extra": {
+    "selected": 681,
+    "ever_passed": 681,
+    "unpassed": [],
+    "ci_verified": false,
+    "paid_provider_calls": 0
+  }
+}

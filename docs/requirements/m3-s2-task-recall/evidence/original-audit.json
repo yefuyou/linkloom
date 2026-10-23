@@ -1,0 +1,2101 @@
+{
+  "totals": {
+    "expected_tasks": 17,
+    "recalled_tasks": 16,
+    "CORRECT_ACCEPT": 31,
+    "false_recalled_tasks": 0,
+    "CORRECT_UNKNOWN": 32,
+    "missed_tasks": 1,
+    "MISSING_OBSERVATION": 4,
+    "REJECTED": 1
+  },
+  "batches": [
+    {
+      "cases": [
+        "F01",
+        "F02"
+      ],
+      "original_sha256": "8d5f2b9b5e534958b9156e62d8a69151d81a17455c20b7640978d3e019be24d5",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-1.json",
+      "proposals": [
+        {
+          "text": "银杉计划的证书轮换这件事交给顾言统筹，2033年2月18日交付；本项由云渡供货。",
+          "description_parts": [
+            "证书轮换"
+          ],
+          "owner": "顾言",
+          "deadline_text": "2033年2月18日",
+          "project": "银杉计划",
+          "vendor": "云渡",
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "顾言",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "证书轮换这件事交给顾言统筹",
+              "task_quote": "证书轮换",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2033年2月18日",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "证书轮换这件事交给顾言统筹，2033年2月18日交付",
+              "task_quote": "证书轮换",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": "银杉计划",
+              "role": "TASK_PROJECT",
+              "state": "ASSERTED",
+              "quote": "银杉计划的证书轮换",
+              "task_quote": "证书轮换",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": "云渡",
+              "role": "TASK_VENDOR",
+              "state": "ASSERTED",
+              "quote": "证书轮换这件事交给顾言统筹，2033年2月18日交付；本项由云渡供货",
+              "task_quote": "证书轮换",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "浅湾工程的备份演练还是由许晴继续照管，交付落在2033-03-09；松桥是这项工作的供货方。",
+          "description_parts": [
+            "备份演练"
+          ],
+          "owner": "许晴",
+          "deadline_text": "2033-03-09",
+          "project": "浅湾工程",
+          "vendor": "松桥",
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "许晴",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "备份演练还是由许晴继续照管",
+              "task_quote": "备份演练",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": "2033-03-09",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "备份演练还是由许晴继续照管，交付落在2033-03-09",
+              "task_quote": "备份演练",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": "浅湾工程",
+              "role": "TASK_PROJECT",
+              "state": "ASSERTED",
+              "quote": "浅湾工程的备份演练",
+              "task_quote": "备份演练",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": "松桥",
+              "role": "TASK_VENDOR",
+              "state": "ASSERTED",
+              "quote": "松桥是这项工作的供货方",
+              "task_quote": "备份演练",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_53ed1cf3081a9673dcba54f1bb4bd7e85ba0095cdaa53513887c4bd2127132ff",
+          "segment_id": "segment_v1_45d2b0f9d2b385565007b8d5132d32304801219fe2dfe07657daac7f03a5d8db",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_45d2b0f9d2b385565007b8d5132d32304801219fe2dfe07657daac7f03a5d8db",
+          "quote_sha256": "a8af334c72980727e132670f292e79bec11f64ae1ba2568c51f7d379af7eda37",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "c1d88e638a98f06ee446d9bd4892baf5a9a567a9c0bc9cb792a6587afa7c4f12",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "7eb9be9cd1f4beb20870cd947018dd3ee85a2cd8926ee6f214a98962012a692b",
+          "extraction_fingerprint": "a91f9a1308782b2f495628d15af4183cf39c76c3acd37592098a75a31caa5799",
+          "claims_sha256": "ee3b6ef31aa46bfcaa73a54c1cff265d950a1cee3210876031d7a0109922be73",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "7bdf5dac37afbfd234d8bb54d30e87beea512199ea70ad80861d14f54fd5d787",
+              "response_sha256": "9b8483801f8a3175fd082a7e7d3350dcb6f07b0a1543f4d4c478412acefa3833",
+              "provider_request_id": null,
+              "provider_response_id": "wZLZar6yF7-FytMPvdWUsAQ",
+              "usage": {
+                "input_tokens": 2160,
+                "output_tokens": 982,
+                "total_tokens": 3142,
+                "duration_ms": 10585.707
+              },
+              "latency_ms": 10594.93520000251,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 8,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F01",
+            "anchor": "证书轮换",
+            "field": "owner",
+            "expected": "顾言",
+            "actual": "顾言",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F01",
+            "anchor": "证书轮换",
+            "field": "deadline",
+            "expected": [
+              "2033年2月18日",
+              "2033-02-18",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033年2月18日",
+              "2033-02-18",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F01",
+            "anchor": "证书轮换",
+            "field": "project",
+            "expected": "银杉计划",
+            "actual": "银杉计划",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F01",
+            "anchor": "证书轮换",
+            "field": "vendor",
+            "expected": "云渡",
+            "actual": "云渡",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F02",
+            "anchor": "备份演练",
+            "field": "owner",
+            "expected": "许晴",
+            "actual": "许晴",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F02",
+            "anchor": "备份演练",
+            "field": "deadline",
+            "expected": [
+              "2033-03-09",
+              "2033-03-09",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033-03-09",
+              "2033-03-09",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F02",
+            "anchor": "备份演练",
+            "field": "project",
+            "expected": "浅湾工程",
+            "actual": "浅湾工程",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F02",
+            "anchor": "备份演练",
+            "field": "vendor",
+            "expected": "松桥",
+            "actual": "松桥",
+            "outcome": "CORRECT_ACCEPT"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F03",
+        "F04"
+      ],
+      "original_sha256": "1dbfc1aa923a06f514b673fc9e24e0de8776233b2f6927a281f8e9932b04e8a7",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-2.json",
+      "proposals": [
+        {
+          "text": "签名适配这一块我接下来兜底，4月16日把验收结果交齐。",
+          "description_parts": [
+            "签名适配这一块我接下来兜底，4月16日把验收结果交齐"
+          ],
+          "owner": "简宁",
+          "deadline_text": "4月16日",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "简宁",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "签名适配这一块我接下来兜底",
+              "task_quote": "签名适配这一块我接下来兜底，4月16日把验收结果交齐",
+              "basis": "SPEAKER",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "4月16日",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "4月16日把验收结果交齐",
+              "task_quote": "签名适配这一块我接下来兜底，4月16日把验收结果交齐",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "签名适配这一块我接下来兜底，4月16日把验收结果交齐",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "签名适配这一块我接下来兜底，4月16日把验收结果交齐",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_bc864024ec7893c72eefd00d20dc78a2e3b8181a97569cc3ac5d9739182f47ef",
+          "segment_id": "segment_v1_7398ba7f5a3d3e33c2dc3ce9c373c1fcf9bf979ee330da1f9229610bb0503089",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_7398ba7f5a3d3e33c2dc3ce9c373c1fcf9bf979ee330da1f9229610bb0503089",
+          "quote_sha256": "d590bff3af4cfadf397714298cafbc2e1f38267e1d5a5c81c579b2f6dc6402ce",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "cd1f116111a2234a1a02ae022869b917b03599ca4893032f3c98a04041d1c3f5",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "0d954c9e669a16fe704be16e1456a70cba320c9a434cf6663b626a36e837f8c4",
+          "extraction_fingerprint": "24068b051155356d049b04844d74bd797edf1b4f720273fa3b9d947b9699326f",
+          "claims_sha256": "d7b38f7c2bd4b00b989f21421cd118bb29f05005e752d9c9ebb43ea65d526c0a",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "895d960a3e16b17167ba4a2923271ad2dcf34532b379b5bf5c145ce11a142a03",
+              "response_sha256": "51cc6cfd38dca5f93ebf6215ecb3e5180cc32800e8363f89c9ac72a9116ef2a2",
+              "provider_request_id": null,
+              "provider_response_id": "yJLZarStHZStuMYP29iGmAQ",
+              "usage": {
+                "input_tokens": 2137,
+                "output_tokens": 497,
+                "total_tokens": 2634,
+                "duration_ms": 5072.34
+              },
+              "latency_ms": 5091.537599997537,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 1,
+          "CORRECT_ACCEPT": 2,
+          "CORRECT_UNKNOWN": 2,
+          "false_recalled_tasks": 0,
+          "missed_tasks": 1,
+          "MISSING_OBSERVATION": 4
+        },
+        "fields": [
+          {
+            "case_id": "F03",
+            "anchor": "签名适配",
+            "field": "owner",
+            "expected": "简宁",
+            "actual": "简宁",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F03",
+            "anchor": "签名适配",
+            "field": "deadline",
+            "expected": [
+              "4月16日",
+              null,
+              "MONTH_DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "4月16日",
+              null,
+              "MONTH_DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F03",
+            "anchor": "签名适配",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F03",
+            "anchor": "签名适配",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F04",
+            "anchor": "迁移排练",
+            "field": "owner",
+            "expected": null,
+            "actual": null,
+            "outcome": "MISSING_OBSERVATION"
+          },
+          {
+            "case_id": "F04",
+            "anchor": "迁移排练",
+            "field": "deadline",
+            "expected": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "actual": null,
+            "outcome": "MISSING_OBSERVATION"
+          },
+          {
+            "case_id": "F04",
+            "anchor": "迁移排练",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "MISSING_OBSERVATION"
+          },
+          {
+            "case_id": "F04",
+            "anchor": "迁移排练",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "MISSING_OBSERVATION"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F05",
+        "F06"
+      ],
+      "original_sha256": "2add969623c4c504dea92314b6dcb3ffe190a763cccb434a0f35cf0b98d0a527",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-3.json",
+      "proposals": [
+        {
+          "text": "本轮交付由苏珂接棒，苏珂在2033年5月21日交齐容量报告",
+          "description_parts": [
+            "交齐容量报告"
+          ],
+          "owner": "苏珂",
+          "deadline_text": "2033年5月21日",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "苏珂",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "苏珂在2033年5月21日交齐容量报告",
+              "task_quote": "交齐容量报告",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2033年5月21日",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "苏珂在2033年5月21日交齐容量报告",
+              "task_quote": "交齐容量报告",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "交齐容量报告",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "交齐容量报告",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "文档巡检照常开展。程泉只是旁听者，并非这项工作的执行人；本轮没有指定接办者，交付时间也空缺",
+          "description_parts": [
+            "文档巡检"
+          ],
+          "owner": null,
+          "deadline_text": null,
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "文档巡检",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "文档巡检",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "文档巡检",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "文档巡检",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [
+        "NON_ASSERTED_TASK",
+        "NON_ASSERTED_TASK"
+      ],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_ae55db2f8c4cd3e365ce1ceea32f836452e3cca95fd15372cb5b2bba3a8435e4",
+          "segment_id": "segment_v1_41efed3f8c8cbc315fa08c4b0bab5d3ac2a0e62f12363b565e3efa71159d07e9",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_41efed3f8c8cbc315fa08c4b0bab5d3ac2a0e62f12363b565e3efa71159d07e9",
+          "quote_sha256": "a1e72ba814073c67d80de6bdcc5462a7d06a62f216fdc12fa583b2fe5f8aa7f8",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "4cd8e5d1374913fab98d770656d4a232e5aa3c1e583022b339b2e42034ad488e",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "b4bf34a4d08b4a298e9fa95e273ee98046ac48c80160bb5063f345742adb8986",
+          "extraction_fingerprint": "0538bb48140a4c47cece2898b7dadf6decd85e1396c0b42306d6410612d1b346",
+          "claims_sha256": "7d48d6339b2c9850f69bc6d7c3d61989dfe54673dde0463c365b1c9fe7333986",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "ba03cf46bd64983e93f52137ddeaf4a653767eb5ace995612df657446a0f58c9",
+              "response_sha256": "2a713d8fa89778f5fa10587e2476f9d8f46fe5bcb00044552b35f127db4884e0",
+              "provider_request_id": null,
+              "provider_response_id": "zZLZasGvI_bnytMPsrXD0Qs",
+              "usage": {
+                "input_tokens": 2158,
+                "output_tokens": 832,
+                "total_tokens": 2990,
+                "duration_ms": 6472.808
+              },
+              "latency_ms": 6490.390300001309,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 2,
+          "CORRECT_UNKNOWN": 6,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F05",
+            "anchor": "容量报告",
+            "field": "owner",
+            "expected": "苏珂",
+            "actual": "苏珂",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F05",
+            "anchor": "容量报告",
+            "field": "deadline",
+            "expected": [
+              "2033年5月21日",
+              "2033-05-21",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033年5月21日",
+              "2033-05-21",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F05",
+            "anchor": "容量报告",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F05",
+            "anchor": "容量报告",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F06",
+            "anchor": "文档巡检",
+            "field": "owner",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F06",
+            "anchor": "文档巡检",
+            "field": "deadline",
+            "expected": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "actual": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F06",
+            "anchor": "文档巡检",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F06",
+            "anchor": "文档巡检",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F07",
+        "F08"
+      ],
+      "original_sha256": "324d5a1b183dc23e85695b33ad139b26b5cf662030f760dce8e2cdbe5dff1d6d",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-4.json",
+      "proposals": [
+        {
+          "text": "陈柯接着负责索引回填，交付是8月23日",
+          "description_parts": [
+            "索引回填"
+          ],
+          "owner": "陈柯",
+          "deadline_text": "8月23日",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "陈柯",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "陈柯接着负责索引回填",
+              "task_quote": "索引回填",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "8月23日",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "索引回填，交付是8月23日",
+              "task_quote": "索引回填",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "索引回填",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "索引回填",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "周薇来完成配额盘点，约定在11月交付",
+          "description_parts": [
+            "配额盘点"
+          ],
+          "owner": "周薇",
+          "deadline_text": "11月",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "周薇",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "周薇来完成配额盘点",
+              "task_quote": "配额盘点",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": "11月",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "配额盘点，约定在11月交付",
+              "task_quote": "配额盘点",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "配额盘点",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "配额盘点",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_825cae1b94ffc0a69d5bdcd0271ccccd99e3221fb5e0f6d0e1d1a3ad9f876cc9",
+          "segment_id": "segment_v1_2565c35222779d283f37481771f85c74f3be084244372cf275d7a1baf120eb22",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_2565c35222779d283f37481771f85c74f3be084244372cf275d7a1baf120eb22",
+          "quote_sha256": "70361a5657a38b88f67a1c93c188f310764f86798045d1450dec7437fa33de0f",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "a15703ae690ed6d019b560e0119b2d5f03bcc4b3716fe87fe7c884c18ad638a2",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "469f5a554bde6800d3ed26350969213e93e148eb297ccd3bd55a2e55f1a83efb",
+          "extraction_fingerprint": "22f3dd5cd481a86996303fbf045851dc64cfef2eebf70c97c1641fe513b00e20",
+          "claims_sha256": "7328524ecbd313bb97017a909dddcddf346d6b4ae8308b3a7e989cf8d0b6784a",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "57bbdf4d53fdf6fda6cb4a6008321a2eb36dccf89ce26095b057803add11b673",
+              "response_sha256": "1dfdc7753d94d7aa1dd2279a6ce1cfd5e07bcf6616c35170a58798cb130bffed",
+              "provider_request_id": null,
+              "provider_response_id": "1JLZaoPAEbXgytMPqqSY0QI",
+              "usage": {
+                "input_tokens": 2137,
+                "output_tokens": 811,
+                "total_tokens": 2948,
+                "duration_ms": 6512.966
+              },
+              "latency_ms": 6520.780599999853,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 4,
+          "CORRECT_UNKNOWN": 4,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F07",
+            "anchor": "索引回填",
+            "field": "owner",
+            "expected": "陈柯",
+            "actual": "陈柯",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F07",
+            "anchor": "索引回填",
+            "field": "deadline",
+            "expected": [
+              "8月23日",
+              null,
+              "MONTH_DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "8月23日",
+              null,
+              "MONTH_DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F07",
+            "anchor": "索引回填",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F07",
+            "anchor": "索引回填",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F08",
+            "anchor": "配额盘点",
+            "field": "owner",
+            "expected": "周薇",
+            "actual": "周薇",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F08",
+            "anchor": "配额盘点",
+            "field": "deadline",
+            "expected": [
+              "11月",
+              null,
+              "MONTH",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "11月",
+              null,
+              "MONTH",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F08",
+            "anchor": "配额盘点",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F08",
+            "anchor": "配额盘点",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F09",
+        "F10"
+      ],
+      "original_sha256": "ae069c84eb809fbbf87ad4f7294225bd2838e81ff4d3d102ae0cd7e14ed362b9",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-5.json",
+      "proposals": [
+        {
+          "text": "审计归档交由宋岚处理，交付日明确为2033-06-08",
+          "description_parts": [
+            "审计归档"
+          ],
+          "owner": "宋岚",
+          "deadline_text": "2033-06-08",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "宋岚",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "审计归档交由宋岚处理",
+              "task_quote": "审计归档",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2033-06-08",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "审计归档交由宋岚处理，交付日明确为2033-06-08",
+              "task_quote": "审计归档",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "审计归档",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "审计归档",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "陈朔负责的容量验收须在2033-07-08交付",
+          "description_parts": [
+            "容量验收"
+          ],
+          "owner": "陈朔",
+          "deadline_text": "2033-07-08",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "陈朔",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "陈朔负责的容量验收",
+              "task_quote": "容量验收",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": "2033-07-08",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "陈朔负责的容量验收须在2033-07-08交付",
+              "task_quote": "容量验收",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "容量验收",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "容量验收",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_6e6d67c302c10a57d266607c24c10969f4f06dc9c13c3c1225ffa7e713b957e5",
+          "segment_id": "segment_v1_3ce0c8a243a85c4b7d61a4e22aa8597b38053678fc6ee80e47775077591d10a3",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_3ce0c8a243a85c4b7d61a4e22aa8597b38053678fc6ee80e47775077591d10a3",
+          "quote_sha256": "1bfe18dbadc47f7524004301dab65ab4bd1c985029f01597f7b69b3a83533b45",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "81e00e743ae3f082173d2c469ffd7f28b0b1b51ba2e9d5604badf1629dcff2ff",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "38b7965a5f2f50042623e2fb4748e75888de66edb1c6695849d9ec224af445d1",
+          "extraction_fingerprint": "284b088c5409ec949f542f27ae95cfa11d731e91a1ce37e1688b1813fab72ea7",
+          "claims_sha256": "c81526b0ba5213430ed6dc5c5934e0b5741a9bf47ce8dd5aa2736d0cb7ea1c29",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "a8dc91032fd7934dff6096fd9b980d12d5ef10687a95ef0320d2865029471248",
+              "response_sha256": "1cbebaf9534831c02f15306d3225fe3f7bc74770f4d4deb5ea7bcad8ada20db0",
+              "provider_request_id": null,
+              "provider_response_id": "2pLZasruJLmF1sgP0tXh6Qs",
+              "usage": {
+                "input_tokens": 2179,
+                "output_tokens": 856,
+                "total_tokens": 3035,
+                "duration_ms": 6933.658
+              },
+              "latency_ms": 6953.9363000003505,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 4,
+          "CORRECT_UNKNOWN": 4,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F09",
+            "anchor": "审计归档",
+            "field": "owner",
+            "expected": "宋岚",
+            "actual": "宋岚",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F09",
+            "anchor": "审计归档",
+            "field": "deadline",
+            "expected": [
+              "2033-06-08",
+              "2033-06-08",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033-06-08",
+              "2033-06-08",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F09",
+            "anchor": "审计归档",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F09",
+            "anchor": "审计归档",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F10",
+            "anchor": "容量验收",
+            "field": "owner",
+            "expected": "陈朔",
+            "actual": "陈朔",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F10",
+            "anchor": "容量验收",
+            "field": "deadline",
+            "expected": [
+              "2033-07-08",
+              "2033-07-08",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033-07-08",
+              "2033-07-08",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F10",
+            "anchor": "容量验收",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F10",
+            "anchor": "容量验收",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F11",
+        "F12"
+      ],
+      "original_sha256": "0ad9f30d9bb3f0641c131a3c1d5227f3207f0d368cc1117aececa9776980bc72",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-6.json",
+      "proposals": [
+        {
+          "text": "许旸接手告警复核。两个小组分别主张2033-08-12和2033-08-15交付，尚未决定采用哪一天。",
+          "description_parts": [
+            "告警复核"
+          ],
+          "owner": "许旸",
+          "deadline_text": null,
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "许旸",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "许旸接手告警复核",
+              "task_quote": "告警复核",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "AMBIGUOUS",
+              "quote": "",
+              "task_quote": "告警复核",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "告警复核",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "告警复核",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "陆溪承担镜像签名工作。交付日只是暂拟2033-09-18，要等审计批准后才确定；目前没有已确认的交付日期。",
+          "description_parts": [
+            "镜像签名工作"
+          ],
+          "owner": "陆溪",
+          "deadline_text": null,
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "陆溪",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "陆溪承担镜像签名工作",
+              "task_quote": "镜像签名工作",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "CONDITIONAL",
+              "quote": "",
+              "task_quote": "镜像签名工作",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "镜像签名工作",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "镜像签名工作",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_80a943fca82ef0b7b1a77298ee6e315d18d0d1f15381788965a0be96bb3defb2",
+          "segment_id": "segment_v1_e1ca843145b4d383cdd681c6abf6bc90a9104a7153e8fdb2d8080d2b4184850d",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_e1ca843145b4d383cdd681c6abf6bc90a9104a7153e8fdb2d8080d2b4184850d",
+          "quote_sha256": "0c49b1d0f58229a3882f728ea31787c9a3e77375ec4e57f6d27ae1c964212978",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "d81833b50e80a9c64447f2807fd92d83ed505024a5d7f4f6a5d7e96f8f5ed110",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "4a432bc6dd3ac5997061f00a69e8fbde8c01d3142e7625e91aceafafbf84b137",
+          "extraction_fingerprint": "ef942aa666c202853d4e7eefb93ebf3d942867c5a1bc3365d80ccca9ec95781b",
+          "claims_sha256": "932cc934bd9d5451f76562ddeed243198a0e85b906cd4fa6bb4c87fdf29d43f8",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "7e4269dea4abdccfe05ea79e3c0b9fed8b3728b3ac2042463b1b320297371046",
+              "response_sha256": "a1ee22f9a96e3aad093322b17651b11cd34a636288977c6875224a0752abbeca",
+              "provider_request_id": null,
+              "provider_response_id": "4ZLZatPQIsmF1sgPlK7woQs",
+              "usage": {
+                "input_tokens": 2172,
+                "output_tokens": 821,
+                "total_tokens": 2993,
+                "duration_ms": 6848.6
+              },
+              "latency_ms": 6858.668100001523,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 2,
+          "CORRECT_UNKNOWN": 6,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F11",
+            "anchor": "告警复核",
+            "field": "owner",
+            "expected": "许旸",
+            "actual": "许旸",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F11",
+            "anchor": "告警复核",
+            "field": "deadline",
+            "expected": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "actual": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F11",
+            "anchor": "告警复核",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F11",
+            "anchor": "告警复核",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F12",
+            "anchor": "镜像签名",
+            "field": "owner",
+            "expected": "陆溪",
+            "actual": "陆溪",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F12",
+            "anchor": "镜像签名",
+            "field": "deadline",
+            "expected": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "actual": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F12",
+            "anchor": "镜像签名",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F12",
+            "anchor": "镜像签名",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "F13",
+        "H01"
+      ],
+      "original_sha256": "102a295f5deb1d04e26b45e37d6f4d92c94f71bc2de51c93d35f6d7265fe3bf5",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-7.json",
+      "proposals": [
+        {
+          "text": "闻舟承担前端清单核对，2033-10-04交齐前端清单。",
+          "description_parts": [
+            "前端清单核对"
+          ],
+          "owner": "闻舟",
+          "deadline_text": "2033-10-04",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "闻舟",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "闻舟承担前端清单核对",
+              "task_quote": "前端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2033-10-04",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "前端清单核对，2033-10-04交齐前端清单",
+              "task_quote": "前端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "前端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "前端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "姚月承担后端清单核对，2033-10-07交齐后端清单。",
+          "description_parts": [
+            "后端清单核对"
+          ],
+          "owner": "姚月",
+          "deadline_text": "2033-10-07",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "姚月",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "姚月承担后端清单核对",
+              "task_quote": "后端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2033-10-07",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "后端清单核对，2033-10-07交齐后端清单",
+              "task_quote": "后端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "后端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "后端清单核对",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "上线检查这件事我来扛，2029-07-03前交付灰度结果。",
+          "description_parts": [
+            "上线检查"
+          ],
+          "owner": "赵宁",
+          "deadline_text": "2029-07-03",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "赵宁",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "上线检查这件事我来扛",
+              "task_quote": "上线检查",
+              "basis": "SPEAKER",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": "2029-07-03",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "上线检查这件事我来扛，2029-07-03前交付灰度结果",
+              "task_quote": "上线检查",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "上线检查",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "上线检查",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_d91f4bdc0f32604ec3b64ea5c76dc3a904e47eb56c236531bfe517c5e50b9a41",
+          "segment_id": "segment_v1_8cf897492c9601921e4df0cc45237eb915d020cb84fd8d91cfb8b64df60d75f2",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_8cf897492c9601921e4df0cc45237eb915d020cb84fd8d91cfb8b64df60d75f2",
+          "quote_sha256": "7e6e852d23154096179cfae48f36148bc10837d9675c99e1583404de824a6042",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "788fccd24085ba002461de00edf68f84aff15f3febfc95ea030bba0a6b7a5b3d",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "60f6068cf47d834b86f06afce86f8f41c0e5cb9d60c5f713c9954dc82aafb1a0",
+          "extraction_fingerprint": "e53c91d95effee71478fdc352eedfb5b7ee5525e262175a98598f13116ffeef1",
+          "claims_sha256": "c490c7e2dd37a60ac9717eca209be236e609d1a36323886e42cf4ba0758ed95e",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "e62bfcf39b1cded1deea9d374d6b8d8f9a02c91342c81d31c59b0fe59a81ea1e",
+              "response_sha256": "9dec6ff3b97a45ba0099d6ee310367ba65621f07d0a9e491db735b55bb63dc04",
+              "provider_request_id": null,
+              "provider_response_id": "6JLZapKZHPbnytMP_IqnOA",
+              "usage": {
+                "input_tokens": 2158,
+                "output_tokens": 1299,
+                "total_tokens": 3457,
+                "duration_ms": 9205.725
+              },
+              "latency_ms": 9221.768499999598,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 3,
+          "recalled_tasks": 3,
+          "CORRECT_ACCEPT": 6,
+          "CORRECT_UNKNOWN": 6,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "F13",
+            "anchor": "前端清单",
+            "field": "owner",
+            "expected": "闻舟",
+            "actual": "闻舟",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "前端清单",
+            "field": "deadline",
+            "expected": [
+              "2033-10-04",
+              "2033-10-04",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033-10-04",
+              "2033-10-04",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "前端清单",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "前端清单",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "后端清单",
+            "field": "owner",
+            "expected": "姚月",
+            "actual": "姚月",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "后端清单",
+            "field": "deadline",
+            "expected": [
+              "2033-10-07",
+              "2033-10-07",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2033-10-07",
+              "2033-10-07",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "后端清单",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "F13",
+            "anchor": "后端清单",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "H01",
+            "anchor": "交付灰度结果",
+            "field": "owner",
+            "expected": "赵宁",
+            "actual": "赵宁",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "H01",
+            "anchor": "交付灰度结果",
+            "field": "deadline",
+            "expected": [
+              "2029-07-03",
+              "2029-07-03",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2029-07-03",
+              "2029-07-03",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "H01",
+            "anchor": "交付灰度结果",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "H01",
+            "anchor": "交付灰度结果",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    },
+    {
+      "cases": [
+        "H02",
+        "H03"
+      ],
+      "original_sha256": "d5094be6ba1a6d247b131a98888a8ac5692be0e8596ac1f653cac7e4b5702711",
+      "original_file": "..\\m3s\\work\\m3s-live-20261022\\f-batch-8.json",
+      "proposals": [
+        {
+          "text": "今日改由林悦接手，2029-07-06前完成回归测试",
+          "description_parts": [
+            "完成回归测试"
+          ],
+          "owner": "林悦",
+          "deadline_text": "2029-07-06前",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "林悦",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "今日改由林悦接手，2029-07-06前完成回归测试",
+              "task_quote": "完成回归测试",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "deadline",
+              "value": "2029-07-06前",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "2029-07-06前完成回归测试",
+              "task_quote": "完成回归测试",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "完成回归测试",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "完成回归测试",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 0
+            }
+          ],
+          "work_state": "ASSERTED"
+        },
+        {
+          "text": "交付日期定为2029-07-12，周敏负责完成灰度发布",
+          "description_parts": [
+            "完成灰度发布"
+          ],
+          "owner": "周敏",
+          "deadline_text": "2029-07-12",
+          "project": null,
+          "vendor": null,
+          "field_bindings": [
+            {
+              "field": "owner",
+              "value": "周敏",
+              "role": "CURRENT_OWNER",
+              "state": "ASSERTED",
+              "quote": "周敏负责完成灰度发布",
+              "task_quote": "完成灰度发布",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "deadline",
+              "value": "2029-07-12",
+              "role": "TASK_DEADLINE",
+              "state": "ASSERTED",
+              "quote": "交付日期定为2029-07-12，周敏负责完成灰度发布",
+              "task_quote": "完成灰度发布",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "project",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "完成灰度发布",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            },
+            {
+              "field": "vendor",
+              "value": null,
+              "role": "UNKNOWN",
+              "state": "NOT_STATED",
+              "quote": "",
+              "task_quote": "完成灰度发布",
+              "basis": "SOURCE_TEXT",
+              "message_ordinal": 1
+            }
+          ],
+          "work_state": "ASSERTED"
+        }
+      ],
+      "projection_failures": [],
+      "legacy_failures": [],
+      "receipts": [
+        {
+          "provider_id": "gemini",
+          "model_id": "gemini-3.8-flash",
+          "extractor_version": "provider-neutral-extractor/v1",
+          "schema_version": "semantic-candidate/v2",
+          "temporal_policy_version": "explicit-time-only/v1",
+          "request_guard_id": "m3s-live",
+          "workspace_id": "m3s-public-f",
+          "artifact_version_id": "artifact_v1_291a9ee451b800a4bdd8f054435f0969ca3f66d568746eac2d4da8d4a11cfb2d",
+          "segment_id": "segment_v1_980b3e8b5817fc407726ef66e15431fad7b199be48f0141e962e5bf091d33dc8",
+          "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_980b3e8b5817fc407726ef66e15431fad7b199be48f0141e962e5bf091d33dc8",
+          "quote_sha256": "cfe11dd69622d12de78d2cea9f0f0624a6bbc04d8f68cf8a7106780e5c772f10",
+          "relation_catalog_fingerprint": "7b24f96c4efad8f001b2082d47325f5c0b929d365f1d755ab58cd1e34a67c3da",
+          "prompt_sha256": "502ab58a70c8fc38350ea88a6af19601bb91d72309a0625a8803b7e7b25b8e18",
+          "schema_sha256": "e61dd17fe83e4e8266c7a70602136d6c9ba51bbffda30b1d207b5c33f26035fd",
+          "config_sha256": "0a32ac46e79a0b4bdda3eba38d903e77f0b9f42841f1082af197c31003706f60",
+          "extraction_fingerprint": "ddf67feb3aa0b5a92791416f97b1b39233479a2047077d7069384b0e7931ce6b",
+          "claims_sha256": "fd6c315401c1d79b7345d69f8dff5d45aa858d77f9a07af3709f51e6534ee198",
+          "attempts": [
+            {
+              "attempt_number": 1,
+              "request_sha256": "3e4dae8646a35182eac02b7d8be5871ea4f1cf217cf2872e0bee345ee1ed53e0",
+              "response_sha256": "ebab05be564d7cedc3036c1a185fdf9bf0b8b46d6701829fc1f37977236cddbd",
+              "provider_request_id": null,
+              "provider_response_id": "8ZLZavG9MJqOytMP7cHvsAU",
+              "usage": {
+                "input_tokens": 2163,
+                "output_tokens": 885,
+                "total_tokens": 3048,
+                "duration_ms": 6953.72
+              },
+              "latency_ms": 6968.575899998541,
+              "failure_code": null,
+              "outcome": "accepted_response",
+              "budget_reservation_id": "m3s-fixed-campaign",
+              "estimated_cost_upper_bound_usd": 0.25
+            }
+          ],
+          "terminal_reason": null
+        }
+      ],
+      "evaluation": {
+        "totals": {
+          "expected_tasks": 2,
+          "recalled_tasks": 2,
+          "CORRECT_ACCEPT": 3,
+          "REJECTED": 1,
+          "CORRECT_UNKNOWN": 4,
+          "false_recalled_tasks": 0
+        },
+        "fields": [
+          {
+            "case_id": "H02",
+            "anchor": "完成回归测试",
+            "field": "owner",
+            "expected": "林悦",
+            "actual": "林悦",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "H02",
+            "anchor": "完成回归测试",
+            "field": "deadline",
+            "expected": [
+              "2029-07-06",
+              "2029-07-06",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              null,
+              null,
+              "UNKNOWN",
+              "UNKNOWN"
+            ],
+            "outcome": "REJECTED"
+          },
+          {
+            "case_id": "H02",
+            "anchor": "完成回归测试",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "H02",
+            "anchor": "完成回归测试",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "H03",
+            "anchor": "完成灰度发布",
+            "field": "owner",
+            "expected": "周敏",
+            "actual": "周敏",
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "H03",
+            "anchor": "完成灰度发布",
+            "field": "deadline",
+            "expected": [
+              "2029-07-12",
+              "2029-07-12",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "actual": [
+              "2029-07-12",
+              "2029-07-12",
+              "DAY",
+              "TASK_DEADLINE"
+            ],
+            "outcome": "CORRECT_ACCEPT"
+          },
+          {
+            "case_id": "H03",
+            "anchor": "完成灰度发布",
+            "field": "project",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          },
+          {
+            "case_id": "H03",
+            "anchor": "完成灰度发布",
+            "field": "vendor",
+            "expected": null,
+            "actual": null,
+            "outcome": "CORRECT_UNKNOWN"
+          }
+        ]
+      }
+    }
+  ],
+  "findings": {
+    "F04": "NO_MODEL_PROPOSAL; no projection failure",
+    "H02": "PROTOCOL_DATE_TOKEN; observation survives, deadline rejected as DEADLINE_INVALID",
+    "F05_F06": "LEGACY_NON_ASSERTED_TASK_VETO; same real proposals survive v2 projection"
+  }
+}
