@@ -1,0 +1,18 @@
+AssertionError [ERR_ASSERTION]: Revalidation must hide the previous evidence before the response arrives
+    at D:\webproject\Linkloom\work\m3d-answer-first-integration\tests\ui\unified_ask_dom_test.cjs:104:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '<section class="panel ask-answer ask-answer--notice task-answer">\n' +
+    '    <p class="ask-answer-status">Partial investigation · confirmation pending</p>\n' +
+    '    <h2 class="ask-answer-headline">Source records found; the formal task state remains unconfirmed</h2>\n' +
+    '    <p class="ask-answer-sentence">Records are kept separate. Source statements and model interpretations do not establish the current owner or effective plan.</p>\n' +
+    '    <p><strong>Formal business status:</strong> Unconfirmed. This investigation does not grant approval.</p>\n' +
+    '    <div class="task-model-summary"><strong>Model judgments · confirmation pending</strong><ul><li>Do the records describe the same task? The model reports conflicting evidence</li></ul><p class="hint">Checked citations do not verify the interpretation. Full proposals and evidence are expandable below.</p></div>\n' +
+    '    <div class="ask-unknown"><h3>Open questions</h3>\n' +
+    '      <p>The investigation did not establish a current formal task state.</p>\n' +
+    '      \n' +
+    '      \n' +
+    '...',
+  expected: /2029-06-20|林枫|CONFLICT/,
+  operator: 'doesNotMatch'
+}

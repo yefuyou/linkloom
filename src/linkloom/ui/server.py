@@ -23,6 +23,7 @@ STATIC_FILES = {
     "/product.html": ("product.html", "text/html; charset=utf-8"),
     "/product.css": ("product.css", "text/css; charset=utf-8"),
     "/product.js": ("product.js", "text/javascript; charset=utf-8"),
+    "/product-task-result.js": ("product-task-result.js", "text/javascript; charset=utf-8"),
     "/legacy-ask": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/app.css": ("app.css", "text/css; charset=utf-8"),

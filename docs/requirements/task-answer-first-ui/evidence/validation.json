@@ -1,0 +1,56 @@
+{
+  "base": "bde9d9e2b88c2e69132cf48d1534dc28d4fca764",
+  "branch": "codex/task-answer-first-ui",
+  "affected_regression": {
+    "tests": "428",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  "new_http": {
+    "tests": "4",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  "existing_security": {
+    "tests": 14,
+    "failures": 0
+  },
+  "chromium": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "chromium_safety": {
+    "sourceOpened": true,
+    "savedRead": "PARTIAL",
+    "updatedRead": "BLOCKED",
+    "error": "SOURCE_SNAPSHOT_CHANGED",
+    "otherWorkspaceRead": 409,
+    "workspace": "ws_4c2515c109bd45e8aaba39fc584cdd6d"
+  },
+  "screenshots": [
+    "before-desktop.png",
+    "after-partial-desktop.png",
+    "after-mobile.png",
+    "after-field-evidence.png",
+    "after-original-source.png",
+    "after-model-conflict-desktop.png",
+    "after-unknown-desktop.png",
+    "after-conflict-gap-desktop.png",
+    "after-p4-comparison-desktop.png",
+    "after-blocked.png",
+    "after-workspace-isolation.png"
+  ],
+  "independent_review": {
+    "model": "gpt-5.6-luna",
+    "effort": "max",
+    "P1": 0,
+    "P2": 0
+  },
+  "external_model_calls": 0,
+  "fixture": "public synthetic; scripted adapters, not real-provider semantic evaluation"
+}

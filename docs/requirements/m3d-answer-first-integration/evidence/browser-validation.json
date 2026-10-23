@@ -1,0 +1,55 @@
+{
+  "cases": 8,
+  "passed": 8,
+  "paid_requests": 0,
+  "page_errors": 0,
+  "post_patch_pending_cases": 2,
+  "post_patch_pending_passed": 2,
+  "final_product_js_sha256": "b0c5c652a58a800d5e08846c49c1675ab55d51b933a8c8825c48a5e10af585ef",
+  "console": [
+    {
+      "case": "A",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "case": "B",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    },
+    {
+      "case": "C",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    }
+  ],
+  "console_explanation": "Three deliberate permission refusals, one each in A/B/C.",
+  "source_span_checks": 13,
+  "screenshots": [
+    "A-blocked.png",
+    "A-desktop.png",
+    "A-expanded-evidence.png",
+    "A-mobile.png",
+    "A-original-source.png",
+    "A-workspace-isolation.png",
+    "B-desktop.png",
+    "C-blocked.png",
+    "C-desktop.png",
+    "C-provider-free-cold.png",
+    "C-workspace-isolation.png",
+    "conflict-gap-desktop.png",
+    "model-conflict-desktop.png",
+    "p4-desktop.png",
+    "partial-desktop.png",
+    "partial-expanded-evidence-full.png",
+    "partial-expanded-evidence.png",
+    "partial-mobile.png",
+    "partial-original-source.png",
+    "pending-green-A-blocked.png",
+    "pending-green-A.png",
+    "pending-green-C-blocked.png",
+    "pending-green-C.png",
+    "pending-red-A.png",
+    "unknown-desktop.png"
+  ]
+}

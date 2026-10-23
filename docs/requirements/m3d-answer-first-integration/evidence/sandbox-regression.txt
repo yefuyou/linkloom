@@ -1,0 +1,1958 @@
+FFFFFFFFFFFFF.FFFFFFFFFFFFFFFFFFEEEEEEEEEEEEEE.......................... [ 44%]
+........................................................................ [ 88%]
+..................                                                       [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_unknown_task_and_date_mismatch_request_scope_without_starting_agent _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_investigation_without_as_of_uses_observed_current_scope _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_historical_investigation_uses_observed_state_without_fake_predecessor _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_unconfigured_agent_returns_safe_configuration_failure _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_provider_failure_never_exposes_a_final[fail-FAILED] __
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ ERROR at setup of test_legacy_api_and_legacy_page_keep_their_existing_semantics _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_unified_ask_flow.py:46: in ask_fixture
+    fixture = UnifiedAskFixture(tmp_path / "unified-ask.sqlite")
+<string>:12: in __init__
+    ???
+tests\integration\unified_ask_fixture.py:470: in __post_init__
+    self._seed_synthetic_data()
+tests\integration\unified_ask_fixture.py:486: in _seed_synthetic_data
+    status, payload = request_json(self.base_url, "/api/workspaces", method="POST", data={"name": ATLAS})
+tests\integration\unified_ask_fixture.py:390: in request_json
+    response = urlopen(request, timeout=timeout)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+================================== FAILURES ===================================
+________ test_task_answer_assets_and_existing_result_contract[partial] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_task_answer_http.py:17: in test_task_answer_assets_and_existing_result_contract
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_______ test_task_answer_assets_and_existing_result_contract[conflict] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_task_answer_http.py:17: in test_task_answer_assets_and_existing_result_contract
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____ test_task_answer_assets_and_existing_result_contract[model-conflict] _____
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_task_answer_http.py:17: in test_task_answer_assets_and_existing_result_contract
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+________ test_task_answer_assets_and_existing_result_contract[unknown] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_task_answer_http.py:17: in test_task_answer_assets_and_existing_result_contract
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____________ test_combined_product_and_provider_free_cold_read[A] _____________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:14: in test_combined_product_and_provider_free_cold_read
+    ws, result = start_case(base, case)
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____________ test_combined_product_and_provider_free_cold_read[B] _____________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:14: in test_combined_product_and_provider_free_cold_read
+    ws, result = start_case(base, case)
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____________ test_combined_product_and_provider_free_cold_read[C] _____________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:14: in test_combined_product_and_provider_free_cold_read
+    ws, result = start_case(base, case)
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+__ test_combined_replanned_result_never_leaks_stale_evidence[source_update] ___
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:32: in test_combined_replanned_result_never_leaks_stale_evidence
+    ws, result = start_case(base, 'C')
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_combined_replanned_result_never_leaks_stale_evidence[evidence_revoke] __
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:32: in test_combined_replanned_result_never_leaks_stale_evidence
+    ws, result = start_case(base, 'C')
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____ test_combined_replanned_result_never_leaks_stale_evidence[workspace] _____
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3d_combined.py:32: in test_combined_replanned_result_never_leaks_stale_evidence
+    ws, result = start_case(base, 'C')
+tests\m3d_support.py:82: in start_case
+    _, body = _client(base, '/api/workspaces', method='POST', data=dict(name='Integration D '+case))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[False] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3s1_ambiguous_product.py:78: in test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read
+    ws,result=start(base)
+tests\integration\test_m3s1_ambiguous_product.py:65: in start
+    _,b=_client(base,'/api/workspaces',method='POST',data=dict(name='Original M3-S ambiguous source'))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[True] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3s1_ambiguous_product.py:78: in test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read
+    ws,result=start(base)
+tests\integration\test_m3s1_ambiguous_product.py:65: in start
+    _,b=_client(base,'/api/workspaces',method='POST',data=dict(name='Original M3-S ambiguous source'))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_host_rejects_repeated_discovery_after_unknown_without_extra_provider_loop _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3s1_ambiguous_product.py:100: in test_host_rejects_repeated_discovery_after_unknown_without_extra_provider_loop
+    _,result=start(base)
+tests\integration\test_m3s1_ambiguous_product.py:65: in start
+    _,b=_client(base,'/api/workspaces',method='POST',data=dict(name='Original M3-S ambiguous source'))
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+______ test_http_partial_exposes_original_tasks_proposal_and_exact_block ______
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:28: in test_http_partial_exposes_original_tasks_proposal_and_exact_block
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+__ test_http_explicit_tasks_domain_accepts_owner_field_in_original_question ___
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:61: in test_http_explicit_tasks_domain_accepts_owner_field_in_original_question
+    result = http_ask(base, workspace, question=question)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+___________ test_new_service_reads_saved_result_without_model_calls ___________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:77: in test_new_service_reads_saved_result_without_model_calls
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_cold_read_requires_accepted_reviewer_and_complete_ledger[ledger_missing] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:115: in test_cold_read_requires_accepted_reviewer_and_complete_ledger
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_cold_read_requires_accepted_reviewer_and_complete_ledger[reviewer_rejected] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:115: in test_cold_read_requires_accepted_reviewer_and_complete_ledger
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_______ test_http_trusted_p4_only_unlocks_matching_prerequisites[both] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:144: in test_http_trusted_p4_only_unlocks_matching_prerequisites
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_____ test_http_trusted_p4_only_unlocks_matching_prerequisites[identity] ______
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:144: in test_http_trusted_p4_only_unlocks_matching_prerequisites
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_______ test_http_trusted_p4_only_unlocks_matching_prerequisites[none] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:144: in test_http_trusted_p4_only_unlocks_matching_prerequisites
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_______ test_http_hot_and_new_process_hide_invalidated_results[update] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:176: in test_http_hot_and_new_process_hide_invalidated_results
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_______ test_http_hot_and_new_process_hide_invalidated_results[remove] ________
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:176: in test_http_hot_and_new_process_hide_invalidated_results
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+__ test_http_hot_and_new_process_hide_invalidated_results[relation_retract] ___
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:176: in test_http_hot_and_new_process_hide_invalidated_results
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+____ test_same_name_separate_work_never_inherits_fields_or_model_identity _____
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:238: in test_same_name_separate_work_never_inherits_fields_or_model_identity
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+______ test_revoked_evidence_without_source_change_cannot_be_resurrected ______
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_product_review.py:256: in test_revoked_evidence_without_source_change_cannot_be_resurrected
+    result = http_ask(base, ws)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_task_http_execution_failure_never_becomes_accepted_partial[provider_unknown] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_execution_failures.py:42: in test_task_http_execution_failure_never_becomes_accepted_partial
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+___ test_task_http_execution_failure_never_becomes_accepted_partial[budget] ___
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_execution_failures.py:42: in test_task_http_execution_failure_never_becomes_accepted_partial
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_task_http_execution_failure_never_becomes_accepted_partial[no_progress] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_execution_failures.py:42: in test_task_http_execution_failure_never_becomes_accepted_partial
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_task_http_execution_failure_never_becomes_accepted_partial[workspace] __
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_execution_failures.py:42: in test_task_http_execution_failure_never_becomes_accepted_partial
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+_ test_task_http_execution_failure_never_becomes_accepted_partial[permission] _
+D:\Anaconda\Lib\urllib\request.py:1319: in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+D:\Anaconda\Lib\http\client.py:1338: in request
+    self._send_request(method, url, body, headers, encode_chunked)
+D:\Anaconda\Lib\http\client.py:1384: in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1333: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+D:\Anaconda\Lib\http\client.py:1093: in _send_output
+    self.send(msg)
+D:\Anaconda\Lib\http\client.py:1037: in send
+    self.connect()
+D:\Anaconda\Lib\http\client.py:1003: in connect
+    self.sock = self._create_connection(
+D:\Anaconda\Lib\socket.py:864: in create_connection
+    raise exceptions[0]
+D:\Anaconda\Lib\socket.py:849: in create_connection
+    sock.connect(sa)
+E   PermissionError: [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_m3p_execution_failures.py:42: in test_task_http_execution_failure_never_becomes_accepted_partial
+    result = http_ask(base, workspace)
+tests\m3p_support.py:161: in http_ask
+    status, config = _client(base, '/api/product/ask/config')
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1322: in do_open
+    raise URLError(err)
+E   urllib.error.URLError: <urlopen error [WinError 10013] 以一种访问权限不允许的方式做了一个访问套接字的尝试。>
+- generated xml file: D:\webproject\Linkloom\work\m3d-answer-first-integration\docs\requirements\m3d-answer-first-integration\evidence\regression.xml -
+=========================== short test summary info ===========================
+FAILED tests/integration/test_task_answer_http.py::test_task_answer_assets_and_existing_result_contract[partial]
+FAILED tests/integration/test_task_answer_http.py::test_task_answer_assets_and_existing_result_contract[conflict]
+FAILED tests/integration/test_task_answer_http.py::test_task_answer_assets_and_existing_result_contract[model-conflict]
+FAILED tests/integration/test_task_answer_http.py::test_task_answer_assets_and_existing_result_contract[unknown]
+FAILED tests/integration/test_m3d_combined.py::test_combined_product_and_provider_free_cold_read[A]
+FAILED tests/integration/test_m3d_combined.py::test_combined_product_and_provider_free_cold_read[B]
+FAILED tests/integration/test_m3d_combined.py::test_combined_product_and_provider_free_cold_read[C]
+FAILED tests/integration/test_m3d_combined.py::test_combined_replanned_result_never_leaks_stale_evidence[source_update]
+FAILED tests/integration/test_m3d_combined.py::test_combined_replanned_result_never_leaks_stale_evidence[evidence_revoke]
+FAILED tests/integration/test_m3d_combined.py::test_combined_replanned_result_never_leaks_stale_evidence[workspace]
+FAILED tests/integration/test_m3s1_ambiguous_product.py::test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[False]
+FAILED tests/integration/test_m3s1_ambiguous_product.py::test_original_ambiguous_unknown_survives_replan_runtime_reviewer_and_cold_read[True]
+FAILED tests/integration/test_m3s1_ambiguous_product.py::test_host_rejects_repeated_discovery_after_unknown_without_extra_provider_loop
+FAILED tests/integration/test_m3p_product_review.py::test_http_partial_exposes_original_tasks_proposal_and_exact_block
+FAILED tests/integration/test_m3p_product_review.py::test_http_explicit_tasks_domain_accepts_owner_field_in_original_question
+FAILED tests/integration/test_m3p_product_review.py::test_new_service_reads_saved_result_without_model_calls
+FAILED tests/integration/test_m3p_product_review.py::test_cold_read_requires_accepted_reviewer_and_complete_ledger[ledger_missing]
+FAILED tests/integration/test_m3p_product_review.py::test_cold_read_requires_accepted_reviewer_and_complete_ledger[reviewer_rejected]
+FAILED tests/integration/test_m3p_product_review.py::test_http_trusted_p4_only_unlocks_matching_prerequisites[both]
+FAILED tests/integration/test_m3p_product_review.py::test_http_trusted_p4_only_unlocks_matching_prerequisites[identity]
+FAILED tests/integration/test_m3p_product_review.py::test_http_trusted_p4_only_unlocks_matching_prerequisites[none]
+FAILED tests/integration/test_m3p_product_review.py::test_http_hot_and_new_process_hide_invalidated_results[update]
+FAILED tests/integration/test_m3p_product_review.py::test_http_hot_and_new_process_hide_invalidated_results[remove]
+FAILED tests/integration/test_m3p_product_review.py::test_http_hot_and_new_process_hide_invalidated_results[relation_retract]
+FAILED tests/integration/test_m3p_product_review.py::test_same_name_separate_work_never_inherits_fields_or_model_identity
+FAILED tests/integration/test_m3p_product_review.py::test_revoked_evidence_without_source_change_cannot_be_resurrected
+FAILED tests/integration/test_m3p_execution_failures.py::test_task_http_execution_failure_never_becomes_accepted_partial[provider_unknown]
+FAILED tests/integration/test_m3p_execution_failures.py::test_task_http_execution_failure_never_becomes_accepted_partial[budget]
+FAILED tests/integration/test_m3p_execution_failures.py::test_task_http_execution_failure_never_becomes_accepted_partial[no_progress]
+FAILED tests/integration/test_m3p_execution_failures.py::test_task_http_execution_failure_never_becomes_accepted_partial[workspace]
+FAILED tests/integration/test_m3p_execution_failures.py::test_task_http_execution_failure_never_becomes_accepted_partial[permission]
+ERROR tests/integration/test_unified_ask_flow.py::test_current_and_historical_lookup_are_reviewed_and_make_zero_model_requests
+ERROR tests/integration/test_unified_ask_flow.py::test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclusion
+ERROR tests/integration/test_unified_ask_flow.py::test_unknown_task_and_date_mismatch_request_scope_without_starting_agent
+ERROR tests/integration/test_unified_ask_flow.py::test_external_provider_permission_is_denied_by_default_and_offline_mode_is_explicit
+ERROR tests/integration/test_unified_ask_flow.py::test_investigation_uses_runtime_tools_validator_reviewer_and_keeps_reason_unknown
+ERROR tests/integration/test_unified_ask_flow.py::test_investigation_without_as_of_uses_observed_current_scope
+ERROR tests/integration/test_unified_ask_flow.py::test_historical_investigation_uses_observed_state_without_fake_predecessor
+ERROR tests/integration/test_unified_ask_flow.py::test_unconfigured_agent_returns_safe_configuration_failure
+ERROR tests/integration/test_unified_ask_flow.py::test_provider_failure_never_exposes_a_final[uncertain-PROVIDER_UNCERTAIN]
+ERROR tests/integration/test_unified_ask_flow.py::test_provider_failure_never_exposes_a_final[fail-FAILED]
+ERROR tests/integration/test_unified_ask_flow.py::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[forged_receipt]
+ERROR tests/integration/test_unified_ask_flow.py::test_forged_receipt_or_wrong_evidence_is_rejected_and_run_scope_is_workspace_bound[wrong_evidence]
+ERROR tests/integration/test_unified_ask_flow.py::test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_permission
+ERROR tests/integration/test_unified_ask_flow.py::test_legacy_api_and_legacy_page_keep_their_existing_semantics
+31 failed, 117 passed, 14 errors in 198.08s (0:03:18)
+Exception ignored in: <function Console.__del__ at 0x000001E7D0563A60>
+Traceback (most recent call last):
+  File "C:\Users\18019\AppData\Roaming\Python\Python313\site-packages\pyreadline3\console\console.py", line 255, in __del__
+OSError: [WinError -1073741816] Windows Error 0xc0000008

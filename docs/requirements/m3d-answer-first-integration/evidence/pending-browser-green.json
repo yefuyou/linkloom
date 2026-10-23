@@ -1,0 +1,129 @@
+{
+  "paid_requests": 0,
+  "cases": [
+    {
+      "case": "A",
+      "mutation": "source_update",
+      "pending_text": "",
+      "http": {
+        "status": 200,
+        "body": {
+          "result": {
+            "schema_version": "product-ask/v1",
+            "query": "兼容矩阵核验由谁负责，何时交齐？请调查并列出原文证据。",
+            "workspace_id": "ws_3de5858abcc24d4eabd1ada4b90c4942",
+            "scope": {
+              "subject": "",
+              "relation": "",
+              "as_of": null
+            },
+            "path": "TASK_INVESTIGATION",
+            "route": {
+              "intent": "TASK_INVESTIGATION",
+              "code": "SOURCE_TASK_INVESTIGATION",
+              "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+              "admission": {
+                "origin": "USER_SCOPED",
+                "context": {
+                  "domain": "tasks",
+                  "snapshot_hash": "63e8172c48f7af484d8a7c3fec51e94cafd115ae42d44000324fff4dd80aa9b2"
+                }
+              }
+            },
+            "status": "BLOCKED",
+            "conclusions": [],
+            "discovery": null,
+            "evidence": [],
+            "receipts": [],
+            "uncertainty": {
+              "unknown_fields": [],
+              "statement": ""
+            },
+            "agent_run_id": "ui-a2e35cfd258f",
+            "reviewer": {
+              "performed": false,
+              "accepted": false
+            },
+            "timeline": null,
+            "progress": null,
+            "error": {
+              "code": "SOURCE_SNAPSHOT_CHANGED",
+              "classification": "validation",
+              "message": "The authorized source snapshot changed; ask again."
+            },
+            "metrics": {},
+            "trace": [],
+            "preparation": null,
+            "working_context_audit": null
+          }
+        }
+      },
+      "passed": true,
+      "scripted_calls": 5
+    },
+    {
+      "case": "C",
+      "mutation": "evidence_revoke",
+      "pending_text": "",
+      "http": {
+        "status": 200,
+        "body": {
+          "result": {
+            "schema_version": "product-ask/v1",
+            "query": "调查缓存校核的执行人、截止日及缺失的补充确认；未知字段请明确写未知。",
+            "workspace_id": "ws_5269dd7b12414e139ecb5bed8e83b988",
+            "scope": {
+              "subject": "",
+              "relation": "",
+              "as_of": null
+            },
+            "path": "TASK_INVESTIGATION",
+            "route": {
+              "intent": "TASK_INVESTIGATION",
+              "code": "SOURCE_TASK_INVESTIGATION",
+              "reason": "Bounded task investigation; observations and plans remain unconfirmed.",
+              "admission": {
+                "origin": "USER_SCOPED",
+                "context": {
+                  "domain": "tasks",
+                  "snapshot_hash": "16fbb3539866e17be0cd9a2f9a944adec2b4933894c8745311596a3e5ac29c2b"
+                }
+              }
+            },
+            "status": "BLOCKED",
+            "conclusions": [],
+            "discovery": null,
+            "evidence": [],
+            "receipts": [],
+            "uncertainty": {
+              "unknown_fields": [],
+              "statement": ""
+            },
+            "agent_run_id": "ui-53f52368c8d8",
+            "reviewer": {
+              "performed": false,
+              "accepted": false
+            },
+            "timeline": null,
+            "progress": null,
+            "error": {
+              "code": "SOURCE_SNAPSHOT_CHANGED",
+              "classification": "validation",
+              "message": "The authorized source snapshot changed; ask again."
+            },
+            "metrics": {},
+            "trace": [],
+            "preparation": null,
+            "working_context_audit": null
+          }
+        }
+      },
+      "passed": true,
+      "scripted_calls": 6
+    }
+  ],
+  "page_errors": [],
+  "browser_version": "155.0.8059.85",
+  "passed": true,
+  "product_js_sha256": "b0c5c652a58a800d5e08846c49c1675ab55d51b933a8c8825c48a5e10af585ef"
+}
