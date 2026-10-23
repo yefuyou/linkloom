@@ -1,0 +1,238 @@
+[
+  {
+    "claim_id": "ES2002a:chunk:0002:claim:0",
+    "artifact_id": "ES2002a:chunk:0002",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_81b37f96c681cccf614de506fcfe1320406a6aedf5d0d8c44f2273070b2e5ed5",
+    "claim_type": "PLAN",
+    "subject": "team",
+    "relation_phrase": "next_agenda_item",
+    "value": "discuss project finance",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.9,
+      "relation": 0.9,
+      "temporal": 0.9,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "we now need to discuss the project finance .",
+      "description_parts": [
+        "discuss the project finance"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    },
+    "exact_unique_quote": true,
+    "canonical_start": 22003,
+    "native_anchors": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.88",
+        "speaker": "B",
+        "text": "Okay , uh we now need to discuss the project finance .",
+        "char_start": 21993,
+        "char_end": 22047,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "discovery_failures": [
+      {
+        "artifact_id": "ES2002a:chunk:0002",
+        "reason": "NON_ASSERTED_TASK",
+        "proposal_index": 0
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2002a:chunk:0006:claim:0",
+    "artifact_id": "ES2002a:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_9a726fd2600b42ccf219594d9332482e0a0b5228cbcc54421e97818adc722291",
+    "claim_type": "PLAN",
+    "subject": "next meeting",
+    "relation_phrase": "scheduled_time",
+    "value": "in thirty minutes",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.8,
+      "overall": 0.85
+    },
+    "task": {
+      "text": "the next meeting's gonna be in thirty minutes .",
+      "description_parts": [
+        "the next meeting's gonna be in thirty minutes"
+      ],
+      "owner": null,
+      "deadline_text": "in thirty minutes",
+      "project": null,
+      "vendor": null
+    },
+    "exact_unique_quote": true,
+    "canonical_start": 52258,
+    "native_anchors": [
+      {
+        "utterance_id": "ES2002a.B.dialog-act.dharshi.194",
+        "speaker": "B",
+        "text": "the next meeting's gonna be in thirty minutes .",
+        "char_start": 52258,
+        "char_end": 52305,
+        "source_member": "dialogueActs/ES2002a.B.dialog-act.xml",
+        "member_sha256": "fd94fe188a80bad10c7c9879e0f0836482c208d21bfc7116623836b737e2b084"
+      }
+    ],
+    "discovery_failures": [
+      {
+        "artifact_id": "ES2002a:chunk:0006",
+        "reason": "NON_ASSERTED_TASK",
+        "proposal_index": 0
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:4",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PLAN",
+    "subject": "technical considerations",
+    "relation_phrase": "presentation_plan",
+    "value": "give technical considerations",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "and I'll I'll give you the uh , I guess , technical considerations for those .",
+      "description_parts": [
+        "I'll give you the uh , I guess , technical considerations for those"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    },
+    "exact_unique_quote": true,
+    "canonical_start": 54276,
+    "native_anchors": [
+      {
+        "utterance_id": "ES2005c.A.dialog-act.dharshi.46",
+        "speaker": "A",
+        "text": "and I'll I'll give you the uh , I guess , technical considerations for those .",
+        "char_start": 54276,
+        "char_end": 54354,
+        "source_member": "dialogueActs/ES2005c.A.dialog-act.xml",
+        "member_sha256": "79cdeb0e2bae6a690f99882ef9bd80114ff342d79b651f45916333dad5228c49"
+      }
+    ],
+    "discovery_failures": [
+      {
+        "artifact_id": "ES2005c:chunk:0006",
+        "reason": "NON_ASSERTED_TASK",
+        "proposal_index": 4
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2005c:chunk:0006:claim:5",
+    "artifact_id": "ES2005c:chunk:0006",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_717b355f2a7e2a7f24f4da42542f061545e463e007b632673b39240dc2977421",
+    "claim_type": "PLAN",
+    "subject": "remote controls",
+    "relation_phrase": "action_plan",
+    "value": "examine old remote controls and reuse essential pieces",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.95,
+      "entity": 0.85,
+      "relation": 0.9,
+      "temporal": 0.95,
+      "overall": 0.9
+    },
+    "task": {
+      "text": "the way I'm gonna do this is uh we're gonna take a look at some old remote controls , see how they work , uh reuse the the vital kind of um essential pieces of it ,",
+      "description_parts": [
+        "we're gonna take a look at some old remote controls , see how they work",
+        "reuse the the vital kind of um essential pieces of it"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    },
+    "exact_unique_quote": false,
+    "canonical_start": null,
+    "native_anchors": [],
+    "discovery_failures": [
+      {
+        "artifact_id": "ES2005c:chunk:0006",
+        "reason": "TASK_TEXT_OR_DESCRIPTION_UNGROUNDED_OR_AMBIGUOUS",
+        "proposal_index": 5
+      }
+    ]
+  },
+  {
+    "claim_id": "ES2005c:chunk:0017:claim:0",
+    "artifact_id": "ES2005c:chunk:0017",
+    "evidence_ref": "evidence:semantic-ingestion:v1:segment_v1_0490eb6d63d2b1df5b181b54aae73d6c116a70f88e46a1012b52bd519863b261",
+    "claim_type": "PLAN",
+    "subject": "team",
+    "relation_phrase": "assigned_task",
+    "value": "work on giving me a model in clay",
+    "temporal_status": "NOT_STATED",
+    "valid_from_raw": null,
+    "valid_to_raw": null,
+    "confidence": {
+      "claim_type": 0.9,
+      "entity": 0.8,
+      "relation": 0.85,
+      "temporal": 0.85,
+      "overall": 0.85
+    },
+    "task": {
+      "text": "and what I would like you guys to do is work on giving me a model in clay .",
+      "description_parts": [
+        "work on giving me a model in clay"
+      ],
+      "owner": null,
+      "deadline_text": null,
+      "project": null,
+      "vendor": null
+    },
+    "exact_unique_quote": true,
+    "canonical_start": 136029,
+    "native_anchors": [
+      {
+        "utterance_id": "ES2005c.C.dialog-act.dharshi.303",
+        "speaker": "C",
+        "text": "and what I would like you guys to do is work on giving me a model in clay .",
+        "char_start": 136029,
+        "char_end": 136104,
+        "source_member": "dialogueActs/ES2005c.C.dialog-act.xml",
+        "member_sha256": "b206114513f31c1c96f372f82ae88305d27b597f16a817c9cd726d7d6b0a9c95"
+      }
+    ],
+    "discovery_failures": [
+      {
+        "artifact_id": "ES2005c:chunk:0017",
+        "reason": "NON_ASSERTED_TASK",
+        "proposal_index": 0
+      }
+    ]
+  }
+]
