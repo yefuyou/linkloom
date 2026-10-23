@@ -58,3 +58,17 @@ P4 查询只按计划 predicate 与完整 subject/object `ObservationRef` 匹配
 ## 局限
 
 本报告没有重复执行已由主 Agent 提供收据的独立 63 个 P2 用例和 joint 正常/来源变更用例；未修改当前 worktree 中主 Agent 的未提交 CI/test 证据。复现脚本和临时 SQLite/runtime 材料保留在 `D:\webproject\Linkloom\work\` 供复查。
+
+## 追加复审：HEAD 51f535e 的 M3R Reviewer 测试适配
+
+复审对象仅为 `tests/integration/test_m3q_provider_host.py` 的当前单文件 diff（8 行：6 additions、2 deletions）；当前 worktree 没有生产文件 diff。CI run `39878488328` 的 Task 失败来自旧调用在 P2-B 已要求 canonical Host task identity 后仍省略 `task_id`，不是生产安全断言失败。
+
+适配内容保持了严格门禁：
+
+1. `review_task_relation_result(..., task_id=missing)` 明确断言 `status == fail`（`tests/integration/test_m3q_provider_host.py:391-392`），验证旧调用不会被默认为可信。
+2. 从真实 `state.model_executions` 调用 `task_relation_task_id(state.model_executions, state.run_id)`，再带入 reviewer 重放并断言 `status == pass`（`:393-395`）。没有从模型 Final、tool row 或 payload 接受 task identity。
+3. Reviewer 之后仍保留 `accepted`、`PARTIAL`、semantic proposal 不可发布、无 P4 promotion、所有步骤 `BLOCKED` 和 source-scoped operation blocker 断言（`:396-412`）。
+
+生产契约与此适配一致：`task_relation_task_id` 要求当前 run/retrieval_agent 的 model execution 恰好导出一个 task identity（`src/linkloom/agents/task_relation_result.py:57-63`）；Reviewer 在存在 inspection plan 且缺少 task_id 时拒绝，并要求每条记录与 Host task identity 一致（`:66-89`），随后以该 identity 重放 query（`:97-109`）。
+
+追加结论：**P1=0，P2=0；该适配是必要的最小测试修正，不放宽 Reviewer，不改变生产行为。** 主 Agent 报告真实 HTTP 专项本地 `1 passed / 6s`；本独立复审未重复运行已通过用例。CI 首轮失败日志/JUnit 应保留为“旧测试调用不符合新 Host canonical task contract”的证据，不应通过删除或放宽断言处理。

@@ -329,7 +329,7 @@ def test_m3r_source_bound_product_chain_matches_durable_tool_receipts(tmp_path):
     """
     from linkloom.runtime.artifacts import ModelArtifactStore
     from linkloom.runtime.checkpoint import SQLiteCheckpointer
-    from linkloom.agents.task_relation_result import review_task_relation_result
+    from linkloom.agents.task_relation_result import review_task_relation_result, task_relation_task_id
 
     app, service, transport, stages, ws = provider_product(tmp_path)
     # A missing explicit sidecar must stay missing, rather than acquiring P4
@@ -388,7 +388,11 @@ def test_m3r_source_bound_product_chain_matches_durable_tool_receipts(tmp_path):
             assert payload['receipts'] == [dict(call_id=r.call_id, tool_id=r.tool_id,
                 arguments=r.arguments, sequence=r.sequence) for r in records], 'REVIEWER: receipt mismatch'
             tools = job.task_preparation.tools.for_run(state.run_id, store, QUESTION)
-            assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id)['status'] == 'pass', 'REVIEWER'
+            # P2-B requires the independent Host model-turn task identity.
+            assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id)['status'] == 'fail', 'REVIEWER: missing Host task identity'
+            task_id = task_relation_task_id(state.model_executions, state.run_id)
+            assert review_task_relation_result(payload, tools, records=records, run_id=state.run_id,
+                task_id=task_id)['status'] == 'pass', 'REVIEWER'
             assert result['reviewer']['accepted'], 'REVIEWER'
             view = result['task_review']
             assert result['status'] == 'PARTIAL' and len(view['proposals']) == 2, 'PRODUCT_PROJECTION'
