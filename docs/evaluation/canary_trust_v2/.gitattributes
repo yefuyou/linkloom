@@ -1,5 +1,5 @@
 .gitattributes -text
-*.json -text
+*.json -text whitespace=trailing-space,space-before-tab,cr-at-eol
 *.py -text
 *.zip binary
 *.md text eol=lf
