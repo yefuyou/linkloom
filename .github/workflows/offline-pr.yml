@@ -236,6 +236,8 @@ jobs:
           tests/unit/test_task_offline_permissions.py
           tests/unit/test_task_observation.py
           tests/unit/test_task_observation_discovery.py
+          tests/unit/test_text_scopes.py
+          tests/unit/test_quote_nesting_p2.py
           tests/unit/test_task_plan_revision.py
           tests/unit/test_task_relation_candidates.py
           tests/unit/test_task_relation_query.py
