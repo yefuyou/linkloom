@@ -261,6 +261,8 @@ class RuntimeWorkingContext:
             audit["recovery"] = json.loads(encoded(asdict(restored)))
             if restored.status != "complete":
                 raise ValidationError("Required original evidence cannot be restored.", details={"code": "CONTEXT_RECOVERY_INCOMPLETE"})
+            if len(restored.evidence) > 8:
+                raise ValidationError("Required original evidence exceeds Runtime limit.", details={"code": "CONTEXT_EVIDENCE_LIMIT_EXCEEDED"})
             candidates = tuple(RetrievedEvidence(r.ref.evidence_id, r.ref.source_ref, r.ref.logical_path, 1.0, i,
                 "runtime_recovery", r.ref.resource_id, dict(text=r.quote, workspace_id=self.tools.workspace_id,
                     status="verified", active=True, current=True, authorized=True)) for i, r in enumerate(restored.evidence))

@@ -155,6 +155,18 @@ def test_dynamic_capacity_also_respects_a_lower_candidate_pool(tmp_path):
     assert all(c["complete"] for c in audit["coverage"])
 
 
+@pytest.mark.parametrize("assembler_limit", [9, 12])
+def test_injected_assembler_cannot_authorize_nine_required_items(tmp_path, assembler_limit):
+    service, state, request = service_for(tmp_path, 9)
+    assembler = ContextAssembler(budget=ContextBudget(max_evidence=assembler_limit), policy=service.config.policy)
+    service.assemble = lambda **kw: assembler.assemble(workspace_id="capacity", **kw)
+    with pytest.raises(ValidationError) as error:
+        service.prepare(request, state)
+    assert error.value.details["code"] == "CONTEXT_INCOMPLETE"
+    assert service.latest["status"] == "BLOCKED"
+    assert all(not c["complete"] and len(c["missing_evidence_ids"]) == 9 for c in service.latest["coverage"])
+
+
 def test_filtered_counterevidence_is_not_replaced_by_a_one_sided_pass():
     items = tuple(_evidence(str(i), i + 1, workspace_id="other" if i == 5 else "borealis") for i in range(6))
     groups = (EvidenceGroup("whole_conflict", tuple(str(i) for i in range(6)), ("g",), True),)
