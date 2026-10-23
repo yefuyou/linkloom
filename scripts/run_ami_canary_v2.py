@@ -18,6 +18,7 @@ from linkloom.semantic_ingestion.extraction import ProviderRequestAuthorization,
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 ROOT = Path(__file__).resolve().parents[1]
+PRODUCTION_SHA = 'ba51b3586135f1ef52a32b5e9945d14b058bac38'
 LIMITS = TaskProviderLimits(30, 1_400_000, 122_880, 8, 3600, 90, .25,
                           input_usd_per_million=4, output_usd_per_million=20)
 PROFILES = {'null': None, 'TASK_RECALL_V3': TaskDiscoveryProfile.TASK_RECALL_V3}
@@ -63,10 +64,11 @@ def prepare(inputs, output, profile):
                   temperature=None, sdk_attempts=1, f_attempts=1, limits=asdict(LIMITS),
                   reservations=reserves, input_token_upper_bound=sum(sizes), compactor=False)
     source_hashes = {a.artifact_id: a.content_hash for a in sources}
-    identity = dict(version=VERSION, frozen_sha=head(), code_hashes=code_identity(),
+    identity = dict(version=VERSION, frozen_sha=head(), production_sha=PRODUCTION_SHA, code_hashes=code_identity(),
                     config_sha256=sha(canonical(config)), config=config, source_hashes=source_hashes,
                     input_files={relative: sha((inputs / relative).read_bytes())
                                  for relative in ('manifest.json', 'transcripts/ES2002a.json', 'transcripts/ES2005c.json')},
+                    planned_requests_sha256=sha(canonical(requests)),
                     run_id=str(uuid.uuid4()), runtime=runtime_identity(), process_id=os.getpid())
     save_new(output / 'plan.json', identity)
     save_new(output / 'planned_requests.json', requests)
@@ -86,6 +88,20 @@ def verify_gate(gate, identity):
         raise ValueError('frozen commit does not contain all runner/source files')
     if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True).strip():
         raise ValueError('frozen source tree must be clean')
+    if subprocess.run(['git', 'diff', '--quiet', PRODUCTION_SHA, '--', 'src/linkloom',
+            ':!src/linkloom/evaluation/canary_trust.py'], cwd=ROOT).returncode:
+        raise ValueError('production source differs from authorized PR18 SHA')
+    if identity['config']['task_profile'] == 'null':
+        packet = json.loads(gate.read_text(encoding='utf8'))
+        replay = json.loads(Path(packet['replay']['path']).read_text(encoding='utf8'))
+        old_root = Path(replay['historical_seal_path']).parent
+        seal = json.loads((old_root / 'output_seal.json').read_text(encoding='utf8'))
+        original = old_root / 'actual_requests.jsonl'
+        if sha(original.read_bytes()) != seal['files']['actual_requests.jsonl']:
+            raise ValueError('historical comparison request seal mismatch')
+        original_requests = [json.loads(line) for line in original.read_text(encoding='utf8').splitlines() if line.strip()]
+        if sha(canonical(original_requests)) != identity['planned_requests_sha256']:
+            raise ValueError('first-round input/profile/model contract drift')
 
 
 def run(inputs, output, *, profile='TASK_RECALL_V3', execute=False, gate=None):
@@ -93,8 +109,8 @@ def run(inputs, output, *, profile='TASK_RECALL_V3', execute=False, gate=None):
     if not execute:
         print(f'OFFLINE: 28 requests / {profile}; reserved USD {sum(identity["config"]["reservations"]):.2f}; no Provider calls', flush=True)
         return
-    if profile != 'TASK_RECALL_V3' or gate is None:
-        raise ValueError('live requires v3 contract and frozen offline gate')
+    if gate is None:
+        raise ValueError('live requires a frozen offline gate')
     verify_gate(gate, identity)
     journal = AttemptJournal(output / 'attempts', run_id=identity['run_id'], identity=identity)
     sdk = build_gemini_sdk_client(os.environ['GEMINI_API_KEY'],

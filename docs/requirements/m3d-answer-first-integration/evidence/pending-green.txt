@@ -1,0 +1,6 @@
+PASS: revalidation hides previous fields, quotes and proposals while HTTP is pending, including language changes
+PASS: refresh retains only workspace-bound run pointer; reopening revalidates and hides revoked evidence
+PASS: scope/date/query invalidation, latest question wins, workspace response isolation
+PASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets
+PASS: feedback mutation blocks racing Ask, preserves query and resumes after save
+PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored

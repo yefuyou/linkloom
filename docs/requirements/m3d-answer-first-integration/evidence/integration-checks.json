@@ -1,0 +1,34 @@
+{
+  "base": "33390e2eeaad71d215e279b2f724cae672ea4f80",
+  "ui_source": "94e52027fb97bde0d28fb003c7bab189975fb047",
+  "source_parent": "bde9d9e2b88c2e69132cf48d1534dc28d4fca764",
+  "cherry_pick": "b7134ae0d1881b77d69cf72298cc652072fb3617",
+  "ui_increment_count": 1,
+  "patch_id": "877261466f9621a012af5903ad6125b1247489bd",
+  "production_files": [
+    "src/linkloom/ui/server.py",
+    "src/linkloom/ui/static/product-task-result.js",
+    "src/linkloom/ui/static/product.css",
+    "src/linkloom/ui/static/product.html",
+    "src/linkloom/ui/static/product.js"
+  ],
+  "production_equals_fixed_ui": false,
+  "unchanged_ui_files": [
+    "src/linkloom/ui/server.py",
+    "src/linkloom/ui/static/product-task-result.js",
+    "src/linkloom/ui/static/product.css",
+    "src/linkloom/ui/static/product.html"
+  ],
+  "compatibility_patches": 1,
+  "compatibility_diff": "diff --git a/src/linkloom/ui/static/product.js b/src/linkloom/ui/static/product.js\nindex 1026e4636..49b4d3215 100644\n--- a/src/linkloom/ui/static/product.js\n+++ b/src/linkloom/ui/static/product.js\n@@ -816,7 +816,10 @@\n       else if (action === \"reopen-task\") {\n         const workspaceId = state.workspace.workspace_id;\n         const runId = savedTaskRun(workspaceId);\n-        if (runId) await pollAsk(runId, workspaceId, ++state.agentViewToken);\n+        if (runId) {\n+          invalidateAsk();\n+          await pollAsk(runId, workspaceId, state.agentViewToken);\n+        }\n       }\n       else if ([\"feedback-approve\", \"feedback-reject\", \"feedback-revoke\"].includes(action)) {\n         const actor = document.getElementById(\"feedback-actor\");",
+  "core_m3d_files_changed": false,
+  "branch": "codex/m3d-answer-first-integration",
+  "remote": "https://github.com/yefuyou/linkloom.git",
+  "file_sha256": {
+    "src/linkloom/ui/server.py": "d5e36933768f6e742aac301b5ea56be38870a3b9b320cb11bc426a5a41d3015e",
+    "src/linkloom/ui/static/product-task-result.js": "7f080d8d8520a1555d333f4be451dcc76ec51a225cd4cfa375d6d37d95b01b72",
+    "src/linkloom/ui/static/product.css": "62faa2ab3cfb6886db798b3927612c7477dcd04068c563da5c487662d0f3c57d",
+    "src/linkloom/ui/static/product.html": "1f3cad473cd392067be1530f5c9366b293a81a90ec08747ae21bacb9dec2a274",
+    "src/linkloom/ui/static/product.js": "b0c5c652a58a800d5e08846c49c1675ab55d51b933a8c8825c48a5e10af585ef"
+  }
+}

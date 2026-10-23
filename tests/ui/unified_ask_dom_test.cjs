@@ -73,7 +73,7 @@ async function setup(storage = new Map()) {
       : {candidates: []};
     return response(payload);
   }
-  vm.runInNewContext(source, {document: {documentElement: {lang: "en"},
+  vm.runInNewContext(fs.readFileSync("src/linkloom/ui/static/product-task-result.js", "utf8") + "\n" + source, {document: {documentElement: {lang: "en"},
     getElementById: element, querySelectorAll: () => nav}, fetch,
     FormData: class {constructor(form) {this.form = form;} *[Symbol.iterator]() {yield* Object.entries(this.form.fields);} get(key) {return this.form.fields[key];}},
     window: {setTimeout() {}, sessionStorage: {
@@ -98,6 +98,18 @@ async function setup(storage = new Map()) {
   const savedTask = taskResult(); savedTask.result.agent_run_id = "saved-task";
   beforeReload.pending[0](savedTask); await saveRequest;
   assert.deepEqual([...savedPointer.values()], ["saved-task"]); // No quotes or result cache.
+  const rechecking = beforeReload.element("page").listeners.click({target: {closest: () => ({dataset: {action: "reopen-task"}})}});
+  await tick();
+  assert.equal(beforeReload.polls.length, 1);
+  assert.doesNotMatch(beforeReload.element("ask-result").innerHTML, /2029-06-20|林枫|CONFLICT/,
+    "Revalidation must hide the previous evidence before the response arrives");
+  beforeReload.element("ask-language").value = "zh";
+  await beforeReload.element("page").listeners.change({target: {id: "ask-language"}});
+  assert.doesNotMatch(beforeReload.element("ask-result").innerHTML, /2029-06-20|林枫|CONFLICT/,
+    "Language changes must not restore a result awaiting revalidation");
+  beforeReload.polls[0](savedTask); await rechecking;
+  assert.match(beforeReload.element("ask-result").innerHTML, /2029-06-20/);
+  console.log("PASS: revalidation hides previous fields, quotes and proposals while HTTP is pending, including language changes");
   const reopened = await setup(savedPointer);
   assert.match(reopened.element("page").innerHTML, /reopen-task/);
   assert.equal(reopened.pending.length, 0);
@@ -255,7 +267,7 @@ async function setup(storage = new Map()) {
   assert.match(taskHtml, /Unknown fields/);
   assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
   assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
-  assert.match(taskHtml, /Conflicting proposal/);
+  assert.match(taskHtml, /The model reports conflicting evidence/);
   const taskPermissionUi = await setup();
   const taskPermissionOperation = taskPermissionUi.submit(); await tick();
   const deniedTask = taskResult();
@@ -263,6 +275,14 @@ async function setup(storage = new Map()) {
     error: {code: "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", message: "Authorize the current sources."}});
   taskPermissionUi.pending[0](deniedTask); await taskPermissionOperation;
   assert.match(taskPermissionUi.element("ask-result").innerHTML, /Check the per-request permission/);
+  const blockedUi = await setup();
+  const blockedOperation = blockedUi.submit(); await tick();
+  const changedTask = taskResult();
+  Object.assign(changedTask.result, {status: "BLOCKED", error: {code: "SOURCE_SNAPSHOT_CHANGED"},
+    preparation: {gaps: ["OLD_PRIVATE_SOURCE"]}, uncertainty: {statement: "OLD_PRIVATE_SOURCE"}});
+  blockedUi.pending[0](changedTask); await blockedOperation;
+  assert.match(blockedUi.element("ask-result").innerHTML, /Previous task details are hidden/);
+  assert.doesNotMatch(blockedUi.element("ask-result").innerHTML, /OLD_PRIVATE_SOURCE|2029-06-20|林枫/);
   const uncertainUi = await setup();
   const unknownOperation = uncertainUi.submit(); await tick();
   const unknownPayload = result("");

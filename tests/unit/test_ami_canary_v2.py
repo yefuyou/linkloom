@@ -57,7 +57,8 @@ def test_source_tampering_is_rejected_before_any_request_or_client(tmp_path):
         runner.run(root, tmp_path / 'tampered')
 
 
-def test_timeout_is_unknown_stops_batch_without_retry_and_keeps_budget(tmp_path, monkeypatch):
+@pytest.mark.parametrize('profile', ['null', 'TASK_RECALL_V3'])
+def test_timeout_is_unknown_stops_batch_without_retry_and_keeps_budget(tmp_path, monkeypatch, profile):
     from types import SimpleNamespace
     from linkloom.evaluation.canary_trust import summarize_attempts
     calls = []
@@ -71,7 +72,7 @@ def test_timeout_is_unknown_stops_batch_without_retry_and_keeps_budget(tmp_path,
     monkeypatch.setattr(runner, 'build_gemini_sdk_client', lambda *args, **kwargs:
                         SimpleNamespace(models=SimpleNamespace(generate_content=timeout)))
     output = tmp_path / 'unknown'
-    runner.run(inputs(tmp_path), output, execute=True, gate=tmp_path / 'test-gate')
+    runner.run(inputs(tmp_path), output, profile=profile, execute=True, gate=tmp_path / 'test-gate')
     summary = summarize_attempts(output / 'attempts')
     assert len(calls) == 1
     assert summary['outcomes'] == {'OUTCOME_UNKNOWN': 1}

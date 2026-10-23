@@ -1,0 +1,3 @@
+Command: python -u scripts/verify_task_revalidation_pending.py --campaign green
+Exit status: 0. No stdout or stderr.
+Machine-readable outcome: pending-browser-green.json; passed=true; A/C each passed=true.
