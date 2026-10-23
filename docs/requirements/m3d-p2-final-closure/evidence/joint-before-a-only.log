@@ -1,0 +1,48 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_joint_product_http_p4_runtime_reviewer_and_fresh_cold_read _______
+
+tmp_path = WindowsPath('D:/webproject/Linkloom/work/p2-joint-before1/test_joint_product_http_p4_run0')
+
+    def test_joint_product_http_p4_runtime_reviewer_and_fresh_cold_read(tmp_path):
+        (app, _service, transport, workspace, observations, sidecar, result, hot, pointer,
+         state, ledger) = _run_joint(tmp_path)
+        try:
+            inspect_record, query_record, semantic_record = ledger
+            assert [row["tool_id"] for row in ledger] == [
+                "inspect_task_context", "query_task_relations", "analyze_task_semantics"
+            ]
+            assert all(row["status"] == "completed" for row in ledger)
+            inspected = inspect_record["result"]["value"]
+            assert len(inspected["observations"]) == 1
+            inspected_ref = inspected["observations"][0]["ref"]
+            assert set(inspected_ref) == {
+                "workspace_id", "observation_id", "artifact_id", "artifact_version_id",
+                "evidence_ref", "content_hash", "payload_hash",
+            }
+            assert inspected_ref == ObservationRef.from_observation(observations[0]).to_dict()
+            assert observations[0].observation_id != observations[1].observation_id
+            assert all(o.observation_id.startswith('task_observation_v2_') for o in observations)
+            assert observations[0].raw_text == observations[1].raw_text == SHARED_TEXT
+            assert observations[0].provenance == observations[1].provenance
+            owner_proofs = [next(e for e in o.field_evidence if e.field == 'owner') for o in observations[:2]]
+            assert owner_proofs[0] == owner_proofs[1]
+            receipts = inspected["investigation_receipts"]
+            assert [receipt["step_id"] for receipt in receipts] == ["inspect_A"]
+            assert observations[1].observation_id not in {
+                row["ref"]["observation_id"] for row in inspected["observations"]
+            }
+    
+            query = query_record["result"]["value"]
+            steps = {row["step_id"]: row for row in query["investigation_steps"]}
+>           assert steps["same_A"]["status"] == "SUPPORTED"
+E           AssertionError: assert 'BLOCKED' == 'SUPPORTED'
+E             
+E             - SUPPORTED
+E             + BLOCKED
+
+tests\integration\test_p2_joint_product.py:367: AssertionError
+- generated xml file: D:\webproject\Linkloom\work\m3d-p2-final-closure\docs\requirements\m3d-p2-final-closure\evidence\joint-before-a-only.xml -
+=========================== short test summary info ===========================
+FAILED tests/integration/test_p2_joint_product.py::test_joint_product_http_p4_runtime_reviewer_and_fresh_cold_read
+1 failed in 39.01s
