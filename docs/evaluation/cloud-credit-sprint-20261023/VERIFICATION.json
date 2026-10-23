@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "verification": "Public archive hashes and independent offline A-E receipt recomputation",
+  "files_verified": 789,
+  "provider_calls_during_verification": 0,
+  "generated_requests_in_saved_experiment": 57,
+  "successful_responses_in_saved_experiment": 56,
+  "reserved_usd": 14.4,
+  "successful_receipt_token_estimate_usd": 0.38359475,
+  "actual_bill_usd": null,
+  "all_included_raw_files_byte_exact": true,
+  "offline_totals_equal_saved_results": true
+}
