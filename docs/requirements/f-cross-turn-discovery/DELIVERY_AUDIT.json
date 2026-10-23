@@ -1,0 +1,42 @@
+{
+  "status": "PASS_TARGETED_SCAN_AND_PUBLIC_SOURCE_REVIEW",
+  "scanned_payload_files": 41,
+  "findings": [],
+  "checks": [
+    "Provider key patterns",
+    "GitHub/AWS token patterns",
+    "private key blocks",
+    "Bearer credential values",
+    "email addresses",
+    "mobile-number patterns",
+    "private home paths",
+    "Evaluator-only Gold JSON fields"
+  ],
+  "source_provenance": "Public AMI transcript windows and raw historical model proposals; exact frozen request bytes preserved",
+  "private_user_notes_included": false,
+  "credentials_accessed": false,
+  "provider_calls": 0,
+  "budget_writes": 0,
+  "omitted": [
+    "CASE_DESIGN.json",
+    "FAILURE_MATRIX.json",
+    "official summaries/qrels/Evaluator-only Gold",
+    "original PACKAGE_MANIFEST with excluded-file references",
+    "historical evidence ZIP and budget snapshots",
+    "prior full analysis reports and analyzer script"
+  ],
+  "test_answers_changed": false,
+  "production_candidate_added_lines": 38,
+  "production_candidate_deleted_lines": 0,
+  "candidate_default": "OFF",
+  "key_handoff_required": false,
+  "local_execution_state": "NOT_RUN",
+  "test_receipts": {
+    "original_preparation_tests": 39,
+    "handoff_recheck": 39,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "audit_scope": "Exact allowlist committed on the independent F branch; pattern scanning is combined with source provenance and staged-file review"
+}

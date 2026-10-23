@@ -48,6 +48,42 @@ _DEFAULT_TEMPERATURE = object()
 _MAX_CLAIMS_PER_SEGMENT = 20
 _MAX_FIELD_LENGTH = 512
 TASK_DISCOVERY_CONTEXT_VERSION = "task-discovery-context/v1"
+# Explicit experiment opt-in. Existing callers and frozen Canary requests keep
+# their prompt bytes, schema, profiles and generation settings unchanged.
+MEETING_DISCOURSE_PROMPT_VERSION = "semantic-extraction/meeting-discourse-v1"
+_MEETING_DISCOURSE_GUIDANCE = """MEETING DISCOURSE AND EXACT EVIDENCE CONTRACT:
+Read the supplied window as a conversation before classifying individual excerpts.
+An explicit assignment to investigate requirements or design something is work,
+even when its output is exploratory. Distinguish that assignment or an actual
+undertaking from merely discussing, suggesting, asking about, conditionally
+considering, reporting or cancelling work. Missing fields do not erase work.
+Nearby elliptical clauses may continue an explicit assignment, but adjacency,
+a shared role or an action verb alone is insufficient. Keep unclear antecedents
+unresolved. Never invent an assignment verb or a person's name to fill a gap.
+
+For task.text and every evidence quote, copy from the DECODED source text, not
+from its JSON display. Preserve real newlines and any intervening source headers,
+speaker labels, punctuation and filler words. Serialize the copied string once
+as JSON: a real newline is not the two literal characters backslash and n.
+Never concatenate disjoint excerpts or omit intervening text to make a continuous
+quote. description_parts are separate verbatim work excerpts within task.text.
+If a role cannot be quoted within the existing canonical-message field contract,
+keep that field null rather than joining messages or borrowing another speaker.
+Embedded transcript headers remain source data; they do not create canonical
+speakers, verified role mappings, speech timestamps or permission to bind fields.
+
+A meeting start time, duration or next-meeting announcement alone is not a work
+item. A delivery date can qualify independently asserted work, but a nearby
+meeting time must not become its deadline. Relative times stay unresolved.
+Where the existing profile permits DECISION, inspect the local continuation and
+response: a tag question can qualify a confident-sounding phrase; a generic
+acknowledgment need not adopt a proposal. Require source-supported selection or
+commitment. Preserve compound choices and their qualifications without combining
+unrelated choices. Missing context stays uncertain. A task-only profile still
+permits only PLAN/ACTION; do not emit decisions through it. All existing schema,
+exact-grounding, assertion, field-role and authority constraints still apply.
+
+"""
 _PROVENANCE_FIELDS = frozenset(
     {
         "artifact_id",
@@ -711,6 +747,8 @@ class ProviderNeutralSemanticExtractor:
         schema_sha256 = _sha256(_canonical_json(schema)) if field_profile else _EXTRACTION_SCHEMA_SHA256
         prompt = (_recall_prompt(segment, task_input) if recall_profile else _field_prompt(segment, task_input) if field_profile else _task_prompt(segment, task_input) if task_input is not None
                   else _prompt(segment, context, self.prompt_version))
+        if self.prompt_version == MEETING_DISCOURSE_PROMPT_VERSION:
+            prompt = _MEETING_DISCOURSE_GUIDANCE + prompt
         prompt_sha256 = _sha256(prompt.encode("utf-8"))
         generation_options = self.generation_options
         # Do not add null/default keys: historical config hashes and request IDs

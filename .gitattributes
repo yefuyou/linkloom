@@ -1,2 +1,11 @@
 # Preserve the single reconstructed ledger's bytes verified by its original seal.
 /docs/evaluation/public_memory_benchmark_clean/e2_revised_mh_only_20261005/final_evaluation_v1_20261005/formal_rehearsal_budget_ledger.json -text
+# Preserve this F A/B handoff's exact hashed bytes on Windows and Unix.
+/.gitattributes -text
+/src/linkloom/semantic_ingestion/extraction.py -text
+/scripts/prepare_f_ab.py -text
+/scripts/verify_f_ab_handoff.py -text
+/tests/unit/test_f_ab_preparation.py -text
+/tests/unit/test_f_cross_turn_candidate.py -text
+/tests/fixtures/f_cross_turn/** -text
+/docs/requirements/f-cross-turn-discovery/** -text

@@ -1,0 +1,87 @@
+{
+  "rows": [
+    {
+      "path": "src/linkloom/agents/claim_grounding.py",
+      "local_kind": "working file",
+      "local_sha256": "6e04a7374c96ce18d607b8f77c945ef9ca96d0b50124e2a2df7d4028a95a1be0",
+      "canary_raw_sha256": "6ecfff95d0c887b46ed8d866f6c83615a29d79336e3e9caf58330d2fc8fbd0c2",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/agents/reviewer_agent.py",
+      "local_kind": "working file",
+      "local_sha256": "468a16ee1cc49aba2632d0deb35389c5a6f04b3c4de617342636e7cbc56621fe",
+      "canary_raw_sha256": "ff2a1226ed53e22c59a1172a94098b6080f550c91fd7265d564498606e165039",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_discovery_veto.py",
+      "local_kind": "working file",
+      "local_sha256": "9c99df8de0d6dffb3b2a7230d8423c22ef8eb54c74dbf87d8fb62b2412022246",
+      "canary_raw_sha256": "db32cb20278607cdc24883caa5ec66ed6080012ba4ce5294a7cabf2a475908d3",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_field_binding.py",
+      "local_kind": "working file",
+      "local_sha256": "c94ac419928a1a80a645b3e1652873985cc457243c66031a539cc6d4210dedec",
+      "canary_raw_sha256": "d60b9b97573fd6b867c5da8866ad4a6e832a58b3edc3095177b16cbac8ba5a6e",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/task_observation_discovery.py",
+      "local_kind": "working file",
+      "local_sha256": "8d6853f0bb0500ee661188416ac0c25804742f24ed0b6abeca3a1b84d327ac49",
+      "canary_raw_sha256": "f113b8251b8ede8e1fdc7d4a68d04a1dd01c6fea1b5908908fd34c3a5c5d1734",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/text_scopes.py",
+      "local_kind": "working file",
+      "local_sha256": "186a0f69a5700e8246581a7d631baf4e6c74522db08fbcd892ea7232dc56e98f",
+      "canary_raw_sha256": "1d91049386a0e863f548a5b72885e071ef63954b127280ed3d08dce441b64231",
+      "byte_equal": false,
+      "newline_only": false,
+      "interpretation": "implementation differs"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/validation.py",
+      "local_kind": "working file",
+      "local_sha256": "a72ed50f75863fe9febce2e83bdcbbf91142b81b92fa96977fd84e98bf170081",
+      "canary_raw_sha256": "7f55b3a47a9753fcb3e1c99e1c217a1ad4fd5eb99935c9b3c78584ac0a94482f",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/ui/task_provider.py",
+      "local_kind": "working file",
+      "local_sha256": "ccc4922a62d4e09388c73d2139d71d84458713c7d56aebd81ce6207f662ab1c1",
+      "canary_raw_sha256": "6654b6467e9d47a2a334aa217292ab1774c0d693f11303393e1c14e755111bef",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    },
+    {
+      "path": "src/linkloom/semantic_ingestion/extraction.py",
+      "local_kind": "baseline Git blob",
+      "local_sha256": "c6d3ba5949d9e302d81e1051dfb3b43178b5995c05d05e74b4c58a40c6f4c57e",
+      "canary_raw_sha256": "63ba8b413e8962b64fd17ee22429c4ce652ee5a027e7384547a77c2a941d433c",
+      "byte_equal": false,
+      "newline_only": true,
+      "interpretation": "same content; raw byte hashes preserved"
+    }
+  ],
+  "source_text_normalized": false,
+  "request_text_normalized": false
+}
