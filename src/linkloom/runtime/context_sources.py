@@ -12,7 +12,7 @@ from linkloom.context.models import ContextResource, ResourceType
 from linkloom.context.recovery import EvidenceRef, SourceSnapshot
 from linkloom.evidence_identity import passage_evidence_id
 from linkloom.runtime.errors import ValidationError
-from linkloom.semantic_ingestion.document_text import parse_source_text
+from linkloom.semantic_ingestion.document_text import parse_source_text, source_parse_session
 from linkloom.semantic_ingestion.task_relation_models import EvidenceQuote, ObservationRef, canonical_hash
 from linkloom.semantic_ingestion.task_relation_validation import verify_evidence_quote
 from linkloom.tools.semantic_context import build_semantic_context
@@ -65,18 +65,19 @@ class TaskEvidenceBridge:
         if self._captured is not None:
             yield
             return
-        captured = self._read()
-        snapshot_id = self._identity(captured)
-        self._captured = captured
-        self.snapshot_id = snapshot_id
-        succeeded = False
-        try:
-            yield
-            succeeded = True
-        finally:
-            self._captured = None
-            if succeeded and self._identity(self._read()) != snapshot_id:
-                raise ValidationError("Authorized snapshot changed during recovery.", details={"code": "CONTEXT_SNAPSHOT_CHANGED"})
+        with source_parse_session():
+            captured = self._read()
+            snapshot_id = self._identity(captured)
+            self._captured = captured
+            self.snapshot_id = snapshot_id
+            succeeded = False
+            try:
+                yield
+                succeeded = True
+            finally:
+                self._captured = None
+                if succeeded and self._identity(self._read()) != snapshot_id:
+                    raise ValidationError("Authorized snapshot changed during recovery.", details={"code": "CONTEXT_SNAPSHOT_CHANGED"})
 
     def semantic_snapshot(self):
         return self._read()[-1]
