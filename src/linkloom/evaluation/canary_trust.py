@@ -35,6 +35,8 @@ def classify_attempt(evidence):
     """
     if evidence.get('provider_response_received') is True:
         status = evidence.get('http_status')
+        if evidence.get('provider_error_received') is True:
+            return 'SENT_FAILED'
         if type(status) is int and status >= 400:
             return 'SENT_FAILED'
         response_id = evidence.get('provider_response_id')

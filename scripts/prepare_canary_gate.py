@@ -24,6 +24,8 @@ def validate_gate(path, identity):
         raise ValueError('gate source identity drift')
     if gate['runtime'] != identity['runtime']:
         raise ValueError('gate runtime identity drift')
+    if any(gate[key] != identity[key] for key in ('source_hashes', 'input_files')):
+        raise ValueError('gate input source identity drift')
     for key in REQUIRED:
         check = gate['tests'][key]
         path = Path(check['path'])
@@ -45,13 +47,24 @@ def validate_gate(path, identity):
             or replay['runtime'] != identity['runtime']
             or replay['task_profile'] is not None or replay['status'] != 'PASS'):
         raise ValueError('offline Discovery regression not verified')
+    if (replay['complete_meetings'] != {'ES2002a': 8, 'ES2005c': 20}
+            or any(replay[key] != identity[key] for key in ('source_hashes', 'input_files'))
+            or sha(Path(replay['historical_seal_path']).read_bytes()) != replay['historical_seal_sha256']):
+        raise ValueError('offline Discovery source/seal mismatch')
     if sha((replay_path.parent / 'discovery.json').read_bytes()) != replay['discovery_sha256']:
         raise ValueError('offline Discovery output changed')
+    batches = json.loads((replay_path.parent / 'discovery.json').read_text(encoding='utf8'))
+    counts = {m: sum(len(b['result']['extractions']) for b in batches if b['meeting_id'] == m)
+              for m in ('ES2002a', 'ES2005c')}
+    if counts != replay['complete_meetings']:
+        raise ValueError('incomplete offline Discovery structure')
 
 
 def create(output, tests, replay):
     from scripts.run_ami_canary_v2 import code_identity, head, runtime_identity
     identity = dict(frozen_sha=head(), code_hashes=code_identity(), runtime=runtime_identity())
+    replay_data = json.loads(replay.read_text(encoding='utf8'))
+    identity.update({key: replay_data[key] for key in ('source_hashes', 'input_files')})
     evidence = lambda p: dict(path=str(p.resolve()), sha256=sha(p.read_bytes()))
     gate = dict(**identity, tests={k: evidence(v) for k, v in zip(REQUIRED, tests)}, replay=evidence(replay))
     save_new(output, gate)

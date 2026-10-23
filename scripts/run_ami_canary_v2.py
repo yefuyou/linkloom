@@ -65,8 +65,8 @@ def prepare(inputs, output, profile):
     source_hashes = {a.artifact_id: a.content_hash for a in sources}
     identity = dict(version=VERSION, frozen_sha=head(), code_hashes=code_identity(),
                     config_sha256=sha(canonical(config)), config=config, source_hashes=source_hashes,
-                    input_files={f'transcripts/{m}.json': sha((inputs / f'transcripts/{m}.json').read_bytes())
-                                 for m in ('ES2002a', 'ES2005c')},
+                    input_files={relative: sha((inputs / relative).read_bytes())
+                                 for relative in ('manifest.json', 'transcripts/ES2002a.json', 'transcripts/ES2005c.json')},
                     run_id=str(uuid.uuid4()), runtime=runtime_identity(), process_id=os.getpid())
     save_new(output / 'plan.json', identity)
     save_new(output / 'planned_requests.json', requests)
@@ -80,6 +80,10 @@ def prepare(inputs, output, profile):
 def verify_gate(gate, identity):
     from scripts.prepare_canary_gate import validate_gate
     validate_gate(gate, identity)
+    committed = set(subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', identity['frozen_sha']],
+                                            cwd=ROOT, text=True).splitlines())
+    if set(identity['code_hashes']) - committed:
+        raise ValueError('frozen commit does not contain all runner/source files')
     if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT, text=True).strip():
         raise ValueError('frozen source tree must be clean')
 
@@ -138,6 +142,8 @@ def run(inputs, output, *, profile='TASK_RECALL_V3', execute=False, gate=None):
             persist(raw_path, raw_dict)
             active['evidence'] = dict(sdk_entered=True, provider_response_received=True,
                 provider_response_id=raw_dict.get('response_id'),
+                provider_error_received=isinstance(raw_dict.get('error'), dict) and bool(raw_dict['error']),
+                http_status=(raw_dict.get('sdk_http_response') or {}).get('status_code'),
                 raw_response_canonical_sha256=sha(canonical(raw_dict)), usage=raw_dict.get('usage_metadata'))
             return raw
 

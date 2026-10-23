@@ -14,6 +14,7 @@ from linkloom.evaluation.canary_trust import AttemptJournal, classify_attempt, s
     ({'http_status': 200, 'http_response_observed': True, 'provider_response_received': True}, 'SENT_SUCCEEDED'),
     ({'http_status': 200, 'provider_response_received': True}, 'OUTCOME_UNKNOWN'),
     ({'provider_response_received': True, 'provider_response_id': True}, 'OUTCOME_UNKNOWN'),
+    ({'provider_response_received': True, 'provider_response_id': 'receipt', 'provider_error_received': True}, 'SENT_FAILED'),
     ({'provider_response_received': True, 'provider_response_id': 'receipt'}, 'SENT_SUCCEEDED'),
     ({'session_outcome': 'SUCCEEDED', 'usage': None}, 'OUTCOME_UNKNOWN'),
     ({'pre_transport_rejection': 'sdk_argument_validation', 'sdk_entered': True}, 'OUTCOME_UNKNOWN'),

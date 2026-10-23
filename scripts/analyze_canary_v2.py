@@ -94,6 +94,10 @@ def replay(inputs, historical_run, output):
     from scripts.run_ami_canary_v2 import runtime_identity
     save_new(output / 'replay_receipt.json', dict(version=VERSION, frozen_sha=head(), code_hashes=code_identity(), runtime=runtime_identity(),
         task_profile=None, provider_calls=0, replayed_outputs=cursor, complete_meetings={'ES2002a': 8, 'ES2005c': 20},
+        source_hashes={a.artifact_id: a.content_hash for a in sources},
+        input_files={relative: sha((inputs / relative).read_bytes()) for relative in
+                     ('manifest.json', 'transcripts/ES2002a.json', 'transcripts/ES2005c.json')},
+        historical_seal_path=str((historical_run / 'output_seal.json').resolve()),
         historical_seal_sha256=sha((historical_run / 'output_seal.json').read_bytes()),
         discovery_sha256=sha((output / 'discovery.json').read_bytes()), status='PASS'))
     print({k: v for k, v in summary.items() if k != 'tasks'})

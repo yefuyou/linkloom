@@ -138,7 +138,8 @@ def test_gate_rejects_stale_test_source_and_incompatible_profile(tmp_path):
     from scripts.prepare_canary_gate import validate_gate, REQUIRED
     from scripts.run_canary_checks import SUITES
     from linkloom.evaluation.canary_trust import save_new, sha
-    identity = {'frozen_sha': 'frozen', 'code_hashes': {'code': 'hash'}, 'runtime': {'sdk': 'fixed'}}
+    identity = {'frozen_sha': 'frozen', 'code_hashes': {'code': 'hash'}, 'runtime': {'sdk': 'fixed'},
+                'source_hashes': {'source': 'hash'}, 'input_files': {'manifest.json': 'hash'}}
     tests = {}
     for name in REQUIRED:
         report = tmp_path / f'{name}.xml'
@@ -147,10 +148,15 @@ def test_gate_rejects_stale_test_source_and_incompatible_profile(tmp_path):
         save_new(report.with_suffix('.identity.json'), dict(**identity,
             report_sha256=tests[name]['sha256'], suite=name, tests=SUITES[name]))
     discovery = tmp_path / 'discovery.json'
-    discovery.write_text('[]')
+    discovery.write_text(json.dumps([dict(meeting_id=m, result={'extractions': [{}] * count})
+                                     for m, count in [('ES2002a', 8), ('ES2005c', 20)]]))
+    historical_seal = tmp_path / 'historical-seal.json'
+    historical_seal.write_text('{}')
     replay = tmp_path / 'replay_receipt.json'
     value = dict(**identity, provider_calls=0, replayed_outputs=28, task_profile=None,
-                 status='PASS', discovery_sha256=sha(discovery.read_bytes()))
+                 status='PASS', discovery_sha256=sha(discovery.read_bytes()),
+                 complete_meetings={'ES2002a': 8, 'ES2005c': 20},
+                 historical_seal_path=str(historical_seal), historical_seal_sha256=sha(historical_seal.read_bytes()))
     save_new(replay, value)
     gate = tmp_path / 'gate.json'
     packet = dict(**identity, tests=tests, replay={'path': str(replay), 'sha256': sha(replay.read_bytes())})
@@ -160,6 +166,8 @@ def test_gate_rejects_stale_test_source_and_incompatible_profile(tmp_path):
         validate_gate(gate, dict(identity, frozen_sha='different'))
     with pytest.raises(ValueError, match='runtime identity drift'):
         validate_gate(gate, dict(identity, runtime={'sdk': 'different'}))
+    with pytest.raises(ValueError, match='input source identity drift'):
+        validate_gate(gate, dict(identity, source_hashes={'different': 'source'}))
     value['task_profile'] = 'TASK_RECALL_V3'
     replay.write_text(json.dumps(value))
     packet['replay']['sha256'] = sha(replay.read_bytes())
