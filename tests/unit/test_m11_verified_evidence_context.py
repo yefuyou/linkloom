@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from linkloom.agents.model_adapter import ModelTurnRequest
@@ -101,9 +103,25 @@ def test_model_turn_request_accepts_historical_requests_without_context():
 
 
 def test_gemini_request_serializes_verified_context_into_model_visible_input():
-    payload = build_gemini_request(_request())
+    read = ToolResult(call_id="context-call-1", tool_id="read_verified_note", status="ok",
+                      value=_verified_result().value[0])
+    payload = build_gemini_request(_request(evidence_context=[read]))
 
     model_input = payload["contents"][0]["parts"][0]["text"]
     assert "verified_evidence_context=" in model_input
     assert "ev_context_1" in model_input
     assert "Verified context evidence 1." in model_input
+
+
+def test_gemini_search_context_preserves_source_identity_without_exposing_quote():
+    payload = build_gemini_request(_request())
+    model_input = payload["contents"][0]["parts"][0]["text"]
+    context = json.loads(model_input.split("verified_evidence_context=", 1)[1])
+    reference = context[0]["value"][0]
+    assert reference["evidence_id"] == "ev_context_1"
+    assert reference["relative_path"] == "note-1.md"
+    assert reference["content_sha256"] == "hash-1"
+    assert reference["quote_sha256"] == "quote-hash-1"
+    assert reference["read_required"] is True
+    assert "quote" not in reference
+    assert "Verified context evidence 1." not in model_input

@@ -261,6 +261,8 @@ class RuntimeWorkingContext:
             audit["recovery"] = json.loads(encoded(asdict(restored)))
             if restored.status != "complete":
                 raise ValidationError("Required original evidence cannot be restored.", details={"code": "CONTEXT_RECOVERY_INCOMPLETE"})
+            if len(restored.evidence) > 8:
+                raise ValidationError("Required original evidence exceeds Runtime limit.", details={"code": "CONTEXT_EVIDENCE_LIMIT_EXCEEDED"})
             candidates = tuple(RetrievedEvidence(r.ref.evidence_id, r.ref.source_ref, r.ref.logical_path, 1.0, i,
                 "runtime_recovery", r.ref.resource_id, dict(text=r.quote, workspace_id=self.tools.workspace_id,
                     status="verified", active=True, current=True, authorized=True)) for i, r in enumerate(restored.evidence))
@@ -275,8 +277,13 @@ class RuntimeWorkingContext:
                 usage = RequestUsage(self.config.policy.count(encoded(other.to_dict())) + self.config.envelope.tokens,
                     len(encoded(other.to_dict()).encode("utf8")) + self.config.envelope.bytes)
                 audit["request_usage"] = asdict(usage)
+                # The default five is a preference, not a reason to discard a
+                # complete required group. Explicit non-default caps stay hard.
+                capacity = (8 if self.config.local_budget.max_evidence == ContextBudget().max_evidence
+                    else self.config.local_budget.max_evidence)
                 return self.assemble(query=self.question, retrieved_evidence=candidates, evidence_groups=groups,
-                    task_subgoals=tuple(g.subgoal_id for g in self.plan.subgoals), request_usage=usage)
+                    task_subgoals=tuple(g.subgoal_id for g in self.plan.subgoals), request_usage=usage,
+                    required_evidence_limit=min(capacity, self.config.policy.max_candidates))
             bundle = None
             try: bundle = assemble(request, working)
             except ValueError: pass

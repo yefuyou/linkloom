@@ -148,6 +148,7 @@ class ContextAssembler:
         evidence_groups: Sequence[EvidenceGroup] = (),
         task_subgoals: Sequence[str] = (),
         request_usage: RequestUsage | None = None,
+        required_evidence_limit: int | None = None,
     ) -> ContextBundle:
         """Inspect a bounded prefix of caller-ranked evidence, never its tail."""
         if not isinstance(workspace_id, str) or not workspace_id.strip():
@@ -163,6 +164,11 @@ class ContextAssembler:
             raise ValueError('group member limit exceeded')
         if sum(len(g.subgoal_ids) for g in evidence_groups) > self.policy.max_candidates:
             raise ValueError('group subgoal hint limit exceeded')
+        if required_evidence_limit is not None and (
+            type(required_evidence_limit) is not int or required_evidence_limit < 0
+            or required_evidence_limit > self.policy.max_candidates
+        ):
+            raise ValueError('required evidence capacity must fit the candidate limit')
         if any(not isinstance(s, str) or not s.strip() or len(s) > 256 for s in task_subgoals):
             raise ValueError('subgoal hint IDs must be nonempty text of at most 256 characters')
         if len(set(task_subgoals).union(s for g in evidence_groups for s in g.subgoal_ids)) > self.policy.max_candidates:
@@ -325,8 +331,15 @@ class ContextAssembler:
             raise ValueError("query exceeds context budget")
 
         evidence_candidates = {c.item_id: c for c in candidates if c.source_type is ContextSourceType.EVIDENCE}
+        # Only the default preferred count can expand for declared required
+        # groups; an injected assembler's explicit non-default cap stays hard.
+        # Filtering, atomic selection and request budgets still apply unchanged.
+        required_ids = {i for g in evidence_groups if g.subgoal_ids for i in g.evidence_ids}
+        capacity = self.budget.max_evidence
+        if required_evidence_limit is not None and self.budget.max_evidence == ContextBudget().max_evidence:
+            capacity = max(capacity, min(required_evidence_limit, len(required_ids)))
         selection, rejected = select_evidence(tuple(evidence_candidates), groups=evidence_groups,
-            subgoals=task_subgoals, max_evidence=self.budget.max_evidence,
+            subgoals=task_subgoals, max_evidence=capacity,
             fits=lambda ids: fits((query_candidate, *(evidence_candidates[i] for i in ids))),
             inspected=min(len(retrieved_evidence), self.policy.max_candidates),
             omitted=max(0, len(retrieved_evidence) - self.policy.max_candidates))
