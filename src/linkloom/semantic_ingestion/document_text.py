@@ -6,6 +6,8 @@ Neither a document date nor an import date is a speech/effective timestamp.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import date, datetime
 import hashlib
@@ -129,7 +131,36 @@ def parse_source_time(raw: str) -> date | datetime:
     return date.fromisoformat(raw)
 
 
+_source_parses = ContextVar("source_parses", default=None)
+
+
+@contextmanager
+def source_parse_session():
+    """Reuse only pure parsing of the exact immutable objects in this scope.
+
+    No authorization, registry or currentness result is stored. Retaining the
+    object alongside its id prevents identity reuse; reset also runs on errors.
+    """
+    token = _source_parses.set({})
+    try:
+        yield
+    finally:
+        _source_parses.reset(token)
+
+
 def parse_source_text(artifact: RawArtifact) -> TimestampedTextParseResult | DocumentTextParseResult:
+    cache = _source_parses.get()
+    if cache is None:
+        return _parse_source_text(artifact)
+    entry = cache.get(id(artifact))
+    if entry is not None and entry[0] is artifact:
+        return entry[1]
+    parsed = _parse_source_text(artifact)
+    cache[id(artifact)] = (artifact, parsed)
+    return parsed
+
+
+def _parse_source_text(artifact: RawArtifact) -> TimestampedTextParseResult | DocumentTextParseResult:
     if not isinstance(artifact, RawArtifact):
         raise TypeError("artifact must be RawArtifact")
     # Content identifies timestamped conversations, even in a Markdown file.

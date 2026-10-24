@@ -441,6 +441,7 @@ class RuntimeAgentAdapter:
         evidence_groups=(),
         task_subgoals=(),
         request_usage=None,
+        required_evidence_limit=None,
     ) -> ContextBundle:
         started = time.perf_counter()
         bundle = self._context_assembler.assemble(
@@ -454,6 +455,7 @@ class RuntimeAgentAdapter:
             evidence_groups=evidence_groups,
             task_subgoals=task_subgoals,
             request_usage=request_usage,
+            required_evidence_limit=required_evidence_limit,
         )
         self._last_context_assembly_ms = (time.perf_counter() - started) * 1000.0
         self._last_context_bundle = bundle
