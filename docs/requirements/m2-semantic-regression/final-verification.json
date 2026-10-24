@@ -1,0 +1,65 @@
+{
+  "phase": "ORIGINAL_LOCAL_ACCEPTANCE_BEFORE_PR_SUBMISSION",
+  "evidence_storage": "XML_AND_RAW_LOGS_LOCAL_ONLY_NOT_COMMITTED",
+  "status": "LOCAL_OFFLINE_CHECKS_SATISFIED_WITH_DOCUMENTED_ENVIRONMENT_RERUN",
+  "runs": [
+    {
+      "name": "task-investigation",
+      "tests": 949,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1268.212,
+      "evidence": "task-investigation.xml"
+    },
+    {
+      "name": "core",
+      "tests": 303,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 231.087,
+      "evidence": "core.xml"
+    },
+    {
+      "name": "core-system-temp",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 0.184,
+      "evidence": "core-system-temp.xml"
+    },
+    {
+      "name": "legacy-temporal",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 17.164,
+      "evidence": "legacy-temporal.xml"
+    },
+    {
+      "name": "frozen-ledger",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 1.505,
+      "evidence": "frozen-ledger.xml"
+    }
+  ],
+  "core_resolution": {
+    "initial_failure": "test_validate_target_root_accepts_synthetic",
+    "cause": "Explicit project-local basetemp is outside tempfile.gettempdir(); the existing guard correctly rejects it.",
+    "resolution": "One test rerun in a fresh actual system-temp directory; 1 passed. No protection/test/production code changed.",
+    "evidence": "core-system-temp.xml"
+  },
+  "independent_review": "PASS_FOR_DRAFT_PR_NOT_PRODUCTION_RELEASE",
+  "new_provider_calls": 0,
+  "remote_ci": "NOT_RUN",
+  "manual_browser": "NOT_RUN",
+  "dom_checks": "PASS",
+  "cli_help": "PASS",
+  "original_experiment": "942/942 sealed files unchanged"
+}

@@ -1,0 +1,38 @@
+{
+  "base_sha": "614c4164edd256d2cc63edf1bb9f66befe25cefb",
+  "precommit_offline_tests": {
+    "passed": 35,
+    "failures": 0,
+    "errors": 0,
+    "junit": "LOCAL_ONLY: work/precommit-m2-distribution.xml"
+  },
+  "production_change": "Existing accepted currentness filter only; no feature expansion or permission/grounding/reviewer change.",
+  "pr19_overlap": {
+    "head_sha": "f06f3fd96470cceb577acac8469583d624580a16",
+    "shared_files": [
+      ".github/workflows/offline-pr.yml"
+    ],
+    "shared_production_files": [],
+    "workflow_hunks": "Different insertion points; no dependency."
+  },
+  "distribution": {
+    "path": "tests/fixtures/m2_real_failure_receipts.zip",
+    "bytes": 201280,
+    "sha256": "f47230c90c077907b091706a6fa88d27f7d528ad479414c0f9e500c3bf1c6766",
+    "original_files": 84,
+    "formal_successful_receipts": 18,
+    "each_file_matches_original_seal": true,
+    "original_archive_unchanged_sha256": "0354e0229e5c829bb41f3080dfdc3e6cf72c50eeb4b43cb9fd4dcef03afe12b8",
+    "raw_sdk_streams_and_thought_signatures_included": false,
+    "secret_or_personal_path_findings": [],
+    "continuation_metadata_findings": [],
+    "evaluator_entries": "Inspected provisional analyst reference/assessment marked NOT_GOLD; no held-out/evaluator-only Gold."
+  },
+  "original_experiment": {
+    "sealed_files_checked": 942,
+    "mismatches": []
+  },
+  "interpretation": "79 exact citations are not 79 correct semantic judgments. Prior 949/Core/history/frozen results remain original local evidence.",
+  "new_provider_calls": 0,
+  "remote_ci": "To be verified on the Draft PR head; not preclaimed."
+}
