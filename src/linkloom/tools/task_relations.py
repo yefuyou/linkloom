@@ -93,8 +93,13 @@ def _relation_status(reads):
     """Project P4 reads without turning a non-supported verdict into support."""
     if not reads:
         return "BLOCKED", False, None, ["NO_MATCHING_P4_RELATION"]
-    verdicts = {read.assessment.verdict for read in reads if read.assessment is not None}
-    reasons = {reason for read in reads for reason in read.blocking_reasons}
+    # include_history exposes audit captures, not current negative/conflict
+    # claims. Apply P4's existing currentness gate to every verdict equally.
+    current = [read for read in reads if read.assessment is not None
+               and read.persistent_lifecycle == "ACTIVE" and read.evidence_state == "VERIFIED"
+               and read.category in {"CURRENT_CONFIRMED", "CURRENT_ASSESSMENT"}]
+    verdicts = {read.assessment.verdict for read in current}
+    reasons = {reason for read in (current or reads) for reason in read.blocking_reasons}
     if "CONFLICT" in verdicts:
         status = "CONFLICT"
     elif len(verdicts) > 1 and "SUPPORTED" in verdicts:
@@ -104,7 +109,7 @@ def _relation_status(reads):
         status = "REFUTED"
     elif "UNKNOWN" in verdicts:
         status = "UNKNOWN"
-    elif any(read.current_supported for read in reads) and verdicts == {"SUPPORTED"}:
+    elif any(read.current_supported for read in current) and verdicts == {"SUPPORTED"}:
         status = "SUPPORTED"
     else:
         status = "BLOCKED"
@@ -112,7 +117,7 @@ def _relation_status(reads):
         reasons.add("P4_VERDICT_" + status)
     elif status == "BLOCKED" and not reasons:
         reasons.add("P4_RELATION_NOT_CURRENT")
-    lifecycle_values = sorted({read.persistent_lifecycle for read in reads})
+    lifecycle_values = sorted({read.persistent_lifecycle for read in (current or reads)})
     lifecycle = lifecycle_values[0] if len(lifecycle_values) == 1 else None
     return status, status == "SUPPORTED", lifecycle, sorted(reasons)
 
