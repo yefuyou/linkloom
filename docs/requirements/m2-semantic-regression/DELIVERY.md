@@ -1,5 +1,9 @@
 # M2 最小语义防回归交付
 
+最新 master `7720390a796662ff42c27b5eef6f8685e5155802` 的最终集成记录见
+[INTEGRATION.md](INTEGRATION.md)，远端验收见本专项 [Draft PR #24](https://github.com/yefuyou/linkloom/pull/24)。
+以下保留原实现及分发轮次的历史证据；旧基线与旧测试数字不代表本次集成运行。
+
 基线：最新拉取的 master `614c4164edd256d2cc63edf1bb9f66befe25cefb`。
 独立分支：`codex/m2-semantic-regression`。原实现轮次只做本地修改；后续用户已
 授权本专项 commit、普通 push 和面向 master 的独立 Draft PR，不授权合并。
