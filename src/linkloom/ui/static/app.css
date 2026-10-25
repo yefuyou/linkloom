@@ -378,14 +378,13 @@ html[lang="zh-CN"] .query-label {
 }
 
 .initial-view {
-  min-height: calc(100vh - var(--bar-height));
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
   max-width: 1180px;
   margin: 0 auto;
-  padding: 8vh 42px 64px;
-  gap: 86px;
-  align-items: center;
+  padding: 3rem 42px;
+  gap: 3rem;
+  align-items: start;
 }
 
 .initial-copy {
@@ -398,7 +397,7 @@ html[lang="zh-CN"] .query-label {
   font-size: clamp(38px, 4.6vw, 62px);
   line-height: 1.06;
   letter-spacing: -0.04em;
-  margin: 18px 0 22px;
+  margin: 0 0 1rem;
 }
 
 .initial-copy .lede {
@@ -409,29 +408,8 @@ html[lang="zh-CN"] .query-label {
   line-height: 28px;
 }
 
-.value-order {
-  margin-top: 38px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--border-strong);
-}
 
-.value-order div {
-  padding: 12px 14px 0 0;
-}
 
-.value-order span {
-  display: block;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-faint);
-  margin-bottom: 4px;
-}
-
-.value-order strong {
-  font-size: 12px;
-  font-weight: 650;
-}
 
 .query-composer {
   background: var(--brief);
@@ -1191,8 +1169,8 @@ html[lang="zh-CN"] .query-label {
 
   .initial-view {
     grid-template-columns: 1fr;
-    padding: 54px 24px 70px;
-    gap: 42px;
+    padding: 1.5rem 24px 2rem;
+    gap: 1.5rem;
   }
 
   .initial-copy h1 {
@@ -1311,20 +1289,7 @@ html[lang="zh-CN"] .query-label {
     font-size: 11px;
   }
 
-  .value-order {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
 
-  .value-order div {
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    align-items: center;
-  }
-
-  .value-order span {
-    margin: 0;
-  }
 
   .composer-footer {
     align-items: stretch;
@@ -1400,4 +1365,10 @@ html[lang="zh-CN"] .query-label {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* A compact initial brief without decorative copy tiers. */
+.initial-copy .lede { margin-top: 1rem; }
+@media (max-width: 700px) {
+  .initial-copy { padding-bottom: 1rem; }
 }

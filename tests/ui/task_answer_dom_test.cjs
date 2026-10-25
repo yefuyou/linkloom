@@ -26,30 +26,30 @@ function result(status = 'PARTIAL') {
 }
 const render = r => context.window.renderTaskAnswer(r, helpers);
 const html = render(result());
-assert.match(html, /已找到来源记录/);
-assert.match(html, /正式业务状态.*尚未确认/);
-assert.match(html, /模型倾向支持，尚未确认/);
+assert.match(html, /找到 2 条任务记录/);
+assert.match(html, /任务关系与生效计划：待确认/);
+assert.match(html, /AI 提案：支持该关系/);
 assert.match(html, /缺少替代计划的明确记录/);
-assert.match(html, /前置关系尚未确认/);
+assert.match(html, /需先确认前置关系/);
 assert.match(html, /data-action="inspect-source" data-id="source-a"/);
-assert.match(html, /字段解释仍待复核/);
+assert.match(html, /AI 字段解读待复核/);
 assert.match(html, /字段证据与原始消息/);
-assert.match(html, /原文片段/);
+assert.match(html, /<blockquote class="quote task-record-quote">/);
 assert.doesNotMatch(html, /已确认延期|已批准|日历日差值.*4/);
 const second = html.split('data-task-observation="b"')[1].split('</article>')[0];
 assert.doesNotMatch(second, /林枫|2029-06-20/);
 assert.match(second, /尚未确定/);
 assert.match(second, /日期含义尚未确定/);
-assert.ok(html.indexOf('待确认事项') < html.indexOf('task-source-records'));
+assert.ok(html.indexOf('task-source-records') < html.indexOf('待确认事项'));
 assert.ok(html.indexOf('task-source-records') < html.indexOf('task-investigation-details'));
 for (const verdict of ['UNKNOWN', 'CONFLICT', 'REFUTED']) {
   const r = result(); r.task_review.proposals[0].proposed_verdict = verdict;
   assert.match(render(r), new RegExp(`data-task-proposal-verdict="${verdict}"`));
-  if (verdict === 'CONFLICT') assert.match(render(r), /模型报告证据冲突/);
+  if (verdict === 'CONFLICT') assert.match(render(r), /AI 提案：证据冲突/);
 }
 const unknown = result('UNKNOWN'); unknown.task_review.observations = []; unknown.task_review.proposals = [];
 assert.match(render(unknown), /资料不足/);
-assert.match(render(unknown), /不能据此断言任务不存在/);
+assert.match(render(unknown), /本次未检索到可核验的任务记录/);
 for (const variant of ['BLOCKED', 'rejected', 'missing']) {
   const r = result();
   if (variant === 'BLOCKED') r.status = variant;
@@ -62,16 +62,16 @@ comparison.task_review.steps[0] = {kind: 'compare_dates', status: 'COMPLETED', c
   current_comparison: {old_deadline: {value: '2029-06-20'}, new_deadline: {value: '2029-06-24'},
     delta_calendar_days: 4, plan_currentness: 'NOT_ESTABLISHED'}}]};
 assert.match(render(comparison), /日历日差值.*4/);
-assert.match(render(comparison), /不能确认当前正式生效的计划/);
-assert.match(render(comparison), /已完成现有可执行的证据读取/);
+assert.match(render(comparison), /当前生效计划待确认/);
+assert.match(render(comparison), /请根据原始记录确认任务关系与生效计划/);
 assert.doesNotMatch(render(comparison), /哪些任务关系和计划正式有效，仍需独立确认/);
 comparison.task_review.steps[0].comparisons[0].current_valid = false;
 assert.doesNotMatch(render(comparison), /日历日差值/);
 for (const [blocker, expected] of [
-  ['SOURCE_SCOPED_OPERATION_UNSUPPORTED', '不支持按指定来源范围执行此读取'],
-  ['TIME_SCOPED_OPERATION_UNSUPPORTED', '不支持按指定时间范围执行此读取'],
-  ['NO_EXECUTABLE_OPERATION', '尚未提供此步骤所需的读取操作'],
-  ['P4_VERDICT_UNKNOWN', '现有关系读取结果仍为未知，未知不等于否定'],
+  ['SOURCE_SCOPED_OPERATION_UNSUPPORTED', '暂时无法核验此来源范围'],
+  ['TIME_SCOPED_OPERATION_UNSUPPORTED', '当前不支持按时间范围读取'],
+  ['NO_EXECUTABLE_OPERATION', '当前缺少此步骤所需的读取能力'],
+  ['P4_VERDICT_UNKNOWN', '任务关系待补充证据'],
 ]) {
   const r = result(); r.task_review.steps[0].blocking_reasons = [blocker];
   assert.ok(render(r).includes(expected), blocker);
@@ -92,3 +92,30 @@ unsafe.task_review.proposals[0].missing_evidence = ['<script>attack</script>'];
 assert.doesNotMatch(render(unsafe), /<img|<script>/);
 assert.match(render(unsafe), /&lt;img/);
 console.log('PASS: bounded answer, unknown/conflict/blocked, field isolation, P4 limits, citations and escaping');
+
+// Additional copy contracts: presentation must preserve the underlying payload.
+for (const locale of ['en', 'zh']) {
+  const h = {...helpers, t: (en, zh) => locale === 'zh' ? zh : en};
+  const r = result();
+  r.task_review.next_actions = [{kind: 'IDENTITY_AND_REVISION_REQUIRED'}];
+  r.preparation.gaps = ['DISCOVERY_COVERAGE_INCOMPLETE'];
+  const original = JSON.stringify(r);
+  const output = context.window.renderTaskAnswer(r, h);
+  assert.equal(JSON.stringify(r), original);
+  assert.ok(output.includes(locale === 'zh' ? '找到 2 条任务记录' : 'Found 2 task records'));
+  assert.ok(output.includes(locale === 'zh' ? '离线演示' : 'Offline demo'));
+  assert.ok(output.includes(locale === 'zh' ? '部分来源尚未完整检查' : 'Some sources have not been fully checked'));
+  assert.ok(output.indexOf('task-source-records') < output.indexOf('task-next-actions'));
+  assert.ok(output.indexOf('task-next-actions') < output.indexOf('task-investigation-details'));
+  const core = output.split('<details class="task-investigation-details')[0];
+  assert.doesNotMatch(core.replace(/<details[\s\S]*?<\/details>/g, ''), /EVIDENCE_VALID|MODEL_PROPOSED|P4|Runtime/);
+  const failed = result(); failed.task_review.proposals[0].evidence_status = 'EVIDENCE_INVALID';
+  const bad = context.window.renderTaskAnswer(failed, h).split('task-source-records')[0];
+  assert.ok(bad.includes(locale === 'zh' ? '证据校验失败' : 'Evidence check failed'));
+  assert.ok(!bad.includes(locale === 'zh' ? '支持该关系' : 'supports the relationship'));
+  const empty = result('UNKNOWN'); empty.task_review.observations = []; empty.task_review.proposals = [];
+  const unknownCopy = context.window.renderTaskAnswer(empty, h);
+  assert.ok(!unknownCopy.includes(locale === 'zh' ? '任务不存在' : 'task does not exist'));
+  assert.ok(unknownCopy.includes(locale === 'zh' ? '请补充会议记录' : 'Add the meeting notes'));
+}
+console.log('PASS: bilingual actual counts, evidence-first order, visible offline/coverage/next steps, invalid proposal labels and immutable result payload');

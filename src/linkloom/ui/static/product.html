@@ -9,21 +9,22 @@
     <link rel="stylesheet" href="/product.css">
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a class="skip-link" href="#main-content" data-ui-en="Skip to content" data-ui-zh="跳转到内容">Skip to content</a>
     <header class="topbar">
       <a class="brand" href="/" aria-label="LinkLoom home"><span class="brand-mark" aria-hidden="true">L</span><span>LinkLoom</span></a>
       <div class="workspace-control">
-        <label for="workspace-picker">Workspace</label>
+        <label for="workspace-picker" data-ui-en="Workspace" data-ui-zh="工作区">Workspace</label>
         <select id="workspace-picker" aria-label="Select workspace"></select>
-        <button class="button quiet" id="new-workspace" type="button">New workspace</button>
+        <button class="button quiet" id="new-workspace" type="button" data-ui-en="New workspace" data-ui-zh="新建工作区">New workspace</button>
       </div>
+      <label class="interface-language"><span data-ui-en="Language" data-ui-zh="界面语言">Language</span><select id="interface-language"><option value="en">English</option><option value="zh">中文</option></select></label>
       <div id="provider-state" class="provider-state" role="status">Checking provider…</div>
     </header>
     <nav class="primary-nav" aria-label="Primary">
-      <button type="button" data-screen="sources" aria-current="page">Sources</button>
-      <button type="button" data-screen="review">Review <span class="nav-count" id="review-count"></span></button>
-      <button type="button" data-screen="decisions">Decision Memory</button>
-      <button type="button" data-screen="ask">Ask</button>
+      <button type="button" data-screen="sources" aria-current="page" data-ui-en="Sources" data-ui-zh="来源">Sources</button>
+      <button type="button" data-screen="review"><span data-ui-en="Review" data-ui-zh="审核">Review</span> <span class="nav-count" id="review-count"></span></button>
+      <button type="button" data-screen="decisions" data-ui-en="Decision Memory" data-ui-zh="决策记忆">Decision Memory</button>
+      <button type="button" data-screen="ask" data-ui-en="Ask" data-ui-zh="提问">Ask</button>
     </nav>
     <main id="main-content" class="page-shell" tabindex="-1">
       <div id="page" aria-live="polite"><section class="state-card"><p>Opening LinkLoom…</p></section></div>

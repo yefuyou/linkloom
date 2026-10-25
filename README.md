@@ -5,9 +5,8 @@
 **Recover the decision that is valid now, what changed, and the source that proves it.**
 
 LinkLoom is a local-first team knowledge assistant for evolving meeting notes and
-Markdown sources. It combines human-reviewed decision history with a bounded,
-read-only investigation Agent, so finding a relevant passage is the start of
-an answer, not the whole answer.
+Markdown sources. Find reviewed decisions, follow their changes, and investigate
+task records with the original evidence alongside each result.
 
 ## From a meeting trail to an answer
 
@@ -23,9 +22,9 @@ Questions about reasons or conflicting sources can take the investigation path.
 
 ## See the product
 
-These existing browser captures use a synthetic meeting and a **deterministic
-fake provider**. They show the product UI, not new live-model results. Follow the
-[60–90 second walkthrough](docs/V1_DEMO.md) with the checked-in fixture.
+These earlier UI captures use synthetic meetings and an **offline demo**.
+For current controls and both demo modes, follow the
+[product walkthrough](docs/V1_DEMO.md).
 
 <table>
   <tr><th>1 · Import sources</th><th>2 · Review candidates</th></tr>
@@ -117,15 +116,14 @@ mode with a dedicated local database:
 python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
 ```
 
-In Ask, select task investigation and ask whether the two meetings describe the
-same task and which owner/deadline can be established. The banner identifies
-deterministic FakeModel stages. The second raw date is retained while its
-uncertain deadline role stays UNKNOWN; model SAME_TASK proposals do not unlock
-revision work. This mode makes no external Provider call and cannot be combined
-with external-provider flags. It is a product wiring demonstration, not real-model
-semantic acceptance. Normal task-stage Provider configuration and authenticated
-task relationship approval remain unavailable. See [the integration boundary](docs/requirements/m3-p-task-investigation/SPEC.md)
-and [dependency/failure audit](docs/requirements/m3-p-task-investigation/DEPENDENCIES.md).
+In Ask, choose tasks and ask whether the meetings describe the same task and
+which owner or deadline the records support. Results show **Offline demo**,
+source records, AI proposals and outstanding questions. Unclear dates remain
+unconfirmed, and proposals require independent confirmation. This mode makes no
+external AI calls and cannot be combined with external-provider launch flags.
+Task relationship approval is not available in the UI.
+See [task investigation setup](docs/requirements/m3-q-real-task-investigation/SPEC.md)
+for the separate, explicitly authorized external AI configuration.
 
 For the complete source → review → answer workflow, install the provider extra
 and set `GEMINI_API_KEY` in your environment:

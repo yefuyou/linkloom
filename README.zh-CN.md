@@ -5,8 +5,7 @@
 **找回当前有效的决定、它经历的变更，以及支持它的原始证据。**
 
 LinkLoom 是一个本地优先的团队知识助手，面向持续变化的会议记录与 Markdown
-来源。它把人工审核的决策历史与有边界、只读的调查 Agent 结合起来，让相关段落
-成为回答的起点，并继续核对决定何时有效、经过谁审核、证据是否仍然成立。
+来源。你可以查找已审核的决策、查看变更历史，并结合原始证据调查任务记录。
 
 ## 从会议记录到有据可查的回答
 
@@ -20,9 +19,8 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
 
 ## 看看实际产品
 
-这些已有浏览器截图使用合成会议资料和**确定性 fake provider**，展示的是产品界面，
-不是本次新增的真实模型结果。可以结合仓库内的样例，按
-[60～90 秒演示指南](docs/V1_DEMO.md)体验。
+以下为使用合成会议资料的早期**离线演示**截图。
+当前操作与两种演示方式见[产品演示指南](docs/V1_DEMO.md)。
 
 <table>
   <tr><th>1 · 导入来源</th><th>2 · 审核候选</th></tr>
@@ -37,7 +35,7 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
   </tr>
   <tr><th>5 · 发现证据过期</th><th>提案保持为支持材料</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="Review Attention：来源变化后 Wrenwell 标记为 STALE" width="560"></a></td>
+    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="待复核决策：来源变化后 Wrenwell 标记为 STALE" width="560"></a></td>
     <td><a href="docs/assets/v1/02-proposal-safety.png"><img src="docs/assets/v1/02-proposal-safety.png" alt="Kestrel Ledger 提案仅作支持材料，不是已批准决定" width="560"></a></td>
   </tr>
 </table>
@@ -54,8 +52,8 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
 | 回溯决策历史 | 在按工作区隔离的 SQLite 中查询当前或指定日期状态、生效时间、前序决定、证据与授权收据；有证据时记录行动和负责人。 |
 | 统一提问 | 已审核状态走确定性查询；原因与冲突问题走明确启用的时序调查 Agent。 |
 | 调查来源关系 | 支持“项目 → 负责人 → 直属领导”和“别名 → 项目 → 负责人 → 直属领导”的有界 search/read 计划；不支持的问法要求澄清。 |
-| 保留已核验的部分结果 | 来源关系调查无法确认最终关系时，可保留带引用的上游事实并列出缺失的跳；结果仍须通过 Grounding 与 Reviewer。 |
-| 跟踪来源变化 | 在产品中明确更新或删除来源时，对账证据并将受影响的当前已落库决定显示在 Review Attention；没有自动文件系统监听。 |
+| 保留已核验的部分结果 | 来源关系调查无法确认最终关系时，可保留带引用的上游事实并列出缺失的跳；结果仍须通过 证据与结果校验。 |
+| 跟踪来源变化 | 在产品中明确更新或删除来源时，对账证据并将受影响的当前已落库决定显示在 待复核决策；没有自动文件系统监听。 |
 
 ## 如何协作
 
@@ -81,7 +79,7 @@ flowchart TD
 证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
 区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
 
-## Quickstart
+## 快速开始
 
 需要 **Python 3.11+**，在终端执行：
 
@@ -103,6 +101,18 @@ python -m linkloom.ui --port 8765 --database work/product.sqlite
 Decision Memory 和 Ask。**启动不需要密钥。** 新数据库还没有已批准决定，提取与
 Agent 调查默认关闭。上面的数据库路径将演示数据留在当前检出目录；省略
 `--database` 时默认使用 `~/.linkloom/product.sqlite`。
+
+无需密钥的跨会议任务演示：
+
+```bash
+python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
+```
+
+在“提问”中选择任务调查，询问多场会议是否描述同一任务、各条记录中的负责人或截止日期是什么。
+结果会标明“离线演示”，展示来源记录、AI 提案与待确认事项。日期含义不明时保持待确认，
+模型提案仍需独立核验。此模式不会调用外部 AI，不能与外部服务启动参数一起使用。
+当前界面暂不支持任务关系审批。外部 AI 的独立授权配置见
+[任务调查配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
 
 要体验完整的来源 → 审核 → 回答流程，安装 Provider 扩展，并在环境中配置
 `GEMINI_API_KEY`：

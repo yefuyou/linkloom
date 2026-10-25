@@ -55,13 +55,13 @@ async function setup({ready = false, unresolved = ['relation', 'valid_from']} = 
   for (const ready of [false, true]) {
     const ui = await setup({ready});
     const html = ui.element('page').innerHTML;
-    assert.match(html, ready ? />Import and extract</ : />Save source for later extraction</);
-    assert.match(html, ready ? /Source text is sent/ : /Source saving is available; semantic extraction is not/);
+    assert.match(html, ready ? />Import and extract</ : />Save source</);
+    assert.match(html, ready ? /Submitting sends source text/ : /Save sources now; extract decisions after AI setup/);
     assert.equal(ui.posts.length, 0, 'opening a page must not import or extract');
     if (!ready) {
       await ui.submit('source-create', undefined, {name: 'meeting.md', content: 'timestamped text'});
       await tick();
-      assert.match(ui.element('page').innerHTML, /Source saved\. Semantic extraction is unavailable/);
+      assert.match(ui.element('page').innerHTML, /Source saved; decision extraction is unavailable/);
       assert.match(ui.element('page').innerHTML, /FAILED/);
       assert.match(ui.element('page').innerHTML, /PROVIDER_UNAVAILABLE/);
       assert.deepEqual(ui.posts.map(p => p.path), ['/api/sources/import']);
@@ -71,11 +71,11 @@ async function setup({ready = false, unresolved = ['relation', 'valid_from']} = 
   await ui.click('inspect-candidate', 'candidate-1');
   let html = ui.element('page').innerHTML;
   assert.doesNotMatch(html, /id="review-relation"|name="relation"/);
-  assert.match(html, /Canonical relation cannot be corrected/);
+  assert.match(html, /Resolve the relationship before approval/);
   assert.match(html, /data-review-action="approve" disabled/);
   assert.match(html, /data-review-action="reject" formnovalidate/);
   assert.match(html, /&lt;unmapped supplier&gt;/);
-  assert.match(html, /import the original artifact again/);
+  assert.match(html, /import the original file again/);
   await ui.submit('candidate-review', undefined, {});
   assert.equal(ui.posts.length, 0, 'Enter cannot approve an unresolved relation');
   await ui.submit('candidate-review', 'reject', {reviewer_id: '', reason: ''});

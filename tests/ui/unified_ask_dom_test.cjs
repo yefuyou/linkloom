@@ -267,7 +267,7 @@ async function setup(storage = new Map()) {
   assert.match(taskHtml, /Unknown fields/);
   assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
   assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
-  assert.match(taskHtml, /The model reports conflicting evidence/);
+  assert.match(taskHtml, /AI proposal: conflicting evidence/);
   const taskPermissionUi = await setup();
   const taskPermissionOperation = taskPermissionUi.submit(); await tick();
   const deniedTask = taskResult();
