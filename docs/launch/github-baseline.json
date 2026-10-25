@@ -1,0 +1,166 @@
+{
+  "retrieved_at_utc": "2026-10-25T14:54:25.301157+00:00",
+  "repository": "yefuyou/linkloom",
+  "views": {
+    "count": 9,
+    "uniques": 3,
+    "views": [
+      {
+        "timestamp": "2026-10-11T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-12T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-13T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-14T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-15T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-16T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-17T00:00:00Z",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-18T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-19T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-20T00:00:00Z",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-21T00:00:00Z",
+        "count": 2,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-22T00:00:00Z",
+        "count": 2,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-23T00:00:00Z",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-24T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      }
+    ]
+  },
+  "clones": {
+    "count": 700,
+    "uniques": 239,
+    "clones": [
+      {
+        "timestamp": "2026-10-11T00:00:00Z",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "timestamp": "2026-10-12T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-13T00:00:00Z",
+        "count": 0,
+        "uniques": 0
+      },
+      {
+        "timestamp": "2026-10-14T00:00:00Z",
+        "count": 6,
+        "uniques": 5
+      },
+      {
+        "timestamp": "2026-10-15T00:00:00Z",
+        "count": 25,
+        "uniques": 16
+      },
+      {
+        "timestamp": "2026-10-16T00:00:00Z",
+        "count": 22,
+        "uniques": 16
+      },
+      {
+        "timestamp": "2026-10-17T00:00:00Z",
+        "count": 5,
+        "uniques": 4
+      },
+      {
+        "timestamp": "2026-10-18T00:00:00Z",
+        "count": 2,
+        "uniques": 2
+      },
+      {
+        "timestamp": "2026-10-19T00:00:00Z",
+        "count": 45,
+        "uniques": 26
+      },
+      {
+        "timestamp": "2026-10-20T00:00:00Z",
+        "count": 100,
+        "uniques": 31
+      },
+      {
+        "timestamp": "2026-10-21T00:00:00Z",
+        "count": 118,
+        "uniques": 44
+      },
+      {
+        "timestamp": "2026-10-22T00:00:00Z",
+        "count": 150,
+        "uniques": 57
+      },
+      {
+        "timestamp": "2026-10-23T00:00:00Z",
+        "count": 163,
+        "uniques": 51
+      },
+      {
+        "timestamp": "2026-10-24T00:00:00Z",
+        "count": 63,
+        "uniques": 22
+      }
+    ]
+  },
+  "referrers": [],
+  "repository_fields": {
+    "description": "A local-first assistant that searches, connects, organizes, and extracts tasks from Obsidian vaults.",
+    "topics": [],
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "open_issues_count": 6
+  },
+  "open_issue_numbers_excluding_pull_requests": [],
+  "interpretation": "Read-only pre-publication baseline. Not launch attribution or estimated users. Traffic dates are UTC; rolling-window uniques must not be summed."
+}

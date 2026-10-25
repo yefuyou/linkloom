@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">LinkLoom — follow decisions across meetings</title>
+  <desc id="desc">Meetings → Decisions → Evidence. Local-first decision history, human review, and source-grounded investigation. Conceptual workflow, not a product screenshot.</desc>
+  <rect width="1280" height="640" fill="#fbfcf9"/>
+  <g id="identity">
+    <path d="M80 64h44a12 12 0 0 1 12 12v44a12 12 0 0 1-12 12H68V76a12 12 0 0 1 12-12Z" fill="#315b42"/>
+    <text x="89" y="113" fill="#fff" font-family="Georgia,serif" font-size="45" font-weight="700">L</text>
+    <text x="158" y="117" fill="#20291f" font-family="Segoe UI,Arial,sans-serif" font-size="62" font-weight="700" letter-spacing="-2">LinkLoom</text>
+    <text x="1210" y="101" text-anchor="end" fill="#647064" font-family="Segoe UI,Arial,sans-serif" font-size="21">LOCAL-FIRST · OPEN SOURCE</text>
+  </g>
+  <g id="promise" fill="#20291f" font-family="Georgia,serif">
+    <text x="68" y="220" font-size="52">Follow decisions across meetings.</text>
+    <text x="70" y="266" fill="#647064" font-family="Segoe UI,Arial,sans-serif" font-size="26">What is valid now, what changed, and the source behind it.</text>
+  </g>
+  <g id="workflow" font-family="Segoe UI,Arial,sans-serif">
+    <path d="M68 324H1210" stroke="#dce3da" stroke-width="2"/>
+    <text x="68" y="397" fill="#315b42" font-size="43" font-weight="650">Meetings</text>
+    <text x="354" y="394" fill="#647064" font-size="43">→</text>
+    <text x="477" y="397" fill="#315b42" font-size="43" font-weight="650">Decisions</text>
+    <text x="784" y="394" fill="#647064" font-size="43">→</text>
+    <text x="909" y="397" fill="#315b42" font-size="43" font-weight="650">Evidence</text>
+    <text x="70" y="442" fill="#647064" font-size="22">Evolving source notes</text>
+    <text x="479" y="442" fill="#647064" font-size="22">Reviewed temporal history</text>
+    <text x="911" y="442" fill="#647064" font-size="22">Quotes you can inspect</text>
+  </g>
+  <g id="footer" font-family="Segoe UI,Arial,sans-serif">
+    <path d="M68 493H1210" stroke="#dce3da" stroke-width="2"/>
+    <text x="68" y="559" fill="#20291f" font-size="23">Source-grounded AI investigation</text>
+    <text x="1210" y="559" text-anchor="end" fill="#315b42" font-size="23" font-weight="600">github.com/yefuyou/linkloom</text>
+  </g>
+</svg>

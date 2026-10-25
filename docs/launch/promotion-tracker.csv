@@ -1,0 +1,2 @@
+record_type,published_at_local,channel,post_url,observed_at_utc,window_start_utc,window_end_utc,views,unique_visitors,referrers,clones,unique_cloners,stars,stars_delta,open_issues_excluding_prs,feedback_issue_urls,notes
+baseline,,unpublished,,2026-10-25T14:54:25.301157+00:00,2026-10-11T00:00:00Z,2026-10-24T00:00:00Z,9,3,[],700,239,0,,0,,Rolling API window; no post published; source list empty is not zero referral traffic.

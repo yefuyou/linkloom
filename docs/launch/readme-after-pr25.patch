@@ -1,0 +1,391 @@
+--- a/README.md
++++ b/README.md
+@@ -22,41 +22,104 @@
+ 
+ ## See the product
+ 
+-Follow the [60–90 second walkthrough](docs/V1_DEMO.md). The screenshots below
+-show synthetic meeting data with offline responses.
+-<table>
+-  <tr><th>1 · Import sources</th><th>2 · Review candidates</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources: imported meeting with versioned evidence spans" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review: candidate with its dated quote and separate approval controls" width="560"></a></td>
+-  </tr>
+-  <tr><th>3 · Follow decision history</th><th>4 · Ask with evidence</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory: current approval and retained historical review records" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask: current Wrenwell decision with effective date, predecessor and source passage" width="560"></a></td>
+-  </tr>
+-  <tr><th>5 · Notice stale evidence</th><th>Investigate task records</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="Task investigation: old evidence hidden after its source changes" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="Task records and unconfirmed model relationship suggestions" width="560"></a></td>
+-  </tr>
+-</table>
+-
+-Also inspect the [replacement approval](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)
+-and [decision history](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png).
+-
+-## What you can do today
+-
+-| Capability | What it does |
+-|---|---|
+-| Import and extract | Store timestamped text as immutable source versions with exact evidence spans. Semantic extraction requires explicit Gemini opt-in. |
+-| Review decisions | Inspect, approve or reject candidates; approval and materialization record authorization. Proposals remain supporting-only. |
+-| Recover decision history | Query current or as-of state, effective dates, predecessors, evidence and receipts in workspace-scoped SQLite. Records can include actions and owners when supported. |
+-| Ask in one place | Reviewed-state questions use deterministic lookup. Reasons and conflicts use an explicitly enabled temporal investigation Agent. |
+-| Investigate source relations | Supported project → owner → direct-leader and alias → project → owner → direct-leader question forms use bounded search/read plans. Unsupported forms request clarification. |
+-| Inspect cross-meeting tasks | Compare task records across meetings, inspect owner/date evidence and review unconfirmed AI relationship suggestions. Use the offline demo or explicitly configure task investigation with per-question source permission. |
+-| Keep verified partial results | See verified relationships alongside the specific evidence still needed to answer the rest of your question. |
+-| Track source changes | Explicit product source updates/deletions reconcile evidence and surface affected current materialized decisions in Review Attention. No automatic filesystem watcher. |
++[Watch the 80-second video](docs/launch/assets/linkloom-walkthrough.mp4) · [Step-by-step walkthrough](docs/V1_DEMO.md)
++
++![Edited browser captures with synthetic data and offline responses, not a continuous recording](docs/launch/assets/linkloom-walkthrough.gif)
++
++Three product views: [review candidates](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png) ·
++[decision history](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png) ·
++[task records and evidence](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png).
++The video reuses V1 views; the linked screenshots show the updated interface. All use synthetic data and offline responses.
++
++## Three core capabilities
++
++- **Follow decisions:** recover current or as-of decisions, effective dates and supersession history.
++- **Review and revalidate:** approve candidates explicitly and revisit decisions when source evidence changes.
++- **Investigate with evidence:** compare source records, extracted fields and original passages, with unconfirmed relationships and gaps made visible.
++
++The task demo preserves per-record owner/date evidence. A model relationship suggestion does not approve a deadline or owner change.
++
++## Quickstart
++
++Requires **Python 3.11+**. From a terminal:
++
++```bash
++git clone https://github.com/yefuyou/linkloom.git
++cd linkloom
++```
++
++On macOS/Linux, create and activate the environment:
++
++```bash
++python3 -m venv .venv
++source .venv/bin/activate
++```
++
++In PowerShell, create and activate it with:
++
++```powershell
++python -m venv .venv
++.\.venv\Scripts\Activate.ps1
++```
++
++After activation:
++
++```bash
++python -m pip install -e .
++python -m linkloom.ui --port 8765 --database work/product.sqlite
++```
++
++Open [the local UI](http://127.0.0.1:8765/). Create a workspace and inspect
++Sources, Review, Decision Memory and Ask. **No key is needed to start.** A fresh
++database has no approved decisions, and extraction and Agent investigation are
++disabled. The database path above keeps demo data in this checkout; omitting
++`--database` defaults to `~/.linkloom/product.sqlite`.
++
++For a key-free **cross-meeting task demonstration**, use the explicit synthetic
++mode with a dedicated local database:
++
++```bash
++python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
++```
++
++Stop any server using the same port first. In Ask, choose **Tasks across the current workspace records** and ask:
++**Do these meetings describe the same task, and what changed about its deadline?** Results show each source record, extracted
++owner/date fields, relationship suggestions and unresolved checks. The **Offline
++demo** label identifies preset responses; this mode makes no external AI calls.
++Task relationships require separate approval. The current task view supports
++investigation and evidence review.
++
++For configurable task investigation, see the
++[setup and authorization contract](docs/requirements/m3-q-real-task-investigation/SPEC.md).
++For the complete source → review → answer workflow, install the provider extra
++and set `GEMINI_API_KEY` in your environment:
++
++```bash
++python -m pip install -e ".[smoke]"
++python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-external-provider
++```
++
++Import [the synthetic meeting](tests/fixtures/v1_release_acceptance_meeting.txt),
++review Birchline and Wrenwell, then ask **“What supplier are we currently
++using?”** or select **2026-10-07** for the historical value. See the
++[walkthrough](docs/V1_DEMO.md) for evidence and date checks before approval.
++
++To also enable reason/conflict and source-relation investigations, launch with
++both permissions (stop the previous server first). For the minimal installation,
++select BM25 first: `export LINKLOOM_RETRIEVAL_MODE=bm25` on macOS/Linux, or
++`$env:LINKLOOM_RETRIEVAL_MODE = 'bm25'` in PowerShell. The default hybrid mode
++instead needs `python -m pip install -e ".[retrieval]"` and may download its local
++embedding model on first use.
++
++```bash
++python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-external-provider --allow-temporal-agent
++```
++
++These opt-ins send source text to the configured Gemini model and can incur
++provider costs; investigation also requires per-request permission in Ask.
++The product launcher pins its configured model and has no provider settings UI.
++For a key-free **older replay**, open [legacy Ask](http://127.0.0.1:8765/legacy-ask);
++it does not run the current source ingestion/review workflow.
+ 
+ ## How it works
+ 
+@@ -82,76 +145,6 @@
+ reviewed truth, source investigation and stale-evidence handling. The
+ [runtime architecture](docs/architecture/RUNTIME_ARCHITECTURE.md) shows which
+ components call an LLM and which enforce deterministic Python contracts.
+-
+-## Quickstart
+-
+-Requires **Python 3.11+**. From a terminal:
+-
+-```bash
+-git clone https://github.com/yefuyou/linkloom.git
+-cd linkloom
+-python -m venv .venv
+-```
+-
+-Activate with `source .venv/bin/activate` on macOS/Linux, or
+-`.\.venv\Scripts\Activate.ps1` in PowerShell. Then:
+-
+-```bash
+-python -m pip install -e .
+-python -m linkloom.ui --port 8765 --database work/product.sqlite
+-```
+-
+-Open [the local UI](http://127.0.0.1:8765/). Create a workspace and inspect
+-Sources, Review, Decision Memory and Ask. **No key is needed to start.** A fresh
+-database has no approved decisions, and extraction and Agent investigation are
+-disabled. The database path above keeps demo data in this checkout; omitting
+-`--database` defaults to `~/.linkloom/product.sqlite`.
+-
+-For a key-free **cross-meeting task demonstration**, use the explicit synthetic
+-mode with a dedicated local database:
+-
+-```bash
+-python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
+-```
+-
+-In Ask, choose **Tasks across the current workspace records** and ask whether
+-the meetings describe the same task. Results show each source record, extracted
+-owner/date fields, relationship suggestions and unresolved checks. The **Offline
+-demo** label identifies preset responses; this mode makes no external AI calls.
+-Task relationships require separate approval. The current task view supports
+-investigation and evidence review.
+-
+-For configurable task investigation, see the
+-[setup and authorization contract](docs/requirements/m3-q-real-task-investigation/SPEC.md).
+-For the complete source → review → answer workflow, install the provider extra
+-and set `GEMINI_API_KEY` in your environment:
+-
+-```bash
+-python -m pip install -e ".[smoke]"
+-python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-external-provider
+-```
+-
+-Import [the synthetic meeting](tests/fixtures/v1_release_acceptance_meeting.txt),
+-review Birchline and Wrenwell, then ask **“What supplier are we currently
+-using?”** or select **2026-10-07** for the historical value. See the
+-[walkthrough](docs/V1_DEMO.md) for evidence and date checks before approval.
+-
+-To also enable reason/conflict and source-relation investigations, launch with
+-both permissions (stop the previous server first). For the minimal installation,
+-select BM25 first: `export LINKLOOM_RETRIEVAL_MODE=bm25` on macOS/Linux, or
+-`$env:LINKLOOM_RETRIEVAL_MODE = 'bm25'` in PowerShell. The default hybrid mode
+-instead needs `python -m pip install -e ".[retrieval]"` and may download its local
+-embedding model on first use.
+-
+-```bash
+-python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-external-provider --allow-temporal-agent
+-```
+-
+-These opt-ins send source text to the configured Gemini model and can incur
+-provider costs; investigation also requires per-request permission in Ask.
+-The product launcher pins its configured model and has no provider settings UI.
+-For a key-free **older replay**, open [legacy Ask](http://127.0.0.1:8765/legacy-ask);
+-it does not run the current source ingestion/review workflow.
+ 
+ ## Engineering worth looking at
+ 
+@@ -196,6 +189,8 @@
+ 
+ ## For developers
+ 
++[Contributing](CONTRIBUTING.md) · [Report a problem or feedback](https://github.com/yefuyou/linkloom/issues/new)
++
+ Start with the [source reading map](docs/README.md), then the
+ [product architecture](docs/architecture/PRODUCT_ARCHITECTURE.md) and
+ [runtime architecture](docs/architecture/RUNTIME_ARCHITECTURE.md).
+--- a/README.zh-CN.md
++++ b/README.zh-CN.md
+@@ -20,64 +20,22 @@
+ 
+ ## 看看实际产品
+ 
+-按[60～90 秒演示指南](docs/V1_DEMO.md)体验完整流程。以下截图使用合成会议资料与离线响应。
+-<table>
+-  <tr><th>1 · 导入来源</th><th>2 · 审核候选</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources：导入会议与版本化证据片段" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review：候选的带日期原文与单独批准操作" width="560"></a></td>
+-  </tr>
+-  <tr><th>3 · 查看决策历史</th><th>4 · 带着证据提问</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory：当前批准与保留的历史审核记录" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask：Wrenwell 当前决定、生效日期、前序决定与来源原文" width="560"></a></td>
+-  </tr>
+-  <tr><th>5 · 发现证据过期</th><th>调查任务记录</th></tr>
+-  <tr>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="任务调查：来源变化后隐藏旧证据" width="560"></a></td>
+-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="任务原文记录与待确认的模型关系建议" width="560"></a></td>
+-  </tr>
+-</table>
++[80 秒演示视频](docs/launch/assets/linkloom-walkthrough.mp4) · [逐步体验](docs/V1_DEMO.md)
+ 
+-还可以查看[替代决定的批准界面](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)和
+-[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png)。
++![合成资料与离线响应的浏览器截图剪辑，非连续操作录像](docs/launch/assets/linkloom-walkthrough.gif)
+ 
+-## 现在能做什么
++三张产品截图：[审核候选](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png) ·
++[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png) ·
++[任务记录与证据](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-zh.png)。
++视频前半复用 V1 画面；截图为 #25 更新后的界面。演示均使用合成资料与离线响应。
+ 
+-| 能力 | 使用方式 |
+-|---|---|
+-| 导入与提取 | 将带时间戳的文本存为不可变来源版本，保留精确证据片段；语义提取需明确启用 Gemini。 |
+-| 审核决定 | 查看、批准或拒绝候选；批准与落库保存授权记录。提案只作支持材料。 |
+-| 回溯决策历史 | 在按工作区隔离的 SQLite 中查询当前或指定日期状态、生效时间、前序决定、证据与授权收据；有证据时记录行动和负责人。 |
+-| 统一提问 | 已审核状态走确定性查询；原因与冲突问题走明确启用的时序调查 Agent。 |
+-| 调查来源关系 | 支持“项目 → 负责人 → 直属领导”和“别名 → 项目 → 负责人 → 直属领导”的有界 search/read 计划；不支持的问法要求澄清。 |
+-| 跨会议任务调查 | 对照不同会议的任务记录，查看负责人、日期证据、待确认的 AI 关系建议与后续核查事项。可使用离线演示，或显式配置调查并逐次授权来源。 |
+-| 保留部分调查结果 | 展示已核验的关系，以及回答其余问题还需补充的具体证据。 |
+-| 跟踪来源变化 | 更新或移除来源后，重新核查证据，将受影响的决策放入审核列表；可对照新来源单独复核。 |
++## 三个核心能力
+ 
+-## 如何协作
++- **追溯决定**：找回当前或指定日期有效的决定、生效时间和替代历史。
++- **审核与复核**：候选先经人工审核；原文证据变化后复核相关决定。
++- **带着证据调查**：对照来源记录、字段与原文，明确展示待确认关系和资料缺口。
+ 
+-```mermaid
+-flowchart TD
+-    S["来源文档"] --> V["版本化来源 + 精确证据"]
+-    V --> I["语义摄取 · LLM 提取"]
+-    I --> C["候选 · 尚非已批准事实"]
+-    C --> H["人工审核 + 授权"]
+-    H --> M["时序决策记忆"]
+-    U["用户提问"] --> A["Unified Ask · 有界路由"]
+-    M --> D["当前 / 指定日期查询 · Python"]
+-    A --> D
+-    A --> R["只读 Agent 调查"]
+-    V --> R
+-    M -. "时序调查中读取已审核状态" .-> R
+-    R --> G["证据校验 + 确定性 Reviewer"]
+-    D --> O["回答 + 证据 + 不确定性"]
+-    G --> O
+-```
+-
+-[产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)展开已审核事实、来源调查与
+-证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
+-区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
++跨会议任务演示保留每条记录的负责人和日期证据；模型关系建议仍待确认，不代表已经批准延期或变更负责人。
+ 
+ ## Quickstart
+ 
+@@ -86,11 +44,23 @@
+ ```bash
+ git clone https://github.com/yefuyou/linkloom.git
+ cd linkloom
+-python -m venv .venv
+ ```
+ 
+-macOS/Linux 使用 `source .venv/bin/activate` 激活环境；PowerShell 使用
+-`.\.venv\Scripts\Activate.ps1`。然后执行：
++macOS/Linux 创建并激活环境：
++
++```bash
++python3 -m venv .venv
++source .venv/bin/activate
++```
++
++PowerShell 创建并激活环境：
++
++```powershell
++python -m venv .venv
++.\.venv\Scripts\Activate.ps1
++```
++
++激活后执行：
+ 
+ ```bash
+ python -m pip install -e .
+@@ -114,6 +84,17 @@
+ 
+ 真实 AI 任务调查的配置与逐次授权见
+ [配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
++
++无需密钥的跨会议任务演示（使用独立数据库）：
++
++```bash
++python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
++```
++
++先停止占用同一端口的服务。在 Ask 选择 **Tasks across the current workspace records**，输入：
++“Do these meetings describe the same task, and what changed about its deadline?”。
++查看两条记录并展开 **Field evidence and original message**。离线预设响应不调用外部模型；
++第二条 deadline 字段保持未确认，模型建议不授予正式业务批准。
+ 
+ 要体验完整的来源 → 审核 → 回答流程，安装 Provider 扩展，并在环境中配置
+ `GEMINI_API_KEY`：
+@@ -140,6 +121,30 @@
+ Ask 中逐次授权。产品启动器固定所配置的模型，界面内没有 Provider 设置。
+ 无需密钥的**旧版回放**位于 [legacy Ask](http://127.0.0.1:8765/legacy-ask)，
+ 它不执行当前的来源摄取和审核流程。
++
++## 如何协作
++
++```mermaid
++flowchart TD
++    S["来源文档"] --> V["版本化来源 + 精确证据"]
++    V --> I["语义摄取 · LLM 提取"]
++    I --> C["候选 · 尚非已批准事实"]
++    C --> H["人工审核 + 授权"]
++    H --> M["时序决策记忆"]
++    U["用户提问"] --> A["Unified Ask · 有界路由"]
++    M --> D["当前 / 指定日期查询 · Python"]
++    A --> D
++    A --> R["只读 Agent 调查"]
++    V --> R
++    M -. "时序调查中读取已审核状态" .-> R
++    R --> G["证据校验 + 确定性 Reviewer"]
++    D --> O["回答 + 证据 + 不确定性"]
++    G --> O
++```
++
++[产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)展开已审核事实、来源调查与
++证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
++区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
+ 
+ ## 值得看的工程设计
+ 
+@@ -171,6 +176,8 @@
+ 
+ ## 开发者入口
+ 
++[贡献指南](CONTRIBUTING.md) · [报告问题或反馈](https://github.com/yefuyou/linkloom/issues/new)
++
+ 先看[源码阅读导航](docs/README.md)，再看
+ [产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)和
+ [Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)。
