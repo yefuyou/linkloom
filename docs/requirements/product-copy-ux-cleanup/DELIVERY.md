@@ -1,161 +1,121 @@
-# Product copy and UI hierarchy delivery
+# 产品文案与 UI 信息层级交付
 
-**Implementation and offline verification complete; real-browser visual acceptance incomplete.**
+本专项沿用 [Draft PR #25](https://github.com/yefuyou/linkloom/pull/25) 和
+`codex/product-copy-ux-cleanup`。实际 UI、中英文、README、演示与回归修改均已完成，
+组合版本已完成离线产品验收和真实 Chromium 验收。保持 Draft、未合并。
 
-Base at task start: `7720390a796662ff42c27b5eef6f8685e5155802`.
-Branch: `codex/product-copy-ux-cleanup`. Independent worktree, no master/other PR
-changes, no real Provider calls, keys or private data. Draft PR delivery only.
+## 范围与统计
 
-## Audit and changes
+任务开始基线：`7720390a796662ff42c27b5eef6f8685e5155802`。
+已按正常合并方式保留原 #25 提交 `3d4c05025c64aed0f51a15b6aa7d476febc972f8`，
+并纳入当前 master `f2ce6b82d635a7b78b17a6d100556c354f7a461a`。
+master 与其他 PR 未修改，无 force push、rebase、reset 或历史改写。
 
-The source/template audit covered **37 page/state groups** and recorded **100
-findings**. The counted units are baseline template locations/dispositions, with
-same-location English/Chinese merged. Shared expressions count once; normal
-translation entries are not multiplied to inflate cleanup totals.
+本轮审计 **42 个页面/状态组、522 个静态文本条目**，记录并处理 **60 处基线问题**：
+**删除 12、合并 12、改写 24、移动 12**。一处双语文案或紧密相关的渲染结构计一次；
+同一位置的多轮编辑、翻译包装和测试更新不重复计算。前轮 37 组/100 项统计保留在
+[原交付](prior-delivery/DELIVERY.md)，两套统计不相加。
 
-| Disposition | Findings |
-|---|---:|
-| Delete | 20 |
-| Merge | 17 |
-| Rewrite | 55 |
-| Move | 8 |
-| Total | 100 |
+- [COPY_AUDIT.md](COPY_AUDIT.md)：原文、位置、分类、问题、处理理由和语义边界。
+- [COPY_AUDIT.json](COPY_AUDIT.json)、[COPY_INVENTORY.json](COPY_INVENTORY.json)：可复核的唯一编号与分类。
+- [COPY_GUIDELINES.md](COPY_GUIDELINES.md)：标题、结果、术语、风险与详情的统一规范。
+- [INTEGRATION.md](INTEGRATION.md)：两份实现的冲突处理与主线兼容。
 
-See [COPY_AUDIT.md](COPY_AUDIT.md) for the state matrix, baseline file/line,
-original copy, issue type, reason, disposition and authority impact.
-[AUDIT_DATA.json](AUDIT_DATA.json) retains the full original/replacement fragments
-and machine-checkable counts. [COPY_GUIDELINES.md](COPY_GUIDELINES.md) defines the
-bilingual vocabulary and placement rules.
+## 实际修改
 
-- `heading()` now takes one title and optional supporting text. Normal Sources,
-  Review, Decision Memory and Ask have one primary heading. Removed decorative
-  eyebrows and repeated subtitles rather than hiding their text.
-- Task results lead with the actual observation count, partial/insufficient
-  status, unconfirmed task relationships/effective plan and visible offline mode.
-  Source cards precede outstanding questions and next actions. Unknown fields
-  stay per-record; dates retain their original wording and unresolved roles.
-- AI proposal verdicts stay explicitly attributed. Invalid evidence checks are
-  labeled as failures, rather than presented as relationship support. Existing
-  server acceptance and date-comparison gates are unchanged.
-- Setup flags, token/request limits, raw enums, version identities, receipts and
-  full traces use native disclosures. Cost limits and source-snapshot permission
-  stay outside those disclosures, before submission.
-- Non-Ask screens, navigation and common statuses now have literal-only bilingual
-  copy. Interface language changes preserve entered text; Ask keeps its separate
-  answer-language option. Source text, source names, model explanations and audit
-  IDs are never translated or rewritten.
-- Legacy Ask loses decorative title tiers and the repeated 01/02/03 explanation;
-  removed its unused CSS and compacted desktop/phone spacing. Current README
-  introductions and demo controls use matching product terms. Historical images,
-  experiment reports, Gold, ledgers and receipts were not edited.
+1. **单标题页面**：Sources、Review、Decision Memory 和 Ask 移除固定眉题与副标题。
+   工作区、详情和候选仍保留必要字段指导、类型及状态。
+2. **结果优先**：任务调查先显示真实记录数，再显示部分结果/资料不足、任务待确认与离线标记。
+   逐条展示负责人、日期、原文及字段证据；无记录时不生成空来源容器。
+3. **降低重复**：同一不确定性集中表达。模型缺口、回执 ID、版本、哈希、配置命令与处理指标可展开；
+   用户下一步从技术详情移至来源之后。
+4. **双语与交互**：界面、已知关系、候选类型、生命周期与错误修复提示中英文一致。
+   URL/本地语言偏好保留；切换语言保留表单与历史查询日期，旧答案及逐次许可重新失效，
+   迟到的响应不能将旧字段恢复到另一工作区。原始关系值继续用于请求。
+5. **诊断分层**：已知错误提供具体修复指导；未知错误主区显示通用双语提示，原文与错误码留在详情。
+   原生 TypeError 和继承对象键的回归已覆盖。
+6. **公开介绍**：两份 README 与演示文档使用当前产品术语和实际功能，引用本轮界面截图。
+   旧版回放的重复标签也已精简。
 
-## Trust and safety placement
+保留原 #25 的第五套 DOM/CI 门禁、语言偏好、完整候选类型、来源保存与原始失败状态区分，
+以及双语错误映射。前轮 AUDIT_DATA、XML、模板快照、浏览器失败收据和捕获脚本保持原样。
 
-| Information | Current location |
-|---|---|
-| Source text sent to external AI and possible fees | Beside import/update; visible before submit |
-| Per-question source permission and bounded model cost | Unchecked checkbox in Ask; unchanged request flag/reset |
-| Numeric cost/time limits, when configured | Above Ask submit; not folded |
-| Exact authorized source versions | Expandable list beside the permission context |
-| Unresolved relationship blocks approval | Visible review guidance and disabled approve action |
-| Source/access/version change blocks old task results | Visible stopped state; old evidence remains hidden |
-| Historical decision validity | Next to the date query and in historical results |
-| AI proposal vs approved decision | Result status plus attributed proposal labels; no new approval action |
-| Unknown fields and date role | Each record's fields and date wording |
-| Incomplete discovery coverage | Visible outstanding-questions notice |
-| Offline execution | Visible task result label and Ask availability notice |
-| Original quotes, counter-evidence, receipts and raw states | Available in source/field/investigation/approval details |
+## 业务语义与必要提示
 
-No F/G, Runtime, Reviewer, P4, relation verdict, domain authorization, production
-Python projection or business decision condition changed. Extra UI request-token
-checks prevent a stale source/list response repainting after workspace/navigation
-changes during localization.
+- 导入和来源更新仍立即告知外部 AI 数据发送及可能费用。
+- Ask 保留未勾选的逐次许可、来源版本清单和配置的费用/请求数/时间上限。
+  仅启动参数及细粒度 Token 上限折叠。
+- 未解析关系的批准仍禁用；候选与模型建议保持待确认，关系调查和业务批准分别表达。
+- UNKNOWN、否定证据、CONFLICT、前置阻断与执行失败分别显示。
+- 来源或权限变化后隐藏旧任务证据；日期比较仍要求 current_valid。
+- 历史查询依据目前记录的批准；无结束日期不被描述为“持续有效”。
+- 离线任务演示在主状态行直接标明，未当作真实模型验收。
 
-## Verification results
+独立复核逐字节核对 **222 个非静态生产源码文件**，全部与当前 origin/master 相同。
+F/G/Runtime/Reviewer/P4、任务关系及批准规则没有本专项改写。主线 M2 门禁保持。
+不引入 UI 框架，不调用付费 Provider，不读取或配置真实 Key，不使用私人数据。
 
-| Check | Result | Evidence |
+## 最终组合验证
+
+| 检查 | 结果 | 记录 |
 |---|---|---|
-| Focused Python product/UI/HTTP suite | **121 passed**, no failures/skips; 1 existing JUnit record_property warning | focused-tests.xml |
-| Final localization + task projection/P4 + task HTTP assets | **21 passed**, no failures/skips | final-static-http-tests.xml |
-| Existing DOM suites | **4/4 scripts passed** | verification.log |
-| Added bilingual copy DOM suite | **1/1 script passed** | verification.log |
-| JS syntax, changed production files and browser helpers | Passed | verification.log |
-| Before/after template snapshots, same public fixture | **8 captured**; HTML parser check passed | template-snapshots/SUMMARY.json |
-| Git whitespace and change-scope check | Passed | verification.log / PR diff |
-| Windows-only transport test on this Linux host | **Collection blocked**, unchanged source imports `msvcrt`; not skipped or weakened | below |
-| Chromium / Playwright actual interactions | **Not executed**: launch failed before page creation | browser-attempt/BROWSER_RESULT.json |
-| Desktop/phone screenshots | **0 captured** | browser limitation below |
-| Full repository test suite / hosted CI | Not executed locally; Draft PR CI is separate | PR checks |
+| 生产 JavaScript 与浏览器脚本语法 | PASS | `node --check` |
+| Task / Unified Ask / First use / Stale revalidation / Product copy DOM | **5/5 PASS** | [DOM 记录](evidence/integrated/copy-dom.txt)及同目录其余日志 |
+| 相关 Python、产品 HTTP 与主线 M2 回归 | **178 passed，零失败、零跳过** | [JUnit](evidence/integrated/product.xml)、[输出](evidence/integrated/python.txt) |
+| 既有离线 HTTP 与保存结果冷读 | PASS，0 Provider requests | [收据](evidence/integrated/http.txt) |
+| Chromium 153.0.8010.0 | **33 步 PASS，139 个本地 HTTP 响应，0 页面脚本错误** | [步骤清单](evidence/integrated/BROWSER_STEPS.md)、[机器收据](evidence/integrated/BROWSER_RESULT.json) |
+| Git 空白检查 | PASS | `git diff --check` |
+| 独立只读复核 | 无遗留 P0/P1/P2 | [复核记录](INDEPENDENT_REVIEW.md) |
 
-The 21 final Python tests overlap the 121-test suite; these are **not 142 distinct
-tests**. DOM script outputs are rendering/interaction contracts in a VM, not real
-browser evidence. CSS spacing was reviewed in source; visual wrapping remains
-unverified.
+浏览器实际操作包括：创建/切换工作区、语言偏好重载、保留未提交字段、查看及本地导入来源、
+空状态、审核与单独批准、当前及历史 Decision Memory、已审核 Ask、任务部分/未知/冲突、
+P4 日期比较、来源更新后阻断、保存结果重新核验、来源展开、旧版回放和网络错误。
+历史日期切语言同时检查 HTTP 响应与界面日期。所有步骤都检查横向溢出，桌面为
+1440×1000，手机为 390×844。浏览器证据和 DOM 检查分别记录。
 
-The initial focused command included
-`tests/integration/test_product_transport_http.py`, whose existing dependency
-`tests/smoke/run_temporal_product_http.py` imports Windows-only `msvcrt`. Collection
-stopped before tests ran. The subsequent 121-test command explicitly selected the
-other related modules. Neither file was changed; no platform failure was hidden
-with a skip or altered assertion.
+本环境首次缺少 Chromium，官方包下载失败，随后通过注册表安装隔离 Chromium 并补齐
+CJK 字体和 SwiftShader 测试库。没有新增生产依赖。浏览器和测试服务在同一执行环境启动。
+开发过程中的失败记录不混入最终 PASS 数量；原始前轮收据不覆盖。
 
-The existing DOM assertions were updated only where product text/order changed.
-Approval blocking, reviewer identity/reason requirements, workspace isolation,
-source invalidation, unknown-vs-negative results, field isolation, escaping,
-proposal status, currentness and date-comparison conditions remain checked. New
-contracts cover bilingual headings, current/history labels, unchanged source data,
-visible costs, unchecked external permission, real record counts, incomplete
-coverage, invalid proposal evidence and result payload immutability. The added
-copy suite also runs in the existing Offline PR checks workflow.
+## 截图
 
-## Browser limitation and reproduction
+初始基线来源于固定 master 的当前重新渲染。早先本地验收截图仍在 evidence 根目录，
+组合版本的 10 张关键截图及新收据放在 evidence/integrated；其余步骤可由脚本复现。
 
-No Chromium executable exists on this host. The official Playwright install
-attempt returned an invalid/truncated archive and failed. The cloud browser could
-not reach the local synthetic host (`ERR_CONNECTION_REFUSED`). No browser test,
-visual audit, screenshot, accessibility conformance or mobile layout pass is claimed.
+| 页面/状态 | 修改前 | 最终组合版本 |
+|---|---|---|
+| Sources / English | [原界面](evidence/before-sources-en.png) | [新界面](evidence/integrated/after-sources-en.png) |
+| 任务调查 / 中文 | [原界面](evidence/before-task-zh.png) | [新界面](evidence/integrated/after-task-zh.png) |
+| 中文 Sources | — | [截图](evidence/integrated/after-sources-zh.png) |
+| 英文任务结果 | — | [截图](evidence/integrated/after-task-en.png) |
+| 手机任务结果 | — | [截图](evidence/integrated/after-task-mobile-zh.png) |
+| 来源变化阻断 / 资料不足 | — | [阻断](evidence/integrated/after-blocked-zh.png)、[资料不足](evidence/integrated/after-unknown-zh.png) |
+| 审核 / 决策历史 / Ask | — | [审核](evidence/integrated/after-review-zh.png)、[历史](evidence/integrated/after-decisions-zh.png)、[Ask](evidence/integrated/after-ask-en.png) |
 
-On a machine with Chromium and the project's offline test dependencies:
+## 未执行项与剩余问题
 
-```bash
-python -m pip install -e '.[dev]'
-# Install Playwright in the Node environment used for this command, then Chromium.
-npx playwright install chromium
-LINKLOOM_TEST_PYTHON=python node tests/ui/product_copy_browser.cjs work/copy-browser-acceptance
-```
+- 历史 `tests/smoke/test_temporal_product_http_lifecycle.py` 的 runner 导入 Windows-only
+  `msvcrt`，当前 Linux 无法收集执行；没有降低或跳过断言。独立离线 HTTP、HTTP 集成与
+  真实浏览器产品流程均已通过。
+- 未运行完整仓库测试、Windows 环境及真实付费模型质量评估。本轮验证范围是上述组合回归。
+- 原生文件选择器随浏览器语言；在已验收桌面和手机尺寸未发现新的明显布局问题。
+- 保持 Draft，未授权合并 master。
 
-The real-browser runner uses fresh local synthetic hosts and the existing
-partial/unknown/conflict/model-conflict/date-comparison fixtures. It clicks the
-four main screens, switches the interface and answer languages, captures desktop
-and 390px phone states, opens original field/source evidence, reopens saved task
-results, updates the synthetic source, verifies old evidence is blocked, and
-switches workspaces to check isolation. It records actual HTTP statuses and
-console errors. These are **planned executable checks, not completed operations**.
-`tests/ui/stale_revalidation_browser.cjs` separately covers explicit revalidation
-approval using the same synthetic workflow.
+## 复现
 
-To compare against the base in a real browser, extract the base static files via
-`git show 7720390:src/linkloom/ui/static/FILE` into a separate temporary directory,
-start `python -m tests.task_answer_browser_server --case partial --root NEW_DIR
---port 8771 --static-root BASE_STATIC_DIR`, and run the same source/task screens.
-Use fresh directories; do not reuse a private or existing database.
-
-The deterministic alternative already captured here can be regenerated with:
+安装项目开发依赖及测试环境的 Playwright/Chromium，使用新合成目录运行：
 
 ```bash
-node scripts/capture_product_copy.cjs work/copy-template-snapshots
+node tests/ui/task_answer_dom_test.cjs
+node tests/ui/unified_ask_dom_test.cjs
+node tests/ui/first_use_dom_test.cjs
+node tests/ui/stale_revalidation_dom_test.cjs
+node tests/ui/product_copy_dom_test.cjs
+node tests/ui/product_copy_browser.cjs work/new-copy-browser-run
+python scripts/run_m3p_offline_acceptance.py --output work/new-copy-http-run
+git diff --check
 ```
 
-These HTML snapshots prove template hierarchy and literal copy changes. They are
-explicitly labeled **not browser acceptance**.
-
-## Remaining work
-
-1. Run and visually inspect the real desktop/phone acceptance before merging.
-   Font fallback, wrapping, focus behavior and spacing still need this check.
-2. Run the existing Windows-only transport test on Windows and inspect hosted CI.
-3. Free-form original source/model explanations remain in their original language;
-   localizing their meaning would require a separate product decision. Task
-   relationship approval remains unavailable, as before this cleanup.
-
-The current delivery should stay **Draft** until the browser gap is resolved.
+`NODE_PATH` 可指向测试环境的 Playwright，`LINKLOOM_CHROMIUM_EXECUTABLE` 可选择已安装浏览器。
+178 项用例及模块见 JUnit；环境为 `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`、
+`LINKLOOM_RETRIEVAL_MODE=bm25`、`PYTHONPATH=src:.:tests/integration`。

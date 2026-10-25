@@ -1,70 +1,75 @@
 # Product copy and information hierarchy
 
-Write for the person completing a task. Keep precise boundaries in the interaction
-and in one clear status, rather than repeating them in each paragraph.
+Write for the user's next decision. Explain the result, evidence and next action
+with the shortest wording that preserves their meaning. These guidelines govern
+presentation, not F/G/Runtime/Reviewer/P4 or authorization rules.
 
-## Titles and layout
+## Page structure
 
-- Use one page title: Sources / 来源, Review / 审核, Decision Memory / 决策记忆, Ask / 提问.
-- `heading(title, description?, action?)` creates no eyebrow and no empty description container.
-- Add instructions beside the input that needs them. Avoid repeating navigation or button labels.
-- Results: answer or actual record count → status → evidence → unresolved questions → next action → details.
-- Show one clear notice per uncertainty. A separate AI-field interpretation label is appropriate because fields and relationships have different trust boundaries.
-- Remove unused wrappers and spacing. Native `details` holds optional diagnostics; do not hide essential blockers there.
+Use one clear page title and the actual controls or records. Add input help only
+where the format, permission or choice needs explanation. A page heading never
+requires an eyebrow or subtitle. Remove obsolete DOM and spacing with the text.
 
-## Status and authority
+Show answers before diagnostics: **result → necessary state → source evidence →
+next action → expandable details**. State one uncertainty once in the main view;
+use details to explain its specific evidence, opposing evidence and gaps.
 
-| Internal value | English | 中文 | Meaning to retain |
-|---|---|---|---|
-| UNKNOWN | Needs confirmation / Insufficient information | 待确认／资料不足 | Search or evidence is inconclusive; no claim of absence. |
-| PARTIAL | Partial results | 部分结果 | Only the displayed, checked part is available. |
-| BLOCKED | Cannot continue | 暂时无法继续 | Show the actual blocker and repair action immediately. |
-| REFUTED | Refuted by evidence | 证据否定 | Different from missing evidence. |
-| CONFLICT | Conflicting evidence | 证据冲突 | Preserve both sides; no unique answer. |
-| MODEL_PROPOSED | AI proposal | AI 提案 | Not a human-approved conclusion. |
-| EVIDENCE_VALID | Citations checked | 引用已核验 | Quote checking is distinct from interpreting or approving it. |
-| STALE | Source changed | 来源已变化 | Revalidate before relying on this decision. |
-| NEEDS_REVALIDATION | Needs revalidation | 待复核 | Current evidence needs human review. |
-| SUPERSEDED | Replaced | 已替代 | Historical record, with validity dates retained. |
-| FAKE / REPLAY execution | Offline demo | 离线演示 | Must remain visible; no claim of real-model evaluation. |
+## Shared terminology
 
-`FAILED` remains the stored extraction state. A saved source with
-`PROVIDER_UNAVAILABLE` may display “Saved · extraction pending / 已保存 · 待提取”,
-alongside its unavailable-extraction notice. Do not change the underlying status,
-invent extracted candidates or claim that failed processing succeeded.
+| English | 中文 | Meaning |
+|---|---|---|
+| Workspace | 工作区 | Data and access scope |
+| Sources | 来源 | Imported text and captured versions |
+| Review | 审核 | Human review of a candidate |
+| Decision Memory | 决策记忆 | Approved decision records and their history |
+| Ask | 提问 | Reviewed lookup or source investigation |
+| Model suggestion · unconfirmed | 模型建议 · 待确认 | AI interpretation awaiting confirmation |
+| Approve and save | 批准并保存 | Explicit human approval and persistence |
+| Source changed | 来源已变化 | Evidence needs another review |
+| Offline demo | 离线演示 | Preset or replayed responses |
 
-## Sentence style
+Translate interface text explicitly. Never translate or rewrite a user's source
+name, workspace name, quote, owner or entered value as if it were interface copy.
+Switching interface language preserves current form text and historical query
+date. Re-read detail data; discard old answers and per-request permission.
 
-Use concrete status and action: “Confirm the prerequisite relationship to continue /
-需先确认前置关系，才能继续”. Describe the missing evidence when it is known.
-Avoid paragraphs built around “does not mean”, “cannot replace”, “不构成”, or
-“尚未证明”. These remain legitimate in engineering documentation when needed.
+## State language
 
-Use “AI” for ordinary setup and investigation copy; “Provider”, “Runtime”, “P4”,
-“Reviewer” as a component, raw enum values, startup flags and receipts belong in
-technical details. The human reviewer field can still be called “Reviewer / 审核人”.
+| Data state / context | Product expression | Preserve |
+|---|---|---|
+| UNKNOWN | Unconfirmed / 待确认; insufficient information / 资料不足 | Lack of proof is not absence or refutation. |
+| PARTIAL | Partial results / 部分结果 | Keep known records and name remaining checks. |
+| REFUTED | Counter-evidence found / 存在否定证据 | Show it separately from UNKNOWN. |
+| CONFLICT | Conflicting evidence / 证据冲突 | Keep both sides; do not select a unique conclusion. |
+| BLOCKED | Blocked / 暂无法继续 | Show the concrete prerequisite or permission immediately. |
+| MODEL_PROPOSED | Model suggestion / 模型建议 | A suggestion stays unapproved even with checked citations. |
+| EVIDENCE_VALID | Citations checked / 引用已核验 | Citation validity does not approve the interpretation. |
+| STALE / NEEDS_REVALIDATION | Source changed / Needs review | Show currentness prominently, before historical evidence. |
+| Open-ended validity interval | No end date / 未设结束日期 | Do not imply the record is currently valid. |
 
-## Information that stays immediately visible
+A model suggestion of support/refutation is explicitly attributed to the model;
+an existing relationship proof is labelled separately. No wording change may
+change which evidence or reviewer outcome releases a result. Counts come from
+the actual returned records; never invent a quantity or infer complete coverage.
 
-- External source transmission and unchecked per-question authorization.
-- The configured per-question cost limit and time limit when available.
-- Missing relationship prerequisite, source/access changes and extraction failure.
-- Partial coverage, unclear date roles, AI proposal attribution and unconfirmed effective plan.
-- Offline execution. Do not infer “real model used” from a successful local test.
-- Historical queries use approvals recorded now, possibly entered after the requested date.
+## Disclosure placement
 
-Source lists, complete quotes, field evidence, both supporting and counter-evidence,
-source/version hashes and approval receipts must remain accessible. Data, source
-names, original quotes and audit IDs are never translated or silently rewritten.
+Keep external data sending, possible fees, per-question authorization, source
+changes, access failure and immediate blockers visible beside the relevant action
+or result. Cost/request/time ceilings remain visible when provided. Setup commands,
+Token details, raw proposals, receipt IDs, hashes and tool traces can be expanded.
 
-## Localization and verification
+Provide repair guidance: add a source, check a quote, clear an incompatible date,
+confirm a prerequisite or check a failed run before retrying. Prefer concrete
+states over repeated sentences explaining what a result cannot establish.
 
-Keep English and Chinese together at the literal interface boundary (`uiText`,
-`askLabel` / `askCopy`, and the legacy i18n catalog). Never run translation or
-normalization over interpolated source data. Match meaning, action and trust
-status across languages; avoid literal engineering translations.
+## Documentation and verification
 
-Copy assertions may change when wording changes. Keep the same business fixtures,
-state outcomes, approval gates, escaping, evidence isolation and date-comparison
-checks. A DOM test verifies rendering contracts; only a real browser run can
-verify mobile wrapping, visual spacing and actual interactions.
+Describe current capabilities and setup plainly in both READMEs and the demo.
+Keep research protocols, experimental conclusions and historical acceptance in
+their technical documents. Preserve frozen evidence and original receipts.
+
+Verify both languages, empty/partial/unknown/conflict/blocked states, proposal
+attribution, source currentness, workspace isolation, date scope and mobile
+layout. Update wording assertions while retaining safety assertions. Actual
+browser evidence and DOM tests must be reported separately.

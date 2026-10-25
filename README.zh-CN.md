@@ -5,7 +5,8 @@
 **找回当前有效的决定、它经历的变更，以及支持它的原始证据。**
 
 LinkLoom 是一个本地优先的团队知识助手，面向持续变化的会议记录与 Markdown
-来源。你可以查找已审核的决策、查看变更历史，并结合原始证据调查任务记录。
+来源。它把人工审核的决策历史与只读的 AI 调查结合起来，让相关段落
+成为回答的起点，并继续核对决定何时有效、经过谁审核、证据是否仍然成立。
 
 ## 从会议记录到有据可查的回答
 
@@ -19,41 +20,40 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
 
 ## 看看实际产品
 
-以下为使用合成会议资料的早期**离线演示**截图。
-当前操作与两种演示方式见[产品演示指南](docs/V1_DEMO.md)。
-
+按[60～90 秒演示指南](docs/V1_DEMO.md)体验完整流程。以下截图使用合成会议资料与离线响应。
 <table>
   <tr><th>1 · 导入来源</th><th>2 · 审核候选</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/01-sources.png"><img src="docs/assets/v1/01-sources.png" alt="Sources：导入会议与版本化证据片段" width="560"></a></td>
-    <td><a href="docs/assets/v1/02-review.png"><img src="docs/assets/v1/02-review.png" alt="Review：Birchline 候选的带日期原文与批准操作" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources：导入会议与版本化证据片段" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review：候选的带日期原文与单独批准操作" width="560"></a></td>
   </tr>
   <tr><th>3 · 查看决策历史</th><th>4 · 带着证据提问</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/03-decision-memory.png"><img src="docs/assets/v1/03-decision-memory.png" alt="Decision Memory：Wrenwell 替代 Birchline 的时间线" width="560"></a></td>
-    <td><a href="docs/assets/v1/04-ask.png"><img src="docs/assets/v1/04-ask.png" alt="Ask：Wrenwell 当前决定、生效日期、前序决定与来源原文" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory：当前批准与保留的历史审核记录" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask：Wrenwell 当前决定、生效日期、前序决定与来源原文" width="560"></a></td>
   </tr>
-  <tr><th>5 · 发现证据过期</th><th>提案保持为支持材料</th></tr>
+  <tr><th>5 · 发现证据过期</th><th>调查任务记录</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="待复核决策：来源变化后 Wrenwell 标记为 STALE" width="560"></a></td>
-    <td><a href="docs/assets/v1/02-proposal-safety.png"><img src="docs/assets/v1/02-proposal-safety.png" alt="Kestrel Ledger 提案仅作支持材料，不是已批准决定" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="任务调查：来源变化后隐藏旧证据" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="任务原文记录与待确认的模型关系建议" width="560"></a></td>
   </tr>
 </table>
 
-还可以查看[替代决定的批准界面](docs/assets/v1/02-review-replacement.png)和
-[历史日期的回答](docs/assets/v1/04-ask-as-of.png)。
+还可以查看[替代决定的批准界面](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)和
+[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png)。
 
 ## 现在能做什么
 
-| 能力 | master 中的实际行为 |
+| 能力 | 使用方式 |
 |---|---|
 | 导入与提取 | 将带时间戳的文本存为不可变来源版本，保留精确证据片段；语义提取需明确启用 Gemini。 |
 | 审核决定 | 查看、批准或拒绝候选；批准与落库保存授权记录。提案只作支持材料。 |
 | 回溯决策历史 | 在按工作区隔离的 SQLite 中查询当前或指定日期状态、生效时间、前序决定、证据与授权收据；有证据时记录行动和负责人。 |
 | 统一提问 | 已审核状态走确定性查询；原因与冲突问题走明确启用的时序调查 Agent。 |
 | 调查来源关系 | 支持“项目 → 负责人 → 直属领导”和“别名 → 项目 → 负责人 → 直属领导”的有界 search/read 计划；不支持的问法要求澄清。 |
-| 保留已核验的部分结果 | 来源关系调查无法确认最终关系时，可保留带引用的上游事实并列出缺失的跳；结果仍须通过 证据与结果校验。 |
-| 跟踪来源变化 | 在产品中明确更新或删除来源时，对账证据并将受影响的当前已落库决定显示在 待复核决策；没有自动文件系统监听。 |
+| 跨会议任务调查 | 对照不同会议的任务记录，查看负责人、日期证据、待确认的 AI 关系建议与后续核查事项。可使用离线演示，或显式配置调查并逐次授权来源。 |
+| 保留部分调查结果 | 展示已核验的关系，以及回答其余问题还需补充的具体证据。 |
+| 跟踪来源变化 | 更新或移除来源后，重新核查证据，将受影响的决策放入审核列表；可对照新来源单独复核。 |
 
 ## 如何协作
 
@@ -79,7 +79,7 @@ flowchart TD
 证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
 区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
 
-## 快速开始
+## Quickstart
 
 需要 **Python 3.11+**，在终端执行：
 
@@ -108,11 +108,12 @@ Agent 调查默认关闭。上面的数据库路径将演示数据留在当前�
 python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
 ```
 
-在“提问”中选择任务调查，询问多场会议是否描述同一任务、各条记录中的负责人或截止日期是什么。
-结果会标明“离线演示”，展示来源记录、AI 提案与待确认事项。日期含义不明时保持待确认，
-模型提案仍需独立核验。此模式不会调用外部 AI，不能与外部服务启动参数一起使用。
-当前界面暂不支持任务关系审批。外部 AI 的独立授权配置见
-[任务调查配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
+在「提问」中选择「当前空间记录中的任务」，询问不同会议是否描述同一任务。
+结果展示逐条来源、提取的负责人和日期、关系建议与待确认事项。「离线演示」标记
+表示使用预设响应，不调用外部 AI。任务关系需单独批准，当前任务视图用于调查与证据核查。
+
+真实 AI 任务调查的配置与逐次授权见
+[配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
 
 要体验完整的来源 → 审核 → 回答流程，安装 Provider 扩展，并在环境中配置
 `GEMINI_API_KEY`：
@@ -154,29 +155,19 @@ Ask 中逐次授权。产品启动器固定所配置的模型，界面内没有 
 - **来源变化会影响决策状态。** 对账将当前证据清单与落库时的出处比较，可标记
   STALE 或 NEEDS_REVALIDATION，不会悄悄把新候选提升为替代事实。
 
-## 当前状态与限制
+## 数据与审核
 
-实现基线：master `95a125ce4d1b2867102217e1d0430044fbf4f739`，
-已包含有界 Recovery 集成。
+来源、决策历史和审核记录按工作区保存在本地。来源变化后，受影响的决策会进入
+待复核状态。复核时可对照原批准与当前证据，为新候选单独记录批准。
 
-本地产品已实现 Sources、Review、Temporal Decision Memory 和 Unified Ask。
-仓库内的发布证据覆盖合成资料工作流，包含历史 Gemini 验收记录；它们不能证明普遍
-提取准确率、独立留出集检索表现或生产就绪程度。协议与限制见
-[证据矩阵](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)。
+AI 提取与调查需明确启用，会将来源文本发送给已配置的外部服务，并可能产生模型费用。
+外部调查还需在「提问」中逐次授权。直接查询已审核决策在本地完成。
 
-路由、关系规划和 Grounding 只支持有界的问法与断言类型。调查只读，不能批准决定。
-来源更新由用户触发；当前已落库决定的过期状态可进入关注视图，专门的过期重审界面尚未实现。
-Runtime 已有 checkpoint/resume，但产品调查任务使用临时、进程内状态，这里不承诺
-UI 跨进程恢复，该能力仍未支持。
+任务关系建议保持待确认；部分结果会列出已找到的信息和剩余问题。
+来源冲突、访问不可用和 AI 服务响应不确定分别显示。原始 Markdown/Obsidian 文件保持不变。
 
-**PARTIAL** 来源关系回答只保留独立核验且带引用的事实与明确缺口，缺失的最终答案
-保持为 null，也不代表已获业务批准。权限或身份校验失败、重复工具错误会终止运行；
-在有效 Final 产生前耗尽模型轮次或 Provider 请求额度仍属失败，Provider 执行结果不确定单独呈现。
-Recovery 不会把执行失败变成部分成功，也不会自动重试。
-
-这是本地应用，尚非已部署的多用户服务。导入副本与决策状态保存在本地，明确启用的
-Provider 请求会离开本机。当前产品流程不会重写原始 Markdown/Obsidian 文件，
-真实知识库回写仍在当前产品边界之外。
+当前产品在本地运行。调查会话使用进程内状态，调查期间请保持服务运行。
+验证方法与已记录结果见[评测参考](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)。
 
 ## 开发者入口
 

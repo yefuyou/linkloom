@@ -1,56 +1,87 @@
-# LinkLoom product walkthrough / 产品演示指南
+# LinkLoom V1 demo walkthrough
 
-Use synthetic notes and a dedicated demo database. Earlier screenshots under
-`docs/assets/v1/` show the previous copy; they remain unchanged as historical evidence.
+This 60–90 second walkthrough follows the V1 product UI from a meeting
+artifact to a stale decision alert. Allow extra time for provider latency.
 
-## Task investigation — offline
+## Before the demo
 
-1. Follow the README command with `--offline-task-demo` and a dedicated database.
-2. Open **Ask**, choose tasks, and ask whether the meetings describe the same task.
-3. Read the record count and **Partial results** / **Insufficient information** status.
-4. Check **Offline demo**, the **AI proposals · awaiting confirmation** label, and the source cards.
-5. Expand **Field evidence and original message** to compare each interpreted field with its quote.
-6. Read the outstanding questions and next steps. Task relationships and the effective plan remain unconfirmed.
-7. Switch the answer language and resize to a phone width. These operations do not authorize a new model call.
+The Sources → Review → Decision Memory → Ask workflow needs semantic
+extraction. The local UI disables extraction by default. Install the existing
+Google GenAI SDK extra if needed, configure GEMINI_API_KEY in a shell secret
+manager, and start LinkLoom with the explicit external-provider option described
+in the [README Quickstart](../README.md#quickstart).
 
-This mode uses scripted responses with public synthetic sources. It demonstrates
-product behavior; it does not measure real-model understanding. Task relationship
-approval is unavailable in this UI.
+The fixture is synthetic:
+tests/fixtures/v1_release_acceptance_meeting.txt
 
-## Sources → Review → Decision Memory → Ask
+Import it through Sources. Do not insert records through SQLite or call private
+domain functions. The product UI sends the source text to Gemini only after the
+explicit launch-time opt-in.
 
-This separate workflow needs AI extraction. Follow [README setup](../README.md#quickstart)
-and review the external-source transmission notice before importing. External AI
-can incur fees; new investigations also require per-question permission.
+For a key-free preview, /legacy-ask replays an older deterministic decision
+brief; it does not demonstrate the V1 workflow. The screenshots in the README
+were captured with offline responses and are not a public provider
+switch.
 
-1. Create a workspace and import `tests/fixtures/v1_release_acceptance_meeting.txt`.
-   Choose **Import and extract**. If AI is unavailable, **Save source** retains
-   the text for later extraction.
-2. In **Review**, open Birchline. Check the subject, relationship, original quote
-   and effective date. Fill unresolved fields only from the source.
-3. Enter your reviewer name and reason, then **Approve decision**.
-   Approval stays unavailable while the relationship is unresolved.
-4. Review and approve Wrenwell against its replacement wording and October 8
-   effective date. Kestrel Ledger stays an **Unapproved proposal**.
-5. In **Decision Memory**, inspect Wrenwell, its predecessor and the original
-   quotes. Approval and source version details are expandable.
-6. In **Ask**, ask “What supplier are we currently using?” Expect the reviewed
-   Wrenwell record. Use October 7 in advanced options to inspect Birchline.
-   Historical results use approvals recorded today.
-7. Update the source through **Sources**. Affected decisions may appear in
-   **Decision records needing attention**. Open **Revalidate decision**, compare
-   current evidence, and give any replacement a separate approval.
+## Walkthrough
 
-Inspect actual extraction output before approving; model output may vary.
+1. **Open Sources.** Create or select a demo workspace. The source and its
+   decision history stay scoped to that workspace.
 
-## 中文操作
+2. **Import the meeting.** Select the synthetic fixture in the Sources file
+   picker and choose **Import and extract**. Wait for **Processed**. The
+   acceptance fixture produced three segments, two decision candidates for
+   review, and one supporting proposal.
 
-离线任务演示：使用 README 中的 `--offline-task-demo` 命令及独立演示数据库。
-在“提问”中选择任务调查，先看记录数与“部分结果／资料不足”状态，再看来源原文。
-AI 提案保持“待确认”；字段证据、关系核验过程与运行详情可展开查看。
-“离线演示”始终可见，不代表真实模型能力已通过评测。当前界面暂不支持任务关系审批。
+3. **Inspect the first candidate.** Open Review and select **Birchline**.
+   Confirm its type is Decision candidate, its subject and relation, the exact October 6
+   evidence quote, the source name, and the effective date. If the UI shows
+   “Unconfirmed”, enter 2026-10-06 based on that quote.
 
-完整决策流程：在“来源”导入合成会议，进入“审核”核对原文、生效日期、对象和关系，
-填写审核人与理由后选择“批准决策”。在“决策记忆”查看当前记录与历史，
-在“提问”查询当前或指定日期的决策。来源变化后，进入“待复核决策”重新核验；
-新的替代记录需要独立批准。外部 AI 的内容发送与费用授权在提交位置展示。
+4. **Approve Birchline.** Enter a reviewer and a short reason, then choose
+   **Approve and save**. The Review UI records the resolution and opens
+   Decision Memory for the approved record.
+
+5. **Review the replacement.** Return to Review and inspect **Wrenwell**.
+   Confirm the replacement wording, source passage, and October 8 effective
+   time. If needed, resolve it to 2026-10-08 from the explicit source sentence,
+   then approve it through the UI. Leave **Kestrel Ledger** as a proposal;
+   it must remain supporting-only.
+
+6. **Open Decision Memory.** The current value should be Wrenwell. Its timeline
+   should show Birchline as Replaced and Wrenwell as Active, with each
+   validity boundary and source passage.
+
+7. **Ask for the current supplier.** Submit:
+   **What supplier are we currently using?**
+   Expect Wrenwell, its October 8 effective time, the replaced value
+   Birchline, and the source evidence.
+
+8. **Ask for the historical value.** Use the optional date field with
+   2026-10-07 and submit the same question. Expect Birchline with its historical
+   validity interval and evidence.
+
+9. **Change the source.** Return to Sources, inspect the meeting, and append a
+   short note to the Wrenwell source line. Save the new source version using
+   the product UI. Wait for ingestion to finish; the source version should
+   change.
+
+10. **Check Review Attention.** Open Review. The previously materialized
+    Wrenwell decision should appear under **Decision records needing attention**
+    with state **Source changed**. Choose **Revalidate decision** to compare the
+    original approval with the current source. Review the new candidate and
+    record a separate approval, or keep the decision unresolved.
+
+Before approval, check the candidate type, effective date and quoted source.
+Kestrel Ledger remains an unapproved supporting proposal.
+
+## Cross-meeting task demo
+
+Use the no-key task-demo command in the README with a dedicated database.
+Select **Tasks across the current workspace records**, then ask:
+“Do these meetings describe the same task, and what changed about its deadline?”
+Read the record count and result status first. Compare each source's owner/date
+fields, open **Field evidence and original message**, and inspect **Relationship
+proposals and investigation details** for the complete model suggestions.
+The **Offline demo** label stays visible. Suggestions remain unconfirmed and
+are kept separate from approved Decision Memory records.

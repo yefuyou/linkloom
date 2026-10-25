@@ -20,7 +20,7 @@ async (page, outputDirectory = 'output/playwright') => {
   await page.locator('.task-answer').waitFor();
   const runId = valid.agent_run_id;
   await page.reload();
-  await page.getByRole('heading', {name: 'Workspace sources', exact: true}).waitFor();
+  await page.getByRole('heading', {name: 'Sources', exact: true}).waitFor();
   await page.getByRole('button', {name: 'Ask', exact: true}).click();
   await page.locator('#ask-result').waitFor({state: 'attached'});
   check(!((await page.locator('#ask-result').innerText()).includes('林枫')), 'Reload showed cached source text');
@@ -45,9 +45,9 @@ async (page, outputDirectory = 'output/playwright') => {
   check(created.status() === 201, 'Could not create synthetic isolation workspace');
   const other = (await created.json()).workspace.workspace_id;
   await page.reload();
-  await page.getByRole('heading', {name: 'Workspace sources', exact: true}).waitFor();
+  await page.getByRole('heading', {name: 'Sources', exact: true}).waitFor();
   await page.locator('#workspace-picker').selectOption(other);
-  await page.getByRole('heading', {name: 'Workspace sources', exact: true}).waitFor();
+  await page.getByRole('heading', {name: 'Sources', exact: true}).waitFor();
   await page.getByRole('button', {name: 'Ask', exact: true}).click();
   await page.locator('#ask-form').waitFor();
   check(await page.locator('[data-action="reopen-task"]').count() === 0, 'Cross-workspace result pointer leaked');

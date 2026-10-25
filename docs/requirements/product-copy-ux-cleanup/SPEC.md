@@ -1,24 +1,25 @@
 # Product copy and information hierarchy SPEC
 
-Authorized scope: the user's 2026-10-25 request, based on remote master
-`7720390a796662ff42c27b5eef6f8685e5155802`, independent worktree and branch
-`codex/product-copy-ux-cleanup`. This is a presentation follow-up to the roadmap's
-answer-first Product consolidation, not a new product capability or milestone.
+Authorized scope: the user's 2026-10-25 implementation brief. Baseline master:
+`7720390a796662ff42c27b5eef6f8685e5155802`. Branch: `codex/product-copy-ux-cleanup`.
 
-Implementation: audit rendered template branches; remove mandatory title tiers;
-use bilingual product status labels; put task record counts, evidence and next
-actions before expandable diagnostics; keep source transmission, cost permission,
-invalidity and blockers immediately visible. Keep the existing visual system.
-Localize literal interface copy, never original source data or audit identities.
+Improve product-facing wording and hierarchy across Workspace, Sources, Review,
+Decision Memory, Ask, task/source investigation, legacy replay and current public
+documentation. Use one page title, answers before diagnostics, contextual helper
+text and equivalent Chinese/English terminology. Preserve typed state, provenance,
+approval, currentness, external-source permission and cost disclosures.
 
-Acceptance: JS syntax, bilingual and DOM contracts, affected HTTP/product flows,
-source update/revocation and workspace isolation, task uncertainty/approval and
-comparison gates. Run actual Chromium at desktop and phone widths if available;
-otherwise explicitly report visual acceptance as incomplete and preserve a
-reproduction script. DOM tests are not browser acceptance.
+Implementation: inventory rendered states and text; simplify presentation helpers
+and result DOM; localize product labels; update current documentation; verify
+existing DOM, Python/HTTP and synthetic Chromium desktop/mobile flows. Record
+baseline and candidate evidence, exact change counts and unresolved checks.
 
-Excluded: F/G/Runtime/Reviewer/P4 rules, domain statuses, Provider calls or keys,
-private data, frozen answers/reports/ledgers/receipts, other branches/PRs, master
-writes, merges, history rewriting and new frameworks. Commit, push and create
-one independent Draft PR after offline verification; keep any visual blocker
-visible in the delivery and PR description.
+No core Agent, F/G, Runtime, Reviewer, P4 or authorization rule changes; no real
+Provider, keys, private data, frozen results or other branches. Submit and push this
+branch only and create a Draft PR. Independent review reports findings without edits.
+
+
+Continuation: keep existing Draft PR #25 and preserve remote commit 3d4c050 by
+normal merge. Integrate current master f2ce6b8 without changing its core rules.
+Retain prior receipts and DOM CI gate. Publish only an independently reviewed,
+retested tree, using a non-forced expected-head branch update.

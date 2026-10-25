@@ -257,6 +257,8 @@ jobs:
           tests/unit/test_task_relation_query.py
           tests/unit/test_task_relation_question_planner.py
           tests/unit/test_task_relation_semantic.py
+          tests/unit/test_m2_real_failure_regression.py
+          tests/unit/test_m2_semantic_currentness.py
           tests/unit/test_task_relation_store.py
           tests/unit/test_task_relation_tools.py
           tests/unit/test_task_relations_p2.py
