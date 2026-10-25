@@ -1,0 +1,486 @@
+{
+  "original_root": "C:\\Users\\18019\\.codex\\worktrees\\demo-acceptance-20261024\\Linkloom",
+  "files": [
+    {
+      "path": "CAPABILITY_BOUNDARIES.md",
+      "sha256": "44caaff72a86fea4291958216f260b62b33d6ac26231c09f599b0eefcc908b8f",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "DEMO_ACCEPTANCE.md",
+      "sha256": "c79aa370ce961b644a95b8e8fe25bb36358de9921c9b4a2bc245acc631edec87",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "DEMO_SCRIPT.md",
+      "sha256": "d867ec468317932f01eb5cf0195c53df4c0f6f5b92ae118b57165e48c847cece",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "EVIDENCE_INDEX.md",
+      "sha256": "15ba3aecf7f32ac242e8f2d1d57f8ddeca93247e927022105ff7cfa1c54700e2",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/01-normal-first-use.dom.json",
+      "sha256": "7e8dbf843f31ab23a99e26e373722674832826d8ac62624c2883f3d02d50725a",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/01-normal-first-use.png",
+      "sha256": "34470200a7d7eee3d6d3cc111811b3a6fd6c2dbc1ad5dab2a5dc08f9b7826dd6",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/01-normal-first-use.txt",
+      "sha256": "e20541dbdfa1433f37ec40c320a0661ec40c17b3b39dbe061a5404f372e1c8bd",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/02-normal-sources.dom.json",
+      "sha256": "c9b645b911a3dcf47a66bcbd178155629a01a0d439e366868b750c7818535c71",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/02-normal-sources.txt",
+      "sha256": "155191da215a626d432cbe3f2d5642f263ebb00334b9f3c24b338efc48d5acab",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/03-normal-imported.dom.json",
+      "sha256": "f21ff9171007840bf055bc41762284c3dc321ec87838ad6538ea7a99ca2b0911",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/03-normal-imported.png",
+      "sha256": "9cd4842d1b72a3f5716538fe665a537721de3e1e46e4b20d8cce134ce4368c58",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/03-normal-imported.txt",
+      "sha256": "14a91e35da60a2f4d666667da43f695cec518b55e9a93efcc81c613949866b33",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/04-normal-ask.dom.json",
+      "sha256": "ca55f2c003bd287145058f1543bec0d6013535e8b964e3a1e386550eb5a23256",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/04-normal-ask.txt",
+      "sha256": "94a0565adf526cda61e6b4ec3d30ed34b638b686b3176579eeefbe07eeb5873b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/05-normal-task-unavailable.dom.json",
+      "sha256": "7e97b6f2730ccb068cbeb9f17b98e70ff33564bb2b577c85b9702cae2bb58f43",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/05-normal-task-unavailable.png",
+      "sha256": "aa7cc3cd8410dce2f59c0d75f659a5ac586a24a68f8b5ef6490637f8bdd3de76",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/05-normal-task-unavailable.txt",
+      "sha256": "63fb06f29edfb4e70e0cee0f458f2bca3fb311634f77a9aeb86bc35b6b397692",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/06-offline-sources.dom.json",
+      "sha256": "b97d76d6ca9cfaaf0ff919851496e44ddc990d316af9f33d0a2d290584b877b0",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/06-offline-sources.png",
+      "sha256": "b3e649e348b3f7ece0f3d69085227de9b259774566c30c03eac7a2c4151d8839",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/06-offline-sources.txt",
+      "sha256": "8663c3b7c9478cd72e5ea7c5b13fe9515c13841fcbfeb6ff59335b22d83dd27c",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/07-meeting-one.dom.json",
+      "sha256": "e401650c7d27957627fac29c74831f404925c111ceb4ed73da6f242710a9a20d",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/07-meeting-one.png",
+      "sha256": "b3b0cbfb04a8738099eb0000e2d2eb46b9aed0a54f6e179c39a1550a9d952476",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/07-meeting-one.txt",
+      "sha256": "f92560af3f75b981a8c311e322d07378280f1578502f6ea873cd53e8d32e126d",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/08-offline-ask-initial.dom.json",
+      "sha256": "4784b1eae972778eb0b0ba21b0924aa425e29de0f731ec2c8a07da539d0cbc0a",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/08-offline-ask-initial.png",
+      "sha256": "8c305cc6b8dd7ad60cf7a784b3c736f43229e7d5382efc573908b53b756a98e6",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/08-offline-ask-initial.txt",
+      "sha256": "82caac4d546e15a87284d94fead685dd5d69a1885f93a3543ad351b83bad8330",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/09-source-scope.dom.json",
+      "sha256": "ec9b67620b9ed5973647a26cde2ecf847813005aec21e8c183c709acd385eda7",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/09-source-scope.png",
+      "sha256": "dae11175919d3937d8e0010d1689184f2d8570691fbf37c6f8a3ebf554d2f676",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/09-source-scope.txt",
+      "sha256": "c227ab751aa1c66ddabf36bd54047c7bdc0d304ab10f14344e08d1ab8a23b08e",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/10-task-submitted.dom.json",
+      "sha256": "eece6c82e16832c1401efa2e11f44c75cb733d7c26a8efe85056b98111c60f2b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/10-task-submitted.txt",
+      "sha256": "41879688df851f64bc1e3117eaba5e11d0a1335f57db6d188aa8ab23f1b2fc8e",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/11-task-result.dom.json",
+      "sha256": "eece6c82e16832c1401efa2e11f44c75cb733d7c26a8efe85056b98111c60f2b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/11-task-result.png",
+      "sha256": "f5863be0c1f21dedf71310552ac626263814e771ac51782a6874e5b3b4ec2a60",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/11-task-result.txt",
+      "sha256": "41879688df851f64bc1e3117eaba5e11d0a1335f57db6d188aa8ab23f1b2fc8e",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/12-task-complete.dom.json",
+      "sha256": "dded3cad61a974c45a6d3314473b57ed56137df3e2285fb70f17dee3cd5601c3",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/12-task-complete.png",
+      "sha256": "c495a9558560ac80322b78f0242412142819cb0b9959f8361323252f7316b577",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/12-task-complete.txt",
+      "sha256": "a1679ec1edce0a64a5fe0bbfab15d6172102e309b37e41539189ec6dce45a56d",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/13-expanded-evidence.dom.json",
+      "sha256": "ecbc41077ab3f7be6396fcb5aa374ef237b191324f2119af626b6c9f3e3bb48d",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/13-expanded-evidence.png",
+      "sha256": "b8d1359db4092b1cc74e307b76df47713ee9fc29e8ebdcf4824016b9d18d6e89",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/13-expanded-evidence.txt",
+      "sha256": "47c2f9d95da2f3c12c1cf51d700743d2362d6ce2d1ee358929c4ee41f2305921",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/14-original-meeting-two.dom.json",
+      "sha256": "37dc81d4527da624fc8686dbba25fc594d0daca21fa592cf0e4ee0906d9b5545",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/14-original-meeting-two.png",
+      "sha256": "ea75c2f5f827e09b8b52800e3560d5aab62104e97a05d7f0393a132c64b5266b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/14-original-meeting-two.txt",
+      "sha256": "5f27e3130fbde91ca985ff386b62e84022c2a348bb50cf305545f582d870838b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/15-return-from-source.dom.json",
+      "sha256": "53ca75e0a62e927d230fe02a8df3b43921baca123f7625beea0e07d2f68158fd",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/15-return-from-source.txt",
+      "sha256": "4e7a1f89ed4dca8839536bd4c7918f02c7e3302d6831eb747002be323f5eca31",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/16-rechecked-baseline.dom.json",
+      "sha256": "de2b11e8c45236b7c11ddf9227d662d5a3db4490ddbad657f23b633808c462de",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/16-rechecked-baseline.txt",
+      "sha256": "c04c9fd2370512fdd4c9696e5c1964fbc269b2a3edf4206a281a76d634ffbe5f",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/17-english-result.dom.json",
+      "sha256": "8b5d68c3313ab4f0378f987f7777ff21e1e8e2213ecc8029a502518c681e1fa7",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/17-english-result.png",
+      "sha256": "c85f079f5d352cdc8c7e615b596a2962da58f28af556528014b5dc074881ce61",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/17-english-result.txt",
+      "sha256": "124e6f58e039dff975b309e09578f3dd73116cfcf872169910c29c7d958dff03",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/18-mobile-result.dom.json",
+      "sha256": "5851bef1453610a89e60453ddadb3efe14513c7b6bab281fd55977111ceedfce",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/18-mobile-result.png",
+      "sha256": "2826cc8265fe133a6ab5259797608d49c778bddcb88a93b01660efe726875eab",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/18-mobile-result.txt",
+      "sha256": "9a1fb85357cf1a6f980578572230783de2cc75249c5cd023670e1440a1ad966b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/19-reload-ask.dom.json",
+      "sha256": "53ca75e0a62e927d230fe02a8df3b43921baca123f7625beea0e07d2f68158fd",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/19-reload-ask.png",
+      "sha256": "584c3b62d68f5787dd3ead37cd6fe08c3e58d465bbd6464b8acfd1fb7d3a1ae5",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/19-reload-ask.txt",
+      "sha256": "4e7a1f89ed4dca8839536bd4c7918f02c7e3302d6831eb747002be323f5eca31",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/19-reload-clears-result.dom.json",
+      "sha256": "b97d76d6ca9cfaaf0ff919851496e44ddc990d316af9f33d0a2d290584b877b0",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/19-reload-clears-result.txt",
+      "sha256": "8663c3b7c9478cd72e5ea7c5b13fe9515c13841fcbfeb6ff59335b22d83dd27c",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/20-before-network-failure.dom.json",
+      "sha256": "de2b11e8c45236b7c11ddf9227d662d5a3db4490ddbad657f23b633808c462de",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/20-before-network-failure.txt",
+      "sha256": "c04c9fd2370512fdd4c9696e5c1964fbc269b2a3edf4206a281a76d634ffbe5f",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/21-network-failure.dom.json",
+      "sha256": "c43031a5aa1f0d29ede02cceda7fa4a65d8eeafa846ac6efa70e476995d2c727",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/21-network-failure.png",
+      "sha256": "b720e74d48bdb670dbea12967f9b2ac228b42ab4bf4515fa39f930a064df5915",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/21-network-failure.txt",
+      "sha256": "86a408d88e8585b3cff19387bd2536945c8476c15d08e4f55e5cf9c7d4b3f682",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/21-network-restored.dom.json",
+      "sha256": "c43031a5aa1f0d29ede02cceda7fa4a65d8eeafa846ac6efa70e476995d2c727",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/21-network-restored.txt",
+      "sha256": "86a408d88e8585b3cff19387bd2536945c8476c15d08e4f55e5cf9c7d4b3f682",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/22-network-recovered.dom.json",
+      "sha256": "de2b11e8c45236b7c11ddf9227d662d5a3db4490ddbad657f23b633808c462de",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/22-network-recovered.txt",
+      "sha256": "c04c9fd2370512fdd4c9696e5c1964fbc269b2a3edf4206a281a76d634ffbe5f",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/23-source-version-updated.dom.json",
+      "sha256": "522da477188c15b4436f395048f3e44549a374b03866ba81ae87fc573293557d",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/23-source-version-updated.png",
+      "sha256": "44bb870d6a7c41f94da97adf98f33cfc4bc5878810755d997e0ad7f7f2a3bc8e",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/23-source-version-updated.txt",
+      "sha256": "45cac2a66a876bdd235eadd2b8052cc242c019f3d0e2ac936aa03d0ffcf41837",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/24-stale-result-blocked.dom.json",
+      "sha256": "4733950eb42b4f3bd4613e639935f198167c7382680b52b57b5796e01a89ba8e",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/24-stale-result-blocked.png",
+      "sha256": "78bc0e8a125de966003800581ce822c55042a466e1bf4518b6b3f34f7cda6fa6",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/24-stale-result-blocked.txt",
+      "sha256": "4ce4b1443df5d6f5879aaab82ba7db026c5ddbe56831c718d0bc9cebbad4f148",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/25-blocked-diagnostics.dom.json",
+      "sha256": "65bd8c7e7c6694f025edeb33034f8b3b0ab3a8fe1fcad73fff090dc8f60360cc",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/25-blocked-diagnostics.png",
+      "sha256": "05a6bc8d1e386c6984cee90cde6217789450514668d667e67130715ef2c30297",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/25-blocked-diagnostics.txt",
+      "sha256": "913426cb84b6afac26beecd19bb80734a4214edbd756b3a292366dd44e37ec41",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/26-blocked-english.dom.json",
+      "sha256": "168ea7f42dfeea879806f02cc453428e1f7135cc490e5548550da4f13653aee3",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/26-blocked-english.png",
+      "sha256": "3cd8c8c7f99777db0922be61893bfa54acf2f7a507ed4cd24fa37abd31445110",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/26-blocked-english.txt",
+      "sha256": "5e5b62910dbe59489318169bffc292e8655f796e184e4a90a9d909298dbd91e3",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/actions.jsonl",
+      "sha256": "0c13a07a069e852f65c17700546ed1e555fca8f83ec542815624fb3aee5b2211",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/blocked-external.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/browser.har",
+      "sha256": "9cb11ae77f452a61f5a5b7ee1b12d634f46954be5d49abe93c617bd984b16323",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/console.jsonl",
+      "sha256": "3cdbea357581dd8177b3151b61a19b3968068f5d950487501a791e38f5f4693a",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/delivery-check.json",
+      "sha256": "7d6c0f5c34498d1c119266ce22cd3af9eb2dddc7d0aba62c75df4d827166c3ce",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/environment.json",
+      "sha256": "86f257dbc12f9c1a732d548094ed572480d29cba07d0104dd13c807aef15316b",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/http-index.json",
+      "sha256": "57efd52ad265f4514448e1c13efb5ac25c8fdd259d64ae486fb98b662964253a",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/http.jsonl",
+      "sha256": "733b4690f8e9446f60e7d33e758038a130e4f1b9b0b9fbe00968eb3ddcabd1a2",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/server-normal.json",
+      "sha256": "738e945fdd9a87634f503e63f5b097eb3363d1a561ed2e8e4bf1a03015a3f988",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/server-offline.json",
+      "sha256": "e156b85a416797da6ddefadffca40a4f23f1e2f2367a8a3766cb08d074d7ecf8",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/source-verification.json",
+      "sha256": "ac56f8ff4397447a17949d358cca5be433280efcfef67544d12f2b98b3eea344",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "output/playwright/demo-acceptance-20261024/trace.zip",
+      "sha256": "70c88c753edbe77333f9742a4e75bfa876436dcc0bf34269c235dcad260cf3bc",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "SETUP_LOG.md",
+      "sha256": "d01e4f3a9d53aeb8499b0ba788e47048af181c4143bcb36708a3972fbccb297f",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "UX_ISSUES.md",
+      "sha256": "b0c2b5626ef48b5ff17de5d586af6e3b56c00937165b9d46ff81648086ab2f06",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "work/demo-acceptance-20261024/browser_driver.py",
+      "sha256": "41c2461035aac668d95bc23a386736a8f43fc66a9fcb96cb15f9e82ce3f1be24",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "work/demo-acceptance-20261024/finalize_delivery.py",
+      "sha256": "cabbe81cf48cb9a395ae25b4c5c7cb0652c0663f31625a87c6c49ee047c6de80",
+      "matches_original_manifest": true
+    },
+    {
+      "path": "work/demo-acceptance-20261024/verify_capture.py",
+      "sha256": "7adfb72fdb00debc3d7807b5acaf4f91c6bc14b66f3673555bc60ccfcfd5063e",
+      "matches_original_manifest": true
+    }
+  ],
+  "all_match": true
+}

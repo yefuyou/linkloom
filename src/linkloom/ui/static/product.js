@@ -504,6 +504,22 @@
         escapeHtml, t, date: value => askDate(value, locale),
         citation: (item, index) => askEvidence(item, index, locale),
       });
+      // The task renderer remains presentation-only.  Local review is mounted
+      // as a narrow post-render extension so Host capabilities and source/CAS
+      // checks stay in the dedicated review module/API.
+      // The task answer language is resolved from the query locale.  Keep the
+      // review panel on that same locale rather than the app's display-state
+      // language, which may still be English while an answer is Chinese.
+      const reviewLanguage = locale;
+      window.mountTaskReview?.({
+        target, result, workspaceId: state.workspace?.workspace_id,
+        runId: result.agent_run_id, language: reviewLanguage,
+        invalidateResult: () => invalidateAsk(),
+        isCurrent: () => viewToken === state.agentViewToken
+          && state.workspace?.workspace_id === result.workspace_id
+          && askLocale(result.query) === reviewLanguage
+          && target.isConnected !== false,
+      });
       return;
     }
     if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {

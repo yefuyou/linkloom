@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="13" time="526.137" timestamp="2026-10-25T21:57:51.602807+08:00" hostname="beagle"><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[foreign_capability]" time="56.181" /><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[actor]" time="44.367" /><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[note]" time="99.328" /><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[step]" time="7.443"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb2/test_pending_recovery_preserve3')
+tamper = 'step'
+
+    @pytest.mark.parametrize("tamper", ["foreign_capability", "actor", "note", "step"])
+    def test_pending_recovery_preserves_capability_scope_and_exact_request(tmp_path, tamper):
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+&gt;               result, view = _run_review(base, workspace_id)
+
+tests\integration\test_task_review_recovery_binding.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_task_review_recovery.py:68: in _run_review
+    result = http_ask(base, workspace_id)
+tests\m3p_support.py:165: in http_ask
+    status, payload = _client(base, '/api/product/ask', method='POST',
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x0000013B487EDE40&gt;
+b = &lt;memory at 0x0000013B4831B280&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_task_review_recovery" name="test_empty_product_server_starts_without_review_or_relation_sidecars" time="2.789" /><testcase classname="tests.integration.test_task_review_recovery" name="test_memory_product_without_explicit_review_sidecar_is_not_writable" time="0.459" /><testcase classname="tests.integration.test_task_review_recovery" name="test_catalog_revoke_with_unchanged_content_redacts_review" time="20.700"><failure message="TimeoutError: timed out">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb2/test_catalog_revoke_with_uncha0')
+
+    def test_catalog_revoke_with_unchanged_content_redacts_review(tmp_path) -&gt; None:
+        (tmp_path / "work" / "investigations").mkdir(parents=True)
+        app, service = build_offline_task_demo(tmp_path / "offline.sqlite")
+        workspace_id = app._workspace_id()
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, _server):
+                assert service.task_relation_paths[workspace_id] == (tmp_path / "offline.sqlite").with_name(
+                    "offline.sqlite.relations.sqlite"
+                )
+&gt;               result, view = _run_review(base, workspace_id)
+
+tests\integration\test_task_review_recovery.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_task_review_recovery.py:68: in _run_review
+    result = http_ask(base, workspace_id)
+tests\m3p_support.py:173: in http_ask
+    status, payload = _client(base,
+tests\integration\test_product_application_flow.py:96: in _client
+    response = urlopen(request, timeout=3)
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+D:\Anaconda\Lib\http\client.py:292: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;socket.SocketIO object at 0x0000013B487EC940&gt;
+b = &lt;memory at 0x0000013B4831B880&gt;
+
+    def readinto(self, b):
+        """Read up to len(b) bytes into the writable buffer *b* and return
+        the number of bytes read.  If the socket is non-blocking and no bytes
+        are available, None is returned.
+    
+        If *b* is non-empty, a 0 return value indicates that the connection
+        was shutdown at the other end.
+        """
+        self._checkClosed()
+        self._checkReadable()
+        if self._timeout_occurred:
+            raise OSError("cannot read from timed out object")
+        try:
+&gt;           return self._sock.recv_into(b)
+E           TimeoutError: timed out
+
+D:\Anaconda\Lib\socket.py:719: TimeoutError</failure></testcase><testcase classname="tests.integration.test_task_review_recovery" name="test_continue_recovers_after_review_append_failure_without_duplicate_proof" time="138.483" /><testcase classname="tests.integration.test_task_review_recovery" name="test_new_run_projects_only_exact_related_review_history" time="69.973" /><testcase classname="tests.integration.test_task_review_commit_boundary" name="test_committed_audit_failure_remains_blocked_until_repaired" time="21.002"><failure message="http.client.RemoteDisconnected: Remote end closed connection without response">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb2/test_committed_audit_failure_r0')
+
+    def test_committed_audit_failure_remains_blocked_until_repaired(tmp_path):
+        (tmp_path / "work" / "investigations").mkdir(parents=True)
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        proof_path = tmp_path / "relations.sqlite"
+        assert not proof_path.exists()
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+                result, view = _run_review(base, workspace_id)
+                payload = _statement(workspace_id, result, view, action="CONTINUE", step_id="dates", note="Audit fault boundary.")
+                store = server.task_review._store
+                original_audit = store.audit
+                failure = {"enabled": True}
+    
+                def fail_committed_audit(value, *, phase, status, error_code=None, details=None):
+                    if failure["enabled"] and phase == "COMMITTED":
+                        raise RuntimeError("INJECTED_COMMITTED_AUDIT_FAILURE")
+                    return original_audit(value, phase=phase, status=status, error_code=error_code, details=details)
+    
+                store.audit = fail_committed_audit
+&gt;               code, first = _request(base, "/api/product/task-review", method="POST", data=payload)
+
+tests\integration\test_task_review_commit_boundary.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_task_review_recovery.py:37: in _request
+    with urlopen(request, timeout=60) as response:
+D:\Anaconda\Lib\urllib\request.py:189: in urlopen
+    return opener.open(url, data, timeout)
+D:\Anaconda\Lib\urllib\request.py:489: in open
+    response = self._open(req, data)
+D:\Anaconda\Lib\urllib\request.py:506: in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+D:\Anaconda\Lib\urllib\request.py:466: in _call_chain
+    result = func(*args)
+D:\Anaconda\Lib\urllib\request.py:1348: in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+D:\Anaconda\Lib\urllib\request.py:1323: in do_open
+    r = h.getresponse()
+D:\Anaconda\Lib\http\client.py:1430: in getresponse
+    response.begin()
+D:\Anaconda\Lib\http\client.py:331: in begin
+    version, status, reason = self._read_status()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;http.client.HTTPResponse object at 0x0000013B489CB850&gt;
+
+    def _read_status(self):
+        line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+        if len(line) &gt; _MAXLINE:
+            raise LineTooLong("status line")
+        if self.debuglevel &gt; 0:
+            print("reply:", repr(line))
+        if not line:
+            # Presumably, the server closed the connection before
+            # sending a valid response.
+&gt;           raise RemoteDisconnected("Remote end closed connection without"
+                                     " response")
+E           http.client.RemoteDisconnected: Remote end closed connection without response
+
+D:\Anaconda\Lib\http\client.py:300: RemoteDisconnected</failure></testcase><testcase classname="tests.integration.test_task_review_commit_boundary" name="test_external_retraction_during_capture_cannot_commit_review" time="32.989" /><testcase classname="tests.unit.test_task_review_cache_bounds" name="test_capability_capacity_and_expiry_discard_old_tokens" time="0.014" /><testcase classname="tests.unit.test_task_review_cache_bounds" name="test_run_snapshot_capacity_is_bounded_and_close_releases_memory" time="0.129" /></testsuite></testsuites>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="155.960" timestamp="2026-10-25T21:56:00.775110+08:00" hostname="beagle"><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[foreign_capability]" time="45.653"><failure message="AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': 'd756716905c2c7bbed6c8e49358566e041... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:56:46.107457+00:00', 'error_code': None, ...}, ...}&#10;assert (200 in {403, 409})">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb1/test_pending_recovery_preserve0')
+tamper = 'foreign_capability'
+
+    @pytest.mark.parametrize("tamper", ["foreign_capability", "actor", "note", "step"])
+    def test_pending_recovery_preserves_capability_scope_and_exact_request(tmp_path, tamper):
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+                result, view = _run_review(base, workspace_id)
+                payload = _statement(workspace_id, result, view, action="CONTINUE", step_id="dates", note="Exact pending request.")
+                review = server.task_review
+                original_append = review._store.append
+                failed = {"once": False}
+    
+                def fail_once(value):
+                    if not failed["once"]:
+                        failed["once"] = True
+                        raise RuntimeError("INTEGRATION_RECEIPT_FAILURE")
+                    return original_append(value)
+    
+                review._store.append = fail_once
+                code, pending = _request(base, "/api/product/task-review", method="POST", data=payload)
+                assert code == 409 and pending["receipt"] is None
+                counts = _proof_counts(tmp_path / "relations.sqlite")
+                altered = dict(payload)
+                if tamper == "foreign_capability":
+                    binding = review._issuer.binding(payload["capability"])
+                    altered["capability"] = review._issuer.issue(dict(binding, workspace_id="ws_foreign"))
+                elif tamper == "actor":
+                    altered["actor_label"] = "another-local-actor"
+                elif tamper == "note":
+                    altered["note"] = "A different statement cannot reuse this audit identity."
+                else:
+                    altered["step_id"] = "identity"
+                code, refused = _request(base, "/api/product/task-review", method="POST", data=altered)
+&gt;               assert code in {403, 409} and refused.get("status") != "COMMITTED", refused
+E               AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': 'd756716905c2c7bbed6c8e49358566e041... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:56:46.107457+00:00', 'error_code': None, ...}, ...}
+E               assert (200 in {403, 409})
+
+tests\integration\test_task_review_recovery_binding.py:42: AssertionError</failure></testcase><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[actor]" time="30.365"><failure message="AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': '128424b1eec507ca850bf28f501bc43692... 'actor_label': 'another-local-actor', 'created_at': '2026-10-25T13:57:20.164338+00:00', 'error_code': None, ...}, ...}&#10;assert (200 in {403, 409})">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb1/test_pending_recovery_preserve1')
+tamper = 'actor'
+
+    @pytest.mark.parametrize("tamper", ["foreign_capability", "actor", "note", "step"])
+    def test_pending_recovery_preserves_capability_scope_and_exact_request(tmp_path, tamper):
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+                result, view = _run_review(base, workspace_id)
+                payload = _statement(workspace_id, result, view, action="CONTINUE", step_id="dates", note="Exact pending request.")
+                review = server.task_review
+                original_append = review._store.append
+                failed = {"once": False}
+    
+                def fail_once(value):
+                    if not failed["once"]:
+                        failed["once"] = True
+                        raise RuntimeError("INTEGRATION_RECEIPT_FAILURE")
+                    return original_append(value)
+    
+                review._store.append = fail_once
+                code, pending = _request(base, "/api/product/task-review", method="POST", data=payload)
+                assert code == 409 and pending["receipt"] is None
+                counts = _proof_counts(tmp_path / "relations.sqlite")
+                altered = dict(payload)
+                if tamper == "foreign_capability":
+                    binding = review._issuer.binding(payload["capability"])
+                    altered["capability"] = review._issuer.issue(dict(binding, workspace_id="ws_foreign"))
+                elif tamper == "actor":
+                    altered["actor_label"] = "another-local-actor"
+                elif tamper == "note":
+                    altered["note"] = "A different statement cannot reuse this audit identity."
+                else:
+                    altered["step_id"] = "identity"
+                code, refused = _request(base, "/api/product/task-review", method="POST", data=altered)
+&gt;               assert code in {403, 409} and refused.get("status") != "COMMITTED", refused
+E               AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': '128424b1eec507ca850bf28f501bc43692... 'actor_label': 'another-local-actor', 'created_at': '2026-10-25T13:57:20.164338+00:00', 'error_code': None, ...}, ...}
+E               assert (200 in {403, 409})
+
+tests\integration\test_task_review_recovery_binding.py:42: AssertionError</failure></testcase><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[note]" time="27.240"><failure message="AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': '8bec441d1099b23a494145cd8138b9f5c5... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:57:45.512659+00:00', 'error_code': None, ...}, ...}&#10;assert (200 in {403, 409})">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb1/test_pending_recovery_preserve2')
+tamper = 'note'
+
+    @pytest.mark.parametrize("tamper", ["foreign_capability", "actor", "note", "step"])
+    def test_pending_recovery_preserves_capability_scope_and_exact_request(tmp_path, tamper):
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+                result, view = _run_review(base, workspace_id)
+                payload = _statement(workspace_id, result, view, action="CONTINUE", step_id="dates", note="Exact pending request.")
+                review = server.task_review
+                original_append = review._store.append
+                failed = {"once": False}
+    
+                def fail_once(value):
+                    if not failed["once"]:
+                        failed["once"] = True
+                        raise RuntimeError("INTEGRATION_RECEIPT_FAILURE")
+                    return original_append(value)
+    
+                review._store.append = fail_once
+                code, pending = _request(base, "/api/product/task-review", method="POST", data=payload)
+                assert code == 409 and pending["receipt"] is None
+                counts = _proof_counts(tmp_path / "relations.sqlite")
+                altered = dict(payload)
+                if tamper == "foreign_capability":
+                    binding = review._issuer.binding(payload["capability"])
+                    altered["capability"] = review._issuer.issue(dict(binding, workspace_id="ws_foreign"))
+                elif tamper == "actor":
+                    altered["actor_label"] = "another-local-actor"
+                elif tamper == "note":
+                    altered["note"] = "A different statement cannot reuse this audit identity."
+                else:
+                    altered["step_id"] = "identity"
+                code, refused = _request(base, "/api/product/task-review", method="POST", data=altered)
+&gt;               assert code in {403, 409} and refused.get("status") != "COMMITTED", refused
+E               AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': '8bec441d1099b23a494145cd8138b9f5c5... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:57:45.512659+00:00', 'error_code': None, ...}, ...}
+E               assert (200 in {403, 409})
+
+tests\integration\test_task_review_recovery_binding.py:42: AssertionError</failure></testcase><testcase classname="tests.integration.test_task_review_recovery_binding" name="test_pending_recovery_preserves_capability_scope_and_exact_request[step]" time="45.898"><failure message="AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': 'd9eae893cd168fd30f34280c69de7655ee... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:58:28.008788+00:00', 'error_code': None, ...}, ...}&#10;assert (200 in {403, 409})">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/irb1/test_pending_recovery_preserve3')
+tamper = 'step'
+
+    @pytest.mark.parametrize("tamper", ["foreign_capability", "actor", "note", "step"])
+    def test_pending_recovery_preserves_capability_scope_and_exact_request(tmp_path, tamper):
+        app, service, _stages, workspace_id, *_ = revision_product(tmp_path, records="none")
+        try:
+            with _review_http(app, service, sidecar_path=tmp_path / "review.sqlite") as (base, server):
+                result, view = _run_review(base, workspace_id)
+                payload = _statement(workspace_id, result, view, action="CONTINUE", step_id="dates", note="Exact pending request.")
+                review = server.task_review
+                original_append = review._store.append
+                failed = {"once": False}
+    
+                def fail_once(value):
+                    if not failed["once"]:
+                        failed["once"] = True
+                        raise RuntimeError("INTEGRATION_RECEIPT_FAILURE")
+                    return original_append(value)
+    
+                review._store.append = fail_once
+                code, pending = _request(base, "/api/product/task-review", method="POST", data=payload)
+                assert code == 409 and pending["receipt"] is None
+                counts = _proof_counts(tmp_path / "relations.sqlite")
+                altered = dict(payload)
+                if tamper == "foreign_capability":
+                    binding = review._issuer.binding(payload["capability"])
+                    altered["capability"] = review._issuer.issue(dict(binding, workspace_id="ws_foreign"))
+                elif tamper == "actor":
+                    altered["actor_label"] = "another-local-actor"
+                elif tamper == "note":
+                    altered["note"] = "A different statement cannot reuse this audit identity."
+                else:
+                    altered["step_id"] = "identity"
+                code, refused = _request(base, "/api/product/task-review", method="POST", data=altered)
+&gt;               assert code in {403, 409} and refused.get("status") != "COMMITTED", refused
+E               AssertionError: {'audit': {'details_hash': None, 'error_code': None, 'kind': 'audit', 'pair_hash': 'd9eae893cd168fd30f34280c69de7655ee... 'actor_label': 'local-recovery-test', 'created_at': '2026-10-25T13:58:28.008788+00:00', 'error_code': None, ...}, ...}
+E               assert (200 in {403, 409})
+
+tests\integration\test_task_review_recovery_binding.py:42: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="5.479" timestamp="2026-10-25T20:42:44.574718+08:00" hostname="beagle"><testcase classname="tests.unit.test_task_review_cache_bounds" name="test_capability_capacity_and_expiry_discard_old_tokens" time="0.017"><failure message="AttributeError: &lt;module 'linkloom.ui.task_review' from 'C:\\Users\\18019\\.codex\\worktrees\\task-relation-review-closure\\Linkloom\\src\\linkloom\\ui\\task_review.py'&gt; has no attribute '_MAX_REVIEW_CAPABILITIES'">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000011E55A4E9E0&gt;
+
+    def test_capability_capacity_and_expiry_discard_old_tokens(monkeypatch):
+        import time
+    
+        clock = {"now": 1000.0}
+        monkeypatch.setattr(time, "time", lambda: clock["now"])
+&gt;       monkeypatch.setattr(task_review, "_MAX_REVIEW_CAPABILITIES", 2)
+E       AttributeError: &lt;module 'linkloom.ui.task_review' from 'C:\\Users\\18019\\.codex\\worktrees\\task-relation-review-closure\\Linkloom\\src\\linkloom\\ui\\task_review.py'&gt; has no attribute '_MAX_REVIEW_CAPABILITIES'
+
+tests\unit\test_task_review_cache_bounds.py:13: AttributeError</failure></testcase><testcase classname="tests.unit.test_task_review_cache_bounds" name="test_run_snapshot_capacity_is_bounded_and_close_releases_memory" time="0.046"><failure message="AttributeError: &lt;module 'linkloom.ui.task_review' from 'C:\\Users\\18019\\.codex\\worktrees\\task-relation-review-closure\\Linkloom\\src\\linkloom\\ui\\task_review.py'&gt; has no attribute '_MAX_REVIEW_RUN_SNAPSHOTS'">tmp_path = WindowsPath('C:/Users/18019/.codex/worktrees/task-relation-review-closure/Linkloom/work/i1/test_run_snapshot_capacity_is_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000011E55A4EB10&gt;
+
+    def test_run_snapshot_capacity_is_bounded_and_close_releases_memory(tmp_path, monkeypatch):
+&gt;       monkeypatch.setattr(task_review, "_MAX_REVIEW_RUN_SNAPSHOTS", 2)
+E       AttributeError: &lt;module 'linkloom.ui.task_review' from 'C:\\Users\\18019\\.codex\\worktrees\\task-relation-review-closure\\Linkloom\\src\\linkloom\\ui\\task_review.py'&gt; has no attribute '_MAX_REVIEW_RUN_SNAPSHOTS'
+
+tests\unit\test_task_review_cache_bounds.py:29: AttributeError</failure></testcase></testsuite></testsuites>

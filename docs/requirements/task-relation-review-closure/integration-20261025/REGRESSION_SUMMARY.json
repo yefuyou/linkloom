@@ -1,0 +1,88 @@
+{
+  "suites": [
+    {
+      "file": "0-results.xml",
+      "tests": 5,
+      "failures": 0,
+      "seconds": 5.6930000000000005
+    },
+    {
+      "file": "1-results.xml",
+      "tests": 303,
+      "failures": 1,
+      "seconds": 854.425
+    },
+    {
+      "file": "2-results.xml",
+      "tests": 184,
+      "failures": 0,
+      "seconds": 64.292
+    },
+    {
+      "file": "3-results.xml",
+      "tests": 46,
+      "failures": 20,
+      "seconds": 78.533
+    },
+    {
+      "file": "4-results.xml",
+      "tests": 45,
+      "failures": 0,
+      "seconds": 4.361
+    },
+    {
+      "file": "5-results.xml",
+      "tests": 10,
+      "failures": 2,
+      "seconds": 6.507
+    },
+    {
+      "file": "6-results.xml",
+      "tests": 6,
+      "failures": 6,
+      "seconds": 9.554
+    },
+    {
+      "file": "7-results.xml",
+      "tests": 22,
+      "failures": 6,
+      "seconds": 14.331
+    },
+    {
+      "file": "8-results.xml",
+      "tests": 41,
+      "failures": 0,
+      "seconds": 85.317
+    },
+    {
+      "file": "9-results.xml",
+      "tests": 2,
+      "failures": 1,
+      "seconds": 7.029
+    },
+    {
+      "file": "10-results.xml",
+      "tests": 637,
+      "failures": 6,
+      "seconds": 259.172
+    },
+    {
+      "file": "11-results.xml",
+      "tests": 22,
+      "failures": 0,
+      "seconds": 53.686
+    }
+  ],
+  "unique_final_tests": 1325,
+  "all_unique_pass": true,
+  "remaining": [],
+  "protected_count": 287,
+  "protected_unchanged": true,
+  "recovery_binding_red": "4 rejected scenarios reproduced as unsafe 200 before fix",
+  "recovery_final": "10 passed plus 3 affected-case rerun passed; failures preserved",
+  "final_recovery_suite": {
+    "file": "final-recovery-suite.xml",
+    "tests": 17,
+    "failures": 0
+  }
+}

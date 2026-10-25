@@ -1,0 +1,69 @@
+[
+  {
+    "command": [
+      "node",
+      "--check",
+      "src/linkloom/ui/static/product.js"
+    ],
+    "status": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "src/linkloom/ui/static/product-task-result.js"
+    ],
+    "status": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "src/linkloom/ui/static/product-task-review.js"
+    ],
+    "status": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "node",
+      "tests/ui/task_review_dom_test.cjs"
+    ],
+    "status": 0,
+    "output": "PASS: task review renders bounded evidence, self-asserted local forms, history and safe invalidation\n"
+  },
+  {
+    "command": [
+      "node",
+      "tests/ui/task_answer_dom_test.cjs"
+    ],
+    "status": 0,
+    "output": "PASS: bounded answer, unknown/conflict/blocked, field isolation, P4 limits, citations and escaping\n"
+  },
+  {
+    "command": [
+      "node",
+      "tests/ui/unified_ask_dom_test.cjs"
+    ],
+    "status": 0,
+    "output": "PASS: revalidation hides previous fields, quotes and proposals while HTTP is pending, including language changes\nPASS: refresh retains only workspace-bound run pointer; reopening revalidates and hides revoked evidence\nPASS: scope/date/query invalidation, latest question wins, workspace response isolation\nPASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets\nPASS: feedback mutation blocks racing Ask, preserves query and resumes after save\nPASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored\n"
+  },
+  {
+    "command": [
+      "node",
+      "tests/ui/stale_revalidation_dom_test.cjs"
+    ],
+    "status": 0,
+    "output": "PASS: stale comparison, separate approval, escaped evidence, resolved copy, workspace race isolation\n"
+  },
+  {
+    "command": [
+      "node",
+      "tests/ui/first_use_dom_test.cjs"
+    ],
+    "status": 0,
+    "output": "PASS: provider-aware import, saved-vs-failed status, relation guidance/escaping, blocked approval, reviewer-bound rejection, source navigation, subject/time review\n"
+  }
+]
