@@ -20,64 +20,22 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
 
 ## 看看实际产品
 
-按[60～90 秒演示指南](docs/V1_DEMO.md)体验完整流程。以下截图使用合成会议资料与离线响应。
-<table>
-  <tr><th>1 · 导入来源</th><th>2 · 审核候选</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources：导入会议与版本化证据片段" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review：候选的带日期原文与单独批准操作" width="560"></a></td>
-  </tr>
-  <tr><th>3 · 查看决策历史</th><th>4 · 带着证据提问</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory：当前批准与保留的历史审核记录" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask：Wrenwell 当前决定、生效日期、前序决定与来源原文" width="560"></a></td>
-  </tr>
-  <tr><th>5 · 发现证据过期</th><th>调查任务记录</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="任务调查：来源变化后隐藏旧证据" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="任务原文记录与待确认的模型关系建议" width="560"></a></td>
-  </tr>
-</table>
+[80 秒演示视频](docs/launch/assets/linkloom-walkthrough.mp4) · [逐步体验](docs/V1_DEMO.md)
 
-还可以查看[替代决定的批准界面](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)和
-[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png)。
+![合成资料与离线响应的浏览器截图剪辑，非连续操作录像](docs/launch/assets/linkloom-walkthrough.gif)
 
-## 现在能做什么
+三张产品截图：[审核候选](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png) ·
+[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png) ·
+[任务记录与证据](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-zh.png)。
+视频前半复用 V1 画面；截图为 #25 更新后的界面。演示均使用合成资料与离线响应。
 
-| 能力 | 使用方式 |
-|---|---|
-| 导入与提取 | 将带时间戳的文本存为不可变来源版本，保留精确证据片段；语义提取需明确启用 Gemini。 |
-| 审核决定 | 查看、批准或拒绝候选；批准与落库保存授权记录。提案只作支持材料。 |
-| 回溯决策历史 | 在按工作区隔离的 SQLite 中查询当前或指定日期状态、生效时间、前序决定、证据与授权收据；有证据时记录行动和负责人。 |
-| 统一提问 | 已审核状态走确定性查询；原因与冲突问题走明确启用的时序调查 Agent。 |
-| 调查来源关系 | 支持“项目 → 负责人 → 直属领导”和“别名 → 项目 → 负责人 → 直属领导”的有界 search/read 计划；不支持的问法要求澄清。 |
-| 跨会议任务调查 | 对照不同会议的任务记录，查看负责人、日期证据、待确认的 AI 关系建议与后续核查事项。可使用离线演示，或显式配置调查并逐次授权来源。 |
-| 保留部分调查结果 | 展示已核验的关系，以及回答其余问题还需补充的具体证据。 |
-| 跟踪来源变化 | 更新或移除来源后，重新核查证据，将受影响的决策放入审核列表；可对照新来源单独复核。 |
+## 三个核心能力
 
-## 如何协作
+- **追溯决定**：找回当前或指定日期有效的决定、生效时间和替代历史。
+- **审核与复核**：候选先经人工审核；原文证据变化后复核相关决定。
+- **带着证据调查**：对照来源记录、字段与原文，明确展示待确认关系和资料缺口。
 
-```mermaid
-flowchart TD
-    S["来源文档"] --> V["版本化来源 + 精确证据"]
-    V --> I["语义摄取 · LLM 提取"]
-    I --> C["候选 · 尚非已批准事实"]
-    C --> H["人工审核 + 授权"]
-    H --> M["时序决策记忆"]
-    U["用户提问"] --> A["Unified Ask · 有界路由"]
-    M --> D["当前 / 指定日期查询 · Python"]
-    A --> D
-    A --> R["只读 Agent 调查"]
-    V --> R
-    M -. "时序调查中读取已审核状态" .-> R
-    R --> G["证据校验 + 确定性 Reviewer"]
-    D --> O["回答 + 证据 + 不确定性"]
-    G --> O
-```
-
-[产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)展开已审核事实、来源调查与
-证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
-区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
+跨会议任务演示保留每条记录的负责人和日期证据；模型关系建议仍待确认，不代表已经批准延期或变更负责人。
 
 ## Quickstart
 
@@ -86,11 +44,23 @@ flowchart TD
 ```bash
 git clone https://github.com/yefuyou/linkloom.git
 cd linkloom
-python -m venv .venv
 ```
 
-macOS/Linux 使用 `source .venv/bin/activate` 激活环境；PowerShell 使用
-`.\.venv\Scripts\Activate.ps1`。然后执行：
+macOS/Linux 创建并激活环境：
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+PowerShell 创建并激活环境：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+激活后执行：
 
 ```bash
 python -m pip install -e .
@@ -102,15 +72,19 @@ Decision Memory 和 Ask。**启动不需要密钥。** 新数据库还没有已�
 Agent 调查默认关闭。上面的数据库路径将演示数据留在当前检出目录；省略
 `--database` 时默认使用 `~/.linkloom/product.sqlite`。
 
-无需密钥的跨会议任务演示：
+无需密钥的跨会议任务演示（使用独立数据库）：
 
 ```bash
 python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
 ```
 
-在「提问」中选择「当前空间记录中的任务」，询问不同会议是否描述同一任务。
-结果展示逐条来源、提取的负责人和日期、关系建议与待确认事项。「离线演示」标记
-表示使用预设响应，不调用外部 AI。任务关系需单独批准，当前任务视图用于调查与证据核查。
+先停止占用同一端口的服务。在 Ask 选择 **Tasks across the current workspace records**，输入：
+“Do these meetings describe the same task, and what changed about its deadline?”。
+查看两条记录并展开 **Field evidence and original message**。离线预设响应不调用外部模型；
+第二条 deadline 字段保持未确认，模型建议不授予正式业务批准。
+
+可选的本地任务核验需显式启用 `--allow-local-task-review`，仅限 localhost。
+它保存用户自声明的核验回执，不认证人员身份，也不代表正式业务批准；关系和日期结论仍须独立来源证据复核。
 
 真实 AI 任务调查的配置与逐次授权见
 [配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
@@ -141,6 +115,30 @@ Ask 中逐次授权。产品启动器固定所配置的模型，界面内没有 
 无需密钥的**旧版回放**位于 [legacy Ask](http://127.0.0.1:8765/legacy-ask)，
 它不执行当前的来源摄取和审核流程。
 
+## 如何协作
+
+```mermaid
+flowchart TD
+    S["来源文档"] --> V["版本化来源 + 精确证据"]
+    V --> I["语义摄取 · LLM 提取"]
+    I --> C["候选 · 尚非已批准事实"]
+    C --> H["人工审核 + 授权"]
+    H --> M["时序决策记忆"]
+    U["用户提问"] --> A["Unified Ask · 有界路由"]
+    M --> D["当前 / 指定日期查询 · Python"]
+    A --> D
+    A --> R["只读 Agent 调查"]
+    V --> R
+    M -. "时序调查中读取已审核状态" .-> R
+    R --> G["证据校验 + 确定性 Reviewer"]
+    D --> O["回答 + 证据 + 不确定性"]
+    G --> O
+```
+
+[产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)展开已审核事实、来源调查与
+证据过期处理。[Runtime 技术架构图](docs/architecture/RUNTIME_ARCHITECTURE.md)
+区分真正调用 LLM 的部分和执行确定性 Python 合约的组件。
+
 ## 值得看的工程设计
 
 - **时间与授权都进入数据模型。** 决策有效期、替代关系、证据和授权收据共同持久化；
@@ -170,6 +168,8 @@ AI 提取与调查需明确启用，会将来源文本发送给已配置的外�
 验证方法与已记录结果见[评测参考](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)。
 
 ## 开发者入口
+
+[贡献指南](CONTRIBUTING.md) · [报告问题或反馈](https://github.com/yefuyou/linkloom/issues/new)
 
 先看[源码阅读导航](docs/README.md)，再看
 [产品架构图](docs/architecture/PRODUCT_ARCHITECTURE.md)和
