@@ -22,66 +22,22 @@ Questions about reasons or conflicting sources can take the investigation path.
 
 ## See the product
 
-Follow the [60–90 second walkthrough](docs/V1_DEMO.md). The screenshots below
-show synthetic meeting data with offline responses.
-<table>
-  <tr><th>1 · Import sources</th><th>2 · Review candidates</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources: imported meeting with versioned evidence spans" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review: candidate with its dated quote and separate approval controls" width="560"></a></td>
-  </tr>
-  <tr><th>3 · Follow decision history</th><th>4 · Ask with evidence</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory: current approval and retained historical review records" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask: current Wrenwell decision with effective date, predecessor and source passage" width="560"></a></td>
-  </tr>
-  <tr><th>5 · Notice stale evidence</th><th>Investigate task records</th></tr>
-  <tr>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="Task investigation: old evidence hidden after its source changes" width="560"></a></td>
-    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="Task records and unconfirmed model relationship suggestions" width="560"></a></td>
-  </tr>
-</table>
+[Watch the 80-second video](docs/launch/assets/linkloom-walkthrough.mp4) · [Step-by-step walkthrough](docs/V1_DEMO.md)
 
-Also inspect the [replacement approval](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)
-and [decision history](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png).
+![Edited browser captures with synthetic data and offline responses, not a continuous recording](docs/launch/assets/linkloom-walkthrough.gif)
 
-## What you can do today
+Three product views: [review candidates](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png) ·
+[decision history](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png) ·
+[task records and evidence](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png).
+The video reuses V1 views; the linked screenshots show the updated interface. All use synthetic data and offline responses.
 
-| Capability | What it does |
-|---|---|
-| Import and extract | Store timestamped text as immutable source versions with exact evidence spans. Semantic extraction requires explicit Gemini opt-in. |
-| Review decisions | Inspect, approve or reject candidates; approval and materialization record authorization. Proposals remain supporting-only. |
-| Recover decision history | Query current or as-of state, effective dates, predecessors, evidence and receipts in workspace-scoped SQLite. Records can include actions and owners when supported. |
-| Ask in one place | Reviewed-state questions use deterministic lookup. Reasons and conflicts use an explicitly enabled temporal investigation Agent. |
-| Investigate source relations | Supported project → owner → direct-leader and alias → project → owner → direct-leader question forms use bounded search/read plans. Unsupported forms request clarification. |
-| Inspect cross-meeting tasks | Compare task records across meetings, inspect owner/date evidence and review unconfirmed AI relationship suggestions. Use the offline demo or explicitly configure task investigation with per-question source permission. |
-| Keep verified partial results | See verified relationships alongside the specific evidence still needed to answer the rest of your question. |
-| Track source changes | Explicit product source updates/deletions reconcile evidence and surface affected current materialized decisions in Review Attention. No automatic filesystem watcher. |
+## Three core capabilities
 
-## How it works
+- **Follow decisions:** recover current or as-of decisions, effective dates and supersession history.
+- **Review and revalidate:** approve candidates explicitly and revisit decisions when source evidence changes.
+- **Investigate with evidence:** compare source records, extracted fields and original passages, with unconfirmed relationships and gaps made visible.
 
-```mermaid
-flowchart TD
-    S["Source documents"] --> V["Versioned sources + exact evidence"]
-    V --> I["Semantic ingestion · LLM extraction"]
-    I --> C["Candidates · not approved facts"]
-    C --> H["Human review + authorization"]
-    H --> M["Temporal Decision Memory"]
-    U["User question"] --> A["Unified Ask · bounded routing"]
-    M --> D["Current / as-of lookup · Python"]
-    A --> D
-    A --> R["Read-only Agent investigation"]
-    V --> R
-    M -. "reviewed lookup in temporal runs" .-> R
-    R --> G["Grounding + deterministic Reviewer"]
-    D --> O["Answer + evidence + uncertainty"]
-    G --> O
-```
-
-The [product architecture](docs/architecture/PRODUCT_ARCHITECTURE.md) separates
-reviewed truth, source investigation and stale-evidence handling. The
-[runtime architecture](docs/architecture/RUNTIME_ARCHITECTURE.md) shows which
-components call an LLM and which enforce deterministic Python contracts.
+The task demo preserves per-record owner/date evidence. A model relationship suggestion does not approve a deadline or owner change.
 
 ## Quickstart
 
@@ -90,11 +46,23 @@ Requires **Python 3.11+**. From a terminal:
 ```bash
 git clone https://github.com/yefuyou/linkloom.git
 cd linkloom
-python -m venv .venv
 ```
 
-Activate with `source .venv/bin/activate` on macOS/Linux, or
-`.\.venv\Scripts\Activate.ps1` in PowerShell. Then:
+On macOS/Linux, create and activate the environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+In PowerShell, create and activate it with:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+After activation:
 
 ```bash
 python -m pip install -e .
@@ -114,12 +82,14 @@ mode with a dedicated local database:
 python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
 ```
 
-In Ask, choose **Tasks across the current workspace records** and ask whether
-the meetings describe the same task. Results show each source record, extracted
+Stop any server using the same port first. In Ask, choose **Tasks across the current workspace records** and ask:
+**Do these meetings describe the same task, and what changed about its deadline?** Results show each source record, extracted
 owner/date fields, relationship suggestions and unresolved checks. The **Offline
 demo** label identifies preset responses; this mode makes no external AI calls.
-Task relationships require separate approval. The current task view supports
-investigation and evidence review.
+Optional local task review requires the explicit `--allow-local-task-review` flag
+on localhost. It records self-asserted human checks, not authenticated reviewer
+identities or formal business approvals. Relation and date conclusions still
+require independently revalidated source evidence.
 
 For configurable task investigation, see the
 [setup and authorization contract](docs/requirements/m3-q-real-task-investigation/SPEC.md).
@@ -152,6 +122,31 @@ provider costs; investigation also requires per-request permission in Ask.
 The product launcher pins its configured model and has no provider settings UI.
 For a key-free **older replay**, open [legacy Ask](http://127.0.0.1:8765/legacy-ask);
 it does not run the current source ingestion/review workflow.
+
+## How it works
+
+```mermaid
+flowchart TD
+    S["Source documents"] --> V["Versioned sources + exact evidence"]
+    V --> I["Semantic ingestion · LLM extraction"]
+    I --> C["Candidates · not approved facts"]
+    C --> H["Human review + authorization"]
+    H --> M["Temporal Decision Memory"]
+    U["User question"] --> A["Unified Ask · bounded routing"]
+    M --> D["Current / as-of lookup · Python"]
+    A --> D
+    A --> R["Read-only Agent investigation"]
+    V --> R
+    M -. "reviewed lookup in temporal runs" .-> R
+    R --> G["Grounding + deterministic Reviewer"]
+    D --> O["Answer + evidence + uncertainty"]
+    G --> O
+```
+
+The [product architecture](docs/architecture/PRODUCT_ARCHITECTURE.md) separates
+reviewed truth, source investigation and stale-evidence handling. The
+[runtime architecture](docs/architecture/RUNTIME_ARCHITECTURE.md) shows which
+components call an LLM and which enforce deterministic Python contracts.
 
 ## Engineering worth looking at
 
@@ -195,6 +190,8 @@ state; keep the server running while investigating. See the
 for recorded validation protocols and results.
 
 ## For developers
+
+[Contributing](CONTRIBUTING.md) · [Report a problem or feedback](https://github.com/yefuyou/linkloom/issues/new)
 
 Start with the [source reading map](docs/README.md), then the
 [product architecture](docs/architecture/PRODUCT_ARCHITECTURE.md) and
