@@ -1,0 +1,962 @@
+{
+  "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+  "counting_unit": "Unique baseline rendering location or closely related bilingual copy group. Translation wrappers and iterative edits are not separate findings.",
+  "issues": [
+    {
+      "id": "C01",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 67,
+      "original": "<p class=\"eyebrow\">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p class=\"lede\">${escapeHtml(description)}</p>",
+      "category": "C",
+      "action": "合并",
+      "problem": "页头固定三层，操作区域被下推。",
+      "result": "heading 只输出标题与可选操作；必要状态在具体操作处保留。",
+      "semantic": false
+    },
+    {
+      "id": "C02",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 143,
+      "original": "Bring the project record together",
+      "category": "C",
+      "action": "改写",
+      "problem": "Sources 下再次使用营销标题。",
+      "result": "直接使用 Sources / 来源。",
+      "semantic": false
+    },
+    {
+      "id": "C03",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 142,
+      "original": "Source text is kept as an immutable version; this does not edit files in your workspace.",
+      "category": "C",
+      "action": "改写",
+      "problem": "空状态混入存储实现说明。",
+      "result": "给出导入会议或决策记录的下一步。",
+      "semantic": false
+    },
+    {
+      "id": "C04",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 145,
+      "original": "LinkLoom will show INGESTING, then the candidate and review counts.",
+      "category": "D",
+      "action": "删除",
+      "problem": "输入说明叙述内部运行状态。",
+      "result": "保留一行一消息的时间戳格式。",
+      "semantic": false
+    },
+    {
+      "id": "C05",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "original": "Source saving is available; semantic extraction is not.",
+      "category": "C",
+      "action": "合并",
+      "problem": "全局状态、说明和错误框重复解释未配置提取。",
+      "result": "操作处说明本地保存与提取开关；配置放入展开区域。",
+      "semantic": true
+    },
+    {
+      "id": "C06",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 147,
+      "original": "Files are read in this browser and submitted to the local LinkLoom server.",
+      "category": "D",
+      "action": "改写",
+      "problem": "实现路径挤占文件输入提示。",
+      "result": "显示可接受格式与实际 256 KB 上限。",
+      "semantic": false
+    },
+    {
+      "id": "C07",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 150,
+      "original": "Save source for later extraction",
+      "category": "C",
+      "action": "改写",
+      "problem": "按钮过长。",
+      "result": "Save source / 保存来源；提取状态在旁边说明。",
+      "semantic": true
+    },
+    {
+      "id": "C08",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 139,
+      "original": "${source.segment_summary.total} segments · ${source.segment_summary.processed} processed · ${source.segment_summary.failed} extraction failed",
+      "category": "D",
+      "action": "移动",
+      "problem": "列表卡片中出现完整处理指标。",
+      "result": "列表保留失败数量；来源详情保留处理信息。",
+      "semantic": true
+    },
+    {
+      "id": "C09",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 139,
+      "original": "Version <strong>${escapeHtml(source.source_version.slice(0, 18))}…</strong>",
+      "category": "D",
+      "action": "移动",
+      "problem": "截断版本标识不帮助选择来源。",
+      "result": "版本与哈希保留在来源详情。",
+      "semantic": false
+    },
+    {
+      "id": "C10",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 159,
+      "original": "Current version ${source.source_version}. Source changes create a new version; prior evidence remains available.",
+      "category": "D",
+      "action": "移动",
+      "problem": "版本哈希占据页头说明。",
+      "result": "标题只用来源名称，版本信息放入详情。",
+      "semantic": false
+    },
+    {
+      "id": "C11",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "original": "Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)",
+      "category": "D",
+      "action": "移动",
+      "problem": "每个处理片段和次数直接展开。",
+      "result": "折叠到处理详情，失败与重试入口仍可见。",
+      "semantic": true
+    },
+    {
+      "id": "C12",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 162,
+      "original": "Submitting changed text creates a new immutable source version and runs reconciliation.",
+      "category": "D",
+      "action": "改写",
+      "problem": "更新提示使用内部术语。",
+      "result": "说明保存新版本与重新核查受影响决策；外发和费用提示直接保留。",
+      "semantic": true
+    },
+    {
+      "id": "C13",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 198,
+      "original": "Decide what becomes authoritative",
+      "category": "C",
+      "action": "改写",
+      "problem": "审核标题抽象且与导航重复。",
+      "result": "Review / 审核；候选类型和审核状态用明确标签。",
+      "semantic": true
+    },
+    {
+      "id": "C14",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 192,
+      "original": "New source-grounded decisions will appear here when the materialization policy requires human authorization.",
+      "category": "D",
+      "action": "改写",
+      "problem": "空状态展示落库策略。",
+      "result": "导入来源后审核提取的候选。",
+      "semantic": false
+    },
+    {
+      "id": "C15",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 192,
+      "original": "${escapeHtml(candidate.review_reasons.join(\" · \") || \"Human review required\")}",
+      "category": "D",
+      "action": "改写",
+      "problem": "审核原因直接展示内部枚举。",
+      "result": "映射为关系、对象、日期或冲突的明确审核事项。",
+      "semantic": true
+    },
+    {
+      "id": "C16",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "original": "Canonical relation cannot be corrected in this review form.",
+      "category": "E",
+      "action": "合并",
+      "problem": "同一阻断在四段中重复解释。",
+      "result": "明确“关系待确认，暂无法批准”，保留重提取和拒绝路径。",
+      "semantic": true
+    },
+    {
+      "id": "C17",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 218,
+      "original": "Effective time never defaults to today.",
+      "category": "C",
+      "action": "合并",
+      "problem": "连续否定说明字段处理规则。",
+      "result": "根据原文补充对象和生效时间，不确定字段留空；校验不变。",
+      "semantic": true
+    },
+    {
+      "id": "C18",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 230,
+      "original": "Approve and materialize",
+      "category": "D",
+      "action": "改写",
+      "problem": "用户按钮使用落库术语。",
+      "result": "Approve and save / 批准并保存。",
+      "semantic": true
+    },
+    {
+      "id": "C19",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 196,
+      "original": "Supporting evidence only. This proposal is not approved and is not part of Decision Memory.",
+      "category": "C",
+      "action": "合并",
+      "problem": "同一未批准状态反复说明。",
+      "result": "未批准，作为参考材料保留；保留 Supporting proposal 徽标。",
+      "semantic": true
+    },
+    {
+      "id": "C20",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 251,
+      "original": "Compare the original approval with current sources. A new candidate needs a separate explicit human approval.",
+      "category": "C",
+      "action": "移动",
+      "problem": "复核页头再次重复批准规则。",
+      "result": "单独批准要求保留在候选审核操作处。",
+      "semantic": true
+    },
+    {
+      "id": "C21",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 264,
+      "original": "What the team has decided",
+      "category": "C",
+      "action": "改写",
+      "problem": "决策记忆页再次堆叠用途说明。",
+      "result": "Decision Memory / 决策记忆，直接展示记录。",
+      "semantic": false
+    },
+    {
+      "id": "C22",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 284,
+      "original": "${badge(item.status)}${badge(item.memory_state)}",
+      "category": "C",
+      "action": "合并",
+      "problem": "历史同一记录并列两个相近状态。",
+      "result": "显示当前生命周期徽标；原始两个状态保留在批准记录详情。",
+      "semantic": true
+    },
+    {
+      "id": "C23",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 281,
+      "original": "· Evidence ${escapeHtml(item.evidence_ref || \"Unavailable\")}",
+      "category": "D",
+      "action": "移动",
+      "problem": "版本与完整证据 ID 混入主要来源正文。",
+      "result": "主要区保留来源名、行号和引文；完整引用可展开。",
+      "semantic": false
+    },
+    {
+      "id": "C24",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 286,
+      "original": "Review receipt: ${escapeHtml(item.authorization?.receipt_id || \"Unavailable\")}",
+      "category": "D",
+      "action": "移动",
+      "problem": "时间线主要区展示长授权 ID。",
+      "result": "保留时间与历史，批准记录承载完整 ID。",
+      "semantic": true
+    },
+    {
+      "id": "C25",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 295,
+      "original": "Historical validity uses currently recorded review decisions; this is not a snapshot of what was known at that time.",
+      "category": "E",
+      "action": "改写",
+      "problem": "以否定句重复解释历史查询。",
+      "result": "历史日期查询依据目前保存的审核记录。",
+      "semantic": true
+    },
+    {
+      "id": "C26",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 367,
+      "original": "<p class=\"eyebrow\">Ask</p>",
+      "category": "C",
+      "action": "合并",
+      "problem": "Ask 页头堆叠眉题、大标题和标语。",
+      "result": "单一 Ask / 提问标题与语言控件。",
+      "semantic": false
+    },
+    {
+      "id": "C27",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 376,
+      "original": "Automatic shortcuts / ask me to clarify",
+      "category": "D",
+      "action": "改写",
+      "problem": "领域选择暴露路由实现。",
+      "result": "Automatic / 自动选择。",
+      "semantic": false
+    },
+    {
+      "id": "C28",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 379,
+      "original": "Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.",
+      "category": "C",
+      "action": "合并",
+      "problem": "输入处提前重复结果免责。",
+      "result": "选择领域以缩小范围；来源变更后刷新。",
+      "semantic": true
+    },
+    {
+      "id": "C29",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 380,
+      "original": "Task stages configured. Relationship proposals require independent confirmation.",
+      "category": "D",
+      "action": "改写",
+      "problem": "阶段配置状态被写成普通操作说明。",
+      "result": "任务调查就绪，仅在任务领域显示相关配置状态。",
+      "semantic": true
+    },
+    {
+      "id": "C30",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 381,
+      "original": "--allow-external-provider --allow-task-investigation --task-max-requests 16",
+      "category": "D",
+      "action": "移动",
+      "problem": "启动参数直接铺在所有问题的表单中。",
+      "result": "配置指令放入配置详情。",
+      "semantic": false
+    },
+    {
+      "id": "C31",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 382,
+      "original": "input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens",
+      "category": "D",
+      "action": "移动",
+      "problem": "细粒度 Token 预算占据主界面。",
+      "result": "Token 详情折叠；费用、请求数和时限仍直接可见。",
+      "semantic": true
+    },
+    {
+      "id": "C32",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 383,
+      "original": "Only the current snapshot, for this question. Does not approve business relationships.",
+      "category": "C",
+      "action": "改写",
+      "problem": "来源授权区混入重复业务批准说明。",
+      "result": "准确说明本次问题和来源版本授权范围。",
+      "semantic": true
+    },
+    {
+      "id": "C33",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 397,
+      "original": "Your reviewer ID (local human assertion)",
+      "category": "D",
+      "action": "改写",
+      "problem": "用户输入标签出现内部身份术语。",
+      "result": "Reviewer name (local record) / 审核人姓名（本地记录）。",
+      "semantic": true
+    },
+    {
+      "id": "C34",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 529,
+      "original": "The answer is not verified yet.",
+      "category": "C",
+      "action": "删除",
+      "problem": "调查中状态又重复解释尚未完成。",
+      "result": "保留正在调查标题和动态进度。",
+      "semantic": true
+    },
+    {
+      "id": "C35",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 515,
+      "original": "The Provider outcome is uncertain. No automatic retry or verified conclusion was released.",
+      "category": "E",
+      "action": "改写",
+      "problem": "失败说明使用 Provider，连续解释不做什么。",
+      "result": "AI 服务响应状态不明，请检查运行详情后再决定重试；自动重试已停止。",
+      "semantic": true
+    },
+    {
+      "id": "C36",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 591,
+      "original": "Terminology is not business evidence.",
+      "category": "C",
+      "action": "删除",
+      "problem": "使用术语的记录反复附带无行动价值声明。",
+      "result": "术语授权边界已在纠正操作处保留。",
+      "semantic": true
+    },
+    {
+      "id": "C37",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 622,
+      "original": "The relationship is supported by verified source reads and checked by Reviewer.",
+      "category": "D",
+      "action": "改写",
+      "problem": "关系答案直接展示 Reviewer。",
+      "result": "来源证据支持该关系；审核原始记录可展开。",
+      "semantic": true
+    },
+    {
+      "id": "C38",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 624,
+      "original": "${result.metrics?.model_turns || 0} ${t(\"model turns\", \"轮模型交互\")}",
+      "category": "D",
+      "action": "移动",
+      "problem": "模型轮次与业务关系并列突出。",
+      "result": "轮次保留在调查详情 metrics 中。",
+      "semantic": false
+    },
+    {
+      "id": "C39",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 61,
+      "original": "Source records found; the formal task state remains unconfirmed",
+      "category": "C",
+      "action": "合并",
+      "problem": "结论前后四段重复解释待确认。",
+      "result": "先显示实际记录数，再用一行区分部分结果、任务待确认和离线演示。",
+      "semantic": true
+    },
+    {
+      "id": "C40",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 62,
+      "original": "Records are kept separate. Source statements and model interpretations do not establish the current owner or effective plan.",
+      "category": "C",
+      "action": "删除",
+      "problem": "主结果又用长句重复状态。",
+      "result": "逐记录卡片保留字段与原文，未确认状态集中显示。",
+      "semantic": true
+    },
+    {
+      "id": "C41",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 64,
+      "original": "Checked citations do not verify the interpretation. Full proposals and evidence are expandable below.",
+      "category": "C",
+      "action": "删除",
+      "problem": "模型摘要重复解释引用与判断。",
+      "result": "模型建议标题明确待确认；引用核验状态在提案详情。",
+      "semantic": true
+    },
+    {
+      "id": "C42",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 37,
+      "original": "Model support cannot replace that evidence.",
+      "category": "D",
+      "action": "改写",
+      "problem": "阻断理由采用辩解式句型。",
+      "result": "指出缺少当前关系证据，并引导核对任务分配原文。",
+      "semantic": true
+    },
+    {
+      "id": "C43",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 33,
+      "original": "Unknown does not mean refuted.",
+      "category": "C",
+      "action": "改写",
+      "problem": "未知状态用逻辑解释代替用户结果。",
+      "result": "现有证据尚无法确定任务关系；未知仍区别于否定。",
+      "semantic": true
+    },
+    {
+      "id": "C44",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 67,
+      "original": "Model-reported gap:",
+      "category": "C",
+      "action": "移动",
+      "problem": "模型缺口与主区待确认事项重复出现。",
+      "result": "完整缺口与正反证集中保留在关系提案详情。",
+      "semantic": true
+    },
+    {
+      "id": "C45",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 73,
+      "original": "Fields are shown per message. Field interpretations still need review; nothing is inherited from another record.",
+      "category": "C",
+      "action": "合并",
+      "problem": "卡片前解释多条实现规则。",
+      "result": "提取字段，请逐条核对原文；字段隔离与来源引用保持。",
+      "semantic": true
+    },
+    {
+      "id": "C46",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 82,
+      "original": "t('Not established:', '尚未确定：')",
+      "category": "C",
+      "action": "删除",
+      "problem": "缺失字段列表重复每个字段的待确认值。",
+      "result": "每字段待确认值保留，技术详情仍列全部未知字段。",
+      "semantic": true
+    },
+    {
+      "id": "C47",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 97,
+      "original": "Citations checked; interpretation and business approval remain unconfirmed.",
+      "category": "C",
+      "action": "合并",
+      "problem": "每项提案重复业务批准解释。",
+      "result": "引用已核验，判断待复核；关系批准边界在详情统一说明。",
+      "semantic": true
+    },
+    {
+      "id": "C48",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 107,
+      "original": "Offline scripted or recorded adapters; real-model understanding was not evaluated.",
+      "category": "D",
+      "action": "改写",
+      "problem": "离线身份被写成实验能力声明。",
+      "result": "主状态标明离线演示，详情说明预设或回放响应。",
+      "semantic": true
+    },
+    {
+      "id": "C49",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 105,
+      "original": "${(view.next_actions || []).map(a => `<p>${esc(nextAction(a))}</p>`).join('')}",
+      "category": "B",
+      "action": "移动",
+      "problem": "用户下一步埋在技术调查详情中。",
+      "result": "下一步置于来源卡片之后、技术详情之前；保留全部不同操作。",
+      "semantic": true
+    },
+    {
+      "id": "C50",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 226,
+      "original": "<p class=\"eyebrow\">${escapeHtml(t(\"initial.eyebrow\"))}</p>",
+      "category": "C",
+      "action": "删除",
+      "problem": "旧版初始页眉题重复标题。",
+      "result": "移除装饰眉题。",
+      "semantic": false
+    },
+    {
+      "id": "C51",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 229,
+      "original": "<div class=\"value-order\"",
+      "category": "C",
+      "action": "删除",
+      "problem": "初始页额外展示三段答案结构。",
+      "result": "保留主标题、简介和输入。",
+      "semantic": false
+    },
+    {
+      "id": "C52",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 236,
+      "original": "<p class=\"query-label\">${escapeHtml(t(\"query.kicker\"))}</p>",
+      "category": "C",
+      "action": "删除",
+      "problem": "表单标题前重复提问标签。",
+      "result": "保留具体输入说明。",
+      "semantic": false
+    },
+    {
+      "id": "C53",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 343,
+      "original": "<p class=\"eyebrow\">${escapeHtml(t(\"running.eyebrow\"))}</p>",
+      "category": "C",
+      "action": "删除",
+      "problem": "进度标题前重复进度名称。",
+      "result": "保留读取进度与来源。",
+      "semantic": false
+    },
+    {
+      "id": "C54",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 698,
+      "original": "<p class=\"eyebrow\">${escapeHtml(t(\"error.kicker\"))}</p>",
+      "category": "C",
+      "action": "删除",
+      "problem": "错误页重复强调失败与证据无关。",
+      "result": "保留失败标题、重试和技术详情。",
+      "semantic": true
+    },
+    {
+      "id": "C55",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 743,
+      "original": "<p class=\"eyebrow\">${escapeHtml(t(\"empty.kicker\"))}</p>",
+      "category": "C",
+      "action": "删除",
+      "problem": "空状态眉题重复没有记录。",
+      "result": "保留空状态标题和行动。",
+      "semantic": false
+    },
+    {
+      "id": "C56",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 47,
+      "original": "Reading the project record, not guessing the answer.",
+      "category": "D",
+      "action": "改写",
+      "problem": "旧版进度标题采用对比式自我说明。",
+      "result": "Reading project records / 正在查阅项目记录。",
+      "semantic": false
+    },
+    {
+      "id": "C57",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 68,
+      "original": "Partial decision · Confirmed record",
+      "category": "E",
+      "action": "改写",
+      "problem": "部分结果可能被读成正式决策确认。",
+      "result": "Partial result · sourced record / 部分结果 · 来源记录。",
+      "semantic": true
+    },
+    {
+      "id": "C58",
+      "file": "README.md",
+      "baseline_line": 180,
+      "original": "## Current status and limits",
+      "category": "D",
+      "action": "合并",
+      "problem": "产品介绍混入过时基线和多段工程验收限制。",
+      "result": "用 Data and review 解释当前使用方式、权限和存储；验证协议链接到开发资料。",
+      "semantic": true
+    },
+    {
+      "id": "C59",
+      "file": "README.zh-CN.md",
+      "baseline_line": 158,
+      "original": "专门的过期重审界面尚未实现",
+      "category": "D",
+      "action": "改写",
+      "problem": "当前说明仍称已有复核功能尚未实现。",
+      "result": "按实际已存在的对照、候选和单独批准流程介绍。",
+      "semantic": true
+    },
+    {
+      "id": "C60",
+      "file": "docs/V1_DEMO.md",
+      "baseline_line": 42,
+      "original": "Approve and materialize",
+      "category": "D",
+      "action": "改写",
+      "problem": "演示按钮与产品术语不一致。",
+      "result": "与批准并保存、已处理、来源已变化等产品标签一致。",
+      "semantic": true
+    }
+  ],
+  "states": [
+    {
+      "id": "S01",
+      "page": "Workspace",
+      "state": "新建/无工作区",
+      "anchor": "showNoWorkspace",
+      "verification": "browser"
+    },
+    {
+      "id": "S02",
+      "page": "Workspace",
+      "state": "切换工作区与隔离",
+      "anchor": "workspacePicker change",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S03",
+      "page": "Workspace",
+      "state": "创建/详情表单切换语言",
+      "anchor": "interface-language change",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S04",
+      "page": "Sources",
+      "state": "来源列表",
+      "anchor": "loadSources",
+      "verification": "browser"
+    },
+    {
+      "id": "S05",
+      "page": "Sources",
+      "state": "初始空状态",
+      "anchor": "loadSources",
+      "verification": "browser"
+    },
+    {
+      "id": "S06",
+      "page": "Sources",
+      "state": "已启用提取与外发提示",
+      "anchor": "loadSources providerReady",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S07",
+      "page": "Sources",
+      "state": "本地保存/提取未启用",
+      "anchor": "loadSources/inspectSource",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S08",
+      "page": "Sources",
+      "state": "处理与失败/重试",
+      "anchor": "inspectSource/pollSource",
+      "verification": "code/HTTP"
+    },
+    {
+      "id": "S09",
+      "page": "Sources",
+      "state": "原文与版本详情",
+      "anchor": "inspectSource",
+      "verification": "browser"
+    },
+    {
+      "id": "S10",
+      "page": "Sources",
+      "state": "更新或移除",
+      "anchor": "source-update/delete-source",
+      "verification": "HTTP/browser"
+    },
+    {
+      "id": "S11",
+      "page": "Review",
+      "state": "候选队列/空队列",
+      "anchor": "loadReview",
+      "verification": "browser"
+    },
+    {
+      "id": "S12",
+      "page": "Review",
+      "state": "参考提案",
+      "anchor": "loadReview proposalItems",
+      "verification": "DOM/code"
+    },
+    {
+      "id": "S13",
+      "page": "Review",
+      "state": "关系未确认阻断批准",
+      "anchor": "inspectCandidate relationGuidance",
+      "verification": "DOM"
+    },
+    {
+      "id": "S14",
+      "page": "Review",
+      "state": "对象和生效日期补充",
+      "anchor": "inspectCandidate resolutionFields",
+      "verification": "DOM"
+    },
+    {
+      "id": "S15",
+      "page": "Review",
+      "state": "来源变化需复核",
+      "anchor": "loadReview attentionCards",
+      "verification": "browser"
+    },
+    {
+      "id": "S16",
+      "page": "Review",
+      "state": "原批准与新来源对照",
+      "anchor": "inspectRevalidation",
+      "verification": "browser"
+    },
+    {
+      "id": "S17",
+      "page": "Review",
+      "state": "新候选单独批准/保留待处理",
+      "anchor": "inspectCandidate/inspectRevalidation",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S18",
+      "page": "Review",
+      "state": "复核完成/只读",
+      "anchor": "inspectRevalidation",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S19",
+      "page": "Decision Memory",
+      "state": "列表与空状态",
+      "anchor": "loadDecisions",
+      "verification": "browser"
+    },
+    {
+      "id": "S20",
+      "page": "Decision Memory",
+      "state": "当前/历史日期",
+      "anchor": "inspectDecision",
+      "verification": "HTTP/browser"
+    },
+    {
+      "id": "S21",
+      "page": "Decision Memory",
+      "state": "时间线/替代/提案/批准详情",
+      "anchor": "inspectDecision",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S22",
+      "page": "Ask",
+      "state": "输入/领域/语言/高级选项",
+      "anchor": "showAsk",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S23",
+      "page": "Ask",
+      "state": "术语候选与授权",
+      "anchor": "loadFeedback/changeFeedback",
+      "verification": "DOM"
+    },
+    {
+      "id": "S24",
+      "page": "Ask",
+      "state": "正在调查",
+      "anchor": "renderAskResult INVESTIGATING",
+      "verification": "DOM/code"
+    },
+    {
+      "id": "S25",
+      "page": "Ask",
+      "state": "已审核答案",
+      "anchor": "renderAskResult COMPLETED",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S26",
+      "page": "Ask",
+      "state": "原因证据不足",
+      "anchor": "renderAskResult reasonUnknown",
+      "verification": "DOM"
+    },
+    {
+      "id": "S27",
+      "page": "Ask",
+      "state": "歧义/日期澄清/无匹配",
+      "anchor": "renderAskResult admissionMessages",
+      "verification": "DOM/HTTP"
+    },
+    {
+      "id": "S28",
+      "page": "Ask",
+      "state": "来源或工作区变化",
+      "anchor": "renderAskResult admissionMessages",
+      "verification": "DOM/HTTP"
+    },
+    {
+      "id": "S29",
+      "page": "Ask",
+      "state": "外发权限与费用上限",
+      "anchor": "showAsk/permission BLOCKED",
+      "verification": "DOM/code"
+    },
+    {
+      "id": "S30",
+      "page": "Ask",
+      "state": "服务响应不确定/失败",
+      "anchor": "renderAskResult/showAskError",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S31",
+      "page": "Ask",
+      "state": "来源关系完成/部分/冲突",
+      "anchor": "renderSourceInvestigation",
+      "verification": "DOM/HTTP"
+    },
+    {
+      "id": "S32",
+      "page": "Task Investigation",
+      "state": "部分记录与模型支持建议",
+      "anchor": "renderTaskAnswer",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S33",
+      "page": "Task Investigation",
+      "state": "无记录/资料不足",
+      "anchor": "renderTaskAnswer UNKNOWN",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S34",
+      "page": "Task Investigation",
+      "state": "模型否定/冲突/未知",
+      "anchor": "proposalState",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S35",
+      "page": "Task Investigation",
+      "state": "前置关系阻断",
+      "anchor": "reason/open steps",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S36",
+      "page": "Task Investigation",
+      "state": "日期比较与当前生效性",
+      "anchor": "comparisons/currentness",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S37",
+      "page": "Task Investigation",
+      "state": "来源更新/撤权与保存结果重核验",
+      "anchor": "renderAskResult BLOCKED",
+      "verification": "DOM/HTTP/browser"
+    },
+    {
+      "id": "S38",
+      "page": "Task Investigation",
+      "state": "离线演示/运行详情",
+      "anchor": "renderTaskAnswer prep.execution_kind",
+      "verification": "DOM/browser"
+    },
+    {
+      "id": "S39",
+      "page": "Legacy Ask",
+      "state": "初始输入",
+      "anchor": "renderInitial",
+      "verification": "browser"
+    },
+    {
+      "id": "S40",
+      "page": "Legacy Ask",
+      "state": "读取进度",
+      "anchor": "renderRunning",
+      "verification": "code"
+    },
+    {
+      "id": "S41",
+      "page": "Legacy Ask",
+      "state": "答案/部分/证据不足",
+      "anchor": "renderResult",
+      "verification": "unit/browser"
+    },
+    {
+      "id": "S42",
+      "page": "Legacy Ask",
+      "state": "空状态/错误/来源核验",
+      "anchor": "renderEmpty/renderError/inspectorHtml",
+      "verification": "unit/browser"
+    }
+  ]
+}

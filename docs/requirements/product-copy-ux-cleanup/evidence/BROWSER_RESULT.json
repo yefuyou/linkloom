@@ -1,0 +1,750 @@
+{
+  "synthetic": true,
+  "external_provider_calls": 0,
+  "browser": "153.0.8010.0",
+  "steps": [
+    {
+      "name": "01-sources-en",
+      "description": "Sources list and local import setup",
+      "screenshot": "01-sources-en.png",
+      "status": "PASS"
+    },
+    {
+      "name": "02-sources-zh",
+      "description": "Chinese source labels and unchanged source names",
+      "screenshot": "02-sources-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "03-workspace-form",
+      "description": "Language changes preserve the open workspace form and user text",
+      "screenshot": "03-workspace-form.png",
+      "status": "PASS"
+    },
+    {
+      "name": "04-task-partial-zh",
+      "description": "Task answer, state, source records and unresolved checks",
+      "screenshot": "04-task-partial-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "05-field-evidence",
+      "description": "Expanded exact quote, field roles and source version",
+      "screenshot": "05-field-evidence.png",
+      "status": "PASS"
+    },
+    {
+      "name": "06-task-partial-en",
+      "description": "English task result with unapproved model suggestions",
+      "screenshot": "06-task-partial-en.png",
+      "status": "PASS"
+    },
+    {
+      "name": "07-task-mobile-zh",
+      "description": "390px task result and source cards",
+      "screenshot": "07-task-mobile-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "08-original-source",
+      "description": "Open source and switch interface language without returning to candidate view",
+      "screenshot": "08-original-source.png",
+      "status": "PASS"
+    },
+    {
+      "name": "09-stale-blocked",
+      "description": "Reopening updated-source results hides old evidence",
+      "screenshot": "09-stale-blocked.png",
+      "status": "PASS"
+    },
+    {
+      "name": "10-workspace-isolation",
+      "description": "New workspace has no previous task pointer or evidence",
+      "screenshot": "10-workspace-isolation.png",
+      "status": "PASS"
+    },
+    {
+      "name": "04-task-unknown-zh",
+      "description": "Task answer, state, source records and unresolved checks",
+      "screenshot": "04-task-unknown-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "04-task-conflict-zh",
+      "description": "Task answer, state, source records and unresolved checks",
+      "screenshot": "04-task-conflict-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "04-task-model-conflict-zh",
+      "description": "Task answer, state, source records and unresolved checks",
+      "screenshot": "04-task-model-conflict-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "04-task-p4-zh",
+      "description": "Task answer, state, source records and unresolved checks",
+      "screenshot": "04-task-p4-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "11-review-attention",
+      "description": "Pending candidates and immediate source-changed warning",
+      "screenshot": "11-review-attention.png",
+      "status": "PASS"
+    },
+    {
+      "name": "12-source-comparison",
+      "description": "Original approval, current source and separate new candidate",
+      "screenshot": "12-source-comparison.png",
+      "status": "PASS"
+    },
+    {
+      "name": "13-review-zh",
+      "description": "Chinese review and explicit approval of the new candidate",
+      "screenshot": "13-review-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "14-decision-history-zh",
+      "description": "Approved result, dated history and retained original approval",
+      "screenshot": "14-decision-history-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "14-historical-language",
+      "description": "Language switch preserves the queried historical date and result scope",
+      "screenshot": "14-historical-language.png",
+      "status": "PASS"
+    },
+    {
+      "name": "15-ask-reviewed",
+      "description": "Reviewed supplier lookup with evidence",
+      "screenshot": "15-ask-reviewed.png",
+      "status": "PASS"
+    },
+    {
+      "name": "16-ask-mobile",
+      "description": "390px reviewed answer and composer",
+      "screenshot": "16-ask-mobile.png",
+      "status": "PASS"
+    },
+    {
+      "name": "17-review-complete-zh",
+      "description": "No stale decision remains after separate approval",
+      "screenshot": "17-review-complete-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "18-empty-workspace",
+      "description": "Fresh application requests a workspace",
+      "screenshot": "18-empty-workspace.png",
+      "status": "PASS"
+    },
+    {
+      "name": "19-empty-sources-zh",
+      "description": "Chinese source empty state and save-only import",
+      "screenshot": "19-empty-sources-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "20-empty-review-zh",
+      "description": "Empty review queue, supporting proposals and attention state",
+      "screenshot": "20-empty-review-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "21-empty-decisions-zh",
+      "description": "Empty Decision Memory has a clear next step",
+      "screenshot": "21-empty-decisions-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "21-empty-investigation",
+      "description": "Empty-source investigation gives an actionable prerequisite",
+      "screenshot": "21-empty-investigation.png",
+      "status": "PASS"
+    },
+    {
+      "name": "22-saved-source-zh",
+      "description": "Source saves locally while extraction remains unavailable",
+      "screenshot": "22-saved-source-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "22-task-unavailable",
+      "description": "Immediate unavailable reason with setup instructions expandable",
+      "screenshot": "22-task-unavailable.png",
+      "status": "PASS"
+    },
+    {
+      "name": "23-legacy-start-zh",
+      "description": "Legacy replay uses a single heading and concise input guidance",
+      "screenshot": "23-legacy-start-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "24-legacy-answer-zh",
+      "description": "Legacy offline replay result and source inspector",
+      "screenshot": "24-legacy-answer-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "25-legacy-mobile-zh",
+      "description": "Legacy replay mobile layout",
+      "screenshot": "25-legacy-mobile-zh.png",
+      "status": "PASS"
+    },
+    {
+      "name": "26-network-error",
+      "description": "Operational failure remains separate from insufficient evidence",
+      "screenshot": "26-network-error.png",
+      "status": "PASS"
+    }
+  ],
+  "console_errors": [],
+  "http": [
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 202
+    },
+    {
+      "path": "/api/product/ask/runs/ui-c859cc334b8d",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-c859cc334b8d",
+      "status": 200
+    },
+    {
+      "path": "/api/sources/src_87a7d1c608f3482b96f04b0228cbcf2c",
+      "status": 200
+    },
+    {
+      "path": "/api/sources/src_87a7d1c608f3482b96f04b0228cbcf2c",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-c859cc334b8d",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-c859cc334b8d",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 201
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 202
+    },
+    {
+      "path": "/api/product/ask/runs/ui-3eae574641b9",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-3eae574641b9",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 202
+    },
+    {
+      "path": "/api/product/ask/runs/ui-01fd694c01fc",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-01fd694c01fc",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 202
+    },
+    {
+      "path": "/api/product/ask/runs/ui-fdeb2239d426",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-fdeb2239d426",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 202
+    },
+    {
+      "path": "/api/product/ask/runs/ui-4c8c361013eb",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-4c8c361013eb",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-4c8c361013eb",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/runs/ui-4c8c361013eb",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/attention",
+      "status": 200
+    },
+    {
+      "path": "/api/review/revalidation/decision_semantic_v1_cb9e67b2724b47d243d841e3430050e2ab09d9f737e345d4a87a94dbaf04ef37",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates/candidate_v1_c89377d36a207ecb48129f2631b18c054b7d87f0f1f40e7ccc69f6f38a8fe22b",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates/candidate_v1_c89377d36a207ecb48129f2631b18c054b7d87f0f1f40e7ccc69f6f38a8fe22b",
+      "status": 200
+    },
+    {
+      "path": "/api/review/revalidation/decision_semantic_v1_cb9e67b2724b47d243d841e3430050e2ab09d9f737e345d4a87a94dbaf04ef37/approve",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/attention",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771/history",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/recover",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771/history",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/recover",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771/history",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/recover",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/decision_semantic_v1_739ede666f137daa1693ba10fc5b5b960a5dc9ce1a7092f89a62c8c537681771/history",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions/recover",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/attention",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/attention",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 409
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 201
+    },
+    {
+      "path": "/api/workspaces/current",
+      "status": 200
+    },
+    {
+      "path": "/api/workspaces",
+      "status": 200
+    },
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/review/candidates",
+      "status": 200
+    },
+    {
+      "path": "/api/review/attention",
+      "status": 200
+    },
+    {
+      "path": "/api/decisions",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 409
+    },
+    {
+      "path": "/api/sources",
+      "status": 200
+    },
+    {
+      "path": "/api/sources/import",
+      "status": 202
+    },
+    {
+      "path": "/api/sources/src_6139eefcb212436cb5b5e1b1d0936954",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask/config",
+      "status": 200
+    },
+    {
+      "path": "/api/product/feedback",
+      "status": 200
+    },
+    {
+      "path": "/api/product/ask",
+      "status": 200
+    },
+    {
+      "path": "/api/context",
+      "status": 200
+    },
+    {
+      "path": "/api/runs",
+      "status": 202
+    },
+    {
+      "path": "/api/runs/demo-daccd16c8244",
+      "status": 200
+    },
+    {
+      "path": "/api/runs/demo-daccd16c8244",
+      "status": 200
+    },
+    {
+      "path": "/api/runs/demo-daccd16c8244",
+      "status": 200
+    }
+  ],
+  "status": "PASS",
+  "retained_screenshots": {
+    "01-sources-en.png": "after-sources-en.png",
+    "02-sources-zh.png": "after-sources-zh.png",
+    "04-task-partial-zh.png": "after-task-zh.png",
+    "06-task-partial-en.png": "after-task-en.png",
+    "07-task-mobile-zh.png": "after-task-mobile-zh.png",
+    "09-stale-blocked.png": "after-blocked-zh.png",
+    "13-review-zh.png": "after-review-zh.png",
+    "14-decision-history-zh.png": "after-decisions-zh.png",
+    "15-ask-reviewed.png": "after-ask-en.png",
+    "04-task-unknown-zh.png": "after-unknown-zh.png"
+  },
+  "other_screenshots": "Reproduce with tests/ui/product_copy_browser.cjs; only key screenshots are checked in."
+}

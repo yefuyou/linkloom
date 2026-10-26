@@ -1,0 +1,10 @@
+{
+  "command": [
+    "D:\\Anaconda\\python.exe",
+    "scripts/run_m3p_offline_acceptance.py",
+    "--output",
+    "C:\\Users\\18019\\AppData\\Local\\Temp\\ll26-http-e097ef2l\\run"
+  ],
+  "exit": 0,
+  "output": "C:\\Users\\18019\\AppData\\Local\\Temp\\ll26-http-e097ef2l\\run"
+}

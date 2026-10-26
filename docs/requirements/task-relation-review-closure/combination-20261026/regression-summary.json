@@ -1,0 +1,17 @@
+{
+  "unique_cases": 1329,
+  "passed": 1329,
+  "failed": 0,
+  "skipped": 0,
+  "initial_failures": [
+    "tests/integration/test_m3p_product_review.py::test_http_hot_and_new_process_hide_invalidated_results[update]: unchanged timeout=3; isolated retry PASS"
+  ],
+  "environment_failures": [
+    "offline entry long Windows path artifact_write_failed; identical short system-temp retry PASS"
+  ],
+  "dom_suites": 6,
+  "javascript_syntax_checks": 3,
+  "review_suite": 30,
+  "frozen_ledger": 5,
+  "source_currentness": 7
+}

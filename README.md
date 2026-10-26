@@ -6,8 +6,7 @@
 
 LinkLoom is a local-first team knowledge assistant for evolving meeting notes and
 Markdown sources. It combines human-reviewed decision history with a bounded,
-read-only investigation Agent, so finding a relevant passage is the start of
-an answer, not the whole answer.
+read-only investigation Agent, to connect answers with their source evidence, effective dates and review history.
 
 ## From a meeting trail to an answer
 
@@ -23,42 +22,40 @@ Questions about reasons or conflicting sources can take the investigation path.
 
 ## See the product
 
-These existing browser captures use a synthetic meeting and a **deterministic
-fake provider**. They show the product UI, not new live-model results. Follow the
-[60–90 second walkthrough](docs/V1_DEMO.md) with the checked-in fixture.
-
+Follow the [60–90 second walkthrough](docs/V1_DEMO.md). The screenshots below
+show synthetic meeting data with offline responses.
 <table>
   <tr><th>1 · Import sources</th><th>2 · Review candidates</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/01-sources.png"><img src="docs/assets/v1/01-sources.png" alt="Sources: imported meeting with versioned evidence spans" width="560"></a></td>
-    <td><a href="docs/assets/v1/02-review.png"><img src="docs/assets/v1/02-review.png" alt="Review: Birchline candidate with its dated quote and approval controls" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-sources-en.png" alt="Sources: imported meeting with versioned evidence spans" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png" alt="Review: candidate with its dated quote and separate approval controls" width="560"></a></td>
   </tr>
   <tr><th>3 · Follow decision history</th><th>4 · Ask with evidence</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/03-decision-memory.png"><img src="docs/assets/v1/03-decision-memory.png" alt="Decision Memory: Wrenwell replaces Birchline on a dated timeline" width="560"></a></td>
-    <td><a href="docs/assets/v1/04-ask.png"><img src="docs/assets/v1/04-ask.png" alt="Ask: current Wrenwell decision with effective date, predecessor and source passage" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png" alt="Decision Memory: current approval and retained historical review records" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-ask-en.png" alt="Ask: current Wrenwell decision with effective date, predecessor and source passage" width="560"></a></td>
   </tr>
-  <tr><th>5 · Notice stale evidence</th><th>Proposals stay supporting-only</th></tr>
+  <tr><th>5 · Notice stale evidence</th><th>Investigate task records</th></tr>
   <tr>
-    <td><a href="docs/assets/v1/05-review-attention-stale.png"><img src="docs/assets/v1/05-review-attention-stale.png" alt="Review Attention: Wrenwell marked STALE after its source changes" width="560"></a></td>
-    <td><a href="docs/assets/v1/02-proposal-safety.png"><img src="docs/assets/v1/02-proposal-safety.png" alt="Kestrel Ledger proposal is supporting evidence, not an approved decision" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-blocked-zh.png" alt="Task investigation: old evidence hidden after its source changes" width="560"></a></td>
+    <td><a href="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png"><img src="docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-en.png" alt="Task records and unconfirmed model relationship suggestions" width="560"></a></td>
   </tr>
 </table>
 
-Also inspect the [replacement approval](docs/assets/v1/02-review-replacement.png)
-and [historical answer](docs/assets/v1/04-ask-as-of.png).
+Also inspect the [replacement approval](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png)
+and [decision history](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png).
 
 ## What you can do today
 
-| Capability | Current behavior on master |
+| Capability | What it does |
 |---|---|
 | Import and extract | Store timestamped text as immutable source versions with exact evidence spans. Semantic extraction requires explicit Gemini opt-in. |
 | Review decisions | Inspect, approve or reject candidates; approval and materialization record authorization. Proposals remain supporting-only. |
 | Recover decision history | Query current or as-of state, effective dates, predecessors, evidence and receipts in workspace-scoped SQLite. Records can include actions and owners when supported. |
 | Ask in one place | Reviewed-state questions use deterministic lookup. Reasons and conflicts use an explicitly enabled temporal investigation Agent. |
 | Investigate source relations | Supported project → owner → direct-leader and alias → project → owner → direct-leader question forms use bounded search/read plans. Unsupported forms request clarification. |
-| Inspect cross-meeting tasks | Explicit offline task demo shows independent task observations, source evidence, model proposals and blocked prerequisites. Normal startup reports task stages unavailable. Existing valid P4 proofs can be read by trusted Host composition; no task approval UI is added. |
-| Keep verified partial results | Source-relation investigation can retain cited upstream facts and name missing hops when the requested final relation cannot be established. Grounding and Reviewer still gate the result. |
+| Inspect cross-meeting tasks | Compare task records across meetings, inspect owner/date evidence and review unconfirmed AI relationship suggestions. Use the offline demo or explicitly configure task investigation with per-question source permission. |
+| Keep verified partial results | See verified relationships alongside the specific evidence still needed to answer the rest of your question. |
 | Track source changes | Explicit product source updates/deletions reconcile evidence and surface affected current materialized decisions in Review Attention. No automatic filesystem watcher. |
 
 ## How it works
@@ -117,16 +114,15 @@ mode with a dedicated local database:
 python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-task-demo
 ```
 
-In Ask, select task investigation and ask whether the two meetings describe the
-same task and which owner/deadline can be established. The banner identifies
-deterministic FakeModel stages. The second raw date is retained while its
-uncertain deadline role stays UNKNOWN; model SAME_TASK proposals do not unlock
-revision work. This mode makes no external Provider call and cannot be combined
-with external-provider flags. It is a product wiring demonstration, not real-model
-semantic acceptance. Normal task-stage Provider configuration and authenticated
-task relationship approval remain unavailable. See [the integration boundary](docs/requirements/m3-p-task-investigation/SPEC.md)
-and [dependency/failure audit](docs/requirements/m3-p-task-investigation/DEPENDENCIES.md).
+In Ask, choose **Tasks across the current workspace records** and ask whether
+the meetings describe the same task. Results show each source record, extracted
+owner/date fields, relationship suggestions and unresolved checks. The **Offline
+demo** label identifies preset responses; this mode makes no external AI calls.
+Task relationships require separate approval. The current task view supports
+investigation and evidence review.
 
+For configurable task investigation, see the
+[setup and authorization contract](docs/requirements/m3-q-real-task-investigation/SPEC.md).
 For the complete source → review → answer workflow, install the provider extra
 and set `GEMINI_API_KEY` in your environment:
 
@@ -177,36 +173,26 @@ it does not run the current source ingestion/review workflow.
   evidence inventory with materialized provenance; it can mark records STALE
   or NEEDS_REVALIDATION without silently promoting a replacement candidate.
 
-## Current status and limits
+## Data and review
 
-Implementation baseline: master `95a125ce4d1b2867102217e1d0430044fbf4f739`,
-including the merged bounded Recovery integration.
+Sources, decision history and review records are stored locally in a workspace.
+Source changes flag affected decisions for review. Revalidation compares the
+original approval with current evidence and records a separate approval for a
+new candidate.
 
-The local product implements Sources, Review, Temporal Decision Memory and
-Unified Ask. The checked-in release evidence covers a synthetic workflow,
-including a historical Gemini acceptance run; it does **not** establish general
-extraction accuracy, held-out retrieval performance or production readiness.
-See the [evidence matrix](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)
-for protocols and caveats.
+AI extraction and investigation send source text to the configured external
+provider only when enabled and may incur model costs. Ask requires permission
+for each external investigation. Direct reviewed-record lookup runs locally.
 
-Routing, relation planning and grounding support bounded question/claim forms.
-Investigation is read-only and cannot approve decisions. Source updates are
-user-triggered; current materialized stale decisions have an attention view, with dedicated stale
-revalidation UI deferred. Runtime checkpoint/resume exists, but product
-investigation jobs use temporary, process-local state; cross-process UI recovery
-remains unsupported.
+Task suggestions remain unconfirmed until separately approved. Partial results
+show the facts found and the remaining questions. Source conflicts, unavailable
+access and uncertain AI service responses have distinct states. Original
+Markdown/Obsidian files stay unchanged.
 
-A **PARTIAL** source-relation answer retains only independently verified, cited
-facts and explicit gaps; its missing final answer stays null. It is not an
-approved business decision. Permission/identity violations and repeated tool errors
-stop the run; reaching the model/provider run limit before a valid Final remains
-a failure. Provider-outcome uncertainty is reported separately. Recovery does not turn failed execution into
-a partial success or automatically retry it.
-
-This is a local application, not a deployed multi-user service. Imported copies
-and decision state live locally; opted-in provider calls leave the machine.
-Original Markdown/Obsidian files are not rewritten by this product flow.
-Real-vault writeback remains outside the current product boundary.
+The current application runs locally. Investigation sessions use process-local
+state; keep the server running while investigating. See the
+[evidence and evaluation reference](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)
+for recorded validation protocols and results.
 
 ## For developers
 

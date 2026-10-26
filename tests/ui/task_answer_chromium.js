@@ -12,11 +12,11 @@ async page => {
   const result = page.locator('#ask-result');
   const text = await result.innerText();
   const config = await (await page.request.get(base + '/api/product/ask/config')).json();
-  const kind = text.includes('模型报告证据冲突') ? 'model-conflict'
+  const kind = text.includes('模型判断：证据冲突') ? 'model-conflict'
     : config.investigation_context.source_count === 3 ? 'conflict-gap'
     : text.includes('资料不足') ? 'unknown'
     : text.includes('日历日差值') ? 'p4-comparison' : 'partial';
-  check(text.includes('正式业务状态： 尚未确认'), 'Formal status must remain unconfirmed');
+  check(text.includes('任务状态：待确认'), 'Formal status must remain unconfirmed');
   check(!text.includes('SUPPORTED') && !text.includes('EVIDENCE_VALID'), 'Technical codes leaked into collapsed view');
   check(!/已确认延期|已批准/.test(text), 'False business approval');
   check(await page.locator('.task-investigation-details').getAttribute('open') === null, 'Details should start collapsed');
@@ -24,17 +24,17 @@ async page => {
   await result.evaluate(el => el.scrollIntoView({block: 'start'}));
   await page.screenshot({path: `output/playwright/after-${kind}-desktop.png`});
   if (kind === 'partial') {
-    check(text.includes('模型倾向支持，尚未确认'), 'Supported model proposal needs an unconfirmed label');
+    check(text.includes('模型建议：支持'), 'Supported model proposal needs an unconfirmed label');
     const cards = page.locator('[data-task-observation]');
     check(await cards.count() === 2, 'Expected both source records');
-    check((await cards.nth(1).innerText()).includes('尚未确定'), 'Unresolved date must remain unknown');
+    check((await cards.nth(1).innerText()).includes('待确认'), 'Unresolved date must remain unknown');
     await cards.first().locator('.ask-source-details summary').click();
     check((await cards.first().innerText()).includes('TASK_DEADLINE'), 'Exact field role unavailable');
     await cards.first().scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/playwright/after-field-evidence.png'});
     await cards.first().locator('.ask-source-details summary').click();
     await page.locator('#ask-language').selectOption('en');
-    check((await result.innerText()).includes('Unconfirmed. This investigation does not grant approval.'), 'English labels missing');
+    check((await result.innerText()).includes('Task status: unconfirmed'), 'English labels missing');
     await page.locator('#ask-language').selectOption('zh');
     await page.setViewportSize({width: 390, height: 844});
     await result.evaluate(el => el.scrollIntoView({block: 'start'}));
@@ -42,13 +42,17 @@ async page => {
     await page.screenshot({path: 'output/playwright/after-mobile.png'});
     await page.setViewportSize({width: 1440, height: 1000});
   } else if (kind === 'unknown') {
-    check(text.includes('不能据此断言任务不存在'), 'Unknown incorrectly establishes absence');
+    check(text.includes('暂未找到可核验的任务记录'), 'Unknown incorrectly establishes absence');
   } else if (kind === 'model-conflict') {
-    check(text.includes('模型报告证据冲突') && text.includes('日期变动与未批准调整的原文需要独立复核'), 'Model conflict attribution was lost');
+    check(text.includes('模型判断：证据冲突'), 'Model conflict attribution was lost');
+    await page.locator('.task-investigation-details > summary').click();
+    check((await result.innerText()).includes('日期变动与未批准调整的原文需要独立复核'), 'Model evidence gap was lost');
   } else if (kind === 'conflict-gap') {
-    check(text.includes('模型无法判断') && text.includes('日期存在冲突'), 'Existing UNKNOWN conflict gap was lost');
+    check(text.includes('模型判断：待确认'), 'Existing UNKNOWN model attribution was lost');
+    await page.locator('.task-investigation-details > summary').click();
+    check((await result.innerText()).includes('日期存在冲突'), 'Existing UNKNOWN conflict gap was lost');
   } else {
-    check(text.includes('日历日差值') && text.includes('不能确认当前正式生效的计划'), 'P4 comparison currentness lost');
+    check(text.includes('日历日差值') && text.includes('当前生效计划：待确认'), 'P4 comparison currentness lost');
   }
   return {kind, visibleText: text, sourceRecords: await page.locator('[data-task-observation]').count()};
 }

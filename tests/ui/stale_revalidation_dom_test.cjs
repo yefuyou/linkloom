@@ -72,5 +72,20 @@ async function setup() {
   await racing.element("workspace-picker").listeners.change();
   racing.resolve(); await inspection;
   assert.doesNotMatch(racing.element("page").innerHTML, /Original: Birchline|New approval for a stale decision/);
+  const localeRace = await setup();
+  await localeRace.click("revalidate-decision", "old");
+  await localeRace.click("revalidate-candidate", "new");
+  localeRace.element("reviewer-id").value = "OLD_WORKSPACE_REVIEWER";
+  localeRace.element("page").querySelectorAll = () => [{id: "reviewer-id", value: "OLD_WORKSPACE_REVIEWER"}];
+  localeRace.defer();
+  const languageChange = localeRace.element("interface-language").listeners.change({target: {value: "zh"}});
+  await tick();
+  localeRace.element("workspace-picker").value = "b";
+  await localeRace.element("workspace-picker").listeners.change();
+  localeRace.element("reviewer-id").value = "NEW_WORKSPACE_VALUE";
+  localeRace.resolve(); await languageChange;
+  assert.equal(localeRace.element("reviewer-id").value, "NEW_WORKSPACE_VALUE",
+    "late language refresh must not restore old workspace form values");
+  assert.doesNotMatch(localeRace.element("page").innerHTML, /Original: Birchline|OLD_WORKSPACE_REVIEWER/);
   console.log("PASS: stale comparison, separate approval, escaped evidence, resolved copy, workspace race isolation");
 })().catch(error => {console.error(error); process.exitCode = 1;});

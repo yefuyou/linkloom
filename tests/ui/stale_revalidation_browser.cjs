@@ -42,7 +42,7 @@ const {strict: assert} = require("node:assert");
     await page.getByLabel("Reviewer", {exact: true}).fill("browser-reviewer");
     await page.getByLabel("Review reason", {exact: true}).fill("Verified current synthetic source against original evidence");
     await page.screenshot({path: path.join(directory, "03-explicit-new-approval.png"), fullPage: true});
-    await page.getByRole("button", {name: "Approve and materialize", exact: true}).click();
+    await page.getByRole("button", {name: "Approve and save", exact: true}).click();
     await page.getByRole("heading", {name: "Decision timeline", exact: true}).waitFor();
     await page.getByText(/Revalidated by a separate human approval/).waitFor();
     await page.screenshot({path: path.join(directory, "04-after-history.png"), fullPage: true});

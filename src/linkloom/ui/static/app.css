@@ -409,30 +409,6 @@ html[lang="zh-CN"] .query-label {
   line-height: 28px;
 }
 
-.value-order {
-  margin-top: 38px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--border-strong);
-}
-
-.value-order div {
-  padding: 12px 14px 0 0;
-}
-
-.value-order span {
-  display: block;
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--ink-faint);
-  margin-bottom: 4px;
-}
-
-.value-order strong {
-  font-size: 12px;
-  font-weight: 650;
-}
-
 .query-composer {
   background: var(--brief);
   border: 1px solid var(--border-strong);
@@ -1309,21 +1285,6 @@ html[lang="zh-CN"] .query-label {
 
   .locale-switch {
     font-size: 11px;
-  }
-
-  .value-order {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .value-order div {
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    align-items: center;
-  }
-
-  .value-order span {
-    margin: 0;
   }
 
   .composer-footer {
