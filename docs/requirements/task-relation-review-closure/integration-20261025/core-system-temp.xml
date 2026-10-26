@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.876" timestamp="2026-10-25T21:03:22.456412+08:00" hostname="beagle"><testcase classname="tests.unit.test_permission_gate" name="test_validate_target_root_accepts_synthetic" time="0.039" /></testsuite></testsuites>

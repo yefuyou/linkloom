@@ -70,6 +70,11 @@ def main() -> int:
         action="store_true",
         help="Explicitly enable bounded read-only temporal Agent runs using the configured Gemini model.",
     )
+    parser.add_argument(
+        "--allow-local-task-review",
+        action="store_true",
+        help="Explicitly enable localhost self-asserted task review records (no identity or business approval).",
+    )
     parser.add_argument('--allow-task-investigation', action='store_true',
         help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
     for name in ('requests', 'input-tokens', 'output-tokens'):
@@ -192,6 +197,7 @@ def main() -> int:
     backend = DemoRunBackend(DemoCase.load_mps_001())
     server = create_http_server(
         backend, product_app=product_app, investigation_service=investigation_service,
+        allow_local_task_review=args.allow_local_task_review,
         host=args.host, port=args.port,
     )
     print(f"LinkLoom Product UI: http://{args.host}:{server.server_port}")
@@ -205,6 +211,8 @@ def main() -> int:
         print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
     else:
         print(f"Semantic extraction provider enabled: Gemini model {args.model}")
+    if args.allow_local_task_review:
+        print("Local task review enabled: localhost self-asserted records only; actor labels are not authenticated and business approval remains false.")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

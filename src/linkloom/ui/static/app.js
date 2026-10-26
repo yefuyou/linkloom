@@ -98,8 +98,6 @@ function localizeStaticShell() {
   if (contextBar) contextBar.setAttribute("aria-label", t("workspace.context"));
   const loading = document.querySelector(".context-loading");
   if (loading) loading.textContent = t("workspace.opening");
-  const eyebrow = document.querySelector(".loading-view .eyebrow");
-  if (eyebrow) eyebrow.textContent = t("initial.eyebrow");
   const heading = document.querySelector(".loading-view h1");
   if (heading) heading.textContent = t("page.loading");
 }
@@ -188,7 +186,6 @@ function topbarHtml(workspace, snapshot = null) {
             ${escapeHtml(t("provenance.trigger"))} <span class="provenance-chevron" aria-hidden="true">▾</span>
           </button>
           <section class="provenance-popover" id="provenance-popover" aria-labelledby="provenance-title" hidden>
-            <p class="popover-kicker">${escapeHtml(t("provenance.kicker"))}</p>
             <h2 id="provenance-title">${escapeHtml(t("provenance.title"))}</h2>
             ${progressStepsHtml(snapshot.provenance.steps, "provenance-steps")}
           </section>
@@ -223,17 +220,11 @@ function renderInitial(context, queryOverride = null) {
     ${topbarHtml(context.workspace)}
     <main class="initial-view" id="main-content">
       <section class="initial-copy" aria-labelledby="initial-title">
-        <p class="eyebrow">${escapeHtml(t("initial.eyebrow"))}</p>
-        <h1 id="initial-title">${escapeHtml(t("initial.titleLine1"))}<br>${escapeHtml(t("initial.titleLine2"))}</h1>
+        <h1 id="initial-title">${escapeHtml(t("initial.titleLine1"))}</h1>
         <p class="lede">${escapeHtml(t("initial.lede"))}</p>
-        <div class="value-order" aria-label="${escapeHtml(t("initial.structure"))}">
-          <div><span>01</span><strong>${escapeHtml(t("initial.decision"))}</strong></div>
-          <div><span>02</span><strong>${escapeHtml(t("initial.why"))}</strong></div>
-          <div><span>03</span><strong>${escapeHtml(t("initial.open"))}</strong></div>
-        </div>
+
       </section>
       <section class="query-composer" aria-labelledby="query-title">
-        <p class="query-label">${escapeHtml(t("query.kicker"))}</p>
         <h2 id="query-title">${escapeHtml(t("query.title"))}</h2>
         <p class="composer-hint" id="query-hint">${escapeHtml(t("query.hint"))}</p>
         <form id="query-form">
@@ -340,7 +331,6 @@ function renderRunning(snapshot) {
     <main class="workspace-layout" id="main-content">
       <section class="brief-pane running-brief" aria-labelledby="running-title">
         <div class="running-copy">
-          <p class="eyebrow">${escapeHtml(t("running.eyebrow"))}</p>
           <h1 id="running-title">${escapeHtml(t("running.title"))}</h1>
           <p>${escapeHtml(t("running.copy"))}</p>
         </div>
@@ -350,7 +340,6 @@ function renderRunning(snapshot) {
         </div>
       </section>
       <aside class="source-inspector running-inspector" aria-labelledby="running-progress-title">
-        <p class="inspector-kicker">${escapeHtml(t("running.evidence"))}</p>
         <h2 id="running-progress-title">${escapeHtml(t("running.basis"))}</h2>
         ${progressStepsHtml(snapshot.provenance.steps, "running-steps")}
         ${evidence ? `
@@ -500,7 +489,6 @@ function uncertaintySectionHtml(snapshot) {
   if (!uncertainty && !unresolved.length) return "";
   return `
     <section class="uncertainty-section" aria-labelledby="uncertainty-title">
-      <p class="section-label">${escapeHtml(t("uncertainty"))}</p>
       <h2 id="uncertainty-title">${escapeHtml(snapshot.kind === "insufficient" ? t("uncertainty.insufficient") : t("uncertainty.partial"))}</h2>
       ${uncertainty?.statement && snapshot.kind !== "insufficient" ? `
         <p class="uncertainty-statement claim" ${claimAttributes(uncertainty.citations)}>
@@ -535,7 +523,6 @@ function inspectorHtml(evidence) {
     <header class="inspector-header">
       <div class="inspector-title-row">
         <div>
-          <p class="inspector-kicker">${escapeHtml(t("inspector.kicker"))}</p>
           <h2 class="inspector-title" id="inspector-title" tabindex="-1">${escapeHtml(evidence.relative_path)}</h2>
           <p class="source-location">${escapeHtml(location)}</p>
         </div>
@@ -695,7 +682,6 @@ function renderError(snapshot) {
     <main class="state-message" id="main-content">
       <span class="error-rule" aria-hidden="true"></span>
       <div role="alert" aria-atomic="true">
-        <p class="eyebrow">${escapeHtml(t("error.kicker"))}</p>
         <h1>${escapeHtml(t(networkFailure ? "error.networkTitle" : "error.title"))}</h1>
         <p class="state-copy">${escapeHtml(t(networkFailure ? "error.networkMessage" : "error.message"))}</p>
       </div>
@@ -740,7 +726,6 @@ function renderEmpty(snapshot) {
   app.innerHTML = `
     ${topbarHtml(snapshot.workspace)}
     <main class="state-message" id="main-content">
-      <p class="eyebrow">${escapeHtml(t("empty.kicker"))}</p>
       <h1>${escapeHtml(t("empty.title"))}</h1>
       <p class="state-copy">${escapeHtml(t("empty.copy"))}</p>
       <button class="secondary-button" type="button" data-action="retry">${escapeHtml(t("empty.return"))}</button>

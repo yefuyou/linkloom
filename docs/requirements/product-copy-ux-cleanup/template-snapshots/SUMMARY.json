@@ -1,0 +1,87 @@
+{
+  "kind": "VM_TEMPLATE_SNAPSHOTS_NOT_BROWSER",
+  "normalization": "Empty template indentation lines removed; public fixture content unchanged",
+  "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+  "records": [
+    {
+      "file": "before-sources-en.html",
+      "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+      "locale": "en",
+      "screen": "sources",
+      "h1": 1,
+      "eyebrows": 1,
+      "ledes": 1,
+      "disclosures": 0
+    },
+    {
+      "file": "before-task-en.html",
+      "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+      "locale": "en",
+      "screen": "task",
+      "h1": 0,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 7
+    },
+    {
+      "file": "before-sources-zh-CN.html",
+      "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+      "locale": "zh-CN",
+      "screen": "sources",
+      "h1": 1,
+      "eyebrows": 1,
+      "ledes": 1,
+      "disclosures": 0
+    },
+    {
+      "file": "before-task-zh-CN.html",
+      "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+      "locale": "zh-CN",
+      "screen": "task",
+      "h1": 0,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 7
+    },
+    {
+      "file": "after-sources-en.html",
+      "baseline": null,
+      "locale": "en",
+      "screen": "sources",
+      "h1": 1,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 1
+    },
+    {
+      "file": "after-task-en.html",
+      "baseline": null,
+      "locale": "en",
+      "screen": "task",
+      "h1": 0,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 7
+    },
+    {
+      "file": "after-sources-zh-CN.html",
+      "baseline": null,
+      "locale": "zh-CN",
+      "screen": "sources",
+      "h1": 1,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 1
+    },
+    {
+      "file": "after-task-zh-CN.html",
+      "baseline": null,
+      "locale": "zh-CN",
+      "screen": "task",
+      "h1": 0,
+      "eyebrows": 0,
+      "ledes": 0,
+      "disclosures": 7
+    }
+  ]
+}

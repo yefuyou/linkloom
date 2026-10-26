@@ -1,0 +1,12 @@
+{
+  "base": "f2ce6b82d635a7b78b17a6d100556c354f7a461a",
+  "branch": "codex/task-relation-review-closure",
+  "no_change_vs_master": {
+    "src/linkloom/tools/task_relations.py": true,
+    "src/linkloom/ui/static/product-task-result.js": true,
+    "src/linkloom/ui/static/product.css": true,
+    "src/linkloom/ui/static/i18n.js": true
+  },
+  "old_p2": "UNMODIFIED",
+  "original_evidence_hashes_unchanged": true
+}

@@ -1,0 +1,1488 @@
+{
+  "base_head": "7720390a796662ff42c27b5eef6f8685e5155802",
+  "branch": "codex/task-relation-review-closure",
+  "preserved_files": [
+    {
+      "path": "docs/requirements/task-relation-review-closure/CAPABILITY_BOUNDARIES.md",
+      "size": 1960,
+      "sha256": "a811cec6a84fd1006ff369d4d0121bfbdd68f4c59801fd561170ad05d347a1d3"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/DELIVERY.md",
+      "size": 8775,
+      "sha256": "f8a92ebb7704d6943d14072f2f2dc9ff5b53846da4570f86ae808cdfc8ba49a1"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/DEMO_ACCEPTANCE.md",
+      "size": 3453,
+      "sha256": "e05e4507487e01c8ac558910139a33925a3ddd1b057434e172b4e1bc4c253bb2"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/DEMO_SCRIPT.md",
+      "size": 3482,
+      "sha256": "15c440d7297393c02bc3a5bcf2056581d08cfe2f2482ae99de6ed2674fd65d6e"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/EVIDENCE_INDEX.md",
+      "size": 12425,
+      "sha256": "0eb7a10c0a55fe6306758ea4f58e020f833b241ab3dd3768c6d625aa4646a050"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/GAP_ANALYSIS.md",
+      "size": 4115,
+      "sha256": "9bc5f708a128319dc30bc719ae91c841e84101ba37e0cd6368e9df6b44f8e6c8"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/implementation_plan.md",
+      "size": 1796,
+      "sha256": "f0af91148fce7e1ea73fcf2634b205a256db6a82afbb0e27af372a79e4a7c782"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/REVIEW.md",
+      "size": 14003,
+      "sha256": "37c8545d27135b4bf888d75bc567846c1d5f06e6b5fe62fa811b5afbf9238943"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/SPEC.md",
+      "size": 6022,
+      "sha256": "f30f18ad6ed9cb11c3df2329dd966e4071c4d8fd6c994ad5b05ec93020f83aba"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/browser/acceptance.py",
+      "size": 18869,
+      "sha256": "824bddc3883afd305f33aee0b7ec8bcc5b2c42a5ac5c3a349bfee2e7ae4dd8aa"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/browser/default_host.py",
+      "size": 4464,
+      "sha256": "bfb74a9a0004fe42551a334ca2b27e45ac44c4e83a110035a3e8326e343952c4"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/browser/offline_source_host.py",
+      "size": 3485,
+      "sha256": "e68de3f8a2e598b781fec6f07525857cfd28f1e4a2ff9aaf5f41ae45d99ffe47"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/browser/summarize_evidence.py",
+      "size": 4840,
+      "sha256": "17ae3a31caaa4be87a3851015068ccd9adb6b6c8f21513eab9ca85f704fdca78"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/backend_worker.md",
+      "size": 2188,
+      "sha256": "0dc0d413a2c926f834e30583e47cccb5014f53c076771c8f12d32812568a2af1"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/commit-boundary-final.xml",
+      "size": 535,
+      "sha256": "0aeb44b1e71857dc5015bcb4e55feec9a7d17fa607cf1a44995cc1ed7b7ef580"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/commit-boundary-first.xml",
+      "size": 994,
+      "sha256": "8816caca988f9717ff4a7414d9033c6f7c0dfa6a1ba849fff0a8ec9f73b37fdf"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/commit-boundary-red.xml",
+      "size": 2884,
+      "sha256": "ccce42cc492115152788197cad5993ab8beca1c767908091e529257e52a6c057"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/final-browser-manifest.json",
+      "size": 13851,
+      "sha256": "005a31d929da549b0c15b173ca8e96b87b1b6c8d17255a85d584cc71c659f0de"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/focused-final-green.xml",
+      "size": 24478,
+      "sha256": "f9aeb6008827ed2950cf1eda2fce81d19772d05ad21a457cb92a0fd1442abd0f"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/focused-final.xml",
+      "size": 113836,
+      "sha256": "fbd90e5f774ae0cd2e8e90c632b6d52e138c9fe7c296980d0fb703ca8c6a934e"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/focused-network-short.xml",
+      "size": 1302,
+      "sha256": "0100cd7fc00ce8149b5763ee5ca4c769fbed0d46531503ea340c012267944e1d"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/git-boundary.json",
+      "size": 2309,
+      "sha256": "4a7964989eb3eb79aa234638df789abfe7c8aa7e8f18ca4f0a1006dbdfa95894"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/host-composition-red.xml",
+      "size": 541,
+      "sha256": "ccd1d4d9fde2bc376d9f110f2ed67a328646552ce589e7caf5e86ac5c71f6324"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/http-first.xml",
+      "size": 5403,
+      "sha256": "c773759d0cb0dbd9f88c2f0b3020909d100845d253508e14cad39109b08174fe"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/http-green.xml",
+      "size": 539,
+      "sha256": "5dfd591f411d1c2ee6bc2220807dee82ae8c5c434c8175892e2051956ba24421"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/original-evidence-hashes.json",
+      "size": 21533,
+      "sha256": "caadc9fc2be243572d14e2c177345f3f32a8a8881647b2b04f0e1b64e5389571"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/pr25-final-overlay.json",
+      "size": 3113,
+      "sha256": "be5807931cb73cf0d0c0e2992b3a3e68ac0c4bba79fc0ab517293b04f648f7d8"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/proof-contracts.xml",
+      "size": 18929,
+      "sha256": "c7d523ddde474fa93f25efa51f7206c342888c49345b44e0282560b67b572121"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/recovery-first.xml",
+      "size": 4549,
+      "sha256": "291c92c2c8b4e96c6cb83461466c7b8a08f737cc8abfd5170ee2a2b067ce4cc5"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/recovery_worker.md",
+      "size": 5540,
+      "sha256": "ac2e19e3d93c88e533c36d83d20930240b2c89012bdbd09be8b46cce70ee66f6"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/ui-final.json",
+      "size": 1767,
+      "sha256": "dfc8236d523da09d4847b155a5c3e1116f422b7ef43d85ffdb959da3257efaf2"
+    },
+    {
+      "path": "docs/requirements/task-relation-review-closure/evidence/ui_dom_red_green.txt",
+      "size": 4829,
+      "sha256": "61adaedca5e6a97f3e55e6910d69c4e3a4284bc690673ecf7462f2702728ad25"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/browser.har",
+      "size": 1179526,
+      "sha256": "a3a8ced90e40c7b6332d3ff6e4c29a303b2ab9d456d0c972852173446acb6977"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/browser.json",
+      "size": 1552027,
+      "sha256": "d9e78bb0920dab08d6f39bc518fc21565bc9839e5cdfe45e175f67044b302827"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/dom.txt",
+      "size": 3953,
+      "sha256": "1169b18d6a752ff95f4cf6f7e732d9899d7de21a5b7746a8fe49c39145b2036b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/p1-reproduced.png",
+      "size": 250352,
+      "sha256": "1c992e77827f17e3d9bd70dbcfd921496974bb701fea5d6ad7eeddb0d460215f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/server.log",
+      "size": 311,
+      "sha256": "9b77b8e40f1ea560d016ccc803a2fc18691d58fd62bd3ec320241e5359941502"
+    },
+    {
+      "path": "output/playwright/task-relation-review/baseline/trace.zip",
+      "size": 30546853,
+      "sha256": "de93b9de35436cd1ffe5a7170845f3147ba694a1704a0dd520755a282229c940"
+    },
+    {
+      "path": "output/playwright/task-relation-review/concurrent-source-update/browser.har",
+      "size": 199459,
+      "sha256": "c49fc92ad5ff58f1b078c86d02689d2554bcf12f3f0cff862f8890651f4777dc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/concurrent-source-update/browser.json",
+      "size": 19573,
+      "sha256": "c9d4d86b090a936eb962cb9bdd50eeb0192a0a4edafc5446fa67f3262dfd46ea"
+    },
+    {
+      "path": "output/playwright/task-relation-review/concurrent-source-update/dom.txt",
+      "size": 1528,
+      "sha256": "93c9c7b0d2dcef4c7694abf69b7e1b6ae326f4e14415932e8f676a17bedb2f54"
+    },
+    {
+      "path": "output/playwright/task-relation-review/concurrent-source-update/source-updated-through-ui.png",
+      "size": 116241,
+      "sha256": "2dcfd3ada6b3492422cd77aeeb04f2d03939a7af543929e2d0697b97c65477ca"
+    },
+    {
+      "path": "output/playwright/task-relation-review/concurrent-source-update/trace.zip",
+      "size": 700437,
+      "sha256": "78ced030c8a92f7cdc7ca4a1d5d321a17249f23267e138706cbada3b7f46abdd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/01-original-sources.json",
+      "size": 5357,
+      "sha256": "27ff1e4ae0824260158d553650c0378b7f97a88010500131d72f5cb809cd55e4"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/01-original-sources.txt",
+      "size": 1610,
+      "sha256": "76d3aa3a30e393c4fb59a08d62f6a4c1d5108d780b66203fa48297bda6d12586"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/02-original-review-entry.json",
+      "size": 18118,
+      "sha256": "f102e87e21aa2a9751e3160ecb071a3f1c71bb05a16f64f3d0b8a7945abf4991"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/02-original-review-entry.png",
+      "size": 315512,
+      "sha256": "17ef224e238dbac133290d72011692523cc01e0423480cb1080197fbedc2a093"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/02-original-review-entry.txt",
+      "size": 4929,
+      "sha256": "026ae5cd70f6a8972d685a0a4c3ba1a151edc2247a138b2a65dfccadb3deda5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/03-original-persisted-receipt.json",
+      "size": 18466,
+      "sha256": "b20c13c4af80e439347a72e9b6e1249d5f545a5a664fe31adbf639d042d27f5b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/03-original-persisted-receipt.png",
+      "size": 332138,
+      "sha256": "baab9b510b2b12e4048f6d886ccd85dbb09655fd690b95535dc77030f034385c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/03-original-persisted-receipt.txt",
+      "size": 5277,
+      "sha256": "e92a5c1b0f5a610e19a363b2f04fbc548ef5fcaefd0fb9e71bb9de1729b2cb04"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/04-identical-browser-api-retry.json",
+      "size": 18466,
+      "sha256": "b20c13c4af80e439347a72e9b6e1249d5f545a5a664fe31adbf639d042d27f5b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/04-identical-browser-api-retry.txt",
+      "size": 5277,
+      "sha256": "e92a5c1b0f5a610e19a363b2f04fbc548ef5fcaefd0fb9e71bb9de1729b2cb04"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/05-altered-browser-api-retry.json",
+      "size": 18466,
+      "sha256": "b20c13c4af80e439347a72e9b6e1249d5f545a5a664fe31adbf639d042d27f5b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/05-altered-browser-api-retry.txt",
+      "size": 5277,
+      "sha256": "e92a5c1b0f5a610e19a363b2f04fbc548ef5fcaefd0fb9e71bb9de1729b2cb04"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/06-original-continue-unknown.json",
+      "size": 18795,
+      "sha256": "43e6d80c48a8eea35b981a1a90aae056fe694bedd4f7ea13ed645ed05948f78f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/06-original-continue-unknown.png",
+      "size": 347211,
+      "sha256": "c36094aaed9ec73d7fe88240a810f5dfe126202107fad46ec51d776d4600ed2e"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/06-original-continue-unknown.txt",
+      "size": 5606,
+      "sha256": "9eba8dd8c984cb8e95bad5c954c86ffb3cae9ac8f6b6765846e77409eecd774b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/07-original-history-after-reload.json",
+      "size": 18922,
+      "sha256": "1624bf4916765ae4abb2af2ee700fca05a27bcba5e7a49c93a4008a2b080a6fa"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/07-original-history-after-reload.png",
+      "size": 340608,
+      "sha256": "4bb19b391f8105595fb3511edf6e8a0f16e9db9715763b0131183cd07bc0b24b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/07-original-history-after-reload.txt",
+      "size": 5569,
+      "sha256": "0818aff07934711837ce6dd1ebf0620eab956ee19fc2fc6f4ff37d3eadb1ad78"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/08-original-withdrawal.json",
+      "size": 19185,
+      "sha256": "95b3eed5ac592730a6535bc141ae1afd1c44868f4c382ee349fd6373e263439d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/08-original-withdrawal.png",
+      "size": 353850,
+      "sha256": "6a779b0622367d896b6afaa47e9df1d812e90393a92c2123bacf6fabcc305121"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/08-original-withdrawal.txt",
+      "size": 5832,
+      "sha256": "879d0fb6a732c2c3bc26a457bf544e2fd17a4adb2a13477fe8b83c7677b78190"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/09-positive-empty-product.json",
+      "size": 2989,
+      "sha256": "15a50536b209d5a48e9f47e44968c36baa6f89810b6d727eb19947c75aafa6ad"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/09-positive-empty-product.txt",
+      "size": 425,
+      "sha256": "e20541dbdfa1433f37ec40c320a0661ec40c17b3b39dbe061a5404f372e1c8bd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/10-positive-first-source-imported.json",
+      "size": 5315,
+      "sha256": "91f76131b8531e002f90eb7b7e50acf69d996045cf1c39825bd13de55b970cc3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/10-positive-first-source-imported.txt",
+      "size": 1428,
+      "sha256": "de8afe316e7ea05a2dc4c159736947662390c00ded25ae3505a39584a103b4d3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/11-positive-second-source-imported.json",
+      "size": 5563,
+      "sha256": "307f5213be9fd3a11843d976d8604a128a13a9e78fa4d63ec23344c3b3b61a16"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/11-positive-second-source-imported.txt",
+      "size": 1552,
+      "sha256": "5c9515e31c2030b2faf0d32ca859a359418aaf3820ee7fb183eaef4583d2789c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/12-positive-before-any-proof.json",
+      "size": 7749,
+      "sha256": "d0cd6c897e4da89027d6017528b876712d711622755e0811ed118faa18d15b4e"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/12-positive-before-any-proof.png",
+      "size": 81751,
+      "sha256": "c25729777eac0e04a56899727533fbad5f5d5385f642b97b47753c21337acbb0"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/12-positive-before-any-proof.txt",
+      "size": 1196,
+      "sha256": "58fa5ba05523f35b3bfc2951a46e41423d0a44811b8a372793eee4ccf0e408f9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/13-positive-first-admitted-run.json",
+      "size": 21882,
+      "sha256": "2355e176f2985a0f6d1ccf606f960fa80c1251a90b91cdd733f0474d786b8f4c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/13-positive-first-admitted-run.png",
+      "size": 439141,
+      "sha256": "4d9dec96ca0551b75d8e479885c1757863b8ab67bcec50f5733fda0b6499a52b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/13-positive-first-admitted-run.txt",
+      "size": 6983,
+      "sha256": "44b81399c8db28dc705060d93c3a22bdbb1ba7ab8300c5eefcc4b9c9c8f937a2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/14-positive-human-statement.json",
+      "size": 21962,
+      "sha256": "4a3e20ec1ccd714798cf6b4b7e4baf867a3e2aed20392958d48968f1b6adbedd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/14-positive-human-statement.png",
+      "size": 443547,
+      "sha256": "bf9caa923b5258f606a1851f3a138218a01d34e331fa31d32bc1ef3c237fa634"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/14-positive-human-statement.txt",
+      "size": 7063,
+      "sha256": "ae73be3fe93dcd577d0f989e02ef83fd715356626daa46993e955c11cfc2d6c3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/15-positive-continue-response.json",
+      "size": 22033,
+      "sha256": "2d98be0b6bfcb9e6d8b80eeb19a67e8bc9c49e3f676a6a03b5a584986c3b82b6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/15-positive-continue-response.png",
+      "size": 446427,
+      "sha256": "abbcbb455b8014882c4012b3f78acf596ba26233aad3684fd2c5f4f4513f7ac9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/15-positive-continue-response.txt",
+      "size": 7134,
+      "sha256": "481a8904d62fd851f9f75283cbb1f5cd7b7e624c8f3cd42103adce0928c5da0d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/16-other-workspace-empty.json",
+      "size": 4765,
+      "sha256": "ad9738d32e27f323f75585078a7d5f6b41f14d10efe019bf9569841a4d21cad2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/16-other-workspace-empty.png",
+      "size": 94223,
+      "sha256": "3afcd14eb3a74ffa22e7d47fde0237591720b13c218c1ec801874a25e6498d60"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/16-other-workspace-empty.txt",
+      "size": 1362,
+      "sha256": "59130b487aa7278fd6132fd6bc734c90bad79228177e720b9c034e0329a026cc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/17-cross-workspace-refused.json",
+      "size": 4765,
+      "sha256": "ad9738d32e27f323f75585078a7d5f6b41f14d10efe019bf9569841a4d21cad2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/17-cross-workspace-refused.txt",
+      "size": 1362,
+      "sha256": "59130b487aa7278fd6132fd6bc734c90bad79228177e720b9c034e0329a026cc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/18-returned-to-original-scope.json",
+      "size": 22413,
+      "sha256": "77bb60ba3baa59815126580cf7649eda3a4c7512959199c1a5f87df93bfe3339"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/18-returned-to-original-scope.png",
+      "size": 442785,
+      "sha256": "bb42d73940c9454cb50014e1785d1e1335e56da161eb9b377a7687da95858213"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/18-returned-to-original-scope.txt",
+      "size": 7139,
+      "sha256": "53fc311e4ec08426ba9f24b9779a22cd2c751899579f089957edbf0044f4634b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/19-original-before-concurrent-source-change.json",
+      "size": 18571,
+      "sha256": "5a7ba44b176c06ab36941f05e5f9cdca56e1493dd8509584eb2f8cd4c5c771d4"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/19-original-before-concurrent-source-change.png",
+      "size": 329269,
+      "sha256": "63004a9696454e9dc4a3d7f77a578cb2e4041e8a04257a9c4407cd71fc7735e5"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/19-original-before-concurrent-source-change.txt",
+      "size": 5058,
+      "sha256": "f0dc854506c7ccefbddcbda4f81bf603911f5486ca73574c2e25bd9054aa98fb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/20-concurrent-source-change-rejected.json",
+      "size": 7869,
+      "sha256": "689c28e5be9a81fd0af646ed35b4229e8fb9a12e52d11dd8cf38d2d9e51414c9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/20-concurrent-source-change-rejected.png",
+      "size": 83354,
+      "sha256": "d4cdd8680308ce2734fdd7f68d9f757005bdfb6048dce2f09b6e5f7c4b68d3d2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/20-concurrent-source-change-rejected.txt",
+      "size": 1337,
+      "sha256": "bccdf2f2c310e15933d0c4de759461cefa4d8688f55fc279ae3a508833f10be9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/21-language-does-not-revive-old-evidence.json",
+      "size": 7726,
+      "sha256": "098dd0bc90bb2da633c3137dd5b757ec3d3a96bf5ff80f23cd8c87af8ca3863e"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/21-language-does-not-revive-old-evidence.png",
+      "size": 81246,
+      "sha256": "75cc31c87796b09b96bbd0287f0330cf4d01840cce08747f62dcd99080e3bc83"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/21-language-does-not-revive-old-evidence.txt",
+      "size": 1242,
+      "sha256": "518017efda3d59d7c955cac3e934dec1d8e7de08e5542698536d7af427852d2b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/22-positive-canonical-proof-capture.json",
+      "size": 22533,
+      "sha256": "09d1ede5de64f786027b685712d1a78a7bb758b64a0b20824977ed35cfcf2680"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/22-positive-canonical-proof-capture.png",
+      "size": 453941,
+      "sha256": "7b8c57ba1338ee0cc9387353acb8db3def24d6ed39db4b94e31c11b218b05e79"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/22-positive-canonical-proof-capture.txt",
+      "size": 7218,
+      "sha256": "8e4cd5719d35c82a0662ba3bdd1860ee1c1e67721c4f3a7e1085f1616fb1c65b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/23-positive-committed-history.json",
+      "size": 22951,
+      "sha256": "11345ba5d1d1dff861cf9f45167642b13558c292e0e35f1844133a4fda83ece0"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/23-positive-committed-history.png",
+      "size": 475556,
+      "sha256": "f7899732b04112628e057711a084c295df92bcc2e5b4603cc4480d451d94c9a1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/23-positive-committed-history.txt",
+      "size": 7636,
+      "sha256": "dda093f156c0bbc0a638924edd1c735c5ecadddca9005d9d674aa476528d822d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/24-positive-fresh-runtime-dates.json",
+      "size": 22093,
+      "sha256": "c4b2edef691f777eddb85b5d4a81c6e320c00de8f7ac03df9c88cd1525108f7f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/24-positive-fresh-runtime-dates.png",
+      "size": 422283,
+      "sha256": "d2d9514cf6d9efe8af63e0c61ae85f541d1c356a915d8a6bd40088c64f482fe6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/24-positive-fresh-runtime-dates.txt",
+      "size": 6776,
+      "sha256": "19e4d48c918e7e6a0d667782b5a9c628e3b54f829ce1d6080deb0e976bdb14e6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/25-before-final-backend-restart.json",
+      "size": 22093,
+      "sha256": "c4b2edef691f777eddb85b5d4a81c6e320c00de8f7ac03df9c88cd1525108f7f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/25-before-final-backend-restart.png",
+      "size": 422283,
+      "sha256": "d2d9514cf6d9efe8af63e0c61ae85f541d1c356a915d8a6bd40088c64f482fe6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/25-before-final-backend-restart.txt",
+      "size": 6776,
+      "sha256": "19e4d48c918e7e6a0d667782b5a9c628e3b54f829ce1d6080deb0e976bdb14e6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/actions.jsonl",
+      "size": 56902,
+      "sha256": "e5903c559e007326c7e95951cdafca28a43b9c4fc520a9e6b81d485a00cffbb9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/blocked-external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/console.jsonl",
+      "size": 1762,
+      "sha256": "02b91028f2bf120ea09a1173bed536c0fc877059d7cbca4d37e6af75d6a44093"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/environment.json",
+      "size": 250,
+      "sha256": "45c6a19f322003bce7e2e38db644b7a74d2c3083810ff5529929047ee64689b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/current/http.jsonl",
+      "size": 4191345,
+      "sha256": "fafa337d693f59268ab25b9df3c817135ec114e68d011ba1177a455f17e86854"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/actions.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/console.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/http.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/original-server.log",
+      "size": 469,
+      "sha256": "27e011ec63c1b782dca82b572b6bd9597abf36ca767c257a02cb62845eb8a5f3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1945/positive-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/01-original-review-entry.png",
+      "size": 335954,
+      "sha256": "f63a144e882156209dc1e571c934e9b4c9b56f7f896d65907ded501eb91e5a5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/01-original-review-entry.txt",
+      "size": 4969,
+      "sha256": "01a13977c74c9acde8abd9232fdc8c285c599dd88d41c9db02ddb4e1958bb535"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/02-original-still-unknown.png",
+      "size": 346135,
+      "sha256": "1862543f855a3f9059f95b439cd8a3e3e195692d943cb0daa4a89c9d0cae286c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/02-original-still-unknown.txt",
+      "size": 5135,
+      "sha256": "ac6afaf87e64ee8cb32aa3934d711dd5148c1142d10832ebc0e6b6c067aab932"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/03-original-history-after-reload.png",
+      "size": 359075,
+      "sha256": "cb817237e83984c1c0fcaee42c153a958eb8a316d8ddaf5dcc9d4863a2d6dc21"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/03-original-history-after-reload.txt",
+      "size": 5563,
+      "sha256": "db8175a8807c5e5d9114857449a4bbe144923eb6b26d5aa3dafa54fe40474f66"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/actions.jsonl",
+      "size": 3485,
+      "sha256": "bca9b0a3c2dda4f99a0ad8266ba80e486f55c683d5ac19665a1aef04778c9520"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/console.jsonl",
+      "size": 608,
+      "sha256": "45d25553806eedc0bb2565d1788f153a279295fa41cc87e7f7be0f2e1617e70f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/environment.json",
+      "size": 242,
+      "sha256": "6c7742106c2772a049b6083ef6f8f76771ab8cf70c2db08b1cdd22dff64411f8"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/failure.txt",
+      "size": 59,
+      "sha256": "309c3cea3755d0708b8c0c0ba356024c8a8b22590fe1648205c188d3e50dd2df"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/http.jsonl",
+      "size": 527944,
+      "sha256": "bc3152b81d9c12d6cf1a7cd369335d69592a9540ff43fbf72e42f40da41a8f5c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/original-server.log",
+      "size": 469,
+      "sha256": "69e8c49497988648a658825e9ce86527576a8c1f1bff7a8105bb6073e3571517"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/original-trace.zip",
+      "size": 20362980,
+      "sha256": "8997c56c130cb95ea127c733d1575bf358e59e28276a2194d79c259b49553240"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/original.har",
+      "size": 891169,
+      "sha256": "96e671bea0bdb18652b28a1ea224cd9727797071b4695bfcccd0a3bfa1164589"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/positive-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/positive-trace.zip",
+      "size": 659560,
+      "sha256": "93a195f12c23c4e40e9e341a8ed0c7d3296e3b49432d2132571d74b973f32cb7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1950/positive.har",
+      "size": 198554,
+      "sha256": "72904aa4385f4493b2cac19b451a2f2605e485045ad1cc57290e0bac8640b42b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/01-original-review-entry.png",
+      "size": 335954,
+      "sha256": "f63a144e882156209dc1e571c934e9b4c9b56f7f896d65907ded501eb91e5a5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/01-original-review-entry.txt",
+      "size": 4969,
+      "sha256": "01a13977c74c9acde8abd9232fdc8c285c599dd88d41c9db02ddb4e1958bb535"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/02-original-still-unknown.png",
+      "size": 346135,
+      "sha256": "1862543f855a3f9059f95b439cd8a3e3e195692d943cb0daa4a89c9d0cae286c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/02-original-still-unknown.txt",
+      "size": 5135,
+      "sha256": "ac6afaf87e64ee8cb32aa3934d711dd5148c1142d10832ebc0e6b6c067aab932"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/03-original-history-after-reload.png",
+      "size": 358918,
+      "sha256": "d0e1b1d177466df79dfa8a61444d5e70945d9a915147561a51293605e9bd1ad8"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/03-original-history-after-reload.txt",
+      "size": 5563,
+      "sha256": "8ec070447856c057ae72e161279bcaca758aa080b9875087d3d3cecf1cacdf6d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/04-positive-imported-via-ui.png",
+      "size": 123072,
+      "sha256": "e25412094a34b085cc01cd10aecf0571a3b61bb893d8e688f06748c699202b6d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/04-positive-imported-via-ui.txt",
+      "size": 1888,
+      "sha256": "6a9c3e086320581549dee2c941cb283b0a739ce8ee31f0286f05397c2d8cc981"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/05-positive-before-proof-capture.png",
+      "size": 498219,
+      "sha256": "12555e762be33bbfa645031bb4c428aceeecbb0a3f902356232594a24ff250ba"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/05-positive-before-proof-capture.txt",
+      "size": 7628,
+      "sha256": "4209f560dc17c381d0ae74a1ed71a09663a0d767b3b8accd03ac86e1f928ffa7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/06-source-proof-committed.png",
+      "size": 497116,
+      "sha256": "34ae34964cbc658eba5b6d2f964956af3cbe754424f546eb88543e9850e9fd68"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/06-source-proof-committed.txt",
+      "size": 7616,
+      "sha256": "6ba0bd1cee0e916920060a0c017de409bb9ca62648ae2d6284d2544aba7564f1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/07-new-investigation-dates-and-related-history.png",
+      "size": 498465,
+      "sha256": "bd2c2e8537b74dda33130408e6b7e1b530fa9b9e4d10e56432aba71624dfe35c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/07-new-investigation-dates-and-related-history.txt",
+      "size": 7869,
+      "sha256": "dcbbe765b59b023a28c7404938b58af73e7f70c633a66fe1447bc7cb9285d195"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/08-positive-reload-retains-history.png",
+      "size": 502136,
+      "sha256": "2aa72fe43d55c44f6e149a99140ff184da0df44c3982b142e370af230bb6f169"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/08-positive-reload-retains-history.txt",
+      "size": 7946,
+      "sha256": "0e0ce9383f9e783cc9dcaeaa80a99fc2d3addd681522a2ed261ee507922fdb2a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/08b-cold-host-retains-source-proof-and-history.png",
+      "size": 502136,
+      "sha256": "2aa72fe43d55c44f6e149a99140ff184da0df44c3982b142e370af230bb6f169"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/08b-cold-host-retains-source-proof-and-history.txt",
+      "size": 7946,
+      "sha256": "0e0ce9383f9e783cc9dcaeaa80a99fc2d3addd681522a2ed261ee507922fdb2a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/09-local-withdrawal-keeps-source-proof.png",
+      "size": 479505,
+      "sha256": "8c1d58c2bbe4e02462bbf432823b31d2889697ad25e19ad0025aa91bc772d64f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/09-local-withdrawal-keeps-source-proof.txt",
+      "size": 7490,
+      "sha256": "524a169751ce427100660f4655557f5ff87baad8bbbd4293cb3bba76192c91fd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/10-other-workspace-no-task-data.png",
+      "size": 94198,
+      "sha256": "117d507c361159742159993f0e926cb663669194fa6eb585bbdc79288a0ad342"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/10-other-workspace-no-task-data.txt",
+      "size": 1354,
+      "sha256": "bd691189d1661638a6b8c814e884ee615f04473d27dffea23ffa1346748506fb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/11-second-browser-updates-source.png",
+      "size": 119656,
+      "sha256": "2549cd9d92d3a4ed894a8eb1a1dc3d6801b298d685dff86e52cb972e4bfbec94"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/11-second-browser-updates-source.txt",
+      "size": 1605,
+      "sha256": "dceb44941c79887588524c4a9ccf9fd3d6c27adf31b4003f108b3f5a8e9a5363"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/12-previous-positive-result-invalidated.png",
+      "size": 83257,
+      "sha256": "43125e69f912db700ff803393879f5f08a4ea2f35b0b072eca95bb10a2b6b0b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/12-previous-positive-result-invalidated.txt",
+      "size": 1320,
+      "sha256": "fa1012946e624c2935c8dafa4f89361f52d72cbccba05e658365534b41ec9f02"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/actions.jsonl",
+      "size": 13507,
+      "sha256": "7bd1c8cd651787ff48ad21ed0c547137943ed97c5a2e61d3199a7c46135ecacc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/console.jsonl",
+      "size": 1892,
+      "sha256": "5a064a5bfc2e78504d16931f0ee2b292ff6ade12cf7595a25318ee7e111583ea"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/environment.json",
+      "size": 242,
+      "sha256": "fd0212e0397023ead227012e1cb91dc9c494ab9fb2ecaa07eaea477d86722779"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/failure.txt",
+      "size": 135,
+      "sha256": "1712a71e10c8756e96d2db5d22a6cf17b719432aaf76f6f2aee1c1bdd7958fc3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/http.jsonl",
+      "size": 3770441,
+      "sha256": "4d8f5f9b6ec344c8f3fe518ef0f56e024bdc25dbbe6cfd4f1ed7e0e3f1c5ca62"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/original-server.log",
+      "size": 469,
+      "sha256": "62a839e1021bfc61422dc3f216f63b11f8c8e77d40d6df326e6a5f4827bd1b7d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/original-trace.zip",
+      "size": 17109955,
+      "sha256": "7d1acc8a7ffe6ba0fb2bebb424e8a011a916368ac41ce84b3dc9a9b030aa83c6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/original.har",
+      "size": 835106,
+      "sha256": "c0b8db2efd0dbba8f39cb0604ccb98e496989486687352630d7c2d3960d5d62f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/positive-cold-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/positive-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/positive-trace.zip",
+      "size": 53417112,
+      "sha256": "55f5672c625c5e518f22aafbfdc5b45f4818c48002450916bba72a13e91aa933"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/positive.har",
+      "size": 4007693,
+      "sha256": "0ae6d37d319579b563d378b60a6f694e7d1e2c551e285b25bd5752b05838584a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/source-change-trace.zip",
+      "size": 880213,
+      "sha256": "8d1b2c8682daca6508392d9a8d5d5ab4cebcc711d8e3bf07bef74ee08a9b9924"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/source-change.har",
+      "size": 196528,
+      "sha256": "273bc6cadf8323c1b2bf93a3c674b5795f248ba9e84d1364a18f8c4da4ca9d66"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1955/source-inputs.json",
+      "size": 531,
+      "sha256": "649381cec45b380aafb371ee253269e6c46ce7e3a8a01da1675e40868eeb3863"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/01-original-review-entry.png",
+      "size": 335954,
+      "sha256": "f63a144e882156209dc1e571c934e9b4c9b56f7f896d65907ded501eb91e5a5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/01-original-review-entry.txt",
+      "size": 4969,
+      "sha256": "01a13977c74c9acde8abd9232fdc8c285c599dd88d41c9db02ddb4e1958bb535"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/02-original-still-unknown.png",
+      "size": 346135,
+      "sha256": "1862543f855a3f9059f95b439cd8a3e3e195692d943cb0daa4a89c9d0cae286c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/02-original-still-unknown.txt",
+      "size": 5135,
+      "sha256": "ac6afaf87e64ee8cb32aa3934d711dd5148c1142d10832ebc0e6b6c067aab932"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/03-original-history-after-reload.png",
+      "size": 358648,
+      "sha256": "504d15376bd3d78dd63ef9ae2ef96042300b9df90710e6c54ac20411ec284f95"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/03-original-history-after-reload.txt",
+      "size": 5563,
+      "sha256": "560c45e1dea07cb344329b1d5666bcbb81e498e1b427d78ff5af5bc9664dabef"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/04-positive-imported-via-ui.png",
+      "size": 122809,
+      "sha256": "666715ca29f8a136808fcba8dc7cc179d939e856df33cc96f3483efed693ce5a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/04-positive-imported-via-ui.txt",
+      "size": 1888,
+      "sha256": "48c2b82439425c59e7ae93716a2b99dbcfd3246c0f068be2099d0ecb74449713"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/05-positive-before-proof-capture.png",
+      "size": 501183,
+      "sha256": "1752a8d381ee554258461158d4f49d9beefce3af17dedfd371ef92e202779c38"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/05-positive-before-proof-capture.txt",
+      "size": 7628,
+      "sha256": "ed547b006ec7e78467562e96cd359a7115b1ebac2e582c65a30b6768293ed4ce"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/06-source-proof-committed.png",
+      "size": 500043,
+      "sha256": "2f23f1b483f40e773a35a34ee6e5331e6d647deffeaaaef803376ccc9ebb2537"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/06-source-proof-committed.txt",
+      "size": 7616,
+      "sha256": "a2c1d893bebd398246eb627f7c34eb5786c6f5fcac8ddeefff495bd5f21e838f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/07-new-investigation-dates-and-related-history.png",
+      "size": 501507,
+      "sha256": "cf1e05f997a438c9bad8874df9a16ed37c19f41c7c528ddcf8b1b82a9e6f25b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/07-new-investigation-dates-and-related-history.txt",
+      "size": 7869,
+      "sha256": "3d0862c826c0b88cd63a8ec667da173cdd08756d4571cc927b3f926de9118fa7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/08-positive-reload-retains-history.png",
+      "size": 504780,
+      "sha256": "2c016986f7949baf608dc7f1ad8968d94a4003e49d5c0d75bf733fa1e4ee96d3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/08-positive-reload-retains-history.txt",
+      "size": 7946,
+      "sha256": "1ae4137404ad8e357389a20f89636e5da2977c01a52e1f0dc0f2da8afa015fad"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/08b-cold-host-retains-source-proof-and-history.png",
+      "size": 504780,
+      "sha256": "2c016986f7949baf608dc7f1ad8968d94a4003e49d5c0d75bf733fa1e4ee96d3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/08b-cold-host-retains-source-proof-and-history.txt",
+      "size": 7946,
+      "sha256": "1ae4137404ad8e357389a20f89636e5da2977c01a52e1f0dc0f2da8afa015fad"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/09-local-withdrawal-keeps-source-proof.png",
+      "size": 482002,
+      "sha256": "f515194ccad0f5bfc256e3d66393aa8f8b588f8528d28f8b6c39c8e6af9628a8"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/09-local-withdrawal-keeps-source-proof.txt",
+      "size": 7490,
+      "sha256": "a73c806e5fcd28e07c5028d467065da39343e166f6710f4988f6a03f9c04e96c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/10-other-workspace-no-task-data.png",
+      "size": 94198,
+      "sha256": "117d507c361159742159993f0e926cb663669194fa6eb585bbdc79288a0ad342"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/10-other-workspace-no-task-data.txt",
+      "size": 1354,
+      "sha256": "bd691189d1661638a6b8c814e884ee615f04473d27dffea23ffa1346748506fb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/11-second-browser-updates-source.png",
+      "size": 120459,
+      "sha256": "afd2e603189204cc86382b35fa16063fd3a28fe11e0233d9cdd960cdb73bfe3f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/11-second-browser-updates-source.txt",
+      "size": 1605,
+      "sha256": "1c03d4c7bea3ab86bf489f64d7fdba8c90f2e3c007337080a0d4bac0bf557bfd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/12-previous-positive-result-invalidated.png",
+      "size": 83257,
+      "sha256": "43125e69f912db700ff803393879f5f08a4ea2f35b0b072eca95bb10a2b6b0b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/12-previous-positive-result-invalidated.txt",
+      "size": 1320,
+      "sha256": "fa1012946e624c2935c8dafa4f89361f52d72cbccba05e658365534b41ec9f02"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/13-conflict-support-and-counter-evidence.png",
+      "size": 531948,
+      "sha256": "48f70389330d19bc3de32bb8bb4851a77ed5299462f07ba613ea21231fc248b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/13-conflict-support-and-counter-evidence.txt",
+      "size": 8143,
+      "sha256": "a3d21228f3ec2badcbc79cf07584f9576691b56a8eb510c684a4d67bf596a843"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/14-source-removed-from-workspace.png",
+      "size": 103031,
+      "sha256": "7433bbd7cb2e638c2dc5e1587080ca5637ed5d5f4ebd3e0965e536a2114b1112"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/14-source-removed-from-workspace.txt",
+      "size": 1564,
+      "sha256": "16e8e7860a4adbd5fc7891f712b1d810d3f6caf00efced59fa801ae1562b8ee1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/15-removed-source-clears-old-evidence.png",
+      "size": 83086,
+      "sha256": "fa6a1266c14661c651b33164aafedbb9fd3debaa83caae759e5817c70b291aa7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/15-removed-source-clears-old-evidence.txt",
+      "size": 1225,
+      "sha256": "7946bc2b891ca63967ad10adaa4617091e699231fac25b3234ba6ba035264b92"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/actions.jsonl",
+      "size": 15151,
+      "sha256": "99679f902d5147df946609e5fb484db13074b5bf2cc9ba0d87625fe331f00c10"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/console.jsonl",
+      "size": 2205,
+      "sha256": "d5e483d972003a95b0a1e7f7dc22e2c4018d3fc7ac85add73c36f859312dcf2b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/environment.json",
+      "size": 242,
+      "sha256": "cdcb0b2ab5661e52c86f63e26c7c90279cb4122f952166344129005ff71dafd5"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/http.jsonl",
+      "size": 4302925,
+      "sha256": "65e91defd9c77c5be4c2d98be61b8d03df4d2df9e9ee24fd8da80794062510ef"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/original-server.log",
+      "size": 469,
+      "sha256": "cb883f1302668134967f59ef34b10816f50150776760fb6002e4972adff328ee"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/original-trace.zip",
+      "size": 16786785,
+      "sha256": "c638ccc35b1284cf418a5cf8f0efbb5bd6e6a128ff411d0a8afdee2bdc937ed5"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/original.har",
+      "size": 834826,
+      "sha256": "d79d7324c09bef08d6e3e37b5558aea1f778ba604d52874829cf320933945f53"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/positive-cold-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/positive-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/positive-trace.zip",
+      "size": 69035784,
+      "sha256": "4dd1988899c1c1f1daa82babdfbb832b81e76767bbe985832c76418d68ba4521"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/positive.har",
+      "size": 4736202,
+      "sha256": "3dc15516d81741070254c51f50b0b1645dddddc74e4fb6604648be0c8a4a476b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/result.json",
+      "size": 361517,
+      "sha256": "648448f4dc5c16e37f024516674d067c59a81e8ec510b8b990ed57df09356971"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/source-change-trace.zip",
+      "size": 1155089,
+      "sha256": "36ca21f1954169f018c5b8d64157d125d6069d4d829e8a8388595b58fc17d40b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/source-change.har",
+      "size": 202095,
+      "sha256": "39a0d64a52d6d9cefcd0edb994a9a5b43bb3e6c1f563e4fe53e49af94a24aa3d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-1958/source-inputs.json",
+      "size": 531,
+      "sha256": "79e7057b8e2d354b540acbda96409a58335cedf25d7633b8a45dfd00a2f17c1d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/01-original-review-entry.png",
+      "size": 335954,
+      "sha256": "f63a144e882156209dc1e571c934e9b4c9b56f7f896d65907ded501eb91e5a5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/01-original-review-entry.txt",
+      "size": 4969,
+      "sha256": "01a13977c74c9acde8abd9232fdc8c285c599dd88d41c9db02ddb4e1958bb535"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/02-original-still-unknown.png",
+      "size": 346135,
+      "sha256": "1862543f855a3f9059f95b439cd8a3e3e195692d943cb0daa4a89c9d0cae286c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/02-original-still-unknown.txt",
+      "size": 5135,
+      "sha256": "ac6afaf87e64ee8cb32aa3934d711dd5148c1142d10832ebc0e6b6c067aab932"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/03-original-history-after-reload.png",
+      "size": 359270,
+      "sha256": "81dd870c450a68570566d5658104c6f4f400d81dc24e50fbb80c118ff418ce17"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/03-original-history-after-reload.txt",
+      "size": 5563,
+      "sha256": "129bdcc1a34bb1ee0518adf289d2d7ad93c1648b1348e8a60fbfecb744e29785"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/04-positive-imported-via-ui.png",
+      "size": 123328,
+      "sha256": "987858a4eaaa809e69b0ecc1aacfb03cadd327f517f0ce4e8676b9856882feab"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/04-positive-imported-via-ui.txt",
+      "size": 1888,
+      "sha256": "f733a6b1bfff1fa2f96bf078e7d751666ab84f4a3991812a32e2bd892f5b2974"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/05-positive-before-proof-capture.png",
+      "size": 499250,
+      "sha256": "674f2ceffe86af938991487831d8be9eedbab732a3e5c65a137f25913d5b1adb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/05-positive-before-proof-capture.txt",
+      "size": 7628,
+      "sha256": "ac35cd298b99ef70cc2b9751602ac78f69c5e4bb0ebd8368bc5bc02f7d9c3893"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/06-source-proof-committed.png",
+      "size": 497104,
+      "sha256": "87109489286e7d37915c87cdf0524f824db54ce4ed2ea6ab1352095a70fef545"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/06-source-proof-committed.txt",
+      "size": 7646,
+      "sha256": "c919cbe7223ea942ded3d223f6ea8814b42790f2941a1c9879ba91380abc5097"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/07-new-investigation-dates-and-related-history.png",
+      "size": 499579,
+      "sha256": "5ea01001e4bf0ed537a53a502a1f47470b5c58d179c3c7ec1bba2ee2dafce9fd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/07-new-investigation-dates-and-related-history.txt",
+      "size": 7869,
+      "sha256": "6c8c86ca1c90ca8ea28c7cf3284aa6322dd3f031148790446f117c2867a7cbd3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/08-positive-reload-retains-history.png",
+      "size": 503127,
+      "sha256": "b6ecf4e83fa7ec52499607f5c1aff3004c8d10287f587168d8f69f2a0b2996bb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/08-positive-reload-retains-history.txt",
+      "size": 7946,
+      "sha256": "d50d2d32706a22de7d0001956c3d3619e35aa2fca6c1a8efae54beb257fed726"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/08b-cold-host-retains-source-proof-and-history.png",
+      "size": 503129,
+      "sha256": "77f0c9f2e736e42694917677dc2cc7889e972829cba8516b905afa6c04eb2d48"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/08b-cold-host-retains-source-proof-and-history.txt",
+      "size": 7946,
+      "sha256": "d50d2d32706a22de7d0001956c3d3619e35aa2fca6c1a8efae54beb257fed726"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/09-local-withdrawal-keeps-source-proof.png",
+      "size": 480530,
+      "sha256": "9e2c087e780cfee4c849d3b182189adff6bea913a2a683cdd5ddd61e4e632bc5"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/09-local-withdrawal-keeps-source-proof.txt",
+      "size": 7490,
+      "sha256": "31844459783ca23e5cce54cfa5cac5932e92994db299f1132e34514c2f96c862"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/10-other-workspace-no-task-data.png",
+      "size": 94198,
+      "sha256": "117d507c361159742159993f0e926cb663669194fa6eb585bbdc79288a0ad342"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/10-other-workspace-no-task-data.txt",
+      "size": 1354,
+      "sha256": "bd691189d1661638a6b8c814e884ee615f04473d27dffea23ffa1346748506fb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/11-second-browser-updates-source.png",
+      "size": 120094,
+      "sha256": "2ece6af2a7f778607d308a2018aefb2b6fe28707c2a727fb51a8b138382c337f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/11-second-browser-updates-source.txt",
+      "size": 1605,
+      "sha256": "8f8b4c32fb31360238f048ffcd254e294cec854fe28abd4ec8549278e7ae6832"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/12-previous-positive-result-invalidated.png",
+      "size": 83257,
+      "sha256": "43125e69f912db700ff803393879f5f08a4ea2f35b0b072eca95bb10a2b6b0b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/12-previous-positive-result-invalidated.txt",
+      "size": 1320,
+      "sha256": "fa1012946e624c2935c8dafa4f89361f52d72cbccba05e658365534b41ec9f02"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/13-conflict-support-and-counter-evidence.png",
+      "size": 530360,
+      "sha256": "8fcd1754768b595e69c5794523efa2174db6012051de0f2035f1419f09f6cb90"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/13-conflict-support-and-counter-evidence.txt",
+      "size": 8143,
+      "sha256": "7a993dd77a85dae4d8861565a08175744af2d050bb83e0005d577d141ba04ffc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/14-source-removed-from-workspace.png",
+      "size": 103136,
+      "sha256": "999e22aefe17d8245cc36bd0fa031e8fe5f88a6bf6e1ccaec99a64c3b3a0765f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/14-source-removed-from-workspace.txt",
+      "size": 1564,
+      "sha256": "27bc1a7583863eadaa107c10410e9b1b40885e4aa95b10a1fe1b7c64e8ffc953"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/15-removed-source-clears-old-evidence.png",
+      "size": 83086,
+      "sha256": "fa6a1266c14661c651b33164aafedbb9fd3debaa83caae759e5817c70b291aa7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/15-removed-source-clears-old-evidence.txt",
+      "size": 1225,
+      "sha256": "7946bc2b891ca63967ad10adaa4617091e699231fac25b3234ba6ba035264b92"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/actions.jsonl",
+      "size": 15151,
+      "sha256": "26c031d50023c41616faa2039e3fbd6e537b3545a7bf54b6be5baba07948f874"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/console.jsonl",
+      "size": 2205,
+      "sha256": "c72a72bb9586d0144c75014f6345aa11cf89346c41e1bed486c26dfcef143a62"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/environment.json",
+      "size": 242,
+      "sha256": "24518e8e6292197512e3393a2136f0ace24d6cb3c7658959c3bae9308c0a4922"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/external.jsonl",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/http.jsonl",
+      "size": 4322524,
+      "sha256": "7afb5bcb8208edcc07fa5e428808d036fbb31d59aa0ed23b11fcc3fc264e36eb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/original-server.log",
+      "size": 469,
+      "sha256": "8e1207d2f88b82c6f4add960981e3d1cf593a15eea490faafa5ceb29b931ea2c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/original-trace.zip",
+      "size": 16410039,
+      "sha256": "c57a701ac193aa13c47e60a1f182790c3bba7c5421e15adb9d44f028f56c0af3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/original.har",
+      "size": 834836,
+      "sha256": "2db94d0027b546849084f8c10c0d2fa7e2d60e020f462a8d6e276bb362c9988e"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/positive-cold-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/positive-server.log",
+      "size": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/positive-trace.zip",
+      "size": 68398978,
+      "sha256": "79c56097b9bc9f7a2d4d103d868e3b9a669e68105827b2d9ce6ecbf37f0e9a72"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/positive.har",
+      "size": 4757742,
+      "sha256": "2cd3f1be92b07be6ccb75cdeb25a0a4b816c7e4d07827bb7cf040ae195360a1f"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/result.json",
+      "size": 361577,
+      "sha256": "5c2f6f5d1cbf886d4b811252f5f701107ea9f420dd47dde1483fb42cc3da5c24"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/source-change-trace.zip",
+      "size": 1302562,
+      "sha256": "994da7e409aab402103541d3f24259070d3605e0ba64d8a41f7598150cc7139e"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/source-change.har",
+      "size": 202075,
+      "sha256": "405d63d7d0e250eda3693693febd9f395620faea1d94038d4720dc619477039a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/source-inputs.json",
+      "size": 531,
+      "sha256": "33b2f9eb229020036ae7a594354063d769414d4f00bdb0774a5a5142d5ce65ca"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/verification-summary.json",
+      "size": 33036,
+      "sha256": "fd7139fe59498e49a91ee1fa06c943bbf12c8e755e37717ebcc868f43f7830d9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/browser.har",
+      "size": 1188684,
+      "sha256": "a319f6e39ad1cfb703d6d225d6ed4d703ad3033555b9f865f89428c15c59945c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/disabled-host-retains-answer.png",
+      "size": 186807,
+      "sha256": "ecb3bb544ba167a113ed5c4555616ece01f597a5e16901c61be4d34b2382e5f1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/dom.txt",
+      "size": 2918,
+      "sha256": "7368a2246ef7f67165b76f97f67a924b571901b7343cdc3b7c96771fb329c4a6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/result.json",
+      "size": 1539623,
+      "sha256": "c2342db44c47f543b402064915f66d02c06914ab8eee3cca9b3acb1c6cf1bfac"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/server.log",
+      "size": 331,
+      "sha256": "0615ede0f5b746e03bb4a50599370a8b4dc64e779ad6f16c55619461e6b3bffc"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/source-1.png",
+      "size": 82744,
+      "sha256": "2c77529f126e03ba08739c190f0f8545b10c57b80ff9fa234611f3300a41a6b9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/source-2.png",
+      "size": 86548,
+      "sha256": "a65e6cca0ad0924df516b190c6f06ef438c60ac84e4d6ff907d0861141ac0edd"
+    },
+    {
+      "path": "output/playwright/task-relation-review/final-20261025-2005/default-host/trace.zip",
+      "size": 12441059,
+      "sha256": "81b0137bee107cca5ba971dabf13196eccccd33096badaf73818027b4f7714ba"
+    }
+  ],
+  "uncommitted_paths": [
+    "src/linkloom/ui/__main__.py",
+    "src/linkloom/ui/server.py",
+    "src/linkloom/ui/static/product.html",
+    "src/linkloom/ui/static/product.js",
+    "docs/requirements/task-relation-review-closure/CAPABILITY_BOUNDARIES.md",
+    "docs/requirements/task-relation-review-closure/DELIVERY.md",
+    "docs/requirements/task-relation-review-closure/DEMO_ACCEPTANCE.md",
+    "docs/requirements/task-relation-review-closure/DEMO_SCRIPT.md",
+    "docs/requirements/task-relation-review-closure/EVIDENCE_INDEX.md",
+    "docs/requirements/task-relation-review-closure/GAP_ANALYSIS.md",
+    "docs/requirements/task-relation-review-closure/REVIEW.md",
+    "docs/requirements/task-relation-review-closure/SPEC.md",
+    "docs/requirements/task-relation-review-closure/browser/acceptance.py",
+    "docs/requirements/task-relation-review-closure/browser/default_host.py",
+    "docs/requirements/task-relation-review-closure/browser/offline_source_host.py",
+    "docs/requirements/task-relation-review-closure/browser/summarize_evidence.py",
+    "docs/requirements/task-relation-review-closure/evidence/backend_worker.md",
+    "docs/requirements/task-relation-review-closure/evidence/commit-boundary-final.xml",
+    "docs/requirements/task-relation-review-closure/evidence/commit-boundary-first.xml",
+    "docs/requirements/task-relation-review-closure/evidence/commit-boundary-red.xml",
+    "docs/requirements/task-relation-review-closure/evidence/final-browser-manifest.json",
+    "docs/requirements/task-relation-review-closure/evidence/focused-final-green.xml",
+    "docs/requirements/task-relation-review-closure/evidence/focused-final.xml",
+    "docs/requirements/task-relation-review-closure/evidence/focused-network-short.xml",
+    "docs/requirements/task-relation-review-closure/evidence/git-boundary.json",
+    "docs/requirements/task-relation-review-closure/evidence/host-composition-red.xml",
+    "docs/requirements/task-relation-review-closure/evidence/http-first.xml",
+    "docs/requirements/task-relation-review-closure/evidence/http-green.xml",
+    "docs/requirements/task-relation-review-closure/evidence/original-evidence-hashes.json",
+    "docs/requirements/task-relation-review-closure/evidence/pr25-final-overlay.json",
+    "docs/requirements/task-relation-review-closure/evidence/proof-contracts.xml",
+    "docs/requirements/task-relation-review-closure/evidence/recovery-first.xml",
+    "docs/requirements/task-relation-review-closure/evidence/recovery_worker.md",
+    "docs/requirements/task-relation-review-closure/evidence/ui-final.json",
+    "docs/requirements/task-relation-review-closure/evidence/ui_dom_red_green.txt",
+    "docs/requirements/task-relation-review-closure/implementation_plan.md",
+    "src/linkloom/ui/static/product-task-review.js",
+    "src/linkloom/ui/task_review.py",
+    "tests/integration/test_task_review_commit_boundary.py",
+    "tests/integration/test_task_review_host_composition.py",
+    "tests/integration/test_task_review_http_acceptance.py",
+    "tests/integration/test_task_review_recovery.py",
+    "tests/ui/task_review_dom_test.cjs",
+    "tests/unit/test_task_review_backend.py"
+  ],
+  "backup_zip": "work\\task-relation-review\\integration-20261025\\accepted-uncommitted-files.zip"
+}

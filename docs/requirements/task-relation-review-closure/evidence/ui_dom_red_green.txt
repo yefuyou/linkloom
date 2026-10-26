@@ -1,0 +1,96 @@
+UI Worker evidence receipt — task relationship local review
+
+Scope: product-task-review.js, the narrow renderTaskAnswer post-render hook,
+product.html script include, and task_review_dom_test.cjs. No renderer, CSS,
+backend, real vault, commit, push, or PR mutation.
+
+RED (before the UI module existed)
+-----------------------------------
+Command:
+  node tests/ui/task_review_dom_test.cjs
+Result:
+  ENOENT: no such file or directory, open
+  src/linkloom/ui/static/product-task-review.js
+  exit code 1
+
+GREEN (after the implementation)
+---------------------------------
+Commands:
+  node --check src/linkloom/ui/static/product-task-review.js
+  node --check src/linkloom/ui/static/product.js
+  node tests/ui/task_review_dom_test.cjs
+  node tests/ui/task_answer_dom_test.cjs
+  node tests/ui/stale_revalidation_dom_test.cjs
+  node tests/ui/unified_ask_dom_test.cjs
+
+Results:
+  PASS: task review renders bounded evidence, self-asserted local forms,
+  history and safe invalidation
+  PASS: bounded answer, unknown/conflict/blocked, field isolation, P4 limits,
+  citations and escaping
+  PASS: stale comparison, separate approval, escaped evidence, resolved copy,
+  workspace race isolation
+  PASS: revalidation hides previous fields, quotes and proposals while HTTP
+  is pending, including language changes
+  PASS: refresh retains only workspace-bound run pointer; reopening
+  revalidates and hides revoked evidence
+  PASS: scope/date/query invalidation, latest question wins, workspace
+  response isolation
+  PASS: automatic scope, candidate/date continuation retains question, new
+  query rediscovers, per-request permission resets
+  PASS: feedback mutation blocks racing Ask, preserves query and resumes
+  after save
+  PASS: source trust label, partial/conflict prefix, rejected Final hidden
+  and stale source poll ignored
+
+  The focused DOM test also covers a second-tab source mutation model: a
+  POST 409 SOURCE_SNAPSHOT_CHANGED calls invalidateResult, clears the parent
+  result state and old quotes, and a later language change cannot resurrect
+  the old task result. GET source invalidation is shown as source failure, not
+  as a misleading Host --allow-local-task-review message.
+
+PR25 compatibility read-only evidence
+--------------------------------------
+gh pr view 25 --json state,isDraft,headRefName,headRefOid,baseRefName,url,title
+  => OPEN, isDraft=true, headRefOid=3d4c05025c64aed0f51a15b6aa7d476febc972f8
+  => https://github.com/yefuyou/linkloom/pull/25
+
+git show origin/review-pr25:src/linkloom/ui/static/product.js
+  => renderAskResult writes target.innerHTML with renderTaskAnswer and returns
+     at the next lines (PR25 anchors 595–599). The hook is inserted only
+     between that render and return; the renderer and CSS remain untouched.
+
+Security closure added after the first GREEN slice
+--------------------------------------------------
+The hook now passes invalidateResult: () => invalidateAsk(). A source/catalog/
+run invalidation or capability/permission refusal clears the parent ask result
+and state before showing a quote-free source failure. A revision CAS conflict
+with a fresh available review keeps the current source-bound review panel.
+The focused test models a second-tab source mutation, POST 409, and a later
+language change; the cleared result state prevents the old quote returning.
+
+Final focused UI slice
+----------------------
+The review hook captures the answer locale from askLocale(result.query), and
+its current-view guard checks that same locale. A Chinese answer therefore
+receives the Chinese review panel even when state.language is still English.
+History items show their run_id plus a current run or related history marker;
+old run receipts remain read-only context and are not rendered as historical
+source quotes. Host-disabled review replaces only the review panel, preserving
+the ordinary read-only task answer and avoiding a false invalidateAsk(), for
+both an available=false response and a 403 Host-disabled fetch error. The
+focused DOM test covers these cases and still passes after the patch.
+
+Canonical source/proof projection slice
+----------------------------------------
+The panel now renders source_verdict (with UNKNOWN fallback) and proof.status
+and source_verdict_source as separate labeled diagnostics. Canonical
+source_supporting_evidence/source_counter_evidence and source_blockers take
+precedence over legacy/model proposal evidence; legacy fields remain a
+compatibility fallback when the source projection is absent. A SUPPORTED
+source verdict is not labeled as an established relation: the persistent
+proof status and the existing business-approval-unconfirmed notice remain
+visible independently.
+
+Not run: real Chromium acceptance (coordinator-owned); Python pytest could not
+start in this environment because of an invalid system DLL relocation.

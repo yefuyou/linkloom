@@ -20,7 +20,7 @@ explicit launch-time opt-in.
 
 For a key-free preview, /legacy-ask replays an older deterministic decision
 brief; it does not demonstrate the V1 workflow. The screenshots in the README
-were captured with a deterministic fake provider and are not a public provider
+were captured with offline responses and are not a public provider
 switch.
 
 ## Walkthrough
@@ -29,17 +29,17 @@ switch.
    decision history stay scoped to that workspace.
 
 2. **Import the meeting.** Select the synthetic fixture in the Sources file
-   picker and choose **Import and extract**. Wait for **COMPLETE**. The
+   picker and choose **Import and extract**. Wait for **Processed**. The
    acceptance fixture produced three segments, two decision candidates for
    review, and one supporting proposal.
 
 3. **Inspect the first candidate.** Open Review and select **Birchline**.
-   Confirm its type is DECISION, its subject and relation, the exact October 6
+   Confirm its type is Decision candidate, its subject and relation, the exact October 6
    evidence quote, the source name, and the effective date. If the UI shows
-   “Not resolved”, enter 2026-10-06 based on that quote.
+   “Unconfirmed”, enter 2026-10-06 based on that quote.
 
 4. **Approve Birchline.** Enter a reviewer and a short reason, then choose
-   **Approve and materialize**. The Review UI records the resolution and opens
+   **Approve and save**. The Review UI records the resolution and opens
    Decision Memory for the approved record.
 
 5. **Review the replacement.** Return to Review and inspect **Wrenwell**.
@@ -49,7 +49,7 @@ switch.
    it must remain supporting-only.
 
 6. **Open Decision Memory.** The current value should be Wrenwell. Its timeline
-   should show Birchline as SUPERSEDED and Wrenwell as ACTIVE, with each
+   should show Birchline as Replaced and Wrenwell as Active, with each
    validity boundary and source passage.
 
 7. **Ask for the current supplier.** Submit:
@@ -68,10 +68,20 @@ switch.
 
 10. **Check Review Attention.** Open Review. The previously materialized
     Wrenwell decision should appear under **Decision records needing attention**
-    with state **STALE**. Inspect it to confirm its original source passage and
-    historical timeline remain visible. V1 shows the attention state; a
-    dedicated stale revalidation action is deferred.
+    with state **Source changed**. Choose **Revalidate decision** to compare the
+    original approval with the current source. Review the new candidate and
+    record a separate approval, or keep the decision unresolved.
 
-The verified fixture run kept Kestrel Ledger out of authoritative Decision
-Memory. Live provider output can vary, so inspect the type and exact evidence
-before approving any candidate.
+Before approval, check the candidate type, effective date and quoted source.
+Kestrel Ledger remains an unapproved supporting proposal.
+
+## Cross-meeting task demo
+
+Use the no-key task-demo command in the README with a dedicated database.
+Select **Tasks across the current workspace records**, then ask:
+“Do these meetings describe the same task, and what changed about its deadline?”
+Read the record count and result status first. Compare each source's owner/date
+fields, open **Field evidence and original message**, and inspect **Relationship
+proposals and investigation details** for the complete model suggestions.
+The **Offline demo** label stays visible. Suggestions remain unconfirmed and
+are kept separate from approved Decision Memory records.
