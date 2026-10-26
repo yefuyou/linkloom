@@ -16,6 +16,7 @@
     askClarification: null,
     askLanguage: "auto",
     askResult: null,
+    askLocaleRun: null,
     askAgent: null,
     language: document.documentElement.lang || "en",
   };
@@ -221,6 +222,7 @@
   }
 
   async function loadScreen(screen = state.screen) {
+    state.askLocaleRun = null;
     const viewToken = ++state.agentViewToken;
     setNavigation(screen);
     state.creatingWorkspace = false;
@@ -560,6 +562,7 @@
   }
 
   function invalidateAsk() {
+    state.askLocaleRun = null;
     state.agentViewToken += 1;
     state.askCandidates = [];
     state.askResult = null;
@@ -622,6 +625,22 @@
       target.innerHTML = window.renderTaskAnswer(result, {
         escapeHtml, t, date: value => askDate(value, locale),
         citation: (item, index) => askEvidence(item, index, locale),
+      });
+      // The task renderer remains presentation-only.  Local review is mounted
+      // as a narrow post-render extension so Host capabilities and source/CAS
+      // checks stay in the dedicated review module/API.
+      // The task answer language is resolved from the query locale.  Keep the
+      // review panel on that same locale rather than the app's display-state
+      // language, which may still be English while an answer is Chinese.
+      const reviewLanguage = locale;
+      window.mountTaskReview?.({
+        target, result, workspaceId: state.workspace?.workspace_id,
+        runId: result.agent_run_id, language: reviewLanguage,
+        invalidateResult: () => invalidateAsk(),
+        isCurrent: () => viewToken === state.agentViewToken
+          && state.workspace?.workspace_id === result.workspace_id
+          && askLocale(result.query) === reviewLanguage
+          && target.isConnected !== false,
       });
       return;
     }
@@ -765,6 +784,7 @@
   }
 
   async function submitAsk(form, clarifiedSlot = null) {
+    state.askLocaleRun = null;
     if (form.dataset.feedbackPending === "true") {
       announce(askCopy("Wait for the terminology change to finish.", "请等待术语更改保存完成。"));
       return;
@@ -1019,6 +1039,9 @@
     const fields = [...(page.querySelectorAll?.("input:not([type=file]):not([type=checkbox]), textarea, select") || [])]
       .map(field => ({id: field.id, value: field.value}));
     const detail = {creating: state.creatingWorkspace, source: state.sourceId, candidate: state.candidateId, revalidation: state.revalidation, decision: state.decisionId};
+    const taskRun = state.screen === "ask" && state.askResult?.path === "TASK_INVESTIGATION"
+      && state.askResult.task_review && state.askResult.reviewer?.accepted === true ? state.askResult.agent_run_id
+      : state.screen === "ask" && state.askLocaleRun?.workspaceId === state.workspace?.workspace_id ? state.askLocaleRun.runId : null;
     invalidateAsk();
     const workspaceId = state.workspace?.workspace_id;
     const language = event.target.value;
@@ -1036,13 +1059,19 @@
         : detail.revalidation ? inspectRevalidation(detail.revalidation.original.decision_id)
         : detail.decision ? inspectDecision(detail.decision, fields.find(field => field.id === "timeline-date")?.value || "") : loadScreen();
       const viewToken = state.agentViewToken;
+      state.askLocaleRun = taskRun ? {workspaceId, runId: taskRun} : null;
       await rendering;
       if (viewToken !== state.agentViewToken || workspaceId !== state.workspace?.workspace_id || language !== state.language) return;
       for (const field of fields) {
         const input = document.getElementById(field.id);
         if (input && field.id !== "ask-external") input.value = field.value;
       }
-      if (state.screen === "ask") { localizeAsk(); syncTaskOptions(); }
+      if (state.screen === "ask") {
+        localizeAsk(); syncTaskOptions();
+        // Restore only a currently displayed task through the existing read-only
+        // recheck; never reuse cached evidence or repeat an investigation POST.
+        if (taskRun) await pollAsk(taskRun, workspaceId, viewToken);
+      }
     } catch (error) { renderError(error); }
   });
 

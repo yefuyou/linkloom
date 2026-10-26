@@ -1,0 +1,295 @@
+{
+  "status": "SEALED_AFTER_CONTEXT_AND_PROCESS_CLOSE",
+  "production_sha256": "e08877ab443882a2cb423fd8eed5816b82e8a00099c6efbecabc3285a8812195",
+  "label": "i-final-1025",
+  "files": [
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/01-original-review-entry.png",
+      "bytes": 335954,
+      "sha256": "f63a144e882156209dc1e571c934e9b4c9b56f7f896d65907ded501eb91e5a5d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/01-original-review-entry.txt",
+      "bytes": 4969,
+      "sha256": "01a13977c74c9acde8abd9232fdc8c285c599dd88d41c9db02ddb4e1958bb535"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/02-original-still-unknown.png",
+      "bytes": 346135,
+      "sha256": "1862543f855a3f9059f95b439cd8a3e3e195692d943cb0daa4a89c9d0cae286c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/02-original-still-unknown.txt",
+      "bytes": 5135,
+      "sha256": "ac6afaf87e64ee8cb32aa3934d711dd5148c1142d10832ebc0e6b6c067aab932"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/03-original-history-after-reload.png",
+      "bytes": 359419,
+      "sha256": "4a4a346237ebd82e48df9448462f36e0b16ab842184da9a0df03987fa3d44db7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/03-original-history-after-reload.txt",
+      "bytes": 5563,
+      "sha256": "80df074a51d67ee6fbecbacfb0310bca15a694653c137e77fda744bf15af2355"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/04-positive-imported-via-ui.png",
+      "bytes": 123204,
+      "sha256": "5ba7aa63438c7c86fab90dc4f0a78baeb2f7ba89b3d0f66a9aa241a10c8c2fda"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/04-positive-imported-via-ui.txt",
+      "bytes": 1861,
+      "sha256": "70a022dfb23d17d772118d67abc73eb0f8a3e50ef7cfcfd8cc5651074bf19c88"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/05-positive-before-proof-capture.png",
+      "bytes": 498674,
+      "sha256": "e49905a6ae2665fa5057ca0777e6f6fbabc523a5cfbfc726a185465e4a746dce"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/05-positive-before-proof-capture.txt",
+      "bytes": 7628,
+      "sha256": "4d67e7cb8f33ec5af2063a7f726249dc2d04e5ec99acf444ae9a1be39e69fbb6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/06-source-proof-committed.png",
+      "bytes": 496312,
+      "sha256": "377baec8d34f3566c93dfb212e88320774979e591073e5a9f442c434edb0c3b6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/06-source-proof-committed.txt",
+      "bytes": 7646,
+      "sha256": "1d66f830e3e8454f54276fb2685537e91097d5d6f03d24870c5e89eb22daac1d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/07-new-investigation-dates-and-related-history.png",
+      "bytes": 499407,
+      "sha256": "9202605f628ca504b70390277151e1f77ebb33cb278bb4a02134e51ade654267"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/07-new-investigation-dates-and-related-history.txt",
+      "bytes": 7869,
+      "sha256": "9c59964824de4c1e2d5c1adf885d418de103c3b0b4468c3eb39df1af6161dc1a"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/08-positive-reload-retains-history.png",
+      "bytes": 502877,
+      "sha256": "4338bc39973c1a4f83a8b65390dfbea01a0da94857f63bce38f2a15923955750"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/08-positive-reload-retains-history.txt",
+      "bytes": 7946,
+      "sha256": "a421a29ff8587a7405b15cad94fad851d058b601a7d6e9bf816062dda89b4046"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/08b-cold-host-retains-source-proof-and-history.png",
+      "bytes": 502877,
+      "sha256": "4338bc39973c1a4f83a8b65390dfbea01a0da94857f63bce38f2a15923955750"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/08b-cold-host-retains-source-proof-and-history.txt",
+      "bytes": 7946,
+      "sha256": "a421a29ff8587a7405b15cad94fad851d058b601a7d6e9bf816062dda89b4046"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/09-local-withdrawal-keeps-source-proof.png",
+      "bytes": 479925,
+      "sha256": "82e57da9ac21ded01daf8e8ad2f7da0d340d6f8551f1794bc0776d1a7870d8de"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/09-local-withdrawal-keeps-source-proof.txt",
+      "bytes": 7490,
+      "sha256": "e634b41b4e16c15e01c09e88e68251037975f433d99ed8ac5a2c7cf7598ea8fa"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/10-other-workspace-no-task-data.png",
+      "bytes": 94198,
+      "sha256": "117d507c361159742159993f0e926cb663669194fa6eb585bbdc79288a0ad342"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/10-other-workspace-no-task-data.txt",
+      "bytes": 1354,
+      "sha256": "bd691189d1661638a6b8c814e884ee615f04473d27dffea23ffa1346748506fb"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/11-second-browser-updates-source.png",
+      "bytes": 119717,
+      "sha256": "47cb57f9d665ad9093867d319d9964082f742e96fa280c6fd1d6f174fb124fca"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/11-second-browser-updates-source.txt",
+      "bytes": 1605,
+      "sha256": "36c1ba988924bd7d3bc175368a98f37e614a67e6e6eb853343a1cfdd475e45c3"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/12-previous-positive-result-invalidated.png",
+      "bytes": 83257,
+      "sha256": "43125e69f912db700ff803393879f5f08a4ea2f35b0b072eca95bb10a2b6b0b2"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/12-previous-positive-result-invalidated.txt",
+      "bytes": 1320,
+      "sha256": "fa1012946e624c2935c8dafa4f89361f52d72cbccba05e658365534b41ec9f02"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/13-conflict-support-and-counter-evidence.png",
+      "bytes": 529231,
+      "sha256": "f3d3308efe09c74686d1b15b54a979410204fdaba9c232da5725b234fc75a4f6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/13-conflict-support-and-counter-evidence.txt",
+      "bytes": 8143,
+      "sha256": "303ef1e884cf12cd7ef38ef192536eca1f4c5d8f5a9ba135b7263c576e7b0f14"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/14-source-removed-from-workspace.png",
+      "bytes": 103221,
+      "sha256": "453480da10ae0fb1df412b169b1c6dd70d89524461027b69ed32f84df6c969b1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/14-source-removed-from-workspace.txt",
+      "bytes": 1564,
+      "sha256": "16c1c66bf05fca274a3f28dcefc98625c06098d3e1f7323940a409bddbc68d4b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/15-removed-source-clears-old-evidence.png",
+      "bytes": 83086,
+      "sha256": "fa6a1266c14661c651b33164aafedbb9fd3debaa83caae759e5817c70b291aa7"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/15-removed-source-clears-old-evidence.txt",
+      "bytes": 1225,
+      "sha256": "7946bc2b891ca63967ad10adaa4617091e699231fac25b3234ba6ba035264b92"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/actions.jsonl",
+      "bytes": 15144,
+      "sha256": "644e5728722d2f626b86f92cf016bf4c81dc97170f9f6dbeee308f23ddb06438"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/console.jsonl",
+      "bytes": 2205,
+      "sha256": "d5e49086db41ec00f270ec284c5a9dcc1f192249771635f269808d17f726aee6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/environment.json",
+      "bytes": 235,
+      "sha256": "64d7111e1639c8e4e17b3ae2b16f5c4e50f7bc6654ae307f48019e43f9599198"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/external.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/http.jsonl",
+      "bytes": 8318970,
+      "sha256": "87abd86f54acda9674d87f0864825a29831cb19ac606c77d4a87ea9040cdbc32"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/original-server.log",
+      "bytes": 462,
+      "sha256": "c5ad099f82f82e2bf8e7bc322815ef3862f74d320358d3cf4f27eccf52fddc4c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/original-trace.zip",
+      "bytes": 27212271,
+      "sha256": "91208a4d1dcfc38d52b4da958f7bf92f382a1da7cc6adc1a5d65c75902997e76"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/original.har",
+      "bytes": 1737336,
+      "sha256": "b45b9c322b9b38483ac2cbd123d19421fabbb644835f0dfd713c097691a50f0c"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/positive-cold-server.log",
+      "bytes": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/positive-server.log",
+      "bytes": 88,
+      "sha256": "1bd8444ba1e0031fac18039a2e181016580c4c61b00120d21cb84d36cef3af91"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/positive-trace.zip",
+      "bytes": 111724039,
+      "sha256": "55d30535baeed6d61c2f3cb4aa9eae66b8ce05c5637788368b0106485d210317"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/positive.har",
+      "bytes": 8101164,
+      "sha256": "64755e5f23c3b4bcfd2a6b8e0caa48c87a5bd7aabe97aa776312555131a0d119"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/result.json",
+      "bytes": 361763,
+      "sha256": "1791aef4d8bdf93e77ac4eaeaba886df2068c5f6adccf32197fa049c5e10caad"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/source-change-trace.zip",
+      "bytes": 1706435,
+      "sha256": "3c940f6d557c1f1997e7d311624a6b54c13357fff5e717ef72cf73754b095877"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/source-change.har",
+      "bytes": 202148,
+      "sha256": "11e36dff2ce144c74bc929aacbed350ca621861eddb665c79a28417baa0d60c9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/source-inputs.json",
+      "bytes": 531,
+      "sha256": "531e533cb827a85799a5fb557d65421bf2d7060613d7332bfddca186217620e4"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/verification-summary.json",
+      "bytes": 33037,
+      "sha256": "fde934cb48d6f9264e963a01996389ed222ba4443a477b509f2f24815b84c0e9"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/browser.har",
+      "bytes": 1113855,
+      "sha256": "0cae4a505d9d6f08e1dae179deaa46d68b4db48957ccc830230e8c0be30b8eb0"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/disabled-host-retains-answer.png",
+      "bytes": 186807,
+      "sha256": "ecb3bb544ba167a113ed5c4555616ece01f597a5e16901c61be4d34b2382e5f1"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/dom.txt",
+      "bytes": 2918,
+      "sha256": "7368a2246ef7f67165b76f97f67a924b571901b7343cdc3b7c96771fb329c4a6"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/result.json",
+      "bytes": 1426573,
+      "sha256": "a9d0fde77c9874a81f8355e1123e01a6dadb1b9ec7431ad226913881de2b0763"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/server.log",
+      "bytes": 324,
+      "sha256": "dfe0aa76fdc541066801de8d93b41ef03d38da99c0f327f12a04ec619763ff28"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/source-1.png",
+      "bytes": 82447,
+      "sha256": "b935f2b53575484c4f0e72db136684f45888c19d0af0526e05cc14ecceab4f6b"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/source-2.png",
+      "bytes": 86356,
+      "sha256": "76250f007dad7b371e2b66eb1f8614e85bbd6c522f8e19c1a733461c7724312d"
+    },
+    {
+      "path": "output/playwright/task-relation-review/i-final-1025/default-host/trace.zip",
+      "bytes": 15017594,
+      "sha256": "4f48e67519bbabcb6d1eb2b186777dce390487e53cd3f9989d97a922c2553dc3"
+    }
+  ],
+  "default_host": "PASS",
+  "preserved_old_files": 287,
+  "all_old_hashes_unchanged": true
+}

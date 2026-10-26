@@ -12,6 +12,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 from linkloom.ui.backend import RunBackend
 from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.task_review import TaskReviewService
 from linkloom.ui.unified_ask import UnifiedAskService
 
 
@@ -24,6 +25,7 @@ STATIC_FILES = {
     "/product.css": ("product.css", "text/css; charset=utf-8"),
     "/product.js": ("product.js", "text/javascript; charset=utf-8"),
     "/product-task-result.js": ("product-task-result.js", "text/javascript; charset=utf-8"),
+    "/product-task-review.js": ("product-task-review.js", "text/javascript; charset=utf-8"),
     "/legacy-ask": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/app.css": ("app.css", "text/css; charset=utf-8"),
@@ -41,13 +43,77 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         backend: RunBackend,
         product_app: ProductApplication | None = None,
         investigation_service: ProductInvestigationService | None = None,
+        *,
+        allow_local_task_review: bool = False,
+        task_review_sidecar_path: str | Path | None = None,
     ) -> None:
         self.backend = backend
         self.product_app = product_app
         self.investigation_service = investigation_service
         self.unified_ask = (UnifiedAskService(product_app, lambda: self.investigation_service)
                             if product_app is not None else None)
+        if product_app is not None:
+            # Relation sidecars are Host-owned.  Keep an explicitly composed
+            # map when one was supplied, but do not let an empty map fall
+            # through to a copied local dict: Product Runtime and task-review
+            # CONTINUE must resolve the same path.  The request never carries
+            # a sidecar path.
+            proof_paths = getattr(investigation_service, "task_relation_paths", None)
+            if proof_paths is None:
+                proof_paths = {}
+                if investigation_service is not None:
+                    investigation_service.task_relation_paths = proof_paths
+            if not isinstance(proof_paths, dict):
+                raise ValueError("task_relation_paths must be a Host-owned mapping")
+            self._task_relation_paths = proof_paths
+            self._default_task_relation_sidecar = self._host_relation_sidecar(product_app)
+            current_workspace = product_app.repository.current_workspace_id()
+            if current_workspace:
+                self._task_relation_sidecar_for(current_workspace)
+            self.task_review = TaskReviewService(
+                product_app,
+                lambda run_id, workspace_id: self.unified_ask.inspect(run_id, workspace_id),
+                enabled=allow_local_task_review,
+                sidecar_path=task_review_sidecar_path,
+                proof_path_provider=self._task_relation_sidecar_for,
+            )
+        else:
+            self._task_relation_paths = {}
+            self._default_task_relation_sidecar = None
+            self.task_review = None
         super().__init__(address, LinkLoomRequestHandler)
+
+    @staticmethod
+    def _host_relation_sidecar(product_app: ProductApplication) -> Path | None:
+        database_path = str(getattr(product_app.repository, "database_path", ""))
+        if not database_path or database_path == ":memory:":
+            # There is no durable Product parent to bind a relation sidecar
+            # to.  Do not create a process-global fallback file.
+            return None
+        if database_path:
+            path = Path(database_path).expanduser().with_name(
+                Path(database_path).expanduser().name + ".relations.sqlite"
+            )
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path
+
+    def _task_relation_sidecar_for(self, workspace_id: str) -> Path | None:
+        if workspace_id in self._task_relation_paths:
+            value = self._task_relation_paths[workspace_id]
+            return Path(value).expanduser() if value is not None else None
+        if self._default_task_relation_sidecar is None:
+            return None
+        self._task_relation_paths[workspace_id] = self._default_task_relation_sidecar
+        return self._default_task_relation_sidecar
+
+    def ensure_task_relation_sidecar(self, workspace_id: object) -> None:
+        if isinstance(workspace_id, str) and workspace_id.strip():
+            self._task_relation_sidecar_for(workspace_id)
+
+    def server_close(self) -> None:
+        if self.task_review is not None:
+            self.task_review.close()
+        super().server_close()
 
 
 class LinkLoomRequestHandler(BaseHTTPRequestHandler):
@@ -104,6 +170,29 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         )
         return True
 
+    def _reject_task_review_origin(self) -> bool:
+        """Allow only same-origin localhost browser requests for local review."""
+        origin = self.headers.get("Origin")
+        if not origin:
+            return False
+        parsed = urlsplit(origin)
+        hostname = (parsed.hostname or "").lower().rstrip(".")
+        host_header = self.headers.get("Host", "").strip().lower()
+        host_hostname = host_header.split(":", 1)[0].rstrip(".")
+        if parsed.scheme.lower() != "http" or hostname not in {"127.0.0.1", "localhost"} or hostname != host_hostname:
+            self._send_error_payload(HTTPStatus.FORBIDDEN, "INVALID_ORIGIN", "Task review requires the local Product UI origin.")
+            return True
+        try:
+            origin_port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        except ValueError:
+            self._send_error_payload(HTTPStatus.FORBIDDEN, "INVALID_ORIGIN", "Task review origin is malformed.")
+            return True
+        host_port = host_header.rsplit(":", 1)[-1] if ":" in host_header else "80"
+        if host_port.isdigit() and int(host_port) != origin_port:
+            self._send_error_payload(HTTPStatus.FORBIDDEN, "INVALID_ORIGIN", "Task review origin does not match the current Host.")
+            return True
+        return False
+
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
         if self._reject_non_local_host():
             return
@@ -118,6 +207,22 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
                 self._send_error_payload(500, "STATIC_ASSET_ERROR", "The UI asset is unavailable.")
                 return
             self._send_bytes(body, status=200, content_type=content_type)
+            return
+        if path == "/api/product/task-review":
+            if self._reject_task_review_origin():
+                return
+            query = parse_qs(urlsplit(self.path).query)
+            workspace_id = query.get("workspace_id", [""])[0]
+            run_id = query.get("run_id", [""])[0]
+            if self.server.task_review is None:
+                self._send_error_payload(HTTPStatus.FORBIDDEN, "LOCAL_TASK_REVIEW_DISABLED", "Task review is unavailable.")
+                return
+            try:
+                self._send_json(self.server.task_review.get(workspace_id, run_id))
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            except ValueError as error:
+                self._send_error_payload(400, "INVALID_TASK_REVIEW_REQUEST", str(error))
             return
         if self.server.unified_ask is not None and path == "/api/product/ask/config":
             try:
@@ -193,6 +298,21 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if self._reject_non_local_host():
             return
         path = unquote(urlsplit(self.path).path)
+        if path == "/api/product/task-review":
+            if self._reject_task_review_origin():
+                return
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            if self.server.task_review is None:
+                self._send_error_payload(HTTPStatus.FORBIDDEN, "LOCAL_TASK_REVIEW_DISABLED", "Task review is unavailable.")
+                return
+            try:
+                result, status = self.server.task_review.post(payload)
+                self._send_json(result, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path.startswith("/api/product/feedback/") and self.server.unified_ask is not None:
             payload = self._read_json_payload(MAX_REQUEST_BYTES)
             if payload is None:
@@ -207,6 +327,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             payload = self._read_json_payload(MAX_REQUEST_BYTES)
             if payload is None:
                 return
+            self.server.ensure_task_relation_sidecar(payload.get("workspace_id"))
             try:
                 result, status = self.server.unified_ask.ask(payload)
                 self._send_json({"result": result}, status=status)
@@ -252,6 +373,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
                 return
+            self.server.ensure_task_relation_sidecar(self.server.product_app._workspace_id())
             self._send_json(result, status=status)
             return
         if self.headers.get_content_type() != "application/json":
@@ -335,6 +457,8 @@ def create_http_server(
     *,
     product_app: ProductApplication | None = None,
     investigation_service: ProductInvestigationService | None = None,
+    allow_local_task_review: bool = False,
+    task_review_sidecar_path: str | Path | None = None,
     host: str = "127.0.0.1",
     port: int = 8765,
 ) -> LinkLoomHTTPServer:
@@ -342,7 +466,14 @@ def create_http_server(
         raise ValueError("Product UI V1 binds to localhost only.")
     if isinstance(port, bool) or not isinstance(port, int) or not 0 <= port <= 65535:
         raise ValueError("port must be between 0 and 65535.")
-    return LinkLoomHTTPServer((host, port), backend, product_app, investigation_service)
+    return LinkLoomHTTPServer(
+        (host, port),
+        backend,
+        product_app,
+        investigation_service,
+        allow_local_task_review=allow_local_task_review,
+        task_review_sidecar_path=task_review_sidecar_path,
+    )
 
 
 __all__ = ["LinkLoomHTTPServer", "create_http_server"]

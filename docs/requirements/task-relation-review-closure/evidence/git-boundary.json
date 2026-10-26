@@ -1,0 +1,26 @@
+{
+  "recorded": "2026-10-25T12:02:25.099677+00:00",
+  "branch": "codex/task-relation-review-closure",
+  "head": "7720390a796662ff42c27b5eef6f8685e5155802",
+  "origin_master": "f2ce6b82d635a7b78b17a6d100556c354f7a461a",
+  "protected_files_unchanged": [
+    "src/linkloom/tools/task_relations.py",
+    "src/linkloom/semantic_ingestion/task_relation_store.py",
+    "src/linkloom/semantic_ingestion/task_relation_query.py",
+    "src/linkloom/semantic_ingestion/task_relation_validation.py",
+    "src/linkloom/semantic_ingestion/task_plan_revision.py",
+    "src/linkloom/semantic_ingestion/task_revision_comparison.py",
+    "src/linkloom/ui/static/product-task-result.js",
+    "src/linkloom/ui/static/product.css"
+  ],
+  "status": "M src/linkloom/ui/__main__.py\n M src/linkloom/ui/server.py\n M src/linkloom/ui/static/product.html\n M src/linkloom/ui/static/product.js\n?? docs/requirements/task-relation-review-closure/\n?? src/linkloom/ui/static/product-task-review.js\n?? src/linkloom/ui/task_review.py\n?? tests/integration/test_task_review_commit_boundary.py\n?? tests/integration/test_task_review_host_composition.py\n?? tests/integration/test_task_review_http_acceptance.py\n?? tests/integration/test_task_review_recovery.py\n?? tests/ui/task_review_dom_test.cjs\n?? tests/unit/test_task_review_backend.py",
+  "production_hashes": {
+    "src/linkloom/ui/__main__.py": "85896df8f6c7c1222ba5ad0a1421cde6eb23178d435a9f782c2fa9ffa1611443",
+    "src/linkloom/ui/server.py": "d51646d0a5cd6eab537981cf0620b57c11c19c953c871755eef16aaa3a1ef5d2",
+    "src/linkloom/ui/task_review.py": "fdd67d1408072c590318b3bbf1f7a386061eb925c06d932c0d1eaae8f9f22694",
+    "src/linkloom/ui/static/product-task-review.js": "8e2f4104bb8f043057b15b7de4fc34870bcb2cb2162dd92e041d351f90d1cbc4",
+    "src/linkloom/ui/static/product.js": "aee628257e90ac5667c0ca91a0df88ccbf303b70b83b46a3b081d3fd8a5c5224",
+    "src/linkloom/ui/static/product.html": "49070206936159d43e04e665d235d764aa9f2cbb2ee143e9d573ddaa4cd5eef8"
+  },
+  "diff_stat": "src/linkloom/ui/__main__.py         |   8 +++\n src/linkloom/ui/server.py           | 133 +++++++++++++++++++++++++++++++++++-\n src/linkloom/ui/static/product.html |   1 +\n src/linkloom/ui/static/product.js   |  16 +++++\n 4 files changed, 157 insertions(+), 1 deletion(-)"
+}
