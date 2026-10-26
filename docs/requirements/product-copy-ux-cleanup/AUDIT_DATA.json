@@ -1,0 +1,1948 @@
+{
+  "summary": {
+    "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+    "audited_states": 37,
+    "findings": 100,
+    "dispositions": {
+      "merge": 17,
+      "rewrite": 55,
+      "move": 8,
+      "delete": 20
+    },
+    "categories": {
+      "C": 67,
+      "B": 6,
+      "E": 9,
+      "D": 9,
+      "A": 9
+    },
+    "browser": "INCOMPLETE",
+    "counting_rule": "One baseline template location/disposition per finding; bilingual variants merged; global rewrites are not multiplied by runtime card count."
+  },
+  "states": [
+    [
+      "Workspace create / no workspace",
+      "product.js:showNoWorkspace + new-workspace",
+      "A/B",
+      "VM shell; code"
+    ],
+    [
+      "Workspace switch / unavailable current workspace",
+      "product.js:workspacePicker change",
+      "A/E",
+      "existing DOM isolation; HTTP"
+    ],
+    [
+      "Sources empty / AI unavailable",
+      "product.js:loadSources",
+      "A/B/E",
+      "new bilingual DOM"
+    ],
+    [
+      "Sources imported / AI ready",
+      "product.js:loadSources",
+      "A/B/E",
+      "first-use DOM; HTTP"
+    ],
+    [
+      "Source saved / extraction unavailable",
+      "product.js:inspectSource",
+      "A/B/E/D",
+      "first-use DOM; HTTP"
+    ],
+    [
+      "Source extraction running / failed / retry",
+      "product.js:pollSource + inspectSource",
+      "A/E/D",
+      "code; segment recovery HTTP"
+    ],
+    [
+      "Source details / update / remove",
+      "product.js:inspectSource + delete-source",
+      "A/B/E/D",
+      "HTTP + DOM"
+    ],
+    [
+      "Review empty / supporting proposals",
+      "product.js:loadReview",
+      "A/B/E",
+      "DOM + HTTP"
+    ],
+    [
+      "Review candidate / unresolved relationship",
+      "product.js:inspectCandidate",
+      "A/B/E/D",
+      "first-use DOM + HTTP"
+    ],
+    [
+      "Review candidate / subject and date correction",
+      "product.js:inspectCandidate",
+      "A/B/E",
+      "first-use DOM + HTTP"
+    ],
+    [
+      "Review approve / reject / saving pending",
+      "product.js:submit + userError",
+      "A/E",
+      "DOM + HTTP"
+    ],
+    [
+      "Review attention / stale comparison",
+      "product.js:inspectRevalidation",
+      "A/B/E/D",
+      "stale DOM + HTTP"
+    ],
+    [
+      "Revalidation unresolved / resolved / read-only",
+      "product.js:inspectRevalidation",
+      "A/E/D",
+      "stale DOM + HTTP"
+    ],
+    [
+      "Decision Memory empty / current records",
+      "product.js:loadDecisions",
+      "A/B",
+      "bilingual DOM + existing DOM"
+    ],
+    [
+      "Decision timeline / current / superseded / invalidated",
+      "product.js:inspectDecision",
+      "A/B/E/D",
+      "bilingual DOM; HTTP"
+    ],
+    [
+      "Decision historical date / missing record",
+      "product.js:inspectDecision",
+      "A/B/E",
+      "code; HTTP"
+    ],
+    [
+      "Ask composer / auto / explicit task scope",
+      "product.js:showAsk",
+      "A/B/E/D",
+      "bilingual DOM + HTTP"
+    ],
+    [
+      "Ask AI unavailable / offline / external cost permission",
+      "product.js:showAsk",
+      "A/B/E/D",
+      "bilingual DOM + first-use DOM"
+    ],
+    [
+      "Ask advanced decision/date / terminology feedback",
+      "product.js:showAsk + loadFeedback",
+      "A/B/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Ask investigating",
+      "product.js:renderAskResult INVESTIGATING",
+      "A/D",
+      "existing DOM; code"
+    ],
+    [
+      "Ask completed reviewed record / historical lookup",
+      "product.js:renderAskResult hasFinal",
+      "A/B/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Ask unknown reason / ambiguous decision / missing date",
+      "product.js:renderAskResult !hasFinal",
+      "A/B/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Ask no match / unsupported / scope denied",
+      "product.js:admissionMessages + !hasFinal",
+      "A/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Ask failed / provider uncertain / permission required",
+      "product.js:renderAskResult + showAskError",
+      "A/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Source relationships complete / partial / conflict",
+      "product.js:renderSourceInvestigation",
+      "A/B/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Task PARTIAL / AI support proposal",
+      "product-task-result.js:renderTaskAnswer",
+      "A/B/E/D",
+      "bilingual task DOM + HTTP"
+    ],
+    [
+      "Task UNKNOWN / no verifiable records",
+      "product-task-result.js:renderTaskAnswer",
+      "A/B/E/D",
+      "bilingual task DOM + HTTP"
+    ],
+    [
+      "Task AI REFUTED / CONFLICT / UNKNOWN proposal",
+      "product-task-result.js:proposalState",
+      "A/E/D",
+      "task DOM + HTTP"
+    ],
+    [
+      "Task BLOCKED / permission / changed source or access",
+      "product.js:task BLOCKED branch",
+      "A/E/D",
+      "existing DOM + HTTP"
+    ],
+    [
+      "Task field unknown / raw date role / original source",
+      "product-task-result.js:observation cards",
+      "A/B/E/D",
+      "task DOM + HTTP"
+    ],
+    [
+      "Task date comparison / future-effective / reference date",
+      "product-task-result.js:comparisons + currentness",
+      "A/B/E",
+      "task DOM + HTTP"
+    ],
+    [
+      "Task incomplete source coverage / next actions / diagnostics",
+      "product-task-result.js:open questions + details",
+      "A/B/E/D",
+      "new task DOM + HTTP"
+    ],
+    [
+      "Legacy initial / empty workspace",
+      "app.js:renderInitial + renderEmpty",
+      "A/B",
+      "code; localization tests"
+    ],
+    [
+      "Legacy running / success / partial / insufficient",
+      "app.js:renderRunning + renderResult",
+      "A/B/E/D",
+      "code; projection/localization tests"
+    ],
+    [
+      "Legacy source inspector / provenance",
+      "app.js:inspectorHtml + topbarHtml",
+      "A/B/D",
+      "code; projection tests"
+    ],
+    [
+      "Legacy error / network failure",
+      "app.js:renderError + renderNetworkError",
+      "A/E/D",
+      "code; localization/HTTP tests"
+    ],
+    [
+      "README EN/ZH / product demo walkthrough",
+      "README.md + README.zh-CN.md + docs/V1_DEMO.md",
+      "A/B/E/D",
+      "actual source and current control cross-check"
+    ]
+  ],
+  "findings": [
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 66,
+      "original": "function heading(kicker, title, description, action = \"\") {\n    return `<header class=\"page-heading\"><div><p class=\"eyebrow\">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p class=\"lede\">${escapeHtml(description)}</p></div>${action}</header>`;\n  }",
+      "replacement": "function heading(title, description = \"\", action = \"\") {\n    return `<header class=\"page-heading\"><div><h1>${escapeHtml(title)}</h1>${description ? `<p class=\"lede\">${escapeHtml(description)}</p>` : \"\"}</div>${action}</header>`;\n  }",
+      "action": "merge",
+      "category": "C",
+      "reason": "One title by default; supporting instructions are opt-in.",
+      "safety": "No",
+      "originals": [
+        "function heading(kicker, title, description, action = \"\") {\n    return `<header class=\"page-heading\"><div><p class=\"eyebrow\">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p class=\"lede\">${escapeHtml(description)}</p></div>${action}</header>`;\n  }"
+      ],
+      "replacements": [
+        "function heading(title, description = \"\", action = \"\") {\n    return `<header class=\"page-heading\"><div><h1>${escapeHtml(title)}</h1>${description ? `<p class=\"lede\">${escapeHtml(description)}</p>` : \"\"}</div>${action}</header>`;\n  }"
+      ],
+      "id": "C001"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 71,
+      "original": "heading(\"LinkLoom\", \"This page could not load\", \"Your source notes and saved decisions were left as they were.\")",
+      "replacement": "heading(uiText(\"This page could not load\", \"页面加载失败\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"LinkLoom\", \"This page could not load\", \"Your source notes and saved decisions were left as they were.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"This page could not load\", \"页面加载失败\"))"
+      ],
+      "id": "C002"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 107,
+      "original": "heading(\"Start here\", \"Create a workspace\", \"Give this project a name. Your imported source artifacts and decision history stay scoped to this workspace.\")",
+      "replacement": "heading(uiText(\"Create a workspace\", \"创建工作区\"), uiText(\"Keep each project’s sources and decisions together.\", \"集中管理项目的来源与决策。\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Start here\", \"Create a workspace\", \"Give this project a name. Your imported source artifacts and decision history stay scoped to this workspace.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"Create a workspace\", \"创建工作区\"), uiText(\"Keep each project’s sources and decisions together.\", \"集中管理项目的来源与决策。\"))"
+      ],
+      "id": "C003"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 143,
+      "original": "heading(\"Sources\", \"Bring the project record together\", \"Import timestamped meeting notes. LinkLoom keeps exact source versions and shows when semantic extraction needs review.\")",
+      "replacement": "heading(uiText(\"Sources\", \"来源\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Sources\", \"Bring the project record together\", \"Import timestamped meeting notes. LinkLoom keeps exact source versions and shows when semantic extraction needs review.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"Sources\", \"来源\"))"
+      ],
+      "id": "C004"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 159,
+      "original": "heading(\"Sources\", source.name, `Current version ${source.source_version}. Source changes create a new version; prior evidence remains available.`)",
+      "replacement": "heading(source.name)",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Sources\", source.name, `Current version ${source.source_version}. Source changes create a new version; prior evidence remains available.`)"
+      ],
+      "replacements": [
+        "heading(source.name)"
+      ],
+      "id": "C005"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 198,
+      "original": "heading(\"Review\", \"Decide what becomes authoritative\", \"Inspect the exact source passage, resolve only fields you can support, then approve or reject through the recorded human review lifecycle.\")",
+      "replacement": "heading(uiText(\"Review\", \"审核\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Review\", \"Decide what becomes authoritative\", \"Inspect the exact source passage, resolve only fields you can support, then approve or reject through the recorded human review lifecycle.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"Review\", \"审核\"))"
+      ],
+      "id": "C006"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 222,
+      "original": "heading(\"Review candidate\", candidate.proposed_value || \"Needs review\", `${candidate.claim_type} · ${candidate.status}`)",
+      "replacement": "heading(candidate.proposed_value || uiText(\"Needs review\", \"待审核\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Review candidate\", candidate.proposed_value || \"Needs review\", `${candidate.claim_type} · ${candidate.status}`)"
+      ],
+      "replacements": [
+        "heading(candidate.proposed_value || uiText(\"Needs review\", \"待审核\"))"
+      ],
+      "id": "C007"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 251,
+      "original": "heading(\"Review Attention\", `${original.subject} · ${original.relation}`, \"Compare the original approval with current sources. A new candidate needs a separate explicit human approval.\")",
+      "replacement": "heading(`${original.subject} · ${original.relation}`, uiText(\"Review current evidence before approving a replacement.\", \"核对当前证据后，再批准替代记录。\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Review Attention\", `${original.subject} · ${original.relation}`, \"Compare the original approval with current sources. A new candidate needs a separate explicit human approval.\")"
+      ],
+      "replacements": [
+        "heading(`${original.subject} · ${original.relation}`, uiText(\"Review current evidence before approving a replacement.\", \"核对当前证据后，再批准替代记录。\"))"
+      ],
+      "id": "C008"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 264,
+      "original": "heading(\"Decision Memory\", \"What the team has decided\", \"Current records retain their effective dates, source evidence, predecessor links, and revalidation state.\")",
+      "replacement": "heading(uiText(\"Decision Memory\", \"决策记忆\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Decision Memory\", \"What the team has decided\", \"Current records retain their effective dates, source evidence, predecessor links, and revalidation state.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"Decision Memory\", \"决策记忆\"))"
+      ],
+      "id": "C009"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 292,
+      "original": "heading(\"Decision Memory\", `${decision.subject} · ${decision.relation}`, \"Reviewed decision timeline and source evidence\")",
+      "replacement": "heading(`${decision.subject} · ${decision.relation}`)",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Decision Memory\", `${decision.subject} · ${decision.relation}`, \"Reviewed decision timeline and source evidence\")"
+      ],
+      "replacements": [
+        "heading(`${decision.subject} · ${decision.relation}`)"
+      ],
+      "id": "C010"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 714,
+      "original": "heading(\"Workspace\", \"Create a workspace\", \"Each workspace has its own source artifacts, review queue, and temporal decisions.\")",
+      "replacement": "heading(uiText(\"Create a workspace\", \"创建工作区\"))",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "heading(\"Workspace\", \"Create a workspace\", \"Each workspace has its own source artifacts, review queue, and temporal decisions.\")"
+      ],
+      "replacements": [
+        "heading(uiText(\"Create a workspace\", \"创建工作区\"))"
+      ],
+      "id": "C011"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 367,
+      "original": "<header class=\"page-heading ask-heading\"><div><p class=\"eyebrow\">Ask</p>\n      <h1>${askLabel(\"Ask the project record\", \"问一问项目决策\")}</h1>\n      <p class=\"lede\">${askLabel(\"Ask naturally. Get a checked answer with its original sources.\", \"自然提问，先看答案，再查证据。\")}</p></div>",
+      "replacement": "<header class=\"page-heading ask-heading\"><div><h1>${askLabel(\"Ask\", \"提问\")}</h1></div>",
+      "action": "merge",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "<header class=\"page-heading ask-heading\"><div><p class=\"eyebrow\">Ask</p>\n      <h1>${askLabel(\"Ask the project record\", \"问一问项目决策\")}</h1>\n      <p class=\"lede\">${askLabel(\"Ask naturally. Get a checked answer with its original sources.\", \"自然提问，先看答案，再查证据。\")}</p></div>"
+      ],
+      "replacements": [
+        "<header class=\"page-heading ask-heading\"><div><h1>${askLabel(\"Ask\", \"提问\")}</h1></div>"
+      ],
+      "id": "C012"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 142,
+      "original": "<section class=\"empty\"><h2>No sources yet</h2><p>Add a timestamped meeting or decision artifact below. Source text is kept as an immutable version; this does not edit files in your workspace.</p></section>",
+      "replacement": "<section class=\"empty\"><h2>No sources yet</h2><p>Add meeting notes or a decision record using the form.</p></section>",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "<section class=\"empty\"><h2>No sources yet</h2><p>Add a timestamped meeting or decision artifact below. Source text is kept as an immutable version; this does not edit files in your workspace.</p></section>"
+      ],
+      "replacements": [
+        "<section class=\"empty\"><h2>No sources yet</h2><p>Add meeting notes or a decision record using the form.</p></section>"
+      ],
+      "id": "C013"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 145,
+      "original": "<p class=\"hint\">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. ${providerReady ? \"LinkLoom will show INGESTING, then the candidate and review counts.\" : \"The source is saved as an immutable version now. Saved sources can be investigated in Ask after configuring task stages and authorizing that question.\"}</p>",
+      "replacement": "<p class=\"hint\">One timestamped message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code></p>",
+      "action": "merge",
+      "category": "B",
+      "reason": "Explain only the required input format.",
+      "safety": "No",
+      "originals": [
+        "<p class=\"hint\">Use one message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code>. ${providerReady ? \"LinkLoom will show INGESTING, then the candidate and review counts.\" : \"The source is saved as an immutable version now. Saved sources can be investigated in Ask after configuring task stages and authorizing that question.\"}</p>"
+      ],
+      "replacements": [
+        "<p class=\"hint\">One timestamped message per line: <code>[2026-10-08T10:00:00Z] Speaker: what was said</code></p>"
+      ],
+      "id": "C014"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 146,
+      "original": "${escapeHtml(state.provider.message)} Source text is sent to this configured provider when you submit.",
+      "replacement": "Source text is sent to the configured AI provider when you submit.",
+      "action": "rewrite",
+      "category": "E",
+      "reason": "Keep external transmission disclosure beside import.",
+      "safety": "External source transmission",
+      "originals": [
+        "${escapeHtml(state.provider.message)} Source text is sent to this configured provider when you submit."
+      ],
+      "replacements": [
+        "Source text is sent to the configured AI provider when you submit."
+      ],
+      "id": "C015"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 146,
+      "original": "<div class=\"error-box\"><strong>Source saving is available; semantic extraction is not.</strong><p>${escapeHtml(state.provider?.message || \"Configure a provider before extracting source text.\")} You can save the source now and extract it later after enabling a provider.</p></div>",
+      "replacement": "<div class=\"review-guidance\"><strong>Save sources now; extract decisions after AI setup.</strong><details><summary>AI setup details</summary><p>${escapeHtml(state.provider?.message || \"Configure a provider before extracting source text.\")}</p></details></div>",
+      "action": "move",
+      "category": "D",
+      "reason": "Keep saving available without treating unavailable extraction as a failed import.",
+      "safety": "Extraction availability remains visible",
+      "originals": [
+        "<div class=\"error-box\"><strong>Source saving is available; semantic extraction is not.</strong><p>${escapeHtml(state.provider?.message || \"Configure a provider before extracting source text.\")} You can save the source now and extract it later after enabling a provider.</p></div>"
+      ],
+      "replacements": [
+        "<div class=\"review-guidance\"><strong>Save sources now; extract decisions after AI setup.</strong><details><summary>AI setup details</summary><p>${escapeHtml(state.provider?.message || \"Configure a provider before extracting source text.\")}</p></details></div>"
+      ],
+      "id": "C016"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 150,
+      "original": "Save source for later extraction",
+      "replacement": "Save source",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Save source for later extraction"
+      ],
+      "replacements": [
+        "Save source"
+      ],
+      "id": "C017"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 147,
+      "original": "<span class=\"hint\">Files are read in this browser and submitted to the local LinkLoom server.</span>",
+      "replacement": "",
+      "action": "delete",
+      "category": "C",
+      "reason": "The form already makes file selection clear; external transmission is disclosed beside submit.",
+      "safety": "No",
+      "originals": [
+        "<span class=\"hint\">Files are read in this browser and submitted to the local LinkLoom server.</span>"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C018"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 139,
+      "original": "<span>Version <strong>${escapeHtml(source.source_version.slice(0, 18))}…</strong></span>",
+      "replacement": "",
+      "action": "delete",
+      "category": "D",
+      "reason": "Full version remains in source details.",
+      "safety": "No",
+      "originals": [
+        "<span>Version <strong>${escapeHtml(source.source_version.slice(0, 18))}…</strong></span>"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C019"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 160,
+      "original": "<p class=\"review-guidance\"><strong>Source saved. Semantic extraction is unavailable.</strong> The exact source text remains stored locally. Enable a provider, then return to Sources and import the original artifact again for extraction.</p>",
+      "replacement": "<p class=\"review-guidance\"><strong>Source saved; decision extraction is unavailable.</strong> Set up AI, then import the original file again to extract decisions.</p>",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "<p class=\"review-guidance\"><strong>Source saved. Semantic extraction is unavailable.</strong> The exact source text remains stored locally. Enable a provider, then return to Sources and import the original artifact again for extraction.</p>"
+      ],
+      "replacements": [
+        "<p class=\"review-guidance\"><strong>Source saved; decision extraction is unavailable.</strong> Set up AI, then import the original file again to extract decisions.</p>"
+      ],
+      "id": "C020"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 160,
+      "original": "${source.error ? `<div class=\"error-box\" role=\"alert\">${escapeHtml(source.error)}</div>` : \"\"}${source.segments.map((segment) => `<p class=\"metadata\">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join(\"\")}",
+      "replacement": "${source.error && !extractionUnavailable ? `<div class=\"error-box\" role=\"alert\">Decision extraction failed. Check the details and retry.</div>` : \"\"}<details><summary>Extraction details</summary>${source.error ? `<p>${escapeHtml(source.error)}</p>` : \"\"}${source.segments.map((segment) => `<p class=\"metadata\">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join(\"\")}</details>",
+      "action": "move",
+      "category": "D",
+      "reason": "Expose actionable failure; move raw codes and segment attempts into details.",
+      "safety": "Failure stays visible",
+      "originals": [
+        "${source.error ? `<div class=\"error-box\" role=\"alert\">${escapeHtml(source.error)}</div>` : \"\"}${source.segments.map((segment) => `<p class=\"metadata\">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join(\"\")}"
+      ],
+      "replacements": [
+        "${source.error && !extractionUnavailable ? `<div class=\"error-box\" role=\"alert\">Decision extraction failed. Check the details and retry.</div>` : \"\"}<details><summary>Extraction details</summary>${source.error ? `<p>${escapeHtml(source.error)}</p>` : \"\"}${source.segments.map((segment) => `<p class=\"metadata\">Segment ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} attempt(s)</p>`).join(\"\")}</details>"
+      ],
+      "id": "C021"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 162,
+      "original": "Submitting changed text creates a new immutable source version and runs reconciliation.${providerReady ? \" The new version will be extracted by the configured provider.\" : \" Enable a provider before saving a new version if you want semantic extraction.\"}",
+      "replacement": "Updating creates a new source version and rechecks affected decisions.${providerReady ? \" Source text will be sent to the configured AI provider for extraction.\" : \" Decision extraction is unavailable until AI is configured.\"}",
+      "action": "rewrite",
+      "category": "E",
+      "reason": "Explain source changes in terms of decision impact and retain send disclosure.",
+      "safety": "External data and stale evidence",
+      "originals": [
+        "Submitting changed text creates a new immutable source version and runs reconciliation.${providerReady ? \" The new version will be extracted by the configured provider.\" : \" Enable a provider before saving a new version if you want semantic extraction.\"}"
+      ],
+      "replacements": [
+        "Updating creates a new source version and rechecks affected decisions.${providerReady ? \" Source text will be sent to the configured AI provider for extraction.\" : \" Decision extraction is unavailable until AI is configured.\"}"
+      ],
+      "id": "C022"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 192,
+      "original": "New source-grounded decisions will appear here when the materialization policy requires human authorization.",
+      "replacement": "Decisions awaiting your approval appear here.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "New source-grounded decisions will appear here when the materialization policy requires human authorization."
+      ],
+      "replacements": [
+        "Decisions awaiting your approval appear here."
+      ],
+      "id": "C023"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 196,
+      "original": "Supporting evidence only. This proposal is not approved and is not part of Decision Memory.",
+      "replacement": "Unapproved proposal · kept outside Decision Memory.",
+      "action": "rewrite",
+      "category": "E",
+      "reason": "One authority label replaces a disclaimer paragraph.",
+      "safety": "Proposal remains unapproved",
+      "originals": [
+        "Supporting evidence only. This proposal is not approved and is not part of Decision Memory."
+      ],
+      "replacements": [
+        "Unapproved proposal · kept outside Decision Memory."
+      ],
+      "id": "C024"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 194,
+      "original": "<p class=\"eyebrow\">PROPOSAL</p>",
+      "replacement": "",
+      "action": "delete",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "<p class=\"eyebrow\">PROPOSAL</p>"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C025"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 200,
+      "original": "<span class=\"muted\">${proposals.length} · not authoritative</span>",
+      "replacement": "<span class=\"muted\">${proposals.length}</span>",
+      "action": "delete",
+      "category": "C",
+      "reason": "Each proposal already has its unapproved label.",
+      "safety": "No",
+      "originals": [
+        "<span class=\"muted\">${proposals.length} · not authoritative</span>"
+      ],
+      "replacements": [
+        "<span class=\"muted\">${proposals.length}</span>"
+      ],
+      "id": "C026"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 217,
+      "original": "<strong>Canonical relation cannot be corrected in this review form.</strong><p>Extracted relation phrase: ${escapeHtml(candidate.relation_phrase || \"Not present\")}. This form cannot add a catalog mapping or turn an unknown relation into a canonical one.</p><p>Open the original source to inspect it. With a provider enabled, return to Sources and import the original artifact again to request a new extraction. Re-extraction may still leave the relation unresolved.</p><p>If you cannot confirm the candidate from its evidence, leave it unresolved and use Reject. Enter your reviewer name and reason to record the rejection; it will not enter Decision Memory.</p>",
+      "replacement": "<strong>Resolve the relationship before approval.</strong><p>Extracted wording: ${escapeHtml(candidate.relation_phrase || uiText(\"Not present\", \"未提供\"))}.</p><p>Check the source. With AI enabled, import the original file again for a new extraction. If the relationship remains unclear, keep it pending or reject it with your name and reason.</p>",
+      "action": "merge",
+      "category": "E",
+      "reason": "A clear blocker and repair path replace repeated prohibitions.",
+      "safety": "Approval stays disabled; identity and rejection reason required",
+      "originals": [
+        "<strong>Canonical relation cannot be corrected in this review form.</strong><p>Extracted relation phrase: ${escapeHtml(candidate.relation_phrase || \"Not present\")}. This form cannot add a catalog mapping or turn an unknown relation into a canonical one.</p><p>Open the original source to inspect it. With a provider enabled, return to Sources and import the original artifact again to request a new extraction. Re-extraction may still leave the relation unresolved.</p><p>If you cannot confirm the candidate from its evidence, leave it unresolved and use Reject. Enter your reviewer name and reason to record the rejection; it will not enter Decision Memory.</p>"
+      ],
+      "replacements": [
+        "<strong>Resolve the relationship before approval.</strong><p>Extracted wording: ${escapeHtml(candidate.relation_phrase || uiText(\"Not present\", \"未提供\"))}.</p><p>Check the source. With AI enabled, import the original file again for a new extraction. If the relationship remains unclear, keep it pending or reject it with your name and reason.</p>"
+      ],
+      "id": "C027"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 218,
+      "original": "Only an unresolved subject and an explicit effective time can be corrected here. Leave uncertain fields empty. Effective time never defaults to today.",
+      "replacement": "Fill in the subject and effective date from the source. Leave uncertain fields empty; the date has no default.",
+      "action": "rewrite",
+      "category": "E",
+      "reason": "Preserve explicit time and unresolved-field requirements.",
+      "safety": "No inferred effective date",
+      "originals": [
+        "Only an unresolved subject and an explicit effective time can be corrected here. Leave uncertain fields empty. Effective time never defaults to today."
+      ],
+      "replacements": [
+        "Fill in the subject and effective date from the source. Leave uncertain fields empty; the date has no default."
+      ],
+      "id": "C028"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 221,
+      "original": "Subject, canonical relation, and effective time are resolved from the source.",
+      "replacement": "Subject, relationship and effective date are available from the source.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Subject, canonical relation, and effective time are resolved from the source."
+      ],
+      "replacements": [
+        "Subject, relationship and effective date are available from the source."
+      ],
+      "id": "C029"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 230,
+      "original": "Approve and materialize",
+      "replacement": "Approve decision",
+      "action": "rewrite",
+      "category": "A",
+      "reason": "Use the user action instead of the storage operation.",
+      "safety": "Approval action and POST unchanged",
+      "originals": [
+        "Approve and materialize"
+      ],
+      "replacements": [
+        "Approve decision"
+      ],
+      "id": "C030"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 301,
+      "original": "<section class=\"panel\"><h2>Ask about this decision</h2><p class=\"hint\">Ask for reviewed state or investigate its sources from the same Ask form.</p>",
+      "replacement": "<section class=\"panel\"><h2>Ask about this decision</h2>",
+      "action": "delete",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "<section class=\"panel\"><h2>Ask about this decision</h2><p class=\"hint\">Ask for reviewed state or investigate its sources from the same Ask form.</p>"
+      ],
+      "replacements": [
+        "<section class=\"panel\"><h2>Ask about this decision</h2>"
+      ],
+      "id": "C031"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 295,
+      "original": "Historical validity uses currently recorded review decisions; this is not a snapshot of what was known at that time.",
+      "replacement": "Historical results use approvals recorded today, which may have been added after the selected date.",
+      "action": "rewrite",
+      "category": "E",
+      "reason": "Keep the historical knowledge boundary clear.",
+      "safety": "Historical validity",
+      "originals": [
+        "Historical validity uses currently recorded review decisions; this is not a snapshot of what was known at that time."
+      ],
+      "replacements": [
+        "Historical results use approvals recorded today, which may have been added after the selected date."
+      ],
+      "id": "C032"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 361,
+      "original": "Task Provider configured. Ask requires per-question source permission; import extraction is disabled.",
+      "replacement": "AI investigation ready · authorize each question.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Task Provider configured. Ask requires per-question source permission; import extraction is disabled."
+      ],
+      "replacements": [
+        "AI investigation ready · authorize each question."
+      ],
+      "id": "C033"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 376,
+      "original": "Automatic shortcuts / ask me to clarify",
+      "replacement": "Choose automatically",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Automatic shortcuts / ask me to clarify",
+        "自动快捷路径／需要时澄清"
+      ],
+      "replacements": [
+        "Choose automatically",
+        "自动选择"
+      ],
+      "id": "C034"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 379,
+      "original": "Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.",
+      "replacement": "Choose a scope if needed. Refresh after updating sources.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.",
+        "自然语言未被识别时可选定领域；只读当前空间来源，结论仍未经确认。来源变更后请刷新页面。"
+      ],
+      "replacements": [
+        "Choose a scope if needed. Refresh after updating sources.",
+        "需要时指定调查范围。更新来源后请刷新页面。"
+      ],
+      "id": "C035"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 380,
+      "original": "<div id=\"task-provider-status\" role=\"status\"><p>${config.agent?.task_investigation ? askLabel(\"Task stages configured. Relationship proposals require independent confirmation.\", \"任务阶段已配置；关系提案仍需独立确认。\") : askLabel(\"Task Provider unavailable. Configure the Host before running task investigation.\", \"任务 Provider 不可用，请先配置 Host。\")}</p>",
+      "replacement": "<div id=\"task-provider-status\" role=\"status\">${!config.agent?.task_investigation ? `<p>${askLabel(\"Task investigation requires AI setup.\", \"任务调查需先配置 AI。\")}</p>` : \"\"}",
+      "action": "delete",
+      "category": "D",
+      "reason": "Remove stage/Host terminology; availability blocker remains visible.",
+      "safety": "Availability unchanged",
+      "originals": [
+        "<div id=\"task-provider-status\" role=\"status\"><p>${config.agent?.task_investigation ? askLabel(\"Task stages configured. Relationship proposals require independent confirmation.\", \"任务阶段已配置；关系提案仍需独立确认。\") : askLabel(\"Task Provider unavailable. Configure the Host before running task investigation.\", \"任务 Provider 不可用，请先配置 Host。\")}</p>"
+      ],
+      "replacements": [
+        "<div id=\"task-provider-status\" role=\"status\">${!config.agent?.task_investigation ? `<p>${askLabel(\"Task investigation requires AI setup.\", \"任务调查需先配置 AI。\")}</p>` : \"\"}"
+      ],
+      "id": "C036"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 381,
+      "original": "<p class=\"hint\">${escapeHtml(config.agent?.task_provider?.setup || \"--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30\")}</p>",
+      "replacement": "<details><summary>${askLabel(\"AI setup details\", \"AI 配置详情\")}</summary><p class=\"hint\">${escapeHtml(config.agent?.task_provider?.setup || \"--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30\")}</p></details>",
+      "action": "move",
+      "category": "D",
+      "reason": "Host flags belong in setup details.",
+      "safety": "No",
+      "originals": [
+        "<p class=\"hint\">${escapeHtml(config.agent?.task_provider?.setup || \"--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30\")}</p>"
+      ],
+      "replacements": [
+        "<details><summary>${askLabel(\"AI setup details\", \"AI 配置详情\")}</summary><p class=\"hint\">${escapeHtml(config.agent?.task_provider?.setup || \"--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30\")}</p></details>"
+      ],
+      "id": "C037"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 382,
+      "original": "<p class=\"metadata\">${askLabel(\"Per-question limits\", \"单次调查上限\")}: ${escapeHtml(config.agent.task_provider.model_id)} · ${config.agent.task_provider.budgets.max_requests} requests · ${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_seconds}s</p>",
+      "replacement": "<p class=\"metadata\">${askLabel(\"Per-question cost limit\", \"单次费用上限\")}: USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_seconds}s</p><details><summary>${askLabel(\"Model and usage limits\", \"模型与用量限制\")}</summary><p>${escapeHtml(config.agent.task_provider.model_id)} · ${config.agent.task_provider.budgets.max_requests} requests · ${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens</p></details>",
+      "action": "move",
+      "category": "E",
+      "reason": "Keep cost and timeout visible; fold token/request metadata.",
+      "safety": "Cost limit stays above submit",
+      "originals": [
+        "<p class=\"metadata\">${askLabel(\"Per-question limits\", \"单次调查上限\")}: ${escapeHtml(config.agent.task_provider.model_id)} · ${config.agent.task_provider.budgets.max_requests} requests · ${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_seconds}s</p>"
+      ],
+      "replacements": [
+        "<p class=\"metadata\">${askLabel(\"Per-question cost limit\", \"单次费用上限\")}: USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_seconds}s</p><details><summary>${askLabel(\"Model and usage limits\", \"模型与用量限制\")}</summary><p>${escapeHtml(config.agent.task_provider.model_id)} · ${config.agent.task_provider.budgets.max_requests} requests · ${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output tokens</p></details>"
+      ],
+      "id": "C038"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 383,
+      "original": "Only the current snapshot, for this question. Does not approve business relationships.",
+      "replacement": "Applies to these source versions for this question only.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "Only the current snapshot, for this question. Does not approve business relationships.",
+        "仅本次问题、当前来源快照；不授予业务关系批准权限。"
+      ],
+      "replacements": [
+        "Applies to these source versions for this question only.",
+        "仅限本次问题及所列来源版本。"
+      ],
+      "id": "C039"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 529,
+      "original": "<p class=\"hint\">${t(\"The answer is not verified yet.\", \"本次结论尚未核验，请等待调查完成。\")}</p>",
+      "replacement": "",
+      "action": "delete",
+      "category": "C",
+      "reason": "The in-progress state already tells the user to wait.",
+      "safety": "No",
+      "originals": [
+        "<p class=\"hint\">${t(\"The answer is not verified yet.\", \"本次结论尚未核验，请等待调查完成。\")}</p>"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C040"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 578,
+      "original": "The sources do not establish the replacement reason.",
+      "replacement": "The replacement reason needs supporting evidence.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "The sources do not establish the replacement reason.",
+        "现有可信来源没有证明更换原因。"
+      ],
+      "replacements": [
+        "The replacement reason needs supporting evidence.",
+        "更换原因待补充证据。"
+      ],
+      "id": "C041"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 622,
+      "original": "The relationship is supported by verified source reads and checked by Reviewer.",
+      "replacement": "The cited sources support this relationship.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "The relationship is supported by verified source reads and checked by Reviewer.",
+        "根据已读取并核验的原始来源，可以确认该关系，结果已经过 Reviewer 核验。"
+      ],
+      "replacements": [
+        "The cited sources support this relationship.",
+        "所引原文支持这一关系。"
+      ],
+      "id": "C042"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 623,
+      "original": "This is source investigation, not a formally approved business decision.",
+      "replacement": "Source-supported relationship · business approval pending.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "This is source investigation, not a formally approved business decision.",
+        "这是来源关系调查结果，不代表已经通过正式业务审批。"
+      ],
+      "replacements": [
+        "Source-supported relationship · business approval pending.",
+        "来源支持的关系 · 业务审批待确认。"
+      ],
+      "id": "C043"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 618,
+      "original": "No verified result for this hop.",
+      "replacement": "Evidence is missing for this relationship.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "Make the result and next action easier to scan.",
+      "safety": "No",
+      "originals": [
+        "No verified result for this hop.",
+        "尚无足够证据核实这一跳。"
+      ],
+      "replacements": [
+        "Evidence is missing for this relationship.",
+        "这一关系待补充证据。"
+      ],
+      "id": "C044"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 624,
+      "original": "<div class=\"ask-pills\"><span>${(source.plan?.subgoals || []).length} ${t(\"hop investigation\", \"跳调查\")}</span><span>${result.metrics?.model_turns || 0} ${t(\"model turns\", \"轮模型交互\")}</span></div>",
+      "replacement": "",
+      "action": "move",
+      "category": "D",
+      "reason": "Execution counts remain in full investigation details.",
+      "safety": "No",
+      "originals": [
+        "<div class=\"ask-pills\"><span>${(source.plan?.subgoals || []).length} ${t(\"hop investigation\", \"跳调查\")}</span><span>${result.metrics?.model_turns || 0} ${t(\"model turns\", \"轮模型交互\")}</span></div>"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C045"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 15,
+      "original": "The model leans toward support; unconfirmed",
+      "replacement": "AI proposal: supports the relationship",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The model leans toward support; unconfirmed",
+        "模型倾向支持，尚未确认"
+      ],
+      "replacements": [
+        "AI proposal: supports the relationship",
+        "AI 提案：支持该关系"
+      ],
+      "id": "C046"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 16,
+      "original": "The model leans against it; unconfirmed",
+      "replacement": "AI proposal: refutes the relationship",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The model leans against it; unconfirmed",
+        "模型倾向否定，尚未确认"
+      ],
+      "replacements": [
+        "AI proposal: refutes the relationship",
+        "AI 提案：否定该关系"
+      ],
+      "id": "C047"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 17,
+      "original": "The model reports conflicting evidence",
+      "replacement": "AI proposal: conflicting evidence",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The model reports conflicting evidence",
+        "模型报告证据冲突"
+      ],
+      "replacements": [
+        "AI proposal: conflicting evidence",
+        "AI 提案：证据冲突"
+      ],
+      "id": "C048"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 18,
+      "original": "The model cannot determine this",
+      "replacement": "AI proposal: insufficient evidence",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The model cannot determine this",
+        "模型无法判断"
+      ],
+      "replacements": [
+        "AI proposal: insufficient evidence",
+        "AI 提案：证据不足"
+      ],
+      "id": "C049"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 30,
+      "original": "Reading within the specified source scope is not supported. This does not mean the evidence is absent.",
+      "replacement": "This source scope cannot be checked here. Try a narrower question.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Reading within the specified source scope is not supported. This does not mean the evidence is absent.",
+        "当前不支持按指定来源范围执行此读取，不代表证据不存在。"
+      ],
+      "replacements": [
+        "This source scope cannot be checked here. Try a narrower question.",
+        "暂时无法核验此来源范围，请缩小问题范围。"
+      ],
+      "id": "C050"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 31,
+      "original": "Reading within the specified time scope is not supported. The requested period was not evaluated.",
+      "replacement": "This time range has not been checked; time-scoped reading is unavailable.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Reading within the specified time scope is not supported. The requested period was not evaluated.",
+        "当前不支持按指定时间范围执行此读取，尚未评估该时段。"
+      ],
+      "replacements": [
+        "This time range has not been checked; time-scoped reading is unavailable.",
+        "尚未核验该时段，当前不支持按时间范围读取。"
+      ],
+      "id": "C051"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 32,
+      "original": "This installation does not provide the read operation needed for this step.",
+      "replacement": "This step requires an unavailable reading capability.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "This installation does not provide the read operation needed for this step.",
+        "当前系统尚未提供此步骤所需的读取操作。"
+      ],
+      "replacements": [
+        "This step requires an unavailable reading capability.",
+        "当前缺少此步骤所需的读取能力。"
+      ],
+      "id": "C052"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 33,
+      "original": "The existing relationship read is still unknown. Unknown does not mean refuted.",
+      "replacement": "The relationship still needs evidence.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The existing relationship read is still unknown. Unknown does not mean refuted.",
+        "现有关系读取结果仍为未知，未知不等于否定。"
+      ],
+      "replacements": [
+        "The relationship still needs evidence.",
+        "任务关系待补充证据。"
+      ],
+      "id": "C053"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 35,
+      "original": "Counter-evidence was returned; this step does not support the proposed relationship.",
+      "replacement": "Counter-evidence refutes the proposed relationship.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Counter-evidence was returned; this step does not support the proposed relationship.",
+        "本步骤返回否定证据，不能据此支持所提关系。"
+      ],
+      "replacements": [
+        "Counter-evidence refutes the proposed relationship.",
+        "反对证据否定了所提关系。"
+      ],
+      "id": "C054"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 36,
+      "original": "A prerequisite relationship is unconfirmed, so this step could not continue.",
+      "replacement": "Confirm the prerequisite relationship to continue.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "A prerequisite relationship is unconfirmed, so this step could not continue.",
+        "前置关系尚未确认，因此本步骤无法继续。"
+      ],
+      "replacements": [
+        "Confirm the prerequisite relationship to continue.",
+        "需先确认前置关系，才能继续。"
+      ],
+      "id": "C055"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 37,
+      "original": "No current, independently verifiable evidence satisfies this step. Model support cannot replace that evidence.",
+      "replacement": "Current, independently verifiable relationship evidence is missing.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "No current, independently verifiable evidence satisfies this step. Model support cannot replace that evidence.",
+        "尚缺当前有效、可独立核验的证据；模型支持不能替代这一前提。"
+      ],
+      "replacements": [
+        "Current, independently verifiable relationship evidence is missing.",
+        "缺少当前有效、可独立核验的关系证据。"
+      ],
+      "id": "C056"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 56,
+      "original": "The dates can be compared, but the currently effective formal plan cannot be confirmed.",
+      "replacement": "Date comparison available · currently effective plan unconfirmed.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "The dates can be compared, but the currently effective formal plan cannot be confirmed.",
+        "可比较日期边界，但不能确认当前正式生效的计划。"
+      ],
+      "replacements": [
+        "Date comparison available · currently effective plan unconfirmed.",
+        "日期可比较 · 当前生效计划待确认。"
+      ],
+      "id": "C057"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 55,
+      "original": "This does not confirm the current formal plan.",
+      "replacement": "Current formal plan: unconfirmed.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "This does not confirm the current formal plan.",
+        "这不代表当前正式计划已确认。"
+      ],
+      "replacements": [
+        "Current formal plan: unconfirmed.",
+        "当前正式计划：待确认。"
+      ],
+      "id": "C058"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 101,
+      "original": "No additional gap reported; this does not imply confirmation.",
+      "replacement": "None reported",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "No additional gap reported; this does not imply confirmation.",
+        "未报告额外缺口，仍不表示已确认。"
+      ],
+      "replacements": [
+        "None reported",
+        "未报告"
+      ],
+      "id": "C059"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 97,
+      "original": "Citations checked; interpretation and business approval remain unconfirmed.",
+      "replacement": "Citations checked · interpretation pending review.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Citations checked; interpretation and business approval remain unconfirmed.",
+        "引用已核验；判断和业务批准仍未确认。",
+        "Citations or coverage failed validation; no trusted relationship is established.",
+        "引用或覆盖未通过校验，不能建立可信关系。"
+      ],
+      "replacements": [
+        "Citations checked · interpretation pending review.",
+        "引用已核验 · 判断待复核。",
+        "Evidence check failed. Review the citations and coverage.",
+        "证据校验失败，请核对引用与覆盖范围。"
+      ],
+      "id": "C060"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 94,
+      "original": "Model proposals · not formal relationships",
+      "replacement": "AI relationship proposals",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Model proposals · not formal relationships",
+        "模型提案 · 尚非正式关系"
+      ],
+      "replacements": [
+        "AI relationship proposals",
+        "AI 关系提案"
+      ],
+      "id": "C061"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 103,
+      "original": "Existing relationship reads and remaining steps",
+      "replacement": "Relationship checks",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Existing relationship reads and remaining steps",
+        "既有关系读取与剩余步骤"
+      ],
+      "replacements": [
+        "Relationship checks",
+        "关系核验"
+      ],
+      "id": "C062"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 106,
+      "original": "This installation has no authenticated task-relationship approval interface. Viewing evidence does not approve a relationship.",
+      "replacement": "Task relationship approval is unavailable in this installation.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "This installation has no authenticated task-relationship approval interface. Viewing evidence does not approve a relationship.",
+        "当前系统尚无具备身份与权限校验的任务关系批准接口。查看证据不会批准关系。"
+      ],
+      "replacements": [
+        "Task relationship approval is unavailable in this installation.",
+        "当前版本暂不支持任务关系审批。"
+      ],
+      "id": "C063"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 107,
+      "original": "Offline scripted or recorded adapters; real-model understanding was not evaluated.",
+      "replacement": "Offline demo",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Offline scripted or recorded adapters; real-model understanding was not evaluated.",
+        "本次为离线脚本或回放，未评估真实模型理解能力。"
+      ],
+      "replacements": [
+        "Offline demo",
+        "离线演示"
+      ],
+      "id": "C064"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 72,
+      "original": "What the sources say",
+      "replacement": "Source records",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "What the sources say",
+        "原文记录了什么"
+      ],
+      "replacements": [
+        "Source records",
+        "来源记录"
+      ],
+      "id": "C065"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 73,
+      "original": "Fields are shown per message. Field interpretations still need review; nothing is inherited from another record.",
+      "replacement": "Each card shows one source message. AI field interpretations are pending review.",
+      "action": "rewrite",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "Fields are shown per message. Field interpretations still need review; nothing is inherited from another record.",
+        "字段按消息分别展示，字段解释仍待复核，不从其他记录继承信息。"
+      ],
+      "replacements": [
+        "Each card shows one source message. AI field interpretations are pending review.",
+        "每张卡片对应一条来源消息，AI 字段解读待复核。"
+      ],
+      "id": "C066"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 60,
+      "original": "    <p class=\"ask-answer-status\">${result.status === 'UNKNOWN' ? t('Insufficient information', '资料不足') : t('Partial investigation · confirmation pending', '部分调查结果 · 待确认')}</p>\n    <h2 class=\"ask-answer-headline\">${observations.length ? t('Source records found; the formal task state remains unconfirmed', '已找到来源记录，任务的正式状态仍待确认') : t('The available materials are insufficient for a clear conclusion', '现有资料不足，暂时无法给出明确结论')}</h2>\n    <p class=\"ask-answer-sentence\">${t('Records are kept separate. Source statements and model interpretations do not establish the current owner or effective plan.', '各条记录分别保留。原文陈述与模型解读，尚不代表当前负责人或生效计划。')}</p>\n    <p><strong>${t('Formal business status:', '正式业务状态：')}</strong> ${t('Unconfirmed. This investigation does not grant approval.', '尚未确认。本次调查不授予业务批准。')}</p>\n    ${proposals.length ? `<div class=\"task-model-summary\"><strong>${t('Model judgments · confirmation pending', '模型判断 · 待确认')}</strong><ul>${proposals.slice(0, 3).map(p => `<li>${esc(label(p.predicate))} ${esc(proposalState(p.proposed_verdict))}</li>`).join('')}</ul><p class=\"hint\">${t('Checked citations do not verify the interpretation. Full proposals and evidence are expandable below.', '引用核验不等于判断成立。完整提案与证据可在下方展开。')}</p></div>` : ''}\n    <div class=\"ask-unknown\"><h3>${t('Open questions', '待确认事项')}</h3>\n      ${open.slice(0, 3).map(s => `<p><strong>${esc(s.question || label(s.predicate))}</strong> ${esc(reason(s))}</p>`).join('') || `<p>${steps.length ? t('The available executable evidence reads are complete. This does not confirm the current formal business state.', '已完成现有可执行的证据读取，仍不能据此确认当前正式业务状态。') : t('The investigation did not establish a current formal task state.', '本次调查未能确认任务当前的正式状态。')}</p>`}\n      ${proposals.flatMap(p => p.missing_evidence || []).slice(0, 3).map(g => `<p>${t('Model-reported gap:', '模型报告的缺口：')} ${esc(g)}</p>`).join('')}\n      ${!observations.length ? `<p>${t('No verifiable task candidate was returned. This does not establish that the task does not exist.', '本次没有返回可核验的任务候选，不能据此断言任务不存在。')}</p>` : ''}\n      ${(prep.gaps || []).some(g => g === 'DISCOVERY_COVERAGE_INCOMPLETE') ? `<p>${t('Some source material was not fully examined in this investigation.', '部分来源尚未在本次调查中完整检查。')}</p>` : ''}\n    </div>\n",
+      "replacement": "    <h2 class=\"ask-answer-headline\">${observations.length ? t(`Found ${observations.length} task record${observations.length === 1 ? '' : 's'}`, `找到 ${observations.length} 条任务记录`) : t('More source material is needed', '需要补充来源资料')}</h2>\n    <p class=\"ask-answer-status\">${result.status === 'UNKNOWN' ? t('Insufficient information', '资料不足') : t('Partial results', '部分结果')} · ${t('Task relationships and effective plan: unconfirmed', '任务关系与生效计划：待确认')}</p>\n    ${['FAKE', 'REPLAY'].includes(prep.execution_kind) ? `<p class=\"execution-mode\">${t('Offline demo', '离线演示')}</p>` : ''}\n    ${proposals.length ? `<div class=\"task-model-summary\"><strong>${t('AI proposals · awaiting confirmation', 'AI 提案 · 待确认')}</strong><ul>${proposals.slice(0, 3).map(p => `<li>${esc(label(p.predicate))} ${esc(p.evidence_status === 'EVIDENCE_VALID' ? proposalState(p.proposed_verdict) : t('Evidence check failed', '证据校验失败'))}</li>`).join('')}</ul></div>` : ''}\n",
+      "action": "merge",
+      "category": "E",
+      "reason": "Lead with actual record count, one authority statement and explicitly attributed proposals; preserve offline disclosure.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "    <p class=\"ask-answer-status\">${result.status === 'UNKNOWN' ? t('Insufficient information', '资料不足') : t('Partial investigation · confirmation pending', '部分调查结果 · 待确认')}</p>\n    <h2 class=\"ask-answer-headline\">${observations.length ? t('Source records found; the formal task state remains unconfirmed', '已找到来源记录，任务的正式状态仍待确认') : t('The available materials are insufficient for a clear conclusion', '现有资料不足，暂时无法给出明确结论')}</h2>\n    <p class=\"ask-answer-sentence\">${t('Records are kept separate. Source statements and model interpretations do not establish the current owner or effective plan.', '各条记录分别保留。原文陈述与模型解读，尚不代表当前负责人或生效计划。')}</p>\n    <p><strong>${t('Formal business status:', '正式业务状态：')}</strong> ${t('Unconfirmed. This investigation does not grant approval.', '尚未确认。本次调查不授予业务批准。')}</p>\n    ${proposals.length ? `<div class=\"task-model-summary\"><strong>${t('Model judgments · confirmation pending', '模型判断 · 待确认')}</strong><ul>${proposals.slice(0, 3).map(p => `<li>${esc(label(p.predicate))} ${esc(proposalState(p.proposed_verdict))}</li>`).join('')}</ul><p class=\"hint\">${t('Checked citations do not verify the interpretation. Full proposals and evidence are expandable below.', '引用核验不等于判断成立。完整提案与证据可在下方展开。')}</p></div>` : ''}\n    <div class=\"ask-unknown\"><h3>${t('Open questions', '待确认事项')}</h3>\n      ${open.slice(0, 3).map(s => `<p><strong>${esc(s.question || label(s.predicate))}</strong> ${esc(reason(s))}</p>`).join('') || `<p>${steps.length ? t('The available executable evidence reads are complete. This does not confirm the current formal business state.', '已完成现有可执行的证据读取，仍不能据此确认当前正式业务状态。') : t('The investigation did not establish a current formal task state.', '本次调查未能确认任务当前的正式状态。')}</p>`}\n      ${proposals.flatMap(p => p.missing_evidence || []).slice(0, 3).map(g => `<p>${t('Model-reported gap:', '模型报告的缺口：')} ${esc(g)}</p>`).join('')}\n      ${!observations.length ? `<p>${t('No verifiable task candidate was returned. This does not establish that the task does not exist.', '本次没有返回可核验的任务候选，不能据此断言任务不存在。')}</p>` : ''}\n      ${(prep.gaps || []).some(g => g === 'DISCOVERY_COVERAGE_INCOMPLETE') ? `<p>${t('Some source material was not fully examined in this investigation.', '部分来源尚未在本次调查中完整检查。')}</p>` : ''}\n    </div>\n"
+      ],
+      "replacements": [
+        "    <h2 class=\"ask-answer-headline\">${observations.length ? t(`Found ${observations.length} task record${observations.length === 1 ? '' : 's'}`, `找到 ${observations.length} 条任务记录`) : t('More source material is needed', '需要补充来源资料')}</h2>\n    <p class=\"ask-answer-status\">${result.status === 'UNKNOWN' ? t('Insufficient information', '资料不足') : t('Partial results', '部分结果')} · ${t('Task relationships and effective plan: unconfirmed', '任务关系与生效计划：待确认')}</p>\n    ${['FAKE', 'REPLAY'].includes(prep.execution_kind) ? `<p class=\"execution-mode\">${t('Offline demo', '离线演示')}</p>` : ''}\n    ${proposals.length ? `<div class=\"task-model-summary\"><strong>${t('AI proposals · awaiting confirmation', 'AI 提案 · 待确认')}</strong><ul>${proposals.slice(0, 3).map(p => `<li>${esc(label(p.predicate))} ${esc(p.evidence_status === 'EVIDENCE_VALID' ? proposalState(p.proposed_verdict) : t('Evidence check failed', '证据校验失败'))}</li>`).join('')}</ul></div>` : ''}\n"
+      ],
+      "id": "C067"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 78,
+      "original": "          <p class=\"hint\">${t('Source excerpt', '原文片段')}</p><blockquote",
+      "replacement": "          <blockquote",
+      "action": "delete",
+      "category": "C",
+      "reason": "State the result or evidence gap directly.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "          <p class=\"hint\">${t('Source excerpt', '原文片段')}</p><blockquote"
+      ],
+      "replacements": [
+        "          <blockquote"
+      ],
+      "id": "C068"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 82,
+      "original": "          ${(o.unknown_fields || []).length ? `<p class=\"hint\">${t('Not established:', '尚未确定：')} ${esc(o.unknown_fields.map(fieldLabel).join(' · '))}</p>` : ''}",
+      "replacement": "",
+      "action": "delete",
+      "category": "C",
+      "reason": "Unknown fields already display Not established in their own cells.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "          ${(o.unknown_fields || []).length ? `<p class=\"hint\">${t('Not established:', '尚未确定：')} ${esc(o.unknown_fields.map(fieldLabel).join(' · '))}</p>` : ''}"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C069"
+    },
+    {
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "line": 105,
+      "original": "      ${(view.next_actions || []).map(a => `<p>${esc(nextAction(a))}</p>`).join('')}",
+      "replacement": "",
+      "action": "delete",
+      "category": "C",
+      "reason": "Next steps are now visible once, above details.",
+      "safety": "Task authority unchanged",
+      "originals": [
+        "      ${(view.next_actions || []).map(a => `<p>${esc(nextAction(a))}</p>`).join('')}"
+      ],
+      "replacements": [
+        ""
+      ],
+      "id": "C070"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 63,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "return `<span class=\"badge ${kind}\">${escapeHtml(status.replaceAll(\"_\", \" \"))}</span>`"
+      ],
+      "replacements": [
+        "Bilingual statusLabel; underlying data-status retained."
+      ],
+      "reason": "Raw enums dominate status chips and lack Chinese labels.",
+      "safety": "UNKNOWN/REFUTED/CONFLICT/BLOCKED and current/history remain distinct",
+      "id": "C071"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 82,
+      "action": "move",
+      "category": "D",
+      "originals": [
+        "state.provider?.message || \"Provider status unavailable\""
+      ],
+      "replacements": [
+        "Short AI availability status; full setup message in local disclosure."
+      ],
+      "reason": "Long provider setup messages dominate the top bar.",
+      "safety": "Availability notice remains visible",
+      "id": "C072"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 190,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "<p class=\"eyebrow\">${escapeHtml(candidate.claim_type)}</p>"
+      ],
+      "replacements": [
+        "Localized claim type as metadata."
+      ],
+      "reason": "Technical claim type and uppercase eyebrow compete with the candidate.",
+      "safety": "Preserve decision/proposal/action/plan distinction",
+      "id": "C073"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 261,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "<p class=\"eyebrow\">${escapeHtml(decision.relation)}</p>"
+      ],
+      "replacements": [
+        "Localized business category as small metadata."
+      ],
+      "reason": "Decorative relation caption is repetitive and untranslated.",
+      "safety": "Underlying relation untouched",
+      "id": "C074"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 284,
+      "action": "merge",
+      "category": "C",
+      "originals": [
+        "${badge(item.status)}${badge(item.memory_state)}"
+      ],
+      "replacements": [
+        "One current memory lifecycle badge, falling back to record status."
+      ],
+      "reason": "Two lifecycle chips can repeat Current or Replaced.",
+      "safety": "Current, stale, invalidated and historical states retained",
+      "id": "C075"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 286,
+      "action": "move",
+      "category": "D",
+      "originals": [
+        "<p class=\"metadata\">Review receipt:"
+      ],
+      "replacements": [
+        "Approval details disclosure after the value and validity dates."
+      ],
+      "reason": "Approval IDs interrupt the decision timeline.",
+      "safety": "Original authorization stays available",
+      "id": "C076"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 281,
+      "action": "move",
+      "category": "D",
+      "originals": [
+        "· Evidence ${escapeHtml(item.evidence_ref"
+      ],
+      "replacements": [
+        "Version and reference disclosure with the original quote still visible."
+      ],
+      "reason": "Opaque evidence/version identities precede the quote.",
+      "safety": "No citation lost",
+      "id": "C077"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.js",
+      "line": 70,
+      "action": "rewrite",
+      "category": "E",
+      "originals": [
+        "function renderError(error, retry = \"\")"
+      ],
+      "replacements": [
+        "Known errors get bilingual actionable messages; exact error retained in details."
+      ],
+      "reason": "Raw backend errors and codes lack consistent localized repair guidance.",
+      "safety": "Source/approval/permission blockers stay visible",
+      "id": "C078"
+    },
+    {
+      "file": "src/linkloom/ui/static/product.html",
+      "line": 16,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "<label for=\"workspace-picker\">Workspace</label>"
+      ],
+      "replacements": [
+        "Literal-only bilingual shell and interface language control; original values remain unchanged."
+      ],
+      "reason": "Navigation and primary forms were English-only outside Ask.",
+      "safety": "Language never submits a form or grants permission",
+      "id": "C079"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 226,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"initial.eyebrow\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C080"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 236,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"query.kicker\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C081"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 191,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"provenance.kicker\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C082"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 343,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"running.eyebrow\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C083"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 353,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"running.evidence\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C084"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 538,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"inspector.kicker\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C085"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 698,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"error.kicker\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C086"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 743,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"empty.kicker\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C087"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 503,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"uncertainty\"))}"
+      ],
+      "replacements": [
+        "Remove the node and retain the adjacent main heading."
+      ],
+      "reason": "A decorative or repeated heading adds a text tier.",
+      "safety": "No",
+      "id": "C088"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 229,
+      "action": "delete",
+      "category": "C",
+      "originals": [
+        "<div class=\"value-order\""
+      ],
+      "replacements": [
+        "Remove the entire block and unused CSS."
+      ],
+      "reason": "Decorative 01/02/03 explanation repeats the result structure.",
+      "safety": "No",
+      "id": "C089"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.js",
+      "line": 227,
+      "action": "merge",
+      "category": "C",
+      "originals": [
+        "${escapeHtml(t(\"initial.titleLine1\"))}<br>${escapeHtml(t(\"initial.titleLine2\"))}"
+      ],
+      "replacements": [
+        "One title followed by the composer."
+      ],
+      "reason": "Two-part marketing title delays the actual input.",
+      "safety": "No",
+      "id": "C090"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 35,
+      "action": "rewrite",
+      "category": "B",
+      "originals": [
+        "\"initial.lede\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "No",
+      "id": "C091"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 47,
+      "action": "rewrite",
+      "category": "B",
+      "originals": [
+        "\"running.title\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "No",
+      "id": "C092"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 48,
+      "action": "rewrite",
+      "category": "B",
+      "originals": [
+        "\"running.copy\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "No",
+      "id": "C093"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 66,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "\"outcome.approved\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "Partial/approved/insufficient distinction retained",
+      "id": "C094"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 67,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "\"outcome.insufficient\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "Partial/approved/insufficient distinction retained",
+      "id": "C095"
+    },
+    {
+      "file": "src/linkloom/ui/static/i18n.js",
+      "line": 68,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "\"outcome.partial\":"
+      ],
+      "replacements": [
+        "Concise bilingual label; original outcome conditions unchanged."
+      ],
+      "reason": "Wordy or repeated status/description in the legacy experience.",
+      "safety": "Partial/approved/insufficient distinction retained",
+      "id": "C096"
+    },
+    {
+      "file": "README.md",
+      "line": 9,
+      "action": "rewrite",
+      "category": "B",
+      "originals": [
+        "so finding a relevant passage is the start of"
+      ],
+      "replacements": [
+        "Describe reviewed decisions, changes and source-backed task investigation; Chinese introduction updated too."
+      ],
+      "reason": "Product introduction explains engineering philosophy before user tasks.",
+      "safety": "No",
+      "id": "C097"
+    },
+    {
+      "file": "README.md",
+      "line": 126,
+      "action": "rewrite",
+      "category": "B",
+      "originals": [
+        "Normal task-stage Provider configuration and authenticated"
+      ],
+      "replacements": [
+        "Explain source records, AI proposals, offline mode and current setup link; Chinese quickstart aligned."
+      ],
+      "reason": "Task demo instructions expose internal statuses and contain outdated setup availability.",
+      "safety": "Real-model vs offline; approval unavailable",
+      "id": "C098"
+    },
+    {
+      "file": "docs/V1_DEMO.md",
+      "line": 42,
+      "action": "rewrite",
+      "category": "A",
+      "originals": [
+        "**Approve and materialize**"
+      ],
+      "replacements": [
+        "Current Approve decision controls, independent revalidation, offline task steps and Chinese guide."
+      ],
+      "reason": "Walkthrough names outdated controls and engineering operations.",
+      "safety": "Explicit approval, external data/cost and historical validity retained",
+      "id": "C099"
+    },
+    {
+      "file": "src/linkloom/ui/static/app.css",
+      "line": 386,
+      "action": "rewrite",
+      "category": "C",
+      "originals": [
+        "padding: 8vh 42px 64px;"
+      ],
+      "replacements": [
+        "Compact top-aligned desktop/mobile spacing; no empty value-order containers."
+      ],
+      "reason": "Large centered hero spacing outlives the deleted decorative copy.",
+      "safety": "No",
+      "id": "C100"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Template snapshot — not browser acceptance</title><body><header class="page-heading"><div><h1>来源</h1></div></header>
+      <div class="split"><section><div class="section-title"><h2>工作区来源</h2><span class="muted">0 个来源</span></div><section class="empty"><h2>暂无来源</h2><p>使用右侧表单添加会议记录或决策记录。</p></section></section>
+      <section class="panel"><h2>添加来源</h2><p class="hint">每行一条带时间戳的消息： <code>[2026-10-08T10:00:00Z] Speaker: what was said</code></p>
+        <div class="review-guidance"><strong>可先保存来源，配置 AI 后再提取决策。</strong><details><summary>AI 配置详情</summary><p>AI extraction is not configured.</p></details></div>
+        <form id="source-create" class="form-stack"><div class="field"><label for="source-file">选择 Markdown 或文本文件</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"></div>
+        <div class="field"><label for="source-name">来源名称</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
+        <div class="field"><label for="source-content">带时间戳的原文</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
+        <button class="button" type="submit">保存来源</button></form></section></div></body></html>

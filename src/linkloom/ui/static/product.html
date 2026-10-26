@@ -9,21 +9,22 @@
     <link rel="stylesheet" href="/product.css">
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+    <a id="skip-content" class="skip-link" href="#main-content">Skip to content</a>
     <header class="topbar">
       <a class="brand" href="/" aria-label="LinkLoom home"><span class="brand-mark" aria-hidden="true">L</span><span>LinkLoom</span></a>
       <div class="workspace-control">
-        <label for="workspace-picker">Workspace</label>
+        <label id="workspace-label" for="workspace-picker">Workspace</label>
         <select id="workspace-picker" aria-label="Select workspace"></select>
         <button class="button quiet" id="new-workspace" type="button">New workspace</button>
       </div>
-      <div id="provider-state" class="provider-state" role="status">Checking provider…</div>
+      <div class="interface-language"><label id="interface-language-label" for="interface-language">Language</label><select id="interface-language"><option value="en">English</option><option value="zh">中文</option></select></div>
+      <div id="provider-state" class="provider-state" role="status">Checking AI availability…</div>
     </header>
     <nav class="primary-nav" aria-label="Primary">
-      <button type="button" data-screen="sources" aria-current="page">Sources</button>
-      <button type="button" data-screen="review">Review <span class="nav-count" id="review-count"></span></button>
-      <button type="button" data-screen="decisions">Decision Memory</button>
-      <button type="button" data-screen="ask">Ask</button>
+      <button type="button" data-screen="sources" aria-current="page"><span class="nav-label">Sources</span></button>
+      <button type="button" data-screen="review"><span class="nav-label">Review</span> <span class="nav-count" id="review-count"></span></button>
+      <button type="button" data-screen="decisions"><span class="nav-label">Decision Memory</span></button>
+      <button type="button" data-screen="ask"><span class="nav-label">Ask</span></button>
     </nav>
     <main id="main-content" class="page-shell" tabindex="-1">
       <div id="page" aria-live="polite"><section class="state-card"><p>Opening LinkLoom…</p></section></div>

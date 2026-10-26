@@ -1,0 +1,4555 @@
+{
+  "baseline": "7720390a796662ff42c27b5eef6f8685e5155802",
+  "scope": "Static template text, explicit presentation calls and bilingual legacy message catalog. Dynamic user/source content is classified by its data role, not rewritten. Categories cover preserved and changed text; issue counts belong to COPY_AUDIT.json.",
+  "categories": {
+    "A": "Core title/result/action",
+    "B": "Contextual input/evidence help",
+    "C": "Redundant hierarchy or explanation",
+    "D": "Implementation/diagnostic language",
+    "E": "Risk, permission, authority or uncertainty"
+  },
+  "counts": {
+    "A": 222,
+    "B": 159,
+    "C": 8,
+    "E": 128,
+    "D": 5
+  },
+  "entries": [
+    {
+      "id": "I001",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 39,
+      "anchor": "request:error",
+      "category": "A",
+      "english_or_static": "LinkLoom could not reach its local application. Check that the server is still running."
+    },
+    {
+      "id": "I002",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 71,
+      "anchor": "renderError:heading",
+      "category": "A",
+      "english_or_static": "LinkLoom",
+      "chinese": "This page could not load"
+    },
+    {
+      "id": "I003",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 73,
+      "anchor": "renderError:template",
+      "category": "A",
+      "english_or_static": "Code:"
+    },
+    {
+      "id": "I004",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 78,
+      "anchor": "updateWorkspacePicker:template",
+      "category": "B",
+      "english_or_static": "Select workspace"
+    },
+    {
+      "id": "I005",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 107,
+      "anchor": "showNoWorkspace:heading",
+      "category": "A",
+      "english_or_static": "Start here",
+      "chinese": "Create a workspace"
+    },
+    {
+      "id": "I006",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 107,
+      "anchor": "showNoWorkspace:template",
+      "category": "A",
+      "english_or_static": "Workspace name"
+    },
+    {
+      "id": "I007",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 107,
+      "anchor": "showNoWorkspace:template",
+      "category": "A",
+      "english_or_static": "Create workspace"
+    },
+    {
+      "id": "I008",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 122,
+      "anchor": "loadScreen:template",
+      "category": "A",
+      "english_or_static": "Loading"
+    },
+    {
+      "id": "I009",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 129,
+      "anchor": "loadScreen:template",
+      "category": "A",
+      "english_or_static": "Try again"
+    },
+    {
+      "id": "I010",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 141,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Retry failed segment"
+    },
+    {
+      "id": "I011",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 138,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Version captured"
+    },
+    {
+      "id": "I012",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 138,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Candidates"
+    },
+    {
+      "id": "I013",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 139,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Review required"
+    },
+    {
+      "id": "I014",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 139,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Version"
+    },
+    {
+      "id": "I015",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 141,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Inspect source"
+    },
+    {
+      "id": "I016",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 142,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "No sources yet"
+    },
+    {
+      "id": "I017",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 142,
+      "anchor": "loadSources:template",
+      "category": "C",
+      "english_or_static": "Add a timestamped meeting or decision artifact below. Source text is kept as an immutable version; this does not edit files in your workspace."
+    },
+    {
+      "id": "I018",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 143,
+      "anchor": "loadSources:heading",
+      "category": "B",
+      "english_or_static": "Sources",
+      "chinese": "Bring the project record together"
+    },
+    {
+      "id": "I019",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Source saving is available; semantic extraction is not."
+    },
+    {
+      "id": "I020",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 143,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Workspace sources"
+    },
+    {
+      "id": "I021",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 144,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Add a source"
+    },
+    {
+      "id": "I022",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 144,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Use one message per line:"
+    },
+    {
+      "id": "I023",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 144,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "[2026-10-08T10:00:00Z] Speaker: what was said"
+    },
+    {
+      "id": "I024",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Choose a Markdown or text artifact"
+    },
+    {
+      "id": "I025",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Files are read in this browser and submitted to the local LinkLoom server."
+    },
+    {
+      "id": "I026",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Artifact name"
+    },
+    {
+      "id": "I027",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 146,
+      "anchor": "loadSources:template",
+      "category": "B",
+      "english_or_static": "Timestamped source text"
+    },
+    {
+      "id": "I028",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 158,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Lines"
+    },
+    {
+      "id": "I029",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 158,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "No timestamped evidence spans were parsed."
+    },
+    {
+      "id": "I030",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 159,
+      "anchor": "inspectSource:heading",
+      "category": "B",
+      "english_or_static": "Sources"
+    },
+    {
+      "id": "I031",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "anchor": "inspectSource:template",
+      "category": "E",
+      "english_or_static": "Source saved. Semantic extraction is unavailable."
+    },
+    {
+      "id": "I032",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "anchor": "inspectSource:template",
+      "category": "E",
+      "english_or_static": "The exact source text remains stored locally. Enable a provider, then return to Sources and import the original artifact again for extraction."
+    },
+    {
+      "id": "I033",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Segment"
+    },
+    {
+      "id": "I034",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Retry failed segment"
+    },
+    {
+      "id": "I035",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 159,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Ingestion"
+    },
+    {
+      "id": "I036",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 160,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Exact evidence spans"
+    },
+    {
+      "id": "I037",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 161,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Source version details"
+    },
+    {
+      "id": "I038",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 161,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Version:"
+    },
+    {
+      "id": "I039",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 161,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Update source"
+    },
+    {
+      "id": "I040",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 161,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Submitting changed text creates a new immutable source version and runs reconciliation."
+    },
+    {
+      "id": "I041",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 163,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Artifact name"
+    },
+    {
+      "id": "I042",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 163,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Timestamped source text"
+    },
+    {
+      "id": "I043",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 164,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Save new source version"
+    },
+    {
+      "id": "I044",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 165,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Remove from workspace"
+    },
+    {
+      "id": "I045",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 165,
+      "anchor": "inspectSource:template",
+      "category": "B",
+      "english_or_static": "Back to sources"
+    },
+    {
+      "id": "I046",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 190,
+      "anchor": "loadReview:template",
+      "category": "A",
+      "english_or_static": "Subject"
+    },
+    {
+      "id": "I047",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 191,
+      "anchor": "loadReview:template",
+      "category": "A",
+      "english_or_static": "Relation"
+    },
+    {
+      "id": "I048",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 191,
+      "anchor": "loadReview:template",
+      "category": "B",
+      "english_or_static": "Source"
+    },
+    {
+      "id": "I049",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 191,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "Effective"
+    },
+    {
+      "id": "I050",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 192,
+      "anchor": "loadReview:template",
+      "category": "B",
+      "english_or_static": "Review candidate"
+    },
+    {
+      "id": "I051",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 192,
+      "anchor": "loadReview:template",
+      "category": "B",
+      "english_or_static": "No candidates need review"
+    },
+    {
+      "id": "I052",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 192,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "New source-grounded decisions will appear here when the materialization policy requires human authorization."
+    },
+    {
+      "id": "I053",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 193,
+      "anchor": "loadReview:template",
+      "category": "A",
+      "english_or_static": "PROPOSAL"
+    },
+    {
+      "id": "I054",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 196,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "Supporting evidence only. This proposal is not approved and is not part of Decision Memory."
+    },
+    {
+      "id": "I055",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 196,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "No proposals are currently held as supporting evidence."
+    },
+    {
+      "id": "I056",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 197,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it."
+    },
+    {
+      "id": "I057",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 197,
+      "anchor": "loadReview:template",
+      "category": "B",
+      "english_or_static": "Revalidate decision"
+    },
+    {
+      "id": "I058",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 197,
+      "anchor": "loadReview:template",
+      "category": "E",
+      "english_or_static": "No Decision Memory records currently need revalidation."
+    },
+    {
+      "id": "I059",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 198,
+      "anchor": "loadReview:heading",
+      "category": "A",
+      "english_or_static": "Review",
+      "chinese": "Decide what becomes authoritative"
+    },
+    {
+      "id": "I060",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 198,
+      "anchor": "loadReview:template",
+      "category": "B",
+      "english_or_static": "Pending candidates"
+    },
+    {
+      "id": "I061",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 199,
+      "anchor": "loadReview:template",
+      "category": "A",
+      "english_or_static": "Supporting proposals"
+    },
+    {
+      "id": "I062",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 200,
+      "anchor": "loadReview:template",
+      "category": "A",
+      "english_or_static": "Decision records needing attention"
+    },
+    {
+      "id": "I063",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Canonical relation cannot be corrected in this review form."
+    },
+    {
+      "id": "I064",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Extracted relation phrase:"
+    },
+    {
+      "id": "I065",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Open the original source to inspect it. With a provider enabled, return to Sources and import the original artifact again to request a new extraction. Re-extraction may still leave the relation unresolved."
+    },
+    {
+      "id": "I066",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "If you cannot confirm the candidate from its evidence, leave it unresolved and use Reject. Enter your reviewer name and reason to record the rejection; it will not enter Decision Memory."
+    },
+    {
+      "id": "I067",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 217,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Open original source"
+    },
+    {
+      "id": "I068",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 219,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Subject"
+    },
+    {
+      "id": "I069",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 221,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Effective date or timestamp"
+    },
+    {
+      "id": "I070",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 218,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Resolve fields from the evidence"
+    },
+    {
+      "id": "I071",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 218,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Only an unresolved subject and an explicit effective time can be corrected here. Leave uncertain fields empty. Effective time never defaults to today."
+    },
+    {
+      "id": "I072",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 221,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Subject, canonical relation, and effective time are resolved from the source."
+    },
+    {
+      "id": "I073",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 222,
+      "anchor": "inspectCandidate:heading",
+      "category": "B",
+      "english_or_static": "Review candidate"
+    },
+    {
+      "id": "I074",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 227,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "New approval for a stale decision"
+    },
+    {
+      "id": "I075",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 227,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Original:"
+    },
+    {
+      "id": "I076",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 231,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Keep unresolved / back to comparison"
+    },
+    {
+      "id": "I077",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 231,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Back to Review"
+    },
+    {
+      "id": "I078",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 222,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Subject"
+    },
+    {
+      "id": "I079",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 223,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Relation"
+    },
+    {
+      "id": "I080",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 223,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Valid from"
+    },
+    {
+      "id": "I081",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 223,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Review reasons"
+    },
+    {
+      "id": "I082",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 224,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Exact supporting evidence"
+    },
+    {
+      "id": "I083",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 225,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Source version and provenance"
+    },
+    {
+      "id": "I084",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 225,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Version:"
+    },
+    {
+      "id": "I085",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 226,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Evidence ref:"
+    },
+    {
+      "id": "I086",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 227,
+      "anchor": "inspectCandidate:template",
+      "category": "A",
+      "english_or_static": "Reviewer"
+    },
+    {
+      "id": "I087",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 227,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Review reason"
+    },
+    {
+      "id": "I088",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 230,
+      "anchor": "inspectCandidate:template",
+      "category": "E",
+      "english_or_static": "Approve and materialize"
+    },
+    {
+      "id": "I089",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 230,
+      "anchor": "inspectCandidate:template",
+      "category": "B",
+      "english_or_static": "Reject"
+    },
+    {
+      "id": "I090",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 249,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Current version:"
+    },
+    {
+      "id": "I091",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 250,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Recorded approval (read-only)"
+    },
+    {
+      "id": "I092",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 250,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Approval is already recorded. Finish materialization using only that authorization."
+    },
+    {
+      "id": "I093",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 251,
+      "anchor": "inspectRevalidation:heading",
+      "category": "A",
+      "english_or_static": "Review Attention"
+    },
+    {
+      "id": "I094",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 253,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "No current source record is available. Add a source in Sources, then return to review."
+    },
+    {
+      "id": "I095",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 254,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "This revalidation is complete. The new approval and original record can be inspected in history."
+    },
+    {
+      "id": "I096",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 254,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "This record is read-only and cannot be revalidated here."
+    },
+    {
+      "id": "I097",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 254,
+      "anchor": "inspectRevalidation:template",
+      "category": "B",
+      "english_or_static": "No valid new candidate is available. This decision stays unresolved. Add or update a source, finish extraction, and return here."
+    },
+    {
+      "id": "I098",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 254,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Revalidated by a new approval on"
+    },
+    {
+      "id": "I099",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 254,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "View approved decision and history"
+    },
+    {
+      "id": "I100",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 251,
+      "anchor": "inspectRevalidation:template",
+      "category": "A",
+      "english_or_static": "Original decision:"
+    },
+    {
+      "id": "I101",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 252,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Effective"
+    },
+    {
+      "id": "I102",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 252,
+      "anchor": "inspectRevalidation:template",
+      "category": "A",
+      "english_or_static": "Why this needs attention"
+    },
+    {
+      "id": "I103",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 252,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Original authorization receipts (read-only)"
+    },
+    {
+      "id": "I104",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 252,
+      "anchor": "inspectRevalidation:template",
+      "category": "E",
+      "english_or_static": "Current sources"
+    },
+    {
+      "id": "I105",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 253,
+      "anchor": "inspectRevalidation:template",
+      "category": "B",
+      "english_or_static": "New candidates for explicit review"
+    },
+    {
+      "id": "I106",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 255,
+      "anchor": "inspectRevalidation:template",
+      "category": "A",
+      "english_or_static": "Refresh comparison"
+    },
+    {
+      "id": "I107",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 262,
+      "anchor": "loadDecisions:template",
+      "category": "A",
+      "english_or_static": "Valid from"
+    },
+    {
+      "id": "I108",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 262,
+      "anchor": "loadDecisions:template",
+      "category": "B",
+      "english_or_static": "Source"
+    },
+    {
+      "id": "I109",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 263,
+      "anchor": "loadDecisions:template",
+      "category": "B",
+      "english_or_static": "View history and evidence"
+    },
+    {
+      "id": "I110",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 263,
+      "anchor": "loadDecisions:template",
+      "category": "A",
+      "english_or_static": "No decisions in this workspace"
+    },
+    {
+      "id": "I111",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 263,
+      "anchor": "loadDecisions:template",
+      "category": "E",
+      "english_or_static": "Import a source, review a candidate, and approve it before it appears here."
+    },
+    {
+      "id": "I112",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 264,
+      "anchor": "loadDecisions:heading",
+      "category": "A",
+      "english_or_static": "Decision Memory",
+      "chinese": "What the team has decided"
+    },
+    {
+      "id": "I113",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 264,
+      "anchor": "loadDecisions:template",
+      "category": "E",
+      "english_or_static": "Current records"
+    },
+    {
+      "id": "I114",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 283,
+      "anchor": "inspectDecision:template",
+      "category": "B",
+      "english_or_static": "Inspect source"
+    },
+    {
+      "id": "I115",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 278,
+      "anchor": "inspectDecision:template",
+      "category": "B",
+      "english_or_static": "Source:"
+    },
+    {
+      "id": "I116",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 287,
+      "anchor": "inspectDecision:template",
+      "category": "E",
+      "english_or_static": "Revalidated by a separate human approval on"
+    },
+    {
+      "id": "I117",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 284,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Decision"
+    },
+    {
+      "id": "I118",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 285,
+      "anchor": "inspectDecision:template",
+      "category": "D",
+      "english_or_static": "Review receipt:"
+    },
+    {
+      "id": "I119",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 290,
+      "anchor": "inspectDecision:template",
+      "category": "E",
+      "english_or_static": "Proposal only; no formal review receipt."
+    },
+    {
+      "id": "I120",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 292,
+      "anchor": "inspectDecision:heading",
+      "category": "A",
+      "english_or_static": "Decision Memory"
+    },
+    {
+      "id": "I121",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 293,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Decision valid on"
+    },
+    {
+      "id": "I122",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 294,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Show reviewed state"
+    },
+    {
+      "id": "I123",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 294,
+      "anchor": "inspectDecision:template",
+      "category": "E",
+      "english_or_static": "Historical validity uses currently recorded review decisions; this is not a snapshot of what was known at that time."
+    },
+    {
+      "id": "I124",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 294,
+      "anchor": "inspectDecision:template",
+      "category": "B",
+      "english_or_static": "Selected date:"
+    },
+    {
+      "id": "I125",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 297,
+      "anchor": "inspectDecision:template",
+      "category": "B",
+      "english_or_static": "Decision timeline"
+    },
+    {
+      "id": "I126",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 298,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Formal replacements"
+    },
+    {
+      "id": "I127",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 299,
+      "anchor": "inspectDecision:template",
+      "category": "E",
+      "english_or_static": "Unapproved proposals"
+    },
+    {
+      "id": "I128",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 300,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Ask about this decision"
+    },
+    {
+      "id": "I129",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 300,
+      "anchor": "inspectDecision:template",
+      "category": "B",
+      "english_or_static": "Ask for reviewed state or investigate its sources from the same Ask form."
+    },
+    {
+      "id": "I130",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 303,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Open Ask with this scope"
+    },
+    {
+      "id": "I131",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 303,
+      "anchor": "inspectDecision:template",
+      "category": "A",
+      "english_or_static": "Back to Decision Memory"
+    },
+    {
+      "id": "I132",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 327,
+      "anchor": "localizeAsk:askCopy",
+      "category": "E",
+      "english_or_static": "What supplier are we currently using?",
+      "chinese": "我们现在采用哪家供应商？"
+    },
+    {
+      "id": "I133",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 332,
+      "anchor": "decisionCategory:askCopy",
+      "category": "A",
+      "english_or_static": "Supplier",
+      "chinese": "供应商"
+    },
+    {
+      "id": "I134",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 333,
+      "anchor": "decisionCategory:askCopy",
+      "category": "A",
+      "english_or_static": "Budget",
+      "chinese": "预算"
+    },
+    {
+      "id": "I135",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 334,
+      "anchor": "decisionCategory:askCopy",
+      "category": "A",
+      "english_or_static": "Decision",
+      "chinese": "决策"
+    },
+    {
+      "id": "I136",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 368,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Ask the project record",
+      "chinese": "问一问项目决策"
+    },
+    {
+      "id": "I137",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 369,
+      "anchor": "showAsk:askLabel",
+      "category": "B",
+      "english_or_static": "Ask naturally. Get a checked answer with its original sources.",
+      "chinese": "自然提问，先看答案，再查证据。"
+    },
+    {
+      "id": "I138",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 370,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Answer language",
+      "chinese": "回答语言"
+    },
+    {
+      "id": "I139",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 372,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Workspace",
+      "chinese": "项目空间"
+    },
+    {
+      "id": "I140",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 374,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Your question",
+      "chinese": "你的问题"
+    },
+    {
+      "id": "I141",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 374,
+      "anchor": "showAsk:askCopy",
+      "category": "E",
+      "english_or_static": "What supplier are we currently using?",
+      "chinese": "我们现在采用哪家供应商？"
+    },
+    {
+      "id": "I142",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 375,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Investigation scope (optional)",
+      "chinese": "调查领域（可选）"
+    },
+    {
+      "id": "I143",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 376,
+      "anchor": "showAsk:askCopy",
+      "category": "A",
+      "english_or_static": "Automatic shortcuts / ask me to clarify",
+      "chinese": "自动快捷路径／需要时澄清"
+    },
+    {
+      "id": "I144",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 377,
+      "anchor": "showAsk:askCopy",
+      "category": "E",
+      "english_or_static": "Tasks across the current workspace records",
+      "chinese": "当前空间记录中的任务"
+    },
+    {
+      "id": "I145",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 378,
+      "anchor": "showAsk:askCopy",
+      "category": "A",
+      "english_or_static": "Project → owner → direct leader",
+      "chinese": "项目 → 负责人 → 直属领导"
+    },
+    {
+      "id": "I146",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 379,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Select a domain for unfamiliar wording. Reads the current workspace sources; conclusions remain unconfirmed. Refresh this page after source changes.",
+      "chinese": "自然语言未被识别时可选定领域；只读当前空间来源，结论仍未经确认。来源变更后请刷新页面。"
+    },
+    {
+      "id": "I147",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 380,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Task stages configured. Relationship proposals require independent confirmation.",
+      "chinese": "任务阶段已配置；关系提案仍需独立确认。"
+    },
+    {
+      "id": "I148",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 380,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Task Provider unavailable. Configure the Host before running task investigation.",
+      "chinese": "任务 Provider 不可用，请先配置 Host。"
+    },
+    {
+      "id": "I149",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 382,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Per-question limits",
+      "chinese": "单次调查上限"
+    },
+    {
+      "id": "I150",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 383,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Sources in this authorization",
+      "chinese": "本次授权的来源清单"
+    },
+    {
+      "id": "I151",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 383,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Only the current snapshot, for this question. Does not approve business relationships.",
+      "chinese": "仅本次问题、当前来源快照；不授予业务关系批准权限。"
+    },
+    {
+      "id": "I152",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 384,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Ask",
+      "chinese": "提问"
+    },
+    {
+      "id": "I153",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 384,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Ctrl / ⌘ + Enter to ask",
+      "chinese": "Ctrl / ⌘ + Enter 提交"
+    },
+    {
+      "id": "I154",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 385,
+      "anchor": "showAsk:askLabel",
+      "category": "B",
+      "english_or_static": "Advanced: decision and exact date",
+      "chinese": "高级选项：决策与精确日期"
+    },
+    {
+      "id": "I155",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 386,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Decision scope",
+      "chinese": "指定决策（可选）"
+    },
+    {
+      "id": "I156",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 387,
+      "anchor": "showAsk:askCopy",
+      "category": "A",
+      "english_or_static": "Discover automatically from my question",
+      "chinese": "根据问题自动查找"
+    },
+    {
+      "id": "I157",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 388,
+      "anchor": "showAsk:askLabel",
+      "category": "B",
+      "english_or_static": "Only reviewed, source-verified decisions are available.",
+      "chinese": "仅包含已审核且来源可核验的决策。"
+    },
+    {
+      "id": "I158",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 389,
+      "anchor": "showAsk:askLabel",
+      "category": "B",
+      "english_or_static": "Decision valid on this date (optional)",
+      "chinese": "查询哪一天有效的决策（可选）"
+    },
+    {
+      "id": "I159",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 389,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Blank means now. Dates start at 00:00 UTC; history uses currently recorded approvals.",
+      "chinese": "留空查询当前；日期以 UTC 零点为准，使用目前记录的审核信息。"
+    },
+    {
+      "id": "I160",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 390,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Allow this request to send sources to the configured external AI provider and incur bounded model costs.",
+      "chinese": "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。"
+    },
+    {
+      "id": "I161",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 390,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Offline investigation demo is available.",
+      "chinese": "可使用离线调查演示。"
+    },
+    {
+      "id": "I162",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 390,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "AI investigation is not configured. Reviewed record queries remain available.",
+      "chinese": "尚未配置 AI 调查；可信决策查询可直接使用。"
+    },
+    {
+      "id": "I163",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 391,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Recheck last task investigation",
+      "chinese": "重新核验上次任务调查"
+    },
+    {
+      "id": "I164",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 392,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Term not understood? Propose a correction",
+      "chinese": "术语没识别对？提出纠正"
+    },
+    {
+      "id": "I165",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 393,
+      "anchor": "showAsk:askLabel",
+      "category": "E",
+      "english_or_static": "Terminology applies only to this workspace after your explicit approval. It cannot approve or change business decisions.",
+      "chinese": "术语仅在本空间经人工确认后生效，不能批准或修改业务决策。"
+    },
+    {
+      "id": "I166",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 395,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "New term",
+      "chinese": "新术语"
+    },
+    {
+      "id": "I167",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 395,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "One term, 2–40 characters; sentences are unsupported.",
+      "chinese": "单个术语，2–40 字符；不支持整句。"
+    },
+    {
+      "id": "I168",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 396,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Means this existing relation",
+      "chinese": "对应已有关系"
+    },
+    {
+      "id": "I169",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 397,
+      "anchor": "showAsk:askLabel",
+      "category": "D",
+      "english_or_static": "Your reviewer ID (local human assertion)",
+      "chinese": "你的审核者标识（本地人工声明）"
+    },
+    {
+      "id": "I170",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 398,
+      "anchor": "showAsk:askLabel",
+      "category": "A",
+      "english_or_static": "Propose only — pending review",
+      "chinese": "提出候选，等待确认"
+    },
+    {
+      "id": "I171",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 367,
+      "anchor": "showAsk:template",
+      "category": "A",
+      "english_or_static": "Ask"
+    },
+    {
+      "id": "I172",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 371,
+      "anchor": "showAsk:template",
+      "category": "A",
+      "english_or_static": "Auto / 跟随问题"
+    },
+    {
+      "id": "I173",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 371,
+      "anchor": "showAsk:template",
+      "category": "A",
+      "english_or_static": "中文"
+    },
+    {
+      "id": "I174",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 371,
+      "anchor": "showAsk:template",
+      "category": "A",
+      "english_or_static": "English"
+    },
+    {
+      "id": "I175",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 411,
+      "anchor": "loadFeedback:askCopy",
+      "category": "A",
+      "english_or_static": "I confirm this terminology",
+      "chinese": "我确认此术语映射"
+    },
+    {
+      "id": "I176",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 411,
+      "anchor": "loadFeedback:askCopy",
+      "category": "A",
+      "english_or_static": "Reject",
+      "chinese": "拒绝"
+    },
+    {
+      "id": "I177",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 411,
+      "anchor": "loadFeedback:askCopy",
+      "category": "A",
+      "english_or_static": "Revoke mapping",
+      "chinese": "撤销映射"
+    },
+    {
+      "id": "I178",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 411,
+      "anchor": "loadFeedback:askCopy",
+      "category": "A",
+      "english_or_static": "No terminology feedback in this workspace.",
+      "chinese": "本空间暂无术语反馈。"
+    },
+    {
+      "id": "I179",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 434,
+      "anchor": "changeFeedback:askCopy",
+      "category": "E",
+      "english_or_static": "Saved. Ask the same question again to check the current state.",
+      "chinese": "已保存。可直接再次提交原问题，检查当前效果。"
+    },
+    {
+      "id": "I180",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 454,
+      "anchor": "askRequest:error",
+      "category": "A",
+      "english_or_static": "Ask could not reach its local service."
+    },
+    {
+      "id": "I181",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 465,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Original source",
+      "chinese": "原始来源"
+    },
+    {
+      "id": "I182",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 465,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Lines",
+      "chinese": "行号"
+    },
+    {
+      "id": "I183",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 467,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "View source",
+      "chinese": "查看来源"
+    },
+    {
+      "id": "I184",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 468,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Source version and exact references",
+      "chinese": "来源版本与完整引用"
+    },
+    {
+      "id": "I185",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 469,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Version",
+      "chinese": "来源版本"
+    },
+    {
+      "id": "I186",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 470,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Evidence reference",
+      "chinese": "原始证据引用"
+    },
+    {
+      "id": "I187",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 471,
+      "anchor": "askEvidence:t",
+      "category": "B",
+      "english_or_static": "Citation",
+      "chinese": "引用编号"
+    },
+    {
+      "id": "I188",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 480,
+      "anchor": "askTechnical:t",
+      "category": "A",
+      "english_or_static": "Review records and technical details",
+      "chinese": "审核记录与技术详情"
+    },
+    {
+      "id": "I189",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 481,
+      "anchor": "askTechnical:t",
+      "category": "E",
+      "english_or_static": "Recorded authorization",
+      "chinese": "审核收据"
+    },
+    {
+      "id": "I190",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 482,
+      "anchor": "askTechnical:t",
+      "category": "D",
+      "english_or_static": "Receipt",
+      "chinese": "收据编号"
+    },
+    {
+      "id": "I191",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 483,
+      "anchor": "askTechnical:t",
+      "category": "E",
+      "english_or_static": "Authorization",
+      "chinese": "授权类型"
+    },
+    {
+      "id": "I192",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 484,
+      "anchor": "askTechnical:t",
+      "category": "E",
+      "english_or_static": "Authorized",
+      "chinese": "审核时间"
+    },
+    {
+      "id": "I193",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 512,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "The configuration, source evidence or investigation budget did not pass the required checks. No verified conclusion is available.",
+      "chinese": "运行配置、来源证据或调查预算尚未通过必要检查，本次没有可核验的最终结论。"
+    },
+    {
+      "id": "I194",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 513,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Task investigation is unavailable in the current configuration. No investigation or external model call was started.",
+      "chinese": "当前配置不支持任务调查，尚未启动调查或外部模型调用。"
+    },
+    {
+      "id": "I195",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 514,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Check the per-request permission above, then ask again. Sources are sent only after permission is granted.",
+      "chinese": "请查看上方来源清单与预算，勾选本次授权后再次提问；授权前不会发送来源内容。"
+    },
+    {
+      "id": "I196",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 515,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "The Provider outcome is uncertain. No automatic retry or verified conclusion was released.",
+      "chinese": "Provider 执行结果不确定；系统不会自动重试，本次没有发布可核验结论。"
+    },
+    {
+      "id": "I197",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 516,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Clear the advanced decision date and state the investigation period in your question. The original question is kept.",
+      "chinese": "请清除高级选项中的决策日期，并在原问题中说明调查时段。原问题已保留。"
+    },
+    {
+      "id": "I198",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 517,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "The sources, access or relationship evidence changed. Previous task details are hidden. Refresh the source list and investigate again.",
+      "chinese": "来源、访问权限或关系证据已变化，旧任务详情已隐藏。请刷新来源清单后重新调查。"
+    },
+    {
+      "id": "I199",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 518,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Task investigation unavailable",
+      "chinese": "当前无法使用任务调查"
+    },
+    {
+      "id": "I200",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 518,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "This investigation needs your permission",
+      "chinese": "这次调查需要你的授权"
+    },
+    {
+      "id": "I201",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 518,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Task investigation stopped",
+      "chinese": "任务调查已停止"
+    },
+    {
+      "id": "I202",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 518,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Reason and review",
+      "chinese": "停止原因与审查记录"
+    },
+    {
+      "id": "I203",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 529,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Investigating the sources",
+      "chinese": "正在调查相关来源"
+    },
+    {
+      "id": "I204",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 529,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Checking reviewed records and source evidence…",
+      "chinese": "正在查看可信记录，核验来源证据…"
+    },
+    {
+      "id": "I205",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 529,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The answer is not verified yet.",
+      "chinese": "本次结论尚未核验，请等待调查完成。"
+    },
+    {
+      "id": "I206",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 541,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Choose an investigation scope",
+      "chinese": "请选择调查领域"
+    },
+    {
+      "id": "I207",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 541,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Select tasks or project relationships above, or choose a reviewed decision. Your question has been kept; no investigation has started.",
+      "chinese": "请在上方选择任务或项目关系领域，或指定可信决策。原问题已保留，尚未启动调查。"
+    },
+    {
+      "id": "I208",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 542,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "The source scope changed",
+      "chinese": "来源范围已变化"
+    },
+    {
+      "id": "I209",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 542,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Refresh this page to review the current workspace sources, then select the domain and ask again.",
+      "chinese": "请刷新页面，查看当前空间来源后重新选择领域并提问。"
+    },
+    {
+      "id": "I210",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 543,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "This investigation capability is unavailable",
+      "chinese": "当前不支持此调查能力"
+    },
+    {
+      "id": "I211",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 543,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The selected domain has no configured planner. No alternate investigation was started.",
+      "chinese": "所选领域尚无可用规划器；未改为执行其他调查。"
+    },
+    {
+      "id": "I212",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 544,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Check the investigation domain",
+      "chinese": "请核对调查领域"
+    },
+    {
+      "id": "I213",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 544,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "This question requests project relationships. Select that domain to continue the original question.",
+      "chinese": "该问题请求项目关系调查，请选择对应领域以继续原问题。"
+    },
+    {
+      "id": "I214",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 545,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "The request exceeds read-only scope",
+      "chinese": "请求超出只读调查范围"
+    },
+    {
+      "id": "I215",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 545,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Ask about the current workspace records without write, credential or permission-bypass instructions.",
+      "chinese": "请针对当前空间记录提问，不包含写入、凭证或绕过权限的指令。"
+    },
+    {
+      "id": "I216",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 546,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Enter an investigation question",
+      "chinese": "请输入调查问题"
+    },
+    {
+      "id": "I217",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 546,
+      "anchor": "renderAskResult:t",
+      "category": "C",
+      "english_or_static": "A greeting does not start an investigation. Ask a question about the selected records.",
+      "chinese": "问候不会启动调查，请对选定记录提出问题。"
+    },
+    {
+      "id": "I218",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 549,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "This relationship question is not supported",
+      "chinese": "目前不能可靠地拆解这个关系问题"
+    },
+    {
+      "id": "I219",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 549,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Approved terminology conflicts",
+      "chinese": "已批准术语存在冲突"
+    },
+    {
+      "id": "I220",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 549,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Which decision do you mean?",
+      "chinese": "你想问的是哪项决策？"
+    },
+    {
+      "id": "I221",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 550,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Choose a specific date",
+      "chinese": "请选择一个具体日期"
+    },
+    {
+      "id": "I222",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 551,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "This investigation needs your permission",
+      "chinese": "这次调查需要你的授权"
+    },
+    {
+      "id": "I223",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 552,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Investigation outcome uncertain; no verified conclusion",
+      "chinese": "本次调查执行结果不确定，没有可核验的最终结论"
+    },
+    {
+      "id": "I224",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 553,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "No matching reviewed decision found",
+      "chinese": "暂未找到与问题匹配的可信决策"
+    },
+    {
+      "id": "I225",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 554,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "No verified answer is available",
+      "chinese": "本次尚未得到可核验的答案"
+    },
+    {
+      "id": "I226",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 555,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.",
+      "chinese": "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。"
+    },
+    {
+      "id": "I227",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 555,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.",
+      "chinese": "请在下方撤销冲突映射，或在高级选项中指定可信决策。"
+    },
+    {
+      "id": "I228",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 555,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Choose one decision to continue your original question.",
+      "chinese": "选择一项后继续原问题，无需重新输入。"
+    },
+    {
+      "id": "I229",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 556,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Select one exact date above to check which decision was valid. Your question and confirmed decision are retained.",
+      "chinese": "请在上方选择精确日期，以核实当时有效的决策。原问题和已确认的决策会保留。"
+    },
+    {
+      "id": "I230",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 557,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Check the per-request permission above, then ask again. Sources are sent only after permission is granted.",
+      "chinese": "请勾选上方的本次授权，再次提问后才会发送来源内容并启动调查。"
+    },
+    {
+      "id": "I231",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 558,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Saved formal decisions are unaffected. No draft is presented as an answer.",
+      "chinese": "已保存的正式决策不受本次调查影响，本次未核验的内容不会作为答案。"
+    },
+    {
+      "id": "I232",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 559,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Add a known project or decision term, or choose a reviewed decision in advanced options.",
+      "chinese": "请补充已知项目或决策名称，也可在高级选项中指定可信决策。"
+    },
+    {
+      "id": "I233",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 560,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "AI investigation is not configured. Direct reviewed queries are still available.",
+      "chinese": "尚未配置 AI 调查；仍可直接查询已审核记录。"
+    },
+    {
+      "id": "I234",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 561,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The request did not produce an accepted answer. Details are available below.",
+      "chinese": "本次请求未产生通过核验的答案，可展开下方详情查看原因。"
+    },
+    {
+      "id": "I235",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 563,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Choose this decision",
+      "chinese": "选择这项决策"
+    },
+    {
+      "id": "I236",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 564,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "More candidates are available in advanced options. Narrow the question if needed.",
+      "chinese": "更多候选可在高级选项中查看，也可补充问题缩小范围。"
+    },
+    {
+      "id": "I237",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 578,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "The sources do not establish the replacement reason.",
+      "chinese": "现有可信来源没有证明更换原因。"
+    },
+    {
+      "id": "I238",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 578,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "No effective formal decision could be verified.",
+      "chinese": "未能核实该日期有效的正式决策。"
+    },
+    {
+      "id": "I239",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 578,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The investigation conclusion has not been verified.",
+      "chinese": "本次调查结论尚未核验。"
+    },
+    {
+      "id": "I240",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 578,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Some requested information is not supported by evidence.",
+      "chinese": "请求中的部分信息尚无可信证据。"
+    },
+    {
+      "id": "I241",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 579,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "No verifiable formal decision for this date",
+      "chinese": "该日期没有可核实的正式决策"
+    },
+    {
+      "id": "I242",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 579,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Change verified; the reason remains unknown",
+      "chinese": "更换事实已核实，原因尚无可信证据"
+    },
+    {
+      "id": "I243",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 579,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The reason is not established",
+      "chinese": "原因尚无可信证据"
+    },
+    {
+      "id": "I244",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 580,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "The replacement is verified; its cause is not established.",
+      "chinese": "已核实发生了更换，但不能据此推断原因。"
+    },
+    {
+      "id": "I245",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 581,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "There is no unique reviewed, source-verified effective decision for the selected date.",
+      "chinese": "所选日期没有唯一、已审核且来源可核验的有效决策。"
+    },
+    {
+      "id": "I246",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 583,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "View decision timeline",
+      "chinese": "查看决策时间线"
+    },
+    {
+      "id": "I247",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 584,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Decision history and unapproved proposals",
+      "chinese": "相关历史与未审核提案"
+    },
+    {
+      "id": "I248",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 584,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Unapproved proposal, not a formal decision",
+      "chinese": "未审核提案，非正式决策"
+    },
+    {
+      "id": "I249",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 586,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "No verified decision",
+      "chinese": "没有可核实的正式决策"
+    },
+    {
+      "id": "I250",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 586,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Source investigation checked",
+      "chinese": "来源调查已核验"
+    },
+    {
+      "id": "I251",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 586,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Verified formal decision",
+      "chinese": "已核实的正式决策"
+    },
+    {
+      "id": "I252",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 588,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "What remains unknown",
+      "chinese": "尚未取得证据支持的内容"
+    },
+    {
+      "id": "I253",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 589,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Effective at the selected historical date",
+      "chinese": "所选历史日期的有效决策"
+    },
+    {
+      "id": "I254",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 589,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Current reviewed record",
+      "chinese": "当前可信记录"
+    },
+    {
+      "id": "I255",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 589,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Effective from",
+      "chinese": "生效日期"
+    },
+    {
+      "id": "I256",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 590,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "AI investigated the sources",
+      "chinese": "AI 已调查相关来源"
+    },
+    {
+      "id": "I257",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 590,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Direct reviewed-record lookup",
+      "chinese": "直接查询可信决策记录"
+    },
+    {
+      "id": "I258",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 590,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Offline synthetic demo",
+      "chinese": "离线合成演示"
+    },
+    {
+      "id": "I259",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 590,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "Model used",
+      "chinese": "使用了模型"
+    },
+    {
+      "id": "I260",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 590,
+      "anchor": "renderAskResult:t",
+      "category": "A",
+      "english_or_static": "0 model calls",
+      "chinese": "零模型调用"
+    },
+    {
+      "id": "I261",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 591,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Approved terminology used to locate this decision",
+      "chinese": "使用已批准术语定位此决策"
+    },
+    {
+      "id": "I262",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 591,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Terminology is not business evidence.",
+      "chinese": "术语解释不构成业务证据。"
+    },
+    {
+      "id": "I263",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 592,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Valid time uses approvals recorded now; this does not establish what people knew or approved at that historical time.",
+      "chinese": "这是使用目前审核记录查询的有效时间，不代表当时的人已经知情或批准。"
+    },
+    {
+      "id": "I264",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 594,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "Original evidence",
+      "chinese": "原始证据"
+    },
+    {
+      "id": "I265",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 594,
+      "anchor": "renderAskResult:t",
+      "category": "B",
+      "english_or_static": "View remaining sources",
+      "chinese": "查看其余来源"
+    },
+    {
+      "id": "I266",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 595,
+      "anchor": "renderAskResult:t",
+      "category": "E",
+      "english_or_static": "Replacement effective",
+      "chinese": "更换生效日期"
+    },
+    {
+      "id": "I267",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 609,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Alias → project",
+      "chinese": "别名 → 项目"
+    },
+    {
+      "id": "I268",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 609,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Project → owner",
+      "chinese": "项目 → 负责人"
+    },
+    {
+      "id": "I269",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 609,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Owner → direct leader",
+      "chinese": "负责人 → 直属领导"
+    },
+    {
+      "id": "I270",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 614,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "E",
+      "english_or_static": "Conflicting sources; no unique answer",
+      "chinese": "来源存在冲突，当前无法确定唯一结果"
+    },
+    {
+      "id": "I271",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 614,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Partly verified; evidence is still missing",
+      "chinese": "已核实部分关系，后续证据不足"
+    },
+    {
+      "id": "I272",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 618,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "No unique result; inspect the opposing sources below.",
+      "chinese": "没有唯一结果，请查看下方互相矛盾的原始来源。"
+    },
+    {
+      "id": "I273",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 618,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "No verified result for this hop.",
+      "chinese": "尚无足够证据核实这一跳。"
+    },
+    {
+      "id": "I274",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 620,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Source-supported relationship",
+      "chinese": "来源支持的关系"
+    },
+    {
+      "id": "I275",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 620,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Source investigation; no relationship verified",
+      "chinese": "来源调查，尚无关系得到核实"
+    },
+    {
+      "id": "I276",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 622,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "D",
+      "english_or_static": "The relationship is supported by verified source reads and checked by Reviewer.",
+      "chinese": "根据已读取并核验的原始来源，可以确认该关系，结果已经过 Reviewer 核验。"
+    },
+    {
+      "id": "I277",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 622,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.",
+      "chinese": "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。"
+    },
+    {
+      "id": "I278",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 622,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "E",
+      "english_or_static": "The known upstream facts are retained. The requested final relationship remains unknown.",
+      "chinese": "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。"
+    },
+    {
+      "id": "I279",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 623,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "E",
+      "english_or_static": "This is source investigation, not a formally approved business decision.",
+      "chinese": "这是来源关系调查结果，不代表已经通过正式业务审批。"
+    },
+    {
+      "id": "I280",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 624,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "hop investigation",
+      "chinese": "跳调查"
+    },
+    {
+      "id": "I281",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 624,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "D",
+      "english_or_static": "model turns",
+      "chinese": "轮模型交互"
+    },
+    {
+      "id": "I282",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 625,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "E",
+      "english_or_static": "Sources supporting the verified facts or conflict",
+      "chinese": "支持已核实关系或冲突的来源"
+    },
+    {
+      "id": "I283",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 626,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Other sources read; no additional relationship established",
+      "chinese": "其他已读取材料，未据此确认额外关系"
+    },
+    {
+      "id": "I284",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 627,
+      "anchor": "renderSourceInvestigation:t",
+      "category": "B",
+      "english_or_static": "Full investigation: plan, dependencies and tool calls",
+      "chinese": "查看完整调查过程：计划、依赖与工具记录"
+    },
+    {
+      "id": "I285",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 644,
+      "anchor": "showAskError:askCopy",
+      "category": "A",
+      "english_or_static": "The request could not be completed",
+      "chinese": "请求暂时无法完成"
+    },
+    {
+      "id": "I286",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 644,
+      "anchor": "showAskError:askCopy",
+      "category": "A",
+      "english_or_static": "Check the local service and try again.",
+      "chinese": "请检查本地服务后重试。"
+    },
+    {
+      "id": "I287",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 644,
+      "anchor": "showAskError:askCopy",
+      "category": "A",
+      "english_or_static": "Error details",
+      "chinese": "错误详情"
+    },
+    {
+      "id": "I288",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 649,
+      "anchor": "submitAsk:askCopy",
+      "category": "A",
+      "english_or_static": "Wait for the terminology change to finish.",
+      "chinese": "请等待术语更改保存完成。"
+    },
+    {
+      "id": "I289",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 669,
+      "anchor": "submitAsk:askCopy",
+      "category": "A",
+      "english_or_static": "Looking for a reviewed answer…",
+      "chinese": "正在查找可信答案…"
+    },
+    {
+      "id": "I290",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 702,
+      "anchor": "module:template",
+      "category": "A",
+      "english_or_static": "Switching workspace…"
+    },
+    {
+      "id": "I291",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 714,
+      "anchor": "module:heading",
+      "category": "A",
+      "english_or_static": "Workspace",
+      "chinese": "Create a workspace"
+    },
+    {
+      "id": "I292",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 714,
+      "anchor": "module:template",
+      "category": "A",
+      "english_or_static": "Workspace name"
+    },
+    {
+      "id": "I293",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 714,
+      "anchor": "module:template",
+      "category": "A",
+      "english_or_static": "Create workspace"
+    },
+    {
+      "id": "I294",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 714,
+      "anchor": "module:template",
+      "category": "A",
+      "english_or_static": "Cancel"
+    },
+    {
+      "id": "I295",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 742,
+      "anchor": "module:announce",
+      "category": "B",
+      "english_or_static": "Source files must be 256 KB or smaller."
+    },
+    {
+      "id": "I296",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 751,
+      "anchor": "module:announce",
+      "category": "A",
+      "english_or_static": "LinkLoom could not read this file. Paste the timestamped text instead."
+    },
+    {
+      "id": "I297",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 807,
+      "anchor": "module:template",
+      "category": "A",
+      "english_or_static": "Refresh"
+    },
+    {
+      "id": "I298",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 849,
+      "anchor": "module:announce",
+      "category": "E",
+      "english_or_static": "The recorded revalidation approval was materialized."
+    },
+    {
+      "id": "I299",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 864,
+      "anchor": "module:announce",
+      "category": "A",
+      "english_or_static": "Failed segment recovery started."
+    },
+    {
+      "id": "I300",
+      "file": "src/linkloom/ui/static/product.js",
+      "baseline_line": 870,
+      "anchor": "module:announce",
+      "category": "B",
+      "english_or_static": "Source removed; affected decisions were reconciled."
+    },
+    {
+      "id": "I301",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 11,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Do the records describe the same task?",
+      "chinese": "这些记录是否属于同一任务？"
+    },
+    {
+      "id": "I302",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 12,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Does one plan replace the other?",
+      "chinese": "后一计划是否替代前一计划？"
+    },
+    {
+      "id": "I303",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 15,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The model leans toward support; unconfirmed",
+      "chinese": "模型倾向支持，尚未确认"
+    },
+    {
+      "id": "I304",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 16,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The model leans against it; unconfirmed",
+      "chinese": "模型倾向否定，尚未确认"
+    },
+    {
+      "id": "I305",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 17,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The model reports conflicting evidence",
+      "chinese": "模型报告证据冲突"
+    },
+    {
+      "id": "I306",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 18,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The model cannot determine this",
+      "chinese": "模型无法判断"
+    },
+    {
+      "id": "I307",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 19,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The model cannot determine this",
+      "chinese": "模型无法判断"
+    },
+    {
+      "id": "I308",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 21,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Existing relationship evidence supports this step",
+      "chinese": "既有关系证据支持此步骤"
+    },
+    {
+      "id": "I309",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 22,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Read completed",
+      "chinese": "读取已完成"
+    },
+    {
+      "id": "I310",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 23,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Counter-evidence found",
+      "chinese": "存在否定证据"
+    },
+    {
+      "id": "I311",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 24,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Conflicting evidence; no unique conclusion",
+      "chinese": "证据冲突，无法给出唯一结论"
+    },
+    {
+      "id": "I312",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 25,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Still unknown",
+      "chinese": "仍然未知"
+    },
+    {
+      "id": "I313",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 26,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Cannot continue yet",
+      "chinese": "暂时无法继续"
+    },
+    {
+      "id": "I314",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 27,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Still unknown",
+      "chinese": "仍然未知"
+    },
+    {
+      "id": "I315",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 30,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Reading within the specified source scope is not supported. This does not mean the evidence is absent.",
+      "chinese": "当前不支持按指定来源范围执行此读取，不代表证据不存在。"
+    },
+    {
+      "id": "I316",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 31,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Reading within the specified time scope is not supported. The requested period was not evaluated.",
+      "chinese": "当前不支持按指定时间范围执行此读取，尚未评估该时段。"
+    },
+    {
+      "id": "I317",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 32,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "This installation does not provide the read operation needed for this step.",
+      "chinese": "当前系统尚未提供此步骤所需的读取操作。"
+    },
+    {
+      "id": "I318",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 33,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The existing relationship read is still unknown. Unknown does not mean refuted.",
+      "chinese": "现有关系读取结果仍为未知，未知不等于否定。"
+    },
+    {
+      "id": "I319",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 34,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The evidence conflicts. Check the original records before choosing a conclusion.",
+      "chinese": "现有证据相互冲突，需要先核对原文。"
+    },
+    {
+      "id": "I320",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 35,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Counter-evidence was returned; this step does not support the proposed relationship.",
+      "chinese": "本步骤返回否定证据，不能据此支持所提关系。"
+    },
+    {
+      "id": "I321",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 36,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "A prerequisite relationship is unconfirmed, so this step could not continue.",
+      "chinese": "前置关系尚未确认，因此本步骤无法继续。"
+    },
+    {
+      "id": "I322",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 37,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "No current, independently verifiable evidence satisfies this step. Model support cannot replace that evidence.",
+      "chinese": "尚缺当前有效、可独立核验的证据；模型支持不能替代这一前提。"
+    },
+    {
+      "id": "I323",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 40,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Owner",
+      "chinese": "负责人"
+    },
+    {
+      "id": "I324",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 40,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Deadline",
+      "chinese": "截止日期"
+    },
+    {
+      "id": "I325",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 41,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Project",
+      "chinese": "项目"
+    },
+    {
+      "id": "I326",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 41,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Vendor",
+      "chinese": "供应商"
+    },
+    {
+      "id": "I327",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 41,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Work",
+      "chinese": "任务内容"
+    },
+    {
+      "id": "I328",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 42,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Not established",
+      "chinese": "尚未确定"
+    },
+    {
+      "id": "I329",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 44,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Provide the missing meeting or original task assignment.",
+      "chinese": "补充缺失的会议或任务分配原文。"
+    },
+    {
+      "id": "I330",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 45,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Date comparison first needs verified task identity and plan revision.",
+      "chinese": "比较日期前，需要先核验任务身份和计划修订。"
+    },
+    {
+      "id": "I331",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 47,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Check a source explicitly stating that one plan replaces the other.",
+      "chinese": "核对明确说明后一计划替代前一计划的来源。"
+    },
+    {
+      "id": "I332",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 48,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Check the referenced original messages and obtain independently verifiable relationship evidence.",
+      "chinese": "核对所引原始消息，补充可独立核验的关系证据。"
+    },
+    {
+      "id": "I333",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 49,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Check the original records for the unresolved question.",
+      "chinese": "围绕待确认问题核对原始记录。"
+    },
+    {
+      "id": "I334",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 50,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "None provided",
+      "chinese": "未提供"
+    },
+    {
+      "id": "I335",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 54,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The declared effective date is",
+      "chinese": "原文声明生效日期为"
+    },
+    {
+      "id": "I336",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 54,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "reference date",
+      "chinese": "核验参考日"
+    },
+    {
+      "id": "I337",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 54,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Not yet effective at that reference date; the current formal plan is unconfirmed.",
+      "chinese": "在该参考日尚未生效；当前正式计划仍未确认。"
+    },
+    {
+      "id": "I338",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 55,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Effective-time conditions hold only at the shown reference date",
+      "chinese": "仅在所示核验参考日满足生效条件"
+    },
+    {
+      "id": "I339",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 55,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "declared effective date",
+      "chinese": "原文声明生效日期"
+    },
+    {
+      "id": "I340",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 55,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "This does not confirm the current formal plan.",
+      "chinese": "这不代表当前正式计划已确认。"
+    },
+    {
+      "id": "I341",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 56,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The dates can be compared, but the currently effective formal plan cannot be confirmed.",
+      "chinese": "可比较日期边界，但不能确认当前正式生效的计划。"
+    },
+    {
+      "id": "I342",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 60,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Insufficient information",
+      "chinese": "资料不足"
+    },
+    {
+      "id": "I343",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 60,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Partial investigation · confirmation pending",
+      "chinese": "部分调查结果 · 待确认"
+    },
+    {
+      "id": "I344",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 61,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Source records found; the formal task state remains unconfirmed",
+      "chinese": "已找到来源记录，任务的正式状态仍待确认"
+    },
+    {
+      "id": "I345",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 61,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The available materials are insufficient for a clear conclusion",
+      "chinese": "现有资料不足，暂时无法给出明确结论"
+    },
+    {
+      "id": "I346",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 62,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Records are kept separate. Source statements and model interpretations do not establish the current owner or effective plan.",
+      "chinese": "各条记录分别保留。原文陈述与模型解读，尚不代表当前负责人或生效计划。"
+    },
+    {
+      "id": "I347",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 63,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Formal business status:",
+      "chinese": "正式业务状态："
+    },
+    {
+      "id": "I348",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 63,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Unconfirmed. This investigation does not grant approval.",
+      "chinese": "尚未确认。本次调查不授予业务批准。"
+    },
+    {
+      "id": "I349",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 64,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Model judgments · confirmation pending",
+      "chinese": "模型判断 · 待确认"
+    },
+    {
+      "id": "I350",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 64,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Checked citations do not verify the interpretation. Full proposals and evidence are expandable below.",
+      "chinese": "引用核验不等于判断成立。完整提案与证据可在下方展开。"
+    },
+    {
+      "id": "I351",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 65,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Open questions",
+      "chinese": "待确认事项"
+    },
+    {
+      "id": "I352",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 66,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The available executable evidence reads are complete. This does not confirm the current formal business state.",
+      "chinese": "已完成现有可执行的证据读取，仍不能据此确认当前正式业务状态。"
+    },
+    {
+      "id": "I353",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 66,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "The investigation did not establish a current formal task state.",
+      "chinese": "本次调查未能确认任务当前的正式状态。"
+    },
+    {
+      "id": "I354",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 67,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Model-reported gap:",
+      "chinese": "模型报告的缺口："
+    },
+    {
+      "id": "I355",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 68,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "No verifiable task candidate was returned. This does not establish that the task does not exist.",
+      "chinese": "本次没有返回可核验的任务候选，不能据此断言任务不存在。"
+    },
+    {
+      "id": "I356",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 69,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Some source material was not fully examined in this investigation.",
+      "chinese": "部分来源尚未在本次调查中完整检查。"
+    },
+    {
+      "id": "I357",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 71,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Source plan boundaries",
+      "chinese": "来源计划日期边界"
+    },
+    {
+      "id": "I358",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 71,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Calendar-day difference",
+      "chinese": "日历日差值"
+    },
+    {
+      "id": "I359",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 72,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Source records",
+      "chinese": "来源记录"
+    },
+    {
+      "id": "I360",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 72,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "What the sources say",
+      "chinese": "原文记录了什么"
+    },
+    {
+      "id": "I361",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 73,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Fields are shown per message. Field interpretations still need review; nothing is inherited from another record.",
+      "chinese": "字段按消息分别展示，字段解释仍待复核，不从其他记录继承信息。"
+    },
+    {
+      "id": "I362",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 76,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Source record",
+      "chinese": "来源记录"
+    },
+    {
+      "id": "I363",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 77,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Recorded at",
+      "chinese": "记录时间"
+    },
+    {
+      "id": "I364",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 78,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Source excerpt",
+      "chinese": "原文片段"
+    },
+    {
+      "id": "I365",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 81,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Date wording in source:",
+      "chinese": "原文日期表述："
+    },
+    {
+      "id": "I366",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 81,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "The date meaning is not established",
+      "chinese": "日期含义尚未确定"
+    },
+    {
+      "id": "I367",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 82,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Not established:",
+      "chinese": "尚未确定："
+    },
+    {
+      "id": "I368",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 83,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "View source",
+      "chinese": "查看来源"
+    },
+    {
+      "id": "I369",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 84,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Field evidence and original message",
+      "chinese": "字段证据与原始消息"
+    },
+    {
+      "id": "I370",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 85,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Source version",
+      "chinese": "来源版本"
+    },
+    {
+      "id": "I371",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 85,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Lines",
+      "chinese": "行号"
+    },
+    {
+      "id": "I372",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 88,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Deadline role",
+      "chinese": "日期角色"
+    },
+    {
+      "id": "I373",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 88,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Precision",
+      "chinese": "精度"
+    },
+    {
+      "id": "I374",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 89,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Unknown fields",
+      "chinese": "未知字段"
+    },
+    {
+      "id": "I375",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 90,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Validation issues",
+      "chinese": "校验问题"
+    },
+    {
+      "id": "I376",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 91,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Model field roles with checked quotes; semantic confirmation is pending.",
+      "chinese": "以下字段角色为模型解释，原文已核验，语义仍待复核。"
+    },
+    {
+      "id": "I377",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 93,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Relationship proposals and investigation details",
+      "chinese": "展开关系提案与调查详情"
+    },
+    {
+      "id": "I378",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 94,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Model proposals · not formal relationships",
+      "chinese": "模型提案 · 尚非正式关系"
+    },
+    {
+      "id": "I379",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 97,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Citations checked; interpretation and business approval remain unconfirmed.",
+      "chinese": "引用已核验；判断和业务批准仍未确认。"
+    },
+    {
+      "id": "I380",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 97,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Citations or coverage failed validation; no trusted relationship is established.",
+      "chinese": "引用或覆盖未通过校验，不能建立可信关系。"
+    },
+    {
+      "id": "I381",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 98,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "See the referenced source",
+      "chinese": "请查看对应来源"
+    },
+    {
+      "id": "I382",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 99,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Supporting evidence",
+      "chinese": "支持证据"
+    },
+    {
+      "id": "I383",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 100,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Counter-evidence or conflicts",
+      "chinese": "反对证据或冲突"
+    },
+    {
+      "id": "I384",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 101,
+      "anchor": "module:t",
+      "category": "B",
+      "english_or_static": "Model-reported evidence gaps",
+      "chinese": "模型报告的证据缺口"
+    },
+    {
+      "id": "I385",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 101,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "No additional gap reported; this does not imply confirmation.",
+      "chinese": "未报告额外缺口，仍不表示已确认。"
+    },
+    {
+      "id": "I386",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 102,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "No model proposal returned.",
+      "chinese": "本次未返回模型提案。"
+    },
+    {
+      "id": "I387",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 103,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Existing relationship reads and remaining steps",
+      "chinese": "既有关系读取与剩余步骤"
+    },
+    {
+      "id": "I388",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 106,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "This installation has no authenticated task-relationship approval interface. Viewing evidence does not approve a relationship.",
+      "chinese": "当前系统尚无具备身份与权限校验的任务关系批准接口。查看证据不会批准关系。"
+    },
+    {
+      "id": "I389",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 107,
+      "anchor": "module:t",
+      "category": "E",
+      "english_or_static": "Offline scripted or recorded adapters; real-model understanding was not evaluated.",
+      "chinese": "本次为离线脚本或回放，未评估真实模型理解能力。"
+    },
+    {
+      "id": "I390",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 108,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "All original citations",
+      "chinese": "全部原始引用"
+    },
+    {
+      "id": "I391",
+      "file": "src/linkloom/ui/static/product-task-result.js",
+      "baseline_line": 109,
+      "anchor": "module:t",
+      "category": "A",
+      "english_or_static": "Investigation trace and review",
+      "chinese": "调查轨迹与审查结果"
+    },
+    {
+      "id": "I392",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 4,
+      "anchor": "module:error",
+      "category": "A",
+      "english_or_static": "LinkLoom localization failed to load."
+    },
+    {
+      "id": "I393",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 169,
+      "anchor": "topbarHtml:template",
+      "category": "A",
+      "english_or_static": "LinkLoom"
+    },
+    {
+      "id": "I394",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 182,
+      "anchor": "topbarHtml:template",
+      "category": "A",
+      "english_or_static": "English"
+    },
+    {
+      "id": "I395",
+      "file": "src/linkloom/ui/static/app.js",
+      "baseline_line": 184,
+      "anchor": "topbarHtml:template",
+      "category": "A",
+      "english_or_static": "中文"
+    },
+    {
+      "id": "I396",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 13,
+      "anchor": "catalog:page.loading",
+      "category": "A",
+      "english_or_static": "Opening the project record…",
+      "chinese": "正在打开项目记录…"
+    },
+    {
+      "id": "I397",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 14,
+      "anchor": "catalog:page.initial",
+      "category": "A",
+      "english_or_static": "Recover a team decision",
+      "chinese": "恢复团队决策"
+    },
+    {
+      "id": "I398",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 15,
+      "anchor": "catalog:page.running",
+      "category": "A",
+      "english_or_static": "Recovering decision",
+      "chinese": "正在恢复决策"
+    },
+    {
+      "id": "I399",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 16,
+      "anchor": "catalog:page.success",
+      "category": "A",
+      "english_or_static": "Recovered decision",
+      "chinese": "已恢复决策"
+    },
+    {
+      "id": "I400",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 17,
+      "anchor": "catalog:page.insufficient",
+      "category": "E",
+      "english_or_static": "Not enough evidence",
+      "chinese": "证据不足"
+    },
+    {
+      "id": "I401",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 18,
+      "anchor": "catalog:page.error",
+      "category": "A",
+      "english_or_static": "Reconstruction failed",
+      "chinese": "决策恢复失败"
+    },
+    {
+      "id": "I402",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 19,
+      "anchor": "catalog:skip",
+      "category": "A",
+      "english_or_static": "Skip to decision brief",
+      "chinese": "跳到决策简报"
+    },
+    {
+      "id": "I403",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 20,
+      "anchor": "catalog:workspace.context",
+      "category": "A",
+      "english_or_static": "Workspace context",
+      "chinese": "工作区信息"
+    },
+    {
+      "id": "I404",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 21,
+      "anchor": "catalog:workspace.fallback",
+      "category": "A",
+      "english_or_static": "Decision workspace",
+      "chinese": "决策工作区"
+    },
+    {
+      "id": "I405",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 22,
+      "anchor": "catalog:workspace.readOnly",
+      "category": "E",
+      "english_or_static": "Read-only",
+      "chinese": "只读"
+    },
+    {
+      "id": "I406",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 23,
+      "anchor": "catalog:workspace.opening",
+      "category": "A",
+      "english_or_static": "Opening decision workspace…",
+      "chinese": "正在打开决策工作区…"
+    },
+    {
+      "id": "I407",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 24,
+      "anchor": "catalog:locale.control",
+      "category": "A",
+      "english_or_static": "Language",
+      "chinese": "界面语言"
+    },
+    {
+      "id": "I408",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 25,
+      "anchor": "catalog:locale.switchTo",
+      "category": "A",
+      "english_or_static": "Switch interface language to Chinese",
+      "chinese": "将界面语言切换为英文"
+    },
+    {
+      "id": "I409",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 26,
+      "anchor": "catalog:locale.option",
+      "category": "A",
+      "english_or_static": "中文",
+      "chinese": "English"
+    },
+    {
+      "id": "I410",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 27,
+      "anchor": "catalog:locale.changed",
+      "category": "A",
+      "english_or_static": "Interface language changed to English.",
+      "chinese": "界面语言已切换为中文。"
+    },
+    {
+      "id": "I411",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 28,
+      "anchor": "catalog:provenance.trigger",
+      "category": "B",
+      "english_or_static": "How LinkLoom found this",
+      "chinese": "LinkLoom 如何找到答案"
+    },
+    {
+      "id": "I412",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 29,
+      "anchor": "catalog:provenance.short",
+      "category": "B",
+      "english_or_static": "Provenance",
+      "chinese": "来源说明"
+    },
+    {
+      "id": "I413",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 30,
+      "anchor": "catalog:provenance.kicker",
+      "category": "C",
+      "english_or_static": "Provenance",
+      "chinese": "来源说明"
+    },
+    {
+      "id": "I414",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 31,
+      "anchor": "catalog:provenance.title",
+      "category": "B",
+      "english_or_static": "How the answer was reconstructed",
+      "chinese": "答案是如何恢复的"
+    },
+    {
+      "id": "I415",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 32,
+      "anchor": "catalog:initial.eyebrow",
+      "category": "C",
+      "english_or_static": "Decision recovery · grounded in project records",
+      "chinese": "决策恢复 · 基于项目记录"
+    },
+    {
+      "id": "I416",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 33,
+      "anchor": "catalog:initial.titleLine1",
+      "category": "B",
+      "english_or_static": "Find the decision.",
+      "chinese": "找到最终决定。"
+    },
+    {
+      "id": "I417",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 34,
+      "anchor": "catalog:initial.titleLine2",
+      "category": "B",
+      "english_or_static": "See the proof.",
+      "chinese": "查看依据。"
+    },
+    {
+      "id": "I418",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 35,
+      "anchor": "catalog:initial.lede",
+      "category": "B",
+      "english_or_static": "LinkLoom reconstructs what your team finally decided from project documents, then connects each claim to the record behind it.",
+      "chinese": "LinkLoom 从项目文档中恢复团队最终做出的决定，并把每项结论连接到背后的记录。"
+    },
+    {
+      "id": "I419",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 36,
+      "anchor": "catalog:initial.structure",
+      "category": "A",
+      "english_or_static": "Answer structure",
+      "chinese": "答案结构"
+    },
+    {
+      "id": "I420",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 37,
+      "anchor": "catalog:initial.decision",
+      "category": "A",
+      "english_or_static": "The decision",
+      "chinese": "最终决定"
+    },
+    {
+      "id": "I421",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 38,
+      "anchor": "catalog:initial.why",
+      "category": "A",
+      "english_or_static": "Why it won",
+      "chinese": "为什么这样决定"
+    },
+    {
+      "id": "I422",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 39,
+      "anchor": "catalog:initial.open",
+      "category": "A",
+      "english_or_static": "What remains open",
+      "chinese": "还有什么未确定"
+    },
+    {
+      "id": "I423",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 40,
+      "anchor": "catalog:query.kicker",
+      "category": "C",
+      "english_or_static": "Ask this workspace",
+      "chinese": "向当前工作区提问"
+    },
+    {
+      "id": "I424",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 41,
+      "anchor": "catalog:query.title",
+      "category": "A",
+      "english_or_static": "What did the team decide?",
+      "chinese": "团队最后做出了什么决定？"
+    },
+    {
+      "id": "I425",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 42,
+      "anchor": "catalog:query.hint",
+      "category": "B",
+      "english_or_static": "Ask for a final choice, rationale, owner, or unresolved gate.",
+      "chinese": "可以询问最终选择、决策理由、负责人或尚未解决的关口。"
+    },
+    {
+      "id": "I426",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 43,
+      "anchor": "catalog:query.label",
+      "category": "A",
+      "english_or_static": "Decision question",
+      "chinese": "决策问题"
+    },
+    {
+      "id": "I427",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 44,
+      "anchor": "catalog:query.readOnly",
+      "category": "B",
+      "english_or_static": "Source notes remain unchanged.",
+      "chinese": "源笔记不会被修改。"
+    },
+    {
+      "id": "I428",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 45,
+      "anchor": "catalog:query.submit",
+      "category": "A",
+      "english_or_static": "Recover decision",
+      "chinese": "恢复决策"
+    },
+    {
+      "id": "I429",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 46,
+      "anchor": "catalog:running.eyebrow",
+      "category": "C",
+      "english_or_static": "Reconstructing the decision",
+      "chinese": "正在恢复决策"
+    },
+    {
+      "id": "I430",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 47,
+      "anchor": "catalog:running.title",
+      "category": "A",
+      "english_or_static": "Reading the project record, not guessing the answer.",
+      "chinese": "正在阅读项目记录，而不是猜测答案。"
+    },
+    {
+      "id": "I431",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 48,
+      "anchor": "catalog:running.copy",
+      "category": "B",
+      "english_or_static": "LinkLoom is locating the authoritative decision, then checking its rationale, actions, and unresolved gates against the source notes.",
+      "chinese": "LinkLoom 正在定位权威的决策记录，并依据源笔记核对决策理由、行动项和未决关口。"
+    },
+    {
+      "id": "I432",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 49,
+      "anchor": "catalog:running.question",
+      "category": "A",
+      "english_or_static": "Your question",
+      "chinese": "你的问题"
+    },
+    {
+      "id": "I433",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 50,
+      "anchor": "catalog:running.evidence",
+      "category": "B",
+      "english_or_static": "Evidence in progress",
+      "chinese": "正在查找证据"
+    },
+    {
+      "id": "I434",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 51,
+      "anchor": "catalog:running.basis",
+      "category": "A",
+      "english_or_static": "Finding the basis for the answer",
+      "chinese": "正在寻找答案依据"
+    },
+    {
+      "id": "I435",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 52,
+      "anchor": "catalog:running.reviewing",
+      "category": "E",
+      "english_or_static": "Currently reviewing",
+      "chinese": "当前正在核对"
+    },
+    {
+      "id": "I436",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 53,
+      "anchor": "catalog:running.reviewingAria",
+      "category": "E",
+      "english_or_static": "Currently reviewed source",
+      "chinese": "当前核对的来源"
+    },
+    {
+      "id": "I437",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 54,
+      "anchor": "catalog:step.searching",
+      "category": "A",
+      "english_or_static": "Searched the workspace",
+      "chinese": "已搜索工作区"
+    },
+    {
+      "id": "I438",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 55,
+      "anchor": "catalog:step.reading",
+      "category": "A",
+      "english_or_static": "Read decision records",
+      "chinese": "已读取决策记录"
+    },
+    {
+      "id": "I439",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 56,
+      "anchor": "catalog:step.checking",
+      "category": "A",
+      "english_or_static": "Checked supporting claims",
+      "chinese": "已核对支撑结论"
+    },
+    {
+      "id": "I440",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 57,
+      "anchor": "catalog:step.ready",
+      "category": "A",
+      "english_or_static": "Answer ready",
+      "chinese": "答案已就绪"
+    },
+    {
+      "id": "I441",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 58,
+      "anchor": "catalog:stepState.complete",
+      "category": "A",
+      "english_or_static": "complete",
+      "chinese": "已完成"
+    },
+    {
+      "id": "I442",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 59,
+      "anchor": "catalog:stepState.active",
+      "category": "A",
+      "english_or_static": "active",
+      "chinese": "进行中"
+    },
+    {
+      "id": "I443",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 60,
+      "anchor": "catalog:stepState.pending",
+      "category": "A",
+      "english_or_static": "pending",
+      "chinese": "待处理"
+    },
+    {
+      "id": "I444",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 61,
+      "anchor": "catalog:stage.searching",
+      "category": "A",
+      "english_or_static": "searching the workspace",
+      "chinese": "正在搜索工作区"
+    },
+    {
+      "id": "I445",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 62,
+      "anchor": "catalog:stage.reading",
+      "category": "A",
+      "english_or_static": "reading decision records",
+      "chinese": "正在读取决策记录"
+    },
+    {
+      "id": "I446",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 63,
+      "anchor": "catalog:stage.checking",
+      "category": "A",
+      "english_or_static": "checking supporting claims",
+      "chinese": "正在核对支撑结论"
+    },
+    {
+      "id": "I447",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 64,
+      "anchor": "catalog:stage.ready",
+      "category": "A",
+      "english_or_static": "preparing the answer",
+      "chinese": "正在准备答案"
+    },
+    {
+      "id": "I448",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 65,
+      "anchor": "catalog:question",
+      "category": "A",
+      "english_or_static": "Question",
+      "chinese": "问题"
+    },
+    {
+      "id": "I449",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 66,
+      "anchor": "catalog:outcome.approved",
+      "category": "E",
+      "english_or_static": "Approved · Confirmed",
+      "chinese": "已批准 · 已确认"
+    },
+    {
+      "id": "I450",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 67,
+      "anchor": "catalog:outcome.insufficient",
+      "category": "E",
+      "english_or_static": "Not enough evidence · Unknown",
+      "chinese": "证据不足 · 未知"
+    },
+    {
+      "id": "I451",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 68,
+      "anchor": "catalog:outcome.partial",
+      "category": "A",
+      "english_or_static": "Partial decision · Confirmed record",
+      "chinese": "部分决策 · 已有记录确认"
+    },
+    {
+      "id": "I452",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 69,
+      "anchor": "catalog:result.insufficientFallback",
+      "category": "E",
+      "english_or_static": "The workspace does not contain enough evidence to answer this question.",
+      "chinese": "工作区没有足够证据回答这个问题。"
+    },
+    {
+      "id": "I453",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 70,
+      "anchor": "catalog:rationale",
+      "category": "A",
+      "english_or_static": "Why this decision was made",
+      "chinese": "为什么这样决定"
+    },
+    {
+      "id": "I454",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 71,
+      "anchor": "catalog:known",
+      "category": "A",
+      "english_or_static": "Known from the project record",
+      "chinese": "项目记录中已确认的信息"
+    },
+    {
+      "id": "I455",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 72,
+      "anchor": "catalog:alternatives",
+      "category": "A",
+      "english_or_static": "Alternatives the team rejected",
+      "chinese": "团队否决的替代方案"
+    },
+    {
+      "id": "I456",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 73,
+      "anchor": "catalog:actions",
+      "category": "A",
+      "english_or_static": "What happens next",
+      "chinese": "接下来要做什么"
+    },
+    {
+      "id": "I457",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 74,
+      "anchor": "catalog:action",
+      "category": "A",
+      "english_or_static": "Action",
+      "chinese": "行动项"
+    },
+    {
+      "id": "I458",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 75,
+      "anchor": "catalog:owner",
+      "category": "A",
+      "english_or_static": "Owner",
+      "chinese": "负责人"
+    },
+    {
+      "id": "I459",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 76,
+      "anchor": "catalog:due",
+      "category": "A",
+      "english_or_static": "Due",
+      "chinese": "截止日期"
+    },
+    {
+      "id": "I460",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 77,
+      "anchor": "catalog:status",
+      "category": "A",
+      "english_or_static": "Status",
+      "chinese": "状态"
+    },
+    {
+      "id": "I461",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 78,
+      "anchor": "catalog:status.completed",
+      "category": "A",
+      "english_or_static": "Complete",
+      "chinese": "已完成"
+    },
+    {
+      "id": "I462",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 79,
+      "anchor": "catalog:status.in_progress",
+      "category": "A",
+      "english_or_static": "In progress",
+      "chinese": "进行中"
+    },
+    {
+      "id": "I463",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 80,
+      "anchor": "catalog:status.blocked",
+      "category": "E",
+      "english_or_static": "Blocked",
+      "chinese": "受阻"
+    },
+    {
+      "id": "I464",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 81,
+      "anchor": "catalog:status.pending",
+      "category": "A",
+      "english_or_static": "Pending",
+      "chinese": "待处理"
+    },
+    {
+      "id": "I465",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 82,
+      "anchor": "catalog:status.unassigned",
+      "category": "A",
+      "english_or_static": "Unassigned",
+      "chinese": "未分配"
+    },
+    {
+      "id": "I466",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 83,
+      "anchor": "catalog:status.unknown",
+      "category": "E",
+      "english_or_static": "Unknown",
+      "chinese": "未知"
+    },
+    {
+      "id": "I467",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 84,
+      "anchor": "catalog:value.unassigned",
+      "category": "A",
+      "english_or_static": "Unassigned",
+      "chinese": "未分配"
+    },
+    {
+      "id": "I468",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 85,
+      "anchor": "catalog:value.notRecorded",
+      "category": "A",
+      "english_or_static": "Not recorded",
+      "chinese": "未记录"
+    },
+    {
+      "id": "I469",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 86,
+      "anchor": "catalog:uncertainty",
+      "category": "A",
+      "english_or_static": "Uncertainty",
+      "chinese": "不确定性"
+    },
+    {
+      "id": "I470",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 87,
+      "anchor": "catalog:uncertainty.insufficient",
+      "category": "E",
+      "english_or_static": "Still unresolved",
+      "chinese": "仍未确定"
+    },
+    {
+      "id": "I471",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 88,
+      "anchor": "catalog:uncertainty.partial",
+      "category": "A",
+      "english_or_static": "What is not yet settled",
+      "chinese": "还有什么未确定"
+    },
+    {
+      "id": "I472",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 89,
+      "anchor": "catalog:uncertainty.unknown",
+      "category": "E",
+      "english_or_static": "Not established:",
+      "chinese": "尚未确认："
+    },
+    {
+      "id": "I473",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 90,
+      "anchor": "catalog:inspector.label",
+      "category": "B",
+      "english_or_static": "Evidence source inspector",
+      "chinese": "证据来源检查器"
+    },
+    {
+      "id": "I474",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 91,
+      "anchor": "catalog:inspector.close",
+      "category": "B",
+      "english_or_static": "Close evidence inspector",
+      "chinese": "关闭证据检查器"
+    },
+    {
+      "id": "I475",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 92,
+      "anchor": "catalog:inspector.open",
+      "category": "B",
+      "english_or_static": "Open evidence {ordinal}: {location}",
+      "chinese": "打开证据 {ordinal}：{location}"
+    },
+    {
+      "id": "I476",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 93,
+      "anchor": "catalog:inspector.evidence",
+      "category": "B",
+      "english_or_static": "Evidence {ordinal}: {location}",
+      "chinese": "证据 {ordinal}：{location}"
+    },
+    {
+      "id": "I477",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 94,
+      "anchor": "catalog:inspector.empty",
+      "category": "B",
+      "english_or_static": "Select a citation to inspect its source.",
+      "chinese": "选择一个引用，查看对应来源。"
+    },
+    {
+      "id": "I478",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 95,
+      "anchor": "catalog:inspector.kicker",
+      "category": "B",
+      "english_or_static": "Source evidence",
+      "chinese": "来源证据"
+    },
+    {
+      "id": "I479",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 96,
+      "anchor": "catalog:inspector.supports",
+      "category": "B",
+      "english_or_static": "Supports:",
+      "chinese": "支持此结论："
+    },
+    {
+      "id": "I480",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 97,
+      "anchor": "catalog:inspector.navigation",
+      "category": "B",
+      "english_or_static": "Evidence citations",
+      "chinese": "证据引用"
+    },
+    {
+      "id": "I481",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 98,
+      "anchor": "catalog:inspector.brief",
+      "category": "B",
+      "english_or_static": "Evidence in this brief",
+      "chinese": "本简报中的证据"
+    },
+    {
+      "id": "I482",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 99,
+      "anchor": "catalog:inspector.keys",
+      "category": "B",
+      "english_or_static": "J / K to navigate",
+      "chinese": "按 J / K 切换"
+    },
+    {
+      "id": "I483",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 100,
+      "anchor": "catalog:inspector.quote",
+      "category": "B",
+      "english_or_static": "Verified source excerpt",
+      "chinese": "已验证的来源摘录"
+    },
+    {
+      "id": "I484",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 101,
+      "anchor": "catalog:inspector.lines",
+      "category": "B",
+      "english_or_static": "Source document lines",
+      "chinese": "来源文档行"
+    },
+    {
+      "id": "I485",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 102,
+      "anchor": "catalog:inspector.fallback",
+      "category": "B",
+      "english_or_static": "Only the verified excerpt is available.",
+      "chinese": "当前仅有已验证的来源摘录。"
+    },
+    {
+      "id": "I486",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 103,
+      "anchor": "catalog:error.kicker",
+      "category": "C",
+      "english_or_static": "Operational failure · not an evidence conclusion",
+      "chinese": "运行失败 · 这不是证据结论"
+    },
+    {
+      "id": "I487",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 104,
+      "anchor": "catalog:error.title",
+      "category": "A",
+      "english_or_static": "LinkLoom could not complete this reconstruction.",
+      "chinese": "LinkLoom 未能完成这次决策恢复。"
+    },
+    {
+      "id": "I488",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 105,
+      "anchor": "catalog:error.message",
+      "category": "A",
+      "english_or_static": "The workspace was left unchanged. You can safely try the question again.",
+      "chinese": "工作区未被修改，你可以安全地重试这个问题。"
+    },
+    {
+      "id": "I489",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 106,
+      "anchor": "catalog:error.networkTitle",
+      "category": "A",
+      "english_or_static": "The decision workspace could not be reached.",
+      "chinese": "无法连接到决策工作区。"
+    },
+    {
+      "id": "I490",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 107,
+      "anchor": "catalog:error.networkMessage",
+      "category": "A",
+      "english_or_static": "Your notes were not changed. Check the local LinkLoom server and try again.",
+      "chinese": "你的笔记未被修改。请检查本地 LinkLoom 服务后重试。"
+    },
+    {
+      "id": "I491",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 108,
+      "anchor": "catalog:error.retry",
+      "category": "A",
+      "english_or_static": "Try this question again",
+      "chinese": "重新尝试这个问题"
+    },
+    {
+      "id": "I492",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 109,
+      "anchor": "catalog:error.details",
+      "category": "A",
+      "english_or_static": "Technical details",
+      "chinese": "技术详情"
+    },
+    {
+      "id": "I493",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 110,
+      "anchor": "catalog:error.request",
+      "category": "A",
+      "english_or_static": "The request failed.",
+      "chinese": "请求失败。"
+    },
+    {
+      "id": "I494",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 111,
+      "anchor": "catalog:error.networkTechnical",
+      "category": "A",
+      "english_or_static": "Network request failed.",
+      "chinese": "网络请求失败。"
+    },
+    {
+      "id": "I495",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 112,
+      "anchor": "catalog:error.unsupportedState",
+      "category": "A",
+      "english_or_static": "This product state is not supported.",
+      "chinese": "当前产品状态不受支持。"
+    },
+    {
+      "id": "I496",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 113,
+      "anchor": "catalog:empty.kicker",
+      "category": "C",
+      "english_or_static": "Empty workspace",
+      "chinese": "空工作区"
+    },
+    {
+      "id": "I497",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 114,
+      "anchor": "catalog:empty.title",
+      "category": "A",
+      "english_or_static": "There are no project records to search yet.",
+      "chinese": "当前没有可供搜索的项目记录。"
+    },
+    {
+      "id": "I498",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 115,
+      "anchor": "catalog:empty.copy",
+      "category": "A",
+      "english_or_static": "Choose a workspace containing Markdown project notes, then ask LinkLoom what the team decided.",
+      "chinese": "请选择一个包含 Markdown 项目笔记的工作区，再询问 LinkLoom 团队最后做出了什么决定。"
+    },
+    {
+      "id": "I499",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 116,
+      "anchor": "catalog:empty.return",
+      "category": "A",
+      "english_or_static": "Return to the question",
+      "chinese": "返回提问"
+    },
+    {
+      "id": "I500",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 117,
+      "anchor": "catalog:announce.started",
+      "category": "A",
+      "english_or_static": "LinkLoom started searching the workspace.",
+      "chinese": "LinkLoom 已开始搜索工作区。"
+    },
+    {
+      "id": "I501",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 118,
+      "anchor": "catalog:announce.running",
+      "category": "A",
+      "english_or_static": "LinkLoom is {stage}.",
+      "chinese": "LinkLoom 当前进度：{stage}。"
+    },
+    {
+      "id": "I502",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 119,
+      "anchor": "catalog:announce.success",
+      "category": "B",
+      "english_or_static": "Answer ready. The decision is supported by project evidence.",
+      "chinese": "答案已就绪，项目记录提供了决策依据。"
+    },
+    {
+      "id": "I503",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 120,
+      "anchor": "catalog:announce.insufficient",
+      "category": "E",
+      "english_or_static": "Answer ready. There is not enough evidence.",
+      "chinese": "答案已就绪，但证据不足。"
+    },
+    {
+      "id": "I504",
+      "file": "src/linkloom/ui/static/i18n.js",
+      "baseline_line": 121,
+      "anchor": "catalog:announce.error",
+      "category": "A",
+      "english_or_static": "LinkLoom could not complete the reconstruction.",
+      "chinese": "LinkLoom 未能完成这次决策恢复。"
+    },
+    {
+      "id": "I505",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 7,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "LinkLoom — Team Decision Memory"
+    },
+    {
+      "id": "I506",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 12,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Skip to content"
+    },
+    {
+      "id": "I507",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 14,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "L"
+    },
+    {
+      "id": "I508",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 14,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "LinkLoom"
+    },
+    {
+      "id": "I509",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 16,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Workspace"
+    },
+    {
+      "id": "I510",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 18,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "New workspace"
+    },
+    {
+      "id": "I511",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 20,
+      "anchor": "static-shell",
+      "category": "E",
+      "english_or_static": "Checking provider…"
+    },
+    {
+      "id": "I512",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 23,
+      "anchor": "static-shell",
+      "category": "B",
+      "english_or_static": "Sources"
+    },
+    {
+      "id": "I513",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 24,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Review"
+    },
+    {
+      "id": "I514",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 25,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Decision Memory"
+    },
+    {
+      "id": "I515",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 26,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Ask"
+    },
+    {
+      "id": "I516",
+      "file": "src/linkloom/ui/static/product.html",
+      "baseline_line": 29,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Opening LinkLoom…"
+    },
+    {
+      "id": "I517",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 7,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "LinkLoom — Decision recovery"
+    },
+    {
+      "id": "I518",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 12,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Skip to decision brief"
+    },
+    {
+      "id": "I519",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 17,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "LinkLoom"
+    },
+    {
+      "id": "I520",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 19,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Opening decision workspace…"
+    },
+    {
+      "id": "I521",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 22,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Decision recovery"
+    },
+    {
+      "id": "I522",
+      "file": "src/linkloom/ui/static/index.html",
+      "baseline_line": 23,
+      "anchor": "static-shell",
+      "category": "A",
+      "english_or_static": "Opening the project record…"
+    }
+  ]
+}

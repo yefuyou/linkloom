@@ -267,7 +267,7 @@ async function setup(storage = new Map()) {
   assert.match(taskHtml, /Unknown fields/);
   assert.match(taskHtml, /DEADLINE_ROLE_UNRESOLVED/);
   assert.match(taskHtml, /data-task-proposal-verdict="CONFLICT"/);
-  assert.match(taskHtml, /The model reports conflicting evidence/);
+  assert.match(taskHtml, /Model assessment: conflicting evidence/);
   const taskPermissionUi = await setup();
   const taskPermissionOperation = taskPermissionUi.submit(); await tick();
   const deniedTask = taskResult();
@@ -289,7 +289,8 @@ async function setup(storage = new Map()) {
   Object.assign(unknownPayload.result, {status: "PROVIDER_UNCERTAIN", path: "AGENT", conclusions: [], timeline: null});
   uncertainUi.pending[0](unknownPayload);
   await unknownOperation;
-  assert.match(uncertainUi.element("ask-result").innerHTML, /outcome uncertain; no verified conclusion/);
+  assert.match(uncertainUi.element("ask-result").innerHTML, /Investigation outcome uncertain/);
+  assert.match(uncertainUi.element("ask-result").innerHTML, /No verified answer was returned/);
   assert.doesNotMatch(uncertainUi.element("ask-result").innerHTML, /Verified Leader|Known Owner/);
   const rejectedUi = await setup();
   const operation = rejectedUi.submit(); await tick();
