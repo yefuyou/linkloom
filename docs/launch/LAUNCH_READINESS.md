@@ -2,6 +2,18 @@
 
 状态：**素材与人工审核稿；尚未对外发布或配置仓库 Settings。** 检查日期：2026-10-25（Asia/Shanghai）。
 
+## 2026-10-26 主线集成更新（优先于下方历史快照）
+
+- **#25 已合并**：产品 UI / 双语信息层级，Merge Commit `22a7b1a01ac03ec6b356357ea51ed0d6e68c5bd0`。
+- **#26 已合并**：任务关系本地人工核验与修订调查，Merge Commit `8cf128a1730e058721366a849826a9858f752725`。
+- 本 #27 Draft 分支已使用普通双父提交 `fd3f22922db4428f1d0d6ac906482d7d5580a8cb` 纳入最新 master；13 项原发布素材 blob 逐字节保留，未修改业务源码或冻结数据。
+- 原 `readme-after-pr25.patch` 的中英文 README 变更已应用到本分支；修复中文离线体验重复命令、补齐 #26 的 `--allow-local-task-review` 使用边界。原 patch 保留为历史交接件，**不可再次应用**。
+- 当前仅修改 **Draft PR #27**，**没有合并 master 或完成公开发布**。仓库 About Description、Topics、Social Preview、Profile、Release 和外部帖子仍需后续单独执行或人工审核。
+- 80 秒演示仍是**合成来源/离线响应的浏览器截图剪辑**，不是新的真实 Gemini 模型验收或连续点击录屏。视频没有声称完整展示 #26 的所有核验细节。
+- 下方关于“#25 仍是 Draft”“README 仍待应用”的表述，是 2026-10-25 的**历史快照**，不代表此更新后的当前状态。现行集成状态以本节和 GitHub PR 元数据为准。
+
+
+
 本包只改善仓库展示、体验入口与传播准备，不增加产品功能。基线为
 [`master f2ce6b82`](https://github.com/yefuyou/linkloom/commit/f2ce6b82d635a7b78b17a6d100556c354f7a461a)。
 [#25](https://github.com/yefuyou/linkloom/pull/25) 检查时仍为 Open Draft，head 为
