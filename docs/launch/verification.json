@@ -1,0 +1,199 @@
+{
+  "checked_at_utc": "2026-10-25T15:05:11.382023+00:00",
+  "baseline": "f2ce6b82d635a7b78b17a6d100556c354f7a461a",
+  "branch": "codex/linkloom-open-source-launch",
+  "unchanged_files": [
+    "README.md",
+    "README.zh-CN.md",
+    "docs/V1_DEMO.md"
+  ],
+  "readme_patch": {
+    "base": "PR #25 aa3473d18b5c4542b665a88df1cfbb7dcea88ed5",
+    "applied_to": "ignored copies only",
+    "git_apply_check": true,
+    "matches_expected_content_after_native_line_endings": true
+  },
+  "descriptions": [
+    {
+      "text": "Track decisions across meetings: what is valid now, what changed, and the evidence behind it. Local-first, human-reviewed history with source-grounded AI investigation.",
+      "characters": 168
+    },
+    {
+      "text": "A local-first assistant for cross-meeting decision tracking. Review decisions, follow their temporal history, and investigate questions against the original source evidence.",
+      "characters": 173
+    },
+    {
+      "text": "Meetings change. Keep the decision trail: current and historical decisions, human review, and source-grounded AI investigation in a local-first workspace.",
+      "characters": 154
+    }
+  ],
+  "local_markdown_file_links": "all existing",
+  "media": {
+    "social_dimensions": [
+      1280,
+      640
+    ],
+    "social_preview_widths": [
+      900,
+      360
+    ],
+    "gif_frames": 8,
+    "gif_duration_ms": 80000,
+    "mp4": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1280,
+          "height": 720
+        }
+      ],
+      "format": {
+        "duration": "80.000000",
+        "size": "576005"
+      }
+    }
+  },
+  "installation": {
+    "os": "Windows",
+    "python": "3.13.5",
+    "environment": "new venv; no system site packages",
+    "command": "python -m pip install -e .",
+    "pip_check": "passed",
+    "provider_sdk_installed": false
+  },
+  "browser": {
+    "engine": "Chromium via Playwright CLI",
+    "ordinary_no_key": "created synthetic workspace and opened Sources",
+    "offline_query": "Do these meetings describe the same task, and what changed about its deadline?",
+    "offline_records": 2,
+    "formal_status": "unconfirmed",
+    "deadline_1": "2029-06-20",
+    "deadline_2": null,
+    "field_evidence_expanded": true,
+    "paid_provider_calls": 0,
+    "continuous_video_recording": false
+  },
+  "tests": {
+    "initial": {
+      "tests": 28,
+      "failures": 5,
+      "errors": 0,
+      "skipped": 0
+    },
+    "initial_failure_reason": "five Windows child-process UTF-8 decoding errors",
+    "targeted_recheck": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "recheck_environment": "PYTHONUTF8=1",
+    "unique_cases_with_passing_evidence": 28,
+    "optional_http_lifecycle_collection": "blocked: httpx not in clean dev extra; no provider call",
+    "full_suite": "not run",
+    "ci": "not yet verified"
+  },
+  "public_experiment_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/yefuyou/linkloom/9520362261f8f850191c0fa82f04bdc6452ddc05/docs/requirements/m3-context-engineering/AUDIT.md",
+      "http_status": 200,
+      "sha256": "a5eb15ca0e5588dc3bdbf04bcc315ff6076845e389ca0ebc903b16cb12e5eb3a",
+      "matches_local_git_blob": true,
+      "authentication": "none"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yefuyou/linkloom/9520362261f8f850191c0fa82f04bdc6452ddc05/docs/requirements/m3-context-engineering/experiment.json",
+      "http_status": 200,
+      "sha256": "ac5e92fbe12949b3b6b770c48b95d73632e3bba882631a31e7c94b3e1de0aebe",
+      "matches_local_git_blob": true,
+      "authentication": "none"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yefuyou/linkloom/9520362261f8f850191c0fa82f04bdc6452ddc05/docs/requirements/m3-context-engineering/DELIVERY.md",
+      "http_status": 200,
+      "sha256": "6bd4e89bf9d5cfe41344abb8102ac4b5cf847a1f755e5d2b49009bd8fcfd0e8c",
+      "matches_local_git_blob": true,
+      "authentication": "none"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yefuyou/linkloom/9520362261f8f850191c0fa82f04bdc6452ddc05/docs/requirements/m3-context-engineering/REVIEW.md",
+      "http_status": 200,
+      "sha256": "290f61686509ebcd3cd8effb4b13f9c198be543ebd7a3a524cd720a039045a3b",
+      "matches_local_git_blob": true,
+      "authentication": "none"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yefuyou/linkloom/9520362261f8f850191c0fa82f04bdc6452ddc05/benchmarks/context_engineering/run.py",
+      "http_status": 200,
+      "sha256": "542b0ea0269f3228bb9251e1c490113f86250abe82dc42d492ccadec8d7fb1b0",
+      "matches_local_git_blob": true,
+      "authentication": "none"
+    }
+  ],
+  "files": [
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 2431,
+      "sha256": "47bada34c091114e92ba32c6308811f8e0be8f10b25c3b34656282db027544d4"
+    },
+    {
+      "path": "docs/launch/assets/linkloom-walkthrough.gif",
+      "bytes": 491401,
+      "sha256": "206f1c38fed8b05af046fc5bb04bd36bc8230349e0ebd9392a231de4813762f0"
+    },
+    {
+      "path": "docs/launch/assets/linkloom-walkthrough.mp4",
+      "bytes": 576005,
+      "sha256": "0a0324d6857b33ab9df1b945198cb8235046b515433efaa2e8df4fa541080518"
+    },
+    {
+      "path": "docs/launch/assets/linkloom-walkthrough.srt",
+      "bytes": 1253,
+      "sha256": "1688cb64992a1f2c722ce41bde083f30076da0706cf8852755f95662dc2c2ab2"
+    },
+    {
+      "path": "docs/launch/assets/offline-task-evidence.png",
+      "bytes": 79569,
+      "sha256": "bccf6f327c2c341180ce21e89bfb2bc885f9bdccf492cff65dcbbb8c0a4f4f5e"
+    },
+    {
+      "path": "docs/launch/assets/social-preview.png",
+      "bytes": 62605,
+      "sha256": "296832faefb3f4dc433265c61315e1717fab5ae31046ef674fa4e77fe9f99c28"
+    },
+    {
+      "path": "docs/launch/assets/social-preview.svg",
+      "bytes": 2443,
+      "sha256": "e229ec89661f0007245ca44eb80e99b6beb194adfc4d74f7adae7f9a4f6ad15d"
+    },
+    {
+      "path": "docs/launch/assets/storyboard.json",
+      "bytes": 2122,
+      "sha256": "1428115e21ef6141b4820d408a9f1bb1bcee94849785ee50d3a245c2f14b4903"
+    },
+    {
+      "path": "docs/launch/github-baseline.json",
+      "bytes": 3803,
+      "sha256": "4c488194c54eb6c9ac008561100c8eae4871245bf8e7dd2371f606b014b6f674"
+    },
+    {
+      "path": "docs/launch/LAUNCH_READINESS.md",
+      "bytes": 32816,
+      "sha256": "ee59fa9872ca394d37fc256bcebec5a4654cf88e05477120de807c06c0a7a959"
+    },
+    {
+      "path": "docs/launch/promotion-tracker.csv",
+      "bytes": 428,
+      "sha256": "3fd0b5611f6c798caa7c7d04b6e1f5fd20ec2229185a48a99f466ee04df47ba5"
+    },
+    {
+      "path": "docs/launch/readme-after-pr25.patch",
+      "bytes": 21113,
+      "sha256": "9dfb7c536802ad635df9faad8105a022d6bb2dffbae307e5a00e6b65d657d40a"
+    }
+  ],
+  "remote_settings_changed": false,
+  "external_posts_published": false
+}

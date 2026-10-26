@@ -1,0 +1,16 @@
+{
+  "kind": "edited walkthrough of existing real browser captures; not a continuous screen recording",
+  "provider": "deterministic offline responses; no paid provider run",
+  "width": 1280,
+  "height": 720,
+  "scenes": [
+    {"seconds": 8, "image": "docs/launch/assets/social-preview.png", "title": "Follow decisions across meetings", "caption": "Synthetic data · offline responses · edited browser walkthrough"},
+    {"seconds": 10, "image": "docs/assets/v1/01-sources.png", "crop": [180, 528, 823, 992], "title": "1 / Import the meeting trail", "caption": "Oct 6: Birchline. Oct 7: a proposal. Oct 8: replace Birchline with Wrenwell."},
+    {"seconds": 13, "image": "docs/assets/v1/02-review-replacement.png", "crop": [165, 167, 1335, 700], "title": "2 / Review before a decision becomes authoritative", "caption": "Check the source quote and effective date. A human approves the replacement."},
+    {"seconds": 13, "image": "docs/assets/v1/03-decision-memory.png", "crop": [165, 285, 1335, 740], "title": "3 / See the current decision and its history", "caption": "Wrenwell is active from Oct 8. Birchline remains in the timeline."},
+    {"seconds": 11, "image": "docs/assets/v1/04-ask.png", "crop": [165, 688, 1335, 1040], "title": "4 / Ask what is valid now", "caption": "The reviewed-state lookup returns Wrenwell with its predecessor and exact evidence."},
+    {"seconds": 10, "image": "docs/assets/v1/04-ask-as-of.png", "crop": [165, 523, 1335, 1005], "title": "5 / Ask the same question as of Oct 7", "caption": "Birchline was valid then. A later decision does not erase the earlier record."},
+    {"seconds": 10, "image": "docs/launch/assets/offline-task-evidence.png", "crop": [165, 85, 1280, 750], "title": "6 / Investigate task records and open the evidence", "caption": "Separate task fixture: owner/date observations are visible; relationship suggestions stay unconfirmed."},
+    {"seconds": 5, "image": "docs/launch/assets/social-preview.png", "title": "Try the no-key offline task demo", "caption": "github.com/yefuyou/linkloom · Python 3.11+ · full decision extraction needs provider opt-in"}
+  ]
+}

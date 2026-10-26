@@ -1,0 +1,39 @@
+1
+00:00:00,000 --> 00:00:08,000
+Follow decisions across meetings
+Synthetic data · offline responses · edited browser walkthrough
+
+2
+00:00:08,000 --> 00:00:18,000
+1 / Import the meeting trail
+Oct 6: Birchline. Oct 7: a proposal. Oct 8: replace Birchline with Wrenwell.
+
+3
+00:00:18,000 --> 00:00:31,000
+2 / Review before a decision becomes authoritative
+Check the source quote and effective date. A human approves the replacement.
+
+4
+00:00:31,000 --> 00:00:44,000
+3 / See the current decision and its history
+Wrenwell is active from Oct 8. Birchline remains in the timeline.
+
+5
+00:00:44,000 --> 00:00:55,000
+4 / Ask what is valid now
+The reviewed-state lookup returns Wrenwell with its predecessor and exact evidence.
+
+6
+00:00:55,000 --> 00:01:05,000
+5 / Ask the same question as of Oct 7
+Birchline was valid then. A later decision does not erase the earlier record.
+
+7
+00:01:05,000 --> 00:01:15,000
+6 / Investigate task records and open the evidence
+Separate task fixture: owner/date observations are visible; relationship suggestions stay unconfirmed.
+
+8
+00:01:15,000 --> 00:01:20,000
+Try the no-key offline task demo
+github.com/yefuyou/linkloom · Python 3.11+ · full decision extraction needs provider opt-in
