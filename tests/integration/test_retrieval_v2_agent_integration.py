@@ -218,8 +218,12 @@ def test_mps001_retrieved_evidence_ids_round_trip_to_same_source_and_version(
         "Atlas Lantern pilot approved model provider",
         top_k=20,
     ).evidence
-    assert len(raw_candidates) == 6
-    assert len({item["evidence_id"] for item in raw_candidates}) == 6
+    assert 0 < len(raw_candidates) <= 20
+    assert len({item["evidence_id"] for item in raw_candidates}) == len(raw_candidates)
+    assert {item["relative_path"] for item in raw_candidates} == {
+        note.relative_path for note in adapter.reader.read_notes()
+    }
+    assert len(raw_candidates) > len({item["relative_path"] for item in raw_candidates})
 
     evidence = adapter._search_notes(
         "Atlas Lantern pilot approved model provider",
