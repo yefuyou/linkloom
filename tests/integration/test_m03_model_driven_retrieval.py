@@ -509,7 +509,7 @@ def test_missing_model_fails_closed_without_hidden_deterministic_fallback(m03_ro
     assert state is None or state.tool_ledger == []
 
 
-def test_runtime_refusal_returns_to_model_without_fabricating_ledger(m03_root: Path):
+def test_runtime_unknown_tool_terminates_without_fabricating_ledger(m03_root: Path):
     def unknown_tool(request: ModelTurnRequest) -> ModelAction:
         return ModelAction.tool(
             ToolCall(
@@ -519,13 +519,10 @@ def test_runtime_refusal_returns_to_model_without_fabricating_ledger(m03_root: P
             )
         )
 
-    def final_after_refusal(request: ModelTurnRequest) -> ModelAction:
-        assert request.observation is not None
-        assert request.observation.error is not None
-        assert request.observation.error.code == "TOOL_UNKNOWN"
-        return ModelAction.final("final after runtime refusal")
+    def unexpected_retry(request: ModelTurnRequest) -> ModelAction:
+        pytest.fail("TOOL_UNKNOWN is terminal and must not return to the model")
 
-    model = FakeModelAdapter([unknown_tool, final_after_refusal])
+    model = FakeModelAdapter([unknown_tool, unexpected_retry])
     status, state, result, _, _ = _run_engine(
         m03_root,
         model,
@@ -534,7 +531,8 @@ def test_runtime_refusal_returns_to_model_without_fabricating_ledger(m03_root: P
 
     assert status.status == "completed"
     assert state is not None and result is not None
-    assert model.call_count == 2
+    assert model.call_count == 1
+    assert len(state.model_executions) == 1
     assert state.tool_ledger == []
     assert result["tool_ledger"] == []
     assert result["fallback_used"] is True
