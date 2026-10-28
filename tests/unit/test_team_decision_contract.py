@@ -219,6 +219,12 @@ def test_typed_claim_relation_roles_are_visible_in_the_selected_final_protocol()
     roles = schema["x-linkloom-relation-definitions"]
     assert roles == [
         {
+            "predicate": "alias_of_project",
+            "subject_type": "alias",
+            "object_type": "project",
+            "direction": "The subject name is an alias for the object project; this says nothing about ownership.",
+        },
+        {
             "predicate": "owner_of_project",
             "subject_type": "project",
             "object_type": "person",
