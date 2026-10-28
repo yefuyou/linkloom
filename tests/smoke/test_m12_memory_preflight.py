@@ -9,6 +9,8 @@ from urllib.error import HTTPError
 
 import pytest
 
+from tests.runtime_fixtures import source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, is_verified_evidence_result
 from linkloom.agents.team_decision import TeamDecisionResult
 from linkloom.context.assembler import ContextSourceType
@@ -20,6 +22,15 @@ from linkloom.tools.contracts import ToolCall, ToolResult
 from tests.smoke import test_m12_real_provider_team_decision_smoke as h
 
 
+class _FixtureEmbedder:
+    """Offline dense seam; source lookup and BM25 still run on real fixtures."""
+    def encode(self, texts):
+        import numpy as np
+        terms = ("selected", "approved", "model", "provider")
+        return np.asarray([[text.casefold().count(term) for term in terms]
+                           for text in texts], dtype=np.float32)
+
+
 def test_offline_mps_runtime_uses_seeded_product_memory_path():
     from tests.smoke.m12_memory_fixture import smoke_memory_binding, fixture_final
 
@@ -28,7 +39,7 @@ def test_offline_mps_runtime_uses_seeded_product_memory_path():
     shutil.copytree(h._workspace_for_case(h.PUBLIC_CASES[0]), vault)
     index = scan_vault(vault, root / 'scan').index_path
     frozen_before = hashlib.sha256(h.DATASET_PATH.read_bytes()).hexdigest()
-    with smoke_memory_binding(vault, index, root / 'temporal.sqlite') as binding:
+    with smoke_memory_binding(vault, index, root / 'temporal.sqlite', embedder=_FixtureEmbedder()) as binding:
         adapter = binding.adapter
         hits = adapter._search_decision_memory('Atlas Lantern', None, 5)
         assert hits and hits[0]['source_evidence_refs'] == [binding.source_ref]
@@ -44,24 +55,35 @@ def test_offline_mps_runtime_uses_seeded_product_memory_path():
             return ModelAction.tool(ToolCall(call_id='memory', tool_id='search_decision_memory',
                 arguments={'query': 'Atlas Lantern', 'limit': 5}))
 
-        def finish(request):
+        def search_source(request):
             assert request.observation.value[0]['source_evidence_refs'] == [binding.source_ref]
             assert request.evidence_context == []
-            # Abstain: a memory hit is not source grounding.
-            return ModelAction.final(json.dumps({
-                'schema_version': 'team-decision-result/v1',
-                'decision': {'value': None, 'status': 'insufficient_evidence', 'evidence_refs': []},
-                'rationale': [], 'rejected_alternatives': [], 'actions': [], 'unresolved_items': [],
-                'uncertainty': {'status': 'insufficient_evidence', 'statement': None,
-                                'unknown_fields': [], 'evidence_refs': []}, 'evidence_refs': []}))
+            return ModelAction.tool(ToolCall(call_id='search-source', tool_id='search_notes',
+                arguments={'query': 'Atlas Lantern selected approved model provider',
+                           'source_context': source_context_from_request(request), 'limit': 20}))
 
-        model = FakeModelAdapter([memory, finish])
+        def read_source(request):
+            assert request.observation.status == 'ok'
+            selected = next(item for item in request.observation.value
+                            if item['relative_path'] == binding.source_ref
+                            and 'selected' in item['quote'].casefold())
+            return ModelAction.tool(ToolCall(call_id='read-source', tool_id='read_verified_note',
+                arguments={'note_ref': selected['evidence_id']}))
+
+        def finish(request):
+            assert request.observation.status == 'ok'
+            source = request.observation.value
+            assert source['relative_path'] == binding.source_ref
+            assert 'selected' in source['quote'].casefold()
+            return ModelAction.final(fixture_final(source['quote'], source['evidence_id']))
+
+        model = FakeModelAdapter([memory, search_source, read_source, finish])
         runtime = RuntimeEngine(vault, index, root / 'checkpoints', trace_dir=root / 'traces', model=model)
         result = runtime.start_multi_agent(RunRequest(request_id='m12-offline', thread_id='m12-offline',
             workflow='team_decision', query=h.PUBLIC_CASES[0].user_question,
             max_steps=6, max_provider_requests=6, dry_run=True))
         assert result.status == 'completed', result.error
-        assert len(model.requests) == 2
+        assert len(model.requests) == 4
         assert binding.constructions >= 1  # actual RuntimeEngine received the seeded adapter
 
     with smoke_memory_binding(vault, index, root / 'empty.sqlite', seed=False) as empty:

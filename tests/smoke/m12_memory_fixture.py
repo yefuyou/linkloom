@@ -39,7 +39,7 @@ class MemoryBinding:
 
 
 @contextmanager
-def smoke_memory_binding(vault, index, db_path, *, seed=True):
+def smoke_memory_binding(vault, index, db_path, *, seed=True, embedder=None):
     reader = VaultReader(vault_root=vault, index_path=index)
     source = next(d for d in reader.read_notes() if d.relative_path == '03-final-decision.md')
     if 'status: approved' not in source.content or 'authority: decision_record' not in source.content:
@@ -71,13 +71,24 @@ def smoke_memory_binding(vault, index, db_path, *, seed=True):
             candidate = materializer.propose(decision, team_decision_contract_pass=True, grounding_pass=True)
             materializer.materialize(candidate, approved_by='explicit-frozen-smoke-fixture')
         adapter = adapter_module.RuntimeAgentAdapter(
-            vault, index, decision_memory_store=store, retrieval_mode='hybrid',
+            vault, index, decision_memory_store=store, retrieval_mode='hybrid', embedder=embedder,
         )
         binding = MemoryBinding(adapter, source_ref, value)
 
-        def build(actual_vault, actual_index):
+        def build(actual_vault, actual_index, *, decision_memory_store=None,
+                  decision_memory_store_unavailable=False, workspace_id=None,
+                  temporal_decision_lookup=None, temporal_claim_validator=None):
             if Path(actual_vault).resolve() != Path(vault).resolve() or Path(actual_index).resolve() != Path(index).resolve():
                 raise ValueError('smoke adapter binding cannot cross workspaces')
+            if workspace_id not in (None, workspace):
+                raise ValueError('smoke adapter binding cannot cross workspace identities')
+            if decision_memory_store_unavailable:
+                raise ValueError('smoke fixture requires available seeded memory')
+            if temporal_decision_lookup is not None or temporal_claim_validator is not None:
+                raise ValueError('smoke fixture does not configure temporal callbacks')
+            # Replace the Runtime's default store with this explicitly seeded,
+            # source-registered fixture store. Never fall back to empty memory.
+            assert adapter._decision_memory_store is store
             binding.constructions += 1
             return adapter
 
