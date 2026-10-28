@@ -195,6 +195,14 @@ def _semantic_projection_snapshot() -> tuple[ToolDefinition, dict, dict]:
             for key, value in claim_properties[field].items()
             if key != "maxLength"
         }
+    task_properties = claim_properties["task"]["properties"]
+    for field in ("text", "owner", "deadline_text", "project", "vendor"):
+        task_properties[field] = {
+            key: value for key, value in task_properties[field].items()
+            if key != "maxLength"
+        }
+    task_properties["description_parts"].pop("maxItems")
+    task_properties["description_parts"]["items"].pop("maxLength")
     return definition, canonical, expected
 
 
