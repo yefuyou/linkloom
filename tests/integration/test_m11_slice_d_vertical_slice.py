@@ -16,6 +16,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
@@ -470,7 +472,7 @@ def _slice_d_model(case: dict[str, object]) -> FakeModelAdapter:
                 "search_notes",
                 {
                     "query": case["question"],
-                    "source_context": {"intent": "synthesize verified temporal or assignment evidence"},
+                    "source_context": source_context_from_request(request),
                     "limit": 50,
                 },
             )

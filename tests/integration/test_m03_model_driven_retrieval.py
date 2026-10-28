@@ -9,6 +9,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.base import AgentTask
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.retrieval_agent import RetrievalAgent
@@ -31,7 +33,6 @@ from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
 
 SEARCH_ARGS = {
     "query": "model-driven",
-    "source_context": {"model_owned": "m03-source-context"},
     "limit": 2,
 }
 
@@ -100,12 +101,16 @@ def _run_engine(
     return status, state, result, trace_root, model
 
 
-def _search_action(arguments: dict[str, Any] = SEARCH_ARGS) -> ModelAction:
+def _search_arguments(request: ModelTurnRequest, arguments=SEARCH_ARGS):
+    return {**arguments, "source_context": source_context_from_request(request)}
+
+
+def _search_action(request: ModelTurnRequest, arguments: dict[str, Any] = SEARCH_ARGS) -> ModelAction:
     return ModelAction.tool(
         ToolCall(
             call_id="proposal_search",
             tool_id="search_notes",
-            arguments=dict(arguments),
+            arguments=_search_arguments(request, arguments),
         )
     )
 
@@ -123,12 +128,12 @@ def _read_action(note_ref: str) -> ModelAction:
 def _policy_a() -> FakeModelAdapter:
     def search(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is None
-        return _search_action()
+        return _search_action(request)
 
     def final_after_search(request: ModelTurnRequest) -> ModelAction:
         assert request.previous_tool_call is not None
         assert request.previous_tool_call.tool_id == "search_notes"
-        assert request.previous_tool_call.arguments == SEARCH_ARGS
+        assert request.previous_tool_call.arguments == _search_arguments(request)
         assert request.observation is not None
         assert request.observation.status == "ok"
         assert request.observation.value
@@ -140,12 +145,12 @@ def _policy_a() -> FakeModelAdapter:
 def _policy_b() -> FakeModelAdapter:
     def search(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is None
-        return _search_action()
+        return _search_action(request)
 
     def read_second_result(request: ModelTurnRequest) -> ModelAction:
         assert request.previous_tool_call is not None
         assert request.previous_tool_call.tool_id == "search_notes"
-        assert request.previous_tool_call.arguments == SEARCH_ARGS
+        assert request.previous_tool_call.arguments == _search_arguments(request)
         assert request.observation is not None
         assert request.observation.status == "ok"
         assert isinstance(request.observation.value, list)
@@ -215,7 +220,7 @@ def test_model_arguments_and_observations_remain_exact_on_production_path(m03_ro
     assert status.status == "completed"
     assert state is not None and result is not None
     search_record, read_record = state.tool_ledger
-    assert search_record.arguments == SEARCH_ARGS
+    assert search_record.arguments == _search_arguments(model.requests[0])
     assert read_record.arguments["note_ref"] == model.requests[1].observation.value[1]["evidence_id"]
     assert model.requests[1].observation.to_dict() == search_record.result
     assert model.requests[2].observation.to_dict() == read_record.result
@@ -226,7 +231,7 @@ def test_successful_empty_search_is_observed_before_exact_m01_completion(m03_roo
     observations = []
 
     def search(request: ModelTurnRequest) -> ModelAction:
-        return _search_action({"query": "no-match", "source_context": {}, "limit": 1})
+        return _search_action(request, {"query": "no-match", "source_context": {}, "limit": 1})
 
     def final_after_empty(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None
@@ -278,13 +283,13 @@ def test_prior_search_failure_remains_authoritative_after_later_empty_search(
 
     def initial_search(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is None
-        return _search_action()
+        return _search_action(request)
 
     def retry_after_failure(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None
         assert request.observation.error is not None
         assert request.observation.error.code == "TOOL_EXECUTION_FAILED"
-        return _search_action({"query": "no-match", "source_context": {}, "limit": 1})
+        return _search_action(request, {"query": "no-match", "source_context": {}, "limit": 1})
 
     def final_after_empty(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None
@@ -341,7 +346,7 @@ def test_prior_read_failure_remains_authoritative_after_later_empty_search(
 
     def initial_search(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is None
-        return _search_action()
+        return _search_action(request)
 
     def read_after_search(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None
@@ -353,7 +358,7 @@ def test_prior_read_failure_remains_authoritative_after_later_empty_search(
         assert request.observation is not None
         assert request.observation.error is not None
         assert request.observation.error.code == "TOOL_EXECUTION_FAILED"
-        return _search_action({"query": "no-match", "source_context": {}, "limit": 1})
+        return _search_action(request, {"query": "no-match", "source_context": {}, "limit": 1})
 
     def final_after_empty(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None
@@ -538,7 +543,7 @@ def test_runtime_refusal_returns_to_model_without_fabricating_ledger(m03_root: P
 
 def test_model_request_budget_stops_without_an_extra_model_or_tool_call(m03_root: Path):
     def always_search(request: ModelTurnRequest) -> ModelAction:
-        return _search_action()
+        return _search_action(request, {**SEARCH_ARGS, "query": f"model-driven turn {request.sequence}"})
 
     model = FakeModelAdapter([always_search, always_search, always_search])
     status, state, result, _, _ = _run_engine(

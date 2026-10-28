@@ -17,6 +17,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 from linkloom.runtime.artifacts import ModelArtifactStore
@@ -110,6 +112,23 @@ def _environment(root: Path) -> dict[str, object]:
     }
 
 
+def _budget_environment(root: Path) -> dict[str, object]:
+    """Isolate loop budgets with four current, deterministically supported facts."""
+    source = root / "source"
+    source.mkdir(parents=True)
+    for name in ("One", "Two", "Three", "Four"):
+        (source / f"plan-{name}.md").write_text(
+            f"# Plan {name}\n\nAs of 2025-02-15 Mira Chen is the accountable owner of Plan {name} for Atlas.\n",
+            encoding="utf-8",
+        )
+    vault = root / "vault"
+    shutil.copytree(source, vault)
+    return {"root": root, "source": source, "vault": vault,
+            "source_before": _file_hashes(source), "copy_before": _file_hashes(vault),
+            "index": scan_vault(vault, root / "scan").index_path,
+            "case": {"question": "Who is the accountable owner of the plans for Atlas?"}}
+
+
 def _tool(request: ModelTurnRequest, tool_id: str, arguments: dict[str, object]) -> ModelAction:
     return ModelAction.tool(
         ToolCall(
@@ -121,34 +140,15 @@ def _tool(request: ModelTurnRequest, tool_id: str, arguments: dict[str, object])
 
 
 def _neutral_final(observation: dict[str, object]) -> str:
-    """A valid non-semantic terminal contract used only to isolate the budget RED."""
+    """Finish the budget-only scenario using its exact verified ownership fact."""
     ref = observation["evidence_id"]
-    relative_path = observation["relative_path"]
-    return json.dumps(
-        {
-            "schema_version": "team-decision-result/v1",
-            "decision": {
-                "value": None,
-                "status": "insufficient_evidence",
-                "evidence_refs": [],
-            },
-            "rationale": [],
-            "rejected_alternatives": [],
-            "actions": [],
-            "unresolved_items": [],
-            "uncertainty": {
-                "status": "insufficient_evidence",
-                "statement": (
-                    "The budget characterization reached verified evidence from "
-                    f"{relative_path}."
-                ),
-                "unknown_fields": [],
-                "evidence_refs": [ref],
-            },
-            "evidence_refs": [ref],
-        },
-        ensure_ascii=False,
-    )
+    return json.dumps({
+        "schema_version": "team-decision-result/v1",
+        "decision": {"value": observation["quote"], "status": "approved", "evidence_refs": [ref]},
+        "rationale": [], "rejected_alternatives": [], "actions": [], "unresolved_items": [],
+        "uncertainty": {"status": "none", "statement": None, "unknown_fields": [], "evidence_refs": []},
+        "evidence_refs": [ref],
+    }, ensure_ascii=False)
 
 
 def _context_values(context: list[ToolResult]) -> list[dict[str, object]]:
@@ -326,7 +326,7 @@ def _multi_note_budget_model(case: dict[str, object]) -> FakeModelAdapter:
             "search_notes",
             {
                 "query": case["question"],
-                "source_context": {"intent": "current evaluation rollout boundary"},
+                "source_context": source_context_from_request(request),
                 "limit": 20,
             },
         )
@@ -366,7 +366,7 @@ def _multi_note_context_model(case: dict[str, object]) -> FakeModelAdapter:
             "search_notes",
             {
                 "query": case["question"],
-                "source_context": {"intent": "synthesize verified evidence"},
+                "source_context": source_context_from_request(request),
                 "limit": 50,
             },
         )
@@ -472,12 +472,12 @@ def _over_cap_reference_model() -> FakeModelAdapter:
                 "search_notes",
                 {
                     "query": f"probe-{request.sequence - 1}",
-                    "source_context": {"intent": "bounded context visibility"},
+                    "source_context": source_context_from_request(request),
                     "limit": 1,
                 },
             )
         assert len(observed_refs) == 10
-        omitted_ref = observed_refs[8]
+        omitted_ref = observed_refs[0]
         return ModelAction.final(
             json.dumps(
                 {
@@ -560,7 +560,7 @@ def test_aer_002_allows_a_bounded_multi_note_trajectory_through_the_production_r
     aer_root: Path,
 ) -> None:
     """A six-turn S-4R-F trajectory must not inherit Slice A's three-turn cap."""
-    environment = _environment(aer_root)
+    environment = _budget_environment(aer_root)
     model = _multi_note_budget_model(environment["case"])
     engine = _engine(environment, model)
 

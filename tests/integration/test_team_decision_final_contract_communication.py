@@ -7,6 +7,8 @@ from pathlib import Path
 from copy import deepcopy
 
 import pytest
+
+from tests.runtime_fixtures import offline_retrieval
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.graph import RuntimeEngine

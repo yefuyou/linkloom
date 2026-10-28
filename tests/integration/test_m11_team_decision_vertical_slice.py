@@ -11,6 +11,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 from linkloom.observability.reader import TraceReader
@@ -140,7 +142,7 @@ def _mps_model(*, fabricated_ref: bool = False) -> FakeModelAdapter:
         assert request.observation is None
         return _tool(request, "search_notes", {
             "query": "Atlas Lantern approved model provider",
-            "source_context": {"intent": "provider decision"},
+            "source_context": source_context_from_request(request),
             "limit": 5,
         })
 
