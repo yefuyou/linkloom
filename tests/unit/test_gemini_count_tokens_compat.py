@@ -677,7 +677,6 @@ def _semantic_model_turn_request(harness):
         model_id=harness.MODEL,
         generation_options=ModelGenerationOptions(
             max_output_tokens=512,
-            temperature=0.0,
             require_tool_call=True,
         ),
     )

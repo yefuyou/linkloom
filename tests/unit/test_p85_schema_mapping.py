@@ -52,8 +52,8 @@ def _request() -> ModelTurnRequest:
         user_input="read the verified note",
         observation=None,
         available_tools=[_definition()],
-        model_id="gemini-test-model",
-        generation_options=ModelGenerationOptions(temperature=0),
+        model_id="gemini-3.8-flash",
+        generation_options=ModelGenerationOptions(),
     )
 
 
@@ -129,4 +129,4 @@ def test_adapter_request_groups_function_declarations_and_preserves_generation_o
         {"function_declarations": [map_tool_definition_to_gemini_function(_definition())]}
     ]
     assert request["config"]["automatic_function_calling"] == {"disable": True}
-    assert request["config"]["temperature"] == 0
+    assert "temperature" not in request["config"]
