@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+import pytest
+
+pytest.importorskip(
+    "langgraph",
+    reason="The optional LangGraph reference example requires its own requirements.txt dependencies.",
+)
+
 from examples.langgraph_decision_agent.app import run_demo
 
 
