@@ -20,7 +20,7 @@ from linkloom.ui.investigation import ProductInvestigationService
 from tests.integration.test_product_application_flow import (
     _client, _start_product_server, _stop_product_server, _wait_source,
 )
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import (
+from tests.smoke.provider_ledger import (
     AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked,
 )
 

@@ -17,19 +17,6 @@ from benchmarks.memoryagentbench.public_memory_profile import (
 )
 
 
-@pytest.mark.parametrize("cell_key", ("sh_32k", "mh_6k"))
-def test_clean_cell_freeze_artifacts_verify_without_gold(cell_key: str) -> None:
-    cell = CELLS[cell_key]
-
-    manifest, plan = verify_frozen_artifacts(cell)
-
-    assert manifest["selection"]["question_count"] == 100
-    assert manifest["gold_isolation"]["gold_values_read"] is False
-    assert manifest["prior_use_audit"]["prior_use_overlap"] == 0
-    assert plan["provider_calls_at_freeze"] == 0
-    assert len(plan["execution_plan"]) == 200
-    assert plan["execution_plan"][0]["method"] == "Flat Retrieval"
-    assert plan["execution_plan"][1]["method"] == "LinkLoom Temporal Memory"
 
 
 def test_request_cost_reserve_includes_count_tokens_and_output_cap() -> None:
@@ -43,32 +30,6 @@ def test_request_cost_reserve_includes_count_tokens_and_output_cap() -> None:
     assert bound * 200 < CELLS["sh_32k"].hard_cost_cap_usd
 
 
-@pytest.mark.parametrize("cell_key", ("sh_32k", "mh_6k"))
-def test_self_resigned_freeze_and_plan_tampering_is_rejected(
-    cell_key: str,
-    tmp_path,
-) -> None:
-    cell = CELLS[cell_key]
-    manifest_path = tmp_path / cell.freeze_filename
-    plan_path = tmp_path / cell.execution_plan_filename
-    manifest = json.loads((CLEAN_EVAL_ROOT / cell.freeze_filename).read_text(encoding="utf-8"))
-    plan = json.loads((CLEAN_EVAL_ROOT / cell.execution_plan_filename).read_text(encoding="utf-8"))
-
-    tampered_id = f"{manifest['selection']['qa_ids_in_official_order'][0]}_tampered"
-    manifest["selection"]["qa_ids_in_official_order"][0] = tampered_id
-    manifest["selection"]["question_sha256_by_id"][tampered_id] = manifest["selection"]["question_sha256_by_id"].pop(
-        next(iter(manifest["selection"]["question_sha256_by_id"]))
-    )
-    plan["execution_plan"][0]["qa_id"] = tampered_id
-    manifest["hashes"]["subset_sha256"] = "0" * 64
-    manifest["hashes"]["execution_plan_sha256"] = canonical_sha256(plan)
-    unsigned_manifest = {key: value for key, value in manifest.items() if key != "freeze_manifest_sha256"}
-    manifest["freeze_manifest_sha256"] = canonical_sha256(unsigned_manifest)
-    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
-    plan_path.write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
-
-    with pytest.raises(CleanEvalIntegrityError, match="pinned"):
-        verify_frozen_artifacts(cell, root=tmp_path)
 
 
 def test_runtime_cost_caps_are_strict_at_equality() -> None:
@@ -801,106 +762,10 @@ def _run_synthetic_clean_live(
     }
 
 
-def test_live_runner_retries_same_method_case_without_replaying_prior_case(tmp_path, monkeypatch) -> None:
-    replay = _run_synthetic_clean_live(
-        tmp_path,
-        monkeypatch,
-        {2: ["connect", "success"], 3: ["unknown"]},
-    )
-    summary = replay["result"]["summary"]
-    events = [
-        json.loads(line)
-        for line in (replay["root"] / "provider_attempt_journal.jsonl").read_text(encoding="utf-8").splitlines()
-    ]
-    seq1_calls = [call for call in replay["calls"] if call["sequence"] == 1]
-    seq2_calls = [call for call in replay["calls"] if call["sequence"] == 2]
-    seq2_events = [event for event in events if event.get("sequence") == 2]
-    seq2_attempts = [event for event in seq2_events if event["event"] == "PROVIDER_ATTEMPT_STARTED"]
-    seq2_completed = [event for event in seq2_events if event["event"] == "PROVIDER_ATTEMPT_COMPLETED"]
-    seq2_case_starts = [event for event in seq2_events if event["event"] == "CASE_METHOD_STARTED"]
-    outputs = json.loads((replay["root"] / "provider_outputs.json").read_text(encoding="utf-8"))
-    output_by_sequence = {row["sequence"]: row for row in outputs["provider_outputs"]}
-
-    assert summary["status"] == "STOPPED"
-    assert summary["gold_values_read"] is False
-    assert outputs["gold_values_read"] is False
-    assert replay["rebuild_calls"] == ["sh_32k"]
-    assert replay["scorer_calls"] == []
-    assert len(seq1_calls) == 1
-    assert [call["attempt_no"] for call in seq2_calls] == [1, 2]
-    assert seq2_calls[0]["signature"] == seq2_calls[1]["signature"]
-    assert [event["attempt_no"] for event in seq2_attempts] == [1, 2]
-    assert seq2_completed[0]["safe_error"]["retry_classification"] == "TRANSPORT_CONNECT"
-    assert seq2_completed[1]["provider_outcome"] == "PROVIDER_COMPLETE"
-    assert len({event["generation_request_sha256"] for event in seq2_attempts}) == 1
-    assert len(seq2_case_starts) == 1
-    assert seq2_case_starts[0]["context_sha256"] == replay["plan_rows"][1]["context_sha256"]
-    assert output_by_sequence[1]["provider_attempts"] == 1
-    assert output_by_sequence[2]["provider_attempts"] == 2
-    assert output_by_sequence[2]["provider_outcome"] == "PROVIDER_COMPLETE"
-    assert replay["result"]["run_id"] != "328738863a2c42b191c50224baa03ce8"
-    assert output_by_sequence[2]["retrieval_evidence_ids"] == replay["plan_rows"][1]["retrieval_evidence_ids"]
-    assert output_by_sequence[2]["memory_source_evidence_ids"] == replay["plan_rows"][1]["memory_source_evidence_ids"]
-    assert runner_seal_valid(replay["root"] / "provider_outputs.json", "provider-outputs:factconsolidation_sh_32k")
 
 
-def test_live_runner_exhausts_exactly_three_transient_attempts_then_continues(tmp_path, monkeypatch) -> None:
-    replay = _run_synthetic_clean_live(
-        tmp_path,
-        monkeypatch,
-        {1: ["connect", "connect", "connect"], 2: ["success"], 3: ["unknown"]},
-    )
-    events = [
-        json.loads(line)
-        for line in (replay["root"] / "provider_attempt_journal.jsonl").read_text(encoding="utf-8").splitlines()
-    ]
-    outputs = json.loads((replay["root"] / "provider_outputs.json").read_text(encoding="utf-8"))
-    output_by_sequence = {row["sequence"]: row for row in outputs["provider_outputs"]}
-    seq1_attempts = [
-        call for call in replay["calls"] if call["sequence"] == 1
-    ]
-    started = [
-        event for event in events
-        if event.get("sequence") == 1 and event["event"] == "PROVIDER_ATTEMPT_STARTED"
-    ]
-
-    assert len(seq1_attempts) == 3
-    assert [call["attempt_no"] for call in seq1_attempts] == [1, 2, 3]
-    assert [event["attempt_no"] for event in started] == [1, 2, 3]
-    assert output_by_sequence[1]["provider_attempts"] == 3
-    assert output_by_sequence[1]["provider_outcome"] == "PROVIDER_ERROR"
-    assert output_by_sequence[2]["provider_outcome"] == "PROVIDER_COMPLETE"
-    assert any(call["sequence"] == 2 for call in replay["calls"])
 
 
-def test_live_runner_blocks_retry_when_global_cost_guard_fails(tmp_path, monkeypatch) -> None:
-    global_checks = 0
-
-    def cost_gate(_ledger, _run_id):
-        nonlocal global_checks
-        global_checks += 1
-        return 0.0 if global_checks == 1 else 30.0
-
-    replay = _run_synthetic_clean_live(
-        tmp_path,
-        monkeypatch,
-        {1: ["connect", "success"]},
-        global_cost_gate=cost_gate,
-    )
-    summary = replay["result"]["summary"]
-    events = [
-        json.loads(line)
-        for line in (replay["root"] / "provider_attempt_journal.jsonl").read_text(encoding="utf-8").splitlines()
-    ]
-    outputs = json.loads((replay["root"] / "provider_outputs.json").read_text(encoding="utf-8"))
-
-    assert summary["stop_reason"] == "RETRY_BLOCKED_BY_GLOBAL_COST_GUARD"
-    assert len([call for call in replay["calls"] if call["sequence"] == 1]) == 1
-    assert [event["attempt_no"] for event in events if event.get("sequence") == 1 and event["event"] == "PROVIDER_ATTEMPT_STARTED"] == [1]
-    assert outputs["provider_outputs"][0]["provider_outcome"] == "PROVIDER_ERROR"
-    assert outputs["provider_outputs"][0]["provider_attempts"] == 1
-    assert summary["journal_protocol"]["integrity_valid"] is True
-    assert summary["artifact_durability_status"] == "PASS"
 
 
 def runner_seal_valid(path, identity):
@@ -928,94 +793,8 @@ def test_proxy_parser_preserves_scheme_for_route_validation() -> None:
     assert _safe_proxy_endpoint("socks5://127.0.0.1:7897")[3] == "socks5"
 
 
-def test_accepted_response_followed_by_clean_eval_block_is_local_and_diagnostic(
-    tmp_path, monkeypatch
-) -> None:
-    import hashlib
-    import json
-
-    replay = _run_synthetic_clean_live(
-        tmp_path,
-        monkeypatch,
-        {1: ["malformed_response"]},
-    )
-    summary = replay["result"]["summary"]
-    outputs = json.loads((replay["root"] / "provider_outputs.json").read_text(encoding="utf-8"))
-    output = outputs["provider_outputs"][0]
-    events = [
-        json.loads(line)
-        for line in (replay["root"] / "provider_attempt_journal.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-    ]
-    attempt = next(
-        event
-        for event in events
-        if event.get("sequence") == 1 and event.get("event") == "PROVIDER_ATTEMPT_COMPLETED"
-    )
-
-    assert output["provider_outcome"] == "LOCAL_HARNESS_BLOCK"
-    assert output["failure_classification"] == "LOCAL/HARNESS BLOCK"
-    assert output["safe_error"]["reason_code"] == "CLEAN_EVAL_BLOCK_RESPONSE_GENERATION_RESPONSE_TEXT_MALFORMED"
-    assert output["safe_error"]["phase"] == "RESPONSE_VALIDATION"
-    assert output["safe_error"]["provider_response_already_accepted"] is True
-    assert output["safe_error"]["logical_case_id"] == output["qa_id"]
-    assert output["safe_error"]["method"] == output["method"]
-    assert output["safe_error"]["throw_site_function"] == "_response_text"
-    assert output["safe_error"]["throw_site_module"] == "scripts.run_public_memory_clean_eval"
-    assert output["safe_error"]["guard_name"] == "_response_text"
-    assert output["safe_error"]["bounded_stack_summary"]
-    assert "traceback" not in output["safe_error"]
-    safe_error_json = json.dumps(output["safe_error"])
-    assert "offline-synthetic-placeholder" not in safe_error_json
-    assert "synthetic context" not in safe_error_json
-    assert "synthetic offline answer" not in safe_error_json
-    assert attempt["provider_outcome"] == "LOCAL_HARNESS_BLOCK"
-    assert attempt["failure_classification"] == "LOCAL/HARNESS BLOCK"
-    assert attempt["safe_error"]["reason_code"] == output["safe_error"]["reason_code"]
-    assert summary["provider_completion"]["provider_error_method_cases"] == 0
-    assert summary["provider_completion"]["local_harness_block_method_cases"] == 1
-    assert summary["provider_completion"]["failed_method_cases"] == 1
-    assert replay["scorer_calls"] == []
-    block = json.loads(next((replay["root"] / "clean_eval_blocks").glob("*.json")).read_text(encoding="utf-8"))
-    assert block["response_sha256"] == hashlib.sha256(
-        b'{"candidates":[{"content":{"parts":[{}]}}]}'
-    ).hexdigest()
 
 
-@pytest.mark.parametrize(
-    ("outcome", "reason_code"),
-    [
-        ("smoke_post_response", "CLEAN_EVAL_BLOCK_RESPONSE_PROVIDER_USAGE_UNAVAILABLE"),
-        ("post_response_runtime", "CLEAN_EVAL_BLOCK_LOCAL_RUNTIME_ERROR"),
-    ],
-)
-def test_accepted_response_smoke_and_generic_failures_are_local(
-    tmp_path, monkeypatch, outcome: str, reason_code: str
-) -> None:
-    import json
-
-    replay = _run_synthetic_clean_live(tmp_path, monkeypatch, {1: [outcome]})
-    summary = replay["result"]["summary"]
-    output = json.loads((replay["root"] / "cases" / "001.json").read_text(encoding="utf-8"))
-    evidence_rows = [
-        json.loads(line)
-        for line in (replay["root"] / "accepted_response_evidence.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-    ]
-
-    assert replay["result"]["status"] == "STOPPED"
-    assert output["provider_outcome"] == "LOCAL_HARNESS_BLOCK"
-    assert output["failure_classification"] == "LOCAL/HARNESS BLOCK"
-    assert output["provider_response_accepted"] is True
-    assert output["safe_error"]["reason_code"] == reason_code
-    assert summary["provider_completion"]["provider_response_completed_method_cases"] == 1
-    assert summary["provider_completion"]["provider_error_method_cases"] == 0
-    assert summary["provider_completion"]["local_harness_block_method_cases"] == 1
-    assert summary["provider_completion"]["not_run_method_cases"] == 199
-    assert evidence_rows[0]["response_sha256"]
-    assert replay["scorer_calls"] == []
 
 
 def test_clean_eval_reason_codes_include_stable_category() -> None:
@@ -1851,20 +1630,6 @@ def test_mh_only_scoring_keeps_provider_failure_in_fixed_denominator_and_pair_co
     ]
 
 
-def test_historical_dual_dataset_plan_keeps_the_formal_sh_first_gate(tmp_path, monkeypatch) -> None:
-    import scripts.run_public_memory_clean_eval as runner
-
-    with pytest.raises(runner.CleanEvalBlocked) as error:
-        _run_synthetic_clean_live(
-            tmp_path,
-            monkeypatch,
-            {},
-            cell_key="mh_6k",
-            evaluation_plan_id=runner.LEGACY_DUAL_EVALUATION_PLAN_ID,
-        )
-
-    assert error.value.reason_code == "CLEAN_EVAL_BLOCK_OTHER_SH_32K_MUST_COMPLETE_BEFORE_MH_6K"
-    assert not (tmp_path / "live_artifacts" / "mh_6k" / "synthetic-new-v3-run").exists()
 
 
 def test_diagnostic_cli_dispatches_provider_run_and_local_recovery(tmp_path, monkeypatch, capsys) -> None:

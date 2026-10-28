@@ -186,7 +186,7 @@ def execute(*, live: bool = False, attempt: str | None = None, output_root: Path
     if live:
         from google.genai import types
         from linkloom.agents.providers.gemini_api import build_gemini_sdk_client
-        from tests.smoke.test_p14_cn2_typed_gemini38_smoke import AppendOnlyProviderLedger
+        from tests.smoke.provider_ledger import AppendOnlyProviderLedger
         key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         if not key:
             raise RuntimeError("CREDENTIAL_UNAVAILABLE")
