@@ -18,7 +18,7 @@ def prepare(output, experiment_id):
     ledger = DiagnosticLedger(output/'experiment.ledger.jsonl', experiment_id=experiment_id)
     root = pathlib.Path(__file__).resolve().parents[2]
     files = ['scripts/gemini_transport/diagnostics.py', 'scripts/gemini_transport/ledger.py',
-             'scripts/gemini_transport/product.py', 'tests/smoke/test_p14_cn2_typed_gemini38_smoke.py',
+             'scripts/gemini_transport/product.py', 'tests/smoke/provider_ledger.py',
              'scripts/gemini_transport/sdk.py', 'src/linkloom/agents/providers/gemini_api.py',
              'tests/smoke/run_temporal_product_http.py']
     packet = {

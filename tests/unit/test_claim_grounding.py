@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+import hashlib
 import json
-from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -13,7 +13,6 @@ from linkloom.agents.claim_grounding import (
 )
 from linkloom.agents.team_decision import TeamDecisionResult, claim_proposal_schema
 from linkloom.runtime.errors import ValidationError
-from linkloom.runtime.task_plan import _passage_identity
 
 
 def _evidence(evidence_id: str, quote: str) -> dict[str, object]:
@@ -191,233 +190,6 @@ def test_same_named_leader_from_other_project_cannot_complete_owner_chain() -> N
 
     assert wrong.status is ClaimSupportStatus.INSUFFICIENT
     assert correct.status is ClaimSupportStatus.SUPPORTED
-
-
-@pytest.mark.parametrize("side", ["before", "after"])
-def test_phase9_real_cn2_final_replays_against_exact_verified_passages(side):
-    run = (Path(__file__).resolve().parents[2] / "work" / "phase9_gemini"
-           / "runs" / f"p9-p0-cn2-{side}")
-    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
-    evidence = {}
-    for path in (run / "checkpoints" / "models" / "model").glob(
-        "*/*/tool-results/*.json"
-    ):
-        result = json.loads(path.read_text(encoding="utf-8"))["model_tool_result"]["result"]
-        if result["tool_id"] == "read_verified_note" and result["status"] == "ok":
-            value = result["value"]
-            evidence[value["evidence_id"]] = value
-    assert {item["relative_path"] for item in evidence.values()} == {
-        "phase5_cn/owner.md", "phase5_cn/leader.md",
-    }
-    workspace = next(iter(evidence.values()))["workspace_id"]
-    assert all(_passage_identity(value, workspace) for value in evidence.values())
-
-    decision = TeamDecisionResult.from_grounded_final(
-        observed["final_raw"], list(evidence), evidence_by_ref=evidence,
-    )
-    decision.validate_claim_support(evidence)
-
-    raw = json.loads(observed["final_raw"])
-    for wrong in ("王芳报告给李明", "李明报告给张伟"):
-        changed = json.loads(observed["final_raw"])
-        changed["decision"]["value"] = raw["decision"]["value"].split(";")[0] + "; " + wrong
-        invalid = TeamDecisionResult.from_grounded_final(
-            json.dumps(changed, ensure_ascii=False), list(evidence),
-        )
-        with pytest.raises(ValidationError):
-            invalid.validate_claim_support(evidence)
-    unrelated = {ref: value for ref, value in evidence.items()
-                 if value["relative_path"] == "phase5_cn/owner.md"}
-    with pytest.raises(ValidationError):
-        decision.validate_claim_support(unrelated)
-    foreign = dict(next(iter(evidence.values())), workspace_id="foreign-workspace")
-    assert _passage_identity(foreign, workspace) is None
-
-
-def test_phase11_real_cn2_punctuated_final_replays_without_weakening_binding():
-    run = (Path(__file__).resolve().parents[2] / "work" / "phase11" /
-           "runs" / "p11-cn2-repeats-rep1")
-    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
-    evidence = {}
-    for path in (run / "checkpoints" / "models" / "model").glob(
-        "*/*/tool-results/*.json"
-    ):
-        result = json.loads(path.read_text(encoding="utf-8"))["model_tool_result"]["result"]
-        if result["tool_id"] == "read_verified_note" and result["status"] == "ok":
-            value = result["value"]
-            evidence[value["evidence_id"]] = value
-    assert {value["relative_path"] for value in evidence.values()} == {
-        "phase5_cn/owner.md", "phase5_cn/leader.md",
-    }
-    raw = json.loads(observed["final_raw"])
-    decision = TeamDecisionResult.from_grounded_final(
-        observed["final_raw"], list(evidence), evidence_by_ref=evidence,
-    )
-    decision.validate_claim_support(evidence)
-    for paraphrase in ("李明直接向王芳汇报。", "李明向王芳直接汇报。"):
-        changed = json.loads(observed["final_raw"])
-        changed["decision"]["value"] = (
-            raw["decision"]["value"].split(";")[0] + "; " + paraphrase
-        )
-        variant = TeamDecisionResult.from_grounded_final(
-            json.dumps(changed, ensure_ascii=False), list(evidence),
-            evidence_by_ref=evidence,
-        )
-        variant.validate_claim_support(evidence)
-    for wrong in (
-        "王芳报告直接给李明。", "李明报告直接给张伟。",
-        "王芳直接向李明汇报。", "李明向张伟直接汇报。",
-    ):
-        changed = json.loads(observed["final_raw"])
-        changed["decision"]["value"] = raw["decision"]["value"].split(";")[0] + "; " + wrong
-        invalid = TeamDecisionResult.from_grounded_final(
-            json.dumps(changed, ensure_ascii=False), list(evidence),
-        )
-        with pytest.raises(ValidationError):
-            invalid.validate_claim_support(evidence)
-    unrelated = {ref: item for ref, item in evidence.items()
-                 if item["relative_path"] == "phase5_cn/owner.md"}
-    with pytest.raises(ValidationError):
-        decision.validate_claim_support(unrelated)
-
-
-def _phase14_observed_and_read_evidence(run_id: str):
-    run = Path(__file__).resolve().parents[2] / "work" / "phase14_gemini" / "runs" / run_id
-    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
-    evidence = {}
-    for path in (run / "checkpoints" / "models" / "model").glob(
-        "*/*/tool-results/*.json"
-    ):
-        result = json.loads(path.read_text(encoding="utf-8"))["model_tool_result"]["result"]
-        if result["tool_id"] == "read_verified_note" and result["status"] == "ok":
-            value = result["value"]
-            evidence[value["evidence_id"]] = value
-    assert evidence
-    return observed, evidence
-
-
-@pytest.mark.parametrize("run_id", ["P14-ALIAS-A", "P14-ALIAS-B", "P14-CN2"])
-def test_phase14_real_final_outputs_replay_against_the_exact_verified_reads(run_id: str):
-    observed, evidence = _phase14_observed_and_read_evidence(run_id)
-    workspace = next(iter(evidence.values()))["workspace_id"]
-    assert all(_passage_identity(value, workspace) for value in evidence.values())
-
-    decision = TeamDecisionResult.from_grounded_final(
-        observed["final_raw"], list(evidence), evidence_by_ref=evidence,
-        expected_workspace_id=workspace,
-    )
-    decision.validate_claim_support(evidence)
-
-
-@pytest.mark.parametrize(
-    "mutation",
-    ["reverse_reporting", "wrong_date", "wrong_owner", "wrong_project"],
-)
-def test_phase14_cn2_final_rejects_wrong_relation_entity_or_time(mutation: str):
-    observed, evidence = _phase14_observed_and_read_evidence("P14-CN2")
-    payload = deepcopy(json.loads(observed["final_raw"]))
-    if mutation == "reverse_reporting":
-        payload["decision"]["value"] = payload["decision"]["value"].replace(
-            "李明 reports directly to 王芳", "王芳 reports directly to 李明",
-        )
-    elif mutation == "wrong_date":
-        payload["decision"]["value"] = payload["decision"]["value"].replace(
-            "2025-03-01", "2025-03-02",
-        )
-    elif mutation == "wrong_owner":
-        payload["decision"]["value"] = payload["decision"]["value"].replace(
-            "李明", "张伟",
-        )
-    elif mutation == "wrong_project":
-        payload["decision"]["value"] = payload["decision"]["value"].replace(
-            "青岚计划", "Harbor 计划",
-        )
-    workspace = next(iter(evidence.values()))["workspace_id"]
-    decision = TeamDecisionResult.from_grounded_final(
-        json.dumps(payload, ensure_ascii=False), list(evidence),
-        evidence_by_ref=evidence, expected_workspace_id=workspace,
-    )
-    with pytest.raises(ValidationError):
-        decision.validate_claim_support(evidence)
-
-
-@pytest.mark.parametrize("repeat", ["rep1", "rep2"])
-def test_phase11_alias_final_replays_with_rejected_historical_candidate(repeat):
-    run = (Path(__file__).resolve().parents[2] / "work" / "phase11" /
-           "runs" / f"p11-alias-repeats-{repeat}")
-    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
-    evidence = {}
-    for path in (run / "checkpoints" / "models" / "model").glob(
-        "*/*/tool-results/*.json"
-    ):
-        result = json.loads(path.read_text(encoding="utf-8"))["model_tool_result"]["result"]
-        if result["tool_id"] == "read_verified_note" and result["status"] == "ok":
-            value = result["value"]
-            evidence[value["evidence_id"]] = value
-    assert {value["relative_path"] for value in evidence.values()} == {
-        "05-cobalt-alias.md", "07-cobalt-old-owner.md", "03-cobalt-owner.md",
-    }
-    workspace = next(iter(evidence.values()))["workspace_id"]
-    assert all(_passage_identity(value, workspace) for value in evidence.values())
-    decision = TeamDecisionResult.from_grounded_final(
-        observed["final_raw"], list(evidence), evidence_by_ref=evidence,
-    )
-    decision.validate_claim_support(evidence)
-
-
-@pytest.mark.parametrize("mutation", [
-    "wrong_current_owner", "wrong_historical_owner", "negated_candidate",
-    "wrong_draft_date", "wrong_current_date", "missing_draft_ref",
-    "unrelated_draft_ref", "wrong_project", "missing_current_ref",
-])
-def test_phase11_alias_rejected_candidate_still_requires_both_scoped_facts(mutation):
-    run = (Path(__file__).resolve().parents[2] / "work" / "phase11" /
-           "runs" / "p11-alias-repeats-rep1")
-    observed = json.loads((run / "observed.json").read_text(encoding="utf-8"))
-    evidence = {}
-    for path in (run / "checkpoints" / "models" / "model").glob(
-        "*/*/tool-results/*.json"
-    ):
-        result = json.loads(path.read_text(encoding="utf-8"))["model_tool_result"]["result"]
-        if result["tool_id"] == "read_verified_note" and result["status"] == "ok":
-            value = result["value"]
-            evidence[value["evidence_id"]] = value
-    by_path = {value["relative_path"]: ref for ref, value in evidence.items()}
-    raw = deepcopy(json.loads(observed["final_raw"]))
-    item = raw["rejected_alternatives"][0]
-    if mutation == "wrong_current_owner":
-        raw["decision"]["value"] = raw["decision"]["value"].replace(
-            "Mira Chen", "Leo Park",
-        )
-    elif mutation == "wrong_historical_owner":
-        item["alternative"] = "Nia Vale is the owner of Cobalt B."
-    elif mutation == "negated_candidate":
-        item["alternative"] = "Leo Park is not the owner of Cobalt B."
-    elif mutation == "wrong_draft_date":
-        item["reason"] = item["reason"].replace("2025-01-20", "2025-01-21")
-    elif mutation == "wrong_current_date":
-        item["reason"] = item["reason"].replace("2025-02-15", "2025-02-16")
-    elif mutation == "missing_draft_ref":
-        item["evidence_refs"] = [by_path["03-cobalt-owner.md"]]
-    elif mutation == "unrelated_draft_ref":
-        item["evidence_refs"] = [
-            by_path["05-cobalt-alias.md"], by_path["03-cobalt-owner.md"],
-        ]
-    elif mutation == "wrong_project":
-        raw["decision"]["value"] = raw["decision"]["value"].replace(
-            "owner of Cobalt B;", "owner of Cobalt B for Harbor;",
-        )
-    elif mutation == "missing_current_ref":
-        item["evidence_refs"] = [by_path["07-cobalt-old-owner.md"]]
-    raw["evidence_refs"] = list(dict.fromkeys(
-        raw["decision"]["evidence_refs"] + item["evidence_refs"]
-    ))
-    result = TeamDecisionResult.from_grounded_final(
-        json.dumps(raw, ensure_ascii=False), list(evidence),
-        evidence_by_ref=evidence,
-    )
-    with pytest.raises(ValidationError):
-        result.validate_claim_support(evidence)
 
 
 def test_unparseable_claim_is_unverifiable_instead_of_lexically_accepted() -> None:
@@ -653,3 +425,96 @@ def test_approved_plan_hop_is_bound_to_project_in_parent_question():
 
     assert atlas_target == ("cedar plan",)
     assert wrong_project == ()
+
+
+@pytest.fixture
+def verified_claim_source(tmp_path: Path):
+    """Generate a real scanned source; no archived run or placeholder hash."""
+    from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
+    from linkloom.scanner import scan_vault
+
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    quote = "Mira Chen reports directly to Kai Wu."
+    (vault / "reporting.md").write_text(quote + "\n", encoding="utf-8")
+    adapter = RuntimeAgentAdapter(
+        vault, scan_vault(vault, tmp_path / "index").index_path,
+        retrieval_mode="bm25", decision_memory_enabled=False,
+    )
+    passages = adapter._search_notes("Mira Chen reports directly", {}, 5)
+    assert len(passages) == 1
+    evidence = passages[0]
+    assert evidence["quote"] == quote
+    assert evidence["quote_sha256"] == hashlib.sha256(quote.encode("utf-8")).hexdigest()
+    assert evidence["content_sha256"] == hashlib.sha256(
+        (vault / "reporting.md").read_bytes()
+    ).hexdigest()
+    assert adapter._read_verified_note_for_tool(evidence["evidence_id"]) == evidence
+    return adapter, evidence
+
+
+@pytest.mark.parametrize(
+    "tampered_quote",
+    [
+        "Mira Chen reports directly to Kai Wuu.",
+        "Mira Chen reports directly to Kai Wu",
+        "Mira Chen reports directly to Kai Xu.",
+    ],
+    ids=["one_character_added", "one_character_removed", "one_character_replaced"],
+)
+def test_verified_claim_source_rejects_tampered_quote(verified_claim_source, tampered_quote):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    # Keep the observed ID and hashes: changing even punctuation is tampering.
+    adapter._evidence_by_id[ref] = {**evidence, "quote": tampered_quote}
+
+    with pytest.raises(ValueError, match="no longer matches its source version"):
+        adapter._read_verified_note_for_tool(ref)
+
+
+def test_verified_claim_source_rejects_tampered_source_hash(verified_claim_source):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    digest = evidence["content_sha256"]
+    tampered_hash = ("0" if digest[0] != "0" else "1") + digest[1:]
+    adapter._evidence_by_id[ref] = {**evidence, "content_sha256": tampered_hash}
+
+    with pytest.raises(ValueError, match="no longer matches its source version"):
+        adapter._read_verified_note_for_tool(ref)
+
+
+@pytest.mark.parametrize("protocol", ["team-decision-result/v1", "claim-proposal/v1"])
+def test_grounded_final_rejects_valid_but_unobserved_evidence(verified_claim_source, protocol):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    if protocol == "claim-proposal/v1":
+        payload = {
+            "schema_version": protocol,
+            "claims": [{
+                "subject": "Mira Chen", "predicate": "reports_to", "object": "Kai Wu",
+                "evidence_ids": [ref], "quote": evidence["quote"],
+                "valid_on": None, "temporal_kind": None,
+            }],
+        }
+    else:
+        payload = {
+            "schema_version": protocol,
+            "decision": {"value": evidence["quote"], "status": "approved", "evidence_refs": [ref]},
+            "rationale": [], "rejected_alternatives": [], "actions": [], "unresolved_items": [],
+            "uncertainty": {
+                "status": "none", "statement": None, "unknown_fields": [], "evidence_refs": [],
+            },
+            "evidence_refs": [ref],
+        }
+    text = json.dumps(payload)
+    kwargs = dict(
+        evidence_by_ref={ref: evidence}, expected_workspace_id=adapter.workspace_id,
+        final_protocol=protocol, require_read_evidence=True, read_evidence_ids=[ref],
+    )
+    accepted = TeamDecisionResult.from_grounded_final(text, [ref], **kwargs)
+    accepted.validate_claim_support({ref: evidence})
+    assert accepted.decision["status"] == "approved"
+
+    # All source facts remain valid; only the model's observed allowlist changes.
+    with pytest.raises(ValidationError, match="not observed by the model"):
+        TeamDecisionResult.from_grounded_final(text, [], **kwargs)

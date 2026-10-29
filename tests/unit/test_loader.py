@@ -221,7 +221,10 @@ def test_loader_rejects_symlink_note(tmp_path: Path) -> None:
     index_path = tmp_path / "vault_index.json"
     index_path.write_text(json.dumps(index), encoding="utf-8")
 
+    # Resolution places this link outside the vault. The read must be
+    # rejected at the containment check before the later symlink check.
+    assert not link.resolve().is_relative_to(vault.resolve())
     reader = VaultReader(vault, index_path)
     with pytest.raises(LoaderError) as exc_info:
         reader.read_notes()
-    assert exc_info.value.code == "SYMLINK_REJECTED"
+    assert exc_info.value.code == "PATH_OUTSIDE_ROOT"

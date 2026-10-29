@@ -12,7 +12,7 @@ import pytest
 import httpx
 
 from tests.smoke import run_temporal_product_http as runner
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import (
+from tests.smoke.provider_ledger import (
     AppendOnlyProviderLedger, SmokeBlocked, UncertainProviderRequest,
 )
 

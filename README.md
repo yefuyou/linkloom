@@ -1,12 +1,25 @@
 # LinkLoom
 
-[English](README.md) · [简体中文](README.zh-CN.md)
+Extract topics, decisions, and action items from meeting notes, and track how the same work changes across meetings. Every conclusion links back to its source text; action items and changes take effect only after human confirmation.
 
-**Recover the decision that is valid now, what changed, and the source that proves it.**
+Requires Python 3.11+ and Git:
+```bash
+git clone https://github.com/yefuyou/linkloom.git
+python -m pip install -e ./linkloom
+python -m linkloom.ui --offline-task-demo --database linkloom/work/task-demo.sqlite --port 8765
+```
 
-LinkLoom is a local-first team knowledge assistant for evolving meeting notes and
-Markdown sources. It combines human-reviewed decision history with a bounded,
-read-only investigation Agent, to connect answers with their source evidence, effective dates and review history.
+Open the [local demo](http://127.0.0.1:8765/). In Ask, select **Tasks across the current workspace records** and ask whether the meetings describe the same task and how its deadline changed.
+
+The demo uses synthetic notes and preset responses. No API key is needed.
+
+```mermaid
+flowchart LR
+    A[Meeting notes] --> B[Topics, decisions, action items]
+    B --> C[Check source evidence]
+    C --> D[Human confirmation]
+    D --> E[Track changes across meetings]
+```
 
 ## From a meeting trail to an answer
 

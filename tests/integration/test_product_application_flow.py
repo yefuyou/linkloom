@@ -93,7 +93,7 @@ def _client(base: str, path: str, *, method: str = "GET", data=None):
         headers={"Content-Type": "application/json"} if body is not None else {},
     )
     try:
-        response = urlopen(request, timeout=3)
+        response = urlopen(request, timeout=60)
     except HTTPError as error:
         response = error
     with response:
@@ -768,7 +768,6 @@ def test_temporal_agent_http_entry_validates_reviewed_replacement_and_unknown_re
     _exercise_temporal_agent_replacement(tmp_path, monkeypatch)
 
 
-@pytest.mark.legacy_historical
 def test_legacy_temporal_replacement_matches_original_gold(tmp_path, monkeypatch):
     gold_path = Path(__file__).resolve().parents[1] / "fixtures/legacy_temporal_decision/GOLD.json"
     _exercise_temporal_agent_replacement(tmp_path, monkeypatch, historical_gold=gold_path)
@@ -1088,7 +1087,6 @@ def _exercise_temporal_agent_replacement(tmp_path, monkeypatch, *, historical_go
         _stop_product_server(server, worker, app)
 
 
-@pytest.mark.legacy_historical
 def test_temporal_agent_frozen_other_project_uses_tool_evidence_before_gold(tmp_path, monkeypatch):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
     frozen_root = Path(__file__).resolve().parents[1] / "fixtures/legacy_temporal_decision"

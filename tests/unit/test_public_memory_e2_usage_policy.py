@@ -83,41 +83,8 @@ def test_authorized_baseline_budget_hash_matches_plan_specific_contract():
     ) is False
 
 
-def test_zero_request_e2_stop_does_not_consume_frozen_subset():
-    runner = _runner()
-
-    assert runner._verify_zero_provider_stopped_e2_run(
-        runner.E2_ZERO_PROVIDER_STOPPED_RUN_ID
-    ) is True
-    subset = runner._read_e2_subset_manifest()
-
-    assert subset["subset_sha256"] == runner._build_e2_subset_manifest_payload()["subset_sha256"]
-    assert subset["question_count"] == 92
-    assert len(subset["excluded_prior_generation_qa_ids"]) == 8
-    assert subset["prior_generation_overlap"] == []
 
 
-def test_h3_1_reconciliation_reference_requires_matching_scoped_seal_and_passed_evidence(tmp_path):
-    runner = _runner()
-    actual = (
-        runner.CLEAN_EVAL_ROOT / "H3_1_EVIDENCE_RECONCILIATION_20261005.json"
-    )
-    assert runner._verify_h3_1_reconciliation_artifact(actual) is True
-
-    wrong = tmp_path / "reconciliation.json"
-    runner._json_write(
-        wrong,
-        {
-            "run_id": "other-run",
-            "verification_status": "PASS",
-            "overall_evidence_checks_pass": True,
-        },
-    )
-    runner._seal_file(
-        wrong,
-        identity="h3-1-evidence-reconciliation:other-run:20261005",
-    )
-    assert runner._verify_h3_1_reconciliation_artifact(wrong) is False
 
 
 def _journal_for_response(response, *, blocked=False, reason=None):

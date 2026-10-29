@@ -418,7 +418,7 @@ def test_gemini_failure_diagnostics_survive_runtime_response_artifact(artifact_r
             raise exception
 
     gemini = GeminiProviderAdapter(
-        OfflineGeminiFailureClient(), model_id="gemini-test-model"
+        OfflineGeminiFailureClient(), model_id="gemini-3.8-flash"
     )
     provider = ScriptedProvider([lambda request: gemini.complete(request)])
     loop, _ = _loop(provider)
@@ -431,7 +431,7 @@ def test_gemini_failure_diagnostics_survive_runtime_response_artifact(artifact_r
     record = result.state.model_executions[-1]
     diagnostics = record.provider_error["details"]
     assert diagnostics["provider"] == "gemini"
-    assert diagnostics["model"] == "gemini-test-model"
+    assert diagnostics["model"] == "gemini-3.8-flash"
     assert diagnostics["low_level_failure_class"] == "TRANSPORT_CONNECT"
     assert diagnostics["nested_cause_chain"][0]["exception_type"] == "ConnectionRefusedError"
     payload = store.read(record.response_ref, expected_sha256=record.response_sha256)
@@ -694,7 +694,7 @@ def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
             },
         ]
     )
-    adapter = GeminiProviderAdapter(client, model_id="gemini-test-model")
+    adapter = GeminiProviderAdapter(client, model_id="gemini-3.8-flash")
     executor_calls: list[dict] = []
     loop, policy = _loop(
         adapter,
@@ -733,7 +733,8 @@ def test_existing_gemini_adapter_receives_function_response_from_runtime_loop(
         "name": "search_notes",
         "response": {
             "status": "ok",
-            "value": [{"evidence_id": "ev_gemini_loop"}],
+            "call_id": result.state.tool_ledger[0].call_id,
+            "value": [{"evidence_id": "ev_gemini_loop", "read_required": True}],
         },
     }
     assert "runtime_state" not in client.requests[1]
@@ -777,7 +778,7 @@ def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
     )
     executor_calls: list[dict] = []
     first_loop, _ = _loop(
-        GeminiProviderAdapter(first_client, model_id="gemini-test-model"),
+        GeminiProviderAdapter(first_client, model_id="gemini-3.8-flash"),
         lambda arguments: executor_calls.append(arguments)
         or [{"evidence_id": "ev_gemini_resume"}],
     )
@@ -804,7 +805,7 @@ def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
         ]
     )
     resumed_loop, resumed_policy = _loop(
-        GeminiProviderAdapter(second_client, model_id="gemini-test-model"),
+        GeminiProviderAdapter(second_client, model_id="gemini-3.8-flash"),
         lambda arguments: pytest.fail("cold resume must not re-execute the tool"),
     )
 
@@ -840,7 +841,7 @@ def test_gemini_continuation_survives_tool_result_checkpoint_and_cold_resume(
     assert function_response["id"] == function_call_part["function_call"]["id"]
     assert function_response["name"] == function_call_part["function_call"]["name"]
     assert function_response["response"]["value"] == [
-        {"evidence_id": "ev_gemini_resume"}
+        {"evidence_id": "ev_gemini_resume", "read_required": True}
     ]
     assert restored_state.model_executions[0].normalized_proposal[
         "tool_calls"
@@ -882,7 +883,7 @@ def test_cold_resume_rejects_continuation_bound_to_a_different_source_turn(
         ]
     )
     first_loop, _ = _loop(
-        GeminiProviderAdapter(first_client, model_id="gemini-test-model"),
+        GeminiProviderAdapter(first_client, model_id="gemini-3.8-flash"),
         lambda arguments: [{"evidence_id": "ev_wrong_source"}],
     )
     store = ModelArtifactStore(artifact_root / "models")

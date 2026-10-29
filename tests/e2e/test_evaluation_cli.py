@@ -98,7 +98,12 @@ def test_eval_unsupported_provider(tmp_path: Path):
     ]
     result = subprocess.run(cmd, capture_output=True, text=True)
     assert result.returncode == 1
-    assert "Error: unsupported provider" in result.stdout
+    assert result.stdout == ""
+    assert result.stderr == (
+        "Error: offline mode only allows provider=mock; use --mode dry-run "
+        "to inspect a real-provider configuration.\n"
+    )
+    assert not output_dir.exists()
 
 def test_eval_unsupported_dataset(tmp_path: Path):
     repo_root = Path.cwd()

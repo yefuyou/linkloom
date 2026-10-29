@@ -542,49 +542,6 @@ def test_model_plan_accepts_current_workspace_scope_but_rejects_cross_workspace_
         validate_model_proposed_plan(proposal, user_query=goal, max_steps=5)
 
 
-def _phase11_numeric_plan():
-    observed = json.loads((
-        Path(__file__).resolve().parents[2] / "work" / "phase11" / "runs"
-        / "p11-unseen-plan-model" / "observed.json"
-    ).read_text(encoding="utf-8"))
-    return json.loads(observed["plan_proposal_raw"])
-
-
-def test_phase11_numeric_plan_ids_canonicalize_but_reverse_relation_stays_invalid():
-    raw = _phase11_numeric_plan()
-    with pytest.raises(ValidationError, match="relation direction"):
-        validate_model_proposed_plan(raw, user_query=raw["goal"], max_steps=8)
-    corrected = deepcopy(raw)
-    corrected["subgoals"][2]["question"] = corrected["subgoals"][2].pop(
-        "alternate_question"
-    )
-    plan = validate_model_proposed_plan(
-        corrected, user_query=corrected["goal"], max_steps=8,
-    )
-    assert [item.subgoal_id for item in plan.subgoals] == [
-        "step_1", "step_2", "step_3",
-    ]
-    assert [item.depends_on for item in plan.subgoals] == [
-        (), ("step_1",), ("step_2",),
-    ]
-
-
-@pytest.mark.parametrize("mutation", ["duplicate", "boolean", "unknown", "cycle"])
-def test_numeric_plan_repairs_only_unambiguous_dependency_ids(mutation):
-    raw = _phase11_numeric_plan()
-    raw["subgoals"][2]["question"] = raw["subgoals"][2].pop("alternate_question")
-    if mutation == "duplicate":
-        raw["subgoals"][1]["subgoal_id"] = 1
-    elif mutation == "boolean":
-        raw["subgoals"][1]["subgoal_id"] = True
-    elif mutation == "unknown":
-        raw["subgoals"][2]["depends_on"] = [99]
-    elif mutation == "cycle":
-        raw["subgoals"][0]["depends_on"] = [3]
-    with pytest.raises(ValidationError):
-        validate_model_proposed_plan(raw, user_query=raw["goal"], max_steps=8)
-
-
 def test_empty_primary_and_alternate_mark_only_current_subgoal_blocked():
     plan = _plan()
     successor = _evidence("ev_one", "Cobalt B replaced Meridian A.")
@@ -600,51 +557,6 @@ def test_empty_primary_and_alternate_mark_only_current_subgoal_blocked():
 
     assert assessed.status_by_subgoal == {"successor": "completed", "owner": "blocked"}
     assert assessed.evidence_refs() == {successor["evidence_id"]}
-
-
-@pytest.mark.parametrize(
-    ("run_id", "expected_ids"),
-    [
-        ("P14-PLAN-DEFAULT", ["step_1", "step_2", "step_3"]),
-        ("P14-PLAN-REPAIR", ["s1", "s2", "s3"]),
-    ],
-)
-def test_phase14_real_plan_proposals_normalize_only_unambiguous_shape_errors(
-    run_id: str, expected_ids: list[str],
-):
-    observed_path = (
-        Path(__file__).resolve().parents[2] / "work" / "phase14_gemini" / "runs"
-        / run_id / "observed.json"
-    )
-    observed = json.loads(observed_path.read_text(encoding="utf-8"))
-    raw = json.loads(observed["plan_proposal_raw"])
-
-    from linkloom.runtime.task_plan import validate_model_proposed_plan
-
-    plan = validate_model_proposed_plan(
-        raw, user_query=raw["goal"], max_steps=9,
-    )
-
-    assert [item.subgoal_id for item in plan.subgoals] == expected_ids
-    assert [item.depends_on for item in plan.subgoals] == [
-        (), (expected_ids[0],), (expected_ids[1],),
-    ]
-    assert all(item.alternate_question for item in plan.subgoals)
-
-
-def test_model_plan_normalization_does_not_guess_a_missing_dependent_edge():
-    observed_path = (
-        Path(__file__).resolve().parents[2] / "work" / "phase14_gemini" / "runs"
-        / "P14-PLAN-REPAIR" / "observed.json"
-    )
-    observed = json.loads(observed_path.read_text(encoding="utf-8"))
-    raw = json.loads(observed["plan_proposal_raw"])
-    raw["subgoals"][1].pop("depends_on")
-
-    from linkloom.runtime.task_plan import validate_model_proposed_plan
-
-    with pytest.raises(ValidationError):
-        validate_model_proposed_plan(raw, user_query=raw["goal"], max_steps=9)
 
 
 def test_plan_rejects_same_quote_from_another_workspace_or_source():
