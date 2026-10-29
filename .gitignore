@@ -54,3 +54,10 @@ Thumbs.db
 
 # Per-checkout local verification and build output
 /work/
+
+# AMI evaluation corpus, derived transcripts and human annotations stay local.
+/work/ami_tasks_download/
+/work/ami_tasks_data/
+/work/ami_tasks_data_es2002/
+/work/ami_tasks_annotation/
+/work/ami_tasks_results/
