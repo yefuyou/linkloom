@@ -121,6 +121,14 @@ class TrajectoryHarness:
         histories: dict[str, list[str]] = {}
         active_call: list[ToolCall | None] = [None]
         injection_kind = case.fault_injection["kind"]
+        # Seed the synthetic observation index before the fault under test.
+        # The call budget measures only the scripted fault trajectory.
+        observed = self._search_fixture("", len(_ANCHORS))
+        evidence_paths = {row["evidence_id"]: row["note_path"] for row in observed}
+        # These cases model a candidate whose note is empty or disappeared
+        # after observation, so its opaque ID remains in the synthetic index.
+        for path in ("n/empty.md", "n/missing.md"):
+            evidence_paths["ev_trajectory_" + _ANCHORS[path]] = path
 
         def record_invocation(tool_id: str) -> ToolCall:
             call = active_call[0]
@@ -179,6 +187,7 @@ class TrajectoryHarness:
 
         def read_executor(note_ref: str) -> Any:
             call = record_invocation("read_verified_note")
+            note_ref = evidence_paths[note_ref]
             if case.case_id == "PART-02" and note_ref == case.fault_injection["failed_path"]:
                 raise RuntimeError("synthetic note read failure")
             if case.case_id == "OUT-02":
@@ -424,8 +433,11 @@ class TrajectoryHarness:
             if note_ref in {"n/empty.md", "n/missing.md"}:
                 continue
             text = self.fixture.read_text(note_ref).casefold()
-            if terms and all(term in text for term in terms):
-                matches.append(self._safe_note_value(note_ref))
+            if not terms or all(term in text for term in terms):
+                matches.append({
+                    **self._safe_note_value(note_ref),
+                    "evidence_id": "ev_trajectory_" + _ANCHORS[note_ref],
+                })
             if len(matches) >= limit:
                 break
         return matches

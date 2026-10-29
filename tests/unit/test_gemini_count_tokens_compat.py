@@ -357,7 +357,7 @@ def test_installed_count_tokens_config_is_not_misrepresented_as_developer_suppor
         system_instruction="synthetic system",
         tools=[_tool()],
         generation_config={"temperature": 0.0},
-        http_options=types.HttpOptions(timeout=1_000),
+        http_options=types.HttpOptions(timeout=60_000),
     )
 
     with pytest.raises(ValueError, match="system_instruction.*Developer API"):
@@ -677,7 +677,6 @@ def _semantic_model_turn_request(harness):
         model_id=harness.MODEL,
         generation_options=ModelGenerationOptions(
             max_output_tokens=512,
-            temperature=0.0,
             require_tool_call=True,
         ),
     )

@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCES = ['scripts/gemini_transport/diagnostics.py','scripts/gemini_transport/product.py',
            'scripts/gemini_transport/unified.py','src/linkloom/agents/providers/gemini_api.py',
            'src/linkloom/ui/unified_ask.py','src/linkloom/ui/investigation.py','src/linkloom/ui/backend.py',
-           'src/linkloom/ui/server.py','tests/smoke/test_p14_cn2_typed_gemini38_smoke.py',
+           'src/linkloom/ui/server.py','tests/smoke/provider_ledger.py',
            'tests/integration/unified_transport_fixture.py','tests/integration/unified_ask_fixture.py']
 QUESTION = 'Why did Launch change from Birchline to Wrenwell? Which formal supplier is current, when did it change, and what original sources support this?'
 

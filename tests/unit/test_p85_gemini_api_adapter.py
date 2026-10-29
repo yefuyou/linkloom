@@ -173,10 +173,9 @@ def _request(**changes) -> ModelTurnRequest:
         "user_input": "find durable runtime evidence",
         "observation": None,
         "available_tools": [_definition()],
-        "model_id": "gemini-test-model",
+        "model_id": "gemini-3.8-flash",
         "generation_options": ModelGenerationOptions(
             max_output_tokens=128,
-            temperature=0.2,
         ),
     }
     values.update(changes)
@@ -196,6 +195,14 @@ def _semantic_projection_snapshot() -> tuple[ToolDefinition, dict, dict]:
             for key, value in claim_properties[field].items()
             if key != "maxLength"
         }
+    task_properties = claim_properties["task"]["properties"]
+    for field in ("text", "owner", "deadline_text", "project", "vendor"):
+        task_properties[field] = {
+            key: value for key, value in task_properties[field].items()
+            if key != "maxLength"
+        }
+    task_properties["description_parts"].pop("maxItems")
+    task_properties["description_parts"]["items"].pop("maxLength")
     return definition, canonical, expected
 
 
@@ -311,7 +318,6 @@ def test_required_tool_call_mode_constrains_gemini_to_function_call():
         _request(
             generation_options=ModelGenerationOptions(
                 max_output_tokens=2048,
-                temperature=0.0,
                 require_tool_call=True,
             )
         )
@@ -616,6 +622,7 @@ def test_observation_request_maps_previous_call_and_result_without_full_runtime_
         "id": "call_p85_1",
         "name": "search_notes",
         "response": {
+            "call_id": call.call_id,
             "status": "ok",
             "value": {"matches": [{"evidence_id": "ev_p85_1"}]},
             "business_status": "FOUND",
@@ -736,16 +743,15 @@ def test_invalid_finish_reason_is_rejected():
     assert response.error.code == "MODEL_RESPONSE_MALFORMED"
 
 
-def test_missing_model_id_is_a_safe_request_error_without_provider_call():
-    client = FakeGeminiClient(response={"text": "must not be used"})
+def test_missing_request_model_id_uses_the_configured_product_default():
+    client = FakeGeminiClient(response={"text": "default model answer"})
 
-    response = GeminiProviderAdapter(client).complete(
-        _request(model_id=None)
-    )
+    response = GeminiProviderAdapter(client).complete(_request(model_id=None))
 
-    assert response.error is not None
-    assert response.error.code == "MODEL_INVALID_REQUEST"
-    assert client.requests == []
+    assert response.error is None
+    assert response.action == ModelAction.final("default model answer")
+    assert len(client.requests) == 1
+    assert client.requests[0]["model"] == "gemini-3.8-flash"
 
 
 def test_adapter_configuration_can_supply_model_id_for_legacy_request():
@@ -753,11 +759,11 @@ def test_adapter_configuration_can_supply_model_id_for_legacy_request():
 
     response = GeminiProviderAdapter(
         client,
-        model_id="configured-gemini-model",
+        model_id="gemini-3.8-flash",
     ).complete(_request(model_id=None))
 
     assert response.action == ModelAction.final("configured model answer")
-    assert client.requests[0]["model"] == "configured-gemini-model"
+    assert client.requests[0]["model"] == "gemini-3.8-flash"
 
 
 def test_unsafe_provider_exception_request_id_is_dropped_not_raised_or_persisted():
@@ -912,7 +918,7 @@ def test_projected_provider_limits_are_still_enforced_locally(claims: list[dict]
     extractor = ProviderNeutralSemanticExtractor(
         GeminiProviderAdapter(client),
         provider_id="gemini",
-        model_id="gemini-test-model",
+        model_id="gemini-3.8-flash",
         request_guard=authorize,
         request_guard_id="p85-semantic-test-guard/v1",
         max_attempts=1,
@@ -949,7 +955,7 @@ def test_client_seam_matches_sdk_generate_content_and_does_not_send_root_store_f
     assert response.action == ModelAction.final("sdk answer")
     assert len(client.calls) == 1
     call = client.calls[0]
-    assert call["model"] == "gemini-test-model"
+    assert call["model"] == "gemini-3.8-flash"
     assert isinstance(call["contents"], list)
     assert isinstance(call["config"], dict)
     assert "store" not in call
@@ -1060,7 +1066,7 @@ def test_gemini_exception_diagnostics_preserve_nested_failure_and_request_shape(
     assert response.error is not None
     diagnostics = response.error.details
     assert diagnostics["provider"] == "gemini"
-    assert diagnostics["model"] == "gemini-test-model"
+    assert diagnostics["model"] == "gemini-3.8-flash"
     assert diagnostics["high_level_outcome"] == "MODEL_TRANSIENT_FAILURE"
     assert diagnostics["low_level_failure_class"] == "TRANSPORT_CONNECT"
     assert {
@@ -1498,7 +1504,7 @@ def test_generation_exception_diagnostics_are_sanitized_and_keep_request_id():
     assert details["request_id"] == "gemini-request-503"
     assert details["http_status"] == 503
     assert details["provider"] == "gemini"
-    assert details["model"] == "gemini-test-model"
+    assert details["model"] == "gemini-3.8-flash"
     assert details["api_endpoint_hostname"] == "generativelanguage.googleapis.com"
     assert details["api_endpoint_port"] == 443
     assert "AIzaSyDUMMYKeyIsNotReal1234567890" not in serialized

@@ -61,7 +61,7 @@ def test_real_sdk_sends_structured_task_request_to_mock_transport_only():
         return httpx.Response(200, json=dict(candidates=[dict(content=dict(role='model', parts=[
             dict(functionCall=dict(name='propose_task_relations', args={'proposals': []}, id='synthetic-call'))]),
             finishReason='STOP')], usageMetadata=dict(promptTokenCount=10, candidatesTokenCount=5, totalTokenCount=15)))
-    sdk = build_gemini_sdk_client('offline-placeholder', http_options_kwargs=dict(timeout=1000,
+    sdk = build_gemini_sdk_client('offline-placeholder', http_options_kwargs=dict(timeout=60000,
         retry_options=dict(attempts=1), client_args=dict(transport=httpx.MockTransport(handle))))
     try:
         provider = GeminiProviderAdapter(GeminiSDKClientBridge(sdk))

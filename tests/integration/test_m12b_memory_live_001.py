@@ -15,6 +15,8 @@ import re
 import numpy as np
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents import runtime_adapter as adapter_module
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
@@ -61,7 +63,7 @@ def _final_json(value: str, evidence_ref: str) -> str:
         {
             "schema_version": "team-decision-result/v1",
             "decision": {
-                "value": value,
+                "value": f"{value} is the approved model provider.",
                 "status": "approved",
                 "evidence_refs": [evidence_ref],
             },
@@ -249,14 +251,15 @@ def test_memory_live_001_runtime_uses_memory_then_reads_source_before_grounded_f
         source_hint = Path(memory["source_evidence_refs"][0]).stem.replace("-", " ")
         return _tool(request, "search_notes", {
             "query": f"{memory['value']} {source_hint} May 12",
-            "source_context": {"intent": "verify memory provenance in source evidence"},
+            "source_context": source_context_from_request(request),
             "limit": 10,
         })
 
     def read_source(request):
         assert request.observation is not None and request.observation.status == "ok"
         result = request.observation.value
-        source = next(item for item in result if item["relative_path"] == SOURCE_REF)
+        source = next(item for item in result if item["relative_path"] == SOURCE_REF
+                      and "as the model provider" in item["quote"])
         model_observations["retrieved_source"] = source
         return _tool(request, "read_verified_note", {"note_ref": source["evidence_id"]})
 
@@ -332,7 +335,7 @@ def test_memory_live_001_runtime_uses_memory_then_reads_source_before_grounded_f
             json.dumps(final_payload, ensure_ascii=False),
             [observed_ref],
         )
-        assert checked.decision["value"] == "Provider B"
+        assert checked.decision["value"] == "Provider B is the approved model provider."
         assert checked.decision["evidence_refs"] == [observed_ref]
         assert model_observations["readback"]["evidence_id"] == observed_ref
         assert model_observations["memory_context_selected"] == ["memory-live-001-current-provider"]

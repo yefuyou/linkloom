@@ -11,7 +11,7 @@ from linkloom.agents.providers.gemini_api import build_gemini_sdk_client
 from linkloom.ui.investigation import ProductInvestigationService
 from scripts.gemini_transport.diagnostics import TransportDiagnostics
 from scripts.gemini_transport.product import TransportGeminiProviderAdapter, environment_snapshot
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked
+from tests.smoke.provider_ledger import AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked
 from tests.integration.unified_ask_fixture import UnifiedAskFixture, FakeTransport as ScriptedModel
 
 MODEL = 'gemini-3.8-flash'

@@ -5569,6 +5569,10 @@ def test_offline_run_hard_stop_writes_aggregate_stop_accounting_without_provider
         shutil.rmtree(run_root, ignore_errors=True)
 
 
+@pytest.mark.skipif(
+    not os.environ.get("GEMINI_API_KEY", "").strip(),
+    reason="Real M1.2 smoke requires GEMINI_API_KEY; offline tests use synthetic clients.",
+)
 def test_real_provider_team_decision_smoke_is_opt_in():
     """This test is skipped by default and is never run in offline verification."""
 
@@ -5578,6 +5582,10 @@ def test_real_provider_team_decision_smoke_is_opt_in():
     _harness().run_real_provider_smoke(settings)
 
 
+@pytest.mark.skipif(
+    not os.environ.get("GEMINI_API_KEY", "").strip(),
+    reason="Real M1.2 smoke requires GEMINI_API_KEY; offline tests use synthetic clients.",
+)
 def test_real_provider_mps_001_rerun_is_opt_in():
     """The explicit rerun target can never select the other two cases."""
 

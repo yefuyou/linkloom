@@ -2091,6 +2091,10 @@ def test_offline_trajectory_summary_reads_usage_from_durable_record_shape():
 
 
 @pytest.mark.skipif(
+    not os.environ.get(API_KEY_ENV, "").strip(),
+    reason="Real DeepSeek smoke requires DEEPSEEK_API_KEY; offline tests use synthetic clients.",
+)
+@pytest.mark.skipif(
     os.environ.get(OPT_IN_ENV) != "1",
     reason="DeepSeek real-provider smoke requires exact opt-in",
 )
