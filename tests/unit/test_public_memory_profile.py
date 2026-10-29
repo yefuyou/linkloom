@@ -2167,7 +2167,7 @@ def test_block_artifact_has_bounded_safe_origin_without_prompt_or_secrets(tmp_pa
             method="Flat Retrieval",
             response_evidence={"provider_response_accepted": True},
         )
-    _persist_clean_eval_block(
+    artifact_path = _persist_clean_eval_block(
         tmp_path,
         run_id="run-safe",
         sequence=1,
@@ -2178,7 +2178,7 @@ def test_block_artifact_has_bounded_safe_origin_without_prompt_or_secrets(tmp_pa
         request_hash="a" * 64,
         response_evidence={"provider_response_accepted": True},
     )
-    artifact = next((tmp_path / "clean_eval_blocks").glob("*.json")).read_text(encoding="utf-8")
+    artifact = artifact_path.read_text(encoding="utf-8")
     payload = json.loads(artifact)
 
     assert len(payload["bounded_stack"]) <= 8
