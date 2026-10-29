@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -423,3 +425,96 @@ def test_approved_plan_hop_is_bound_to_project_in_parent_question():
 
     assert atlas_target == ("cedar plan",)
     assert wrong_project == ()
+
+
+@pytest.fixture
+def verified_claim_source(tmp_path: Path):
+    """Generate a real scanned source; no archived run or placeholder hash."""
+    from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
+    from linkloom.scanner import scan_vault
+
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    quote = "Mira Chen reports directly to Kai Wu."
+    (vault / "reporting.md").write_text(quote + "\n", encoding="utf-8")
+    adapter = RuntimeAgentAdapter(
+        vault, scan_vault(vault, tmp_path / "index").index_path,
+        retrieval_mode="bm25", decision_memory_enabled=False,
+    )
+    passages = adapter._search_notes("Mira Chen reports directly", {}, 5)
+    assert len(passages) == 1
+    evidence = passages[0]
+    assert evidence["quote"] == quote
+    assert evidence["quote_sha256"] == hashlib.sha256(quote.encode("utf-8")).hexdigest()
+    assert evidence["content_sha256"] == hashlib.sha256(
+        (vault / "reporting.md").read_bytes()
+    ).hexdigest()
+    assert adapter._read_verified_note_for_tool(evidence["evidence_id"]) == evidence
+    return adapter, evidence
+
+
+@pytest.mark.parametrize(
+    "tampered_quote",
+    [
+        "Mira Chen reports directly to Kai Wuu.",
+        "Mira Chen reports directly to Kai Wu",
+        "Mira Chen reports directly to Kai Xu.",
+    ],
+    ids=["one_character_added", "one_character_removed", "one_character_replaced"],
+)
+def test_verified_claim_source_rejects_tampered_quote(verified_claim_source, tampered_quote):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    # Keep the observed ID and hashes: changing even punctuation is tampering.
+    adapter._evidence_by_id[ref] = {**evidence, "quote": tampered_quote}
+
+    with pytest.raises(ValueError, match="no longer matches its source version"):
+        adapter._read_verified_note_for_tool(ref)
+
+
+def test_verified_claim_source_rejects_tampered_source_hash(verified_claim_source):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    digest = evidence["content_sha256"]
+    tampered_hash = ("0" if digest[0] != "0" else "1") + digest[1:]
+    adapter._evidence_by_id[ref] = {**evidence, "content_sha256": tampered_hash}
+
+    with pytest.raises(ValueError, match="no longer matches its source version"):
+        adapter._read_verified_note_for_tool(ref)
+
+
+@pytest.mark.parametrize("protocol", ["team-decision-result/v1", "claim-proposal/v1"])
+def test_grounded_final_rejects_valid_but_unobserved_evidence(verified_claim_source, protocol):
+    adapter, evidence = verified_claim_source
+    ref = evidence["evidence_id"]
+    if protocol == "claim-proposal/v1":
+        payload = {
+            "schema_version": protocol,
+            "claims": [{
+                "subject": "Mira Chen", "predicate": "reports_to", "object": "Kai Wu",
+                "evidence_ids": [ref], "quote": evidence["quote"],
+                "valid_on": None, "temporal_kind": None,
+            }],
+        }
+    else:
+        payload = {
+            "schema_version": protocol,
+            "decision": {"value": evidence["quote"], "status": "approved", "evidence_refs": [ref]},
+            "rationale": [], "rejected_alternatives": [], "actions": [], "unresolved_items": [],
+            "uncertainty": {
+                "status": "none", "statement": None, "unknown_fields": [], "evidence_refs": [],
+            },
+            "evidence_refs": [ref],
+        }
+    text = json.dumps(payload)
+    kwargs = dict(
+        evidence_by_ref={ref: evidence}, expected_workspace_id=adapter.workspace_id,
+        final_protocol=protocol, require_read_evidence=True, read_evidence_ids=[ref],
+    )
+    accepted = TeamDecisionResult.from_grounded_final(text, [ref], **kwargs)
+    accepted.validate_claim_support({ref: evidence})
+    assert accepted.decision["status"] == "approved"
+
+    # All source facts remain valid; only the model's observed allowlist changes.
+    with pytest.raises(ValidationError, match="not observed by the model"):
+        TeamDecisionResult.from_grounded_final(text, [], **kwargs)
