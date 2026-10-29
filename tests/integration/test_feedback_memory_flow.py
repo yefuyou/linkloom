@@ -27,6 +27,19 @@ def ask(demo, query=QUERY):
     return body["result"]
 
 
+def assert_soft_clarification(result):
+    """Authorized migration: an unbound common term keeps reviewed candidates.
+
+    No canonical/approval/persistence assertion is relaxed. The original query
+    and every lifecycle transition are retained, including revocation.
+    """
+    assert result["discovery"]["status"] == "AMBIGUOUS"
+    assert result["route"]["route"] == "CLARIFY"
+    assert any(c["relation"] == "uses supplier" for c in result["discovery"]["raw_candidates"])
+    assert all(c["workspace_id"] == result["workspace_id"] for c in result["discovery"]["raw_candidates"])
+    assert result["scope"]["subject"] == "" and not result["conclusions"]
+
+
 def feedback(demo, action, **data):
     return request_json(demo.base_url, API + "/" + action, method="POST", data={
         "workspace_id": demo.app._workspace_id(), "actor": "human-reviewer", **data})
@@ -55,11 +68,15 @@ def test_comparable_before_pending_approved_revoked(demo):
     item = approve(demo, candidate)
     approved = ask(demo)
     for query in ("我们现在采用哪家供方外星部门？", "供方把预算改为9000", "current megasupplyx?"):
-        assert ask(demo, query)["discovery"]["status"] == "NO_MATCH"
+        result = ask(demo, query)
+        if query in ("current megasupplyx?", "我们现在采用哪家供方外星部门？"):
+            assert result["discovery"]["status"] == "NO_MATCH"
+        else:
+            assert_soft_clarification(result)
     assert feedback(demo, "revoke", id=item, human_confirmed=True)[0] == 200
     revoked = ask(demo)
     for result in (before, pending, revoked):
-        assert result["discovery"]["status"] == "NO_MATCH"
+        assert_soft_clarification(result)
         assert result["status"] == "NEEDS_SCOPE" and not result["conclusions"]
     assert approved["discovery"]["status"] == "MATCHED"
     assert approved["path"] == "DETERMINISTIC"
@@ -92,13 +109,13 @@ def test_restart_scope_conflict_expiry_and_terminal_status(demo):
         restarted.workspace_ids = workspace_ids
         assert ask(restarted)["conclusions"][0]["value"] == "Wrenwell"
         restarted.select_workspace(OTHER)
-        assert ask(restarted)["discovery"]["status"] == "NO_MATCH"
+        assert_soft_clarification(ask(restarted))
         assert feedback(restarted, "revoke", id=active, human_confirmed=True)[0] == 404
         status, body = request_json(restarted.base_url, API + "?workspace_id=" + workspace)
         assert status == 409
         restarted.select_workspace(ATLAS)
         assert feedback(restarted, "expire", id=active, human_confirmed=True)[0] == 200
-        assert ask(restarted)["discovery"]["status"] == "NO_MATCH"
+        assert_soft_clarification(ask(restarted))
         assert feedback(restarted, "reject", id=conflict, human_confirmed=True)[0] == 200
         _, body = request_json(restarted.base_url, API + "?workspace_id=" + workspace)
         assert {entry["status"] for entry in body["entries"]} == {"expired", "rejected"}
@@ -113,7 +130,7 @@ def test_restart_scope_conflict_expiry_and_terminal_status(demo):
 ])
 def test_no_canonical_override_or_free_text_instruction(demo, term, relation):
     assert feedback(demo, "propose", term=term, relation=relation)[0] == 400
-    assert ask(demo)["discovery"]["status"] == "NO_MATCH"
+    assert_soft_clarification(ask(demo))
 
 
 def test_stale_business_evidence_is_rechecked_independently(demo):
@@ -169,7 +186,7 @@ finally: app.close()
         return json.loads(process.stdout)
     assert restarted()["conclusions"][0]["value"] == "Wrenwell"
     assert feedback(demo, "revoke", id=item, human_confirmed=True)[0] == 200
-    assert restarted()["discovery"]["status"] == "NO_MATCH"
+    assert_soft_clarification(restarted())
 
 
 def test_instruction_sentences_cannot_become_routing_memory(demo):
