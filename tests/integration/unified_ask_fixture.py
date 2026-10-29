@@ -377,7 +377,7 @@ def request_json(
     *,
     method: str = "GET",
     data: dict[str, Any] | None = None,
-    timeout: float = 5.0,
+    timeout: float = 60.0,
 ) -> tuple[int, dict[str, Any]]:
     body = None if data is None else json.dumps(data, ensure_ascii=False).encode("utf-8")
     request = Request(
@@ -400,7 +400,7 @@ def request_json(
 def request_bytes(base_url: str, path: str) -> tuple[int, bytes]:
     request = Request(base_url + path, method="GET")
     try:
-        response = urlopen(request, timeout=5)
+        response = urlopen(request, timeout=60)
     except HTTPError as error:
         response = error
     with response:

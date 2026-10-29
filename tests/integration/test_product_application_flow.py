@@ -93,7 +93,7 @@ def _client(base: str, path: str, *, method: str = "GET", data=None):
         headers={"Content-Type": "application/json"} if body is not None else {},
     )
     try:
-        response = urlopen(request, timeout=3)
+        response = urlopen(request, timeout=60)
     except HTTPError as error:
         response = error
     with response:

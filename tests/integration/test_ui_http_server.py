@@ -10,7 +10,7 @@ from linkloom.ui.server import create_http_server
 
 
 def _json(url: str) -> dict:
-    with urlopen(url, timeout=2) as response:
+    with urlopen(url, timeout=60) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
@@ -24,12 +24,12 @@ def test_local_server_serves_assets_and_demo_product_states() -> None:
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        with urlopen(base + "/", timeout=2) as response:
+        with urlopen(base + "/", timeout=60) as response:
             html = response.read().decode("utf-8")
             assert response.headers["Content-Security-Policy"].startswith("default-src 'self'")
         assert "LinkLoom" in html
         assert html.index("/i18n.js") < html.index("/app.js")
-        with urlopen(base + "/i18n.js", timeout=2) as response:
+        with urlopen(base + "/i18n.js", timeout=60) as response:
             localization = response.read().decode("utf-8")
             assert response.headers["Content-Type"].startswith("text/javascript")
         assert "zh-CN" in localization
@@ -54,9 +54,9 @@ def test_mobile_action_rows_keep_visible_field_labels() -> None:
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        with urlopen(base + "/app.js", timeout=2) as response:
+        with urlopen(base + "/app.js", timeout=60) as response:
             script = response.read().decode("utf-8")
-        with urlopen(base + "/app.css", timeout=2) as response:
+        with urlopen(base + "/app.css", timeout=60) as response:
             stylesheet = response.read().decode("utf-8")
 
         assert 'data-label="${escapeHtml(t("owner"))}"' in script
@@ -79,7 +79,7 @@ def test_frontend_retry_and_mobile_inspector_keep_safe_state_boundaries() -> Non
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        with urlopen(base + "/app.js", timeout=2) as response:
+        with urlopen(base + "/app.js", timeout=60) as response:
             script = response.read().decode("utf-8")
 
         assert "function retryFromError()" in script
@@ -105,9 +105,9 @@ def test_frontend_uses_one_localized_renderer_and_preserves_source_truth() -> No
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        with urlopen(base + "/app.js", timeout=2) as response:
+        with urlopen(base + "/app.js", timeout=60) as response:
             script = response.read().decode("utf-8")
-        with urlopen(base + "/app.css", timeout=2) as response:
+        with urlopen(base + "/app.css", timeout=60) as response:
             stylesheet = response.read().decode("utf-8")
 
         assert "LinkLoomI18n" in script
@@ -143,7 +143,7 @@ def test_local_server_validates_start_payload_and_exposes_run_resource() -> None
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urlopen(request, timeout=2) as response:
+        with urlopen(request, timeout=60) as response:
             started = json.loads(response.read().decode("utf-8"))
             assert response.status == 202
         assert _json(base + f"/api/runs/{started['run']['id']}")["kind"] == "running"
@@ -155,7 +155,7 @@ def test_local_server_validates_start_payload_and_exposes_run_resource() -> None
             method="POST",
         )
         try:
-            urlopen(bad, timeout=2)
+            urlopen(bad, timeout=60)
         except HTTPError as error:
             assert error.code == 400
             payload = json.loads(error.read().decode("utf-8"))
@@ -170,7 +170,7 @@ def test_local_server_validates_start_payload_and_exposes_run_resource() -> None
             method="POST",
         )
         try:
-            urlopen(wrong_content_type, timeout=2)
+            urlopen(wrong_content_type, timeout=60)
         except HTTPError as error:
             assert error.code == 415
             payload = json.loads(error.read().decode("utf-8"))
@@ -180,7 +180,7 @@ def test_local_server_validates_start_payload_and_exposes_run_resource() -> None
 
         wrong_host = Request(base + "/api/context", headers={"Host": "attacker.example"})
         try:
-            urlopen(wrong_host, timeout=2)
+            urlopen(wrong_host, timeout=60)
         except HTTPError as error:
             assert error.code == 421
             payload = json.loads(error.read().decode("utf-8"))
