@@ -18,6 +18,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_contents
+
 from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
@@ -463,7 +465,7 @@ def test_offline_production_composition_and_fixture_copy():
             types.Content.model_validate(content)
         if len(contents) == 1:
             part = {"function_call": {"name": "search_notes", "args": {
-                "query": QUERY, "source_context": {}, "limit": 1,
+                "query": QUERY, "source_context": source_context_from_contents(contents), "limit": 1,
             }}}
         else:
             part = {"text": "未找到匹配笔记"}
@@ -500,7 +502,7 @@ def test_offline_second_turn_rebuilds_native_manual_function_history():
                         "parts": [{"function_call": {
                             "id": provider_call_id,
                             "name": "search_notes",
-                            "args": {"query": QUERY, "source_context": {}, "limit": 1},
+                            "args": {"query": QUERY, "source_context": source_context_from_contents(contents), "limit": 1},
                         }}],
                     },
                     "finish_reason": "STOP",
@@ -521,7 +523,7 @@ def test_offline_second_turn_rebuilds_native_manual_function_history():
         SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)),
         "synthetic-key",
     )
-    _, summary = run_scenario(client, MODEL)
+    run_root, summary = run_scenario(client, MODEL)
 
     assert summary["provider_calls"] == 2
     second, second_config = captured[1]
@@ -535,7 +537,10 @@ def test_offline_second_turn_rebuilds_native_manual_function_history():
     function_response = second[2].parts[0].function_response
     assert function_response.id == provider_call_id
     assert function_response.name == "search_notes"
-    assert function_response.response == {"status": "ok", "value": []}
+    checkpoints = list((run_root / "checkpoints" / "results").glob("*/result.json"))
+    assert len(checkpoints) == 1
+    runtime_call_id = json.loads(checkpoints[0].read_text(encoding="utf-8"))["tool_ledger"][0]["call_id"]
+    assert function_response.response == {"status": "ok", "value": [], "call_id": runtime_call_id}
     assert second_config["tools"][0]["function_declarations"][0]["name"] == "search_notes"
 
 
@@ -593,7 +598,7 @@ def test_offline_second_turn_failure_summary_preserves_tool_progress_without_sec
     def generate_content(*, model, contents, config):
         if len(contents) == 1:
             return {"function_calls": [{"name": "search_notes", "args": {
-                "query": QUERY, "source_context": {}, "limit": 1,
+                "query": QUERY, "source_context": source_context_from_contents(contents), "limit": 1,
             }}], "finish_reason": "STOP"}
         raise SecretRequestShape("synthetic-key must never appear in diagnostics")
 
@@ -624,7 +629,7 @@ def test_offline_wrong_model_behavior_fails_without_retry(behavior):
         return {"function_calls": [{
             "name": "read_verified_note" if behavior == "wrong_tool" else "search_notes",
             "args": ({"note_ref": "missing"} if behavior == "wrong_tool" else
-                     {"query": QUERY, "source_context": {}, "limit": 0 if behavior == "invalid_args" else 1}),
+                     {"query": QUERY, "source_context": source_context_from_contents(contents), "limit": 0 if behavior == "invalid_args" else 1}),
         }], "finish_reason": "STOP"}
     client = SmokeGeminiClient(SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)), "synthetic-key")
     with pytest.raises(SmokeBlocked):

@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 from linkloom.decision_memory.store import TemporalDecisionStore
@@ -72,18 +74,24 @@ def _team_decision_model(
                 tool_id="search_notes",
                 arguments={
                     "query": "Acme supplier decision",
-                    "source_context": {"intent": "supplier decision"},
+                    "source_context": source_context_from_request(request),
                     "limit": 5,
                 },
             )
         )
 
+    def read(request: ModelTurnRequest) -> ModelAction:
+        assert request.observation is not None and request.observation.status == "ok"
+        passage = next(item for item in request.observation.value if "Acme" in item["quote"])
+        return ModelAction.tool(ToolCall(
+            call_id="memory-capture-read", tool_id="read_verified_note",
+            arguments={"note_ref": passage["evidence_id"]},
+        ))
+
     def final(request: ModelTurnRequest) -> ModelAction:
         assert request.observation is not None and request.observation.status == "ok"
-        assert isinstance(request.observation.value, list)
-        passage = next(
-            item for item in request.observation.value if "Acme" in item["quote"]
-        )
+        assert isinstance(request.observation.value, dict)
+        passage = request.observation.value
         ref = passage["evidence_id"]
         if fabricated_ref:
             ref = "ev_v2_fabricated"
@@ -103,7 +111,7 @@ def _team_decision_model(
         return wrapped
 
     model = FakeModelAdapter(
-        [capture_step_error(search), capture_step_error(final)]
+        [capture_step_error(search), capture_step_error(read), capture_step_error(final)]
     )
     model.test_step_errors = step_errors
     return model
@@ -219,7 +227,7 @@ def test_runtime_store_initialization_failure_does_not_fail_successful_answer(
         "review_required": False,
         "reason": "PERSISTENT_STORE_UNAVAILABLE",
     }
-    assert model.call_count == 2
+    assert model.call_count == 3
 
 
 def test_runtime_capture_failure_does_not_fail_successful_team_decision(tmp_path, monkeypatch):
@@ -288,12 +296,11 @@ def test_runtime_does_not_capture_when_grounding_or_reviewer_fails(
         assert isinstance(store, TemporalDecisionStore)
         result = _result(tmp_path, status.run_id)
 
-        expected_status = "completed" if failure == "grounding" else "failed"
-        assert status.status == result["status"] == expected_status, result
+        # Both invalid claims and reviewer refusal must block publication.
+        assert status.status == result["status"] == "failed", result
         if failure == "grounding":
-            assert result["result"]["team_decision"]["decision"]["value"] == "Contoso"
-        else:
-            assert result["result"] is None
+            assert status.error["code"] == "TEAM_DECISION_CONTRACT_ERROR"
+        assert result["result"] is None
         assert result["memory_candidate"]["status"] == "BLOCKED"
         assert _candidate_rows(store, calculate_fingerprint(vault)) == ()
     finally:

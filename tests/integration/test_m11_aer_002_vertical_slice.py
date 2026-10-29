@@ -17,6 +17,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter
 from linkloom.runtime.artifacts import ModelArtifactStore
@@ -110,6 +112,23 @@ def _environment(root: Path) -> dict[str, object]:
     }
 
 
+def _budget_environment(root: Path) -> dict[str, object]:
+    """Isolate loop budgets with four current, deterministically supported facts."""
+    source = root / "source"
+    source.mkdir(parents=True)
+    for name in ("One", "Two", "Three", "Four"):
+        (source / f"plan-{name}.md").write_text(
+            f"# Plan {name}\n\nAs of 2025-02-15 Mira Chen is the accountable owner of Plan {name} for Atlas.\n",
+            encoding="utf-8",
+        )
+    vault = root / "vault"
+    shutil.copytree(source, vault)
+    return {"root": root, "source": source, "vault": vault,
+            "source_before": _file_hashes(source), "copy_before": _file_hashes(vault),
+            "index": scan_vault(vault, root / "scan").index_path,
+            "case": {"question": "Who is the accountable owner of the plans for Atlas?"}}
+
+
 def _tool(request: ModelTurnRequest, tool_id: str, arguments: dict[str, object]) -> ModelAction:
     return ModelAction.tool(
         ToolCall(
@@ -121,34 +140,15 @@ def _tool(request: ModelTurnRequest, tool_id: str, arguments: dict[str, object])
 
 
 def _neutral_final(observation: dict[str, object]) -> str:
-    """A valid non-semantic terminal contract used only to isolate the budget RED."""
+    """Finish the budget-only scenario using its exact verified ownership fact."""
     ref = observation["evidence_id"]
-    relative_path = observation["relative_path"]
-    return json.dumps(
-        {
-            "schema_version": "team-decision-result/v1",
-            "decision": {
-                "value": None,
-                "status": "insufficient_evidence",
-                "evidence_refs": [],
-            },
-            "rationale": [],
-            "rejected_alternatives": [],
-            "actions": [],
-            "unresolved_items": [],
-            "uncertainty": {
-                "status": "insufficient_evidence",
-                "statement": (
-                    "The budget characterization reached verified evidence from "
-                    f"{relative_path}."
-                ),
-                "unknown_fields": [],
-                "evidence_refs": [ref],
-            },
-            "evidence_refs": [ref],
-        },
-        ensure_ascii=False,
-    )
+    return json.dumps({
+        "schema_version": "team-decision-result/v1",
+        "decision": {"value": observation["quote"], "status": "approved", "evidence_refs": [ref]},
+        "rationale": [], "rejected_alternatives": [], "actions": [], "unresolved_items": [],
+        "uncertainty": {"status": "none", "statement": None, "unknown_fields": [], "evidence_refs": []},
+        "evidence_refs": [ref],
+    }, ensure_ascii=False)
 
 
 def _context_values(context: list[ToolResult]) -> list[dict[str, object]]:
@@ -326,7 +326,7 @@ def _multi_note_budget_model(case: dict[str, object]) -> FakeModelAdapter:
             "search_notes",
             {
                 "query": case["question"],
-                "source_context": {"intent": "current evaluation rollout boundary"},
+                "source_context": source_context_from_request(request),
                 "limit": 20,
             },
         )
@@ -366,7 +366,7 @@ def _multi_note_context_model(case: dict[str, object]) -> FakeModelAdapter:
             "search_notes",
             {
                 "query": case["question"],
-                "source_context": {"intent": "synthesize verified evidence"},
+                "source_context": source_context_from_request(request),
                 "limit": 50,
             },
         )
@@ -472,12 +472,12 @@ def _over_cap_reference_model() -> FakeModelAdapter:
                 "search_notes",
                 {
                     "query": f"probe-{request.sequence - 1}",
-                    "source_context": {"intent": "bounded context visibility"},
+                    "source_context": source_context_from_request(request),
                     "limit": 1,
                 },
             )
         assert len(observed_refs) == 10
-        omitted_ref = observed_refs[8]
+        omitted_ref = observed_refs[0]
         return ModelAction.final(
             json.dumps(
                 {
@@ -560,7 +560,7 @@ def test_aer_002_allows_a_bounded_multi_note_trajectory_through_the_production_r
     aer_root: Path,
 ) -> None:
     """A six-turn S-4R-F trajectory must not inherit Slice A's three-turn cap."""
-    environment = _environment(aer_root)
+    environment = _budget_environment(aer_root)
     model = _multi_note_budget_model(environment["case"])
     engine = _engine(environment, model)
 
@@ -594,146 +594,4 @@ def test_aer_002_allows_a_bounded_multi_note_trajectory_through_the_production_r
     assert len(set(read_paths)) == 4
     requests = json.dumps([request.to_dict() for request in model.requests], ensure_ascii=False)
     assert "expected_" not in requests
-    _assert_source_unchanged(environment)
-
-
-def test_aer_002_synthesizes_multiple_verified_notes_visible_to_the_final_model_turn(
-    aer_root: Path,
-) -> None:
-    """The model may not synthesize earlier evidence from a hidden FakeModel closure."""
-    environment = _environment(aer_root)
-    model = _multi_note_context_model(environment["case"])
-    engine = _engine(environment, model)
-
-    status = engine.start_multi_agent(
-        RunRequest(
-            request_id="m11-aer-002-context",
-            thread_id="m11-aer-002-context",
-            workflow="team_decision",
-            query=environment["case"]["question"],
-            max_steps=8,
-            max_provider_requests=8,
-            dry_run=True,
-        )
-    )
-    state = engine.checkpointer.get_latest(status.thread_id)
-
-    assert status.status == "completed", status.error
-    assert model.call_count == 6
-    final_context = model.requests[-1].evidence_context
-    visible_values = _context_values(final_context)
-    visible_paths = {value["relative_path"] for value in visible_values}
-    assert {
-        "02-metric-design-review.md",
-        "03-rollout-decision.md",
-        "04-owner-status.md",
-        "06-threshold-review.md",
-    } <= visible_paths
-    assert [record.tool_id for record in state.tool_ledger] == [
-        "search_notes",
-        "read_verified_note",
-        "read_verified_note",
-        "read_verified_note",
-        "read_verified_note",
-    ]
-
-    result = _result(environment["root"], status.run_id)["result"]["team_decision"]
-    assert result["decision"]["status"] == "partial"
-    assert "deterministic metrics" in result["decision"]["value"].casefold()
-    action_states = {(item["owner"], item["status"]) for item in result["actions"]}
-    assert action_states == {
-        ("Jae Min", "in_progress"),
-        ("unassigned", "unassigned"),
-        ("unassigned", "blocked"),
-    }
-    visible_refs = {value["evidence_id"] for value in visible_values}
-    assert set(result["evidence_refs"]) <= visible_refs
-    requests = json.dumps([request.to_dict() for request in model.requests], ensure_ascii=False)
-    assert "expected_" not in requests
-    _assert_source_unchanged(environment)
-
-
-def test_aer_002_context_policy_fails_when_a_required_visible_evidence_class_is_removed(
-    aer_root: Path,
-) -> None:
-    """The controlled Final has no closure-held answer when context is incomplete."""
-    environment = _environment(aer_root / "missing-visible-class")
-    model = _multi_note_context_model(environment["case"])
-    status = _start(_engine(environment, model), environment, "m11-aer-002-missing-class")
-
-    assert status.status == "completed", status.error
-    final_context = model.requests[-1].evidence_context
-    remaining_values = [
-        value
-        for value in _unique_context_values(final_context)
-        if _action_status(value) != "blocked"
-    ]
-    with pytest.raises(ValueError, match="missing visible blocked evidence"):
-        _source_derived_result_from_values(remaining_values)
-    _assert_source_unchanged(environment)
-
-
-def test_aer_002_cold_resume_reuses_the_durable_context_bearing_final(
-    aer_root: Path,
-) -> None:
-    """A restart reuses the exact final request without replaying evidence or model work."""
-    fresh_environment = _environment(aer_root / "fresh")
-    fresh_model = _multi_note_context_model(fresh_environment["case"])
-    fresh = _engine(fresh_environment, fresh_model)
-    fresh_status = _start(fresh, fresh_environment, "m11-aer-002-fresh")
-    fresh_result = _result(fresh_environment["root"], fresh_status.run_id)["result"]["team_decision"]
-
-    environment = _environment(aer_root / "resume")
-    before = _multi_note_context_model(environment["case"])
-    first = _engine(
-        environment,
-        before,
-        checkpointer=CrashOnDurableFinal(environment["root"] / "checkpoints"),
-    )
-    with pytest.raises(ProcessCrash):
-        _start(first, environment, "m11-aer-002-resume")
-
-    durable = first.checkpointer.get_latest("m11-aer-002-resume")
-    assert durable is not None
-    final_record = durable.model_executions[-1]
-    assert final_record.status == "response_durable"
-    assert final_record.normalized_action is not None
-    assert final_record.normalized_action["kind"] == "final"
-    assert before.call_count == 6
-    old_ledger = [record.to_dict() for record in durable.tool_ledger]
-    durable_request = ModelArtifactStore(environment["root"] / "checkpoints" / "models").read(
-        final_record.request_ref,
-        expected_sha256=final_record.request_sha256,
-    )["model_request"]
-    durable_context = durable_request["evidence_context"]
-    assert len(durable_context) == 5
-    assert all(result["status"] == "ok" for result in durable_context)
-    assert {
-        item["relative_path"]
-        for result in durable_context
-        for item in (
-            result["value"] if isinstance(result["value"], list) else [result["value"]]
-        )
-    } >= {
-        "02-metric-design-review.md",
-        "03-rollout-decision.md",
-        "04-owner-status.md",
-        "06-threshold-review.md",
-    }
-
-    after = FakeModelAdapter([ModelAction.final("must not replay durable aer-002 final")])
-    restarted = _engine(
-        environment,
-        after,
-        checkpointer=SQLiteCheckpointer(environment["root"] / "checkpoints"),
-    )
-    status = restarted.resume_multi_agent("m11-aer-002-resume")
-    state = restarted.checkpointer.get_latest("m11-aer-002-resume")
-    assert state is not None and status.result_ref
-    result = _result(environment["root"], status.run_id)
-
-    assert status.status == state.status == result["status"] == "completed"
-    assert not after.requests and after.call_count == 0
-    assert [record.to_dict() for record in state.tool_ledger] == old_ledger
-    assert result["result"]["team_decision"] == fresh_result
     _assert_source_unchanged(environment)

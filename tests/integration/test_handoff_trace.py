@@ -6,6 +6,8 @@ from pathlib import Path
 from uuid import uuid4
 
 import pytest
+
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
 from linkloom.agents.coordinator import Coordinator
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.agents.retrieval_agent import RetrievalAgent
@@ -74,7 +76,7 @@ def _model_agent(run_id: str, root: Path, query: str = "q") -> RetrievalAgent:
             ToolCall(
                 call_id="model_search",
                 tool_id="search_notes",
-                arguments={"query": query, "source_context": {}, "limit": 10},
+                arguments={"query": query, "source_context": source_context_from_request(request), "limit": 10},
             )
         )
 

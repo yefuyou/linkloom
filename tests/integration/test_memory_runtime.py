@@ -5,6 +5,9 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+from linkloom.loader import VaultReader
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.memory.models import MemoryScope
 from linkloom.memory.store import MemoryStore
@@ -31,7 +34,7 @@ def _search_then_final(query: str = "test query") -> FakeModelAdapter:
             ToolCall(
                 call_id="memory_model_search",
                 tool_id="search_notes",
-                arguments={"query": query, "source_context": {}, "limit": 10},
+                arguments={"query": query, "source_context": source_context_from_request(request), "limit": 10},
             )
         )
 
@@ -93,8 +96,17 @@ def test_runtime_multi_agent_memory_injection(m03_root: Path):
         "test_key",
         {"internal_data": "do_not_leak_this_sentinel"},
         ["doc.md"],
+        metadata={"scope_key": "t1"},
     )
-    store.confirm_candidate(candidate.id, "human")
+    thread_item = store.confirm_candidate(candidate.id, "human")
+    workspace = VaultReader(vault_root=vault, index_path=idx).vault_root_fingerprint
+    preference = "Prefer concise explanations for test query."
+    project_candidate = store.create_candidate(
+        MemoryScope.PROJECT, "test_query_preference",
+        {"kind": "preference", "text": preference}, ["doc.md"],
+        metadata={"scope_key": workspace, "visibility": "workspace"},
+    )
+    project_item = store.confirm_candidate(project_candidate.id, "human")
 
     model = _search_then_final()
     engine = RuntimeEngine(
@@ -137,7 +149,7 @@ def test_runtime_multi_agent_memory_injection(m03_root: Path):
                 injected_found = True
                 refs = event["attributes"]["refs"]
                 assert len(refs) == 1
-                assert refs[0]["memory_id"]
+                assert refs[0]["memory_id"] == project_item.id
                 assert "value_sha256" in refs[0]
                 assert "value" not in refs[0]
 
@@ -145,10 +157,14 @@ def test_runtime_multi_agent_memory_injection(m03_root: Path):
 
     latest_state = engine.checkpointer.get_latest("t1")
     assert latest_state is not None
-    assert len(latest_state.memory_refs) == 1
+    assert len(latest_state.memory_refs) == 2
     assert latest_state.memory_refs[0]["key"] == "test_key"
 
     state_dict = latest_state.to_dict()
-    assert len(state_dict["memory_refs"]) == 1
+    assert len(state_dict["memory_refs"]) == 2
     restored = type(latest_state).from_dict(state_dict)
-    assert len(restored.memory_refs) == 1
+    assert len(restored.memory_refs) == 2
+
+    assert {ref["memory_id"] for ref in latest_state.memory_refs} == {thread_item.id, project_item.id}
+    assert preference in model.requests[0].user_input
+    assert "do_not_leak_this_sentinel" not in model.requests[0].user_input

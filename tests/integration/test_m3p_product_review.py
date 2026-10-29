@@ -3,6 +3,7 @@ from tests.m3p_support import product_http, http_ask
 from tests.m3p_support import revision_product
 import pytest
 import json
+import os
 import subprocess
 import sys
 
@@ -97,6 +98,7 @@ def test_new_service_reads_saved_result_without_model_calls(tmp_path):
     # A separate Python process has no _runs/_jobs, F/G adapters or runtime model.
     child = subprocess.run([sys.executable, '-m', 'tests.m3p_support',
         str(tmp_path / 'product.sqlite'), result['agent_run_id'], workspace],
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
         capture_output=True, text=True, encoding='utf8', timeout=120, check=True)
     code, response = json.loads(child.stdout)
     assert code == 200 and response['result']['status'] == 'PARTIAL', response
@@ -195,6 +197,7 @@ def test_http_hot_and_new_process_hide_invalidated_results(tmp_path, mutation):
         app.close()
     child = subprocess.run([sys.executable, '-m', 'tests.m3p_support',
         str(tmp_path / 'product.sqlite'), result['agent_run_id'], ws, str(tmp_path / 'relations.sqlite')],
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
         capture_output=True, text=True, encoding='utf8', timeout=120, check=True)
     code, response = json.loads(child.stdout)
     blocked = response['result']
@@ -270,6 +273,7 @@ def test_revoked_evidence_without_source_change_cannot_be_resurrected(tmp_path):
         app.close()
     child = subprocess.run([sys.executable, '-m', 'tests.m3p_support',
         str(tmp_path / 'product.sqlite'), result['agent_run_id'], ws, str(tmp_path / 'relations.sqlite')],
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
         capture_output=True, text=True, encoding='utf8', timeout=120, check=True)
     code, response = json.loads(child.stdout)
     blocked = response['result']
