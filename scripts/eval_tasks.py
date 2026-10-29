@@ -48,8 +48,9 @@ Judge only the current meeting. A task is concrete future work explicitly adopte
 assigned or committed to by the end of this meeting. Missing owner/date does not
 erase work. Exclude suggestions without adoption, hypothetical or conditional work,
 questions, rejected/cancelled work, historical/completed work, general requirements,
-and product decisions with no execution obligation. A meeting-time instruction to
-perform substantive work may count; filler and meeting mechanics do not.
+and product decisions with no execution obligation. Only substantive work remaining
+after the meeting counts; exclude presentation, whiteboard or listing requests
+completed during this meeting, as well as filler and meeting mechanics.
 Match the action, object, scope and deliverable. Paraphrases are allowed; merely
 sharing a topic is insufficient. Do not match a broad bundle to one narrow subtask.
 Gold must contain atomic tasks: one prediction matches at most one gold task and
@@ -113,6 +114,15 @@ JUDGE_SCHEMA = object_schema({"judgments": {"type": "array", "items": object_sch
     "owner_correct": {"type": "boolean"}, "deadline_correct": {"type": "boolean"},
     "reason": {"type": "string"}, "evidence_quote": {"type": "string"}})}})
 
+REVIEW_JUDGE_SCHEMA = json.loads(json.dumps(JUDGE_SCHEMA))
+_REVIEW_FIELDS = REVIEW_JUDGE_SCHEMA["properties"]["judgments"]["items"]
+for _name in ("prediction_task_zh", "evidence_quote_zh"):
+    _REVIEW_FIELDS["properties"][_name] = {"type": "string"}
+    _REVIEW_FIELDS["required"].append(_name)
+REVIEW_JUDGE_SCHEMA["properties"]["gold_translations"] = {"type": "array", "items": object_schema({
+    "gold_id": {"type": "string"}, "task_zh": {"type": "string"}, "quote_zh": {"type": "string"}})}
+REVIEW_JUDGE_SCHEMA["required"].append("gold_translations")
+
 
 @dataclass
 class Counter:
@@ -156,6 +166,9 @@ class Client:
         self.last_call = None
         self.actual_cost_usd = 0.0
         self._gemini = None
+        self.usage_by_model = {}
+        self.output_dir = None
+        self.prior_attempt = None
 
     def complete(self, request):
         """LinkLoom uses the unmodified product Gemini adapter."""
@@ -173,12 +186,28 @@ class Client:
                 raise RuntimeError("Missing GEMINI_API_KEY")
             sdk = build_gemini_sdk_client(key, http_options_kwargs={"timeout": 180000,
                                                                   "retry_options": {"attempts": 1}})
-            self._gemini = GeminiProviderAdapter(CountedGeminiTransport(sdk, self.counter, self.record_usage), model_id=GEMINI)
+            self._gemini = GeminiProviderAdapter(CountedGeminiTransport(sdk, self.counter, self.record_usage,
+                self.save_response), model_id=GEMINI)
         return self._gemini
 
     def record_usage(self, value):
         self.last_call = value
         self.actual_cost_usd += value["cost_usd_from_usage"]
+        model = value["model"]
+        total = self.usage_by_model.setdefault(model, {"requests": 0, "input_tokens": 0,
+            "output_tokens_including_thinking": 0, "cost_usd_from_usage": 0.0})
+        usage = value["usage"]
+        total["requests"] += 1
+        total["input_tokens"] += usage.get("prompt_tokens", usage.get("prompt_token_count", 0))
+        total["output_tokens_including_thinking"] += usage.get("completion_tokens",
+            usage.get("candidates_token_count", 0) + usage.get("thoughts_token_count", 0))
+        total["cost_usd_from_usage"] += value["cost_usd_from_usage"]
+        print(json.dumps({"event": "provider_usage", "model": model, "requests": self.counter.requests,
+                          "actual_cost_usd_from_usage": self.actual_cost_usd}), flush=True)
+
+    def save_response(self, raw):
+        if self.output_dir is not None:
+            new_json(self.output_dir / f"provider-response-{self.counter.requests:04}.json", raw)
 
     def generate(self, model, prompt, schema, max_output=4096):
         if not self.live:
@@ -232,6 +261,7 @@ class Client:
             raise RuntimeError(f"Provider HTTP {error.code}; no retry") from None
         except (OSError, ValueError):
             raise RuntimeError("Provider transport/JSON failure; no retry") from None
+        self.save_response({k: raw[k] for k in ("model", "created", "usage", "choices")})
         self.record_usage(deepseek_usage(raw))
         self.counter.settle(reserved, self.last_call["cost_usd_from_usage"])
         choice = raw["choices"][0]
@@ -258,13 +288,22 @@ def deepseek_usage(raw):
 
 
 class CountedGeminiTransport:
-    def __init__(self, sdk, counter, on_usage):
-        self.sdk, self.counter, self.on_usage = sdk, counter, on_usage
+    def __init__(self, sdk, counter, on_usage, on_response=None):
+        self.sdk, self.counter, self.on_usage, self.on_response = sdk, counter, on_usage, on_response
 
     def generate_content(self, *, model, contents, config):
         reserved = self.counter.reserve(model, {"contents": contents, "config": config}, config["max_output_tokens"])
         response = self.sdk.models.generate_content(model=model, contents=contents, config=config)
         raw = response if isinstance(response, dict) else response.model_dump(mode="json", exclude_none=True)
+        if self.on_response:
+            # Retain returned task JSON before local parsing/validation. Do not
+            # persist hidden thought text or encrypted thought signatures.
+            self.on_response({"model": model, "model_version": raw.get("model_version"),
+                "usage_metadata": raw.get("usage_metadata"), "candidates": [
+                    {"finish_reason": c.get("finish_reason"), "content": {"parts": [
+                        {k: v for k, v in p.items() if k != "thought_signature"}
+                        for p in c.get("content", {}).get("parts", []) if not p.get("thought")]}}
+                    for c in raw.get("candidates", [])]})
         usage = raw.get("usage_metadata", {})
         prompt, visible, thought = (usage.get("prompt_token_count"), usage.get("candidates_token_count"),
                                     usage.get("thoughts_token_count", 0))
@@ -447,7 +486,7 @@ def chunks(meeting, max_chars=12000, max_bytes=20000, overlap=2):
     return result
 
 
-def validate_tasks(payload, meeting, actions=None):
+def validate_tasks(payload, meeting, actions=None, *, strict_quotes=True):
     if not isinstance(payload, dict) or set(payload) != {"tasks"} or not isinstance(payload["tasks"], list):
         raise ValueError("Malformed task list")
     expected = {"quote", "task", "owner", "deadline"} | ({"ami_action_id"} if actions is not None else set())
@@ -457,7 +496,12 @@ def validate_tasks(payload, meeting, actions=None):
         if any(not row[k].strip() for k in ("task", "owner", "deadline")):
             raise ValueError("Missing task fields: use 未说明 for unknown owner/date")
         if not row["quote"] or row["quote"] not in meeting["text"]:
-            raise ValueError("Quote is not an exact transcript substring; no automatic repair")
+            if strict_quotes:
+                raise ValueError("Quote is not an exact transcript substring; no automatic repair")
+            # The evaluated fields are task/owner/deadline. An auxiliary evidence
+            # spelling error is retained as a diagnostic, never rewritten or
+            # silently discarded, and the judge must verify work from the source.
+            row["quote_validation"] = "NOT_EXACT_SOURCE_SUBSTRING"
         if actions is not None and row["ami_action_id"] and row["ami_action_id"] not in actions:
             raise ValueError("Unknown AMI action reference")
     return payload["tasks"]
@@ -623,13 +667,57 @@ def baseline_predict(meeting, client):
         "Use 未说明 for unstated fields; preserve relative dates and source precision. "
         "Do not invent owner/date.\n" + MATCH_RULES.split("Match the action")[0] +
         "\nDATA:\n" + encoded(source_input(meeting)).decode())
-    return validate_tasks(client.generate(GEMINI, prompt, TASK_SCHEMA, GEMINI_MAX_OUTPUT), meeting)
+    return validate_tasks(client.generate(GEMINI, prompt, TASK_SCHEMA, GEMINI_MAX_OUTPUT), meeting, strict_quotes=False)
+
+
+def freeze_gold(csv_path, out):
+    with csv_path.open(encoding="utf-8-sig", newline="") as stream:
+        reader = csv.DictReader(stream)
+        if not set(CSV_FIELDS) <= set(reader.fieldnames or []):
+            raise ValueError("Human annotation CSV does not match template")
+        rows = list(reader)
+    gold, seen = [], set()
+    for row in rows:
+        if row["keep"].strip().lower() not in {"y", "n"}:
+            raise ValueError("Every candidate must have a final human keep label")
+        if row["candidate_id"] in seen or row["meeting_id"] not in MEETINGS:
+            raise ValueError("Unknown meeting or duplicate candidate ID")
+        seen.add(row["candidate_id"])
+        if row["keep"].strip().lower() == "n":
+            continue
+        gold.append({"gold_id": row["candidate_id"], "meeting_id": row["meeting_id"],
+            "quote": row["quote"],
+            **{field: row[correction].strip() or row[field].strip() for field, correction in (
+                ("task", "修改后的任务"), ("owner", "修改后的负责人"), ("deadline", "修改后的截止时间"))},
+            "notes": row["备注"]})
+    if len(gold) != 11:
+        raise ValueError("This approved gold version must contain exactly 11 tasks")
+    with out.open("x", encoding="utf-8", newline="\n") as stream:
+        for item in gold:
+            stream.write(encoded(item).decode() + "\n")
+    print(json.dumps({"gold_rows": len(gold), "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}))
 
 
 def load_gold(path, meetings):
     by_meeting = {m["meeting_id"]: m for m in meetings}
     gold = {mid: [] for mid in by_meeting}
     seen = set()
+    if path.suffix == ".jsonl":
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            item = json.loads(line)
+            if set(item) != {"gold_id", "meeting_id", "quote", "task", "owner", "deadline", "notes"}:
+                raise ValueError("Frozen gold has unsupported/missing fields")
+            mid, identity = item["meeting_id"], item["gold_id"]
+            if mid not in gold or not identity or identity in seen:
+                raise ValueError("Frozen gold has unknown/duplicate IDs")
+            if not all(isinstance(v, str) for v in item.values()) or not all(item[k].strip() for k in ("quote", "task", "owner", "deadline")):
+                raise ValueError("Frozen gold has invalid text fields")
+            if item["quote"] not in by_meeting[mid]["text"]:
+                raise ValueError("Frozen gold quote is not in source")
+            seen.add(identity)
+            # Notes and review translations do not influence the model judge.
+            gold[mid].append({k: item[k] for k in ("gold_id", "quote", "task", "owner", "deadline")})
+        return gold
     with path.open(encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         if not set(CSV_FIELDS) <= set(reader.fieldnames or []):
@@ -685,6 +773,49 @@ def validate_judgments(payload, predictions, gold, text):
     return [{**row, "predicted_deadline": pred_map[row["prediction_id"]].get("deadline", UNKNOWN)} for row in rows]
 
 
+def review_judgments(payload, predictions, gold, text):
+    if not isinstance(payload, dict) or set(payload) != {"judgments", "gold_translations"}:
+        raise ValueError("Judge must return decisions and complete gold review translations")
+    translations = payload["gold_translations"]
+    if not isinstance(translations, list) or len(translations) != len(gold):
+        raise ValueError("Judge omitted gold translations")
+    translated = {}
+    for item in translations:
+        if (not isinstance(item, dict) or set(item) != {"gold_id", "task_zh", "quote_zh"}
+            or any(not isinstance(v, str) or not v.strip() for v in item.values())
+            or item["gold_id"] in translated):
+            raise ValueError("Malformed/duplicate gold translation")
+        translated[item["gold_id"]] = item
+    if set(translated) != {g["gold_id"] for g in gold}:
+        raise ValueError("Unknown gold translation ID")
+    if not isinstance(payload["judgments"], list):
+        raise ValueError("Missing judge decisions")
+    base, extras = [], {}
+    matched_ids = {row.get("gold_id") for row in payload["judgments"]
+                   if isinstance(row, dict) and row.get("category") == "MATCH"}
+    base_fields = set(JUDGE_SCHEMA["properties"]["judgments"]["items"]["properties"])
+    for row in payload["judgments"]:
+        if not isinstance(row, dict) or set(row) != base_fields | {"prediction_task_zh", "evidence_quote_zh"}:
+            raise ValueError("Judge omitted Chinese review fields")
+        if (not isinstance(row["prediction_task_zh"], str) or not row["prediction_task_zh"].strip()
+            or not isinstance(row["evidence_quote_zh"], str)
+            or (row["evidence_quote"] and not row["evidence_quote_zh"].strip())):
+            raise ValueError("Missing Chinese task/evidence translation")
+        score_row = {k: row[k] for k in base_fields}
+        extra = {k: row[k] for k in ("prediction_task_zh", "evidence_quote_zh")}
+        if row["category"] == "DUPLICATE" and row["gold_id"] is not None:
+            if row["gold_id"] not in translated or row["gold_id"] not in matched_ids:
+                raise ValueError("Duplicate reference must point to an already matched gold task")
+            # A duplicate can reference the matched item without itself becoming
+            # another match. Preserve that pointer separately, with zero credit.
+            extra["duplicate_of_gold_id"] = row["gold_id"]
+            score_row["gold_id"] = None
+        base.append(score_row)
+        extras[row["prediction_id"]] = extra
+    validated = validate_judgments({"judgments": base}, predictions, gold, text)
+    return [{**row, **extras[row["prediction_id"]]} for row in validated], translated
+
+
 def ratio(numerator, denominator):
     return numerator / denominator if denominator else None
 
@@ -702,10 +833,14 @@ def metrics(rows, gold):
     result = {"tp": tp, "fp": fp, "fn": fn, "precision": ratio(tp, tp + fp),
         "recall": ratio(tp, tp + fn), "f1": ratio(2 * tp, 2 * tp + fp + fn),
         "discussion_false_positives": sum(r["category"] == "DISCUSSION" for r in rows)}
+    result["metric_counts"] = {"precision": {"numerator": tp, "denominator": tp + fp},
+        "recall": {"numerator": tp, "denominator": len(gold)},
+        "discussion_false_positives": {"numerator": result["discussion_false_positives"], "denominator": len(rows)}}
     for field in ("owner",):
         correct = sum(r[f"{field}_correct"] for r in matches)
         result[f"{field}_accuracy_on_matched"] = ratio(correct, tp)
         result[f"{field}_end_to_end_recall"] = ratio(correct, len(gold))
+        result["metric_counts"][f"{field}_accuracy_on_matched"] = {"numerator": correct, "denominator": tp}
         for state, predicate in (("stated", lambda v: v != UNKNOWN), ("unstated", lambda v: v == UNKNOWN)):
             subset = [r for r in matches if predicate(by_id[r["gold_id"]][field])]
             result[f"{field}_{state}_matched_count"] = len(subset)
@@ -720,6 +855,8 @@ def metrics(rows, gold):
         "deadline_prediction_abstentions": sum(abstains(r.get("predicted_deadline")) for r in rows),
         "deadline_abstentions_on_matched_stated_gold": sum(abstains(r.get("predicted_deadline")) for r in stated_matches),
         "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"})
+    result["metric_counts"]["deadline_accuracy_on_matched_stated_gold"] = {"numerator": deadline_correct, "denominator": len(stated_matches)}
+    result["metric_counts"]["deadline_end_to_end_accuracy_on_stated_gold"] = {"numerator": deadline_correct, "denominator": len(stated_gold)}
     return result
 
 
@@ -736,18 +873,96 @@ def audit_sample(rows, seed=20261029):
     return result
 
 
+def write_spot_check(path, sampled):
+    fields = ["system", "meeting_id", "prediction_id", "gold_id", "category", "prediction_task", "prediction_task_zh",
+        "gold_task", "gold_task_zh", "prediction_owner", "gold_owner", "prediction_deadline", "gold_deadline",
+        "owner_correct", "deadline_correct", "quote", "quote_zh", "judge_reason", "人工判断（同意 / 不同意）"]
+    rows = []
+    for row in sampled:
+        prediction, gold = json.loads(row["prediction"]) or {}, json.loads(row["gold"]) or {}
+        rows.append({**{k: row[k] for k in ("system", "meeting_id", "prediction_id", "gold_id", "category", "owner_correct", "deadline_correct")},
+            "prediction_task": prediction.get("task", ""), "prediction_task_zh": row.get("prediction_task_zh", ""),
+            "gold_task": gold.get("task", ""), "gold_task_zh": row.get("gold_task_zh", ""),
+            "prediction_owner": prediction.get("owner", ""), "gold_owner": gold.get("owner", ""),
+            "prediction_deadline": prediction.get("deadline", ""), "gold_deadline": gold.get("deadline", ""),
+            "quote": row["evidence_quote"], "quote_zh": row.get("evidence_quote_zh", ""),
+            "judge_reason": row["reason"], "人工判断（同意 / 不同意）": ""})
+    new_csv(path, fields, rows)
+
+
+def write_result_report(path, report, rows):
+    def fraction(count):
+        n, d = count["numerator"], count["denominator"]
+        return f"{n}/{d} ({n / d:.1%})" if d else f"{n}/{d} (不适用)"
+    labels = {"baseline": "基线", "linkloom": "LinkLoom"}
+    keys = [("待办准确率（precision）", "precision"), ("待办召回率", "recall"),
+        ("负责人正确率（匹配任务）", "owner_accuracy_on_matched"),
+        ("截止时间正确率（匹配且 gold 有日期）", "deadline_accuracy_on_matched_stated_gold"),
+        ("截止时间端到端正确率（全部有日期 gold）", "deadline_end_to_end_accuracy_on_stated_gold"),
+        ("讨论误判数 / 全部预测", "discussion_false_positives")]
+    text = ["# AMI 四场会议待办抽取正式评测", "", "本表使用一次完整评测的预测；模型裁判结果尚待人工抽查，不是最终人工裁决。", "",
+        f"被评测模型：{GEMINI}；thinking_level={GEMINI_THINKING}；总输出上限 {GEMINI_MAX_OUTPUT:,} token（含思考）。裁判：{DEEPSEEK}。",
+        f"标准答案 SHA-256：`{report['gold_sha256']}`；11 条人工 gold，其中 8 条有明确截止时间。", "",
+        "| 指标 | 基线 | LinkLoom |", "| --- | ---: | ---: |"]
+    for label, key in keys:
+        text.append("| " + " | ".join([label, *[fraction(report["micro"][s]["metric_counts"][key]) for s in labels]]) + " |")
+    text.extend(["", "准确率分母为预测数，召回率分母为 11 条 gold；负责人分母为任务匹配数。日期主指标分母为匹配且 gold 明确给出日期的任务数，同时提供全部 8 条有日期 gold 的端到端指标。讨论行的分子是数量，分母只用于说明它占全部预测的比例。", ""])
+    for system, label in labels.items():
+        subset = [r for r in rows if r["system"] == system]
+        metric = report["micro"][system]
+        text.extend([f"## {label}逐项差异", "", f"TP={metric['tp']}，FP={metric['fp']}，FN={metric['fn']}；日期弃答 {metric['deadline_prediction_abstentions']}/{metric['tp'] + metric['fp']} 条预测，其中匹配有日期 gold 的弃答为 {metric['deadline_abstentions_on_matched_stated_gold']}/{metric['deadline_stated_matched_count']}。", "", "漏掉的任务：", ""])
+        missed = [r for r in subset if r["category"] == "FN"]
+        if not missed:
+            text.append("无。")
+        for row in missed:
+            item = json.loads(row["gold"])
+            text.append(f"- {row['meeting_id']} / {row['gold_id']}：{item['task']}；中文：{row['gold_task_zh']}。")
+        text.extend(["", "多出的预测：", ""])
+        extras = [r for r in subset if r["category"] not in {"MATCH", "FN"}]
+        if not extras:
+            text.append("无。")
+        for row in extras:
+            item = json.loads(row["prediction"])
+            text.append(f"- {row['meeting_id']} / {row['prediction_id']} [{row['category']}]：{item['task']}；中文：{row['prediction_task_zh']}。裁判理由：{row['reason']}")
+        text.append("")
+    if report.get("prior_failed_attempt"):
+        prior = report["prior_failed_attempt"]
+        text.extend(["首个基线请求在附加引用精确校验处停止，原始响应未保存；用户明确确认修复后续跑。此前 "
+            f"{prior['requests']} 次请求 / ${prior['actual_cost_usd_from_usage']:.9f} 已计入下面累计用量。续跑前固定的 gold 未改变，没有多轮比较择优。", ""])
+    text.extend(["## 请求与费用", "", f"总请求数：{report['counter']['requests']}/200；按实际 API 用量及公布费率计费 ${report['actual_cost_usd_from_usage']:.9f}/$2.00，不含先前预标注。", "",
+        "| 模型 | 请求数 | 输入 token | 输出 token（含思考） | 用量费用 USD |", "| --- | ---: | ---: | ---: | ---: |"])
+    for model, usage in report["usage_by_model"].items():
+        text.append(f"| {model} | {usage['requests']} | {usage['input_tokens']} | {usage['output_tokens_including_thinking']} | {usage['cost_usd_from_usage']:.9f} |")
+    text.extend(["", f"spot_check.csv 固定种子 20261029，按系统从预测判断及未匹配 gold 判断中各抽取向上取整的 20%，共 {report['spot_check']['sampled']}/{report['spot_check']['population']} 条；包含中文翻译、裁判理由和空白人工判断列。", "",
+        "## 范围与限制", "", "两套系统只接收原始标准转录。全部预测完成后才读取 gold；摘要、候选和人工标注未进入被评测系统。基线整场一次（SDK 直调以容纳全文），LinkLoom 使用未修改的产品 task_observation 流程及 16 个重叠块；仅合并绝对原文位置相同的工作证据。分块上下文、普通文档发言人识别及英文相对日期规则均可能影响结果。", "",
+        "语料及全量模型输出保留在被忽略的 work/；Git 只提交必要的 gold 引用和抽查引用，不提交整场转录或 ZIP。AMI Meeting Corpus / AMI Project、AMI Consortium，CC BY 4.0：https://groups.inf.ed.ac.uk/ami/corpus/ ；https://creativecommons.org/licenses/by/4.0/ 。", ""])
+    with path.open("x", encoding="utf-8") as stream:
+        stream.write("\n".join(text))
+
+
 def evaluate(data, gold_path, out, client):
     out.mkdir(parents=True, exist_ok=False)
+    client.output_dir = out
     meetings = load_meetings(data)
     predictions, diagnostics = {}, {}
     # Finish and save predictions BEFORE opening the human annotation file.
     for meeting in meetings:
         mid = meeting["meeting_id"]
         predictions[mid] = {"baseline": baseline_predict(meeting, client)}
+        new_json(out / f"{mid}.baseline.json", predictions[mid]["baseline"])
+        print(json.dumps({"stage": "baseline", "meeting_id": mid, "predictions": len(predictions[mid]["baseline"])}), flush=True)
         predictions[mid]["linkloom"], diagnostics[mid] = linkloom_predict(meeting, client)
+        new_json(out / f"{mid}.linkloom.json", {"predictions": predictions[mid]["linkloom"], "diagnostics": diagnostics[mid]})
+        print(json.dumps({"stage": "linkloom", "meeting_id": mid, "predictions": len(predictions[mid]["linkloom"])}), flush=True)
     new_json(out / "predictions.json", {"model": GEMINI, "predictions": predictions, "diagnostics": diagnostics})
+    finish_evaluation(meetings, gold_path, out, client, predictions)
+
+
+def finish_evaluation(meetings, gold_path, out, client, predictions, *, saved=None):
     gold = load_gold(gold_path, meetings)
-    all_rows, report = [], {"models": {"evaluated": GEMINI, "judge": DEEPSEEK}, "rules": "meeting-task-match/v2", "per_meeting": {}, "micro": {}}
+    all_rows, report = [], {"models": {"evaluated": GEMINI, "judge": DEEPSEEK}, "rules": "meeting-task-match/v2", "per_meeting": {}, "micro": {},
+        "gold_sha256": hashlib.sha256(gold_path.read_bytes()).hexdigest(),
+        "generation": {"thinking_level": GEMINI_THINKING, "max_output_tokens": GEMINI_MAX_OUTPUT}}
     for meeting in meetings:
         mid = meeting["meeting_id"]
         report["per_meeting"][mid] = {}
@@ -756,16 +971,26 @@ def evaluate(data, gold_path, out, client):
             rng = random.Random(f"20261029:{mid}:{system}")
             items = [{"prediction_id": f"p-{rng.getrandbits(64):016x}", **p} for p in predictions[mid][system]]
             rng.shuffle(items)
-            if items:
-                prompt = MATCH_RULES + "\nReturn JSON judgments.\nDATA:\n" + encoded({
-                    "meeting": source_input(meeting, True), "gold": gold[mid], "predictions": items}).decode()
-                rows = validate_judgments(client.generate(DEEPSEEK, prompt, JUDGE_SCHEMA, 16384), items, gold[mid], meeting["text"])
-            else:
-                rows = []
+            prompt = (MATCH_RULES + "\nReturn JSON judgments, including when predictions is empty. "
+                "Write reason in Chinese. Translate every predicted task into prediction_task_zh and every "
+                "evidence_quote into evidence_quote_zh. For evidence_quote copy an existing prediction.quote "
+                "or gold.quote EXACTLY when it is verified in the transcript, preserving whitespace; "
+                "do not reconstruct punctuation. A prediction quote_validation diagnostic does NOT by itself "
+                "make its task a false positive: independently verify task/owner/date in the full source. "
+                "Never use a non-exact prediction quote as evidence; quote the source or gold instead. "
+                "Also return gold_translations with every supplied gold_id, English task translated as task_zh, "
+                "and the FULL gold quote translated as quote_zh. These translations are review aids, not new judgments. "
+                "Deadline flags MUST be false when the gold date is unstated or the prediction abstains.\nDATA:\n" + encoded({
+                    "meeting": source_input(meeting, True), "gold": gold[mid], "predictions": items}).decode())
+            payload = (client.generate(DEEPSEEK, prompt, REVIEW_JUDGE_SCHEMA, 32768) if saved is None else
+                       json.loads((saved / f"{mid}.{system}.judge.json").read_text(encoding="utf-8")))
+            new_json(out / f"{mid}.{system}.judge.json", payload)
+            rows, translations = review_judgments(payload, items, gold[mid], meeting["text"])
             report["per_meeting"][mid][system] = metrics(rows, gold[mid])
             item_map, gold_map = {p["prediction_id"]: p for p in items}, {g["gold_id"]: g for g in gold[mid]}
             for row in rows:
                 all_rows.append({"system": system, "meeting_id": mid, **row,
+                    "gold_task_zh": translations[row["gold_id"]]["task_zh"] if row["gold_id"] else "",
                     "prediction": encoded(item_map[row["prediction_id"]]).decode(),
                     "gold": encoded(gold_map.get(row["gold_id"])).decode()})
             matched = {r["gold_id"] for r in rows if r["category"] == "MATCH"}
@@ -774,18 +999,48 @@ def evaluate(data, gold_path, out, client):
                     all_rows.append({"system": system, "meeting_id": mid, "prediction_id": "", "gold_id": gid,
                         "category": "FN", "owner_correct": False, "deadline_correct": False,
                         "predicted_deadline": "",
-                        "reason": "No prediction matched this gold task", "evidence_quote": item["quote"],
+                        "reason": "裁判没有为此标准任务匹配任何预测。", "evidence_quote": item["quote"],
+                        "prediction_task_zh": "", "gold_task_zh": translations[gid]["task_zh"],
+                        "evidence_quote_zh": translations[gid]["quote_zh"],
                         "prediction": "null", "gold": encoded(item).decode()})
+            print(json.dumps({"stage": "judge", "meeting_id": mid, "system": system,
+                              "counts": report["per_meeting"][mid][system]["metric_counts"]}), flush=True)
     for system in ("baseline", "linkloom"):
         report["micro"][system] = metrics([r for r in all_rows if r["system"] == system and r["category"] != "FN"],
                                         [g for values in gold.values() for g in values])
     report["counter"] = client.counter.summary()
+    report["actual_cost_usd_from_usage"] = client.actual_cost_usd
+    report["usage_by_model"] = getattr(client, "usage_by_model", {})
+    report["prior_failed_attempt"] = getattr(client, "prior_attempt", None)
     report["cross_meeting_tracking"] = "not_run; interface_only"
+    sampled = audit_sample(all_rows)
+    report["spot_check"] = {"seed": 20261029, "population": len(all_rows), "sampled": len(sampled),
+                            "method": "ceil(20%) independently per system; predictions plus unmatched gold"}
     new_json(out / "results.json", report)
     new_json(out / "judgments.json", all_rows)
-    fields = ["system", "meeting_id", "prediction_id", "gold_id", "category", "owner_correct", "deadline_correct",
-              "predicted_deadline", "reason", "evidence_quote", "prediction", "gold", "human_accept", "human_notes"]
-    new_csv(out / "audit_20pct.csv", fields, audit_sample(all_rows))
+    write_spot_check(out / "spot_check.csv", sampled)
+    write_result_report(out / "results.md", report, all_rows)
+
+
+def score_saved(data, gold_path, source, out, prior_failure=None):
+    """Rebuild reports from existing predictions/judgments; zero provider calls."""
+    state_path = source / "failure.json" if (source / "failure.json").is_file() else source / "results.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    counter = Counter(200, 2.0, requests=state["counter"]["requests"],
+                      usd_upper_bound=state["counter"]["reserved_upper_bound_usd"])
+    client = Client(counter, live=False)
+    client.actual_cost_usd = state["actual_cost_usd_from_usage"]
+    client.usage_by_model = state["usage_by_model"]
+    if prior_failure is not None:
+        prior = json.loads(prior_failure.read_text(encoding="utf-8"))
+        client.prior_attempt = {"requests": prior["counter"]["requests"],
+            "actual_cost_usd_from_usage": prior["actual_cost_usd_from_usage"], "error_type": prior["error_type"]}
+    else:
+        client.prior_attempt = state.get("prior_failed_attempt")
+    predictions = json.loads((source / "predictions.json").read_text(encoding="utf-8"))
+    out.mkdir(parents=True, exist_ok=False)
+    new_json(out / "predictions.json", predictions)
+    finish_evaluation(load_meetings(data), gold_path, out, client, predictions["predictions"], saved=source)
 
 
 def main(argv=None):
@@ -797,6 +1052,15 @@ def main(argv=None):
     prep = sub.add_parser("prepare", help="Parse already-downloaded official AMI XML; no model calls")
     prep.add_argument("--archive", type=Path, required=True)
     prep.add_argument("--out", type=Path, required=True)
+    frozen = sub.add_parser("freeze-gold", help="Convert final human-reviewed y rows into English JSONL")
+    frozen.add_argument("--csv", type=Path, required=True)
+    frozen.add_argument("--out", type=Path, required=True)
+    scoring = sub.add_parser("score-saved", help="Offline report generation from already saved predictions and judgments")
+    scoring.add_argument("--data", type=Path, required=True)
+    scoring.add_argument("--gold", type=Path, required=True)
+    scoring.add_argument("--source", type=Path, required=True)
+    scoring.add_argument("--out", type=Path, required=True)
+    scoring.add_argument("--prior-failure", type=Path)
     for command in ("preannotate", "evaluate"):
         run = sub.add_parser(command)
         run.add_argument("--data", type=Path, required=True)
@@ -804,6 +1068,8 @@ def main(argv=None):
         run.add_argument("--live", action="store_true", help="Enable billable HTTP calls after human confirmation")
         if command == "evaluate":
             run.add_argument("--gold", type=Path, required=True)
+            run.add_argument("--prior-failure", type=Path,
+                help="Only with explicit human authorization: carry failed-attempt counts/cost into continuation")
     args = parser.parse_args(argv)
     if args.command in {None, "plan"}:
         print(json.dumps({"meetings": MEETINGS, "planned_not_processed": PLANNED_MEETINGS,
@@ -817,16 +1083,37 @@ def main(argv=None):
         download(args.out)
     elif args.command == "prepare":
         prepare(args.archive, args.out)
+    elif args.command == "freeze-gold":
+        freeze_gold(args.csv, args.out)
+    elif args.command == "score-saved":
+        score_saved(args.data, args.gold, args.source, args.out, args.prior_failure)
     else:
         if not args.live:
             parser.error("No model calls made: add --live only after human confirmation")
         counter = Counter(10, 0.2) if args.command == "preannotate" else Counter(200, 2.0)
         client = Client(counter, live=True)
+        if args.command == "evaluate" and args.prior_failure is not None:
+            prior = json.loads(args.prior_failure.read_text(encoding="utf-8"))
+            counter.requests = prior["counter"]["requests"]
+            counter.usd_upper_bound = prior["counter"]["reserved_upper_bound_usd"]
+            if not 0 <= counter.requests <= 200 or not 0 <= counter.usd_upper_bound <= 2.0:
+                raise ValueError("Invalid previous-attempt counter")
+            client.actual_cost_usd = prior["actual_cost_usd_from_usage"]
+            client.usage_by_model = prior["usage_by_model"]
+            client.prior_attempt = {"requests": counter.requests,
+                "actual_cost_usd_from_usage": client.actual_cost_usd, "error_type": prior["error_type"]}
         try:
             if args.command == "preannotate":
                 preannotate(args.data, args.out, client)
             else:
                 evaluate(args.data, args.gold, args.out, client)
+        except Exception as error:
+            # Preserve known spend even on failure; never auto-relaunch a paid run.
+            if args.out.is_dir():
+                new_json(args.out / "failure.json", {"error_type": type(error).__name__,
+                    "counter": counter.summary(), "actual_cost_usd_from_usage": client.actual_cost_usd,
+                    "usage_by_model": client.usage_by_model})
+            raise
         finally:
             print(json.dumps({"counter": counter.summary(), "actual_cost_usd_from_usage": client.actual_cost_usd}, ensure_ascii=False))
 

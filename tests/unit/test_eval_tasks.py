@@ -204,6 +204,31 @@ def test_baseline_only_receives_transcript_not_labels_or_internal_xml_ids():
     ev.baseline_predict(source, FakeClient())
 
 
+def test_baseline_quote_spelling_error_is_retained_not_repaired_or_dropped():
+    class FakeClient:
+        def generate(self, *args):
+            return {"tasks": [{**task(), "quote": "I will send the report ."}]}
+    rows = ev.baseline_predict(meeting(), FakeClient())
+    assert len(rows) == 1 and rows[0]["task"] == task()["task"]
+    assert rows[0]["quote"] == "I will send the report ."
+    assert rows[0]["quote_validation"] == "NOT_EXACT_SOURCE_SUBSTRING"
+    with pytest.raises(ValueError, match="exact transcript"):
+        ev.validate_tasks({"tasks": [{**task(), "quote": "I will send the report ."}]}, meeting())
+
+
+def test_transport_saves_task_response_before_usage_validation():
+    from types import SimpleNamespace
+    raw = {"candidates": [{"finish_reason": "STOP", "content": {"parts": [
+        {"thought": True, "text": "not persisted"}, {"function_call": {"name": "emit", "args": {"tasks": []}},
+            "thought_signature": "not persisted"}]}}]}
+    saved = []
+    sdk = SimpleNamespace(models=SimpleNamespace(generate_content=lambda **kwargs: raw))
+    transport = ev.CountedGeminiTransport(sdk, ev.Counter(200, 2), lambda usage: None, saved.append)
+    with pytest.raises(ValueError, match="Missing Gemini usage"):
+        transport.generate_content(model=ev.GEMINI, contents=[], config={"max_output_tokens": 32768})
+    assert saved[0]["candidates"][0]["content"]["parts"] == [{"function_call": {"name": "emit", "args": {"tasks": []}}}]
+
+
 def test_one_to_one_judgments_and_zero_denominator_metrics():
     preds = [{"prediction_id": "p1", "deadline": ev.UNKNOWN}, {"prediction_id": "p2", "deadline": "无法确定"}]
     gold = [{"gold_id": "g1", "owner": "A", "deadline": ev.UNKNOWN}]
@@ -337,14 +362,73 @@ def test_evaluate_opens_gold_only_after_both_predictions_and_audits_fn(tmp_path,
     monkeypatch.setattr(ev, "load_gold", gold)
     class FakeClient:
         counter = ev.Counter(200, 2)
+        actual_cost_usd = 0.0
         def generate(self, *args):
-            raise AssertionError("No predictions means no judge call")
-    ev.evaluate(tmp_path, tmp_path / "unopened.csv", tmp_path / "result", FakeClient())
+            return {"judgments": [], "gold_translations": [{"gold_id": "g1", "task_zh": "发送报告", "quote_zh": "我会发送报告。"}]}
+    gold_path = tmp_path / "unopened.csv"
+    gold_path.write_text("unit-test fixture", encoding="utf-8")
+    ev.evaluate(tmp_path, gold_path, tmp_path / "result", FakeClient())
     report = json.loads((tmp_path / "result" / "results.json").read_text(encoding="utf-8"))
     assert report["micro"]["baseline"]["fn"] == 1
-    with (tmp_path / "result" / "audit_20pct.csv").open(encoding="utf-8-sig", newline="") as stream:
+    with (tmp_path / "result" / "spot_check.csv").open(encoding="utf-8-sig", newline="") as stream:
         rows = list(csv.DictReader(stream))
     assert len(rows) == 2 and all(r["category"] == "FN" for r in rows)
+    assert all(r["gold_task_zh"] == "发送报告" and r["quote_zh"] for r in rows)
+    assert all(r["人工判断（同意 / 不同意）"] == "" for r in rows)
+    ev.score_saved(tmp_path, gold_path, tmp_path / "result", tmp_path / "offline-rescored")
+    rescored = json.loads((tmp_path / "offline-rescored" / "results.json").read_text(encoding="utf-8"))
+    assert rescored["micro"] == report["micro"]
+    assert rescored["counter"] == report["counter"]
+
+
+def test_freeze_gold_applies_human_changes_and_excludes_rejected_rows(tmp_path):
+    source = tmp_path / "review.csv"
+    row = dict.fromkeys(ev.CSV_FIELDS, "")
+    row.update(task(), candidate_id="g0", meeting_id="ES2002a", keep="y",
+        修改后的任务="Submit the final report", 修改后的负责人="Project Manager",
+        修改后的截止时间="Friday", 备注="人工确认", 引用原文的中文翻译="不进入 gold 的辅助译文")
+    reviewed = [{**row, "candidate_id": f"g{i}"} for i in range(11)]
+    reviewed.append({**row, "candidate_id": "rejected", "keep": "n", "task": "DO_NOT_INCLUDE"})
+    ev.new_csv(source, ev.CSV_FIELDS, reviewed)
+    out = tmp_path / "gold.jsonl"
+    ev.freeze_gold(source, out)
+    frozen = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
+    assert len(frozen) == 11
+    assert frozen[0] == {"gold_id": "g0", "meeting_id": "ES2002a", "quote": row["quote"],
+        "task": "Submit the final report", "owner": "Project Manager", "deadline": "Friday", "notes": "人工确认"}
+    assert "DO_NOT_INCLUDE" not in out.read_text(encoding="utf-8")
+    assert "辅助译文" not in out.read_text(encoding="utf-8")
+    loaded = ev.load_gold(out, [meeting()])["ES2002a"]
+    assert len(loaded) == 11 and "notes" not in loaded[0]
+    with pytest.raises(FileExistsError):
+        ev.freeze_gold(source, out)
+
+
+def test_review_judgments_preserve_scores_and_require_all_translations():
+    predictions = [{"prediction_id": "p1", **task()}]
+    gold = [{"gold_id": "g1", **task()}]
+    payload = {"judgments": [{**judgment(deadline_correct=False), "prediction_task_zh": "发送报告",
+        "evidence_quote_zh": "我会发送报告。"}],
+        "gold_translations": [{"gold_id": "g1", "task_zh": "发送报告", "quote_zh": "我会发送报告。"}]}
+    rows, translated = ev.review_judgments(payload, predictions, gold, meeting()["text"])
+    assert rows[0]["category"] == "MATCH" and rows[0]["owner_correct"]
+    assert rows[0]["prediction_task_zh"] == translated["g1"]["task_zh"]
+    assert ev.metrics(rows, gold)["metric_counts"]["owner_accuracy_on_matched"] == {"numerator": 1, "denominator": 1}
+    with pytest.raises(ValueError, match="gold translations"):
+        ev.review_judgments({**payload, "gold_translations": []}, predictions, gold, meeting()["text"])
+
+
+def test_duplicate_gold_pointer_is_not_counted_as_a_second_match():
+    predictions = [{"prediction_id": pid, **task()} for pid in ("p1", "p2")]
+    gold = [{"gold_id": "g1", **task()}]
+    payload = {"judgments": [
+        {**judgment(deadline_correct=False), "prediction_task_zh": "发送报告", "evidence_quote_zh": "我会发送报告。"},
+        {**judgment("p2", "g1", "DUPLICATE"), "prediction_task_zh": "发送报告", "evidence_quote_zh": "我会发送报告。"}],
+        "gold_translations": [{"gold_id": "g1", "task_zh": "发送报告", "quote_zh": "我会发送报告。"}]}
+    rows, _ = ev.review_judgments(payload, predictions, gold, meeting()["text"])
+    assert rows[1]["gold_id"] is None and rows[1]["duplicate_of_gold_id"] == "g1"
+    assert ev.metrics(rows, gold)["metric_counts"]["precision"] == {"numerator": 1, "denominator": 2}
+    assert payload["judgments"][1]["gold_id"] == "g1"  # Original judgment retained.
 
 
 def test_audit_sample_is_reproducible_and_twenty_percent_per_system():

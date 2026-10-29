@@ -1,6 +1,6 @@
 # AMI 会议记录 → 待办抽取
 
-第一版只处理 ES2002a–d。ES2003a–d 保留为后续计划，当前没有转换、预标注或评分。正式评测须等英文人工 gold 完成后另行运行；当前只完成下载、转换及 DeepSeek 预标注。不改产品实现，不接触笔记库，不创建预算账本、封存或预检流程。
+第一版只处理 ES2002a–d。ES2003a–d 保留为后续计划，当前没有转换、预标注或评分。英文人工 gold 已确认为 11 条并固定到 gold.jsonl。首个基线请求在附加引用校验处停止，已用 1 次请求 / $0.006915；用户随后明确确认修复后续跑，累计费用和次数沿用，gold 未变。完整评测已完成：累计 29 次请求、按 API 用量计费 $0.172675374。结果见 [results.md](results.md) / [results.json](results.json)，人工抽查见 [spot_check.csv](spot_check.csv)。分数是裁判初判，报告单列了日期等价和误报类别的人工复核疑点。不改产品实现，不接触笔记库，不创建预算账本、封存或预检流程。
 
 ## 数据确认（2026-10-29）
 
@@ -10,7 +10,7 @@
 - 只需[人工标注 v1.6.2 ZIP](https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip)。[官方页面](https://groups.inf.ed.ac.uk/ami/download/)标为 22 MB；实测 **22,887,865 字节（21.83 MiB）**，Last-Modified 为 2017-04-10。下载已完成；SHA-256 见同目录 ami_public_manual_1.6.2.zip.sha256。无需自动标注、音视频、幻灯片。
 - 从包内读取 words/<meeting>.<A–D>.words.xml 16 份、segments/<meeting>.<A–D>.segments.xml 16 份、abstractive/<meeting>.abssumm.xml 4 份、corpusResources/meetings.xml 1 份，共 37 份 XML。根据 XML 词引用重建发言，保留 speaker、相对秒数、原始 segment/word ID；同一发言的词以单空格连接，发言按词起始时间排序。非词语声音标签不进入文本；校验所有 w 词都已覆盖。**精确引用针对这一确定性转录文本**，原始 XML 在 ZIP 中可回查。
 - 摘要实际为 actions/decisions 下带 nite:id 的 sentence；空 actions 中的 *NA* 不计为 action。metadata 使用 nxt_agent 表示 A–D，角色 PM/ID/UI/ME 转成英文角色名。缺文件、丢词、成员变化或格式不兼容直接报错，不用合成数据替代。这是英文情景会议，小样本结果仅代表所选 4 场。
-- ZIP、转录、候选、中文翻译及未来人工 gold 都只在被 .gitignore 忽略的 work/ 下，不提交语料。Git 只保存下载/评测脚本、ZIP 校验值、说明、空模板及离线测试。
+- ZIP、整场转录、预标注候选和全量模型输出在被 .gitignore 忽略的 work/ 下，不提交语料。按用户本轮明确要求，Git 保存 gold.jsonl（11 条标准任务及必要原文引用）、抽查表、结果报告，以及下载/评测脚本、ZIP 校验值、说明、空模板和离线测试。
 
 ## 脚本结构与输入边界
 
@@ -22,7 +22,8 @@ scripts/eval_tasks.py 无参数或 plan 命令只打印方案，完全离线。�
 | download | 下载官方 ZIP 到全新目录 | 0 |
 | prepare | 本地 XML 转成 transcripts/ 与独立 labels/ | 0 |
 | preannotate --live | DeepSeek 逐场列候选，并统一补全引用中文译文 | 4 + 1 |
-| evaluate --live | 两套 Gemini 系统出预测，然后 DeepSeek 匹配评分 | 4 + K + 至多 8，本轮未运行 |
+| freeze-gold | keep=y 行应用人工改写后生成固定 JSONL | 0 |
+| evaluate --live | 两套 Gemini 系统出预测，然后 DeepSeek 匹配评分 | 4 + 16 + 8，失败不自动重试 |
 
 基线每场一次，把整场转录给 Gemini，输出任务、负责人、截止时间和引用。LinkLoom 直接调用现有 ProviderNeutralSemanticExtractor → TaskObservationDiscoveryService，启用当前产品使用的 TaskDiscoveryProfile.TASK_RECALL_V3；保留提示词、字段证据校验、拒绝逻辑、VALID/PARTIAL 输出及上限，并通过现有 GeminiProviderAdapter 请求模型。
 
@@ -36,6 +37,8 @@ LinkLoom 按完整发言分块，每块最多 12,000 字符 / 20,000 UTF-8 字�
 
 转录只保留原始相对秒数，不伪造 ISO 会议日期。现有普通文档解析和日期词法对英文 speaker 指代、next meeting 等相对截止时间支持有限；本轮不翻译、不修产品规则，限制会真实影响字段正确率。
 
+基线的评测字段是任务、负责人、截止时间；附加 quote 的拼写/空格不一致保留为 quote_validation 诊断，不重写、不删除该任务，也不直接判为 FP，由裁判用完整转录核对。gold、人工预标注引用和裁判引用仍要求精确来源子串。所有后续真实响应先写到被忽略的结果目录再校验，避免因本地校验错误丢失已付费输出；首次失败发生在这一保存机制补齐之前，没有可恢复的响应正文。修复仅影响评测输出处理，不改变产品实现和 gold。
+
 ## 预标注与人工 gold
 
 使用 deepseek-flash（官方当前映射 DeepSeek-V4.1-Flash-1017）。候选包含会议 ID、精确连续原文、英文任务、负责人、截止时间、对应 AMI action 句子 ID 及原文（无对应则空）；未知负责人/日期为“未说明”。DeepSeek 选择起止发言 ID，脚本直接复制原文，记录其字符偏移；不依赖模型重写转录。另有“引用原文的中文翻译”“任务的中文翻译”两列；引用按唯一英文片段合并做一次完整翻译。**中文只辅助核对，gold 以英文原文为准，翻译不进入被评测系统或裁判 gold。**
@@ -44,16 +47,22 @@ candidates.template.csv 只有表头。生成的 CSV 另有 keep、修改后的�
 
 人工必须逐场完整阅读转录，补充 DeepSeek 漏项；新行使用唯一 candidate_id，填写真实引用并置 keep=y，没有 AMI action 可空。复合动作拆成独立行，本场内去重。**只审核候选而不补漏，得到的是候选池召回率，不能当作完整待办召回率。** 官方摘要只辅助核对。
 
+本版实际标注流程：**DeepSeek 预标注 16 条 → 人工依据标注规则逐条核对、改写字段、合并重复、排除会中已完成事项及未接受建议 → AMI 人工摘要覆盖检查（7/7 条有效 action 都有候选对应）→ 由另一个模型（本会话 Codex，与 DeepSeek/Gemini 不同）通读四场全文补查（无新增）→ 人工最终确认 11 条**。keep=n 的 5 条不进入 gold。ES2002a/b/c/d 分别为 3/4/2/2 条，其中 8 条明确给出截止时间。
+
+freeze-gold 对任务、负责人、截止时间逐列使用“修改后的字段非空则采用，否则使用原字段”，保留 meeting_id、quote、notes，并保留原候选 ID 为 gold_id。JSONL 不包含中文辅助翻译、keep=n 行或未采纳候选。冻结后的标准答案 SHA-256 为 `8df36c0dac65e755dbf0ac8a33dbe4be491b0718a260c604d1f5601d31b64855`；只读使用，不在结果出来后调整。原文引用均与标准转录精确匹配。
+
 ## 固定匹配规则：meeting-task-match/v2
 
 规则原文在脚本 MATCH_RULES，裁判统一使用：
 
-1. 仅在同一场会议内匹配。待办须为截至本场结束明确采纳、指派或承诺的具体未来工作；缺负责人/日期仍可算。排除未采纳建议、条件设想、问题、取消/拒绝、历史已完成事项、纯需求及没有执行义务的产品决策。实质性会中工作指令可算，寒暄/会议操作不算。
+1. 仅在同一场会议内匹配。待办须为截至本场结束明确采纳、指派或承诺、仍待会后完成的具体工作；缺负责人/日期仍可算。依据人工标注口径，排除未采纳建议、条件设想、问题、取消/拒绝、历史已完成事项、会中已完成的演示/白板/列举请求、纯需求和没有执行义务的产品决策，以及寒暄/会议操作。
 2. 动作、对象、范围、交付物一致才匹配；允许同义改写，仅主题相同不算。笼统复合预测不强行匹配狭窄子任务。任务匹配不依赖负责人/日期，这两项独立评分。
 3. 一对一：先最大化有效匹配数，再选语义和原文证据最强者，仍同分按 prediction_id、gold_id 字典序选。重复预测不重复得分，多余条目算 FP；一个预测不能覆盖多条 gold。
 4. 负责人别名须能由本场原文/speaker 元数据证明，不凭岗位常识推断，不把汇报者当负责人。gold 写角色（如 Project Manager/项目经理）时，输出该角色或对应人名均正确。截止时间接受等价日期或等价相对表述，保留精度；“下次会前”不补日历日期，会议时间不算截止时间。**只对 gold 明确给出截止时间的条目计分**；系统输出“未说明/无法确定”等单列为弃答，不算编造，也不算正确。gold 未给日期时不计截止时间正确率。
 5. 每条预测返回 MATCH / DISCUSSION / DUPLICATE / UNSUPPORTED / WRONG_TASK、匹配 gold_id、负责人/日期正确与否、理由和精确原文。程序拒绝遗漏预测、多对一、未知 ID、非原文引用、非法字段加分；无效输出停止，不自动修补/重试。
-6. 隐去系统名，使用固定随机种子的无含义预测 ID，逐场逐系统交 DeepSeek。保留全部判断，并按系统随机抽取向上取整的 **20%** 到 audit_20pct.csv。抽样总体包括预测判断和未匹配 gold（FN），附任务、字段、理由、引用、人工核验列。模型裁判仍可能出错。
+6. 隐去系统名，使用固定随机种子的无含义预测 ID，逐场逐系统交 DeepSeek。裁判同时返回中文任务/引用翻译及中文理由；翻译只用于核验。保留全部判断，并按系统以种子 20261029 随机抽取向上取整的 **20%** 到 spot_check.csv。抽样总体包括预测判断和由匹配结果推导的未匹配 gold（FN），附任务、字段、理由、引用和空白“同意 / 不同意”列；报告写明实际抽样分子和分母。模型裁判仍可能出错，抽查结果未回填前不能声称最终人工准确率。
+
+正式裁判末份响应给 DUPLICATE 保留了其对应 gold_id，语义是“重复于已匹配任务”，不代表第二次匹配。本地解析把该指针保留为 duplicate_of_gold_id，将计分 gold_id 置空，仍计 FP，原始响应不改。全部模型请求结束后仅从已保存预测/裁判输出重新生成计分和报告，没有再次调用模型。
 
 ## 指标
 
@@ -67,7 +76,8 @@ candidates.template.csv 只有表头。生成的 CSV 另有 keep、修改后的�
 价格查于 2026-10-29，单位为美元/百万 token：[Gemini 官方](https://ai.google.dev/gemini-api/docs/pricing)3.8 Flash 标准价至 2026-12-31 为输入 0.75、输出（含思考）3.75；[DeepSeek 官方](https://api-docs.deepseek.com/quick_start/pricing/)预算上界按高峰/缓存未命中输入 0.30、输出 1.20，关闭 thinking；实耗按 API 返回缓存命中/未命中 token 和请求时段计算。DeepSeek 低峰命中/未命中/输出分别为 0.003/0.15/0.60。费用是实际 API 用量乘公布费率，不是供应商账户发票；高峰时段或节假日费率变化应重新核对。
 
 - 本版预标注 **4 次候选 + 1 次完整引用翻译**；硬上限 **10 次且 $0.20**。此次实际共 5 次，用量计费 **$0.014960262**，保守费用预留累计 $0.1599378；没有调用 Gemini 或裁判。
-- 正式 = **4 次基线 + 16 次分块（2/4/5/5）+ 至多 8 次裁判，最多 28 次**。本轮未执行，正式仍限 **200 次且 $2.00**，不得沿用旧版 Flash-Lite 成本估计。32,768 是总输出上限，并非每次必然消耗；根据实际 token 结算计数，若下一次最大费用可能突破剩余额度则停止，不擅自提额。
+- 完整评测 = **4 次基线 + 16 次分块（2/4/5/5）+ 8 次裁判，28 次**；加上经用户确认前的首个失败请求，累计 **29 次**。正式限 **200 次且 $2.00**，不得沿用旧版 Flash-Lite 成本估计。32,768 是 Gemini 思考及可见输出共用上限，并非每次必然消耗；根据实际 token 结算计数，若下一次最大费用可能突破剩余额度则停止，不擅自提额。裁判同一请求附带报告/抽查所需中文内容，不另重跑抽取。
+- 本次 Gemini 21 次 / $0.158394750（含首次失败），DeepSeek 8 次 / $0.014280624；合计 **29 次 / $0.172675374**，不包含预标注的 $0.014960262。抽查总体为 11 条基线预测 + 7 条 LinkLoom 预测 + 7 条 LinkLoom 漏检判断，共 25 条；按系统 20% 向上取整抽取 3+3=6 条（6/25=24%，小样本取整），没有人为替换随机样本。
 - 每进程两个简单内存计数器：请求数、已消费/未知结果的费用上界。HTTP 前按序列化输入 UTF-8 字节数+1024（保守高估 token）和最大输出 token 检查并预留；拿到可靠 usage 后按实际用量结算，释放未使用的预留（Gemini 包含思考 token）。失败/未知用量仍占用预留，不自动重试。上界始终按高峰价检查，固定总额不变，无 CLI 提额参数。此次 5 次执行在改为按 usage 结算之前完成，summary.review.json 中保留的是当时累计最大预留，实际费用另列。
 - 不自动恢复或重复启动。失败如需重跑，先看终端/结果中的计数并汇报累计消耗。计数器约束本次单进程，不能控制其他进程或账户消费；没有持久化预算账本。
 
@@ -80,11 +90,14 @@ python scripts/eval_tasks.py plan
 python scripts/eval_tasks.py download --out work/ami_tasks_download
 python scripts/eval_tasks.py prepare --archive work/ami_tasks_download/ami_public_manual_1.6.2.zip --out work/ami_tasks_data_es2002
 python scripts/eval_tasks.py preannotate --data work/ami_tasks_data_es2002 --out work/ami_tasks_annotation --live
-# 人工审核并完整补漏，另存 gold.csv 之后：
-python scripts/eval_tasks.py evaluate --data work/ami_tasks_data_es2002 --gold work/ami_tasks_annotation/gold.csv --out work/ami_tasks_results --live
+# 人工审核并完整补漏、最终确认之后（目标文件已存在时不会覆盖）：
+python scripts/eval_tasks.py freeze-gold --csv work/ami_tasks_annotation/candidates.review.csv --out benchmarks/ami_tasks/gold.jsonl
+python scripts/eval_tasks.py evaluate --data work/ami_tasks_data_es2002 --gold benchmarks/ami_tasks/gold.jsonl --out work/ami_tasks_results --live
+# 只用已有预测/裁判生成报告，不访问模型（实际完成的结果位于 work/ami_tasks_results_final）：
+python scripts/eval_tasks.py score-saved --data work/ami_tasks_data_es2002 --gold benchmarks/ami_tasks/gold.jsonl --source work/ami_tasks_results_continued --out work/ami_tasks_results_final --prior-failure work/ami_tasks_results/failure.json
 ```
 
-此次人工核对入口为 work/ami_tasks_annotation/candidates.review.csv，16 条英文候选；该文件相对初始 candidates.csv 只补全了中文引用翻译。未来完整运行 preannotate 会直接生成含完整翻译的 candidates.csv。不要重复运行已完成的付费步骤；恢复/补充调用须沿用本轮已有请求和费用计数。
+此次人工核对入口为 work/ami_tasks_annotation/candidates.review.csv，16 条英文候选；它已用用户提交的人工核对版本替换。未来完整运行 preannotate 会直接生成含完整翻译的 candidates.csv。不要重复运行已完成的付费步骤；本次正式结果目录只允许创建一次，失败保留已完成预测和已知费用，不自动重试或重启。
 
 | 会议 | 转录词数 | 转录字符数（含 speaker/秒数） | AMI actions | 候选数 |
 | --- | ---: | ---: | ---: | ---: |
