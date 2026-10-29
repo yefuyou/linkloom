@@ -148,7 +148,7 @@ def seed(root, documents):
 
 
 def bounded_sdk_client(sdk, ledger, budget):
-    from tests.smoke.test_p14_cn2_typed_gemini38_smoke import LedgeredGeminiClient
+    from tests.smoke.provider_ledger import LedgeredGeminiClient
     class BoundedClient(LedgeredGeminiClient):
         def generate_content(self, **payload):
             payload = {**payload, 'config': {**payload['config'], 'max_output_tokens': OUTPUT_BOUND}}
@@ -248,7 +248,7 @@ def run_product(case, root, sdk, ledger, budget, *, offline=False):
 
 @serialized_live
 def execute(*, live=False, attempt=None, case_ids=None, dataset=None):
-    from tests.smoke.test_p14_cn2_typed_gemini38_smoke import AppendOnlyProviderLedger
+    from tests.smoke.provider_ledger import AppendOnlyProviderLedger
     from linkloom.agents.providers.gemini_api import build_gemini_sdk_client
     from google.genai import types
     public = Path(dataset) if dataset else PUBLIC

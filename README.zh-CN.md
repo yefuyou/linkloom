@@ -1,12 +1,25 @@
 # LinkLoom
 
-[English](README.md) · [简体中文](README.zh-CN.md)
+从会议记录里提取议题、决定和待办，并跨会议追踪同一件事的变化。每条结论都附原文证据；待办和变更经人工确认后才生效。
 
-**找回当前有效的决定、它经历的变更，以及支持它的原始证据。**
+需要 Python 3.11+ 和 Git：
+```bash
+git clone https://github.com/yefuyou/linkloom.git
+python -m pip install -e ./linkloom
+python -m linkloom.ui --offline-task-demo --database linkloom/work/task-demo.sqlite --port 8765
+```
 
-LinkLoom 是一个本地优先的团队知识助手，面向持续变化的会议记录与 Markdown
-来源。它把人工审核的决策历史与只读的 AI 调查结合起来，让相关段落
-成为回答的起点，并继续核对决定何时有效、经过谁审核、证据是否仍然成立。
+打开 [本地演示](http://127.0.0.1:8765/)。在 Ask 选择 **Tasks across the current workspace records**，询问几次会议说的是否同一个任务、截止日期如何变化。
+
+演示使用合成会议记录和预设响应，无需 API Key。
+
+```mermaid
+flowchart LR
+    A[会议记录] --> B[提取议题、决定和待办]
+    B --> C[核对来源证据]
+    C --> D[人工确认]
+    D --> E[跨会议追踪变化]
+```
 
 ## 从会议记录到有据可查的回答
 

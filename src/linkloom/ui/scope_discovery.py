@@ -450,6 +450,32 @@ def rank_decision_slots(query: str, slots: list[dict[str, Any]], resolver: Froze
     return retrieve_raw(query, workspace_snapshot(slots, resolver, workspace_id), RetrievalConfig(embedder))
 
 
+def _passive_modifier_capture(query: str, match: re.Match[str], bound_names: set[str]) -> bool:
+    """An auxiliary's lowercase modifier is not an independent entity name.
+
+    Restrict this to BE + adverb morphology + past participle. Active/perfect
+    subjects, progressive verbs and dangling complements remain name positions.
+    No vocabulary of modifiers or workspace topics is consulted.
+    """
+    # Do not erase an unbound subject before the auxiliary. A modifier can be
+    # excluded only for a subject question, a bound name, or a reference form.
+    prefix = query[:match.start()].strip(" ,，:：")
+    if normalize_temporal_component(prefix) not in bound_names and not _deictic(prefix):
+        question_prefix = re.sub(r"^(?:as\s+of|截至)\s*[,，:]?\s*", "",
+                                _without_dates(prefix), flags=re.I)
+        question_subject = re.fullmatch(r"(?:what|which|who)(?:\s+(.+))?", question_prefix, re.I)
+        if question_subject is None or (question_subject[1] and
+                normalize_temporal_component(question_subject[1]) not in bound_names):
+            return False
+    auxiliary = query[match.start():match.start(1)].strip()
+    predicate = query[match.end(1):match.end()].strip().split()[-1].casefold()
+    remainder = query[match.end():]
+    return bool(re.fullmatch(r"is|are|was|were", auxiliary, re.I)
+                and re.fullmatch(r"[a-z]+ly(?:\s+[a-z]+ly)*", match[1])
+                and re.fullmatch(r"[a-z]+(?:ed|en)", predicate)
+                and not re.search(r"\b(?:on|with)[^\w]*$", remainder, re.I))
+
+
 def _named(phrase: str) -> bool:
     # Name-shaped tokens in explicit grammatical positions. A broad Chinese
     # clause is not a proper name merely because an old regex captured it.
@@ -482,6 +508,8 @@ def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
         r"\bwith\s+([\w-]+)(?=[?.!]|$)",
     )):
         for match in re.finditer(pattern, query, re.I):
+            if position_kind == 0 and _passive_modifier_capture(query, match, names):
+                continue
             words = [part for group in match.groups() for part in _parts(group)]
             positions.extend(words)
             if position_kind in (0, 2):

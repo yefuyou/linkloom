@@ -6,7 +6,6 @@ import argparse
 from contextlib import closing
 import hashlib
 import json
-import msvcrt
 import os
 from pathlib import Path
 import shutil
@@ -21,7 +20,7 @@ from linkloom.ui.investigation import ProductInvestigationService
 from tests.integration.test_product_application_flow import (
     _client, _start_product_server, _stop_product_server, _wait_source,
 )
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import (
+from tests.smoke.provider_ledger import (
     AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked,
 )
 
@@ -117,6 +116,12 @@ def _freeze() -> tuple[dict, dict]:
 
 class _BatchLock:
     def __enter__(self):
+        if os.name == "nt":
+            import msvcrt
+
+            self._msvcrt = msvcrt
+        else:
+            raise SmokeBlocked("WINDOWS_BATCH_LOCK_REQUIRED")
         self._file = open(ROOT / "batch.lock", "a+b")
         self._file.seek(0, os.SEEK_END)
         if self._file.tell() == 0:
@@ -125,7 +130,7 @@ class _BatchLock:
             os.fsync(self._file.fileno())
         self._file.seek(0)
         try:
-            msvcrt.locking(self._file.fileno(), msvcrt.LK_NBLCK, 1)
+            self._msvcrt.locking(self._file.fileno(), self._msvcrt.LK_NBLCK, 1)
         except OSError:
             self._file.close()
             raise SmokeBlocked("CONCURRENT_BATCH_RUN_BLOCKED") from None
@@ -133,7 +138,7 @@ class _BatchLock:
 
     def __exit__(self, *_):
         self._file.seek(0)
-        msvcrt.locking(self._file.fileno(), msvcrt.LK_UNLCK, 1)
+        self._msvcrt.locking(self._file.fileno(), self._msvcrt.LK_UNLCK, 1)
         self._file.close()
 
 

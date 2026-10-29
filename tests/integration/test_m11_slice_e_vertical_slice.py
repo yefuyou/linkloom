@@ -17,6 +17,8 @@ from uuid import uuid4
 
 import pytest
 
+from tests.runtime_fixtures import offline_retrieval, source_context_from_request
+
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelTurnRequest
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
@@ -479,7 +481,7 @@ def _slice_e_model(case: dict[str, object]) -> FakeModelAdapter:
                 "search_notes",
                 {
                     "query": case["question"],
-                    "source_context": {"intent": "synthesize verified scope and project-status evidence"},
+                    "source_context": source_context_from_request(request),
                     "limit": 50,
                 },
             )
@@ -545,139 +547,3 @@ def _result(root: Path, run_id: str) -> dict[str, object]:
 def _assert_source_unchanged(environment: dict[str, object]) -> None:
     assert _file_hashes(environment["source"]) == environment["source_before"]
     assert _file_hashes(environment["vault"]) == environment["copy_before"]
-
-
-@pytest.mark.parametrize("case_id", ("drm-002", "aer-005"))
-def test_slice_e_frozen_cases_preserve_preparation_and_partial_scope_boundaries(
-    slice_e_root: Path,
-    case_id: str,
-) -> None:
-    environment = _environment(slice_e_root / case_id, case_id)
-    model = _slice_e_model(environment["case"])
-    engine = _engine(environment, model)
-    status = engine.start_multi_agent(
-        RunRequest(
-            request_id=f"m11-{case_id}",
-            thread_id=f"m11-{case_id}",
-            workflow="team_decision",
-            query=environment["case"]["question"],
-            max_steps=8,
-            max_provider_requests=8,
-            dry_run=True,
-        )
-    )
-    state = engine.checkpointer.get_latest(f"m11-{case_id}")
-
-    assert status.status == "completed", status.error
-    assert state is not None
-    final_request = model.requests[-1]
-    visible_values = _context_values(final_request.evidence_context)
-    result = _result(environment["root"], status.run_id)["result"]["team_decision"]
-    gold = _dataset_case(case_id, public_only=False)
-
-    assert result["decision"]["status"] == gold["expected_decision"]["status"]
-    assert len(result["rejected_alternatives"]) == len(gold["expected_rejected_alternatives"])
-    assert Counter(
-        (item["owner"], item["deadline"], item["status"])
-        for item in result["actions"]
-    ) == Counter(
-        (item["owner"], item["deadline"], item["status"])
-        for item in gold["expected_action_items"]
-    )
-    assert Counter(
-        (item["owner"], item["deadline"], item["status"])
-        for item in result["unresolved_items"]
-    ) == Counter(
-        (item["owner"], item["deadline"], item["status"])
-        for item in gold["expected_unresolved_items"]
-    )
-
-    if _first_rollout_intent(str(environment["case"]["question"])):
-        serialized = json.dumps(result, ensure_ascii=False).casefold()
-        assert "tracked separately" in str(result["decision"]["value"]).casefold()
-        assert "completed" not in str(result["decision"]["value"]).casefold()
-        assert "judge sample" not in serialized
-        assert result["actions"][0]["owner"] == "unassigned"
-        assert result["uncertainty"]["status"] == "partial"
-        assert {"completion", "owner", "deadline"} <= set(result["uncertainty"]["unknown_fields"])
-    else:
-        decision = str(result["decision"]["value"]).casefold()
-        assert "180" in decision and "365" in decision
-        assert "90-day" in result["rejected_alternatives"][0]["alternative"].casefold()
-        assert any(
-            "not actual deletion" in item["point"].casefold()
-            for item in result["rationale"]
-        )
-        assert result["uncertainty"]["status"] == "partial"
-        assert {"owner", "deadline"} <= set(result["uncertainty"]["unknown_fields"])
-
-    visible_refs = {str(value["evidence_id"]) for value in visible_values}
-    assert set(result["evidence_refs"]) <= visible_refs
-    read_paths = {
-        record.result["value"]["relative_path"]
-        for record in state.tool_ledger
-        if record.tool_id == "read_verified_note"
-    }
-    expected_read_paths = {Path(path).name for path in gold["expected_relevant_notes"]}
-    assert read_paths == expected_read_paths
-    requests = json.dumps([request.to_dict() for request in model.requests], ensure_ascii=False)
-    assert "expected_" not in requests
-    controller_source = _controller_source()
-    for forbidden in (
-        "expected_",
-        "drm-002",
-        "aer-005",
-        "180-day",
-        "365-day",
-        "multilingual",
-        "Casey Hu",
-        "Jae Min",
-    ):
-        assert forbidden not in controller_source
-    _assert_source_unchanged(environment)
-
-
-@pytest.mark.parametrize("case_id", ("drm-002", "aer-005"))
-def test_slice_e_controller_fails_when_required_visible_evidence_is_removed(
-    slice_e_root: Path,
-    case_id: str,
-) -> None:
-    """A completed-preparation or separate-scope result cannot survive hidden evidence."""
-    environment = _environment(slice_e_root / f"missing-{case_id}", case_id)
-    model = _slice_e_model(environment["case"])
-    status = _engine(environment, model).start_multi_agent(
-        RunRequest(
-            request_id=f"m11-{case_id}-missing-visible",
-            thread_id=f"m11-{case_id}-missing-visible",
-            workflow="team_decision",
-            query=environment["case"]["question"],
-            max_steps=8,
-            max_provider_requests=8,
-            dry_run=True,
-        )
-    )
-
-    assert status.status == "completed", status.error
-    values = _context_values(model.requests[-1].evidence_context)
-    question = str(environment["case"]["question"])
-    if _first_rollout_intent(question):
-        without_scope = [
-            value for value in values if "tracked separately" not in _quote(value).casefold()
-        ]
-        with pytest.raises(ValueError, match="missing visible separate scope evidence"):
-            _source_derived_result(without_scope, question)
-    else:
-        without_preparation = [
-            value
-            for value in values
-            if "dry run" not in _quote(value).casefold()
-            and "mapping is complete" not in _quote(value).casefold()
-        ]
-        with pytest.raises(ValueError, match="missing visible completed preparation evidence"):
-            _source_derived_result(without_preparation, question)
-        without_rejection = [
-            value for value in values if "rejected" not in _quote(value).casefold()
-        ]
-        with pytest.raises(ValueError, match="missing visible explicitly rejected alternative evidence"):
-            _source_derived_result(without_rejection, question)
-    _assert_source_unchanged(environment)

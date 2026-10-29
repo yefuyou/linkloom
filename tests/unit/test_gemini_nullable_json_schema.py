@@ -218,6 +218,14 @@ def test_exact_semantic_schema_wire_contract_and_fingerprints() -> None:
             for key, value in expected_claim_properties[field].items()
             if key != "maxLength"
         }
+    task_properties = expected_claim_properties["task"]["properties"]
+    for field in ("text", "owner", "deadline_text", "project", "vendor"):
+        task_properties[field] = {
+            key: value for key, value in task_properties[field].items()
+            if key != "maxLength"
+        }
+    task_properties["description_parts"].pop("maxItems")
+    task_properties["description_parts"]["items"].pop("maxLength")
     assert wire_schema == expected_wire_schema
 
     canonical_claim_schema = canonical["properties"]["claims"]["items"]

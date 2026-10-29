@@ -10,7 +10,7 @@ from linkloom.agents.providers.gemini_api import build_gemini_sdk_client, Gemini
 from linkloom.ui.investigation import ProductInvestigationService
 from scripts.gemini_transport.diagnostics import TransportDiagnostics
 from scripts.gemini_transport.product import TransportGeminiProviderAdapter
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked
+from tests.smoke.provider_ledger import AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked
 from tests.smoke import run_temporal_product_http as runner
 
 

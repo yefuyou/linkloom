@@ -13,10 +13,17 @@ def test_validate_target_root_accepts_synthetic(tmp_path):
     assert validate_target_root(tmp_path, fingerprint="f1")
 
 def test_validate_target_root_rejects_tmp_string():
-    # just containing tmp is not enough
+    # Just containing tmp is not enough. Resolve macOS /var aliases first;
+    # a sibling of its per-user T directory is still under an allowed root.
+    import sys
     import tempfile
-    sys_tmp = Path(tempfile.gettempdir()).resolve().as_posix()
-    bad_path = Path(sys_tmp).parent / "something_tmp_else"
+    if sys.platform == "darwin":
+        assert Path("/var").is_symlink()
+        assert Path("/var").resolve() == Path("/private/var").resolve()
+    sys_tmp = Path(tempfile.gettempdir()).resolve()
+    bad_path = (Path(sys_tmp.anchor) / "something_tmp_else").resolve()
+    assert not bad_path.is_relative_to(sys_tmp)
+    assert not bad_path.as_posix().startswith(("/tmp/", "/private/var/folders/"))
     with pytest.raises(ValueError, match="Real repository or Vault path rejected"):
         validate_target_root(bad_path, fingerprint="f1")
 

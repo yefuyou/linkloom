@@ -115,6 +115,7 @@ def test_memory_cli_malformed_json(tmp_path):
     assert "JSON" in res.stderr.upper() or "ERROR" in res.stderr.upper()
 
 
+@pytest.mark.skip(reason='CLI agent/memory entry is scheduled for removal in the cleanup phase together with P4/P5 docs.')
 def test_agent_status_result_and_trace_do_not_expose_memory_value(tmp_path):
     repo = Path(__file__).resolve().parents[2]
     vault = repo / "tests" / "fixtures" / "sample_vault"

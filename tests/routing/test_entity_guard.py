@@ -141,3 +141,58 @@ def test_verified_proposal_name_is_not_a_reviewed_answer_or_index_term():
     result = r.route_question("Which platform does ProposalOnly use?", slots, RESOLVER,
                               workspace_id="one", embedder=Model(), provider_factory=Forced)
     assert result["scope"] is None and result["route"] == "CLARIFY"
+
+
+
+@pytest.mark.parametrize("fragment", ["formally adopted", "officially selected", "finally chosen",
+    "currently adopted", "promptly selected", "quietly adopted", "unexpectedly chosen",
+    "formally finally adopted"])
+@pytest.mark.parametrize("dated", [False, True])
+@pytest.mark.parametrize("embedded", [False, True])
+def test_passive_modifier_morphology_is_not_an_unknown_entity(fragment, dated, embedded):
+    query = f"What platform was {fragment}" + (" on 2026-10-06?" if dated else "?")
+    calls = []
+    def factory():
+        calls.append(query)
+        return Forced()
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one",
+        subject="Launch", relation="uses platform", embedder=Model() if embedded else None,
+        provider_factory=factory)
+    assert result["route"] == ("AS_OF" if dated else "CURRENT")
+    assert result["scope"] == {"subject":"Launch", "relation":"uses platform"}
+    assert not result["discovery"]["entity_check"]["hard_veto"]
+    assert result["as_of"] == ("2026-10-06" if dated else None)
+    assert "platform" in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
+    assert not calls and not result["llm_attempted"]
+
+
+@pytest.mark.parametrize("query", ["Which platform does Ghost use?", "Which platform does ghost use?",
+    "Atlas 项目目前用哪个平台？", "Ghost team: which platform?",
+    "Compare Quartz and unrecorded in the platform choice.",
+    "Which platform was friendly using?", "Which platform is unrecorded on?",
+    "Which platform has holly adopted?", "Which platform did holly choose?",
+    "What platform was officially selected by Ghost team?", "Which platform was Wrenly adopted?",
+    "Which platform was holly adopted on?", "Which platform was holly adopted on,?", "ghost was formally adopted as platform?",
+    "Ghost was formally adopted as platform?", "What if ghost was formally adopted as platform?",
+    "Who said ghost was formally adopted as platform?"])
+@pytest.mark.parametrize("embedded", [False, True])
+def test_modifier_rule_preserves_explicit_names_values_and_organization_vetoes(query, embedded):
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one",
+        embedder=Model() if embedded else None, provider_factory=Forced)
+    assert result["discovery"]["entity_check"]["hard_veto"]
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
+    assert "platform" in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
+    assert not result["llm_attempted"]
+
+
+
+@pytest.mark.parametrize("query", ["Launch was formally adopted as platform?",
+    "We were officially selected for platform?",
+    "As of 2026-10-06, what platform was officially selected?",
+    "截至2026-10-06，What platform was formally adopted?"])
+def test_passive_modifier_subject_and_temporal_prefix_binding(query):
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one",
+        subject="Launch", relation="uses platform", embedder=None)
+    assert not result["discovery"]["entity_check"]["hard_veto"]
+    assert result["route"] == ("AS_OF" if "2026-10-06" in query else "CURRENT")
+    assert result["scope"] == {"subject":"Launch", "relation":"uses platform"}

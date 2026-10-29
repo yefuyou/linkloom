@@ -319,6 +319,10 @@ def test_provider_failure_validator_accepts_durable_multi_tool_prefix_before_fin
 
 
 @pytest.mark.skipif(
+    not os.environ.get("DEEPSEEK_API_KEY", "").strip(),
+    reason="Real DeepSeek smoke requires DEEPSEEK_API_KEY; offline tests use synthetic clients.",
+)
+@pytest.mark.skipif(
     os.environ.get(harness.OPT_IN_ENV) != "1",
     reason="DeepSeek business evaluation requires exact opt-in",
 )

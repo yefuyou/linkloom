@@ -6,7 +6,7 @@ from linkloom.agents.providers.gemini_api import build_gemini_sdk_client, Gemini
 from linkloom.ui.__main__ import GeminiSDKClientBridge
 from tests.integration.unified_transport_fixture import UnifiedTransportHarness, MODEL
 from tests.integration.unified_ask_fixture import ATLAS, OTHER, SUBJECT, RELATION, request_json, poll_product_ask
-from tests.smoke.test_p14_cn2_typed_gemini38_smoke import SmokeBlocked
+from tests.smoke.provider_ledger import SmokeBlocked
 
 
 @pytest.fixture

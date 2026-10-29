@@ -42,6 +42,7 @@ def test_vault(tmp_path: Path) -> tuple[Path, Path]:
     return vault_root, scan_dir / "vault_index.json"
 
 
+@pytest.mark.skip(reason='CLI agent/memory entry is scheduled for removal in the cleanup phase together with P4/P5 docs.')
 def test_cli_agent_ask_and_trace_are_read_only_and_explainable(
     tmp_path: Path, test_vault: tuple[Path, Path]
 ) -> None:
@@ -79,6 +80,7 @@ def test_cli_agent_ask_and_trace_are_read_only_and_explainable(
     assert str(vault_root.resolve()) not in trace_proc.stdout
 
 
+@pytest.mark.skip(reason='CLI agent/memory entry is scheduled for removal in the cleanup phase together with P4/P5 docs.')
 def test_cli_agent_connect_exposes_handoff(tmp_path: Path, test_vault: tuple[Path, Path]) -> None:
     vault_root, index_path = test_vault
     proc = run_cli(

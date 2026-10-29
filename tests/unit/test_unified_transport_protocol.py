@@ -9,7 +9,7 @@ def test_prepare_is_not_authorization_and_no_sdk_constructed(tmp_path,monkeypatc
     packet = unified.prepare(tmp_path/'packet')
     assert packet['real_generation_requests']==0 and packet['state']=='PREPARED_NOT_AUTHORIZED'
     assert 'scripts/gemini_transport/product.py' in packet['source_sha256']
-    assert 'tests/smoke/test_p14_cn2_typed_gemini38_smoke.py' in packet['source_sha256']
+    assert 'tests/smoke/provider_ledger.py' in packet['source_sha256']
     assert 'src/linkloom/ui/unified_ask.py' in packet['source_sha256']
     monkeypatch.delenv('LINKLOOM_UNIFIED_TRANSPORT_AUTHORIZATION',raising=False)
     with pytest.raises(PermissionError):
