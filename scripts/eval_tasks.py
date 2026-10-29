@@ -8,7 +8,7 @@ from __future__ import annotations
 import argparse
 import csv
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 import hashlib
 import json
 import math
@@ -63,9 +63,14 @@ meeting's transcript or supplied speaker metadata. A reporter is not an owner.
 If gold specifies a role (e.g. Project Manager), either that role or the associated
 person's name/speaker is correct when their mapping is supported by this meeting.
 An explicitly assigned team is allowed; never infer a person from job conventions.
+Unresolved pronouns (I, you, we, etc.) are ALWAYS incorrect owner values; never
+repair them using the quote's speaker. Resolve explicit speaker IDs through the
+supplied meeting-specific AMI roster before comparing roles/names.
 Deadline: accept identical dates or equivalent source-relative expressions, keeping
 precision. 'Next meeting' has no inferred calendar date. Meeting dates and unrelated
 dates are not deadlines. Score deadline ONLY when gold explicitly states one.
+An explicit duration until the next meeting is equivalent to 'next meeting' when
+the transcript explicitly identifies that same event; do not infer a calendar date.
 Predicted 未说明 or 无法确定 (also null/unknown/cannot determine) is an abstention:
 count it separately, never as a fabricated deadline and never as correct.
 When gold has no deadline, deadline_correct must be false (not scored).
@@ -161,7 +166,7 @@ class Counter:
 
 
 class Client:
-    def __init__(self, counter, live=False):
+    def __init__(self, counter, live=False, *, gemini_max_input_bytes=32768):
         self.counter, self.live = counter, live
         self.last_call = None
         self.actual_cost_usd = 0.0
@@ -169,6 +174,7 @@ class Client:
         self.usage_by_model = {}
         self.output_dir = None
         self.prior_attempt = None
+        self.gemini_max_input_bytes = gemini_max_input_bytes
 
     def complete(self, request):
         """LinkLoom uses the unmodified product Gemini adapter."""
@@ -187,7 +193,7 @@ class Client:
             sdk = build_gemini_sdk_client(key, http_options_kwargs={"timeout": 180000,
                                                                   "retry_options": {"attempts": 1}})
             self._gemini = GeminiProviderAdapter(CountedGeminiTransport(sdk, self.counter, self.record_usage,
-                self.save_response), model_id=GEMINI)
+                self.save_response), model_id=GEMINI, max_input_bytes=self.gemini_max_input_bytes)
         return self._gemini
 
     def record_usage(self, value):
@@ -606,18 +612,104 @@ def resolve_preannotation(payload, meeting, actions):
 
 class ObservationAdapter:
     """Preserve transport exceptions across the extractor's bounded error handling."""
-    def __init__(self, client):
-        self.client, self.error = client, None
+    def __init__(self, client, request_path=None):
+        self.client, self.error, self.request_path = client, None, request_path
 
     def complete(self, request):
         try:
+            if self.request_path is not None:
+                new_json(self.request_path, request.to_dict())
             return self.client.complete(request)
         except Exception as error:
             self.error = error
             raise
 
 
-def linkloom_predict(meeting, client):
+def speaker_windows(meeting):
+    """Adapt headers and subdivide only windows exceeding the existing adapter cap.
+
+    AMI has relative seconds, not a wall-clock start. The ISO epoch is explicitly
+    a transport anchor, NOT an actual meeting date or a task deadline. Metadata
+    is a separate, labelled data message in each window, never an instruction.
+    """
+    epoch = datetime(2000, 1, 1, tzinfo=UTC)
+    metadata = {"kind": "AMI adapter metadata (not a participant utterance)",
+        "time_policy": "ISO 2000-01-01 is a synthetic parser anchor plus AMI elapsed seconds, not a real meeting date; do not use it as a deadline.",
+        "speaker_roles": meeting["speakers"]}
+    header = "[2000-01-01T00:00:00Z] AMI_METADATA: " + encoded(metadata).decode() + "\n"
+    for offset, raw in chunks(meeting):
+        text, mapping = header, []
+        for utterance in meeting["utterances"]:
+            if not offset <= utterance["char_start"] < offset + len(raw):
+                continue
+            body = utterance["text"]
+            original = meeting["text"][utterance["char_start"]:utterance["char_end"]]
+            prefix = f'{utterance["speaker"]} [{utterance["start"]:.3f}-{utterance["end"]:.3f}]: '
+            if original != prefix + body + "\n" or "\n" in body or not body.strip():
+                raise ValueError("AMI utterance does not match its exact original body")
+            stamp = (epoch + timedelta(seconds=utterance["start"])).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+            text += f'[{stamp}] {utterance["speaker"]}: '
+            start = len(text)
+            text += body + "\n"
+            mapping.append({"segment_id": utterance["segment_id"], "speaker": utterance["speaker"],
+                "start": start, "end": start + len(body),
+                "original_start": utterance["char_start"] + len(prefix),
+                "original_end": utterance["char_end"] - 1})
+        # Speaker maps add real input bytes. Keep old boundaries when possible;
+        # otherwise split at complete utterances with the same two-turn overlap.
+        from linkloom.semantic_ingestion.artifacts import RawArtifact
+        from linkloom.semantic_ingestion.extraction import TaskDiscoveryContext, TaskDiscoveryProfile, _recall_prompt
+        from linkloom.semantic_ingestion.task_observation_discovery import _window
+        line_starts = [len(header)] + [text.rfind("\n", 0, item["start"]) + 1 for item in mapping[1:]]
+        def section(left, right):
+            start = line_starts[left]
+            end = line_starts[right] if right < len(mapping) else len(text)
+            body = header + text[start:end]
+            delta = len(header) - start
+            mapped = [{**m, "start": m["start"] + delta, "end": m["end"] + delta} for m in mapping[left:right]]
+            return body, mapped
+        def fits(left, right):
+            value, _ = section(left, right)
+            if len(value) > 16000 or len(value.encode("utf-8")) > 24000:
+                return False
+            artifact = RawArtifact(workspace_id="ami-eval", artifact_id="ami-sizing-only",
+                source_type="timestamped_text", content=value, ingestion_time=epoch)
+            context = TaskDiscoveryContext(artifact, TaskDiscoveryProfile.TASK_RECALL_V3)
+            window = _window(artifact)
+            prompt = _recall_prompt(window, context.input_for(window, "ami-eval"))
+            # Same JSON byte representation as GeminiProviderAdapter._bounded_json.
+            return len(json.dumps(prompt, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")) <= 32768
+        left = 0
+        while left < len(mapping):
+            low, high = left + 1, len(mapping)
+            if not fits(left, low):
+                raise ValueError("One utterance plus canonical speaker context exceeds product input cap")
+            while low < high:
+                middle = (low + high + 1) // 2
+                if fits(left, middle):
+                    low = middle
+                else:
+                    high = middle - 1
+            value, mapped = section(left, low)
+            yield offset, value, mapped
+            if low == len(mapping):
+                break
+            left = max(left + 1, low - 2)
+
+
+def original_span(mapping, start, end):
+    for item in mapping:
+        if item["start"] <= start < end <= item["end"]:
+            return (item["original_start"] + start - item["start"],
+                    item["original_start"] + end - item["start"])
+    raise ValueError("Task evidence is not inside one unchanged AMI utterance body")
+
+
+def linkloom_predict(meeting, client, *, speaker_wiring=False, task_extraction_mode="legacy"):
+    if task_extraction_mode == "meeting_v2":
+        return meeting_v2_predict(meeting, client)
+    if task_extraction_mode != "legacy":
+        raise ValueError("Unknown task_extraction_mode")
     from linkloom.decision_memory.sources import SourceReferenceRegistry
     from linkloom.semantic_ingestion.artifacts import RawArtifact
     from linkloom.semantic_ingestion.document_text import parse_source_text
@@ -632,17 +724,35 @@ def linkloom_predict(meeting, client):
             reservation_id=r.turn_id, estimated_cost_upper_bound_usd=client.counter.quote(GEMINI, r.to_dict(), GEMINI_MAX_OUTPUT)),
         request_guard_id="ami-counter", max_attempts=1, max_output_tokens=GEMINI_MAX_OUTPUT,
         temperature=None, thinking_level=GEMINI_THINKING)
-    for index, (offset, text) in enumerate(chunks(meeting)):
+    windows = (speaker_windows(meeting) if speaker_wiring else
+               ((offset, text, None) for offset, text in chunks(meeting)))
+    for index, (offset, text, mapping) in enumerate(windows):
+        if speaker_wiring:
+            adapter.request_path = client.output_dir / f'{meeting["meeting_id"]}.chunk-{index}.request.json'
         artifact = RawArtifact(workspace_id="ami-eval", artifact_id=f'{meeting["meeting_id"]}-chunk-{index}',
-            source_type="manual_text", content=text, ingestion_time=datetime(2000, 1, 1, tzinfo=UTC))
+            source_type="timestamped_text" if speaker_wiring else "manual_text",
+            content=text, ingestion_time=datetime(2000, 1, 1, tzinfo=UTC))
         registry = SourceReferenceRegistry()
-        for segment in parse_source_text(artifact).segments:
+        parsed = parse_source_text(artifact)
+        if speaker_wiring:
+            if (parsed.status.value != "COMPLETE" or len(parsed.segments) != len(mapping) + 1
+                or any(s.speaker != m["speaker"] or s.body_text != meeting["text"][m["original_start"]:m["original_end"]]
+                       for s, m in zip(parsed.segments[1:], mapping))):
+                raise ValueError("AMI speaker conversion failed canonical parsing")
+            new_json(client.output_dir / f'{meeting["meeting_id"]}.chunk-{index}.source.json',
+                {"original_offset": offset, "content": text, "mapping": mapping,
+                 "speaker_roles": meeting["speakers"], "parser_version": parsed.parser_version,
+                 "parsed_message_count": len(parsed.segments), "time_policy": "synthetic parser anchor, not wall clock"})
+        for segment in parsed.segments:
             registry.register_evidence(artifact.workspace_id, segment.evidence_span.evidence_ref,
                 content_hash=artifact.content_hash, source_version=artifact.artifact_version_id)
         result = TaskObservationDiscoveryService(extractor, source_registry=registry,
             current_source=lambda workspace, identity: artifact,
-            limits=DiscoveryLimits(max_chars=12000, max_bytes=20000, max_calls=1),
+            limits=DiscoveryLimits(max_chars=16000 if speaker_wiring else 12000,
+                max_bytes=24000 if speaker_wiring else 20000, max_calls=1),
             task_profile=TaskDiscoveryProfile.TASK_RECALL_V3).discover((artifact,), workspace_id="ami-eval")
+        if speaker_wiring:
+            new_json(client.output_dir / f'{meeting["meeting_id"]}.chunk-{index}.discovery.json', result.to_dict())
         if adapter.error:
             raise adapter.error
         if len(result.extractions) != 1 or result.extractions[0].failure_code:
@@ -650,15 +760,72 @@ def linkloom_predict(meeting, client):
         diagnostics.append({"chunk": index, "coverage_complete": result.coverage_complete,
             "failures": [{"reason": f.reason, "proposal_index": f.proposal_index} for f in result.failures]})
         for observation in (*result.valid_observations, *result.partial_observations):
-            work = tuple(sorted((offset + e.char_start, offset + e.char_end)
+            work = tuple(sorted((original_span(mapping, e.char_start, e.char_end) if speaker_wiring else
+                (offset + e.char_start, offset + e.char_end))
                 for e in observation.field_evidence if e.field == "description"))
             if work in seen:
                 continue  # Only identical absolute source-work ranges across overlap.
             seen.add(work)
-            predictions.append({"quote": observation.raw_text, "task": observation.description,
+            quote = observation.raw_text
+            if speaker_wiring:
+                evidence = next(e for e in observation.field_evidence if e.field == "raw_text")
+                start, end = original_span(mapping, evidence.char_start, evidence.char_end)
+                if meeting["text"][start:end] != quote:
+                    raise ValueError("Converted evidence does not round-trip to original AMI text")
+            predictions.append({"quote": quote, "task": observation.description,
                 "owner": observation.owner or UNKNOWN,
                 "deadline": observation.deadline_text or UNKNOWN})
     return predictions, diagnostics
+
+
+def meeting_v2_predict(meeting, client):
+    from linkloom.semantic_ingestion.artifacts import RawArtifact
+    from linkloom.semantic_ingestion.timestamped_text import parse_timestamped_text
+    from linkloom.semantic_ingestion.meeting_tasks_v2 import MeetingTaskExtractor, TaskExtractionConfig
+    content, mapping = "", []
+    for utterance in meeting["utterances"]:
+        stamp = (datetime(2000, 1, 1, tzinfo=UTC) + timedelta(seconds=utterance["start"])).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+        content += f'[{stamp}] {utterance["speaker"]}: '
+        start = len(content)
+        body = utterance["text"]
+        original = f'{utterance["speaker"]} [{utterance["start"]:.3f}-{utterance["end"]:.3f}]: '
+        if meeting["text"][utterance["char_start"]:utterance["char_end"]] != original + body + "\n":
+            raise ValueError("AMI body changed during v2 conversion")
+        content += body + "\n"
+        mapping.append({"start": start, "end": start + len(body),
+            "original_start": utterance["char_start"] + len(original), "original_end": utterance["char_end"] - 1})
+    artifact = RawArtifact(workspace_id="ami-eval", artifact_id=meeting["meeting_id"],
+        source_type="timestamped_text", content=content, ingestion_time=datetime(2000, 1, 1, tzinfo=UTC))
+    parsed = parse_timestamped_text(artifact)
+    if parsed.status.value != "COMPLETE" or len(parsed.segments) != len(mapping):
+        raise ValueError("AMI v2 conversion failed complete parsing")
+    new_json(client.output_dir / f'{meeting["meeting_id"]}.v2-source.json',
+        {"content": content, "mapping": mapping, "source_version": artifact.artifact_version_id,
+         "content_hash": artifact.content_hash, "time_policy": "synthetic parser anchor; never used for deadline conversion"})
+    extractor = MeetingTaskExtractor(client, model_id=GEMINI,
+        config=TaskExtractionConfig(task_extraction_mode="meeting_v2", max_input_bytes=client.gemini_max_input_bytes),
+        request_guard=lambda request: True,
+        on_request=lambda index, request: new_json(client.output_dir / f'{meeting["meeting_id"]}.v2-request-{index}.json', request.to_dict()))
+    batch = extractor.extract(artifact, meeting["speakers"])
+    new_json(client.output_dir / f'{meeting["meeting_id"]}.v2-discovery.json', batch.to_dict())
+    roster = {s["participant_id"]: s for s in meeting["speakers"]}
+    predictions = []
+    for candidate in batch.candidates:
+        if not candidate.verify(artifact):
+            raise ValueError("v2 evidence no longer matches source version")
+        quotes = []
+        for evidence in candidate.evidence:
+            start, end = original_span(mapping, evidence.span.char_start, evidence.span.char_end)
+            quote = meeting["text"][start:end]
+            if quote != evidence.span.quote:
+                raise ValueError("v2 evidence failed original AMI round-trip")
+            if quote not in quotes:
+                quotes.append(quote)
+        predictions.append({"task": candidate.task, "owner": " and ".join(roster[o]["role"] for o in candidate.owner_ids) or UNKNOWN,
+            "deadline": candidate.deadline.raw_text or UNKNOWN, "quote": quotes[0],
+            "evidence_quotes": quotes, "deadline_kind": candidate.deadline.kind,
+            "resolved_at": None, "member_ids": list(candidate.member_ids)})
+    return predictions, [{**w, "coverage_complete": batch.coverage_complete, "failures": list(batch.rejected)} for w in batch.windows]
 
 
 def baseline_predict(meeting, client):
@@ -826,6 +993,39 @@ def abstains(value):
         "not specified", "not mentioned", "not provided", "none", "null", "n/a"}
 
 
+def reviewed_field_rules(rows, items, gold, meeting):
+    """Apply the human spot-check's field rules equally, without repairing outputs."""
+    pred, truth = {p["prediction_id"]: p for p in items}, {g["gold_id"]: g for g in gold}
+    normalize = lambda value: re.sub(r"[^a-z0-9]+", "", value.lower())
+    aliases = {}
+    for speaker in meeting["speakers"]:
+        for key in (speaker["speaker"], speaker["participant_id"], speaker["role"]):
+            aliases[normalize(key)] = speaker["role"]
+    def roles(value):
+        return {aliases.get(normalize(part), normalize(part)) for part in re.split(r"\s+and\s+|[&,;/]", value, flags=re.I)}
+    for row in rows:
+        if row["category"] != "MATCH":
+            continue
+        p, g = pred[row["prediction_id"]], truth[row["gold_id"]]
+        old = (row["owner_correct"], row["deadline_correct"])
+        if re.search(r"\b(?:i|me|my|myself|you|your|yourself|we|us|our|ourselves|they|them|their|he|him|his|she|her)\b", p["owner"], re.I):
+            row["owner_correct"] = False
+        elif not abstains(p["owner"]) and roles(p["owner"]) == roles(g["owner"]):
+            row["owner_correct"] = True
+        if normalize(g["deadline"]) == "nextmeeting" and not abstains(p["deadline"]):
+            # Ground the equivalence in the meeting, not its ID or a benchmark phrase.
+            pattern = (r"next meeting[^.?!\n]{0,60}?\b(?P<duration>in\s+"
+                r"(?:\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|forty|sixty)"
+                r"\s+(?:seconds?|minutes?|hours?|days?|weeks?))\b")
+            for match in re.finditer(pattern, meeting["text"], re.I):
+                if normalize(match.group("duration")) == normalize(p["deadline"]):
+                    row["deadline_correct"] = True
+        if old != (row["owner_correct"], row["deadline_correct"]):
+            row["field_review_adjustment"] = {"original_owner_correct": old[0],
+                "original_deadline_correct": old[1], "basis": "human spot-check: unresolved pronouns, AMI speaker roles, event-relative deadline equivalence"}
+    return rows
+
+
 def metrics(rows, gold):
     matches = [r for r in rows if r["category"] == "MATCH"]
     by_id = {g["gold_id"]: g for g in gold}
@@ -900,10 +1100,15 @@ def write_result_report(path, report, rows):
         ("截止时间正确率（匹配且 gold 有日期）", "deadline_accuracy_on_matched_stated_gold"),
         ("截止时间端到端正确率（全部有日期 gold）", "deadline_end_to_end_accuracy_on_stated_gold"),
         ("讨论误判数 / 全部预测", "discussion_false_positives")]
-    text = ["# AMI 四场会议待办抽取正式评测", "", "本表使用一次完整评测的预测；模型裁判结果尚待人工抽查，不是最终人工裁决。", "",
+    scope = report.get("evaluation_scope")
+    v2 = scope and scope.get("task_extraction_mode") == "meeting_v2"
+    if v2:
+        labels["linkloom"] = "meeting_v2"
+    text = ["# AMI 四场会议待办抽取" + ("：v2 第一期（ES2002 开发集，仅供参考）" if v2 else "：第 0 步接线修复" if scope else "正式评测"), "",
+        "本表的新增裁判判断尚待人工抽查；已统一执行此前人工抽查修正的字段规则。", "",
         f"被评测模型：{GEMINI}；thinking_level={GEMINI_THINKING}；总输出上限 {GEMINI_MAX_OUTPUT:,} token（含思考）。裁判：{DEEPSEEK}。",
         f"标准答案 SHA-256：`{report['gold_sha256']}`；11 条人工 gold，其中 8 条有明确截止时间。", "",
-        "| 指标 | 基线 | LinkLoom |", "| --- | ---: | ---: |"]
+        f"| 指标 | 基线 | {labels['linkloom']} |", "| --- | ---: | ---: |"]
     for label, key in keys:
         text.append("| " + " | ".join([label, *[fraction(report["micro"][s]["metric_counts"][key]) for s in labels]]) + " |")
     text.extend(["", "准确率分母为预测数，召回率分母为 11 条 gold；负责人分母为任务匹配数。日期主指标分母为匹配且 gold 明确给出日期的任务数，同时提供全部 8 条有日期 gold 的端到端指标。讨论行的分子是数量，分母只用于说明它占全部预测的比例。", ""])
@@ -929,12 +1134,16 @@ def write_result_report(path, report, rows):
         prior = report["prior_failed_attempt"]
         text.extend(["首个基线请求在附加引用精确校验处停止，原始响应未保存；用户明确确认修复后续跑。此前 "
             f"{prior['requests']} 次请求 / ${prior['actual_cost_usd_from_usage']:.9f} 已计入下面累计用量。续跑前固定的 gold 未改变，没有多轮比较择优。", ""])
-    text.extend(["## 请求与费用", "", f"总请求数：{report['counter']['requests']}/200；按实际 API 用量及公布费率计费 ${report['actual_cost_usd_from_usage']:.9f}/$2.00，不含先前预标注。", "",
+    text.extend(["## 请求与费用", "", f"本轮请求数：{report['counter']['requests']}/{report['counter']['max_requests']}；按实际 API 用量及公布费率计费 ${report['actual_cost_usd_from_usage']:.9f}/${report['counter']['max_usd']:.2f}，不含以前的请求与费用。", "",
         "| 模型 | 请求数 | 输入 token | 输出 token（含思考） | 用量费用 USD |", "| --- | ---: | ---: | ---: | ---: |"])
     for model, usage in report["usage_by_model"].items():
         text.append(f"| {model} | {usage['requests']} | {usage['input_tokens']} | {usage['output_tokens_including_thinking']} | {usage['cost_usd_from_usage']:.9f} |")
     text.extend(["", f"spot_check.csv 固定种子 20261029，按系统从预测判断及未匹配 gold 判断中各抽取向上取整的 20%，共 {report['spot_check']['sampled']}/{report['spot_check']['population']} 条；包含中文翻译、裁判理由和空白人工判断列。", "",
-        "## 范围与限制", "", "两套系统只接收原始标准转录。全部预测完成后才读取 gold；摘要、候选和人工标注未进入被评测系统。基线整场一次（SDK 直调以容纳全文），LinkLoom 使用未修改的产品 task_observation 流程及 16 个重叠块；仅合并绝对原文位置相同的工作证据。分块上下文、普通文档发言人识别及英文相对日期规则均可能影响结果。", "",
+        "## 范围与限制", "",
+        (f"v2 第一期仅重跑新的抽取器，共 {scope['windows']} 个窗口。基线与接线修复后的 legacy 结果复用；没有重跑二者。整场优先，超限按完整发言拆分；Host 显式配置 192 KiB 输入上限，旧适配器默认仍为 32 KiB。每条引用由 canonical 发言句柄复制并核验；截止时间保留 raw_text/kind，resolved_at 恒为空。候选、会后范围、完成状态和交付物标签同一次输出，简单去重不额外调用模型。原始候选、排除项和校验拒绝项保留在被忽略的运行目录。ES2002 为开发集，结果仅作参考。" if v2 else
+        f"第 0 步仅重跑 LinkLoom，共 {scope['windows']} 个窗口；基线预测和基线裁判响应复用，新增基线模型请求为 0。AMI 正文保持逐字一致；ISO 时间为明确标注的技术锚加原始相对秒数，不能当真实日期。每个窗口传入 AMI 元数据角色映射。原 16 块中超过产品 32 KiB 输入限制的块按完整发言拆分，保持两条重叠，不绕过产品限制。产品代码、提示词、task-recall/v3 和引用校验未修改；绝对原文工作位置去重。截止时间规则与会中工作筛选等产品限制仍然存在。" if scope else
+        "两套系统只接收原始标准转录。基线整场一次（SDK 直调以容纳全文），LinkLoom 使用未修改的产品 task_observation 流程及 16 个重叠块；仅合并绝对原文位置相同的工作证据。分块上下文、普通文档发言人识别及英文相对日期规则均可能影响结果。"), "",
+        "全部新预测完成后才读取 gold 任务内容；摘要、候选和人工标注未进入被评测系统。负责人代词未解析的一律判错；明确说话人编号按本场 AMI 角色映射比较；明确同一次下次会议的相对时长与事件表达可等价。", "",
         "语料及全量模型输出保留在被忽略的 work/；Git 只提交必要的 gold 引用和抽查引用，不提交整场转录或 ZIP。AMI Meeting Corpus / AMI Project、AMI Consortium，CC BY 4.0：https://groups.inf.ed.ac.uk/ami/corpus/ ；https://creativecommons.org/licenses/by/4.0/ 。", ""])
     with path.open("x", encoding="utf-8") as stream:
         stream.write("\n".join(text))
@@ -958,11 +1167,13 @@ def evaluate(data, gold_path, out, client):
     finish_evaluation(meetings, gold_path, out, client, predictions)
 
 
-def finish_evaluation(meetings, gold_path, out, client, predictions, *, saved=None):
+def finish_evaluation(meetings, gold_path, out, client, predictions, *, saved=None, saved_baseline=None):
     gold = load_gold(gold_path, meetings)
     all_rows, report = [], {"models": {"evaluated": GEMINI, "judge": DEEPSEEK}, "rules": "meeting-task-match/v2", "per_meeting": {}, "micro": {},
         "gold_sha256": hashlib.sha256(gold_path.read_bytes()).hexdigest(),
         "generation": {"thinking_level": GEMINI_THINKING, "max_output_tokens": GEMINI_MAX_OUTPUT}}
+    if getattr(client, "evaluation_scope", None):
+        report["evaluation_scope"] = client.evaluation_scope
     for meeting in meetings:
         mid = meeting["meeting_id"]
         report["per_meeting"][mid] = {}
@@ -982,10 +1193,14 @@ def finish_evaluation(meetings, gold_path, out, client, predictions, *, saved=No
                 "and the FULL gold quote translated as quote_zh. These translations are review aids, not new judgments. "
                 "Deadline flags MUST be false when the gold date is unstated or the prediction abstains.\nDATA:\n" + encoded({
                     "meeting": source_input(meeting, True), "gold": gold[mid], "predictions": items}).decode())
-            payload = (client.generate(DEEPSEEK, prompt, REVIEW_JUDGE_SCHEMA, 32768) if saved is None else
-                       json.loads((saved / f"{mid}.{system}.judge.json").read_text(encoding="utf-8")))
+            if getattr(client, "evaluation_scope", {}).get("task_extraction_mode") == "meeting_v2":
+                prompt += "\nEach prediction.evidence_quotes item is a separate exact source quote. Never join these into a fabricated contiguous evidence_quote."
+            saved_for_system = saved if saved is not None else saved_baseline if system == "baseline" else None
+            payload = (client.generate(DEEPSEEK, prompt, REVIEW_JUDGE_SCHEMA, 32768) if saved_for_system is None else
+                       json.loads((saved_for_system / f"{mid}.{system}.judge.json").read_text(encoding="utf-8")))
             new_json(out / f"{mid}.{system}.judge.json", payload)
             rows, translations = review_judgments(payload, items, gold[mid], meeting["text"])
+            rows = reviewed_field_rules(rows, items, gold[mid], meeting)
             report["per_meeting"][mid][system] = metrics(rows, gold[mid])
             item_map, gold_map = {p["prediction_id"]: p for p in items}, {g["gold_id"]: g for g in gold[mid]}
             for row in rows:
@@ -1022,6 +1237,59 @@ def finish_evaluation(meetings, gold_path, out, client, predictions, *, saved=No
     write_result_report(out / "results.md", report, all_rows)
 
 
+def evaluate_linkloom(data, gold_path, source, reference_path, out, client, *, task_extraction_mode="legacy"):
+    """One LinkLoom-only rerun; baseline predictions and judge responses are reused."""
+    out.mkdir(parents=True, exist_ok=False)
+    client.output_dir = out
+    meetings = load_meetings(data)
+    previous = json.loads((source / "predictions.json").read_text(encoding="utf-8"))
+    reference = json.loads(reference_path.read_text(encoding="utf-8"))
+    if reference["gold_sha256"] != hashlib.sha256(gold_path.read_bytes()).hexdigest():
+        raise ValueError("Reference and rerun must use the same frozen gold")
+    predictions, diagnostics = {}, {}
+    for meeting in meetings:
+        mid = meeting["meeting_id"]
+        predictions[mid] = {"baseline": previous["predictions"][mid]["baseline"]}
+        predictions[mid]["linkloom"], diagnostics[mid] = linkloom_predict(meeting, client, speaker_wiring=True,
+            task_extraction_mode=task_extraction_mode)
+        new_json(out / f"{mid}.linkloom.json", {"predictions": predictions[mid]["linkloom"], "diagnostics": diagnostics[mid]})
+        print(json.dumps({"stage": "meeting_v2" if task_extraction_mode == "meeting_v2" else "linkloom-speaker-wiring", "meeting_id": mid,
+                          "predictions": len(predictions[mid]["linkloom"])}), flush=True)
+    new_json(out / "predictions.json", {"model": GEMINI, "predictions": predictions, "diagnostics": diagnostics})
+    client.evaluation_scope = {"kind": "meeting_v2_phase1" if task_extraction_mode == "meeting_v2" else "speaker_wiring_linkloom_only",
+        "task_extraction_mode": task_extraction_mode, "windows": sum(len(d) for d in diagnostics.values()),
+        "baseline_reused": True, "baseline_model_requests": 0}
+    finish_evaluation(meetings, gold_path, out, client, predictions, saved_baseline=source)
+    report = json.loads((out / "results.json").read_text(encoding="utf-8"))
+    # Never silently publish an altered reused baseline.
+    if report["micro"]["baseline"] != reference["micro"]["baseline"]:
+        raise ValueError("Reused baseline scores changed; inspect saved results offline")
+    report["wiring_comparison"] = {"before": reference["micro"], "after": report["micro"],
+        "before_per_meeting": reference["per_meeting"],
+        "baseline_reused_from": str(source), "baseline_model_requests": 0,
+        "change": ("meeting_v2 phase1: whole-meeting/multi-evidence/raw-deadline/status/simple-grouping; legacy and baseline reused" if task_extraction_mode == "meeting_v2" else
+            "timestamped speaker headers and per-meeting AMI roster metadata; preserve original window boundaries where possible, subdivide oversized windows at complete utterances for product 32 KiB input cap; unchanged task-recall/v3 product code"),
+        "reference_results_sha256": hashlib.sha256(reference_path.read_bytes()).hexdigest()}
+    new_json(out / "comparison.json", report)
+    if task_extraction_mode == "meeting_v2":
+        lines = ["# ES2002 开发集：第一期 v2 对比", "", "开发集结果只作参考；legacy 和基线均复用既有预测，不增加抽取调用。", "",
+            "| 指标 | 基线（复用） | legacy（接线修复后，复用） | meeting_v2 |", "| --- | ---: | ---: | ---: |"]
+        for label, key in (("待办准确率", "precision"), ("待办召回率", "recall"),
+                ("负责人正确率（匹配任务）", "owner_accuracy_on_matched"),
+                ("截止时间正确率（匹配且 gold 明确）", "deadline_accuracy_on_matched_stated_gold"),
+                ("截止时间端到端正确率", "deadline_end_to_end_accuracy_on_stated_gold"),
+                ("讨论误判数 / 全部预测", "discussion_false_positives")):
+            cells = []
+            for metric in (reference["micro"]["baseline"], reference["micro"]["linkloom"], report["micro"]["linkloom"]):
+                c = metric["metric_counts"][key]; n, d = c["numerator"], c["denominator"]
+                cells.append(f"{n}/{d} ({n/d:.1%})" if d else f"{n}/{d}（不适用）")
+            lines.append("| " + " | ".join([label, *cells]) + " |")
+        lines += ["", f"本轮新增 {client.counter.requests}/{client.counter.max_requests} 次请求，${client.actual_cost_usd:.9f}/${client.counter.max_usd:.2f}。原始结果和逐条中英差异见 results.md；新抽查见 spot_check.csv。", "",
+            "v2 仅输出候选和精确引用；没有 UI、产品持久化、人工审核绑定或日期换算。状态与候选同一次返回，简单去重不增加模型调用。resolved_at 恒为 null。", ""]
+        with (out / "three_way.md").open("x", encoding="utf-8") as stream:
+            stream.write("\n".join(lines))
+
+
 def score_saved(data, gold_path, source, out, prior_failure=None):
     """Rebuild reports from existing predictions/judgments; zero provider calls."""
     state_path = source / "failure.json" if (source / "failure.json").is_file() else source / "results.json"
@@ -1043,6 +1311,69 @@ def score_saved(data, gold_path, source, out, prior_failure=None):
     finish_evaluation(load_meetings(data), gold_path, out, client, predictions["predictions"], saved=source)
 
 
+def rebuild_meeting_v2(data, gold_path, source, out):
+    """Revalidate saved proposals under frozen local rules; no provider path."""
+    from linkloom.agents.model_adapter import ModelAction, ModelResponse
+    from linkloom.semantic_ingestion.meeting_tasks_v2 import TOOL_ID
+    from linkloom.tools.contracts import ToolCall
+    state = json.loads((source / "results.json").read_text(encoding="utf-8"))
+    if state["gold_sha256"] != hashlib.sha256(gold_path.read_bytes()).hexdigest():
+        raise ValueError("Frozen gold changed; saved judge reuse denied")
+    out.mkdir(parents=True, exist_ok=False)
+    previous = json.loads((source / "predictions.json").read_text(encoding="utf-8"))
+    predictions, diagnostics, changes = {}, {}, []
+    meetings = load_meetings(data)
+    for meeting in meetings:
+        mid = meeting["meeting_id"]
+        proposals = json.loads((source / f"{mid}.v2-discovery.json").read_text(encoding="utf-8"))["responses"]
+        class Replay:
+            output_dir = out
+            gemini_max_input_bytes = 192 * 1024
+            position = 0
+            def complete(self, request):
+                if self.position >= len(proposals):
+                    raise ValueError("Offline windows no longer match saved proposals")
+                old_request = json.loads((source / f"{mid}.v2-request-{self.position}.json").read_text(encoding="utf-8"))
+                if json.loads(old_request["user_input"].split("\nDATA:\n", 1)[1]) != json.loads(request.user_input.split("\nDATA:\n", 1)[1]):
+                    raise ValueError("Source version, roster or window changed; saved judge reuse denied")
+                payload = proposals[self.position]
+                self.position += 1
+                return ModelResponse(action=ModelAction.tool(ToolCall(call_id="offline-saved-proposal",
+                    tool_id=TOOL_ID, arguments=payload)))
+        replay = Replay()
+        current, diagnostics[mid] = meeting_v2_predict(meeting, replay)
+        if replay.position != len(proposals):
+            raise ValueError("Offline rebuild omitted a saved window")
+        original = previous["predictions"][mid]["linkloom"]
+        if len(current) != len(original):
+            raise ValueError("Local deadline correction must not change task inventory")
+        rng = random.Random(f"20261029:{mid}:linkloom")
+        ids = [f"p-{rng.getrandbits(64):016x}" for _ in current]
+        old_judge = json.loads((source / f"{mid}.linkloom.judge.json").read_text(encoding="utf-8"))
+        judged = {r["prediction_id"]: r for r in old_judge["judgments"]}
+        for index, (old, new) in enumerate(zip(original, current)):
+            difference = {key for key in old.keys() | new.keys() if old.get(key) != new.get(key)}
+            if difference - {"deadline", "deadline_kind"}:
+                raise ValueError("Offline rule fix changed non-deadline fields; judge reuse denied")
+            if difference:
+                if not abstains(new["deadline"]) or judged[ids[index]]["deadline_correct"]:
+                    raise ValueError("Changed deadline cannot safely reuse this saved field judgment")
+                changes.append({"meeting_id": mid, "prediction_id": ids[index],
+                    "old_deadline": old["deadline"], "new_deadline": new["deadline"],
+                    "old_kind": old.get("deadline_kind"), "new_kind": new.get("deadline_kind")})
+        predictions[mid] = {"baseline": previous["predictions"][mid]["baseline"], "linkloom": current}
+        new_json(out / f"{mid}.linkloom.json", {"predictions": current, "diagnostics": diagnostics[mid]})
+    new_json(out / "predictions.json", {"model": GEMINI, "predictions": predictions, "diagnostics": diagnostics})
+    client = Client(Counter(4, 1.0), live=False)
+    client.evaluation_scope = {"kind": "frozen_rule_offline_rebuild", "task_extraction_mode": "meeting_v2",
+        "windows": sum(len(d) for d in diagnostics.values()), "baseline_reused": True, "baseline_model_requests": 0}
+    finish_evaluation(meetings, gold_path, out, client, predictions, saved=source)
+    new_json(out / "offline_rebuild.json", {"source": str(source), "new_model_requests": 0, "new_cost_usd": 0,
+        "changed_fields": changes, "unchanged": "task inventory, task text, owner, all source references and saved raw proposals",
+        "scope": "local rule validation only; revised prompt was not sent to a model"})
+    print(json.dumps({"offline_rebuild": True, "changed_deadlines": len(changes), "requests": 0, "cost_usd": 0}))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command")
@@ -1061,13 +1392,21 @@ def main(argv=None):
     scoring.add_argument("--source", type=Path, required=True)
     scoring.add_argument("--out", type=Path, required=True)
     scoring.add_argument("--prior-failure", type=Path)
-    for command in ("preannotate", "evaluate"):
+    rebuild = sub.add_parser("rebuild-meeting-v2", help="Offline local-rule validation against saved v2 proposals; never calls providers")
+    for name in ("data", "gold", "source", "out"):
+        rebuild.add_argument("--" + name, type=Path, required=True)
+    for command in ("preannotate", "evaluate", "evaluate-linkloom"):
         run = sub.add_parser(command)
         run.add_argument("--data", type=Path, required=True)
         run.add_argument("--out", type=Path, required=True)
         run.add_argument("--live", action="store_true", help="Enable billable HTTP calls after human confirmation")
-        if command == "evaluate":
+        if command in {"evaluate", "evaluate-linkloom"}:
             run.add_argument("--gold", type=Path, required=True)
+        if command == "evaluate-linkloom":
+            run.add_argument("--source", type=Path, required=True, help="Saved original predictions and baseline judge responses")
+            run.add_argument("--reference", type=Path, required=True, help="Human-corrected results.json for before/after comparison")
+            run.add_argument("--task-extraction-mode", choices=("legacy", "meeting_v2"), default="legacy")
+        if command == "evaluate":
             run.add_argument("--prior-failure", type=Path,
                 help="Only with explicit human authorization: carry failed-attempt counts/cost into continuation")
     args = parser.parse_args(argv)
@@ -1087,11 +1426,15 @@ def main(argv=None):
         freeze_gold(args.csv, args.out)
     elif args.command == "score-saved":
         score_saved(args.data, args.gold, args.source, args.out, args.prior_failure)
+    elif args.command == "rebuild-meeting-v2":
+        rebuild_meeting_v2(args.data, args.gold, args.source, args.out)
     else:
         if not args.live:
             parser.error("No model calls made: add --live only after human confirmation")
-        counter = Counter(10, 0.2) if args.command == "preannotate" else Counter(200, 2.0)
-        client = Client(counter, live=True)
+        v2 = args.command == "evaluate-linkloom" and args.task_extraction_mode == "meeting_v2"
+        counter = (Counter(60, 1.0) if v2 else Counter(10, 0.2) if args.command == "preannotate" else
+                   Counter(40, 0.5) if args.command == "evaluate-linkloom" else Counter(200, 2.0))
+        client = Client(counter, live=True, gemini_max_input_bytes=192 * 1024 if v2 else 32768)
         if args.command == "evaluate" and args.prior_failure is not None:
             prior = json.loads(args.prior_failure.read_text(encoding="utf-8"))
             counter.requests = prior["counter"]["requests"]
@@ -1105,6 +1448,9 @@ def main(argv=None):
         try:
             if args.command == "preannotate":
                 preannotate(args.data, args.out, client)
+            elif args.command == "evaluate-linkloom":
+                evaluate_linkloom(args.data, args.gold, args.source, args.reference, args.out, client,
+                    task_extraction_mode=args.task_extraction_mode)
             else:
                 evaluate(args.data, args.gold, args.out, client)
         except Exception as error:

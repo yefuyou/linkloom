@@ -1,5 +1,37 @@
 # AMI 会议记录 → 待办抽取
 
+## 冻结版同步与验证
+
+已把包含 PR #28/#30 的 origin/master 合入 task-eval，合并和本地改动恢复均无冲突。v2 提示词、规则、阈值已冻结，见 [冻结元数据](v2_frozen.json)。只做了一项通用期限角色修正：纯位置/载体/交付渠道不是期限，真实时间点、时长和事件时点保留；没有加入开发集专用句子规则。
+
+对 ES2002 已有原始响应纯离线重建，清空 1 项非期限，11 条任务及 8 条明确期限的主指标不变；新模型请求 0、费用 $0。新的提示词未经在线重测。人工抽查 CSV 六条均已写“同意”。全量 pytest 3246 passed、31 skipped、0 failed、0 errors；剩余失败为无。历史旧基线失败不再代表本版状态。完整说明见 [冻结版结果](results_v2_phase1.md)。
+
+离线复核入口（输出目录须不存在）：
+
+```powershell
+python scripts/eval_tasks.py rebuild-meeting-v2 --data work/ami_tasks_data_es2002 --gold benchmarks/ami_tasks/gold.jsonl --source work/ami_tasks_results_v2_phase1_final --out work/ami_tasks_v2_offline_check
+```
+
+该入口不读取 API 凭证或调用模型；gold、来源版本、参会者映射或窗口变动，以及非期限预测变化时，拒绝复用缓存裁判。未读取 ES2003，也未实施第二期。
+
+## v2 第一期抽取器（2026-10-30）
+
+显式配置 `task_extraction_mode=legacy|meeting_v2`，默认 legacy；新逻辑在 `src/linkloom/semantic_ingestion/meeting_tasks_v2.py`，不接产品 UI 或数据库。完整两期设计和本次已授权的第一期边界见 [设计/SPEC](task_extraction_v2_design.md)。Gemini 适配器只增加可信 Host 的 `max_input_bytes` 参数，默认仍为 32 KiB，允许显式设置至 256 KiB；本次 v2 Host 使用 192 KiB。旧请求对象不增加字段，默认线载荷及请求哈希不变。
+
+v2 优先读取整场，超限才按完整发言使用大窗口；候选、会后范围、完成状态和交付物标签同一次返回。模型给出 canonical 发言句柄，Host 复制每段完整原文，分别核验位置、哈希和不可变来源版本。截止时间只有原样 raw_text/kind，resolved_at 恒为 null。简单合并仅针对已解析负责人相同且模型 deliverable_key 相同的候选，保留所有出处；未知负责人不合并。没有日期换算、独立状态/去重模型调用、持久化、UI 或人工审核绑定。
+
+本轮只加载 ES2002a–d；没有读取 ES2003 转录、摘要或标注。通用提示词不包含开发集句子、角色或任务。ES2002 是开发集，结果不能证明泛化能力。结果和费用见 [三方对比](results_v2_phase1.md) / [结构化结果](results_v2_phase1.json)，新的裁判抽查见 [spot_check_v2_phase1.csv](spot_check_v2_phase1.csv)。legacy 使用上一轮已修复说话人接线的结果，基线也复用，二者不重跑。
+
+本次 Gemini 每场只请求一次，共 4 次；首次 Host 校验只接受 speaker ID，误拒了同一可信 roster 中的 participant ID。已通过通用、精确且拒绝歧义的 ID 映射修正；4 个原请求及原模型响应完全复用，没有重新抽取或改写模型任务/引文。只为预测发生变化的三场补充 DeepSeek 裁判，未变化的一场裁判复用。累计 **11/60 次、$0.058264752/$1**，包含之前的 3 次失效裁判费用；Gemini 4 次、DeepSeek 7 次。全部运行材料保留在忽略的 work/ 下。
+
+执行入口如下；本次已经完成，不要重复运行：
+
+```powershell
+python scripts/eval_tasks.py evaluate-linkloom --task-extraction-mode meeting_v2 --data work/ami_tasks_data_es2002 --gold benchmarks/ami_tasks/gold.jsonl --source work/ami_tasks_results_speaker_wiring --reference benchmarks/ami_tasks/results_speaker_wiring.json --out work/ami_tasks_results_v2_phase1 --live
+```
+
+下面保留原始评测的数据、署名和方法说明。
+
 第一版只处理 ES2002a–d。ES2003a–d 保留为后续计划，当前没有转换、预标注或评分。英文人工 gold 已确认为 11 条并固定到 gold.jsonl。首个基线请求在附加引用校验处停止，已用 1 次请求 / $0.006915；用户随后明确确认修复后续跑，累计费用和次数沿用，gold 未变。完整评测已完成：累计 29 次请求、按 API 用量计费 $0.172675374。结果见 [results.md](results.md) / [results.json](results.json)，人工抽查见 [spot_check.csv](spot_check.csv)。分数是裁判初判，报告单列了日期等价和误报类别的人工复核疑点。不改产品实现，不接触笔记库，不创建预算账本、封存或预检流程。
 
 ## 数据确认（2026-10-29）

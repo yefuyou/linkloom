@@ -1,0 +1,49 @@
+{
+  "version": "meeting-tasks/v2-phase1",
+  "status": "frozen before full pytest; identical source blobs verified after passing suite",
+  "source_normalized_sha256": {
+    "src/linkloom/semantic_ingestion/meeting_tasks_v2.py": "a5d9aa5591b5cf4be4c7ea63c0dc3671a3cf95daddb9772c627b445ebdf93e3b",
+    "src/linkloom/agents/providers/gemini_api.py": "7ee39c04e73dfe58db66e28ac0820b5af9184cfe0b58c4e3c6568e2c29f0e15b",
+    "scripts/eval_tasks.py": "4d2f674e2f51e7242679019ee68968ed6db26ba60320335912c9b23a12455f1f"
+  },
+  "prompt_sha256": "abd2ff3cf32d3564d0f3c8c07cb3f41c8a59cd2657fc5a3edf4b1bc98e740707",
+  "schema_sha256": "8b7b7dd5b736d1fe8f46ce68b43cd4a9b38304d897fee26bf68bd48a0e312b96",
+  "host_config": {
+    "task_extraction_mode": "meeting_v2",
+    "max_input_bytes": 196608,
+    "window_body_bytes": 49152,
+    "overlap_messages": 2,
+    "max_calls": 32,
+    "max_output_tokens": 32768
+  },
+  "model": "gemini-3.8-flash",
+  "thinking_level": "low",
+  "gold_sha256": "8df36c0dac65e755dbf0ac8a33dbe4be491b0718a260c604d1f5601d31b64855",
+  "integrated_origin_master": "57098a63537857d40be087642ad5b9d93d2cddfa",
+  "master_merge_commit": "13be598729efe285410800e6d5f1c2e6d3f776f5",
+  "merge_conflicts": [],
+  "restore_conflicts": [],
+  "offline_validation": {
+    "data": "ES2002a-d only",
+    "new_requests": 0,
+    "new_cost_usd": 0,
+    "changed_deadlines": 1,
+    "unchanged": "11 tasks, owners, all source references, saved raw model responses and gold",
+    "revised_prompt_live_validated": false,
+    "report": "work/ami_tasks_v2_freeze_final/offline_rebuild.json"
+  },
+  "full_pytest": {
+    "tests": 3277,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 31,
+    "passed": 3246,
+    "seconds": 1338.48,
+    "warnings": 1,
+    "remaining_failures": []
+  },
+  "human_review": {
+    "rows": 6,
+    "agree": 6
+  }
+}

@@ -1,18 +1,18 @@
 ﻿system,meeting_id,prediction_id,gold_id,category,prediction_task,prediction_task_zh,gold_task,gold_task_zh,prediction_owner,gold_owner,prediction_deadline,gold_deadline,owner_correct,deadline_correct,quote,quote_zh,judge_reason,人工判断（同意 / 不同意）
 baseline,ES2002d,p-65f7d07a3ce89d98,ES2002d-c006,MATCH,Submit the evaluation criteria,提交评估标准,Submit the evaluation criteria,提交评估标准,C,Marketing Executive,未说明,未说明,True,False,"C [1348.560-1349.030]: I will , yeah .
 ","C [1348.560-1349.030]：我会的，是的。
-",预测任务“提交评估标准”与金标任务一致，负责人C为营销主管，与金标角色匹配；金标未说明截止日期，故截止日期不计分。,
+",预测任务“提交评估标准”与金标任务一致，负责人C为营销主管，与金标角色匹配；金标未说明截止日期，故截止日期不计分。,同意
 baseline,ES2002c,p-985fac213a64231f,ES2002c-c003,MATCH,Put up the meeting minutes,发布会议纪要,Get the minutes up as soon as possible,尽快发布会议纪要,B,Project Manager,as soon as possible,as soon as possible,True,True,"B [2264.470-2277.720]: So um that'll be that'll be good . Um and I'll get the the minutes up as soon as possible . Anything at all you think we haven't discussed that we need to ? Is everybody kind of happy about what they're gonna be doing ?
 ","B [2264.470-2277.720]: 所以嗯，那会很好的。嗯，我会尽快把会议纪要发上去。你们觉得还有什么我们没讨论但需要讨论的吗？大家对要做的事情都满意吗？
-",预测任务与金标任务一致，均为尽快发布会议纪要；负责人B为项目经理，与金标“Project Manager”相符；截止时间“as soon as possible”与金标一致。,
+",预测任务与金标任务一致，均为尽快发布会议纪要；负责人B为项目经理，与金标“Project Manager”相符；截止时间“as soon as possible”与金标一致。,同意
 baseline,ES2002d,p-8c27fdd8437f96c4,ES2002d-c005,MATCH,Write the final report,撰写最终报告,"Write the final report, including the final design details",撰写最终报告，包含最终设计细节,B,Project Manager,未说明,未说明,True,False,"B [2238.850-2241.730]: Well apparently now I write the final report . What are you guys doing now ?
 ","B [2238.850-2241.730]：嗯，看来现在我要写最终报告了。你们现在在做什么？
-",预测任务“写最终报告”与金标任务一致，负责人B为项目经理，与金标角色匹配；金标未说明截止日期，故截止日期不计分。,
+",预测任务“写最终报告”与金标任务一致，负责人B为项目经理，与金标角色匹配；金标未说明截止日期，故截止日期不计分。,同意
 linkloom,ES2002c,p-4f7aebf9c5a920f0,ES2002c-c003,MATCH,get the the minutes up,整理并发布会议纪要,Get the minutes up as soon as possible,尽快整理并发布会议纪要,I,Project Manager,未说明,as soon as possible,True,False,"B [2264.470-2277.720]: So um that'll be that'll be good . Um and I'll get the the minutes up as soon as possible . Anything at all you think we haven't discussed that we need to ? Is everybody kind of happy about what they're gonna be doing ?
 ","B [2264.470-2277.720]：所以嗯那会很好的。嗯我会尽快把会议纪要整理出来。还有任何你们觉得我们没讨论但需要讨论的吗？大家对自己要做的事情都满意吗？
-",预测任务为整理并发布会议纪要，与金标任务一致；说话人B为项目经理，'I'指代B，所有者正确；金标截止为'as soon as possible'，预测为未说明，属弃权，不计为正确。,
+",预测任务为整理并发布会议纪要，与金标任务一致；说话人B为项目经理，'I'指代B，所有者正确；金标截止为'as soon as possible'，预测为未说明，属弃权，不计为正确。,部分不同意：任务匹配同意；负责人判定不同意（I未解析为具体人或角色）
 linkloom,ES2002b,,ES2002b-c001,FN,,,Think about the components concept,思考组件概念,,Industrial Designer,,in the thirty minutes after lunch,False,False,"B [1965.130-2025.610]: Okay , right . Um , okay well I gotta kind of got five minutes to wrap up now . Um next thing we're doing is having lunch . Whoohoo . Um and then we're gonna have thirty minutes of working on the next stage . Um so I'll be putting the minutes of this uh this meeting into the project documents folder . Um so uh I guess just to just to confirm that we know what we're doing in the next well in the thirty minutes after lunch anyway , um for uh our Industrial Designer , you're gonna be thinking about the components concept . Um User Interface Designer gonna be thinking about our user interface , and marketing you're gonna be thinking about trend watching . Um and you'll all get specific instructions as well . So um I dunno , just just to to ask now if you've got anything else you've thought about while we've been talking . Um , do you wanna start with David . Anything else to say at all ? No , okay . Andrew ?
-",B [1965.130-2025.610]: 好，好吧。嗯，我现在大概只有五分钟来收尾了。嗯，接下来我们要去吃午饭。好耶。嗯，然后我们会有三十分钟来做下一阶段的工作。嗯，所以我会把这次会议的纪要放进项目文档文件夹里。嗯，所以我想就确认一下我们知道接下来要做什么，嗯，就在午饭后的那三十分钟里，嗯，我们的工业设计师，你要思考组件概念。嗯，用户界面设计师要思考我们的用户界面，市场部要思考趋势观察。嗯，你们也都会收到具体指示。所以嗯，我不知道，就现在问一下，如果你们在我们谈话过程中还想到别的什么。嗯，你想先开始吗，David。还有什么要说的吗？没有，好。Andrew？,裁判没有为此标准任务匹配任何预测。,
+",B [1965.130-2025.610]: 好，好吧。嗯，我现在大概只有五分钟来收尾了。嗯，接下来我们要去吃午饭。好耶。嗯，然后我们会有三十分钟来做下一阶段的工作。嗯，所以我会把这次会议的纪要放进项目文档文件夹里。嗯，所以我想就确认一下我们知道接下来要做什么，嗯，就在午饭后的那三十分钟里，嗯，我们的工业设计师，你要思考组件概念。嗯，用户界面设计师要思考我们的用户界面，市场部要思考趋势观察。嗯，你们也都会收到具体指示。所以嗯，我不知道，就现在问一下，如果你们在我们谈话过程中还想到别的什么。嗯，你想先开始吗，David。还有什么要说的吗？没有，好。Andrew？,裁判没有为此标准任务匹配任何预测。,同意
 linkloom,ES2002d,p-3a048f4281b92cc5,,UNSUPPORTED,write up our results on the board,在白板上写下我们的结果,,,未说明,,未说明,,False,False,"C [1007.890-1015.790]: Yeah , okay great . Uh and I'm gonna write up our results on the board , so this'll be a way for us to go through and decide if we're um sort of review where we stand with it .
 ","C [1007.890-1015.790]: 是的，好的，太好了。呃，我要把我们的结果写在白板上，这样我们就可以通过它来审视并决定我们目前的进展。
-",该任务是在本次会议中由C在白板上记录评估结果，属于会议进行中的演示/记录行为，非会议后需完成的实质工作，故不构成有效任务。,
+",该任务是在本次会议中由C在白板上记录评估结果，属于会议进行中的演示/记录行为，非会议后需完成的实质工作，故不构成有效任务。,同意
