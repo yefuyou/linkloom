@@ -37,7 +37,7 @@
 - 本阶段没有进行浏览器人工验收或付费 Provider 验收；前端 DOM 脚本通过不等于浏览器验收。
 
 <!-- TEST_RESULTS_START -->
-## 完整测试结果
+## 第 0 阶段完整测试结果（历史）
 
 | 检查 | 通过 | 失败 | 跳过 | 错误 |
 |---|---:|---:|---:|---:|
@@ -71,6 +71,23 @@
 
 完整 JUnit 报告 SHA-256：`7443e38b58b23646ca9365b8f84bfd9c85a20c1b251e17d14a5537aaa8fb43cb`。
 <!-- TEST_RESULTS_END -->
+
+## 主干同步：PR #30（2026-10-30 起的有效回归门槛）
+
+按用户授权，PR #30 合并后已执行 `git fetch origin refs/heads/master:refs/remotes/origin/master` 和 `git merge --no-edit origin/master`。
+
+- 上游 PR #30 合并提交：`57098a63537857d40be087642ad5b9d93d2cddfa`。
+- 本分支的主干同步提交：`46442bf8969c5a9f6ce80136b94a56b1c03eccd2`。
+- 同步的上游文件只有 `src/linkloom/cli.py`、`tests/e2e/test_cli_encoding.py` 和 `tests/integration/test_m3p_product_review.py`；未与本阶段新增待办文件冲突。编码修复来自上游，本功能分支未自行重写修复。
+- 5 个既有失败的定向复测：`5 passed in 104.67s`。父进程仍采用默认 cp936；上游修复为测试子进程显式提供 UTF-8。
+- 随后的完整 pytest：**3,169 通过、0 失败、31 跳过、0 错误**，共 3,200 个用例，耗时 `2024.70s (0:33:44)`；退出码 0。
+- 原有 3,176 个用例逐项对照：**3,145 通过、31 跳过**；旧 5 个失败全部消失，没有丢失原有用例，没有原有用例新增失败或跳过。
+- 本轮新增的 24 个用例由 PR #30 的 1 个编码用例和待办模块的 23 个用例构成，均通过。
+- 现有前端 DOM 脚本 **6/6 通过**、JavaScript 语法检查 **3/3 通过**；没有改动 Ask 静态文件。
+- 本轮完整套件的运行快照为“待办 store 并发首次初始化修复前”。该问题由独立并发探针发现；修复后的数据层验证在第 1 阶段结果中另列。
+- 完整结果：`work/task-mvp/stage1.xml`、`stage1.stdout.log`、`stage1.stderr.log`、`stage1.comparison.json`、`stage1.frontend.json`。这些运行产物不加入提交。
+
+**后续阶段以 0 失败为回归门槛。上文第 0 阶段的 5 个失败仅是历史记录，不再作为后续允许失败集合。**
 
 ## 现有模块逐条复核
 
@@ -107,10 +124,25 @@
 - 现有 deadline 只有原文支持的完整日期才可用 ISO 日期表示，见 `src/linkloom/semantic_ingestion/task_observation.py:157–164`；缺失年份、角色或精度时，不猜日期，保留 deadline_text。
 - 现有导入入口使用带时间戳的文本解析，见 `src/linkloom/ui/product.py:1256–1276`；端到端夹具应通过现有导入入口，不新增抽取逻辑。
 - 新增任务表只能增量加入，不迁移 ActionRecord，不改动关系旁库、决定流程、Ask 或 legacy-ask。
-- 用户已明确授权本文件及最终中文 README，覆盖仓库一般性“不在 docs 下新建过程文件”的默认约定；不额外建立过程文档。
+- 用户最新补充已取消 README；docs/task-mvp 仅在开发期间保留，最后阶段将内容浓缩进 PR 描述并从分支删除该目录。
 
 ## 阶段对照规则
 
-后续阶段使用同一测试范围和默认编码，比较失败用例集合，而不只比较失败数量。原有用例不得新增失败，不通过修改旧断言、添加 skip/xfail 或修复无关问题改变基线。新增子进程测试按用户要求显式设置 `PYTHONIOENCODING=utf-8`；现有五个编码问题保留其原样，按本次实际运行结果登记。
+后续阶段使用同一测试范围和默认编码，比较失败用例集合，而不只比较失败数量。原有用例不得新增失败，不通过修改旧断言、添加 skip/xfail 或修复无关问题改变基线。新增子进程测试按用户要求显式设置 `PYTHONIOENCODING=utf-8`；本功能分支不自行修复五个编码问题；按用户最新授权，PR #30 合并后将 origin/master 合并进本分支，并确认它们消失。第 0 阶段上述结果保留为历史基线。
 
 第 0 阶段只提交本文件。第 1 阶段及以后每阶段独立提交、用中文报告文件和验证结果、对照基线，再等待用户确认。
+
+## 第 1 阶段结果：数据模型和 store
+
+本阶段仅新增数据层和对应单元测试，尚未实现旧 TaskObservation 适配、review.py 服务、HTTP 或页面。新增核心代码不导入 TaskObservation，不改动决定、ActionRecord、关系旁库或 Ask。
+
+- `src/linkloom/tasks/models.py`：Task、TaskEvent、ObservationLink、TaskStatus，以及统一输入 TaskCandidateInput 和多段 EvidenceReference。证据以 JSON 列表存储，逐段保留 workspace、来源版本、发言或行位置、原文及哈希；不同版本不会压成第一段的版本。
+- `src/linkloom/tasks/store.py`：仅增加任务相关表和元数据；快照、只追加事件和候选链接同事务。支持明确选择的字段变更、手动状态变更、候选重复处理拒绝、工作区隔离、同时间事件的稳定顺序及完整快照重放。
+- 独立复核发现并修复首次并发建库竞争：schema 探测、创建和验证现在都在 BEGIN IMMEDIATE 内，DDL 逐条 execute，不使用会隐式提交事务的 executescript。新增回归先复现旧实现失败，再验证 8 个新库 × 4 连接全部首次打开成功及跨连接读写、重放。
+- 修复后的完整数据层聚焦验证：`python -m pytest -q tests/unit/test_task_models.py tests/unit/test_task_store.py --junitxml=work/task-mvp/stage1-final-focused.xml`，**24 通过、0 失败、0 跳过、0 错误**，主 Agent 核验耗时 `1.62s`。
+- 独立 Reviewer 再次运行原探针：12 个新库 × 4 并发连接，**48 次打开全部成功、0 次初始化失败**；无关数据和 user_version 保持不变，未知 schema 仍被拒绝且原数据保留。修复复核未发现残留 P1/P2。
+- 验证覆盖多段/跨版本证据往返、哈希和定位错误、字段选择、重复候选、工作区隔离、事件插入失败整体回滚、只追加约束、快照重放、原有数据/版本保留及并发审核和首次打开。
+
+上面的 PR #30 完整回归是初始化修复前的 3,200 例快照；修复后运行的是全部 24 个新增数据层用例及独立并发探针，未再次执行原有完整套件。该修复仅改尚未接入产品的新 store 和其新增测试，原有源码及测试未再改动。两次验证范围分别记录，不混作同一轮全量结果。
+
+本阶段没有编写 README。BASELINE.md 和 SPEC.md 仅作开发期间资料，最终阶段按用户要求浓缩进 PR 描述并删除 docs/task-mvp。第 1 阶段提交后停止，等待用户确认第 2 阶段。
