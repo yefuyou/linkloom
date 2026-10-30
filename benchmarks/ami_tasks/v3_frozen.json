@@ -100,5 +100,6 @@
     "known_usd_from_usage": 0.108480822,
     "total_usd_upper_bound_including_one_unknown_request": 0.168857322,
     "additional_requests_after_predictions_and_scoring": 0
-  }
+  },
+  "freeze_commit": "7f8397fde1d1c0d21fbde0c7b8db64ebabfb3883"
 }

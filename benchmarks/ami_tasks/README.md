@@ -1,5 +1,28 @@
 # AMI 会议记录 → 待办抽取
 
+## v3：负责人/交付物拆分与置信度（2026-10-30）
+
+`task_extraction_mode=legacy|meeting_v2|meeting_v3`，默认仍为 legacy，v2 冻结源码未改。v3 只改变候选粒度和不确定承诺的报告方式：一条候选对应一组负责人和一项交付物；相关但负责人的义务不同也拆开。随口或不够明确的承诺返回 LOW，并附一句 confidence_reason；明确承诺返回 HIGH。置信度由模型提出，不视为人类确认。不同负责人的候选不合并；重复候选只按相同已解析负责人组和同一交付物标签合并，保留全部出处，任一成员 LOW 则仍为 LOW，未知负责人不合并。
+
+其余沿用 v2：优先整场，超限才用完整发言大窗口；每段引用分别逐字核验位置、哈希及来源版本；期限只保留 raw_text/kind，resolved_at 始终 null；会后范围、完成状态与候选同一次输出。LOW 同样不能绕过原文校验，也不恢复已经完成、取消或明确限于会中的任务。提示词通用，无开发会议的句子、角色或任务内容。
+
+产品接入通过显式配置启用，导入时进入本地人工审核队列，显示 HIGH/LOW、理由和全部原文；LOW 必须人工核对。审核保存本地确认/拒绝状态，不写权威决策记忆，不自动创建执行任务。旧来源更新/删除使原候选失效；重试不重开已审核条目，LOW 不被重试升级。现有离线演示使用默认 legacy。
+
+可信 Host 启动示例（roster 文件是 `[{"speaker":"X","participant_id":"person-x","role":"Coordinator"}, ...]`，来自会议元数据，不从转录内容推测）：
+
+```powershell
+python -m linkloom.ui --allow-external-provider --task-extraction-mode meeting_v3 --meeting-speaker-roster work/meeting-roster.json --database work/meeting-v3.sqlite
+```
+
+导入内容采用产品支持的 `[2034-01-02T09:00:00Z] X: 发言正文` 格式。会议模式使用可信 Host 的 192 KiB 输入上限、48 KiB 窗口正文目标、2 段重叠，最多 32 个窗口；Gemini 思考 low、输出上限 32768（含思考），旧请求默认 32 KiB 保持不变。会议模式不得与离线演示或 Ask 的 task-investigation 配置混用。
+
+本轮只用 ES2002/ES2003 八场开发，不读取 ES2004。开发评测结果见 [v3 报告](results_v3_dev.md) / [结构化指标](results_v3_dev.json)，分别报告 HIGH+LOW 与仅 HIGH；基线、legacy 和 v2 没有重跑。两组现均为开发集，不能据此声称泛化性能。完整响应、转录、逐条裁判和本地抽查 CSV 仍在忽略的 `work/ami_tasks_results_v3_dev*` 下。源码与配置见 [v3 冻结元数据](v3_frozen.json)。
+
+评测入口 `scripts/eval_meeting_v3.py` 沿用 Gemini/DeepSeek 和已修正评分规则，必须显式 `--task-extraction-mode meeting_v3 --live`；两个数据目录与两个 gold 分别指定。全部预测先完成并保存，再读取 gold。内部复用原评分函数时 `baseline` 表示全候选、`linkloom` 表示 HIGH，发布的结构化结果使用 `all/high` 命名，两者均是 v3，不是旧系统结果。恢复评分须显式 `--resume-from`，累计原计数；提交版核对来源/角色/预测/gold/协议哈希，缺少原始 resume_manifest.json 或任何改变即停止，不接受盲目复用。此次运行已完成，不应重复付费执行。
+
+累计 **21/24 次请求**，其中 Gemini 8 次、DeepSeek 13 次（含 1 次失败）。按成功响应 API 用量已知费用 **$0.108480822**，失败请求未知费用保守计入后的总上界 **$0.168857322/$0.60**；没有将失败请求当作免费。一次传输/JSON 中断后仅续评分，八场抽取从未重跑。AMI 署名与转换说明沿用下文 CC BY 4.0 说明。
+
+
 ## ES2003 最终评测（2026-10-30）
 
 冻结版三方结果见 [最终报告](results_es2003_final.md) 和 [结构化结果](results_es2003_final.json)，逐条漏项和多出项均附中文翻译。全部预测只生成一次并先于 gold 内容读取完成；首次运行因 ES2003a / legacy 裁判将两条预测同时匹配到同一 gold 而中止，见 [首次中止报告](results_es2003_attempt1.md) 和 [无效响应原文](judge_es2003a_legacy_invalid_response.txt)。经用户明确授权，仅续跑裁判一次，反馈仅限当前会议的校验错误；未修改 v2、原评测脚本、评分规则或 gold，也未重新生成任何预测。
