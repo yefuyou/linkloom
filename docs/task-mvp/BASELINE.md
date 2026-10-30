@@ -192,3 +192,40 @@
 - 并发验证为跨连接线程；未额外做多进程压力测试。所有数据库为自动测试的合成临时数据，未操作真实笔记库。
 
 本阶段的关键结论：原始候选指纹、人工字段值和来源有效性需要分别记录；只比较当前版本不足以防止旧确认在版本往返后复活。2A 完成后停止等待确认，下一步为 2B。README 已取消，docs/task-mvp 仍仅作临时资料，最终阶段浓缩至 PR 描述并按授权移除。
+
+## 第 2B 阶段结果：人工重绑定、已失效及拒绝状态投影
+
+2026-10-30，用户确认 2A 后，按批准范围在 feat/task-entity 的 51d325ba622bb3b7de044612f9e9064737df15a8 上开发；开始时工作区干净。基线为 3,210 passed / 31 skipped / 0 failed（3,241 collected）。本阶段没有创建分支 / worktree、改变 Git 配置、推送远端或操作真实笔记库。
+
+### 文件及实现
+
+- src/linkloom/tasks/review_models.py：新增抽取器无关 SourceVersionProof / SourceVersionReader，保存来源、真实版本目录顺序、完整内容哈希、逐段证据指纹、原文时间与上下文令牌。
+- src/linkloom/tasks/legacy_adapter.py：旧 TaskObservation 适配器增加事务内历史/当前版本证明；验证完整原文与每段证据，严格用同源目录 rowid 判断新旧，不按版本哈希或导入时间排序。
+- src/linkloom/tasks/review_storage.py：增量加入 task_review_binding_detail 及工作区关联索引/只追加约束。既有 task / review schema 元数据仍为 v1，旧表、旧审核行和旧触发器不重建或回写。详情合并到对应单次审核历史，保留旧/新指纹、字段选择、版本证明、人工声明及撤销目标。
+- src/linkloom/tasks/review.py：新增 preview_rebind / rebind、preview_invalidation / invalidate、undo_invalidation。重绑定必须人工指定新候选和原任务，严格同源/较新/当前且原文验证通过；展示 title / owner / deadline 组差异，全部差异必须显式选 current / candidate / manual。一次重绑定审核记录保存旧新指纹和选择；实际字段值变化另追加 task_event，旧候选、旧链接、旧证据全保留。字段来源按实际选择区分 source / human，不将保留的相异旧值冒充新版支持。
+- “已失效”与任务业务 status 分开。机器验证同源、较新、当前 active 和完整性；同会/任务不存在必须由审核人分别明确声明为 True，存为 human_statement，保存人、理由、时间。新版无任何原会议时间锚点也可人工声明，但不能覆盖机器验证失败。查询明确区分 machine_validation 和 human_declarations。
+- 专用撤销操作必须指向本任务当前失效审核 ID 和审核版本令牌，仅追加撤销关联记录，恢复 needs_review；保留原失效记录、全部任务历史和业务状态，不自动 approved。普通查询、编辑或确认不能解除 invalidated。
+- 当前绑定与历史链接分开；恢复旧原文不能通过旧 link 重确认或倒绑。只包含单 create / 纯 status 历史且可完整验证旧证据、重放一致的 v1 数据可走明确 legacy 出口；旧指纹标为 opaque，未知候选为 null，不伪造旧审核或字段来源，重绑定需逐字段明确确认。
+- include_reviewed=True 补齐持久拒绝审核快照、rejected 状态、reviewer、reason、reviewed_at；来源改版或删除后仍可查询，旧拒绝理由不附到新变体。默认待确认列表仍排除已拒绝项。
+- 新增 tests/unit/test_task_rebind.py；原测试断言、models.py / store.py、决定 / Ask / ActionRecord / 关系旁库行为未改。没有接 HTTP / 页面 / 新 v2 抽取器，没有写 README。现有临时 SPEC.md / BASELINE.md 更新批准范围和结果。
+
+### 验证与独立复核
+
+- 新增测试覆盖真实旧 pipeline 的新版候选持久化、较新版本 rowid（含与哈希字典序相反的情况）、跨 source/workspace/meeting 拒绝、证据完整性、全部差异选择、字段来源及事件时间、预览 / 审核令牌过期、旧链接防倒绑、两种 legacy 出口、无锚点人工声明、撤销目标/锁存/时间顺序、持久拒绝投影、各插入点异常回滚及三种操作跨连接并发仅一次提交。
+- 同时验证只追加/工作区 FK、真实 2A schema dump 的纯增量升级、旧审核记录/两套 meta v1 / user_version / 无关数据不变，以及审核阶段零模型调用。
+- 独立 Reviewer 初轮五文件聚焦：129 passed in 21.34s，并发现一个 P2：legacy/null candidate 任务失效→撤销→恢复旧原文后，可用普通 reconfirm 绕过逐字段确认，产生 approved 且字段来源未知。
+- 已最小修复：普通 reconfirm 在任何字段或审核写入前拒绝 candidate=null 的旧数据，提示使用受控 legacy 出口。新增公开服务回归先复现旧代码 DID NOT RAISE，再验证修复后任务、事件、链接、审核、详情、来源/版本/证据和候选九类表逐行不变，needs_review / unknown 来源保持。
+- 修复后聚焦五文件：130 passed / 0 failed / 0 skipped，23.93s，包含 2A 原 64 例及新增 66 例。报告 work/task-mvp/stage2b_focused_after_legacy_guard.xml。
+- 独立 Reviewer 仅复核修复：新回归 1 passed in 0.84s；原独立探针重跑 blocked=true / no_mutation=true / needs_review。无剩余阻断 P1/P2；报告 stage2b-independent-legacy-guard.xml。复核未修改实现或测试。
+- 最终冻结快照全量 pytest：3,276 passed / 31 skipped / 0 failed / 0 errors，3,307 collected；1167.09s (0:19:27)，退出码 0。默认编码，PYTHONIOENCODING 和 PYTHONUTF8 均未覆盖。
+- 与 2A 的 3,241 例逐项对照：原有 3,210 passed / 31 skipped，缺失 0、新增失败 0、新增跳过 0；新增 66 例全部通过。最初基线的 5 个编码失败本轮仍全部通过。
+- 最终全量开始至结果核对，共 12 个任务源码/聚焦测试文件的 SHA-256 未变化，提交对应已验证的最终代码。
+- 完整报告/比较：work/task-mvp/stage2b.xml、stage2b.comparison.json、stage2b.verification.json、stage2b.exit.json；JUnit SHA-256 为 88a8543c0d1e9240a53ef87fd27789540054160d9a06f477835c06eef9d04dfb。全部运行产物均留在 ignored work 目录，不提交。
+
+### 范围与限制
+
+- 重绑定仍采用保守规则：所有证据属于单一来源版本，旧新候选的原文记录时间非空且一致；没有独立 meeting_id，不能推断同会不同发言时间或跨来源多段的新旧绑定。证据列表数据契约仍支持多段，不将其压成单引用。
+- 旧 v1 若存在来源字段变更 / merge 链、重放不一致或证据无法验证，明确拒绝，不猜旧当前绑定。仅人工失效的同会与不存在判断可由人工声明承担，机器不将其显示为已验证。
+- 并发实测为多线程跨连接，没有另外进行多进程压力测试。原前端文件未改，本阶段只做审核服务，没有界面验收或部署。
+
+本阶段确认的设计结论：当前绑定、历史链接、人工作出的业务判断和机器可验证的原文事实需要分别保存；撤销也是追加审核记录，不能删改原失效历史。2B 完成后停止等待确认，不自动进入第 3 阶段。临时 docs/task-mvp 仍按用户要求保留到最终阶段，再浓缩至 PR 描述并移除；不写 README。

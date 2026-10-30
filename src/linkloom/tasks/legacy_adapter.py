@@ -101,3 +101,54 @@ class LegacyTaskCandidateSource:
                 context = dict(source=contexts[candidate.evidence[0].source_id], variants=signatures)
                 results.append(CandidateSnapshot(candidate, digest(context), encoded, len(signatures) > 1))
         return tuple(results)
+
+    def version_proof(self, connection, workspace_id, source_id, source_version_id, *, evidence=(), require_current=False):
+        """Verify a historical/current version without inventing an observation."""
+        from linkloom.semantic_ingestion.document_text import parse_source_text
+        from linkloom.tasks.review_models import SourceVersionProof
+        workspace = required_text(workspace_id, 'workspace_id')
+        source_id, source_version_id = required_text(source_id, 'source_id'), required_text(source_version_id, 'source_version_id')
+        if not connection.in_transaction:
+            raise ValueError('source proof requires an active transaction')
+        row = connection.execute('''SELECT version.*,version.rowid AS version_sequence,
+                source.current_version_id,source.active
+            FROM ll_source_version AS version JOIN ll_source AS source
+                ON source.workspace_id=version.workspace_id AND source.source_id=version.source_id
+            WHERE version.workspace_id=? AND version.source_id=? AND version.artifact_version_id=?''',
+            (workspace, source_id, source_version_id)).fetchone()
+        if row is None or not row['active'] or (require_current and row['current_version_id'] != source_version_id):
+            raise CandidateUnavailableError('source version is unavailable, inactive or not current')
+        try:
+            artifact = RawArtifact(workspace_id=workspace, artifact_id=source_id, source_type='timestamped_text',
+                                   content=row['content'], source_uri=row['source_uri'])
+            if artifact.artifact_version_id != source_version_id or artifact.content_hash != row['content_sha256']:
+                raise ValueError('source version failed complete content verification')
+            segments = parse_source_text(artifact).segments
+            for reference in evidence:
+                if (reference.workspace_id != workspace or reference.source_id != source_id
+                    or reference.source_version_id != source_version_id or reference.source_sha256 != artifact.content_hash):
+                    raise ValueError('reference is not bound to this source version')
+                matching = [segment for segment in segments if all(getattr(segment.evidence_span, left) == getattr(reference, right)
+                    for left, right in (('message_id', 'message_id'), ('quote', 'quote'), ('quote_sha256', 'quote_sha256'),
+                                        ('char_start', 'char_start'), ('char_end', 'char_end'),
+                                        ('line_start', 'line_start'), ('line_end', 'line_end')))]
+                if len(matching) != 1 or (reference.meeting_time is not None and reference.meeting_time != matching[0].event_time):
+                    raise ValueError('reference position or original recording time does not verify')
+                span = matching[0].evidence_span
+                saved = connection.execute('''SELECT * FROM ll_source_evidence
+                    WHERE workspace_id=? AND source_id=? AND artifact_version_id=? AND evidence_ref=?''',
+                    (workspace, source_id, source_version_id, span.evidence_ref)).fetchone()
+                if saved is None or any(saved[key] != value for key, value in (
+                    ('content_sha256', artifact.content_hash), ('quote', span.quote), ('quote_sha256', span.quote_sha256),
+                    ('line_start', span.line_start), ('line_end', span.line_end))):
+                    raise ValueError('source evidence was withdrawn or changed')
+            versions = [tuple(value) for value in connection.execute('''SELECT rowid,artifact_version_id,content_sha256
+                FROM ll_source_version WHERE workspace_id=? AND source_id=? ORDER BY rowid''', (workspace, source_id))]
+            epoch = connection.execute('''SELECT COALESCE(MAX(sequence),0) FROM task_review_source_change
+                WHERE workspace_id=? AND source_id=?''', (workspace, source_id)).fetchone()[0]
+            context = dict(versions=versions, epoch=epoch, current_version=row['current_version_id'], active=bool(row['active']))
+            return SourceVersionProof(workspace, source_id, source_version_id, row['version_sequence'], artifact.content_hash,
+                tuple(sorted({segment.event_time for segment in segments if segment.event_time is not None})),
+                digest(context), digest([reference.to_dict() for reference in evidence]), row['current_version_id'] == source_version_id)
+        except (TypeError, ValueError, KeyError) as error:
+            raise CandidateUnavailableError('original version or evidence failed verification') from error

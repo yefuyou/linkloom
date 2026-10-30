@@ -75,3 +75,48 @@ def identity(workspace_id, reviewer, reason):
 def task_fields(task):
     return dict(title=task.title, owner=task.owner,
                 deadline=dict(deadline=task.deadline, deadline_text=task.deadline_text))
+
+@dataclass(frozen=True, slots=True)
+class SourceVersionProof:
+    """Verified immutable source version and durable catalogue order.
+
+    version_sequence is the source catalogue's actual SQLite insertion rowid,
+    never a timestamp or a lexical version-ID comparison. evidence_fingerprint
+    binds all exact references verified by the adapter in the active transaction.
+    """
+
+    workspace_id: str
+    source_id: str
+    source_version_id: str
+    version_sequence: int
+    content_sha256: str
+    meeting_times: tuple
+    context_token: str
+    evidence_fingerprint: str
+    is_current: bool
+
+    def __post_init__(self):
+        from linkloom.tasks.models import utc_time
+        for field in ('workspace_id', 'source_id', 'source_version_id'):
+            object.__setattr__(self, field, required_text(getattr(self, field), field))
+        if type(self.version_sequence) is not int or self.version_sequence < 1:
+            raise ValueError('source version sequence must be a positive catalogue rowid')
+        for field in ('content_sha256', 'context_token', 'evidence_fingerprint'):
+            _hash(getattr(self, field), field)
+        if not isinstance(self.meeting_times, tuple) or type(self.is_current) is not bool:
+            raise ValueError('invalid source proof')
+        object.__setattr__(self, 'meeting_times', tuple(utc_time(value, 'meeting_time') for value in self.meeting_times))
+
+    def to_dict(self):
+        return dict(workspace_id=self.workspace_id, source_id=self.source_id,
+            source_version_id=self.source_version_id, version_sequence=self.version_sequence,
+            content_sha256=self.content_sha256, meeting_times=[value.isoformat() for value in self.meeting_times],
+            context_token=self.context_token, evidence_fingerprint=self.evidence_fingerprint,
+            is_current=self.is_current)
+
+
+class SourceVersionReader(Protocol):
+    def version_proof(self, connection: sqlite3.Connection, workspace_id: str, source_id: str,
+                      source_version_id: str, *, evidence=(), require_current=False) -> SourceVersionProof:
+        """Verify complete original content and every reference on this connection."""
+        ...
