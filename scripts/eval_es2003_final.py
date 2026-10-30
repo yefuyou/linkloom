@@ -6,6 +6,7 @@ All prediction files are completed before finish_evaluation opens the gold.
 from __future__ import annotations
 
 import argparse
+import copy
 from datetime import datetime, UTC
 import hashlib
 import json
@@ -25,6 +26,8 @@ GOLD_SHA256 = "fdb653c84c48cfe9041112352614c80fcf0a79e18777ad70d7314150ecaec7b8"
 FROZEN_COMMIT = "a8dabf40d9a2613781ded1f55747bb6a8e5a81c2"
 SYSTEMS = ("baseline", "legacy", "v2")
 LABELS = {"baseline": "基线", "legacy": "legacy（接线修复后）", "v2": "meeting_v2（冻结版）"}
+PREDICTIONS_SHA256 = "7b3cd5a55dbecc732025a2fd9adeee934924b8f3e1e9c82c4cb9d0000d65c387"
+INVALID_TEXT_SHA256 = "745e83eedf046d8a432cdce5a22452efaf4eaae01e6be0a0f6b6d48de0dfa115"
 
 
 def sha(data):
@@ -106,12 +109,23 @@ def generate_all(meetings, out, client):
     return predictions, diagnostics
 
 
-def sample_rows(rows, seed=20261029):
+def sample_rows(rows, seed=20261029, *, required=None):
     sampled = []
     for system in SYSTEMS:
         subset = sorted((r for r in rows if r["system"] == system),
                         key=lambda r: (r["meeting_id"], r["prediction_id"], r["gold_id"] or ""))
         sampled.extend(random.Random(f"{seed}:{system}").sample(subset, math.ceil(len(subset) * 0.2)))
+    if required and not any((r["system"], r["meeting_id"]) == required and r["prediction_id"] for r in sampled):
+        candidates = sorted((r for r in rows if (r["system"], r["meeting_id"]) == required and r["prediction_id"]),
+                            key=lambda r: r["prediction_id"])
+        if not candidates:
+            raise ValueError("Required rejudged meeting has no judgment to sample")
+        chosen = random.Random(f"{seed}:required:{required}").choice(candidates)
+        # Keep the per-system ceil(20%) size; constrain one randomly selected
+        # slot to the rejudged meeting instead of increasing the sample count.
+        slots = [i for i, r in enumerate(sampled) if r["system"] == required[0]]
+        slot = random.Random(f"{seed}:replacement:{required}").choice(slots)
+        sampled[slot] = chosen
     return sampled
 
 
@@ -146,9 +160,15 @@ def score_all(meetings, gold_path, out, client, predictions, diagnostics):
     report["evaluation_scope"] = {"dataset": "ES2003a-d held-out final evaluation", "systems": SYSTEMS,
                                     "all_predictions_saved_before_gold_parse": True,
                                     "predictions_file_sha256": sha((out / "predictions.json").read_bytes())}
-    sampled = sample_rows(all_rows)
+    required = getattr(client, "required_review", None)
+    sampled = sample_rows(all_rows, required=required)
     report["spot_check"] = {"seed": 20261029, "population": len(all_rows), "sampled": len(sampled),
                             "method": "ceil(20%) independently per system; predictions plus unmatched gold"}
+    if required:
+        report["spot_check"].update({"required_rejudged_meeting": list(required),
+            "method": "ceil(20%) per system, fixed-seed random sample constrained to include an actual legacy ES2003a rejudgment",
+            "rejudged_csv_data_rows": [i + 1 for i, r in enumerate(sampled)
+                if (r["system"], r["meeting_id"]) == required and r["prediction_id"]]})
     ev.new_json(out / "judgments.json", all_rows)
     ev.write_spot_check(out / "spot_check.csv", sampled)
     return report, all_rows
@@ -193,11 +213,118 @@ def write_report(path, report, rows):
               "| 模型 | 请求 | 输入 token | 输出 token（含思考） | 费用 USD |", "| --- | ---: | ---: | ---: | ---: |"]
     for model, usage in report["usage_by_model"].items():
         lines.append(f"| {model} | {usage['requests']} | {usage['input_tokens']} | {usage['output_tokens_including_thinking']} | {usage['cost_usd_from_usage']:.9f} |")
+    if report.get("continuation"):
+        continuation = report["continuation"]
+        lines += ["", "## 首次中止与唯一一次裁判续跑", "",
+            "首次运行在 ES2003a / legacy 裁判处中止：两条预测 p-145d7d661374aae6 和 p-752e663f76945fc4 都被判为 MATCH，且均指向 ES2003a-c001，违反同一 gold 最多匹配一条预测的既定规则。首次结果见 [中止报告](results_es2003_attempt1.md)。",
+            f"无效响应原文完整保存在 [裁判响应原文](judge_es2003a_legacy_invalid_response.txt)，UTF-8 内容 SHA-256 为 `{INVALID_TEXT_SHA256}`。原始提供商响应封装仍在被忽略的首次运行目录中。",
+            "用户随后明确授权只续跑裁判一次。重判提示仅追加 ES2003a 当前响应的校验错误、冲突的预测 ID/gold ID 和既有一对一规则原文，没有发送其他会议的判断结果。所有预测和已通过校验的 ES2003a 基线裁判响应均复用；没有新增 Gemini 调用。重判及余下判断均通过同一个冻结校验器，未自动修复裁判结论。", "",
+            "| 执行 | 状态 | 请求数 | 费用 USD |", "| --- | --- | ---: | ---: |",
+            f"| 首次运行 | 裁判不合规，中止 | {continuation['prior_requests']} | {continuation['prior_cost_usd']:.9f} |",
+            f"| 唯一一次裁判续跑 | 完成 | {report['counter']['requests'] - continuation['prior_requests']} | {report['actual_cost_usd_from_usage'] - continuation['prior_cost_usd']:.9f} |",
+            f"| 累计 | 完成 | {report['counter']['requests']} | {report['actual_cost_usd_from_usage']:.9f} |", "",
+            f"抽查保证包含 ES2003a / legacy 的实际重判判断，位于 CSV 数据行 {report['spot_check']['rejudged_csv_data_rows']}（不含表头）。固定随机种子，在该系统样本内置换一个位置满足此条件，总样本量保持各系统向上取整的 20%。"]
     lines += ["", f"抽查固定种子 20261029，各系统分别向上取整抽 20%，共 {report['spot_check']['sampled']}/{report['spot_check']['population']} 条。包括预测判断与未匹配 gold，附中文翻译、裁判理由及空白人工判断列。", "",
-              "## 执行与边界", "", "一次正式运行；未自动重试或择优选结果。所有系统的全部预测完成并保存之后，才读取标准答案进行评分。预测输入仅来自转录及原始角色元数据；候选 CSV、AMI 摘要和 gold 未进入被评测系统。baseline 整场读取；legacy 保持 32 KiB 适配器上限和发言接线；v2 使用冻结的可信 Host 192 KiB 上限。", "",
-              "未修改任何冻结源码、提示词、规则、阈值和 gold。ES2002 开发集结果不在本轮重跑。完整原始响应、转录和中间结果留在忽略的 work/；仓库只收结果、必要的抽查引用和本轮评测接线。", "",
+              "## 执行与边界", "", "全部预测只生成一次；未自动重试或择优选结果。裁判续跑仅限报告中明确披露的授权范围。所有系统的全部预测完成并保存之后，才读取标准答案进行评分。预测输入仅来自转录及原始角色元数据；候选 CSV、AMI 摘要和 gold 未进入被评测系统。baseline 整场读取；legacy 保持 32 KiB 适配器上限和发言接线；v2 使用冻结的可信 Host 192 KiB 上限。", "",
+              "未修改冻结的 v2 源码、提示词、规则、阈值和 gold，原评测脚本也未修改。ES2002 开发集结果不在本轮重跑。完整原始响应、转录和中间结果留在忽略的 work/；仓库只收结果、必要的抽查引用和本轮评测接线。", "",
               "AMI Meeting Corpus / AMI Project / AMI Consortium；来源 https://groups.inf.ed.ac.uk/ami/corpus/ ，CC BY 4.0：https://creativecommons.org/licenses/by/4.0/ 。"]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+class JudgeContinuationClient(ev.Client):
+    """A single judge-only continuation; no extraction route or inner retries."""
+
+    def __init__(self, prior, source, predictions):
+        counter = ev.Counter(80, 1.5, requests=prior["counter"]["requests"],
+                             usd_upper_bound=prior["counter"]["reserved_upper_bound_usd"])
+        super().__init__(counter, live=True)
+        self.actual_cost_usd = prior["actual_cost_usd_from_usage"]
+        self.usage_by_model = copy.deepcopy(prior["usage_by_model"])
+        self.source, self.predictions = source, predictions
+        self.plan = [(mid, system) for mid in MEETINGS for system in ("baseline", "legacy")]
+        self.plan += [(mid, "v2") for mid in MEETINGS]
+        self.position = 0
+        self.required_review = ("legacy", "ES2003a")
+
+    def complete(self, request):
+        raise RuntimeError("Judge-only continuation cannot call an evaluated model")
+
+    def gemini_adapter(self):
+        raise RuntimeError("Judge-only continuation cannot initialize Gemini")
+
+    def generate(self, model, prompt, schema, max_output=4096):
+        if model != ev.DEEPSEEK or self.position >= len(self.plan):
+            raise ValueError("Unexpected provider call in judge-only continuation")
+        mid, system = self.plan[self.position]
+        data = json.JSONDecoder().raw_decode(prompt.split("\nDATA:\n", 1)[1])[0]
+        rng = random.Random(f"20261029:{mid}:{'baseline' if system == 'baseline' else 'linkloom'}")
+        expected = [{"prediction_id": f"p-{rng.getrandbits(64):016x}", **p} for p in self.predictions[mid][system]]
+        if (data["meeting"]["meeting_id"] != mid
+            or sorted(data["predictions"], key=lambda p: p["prediction_id"]) != sorted(expected, key=lambda p: p["prediction_id"])
+            or schema != ev.REVIEW_JUDGE_SCHEMA or max_output != 32768):
+            raise ValueError("Continuation request differs from the frozen scoring protocol")
+        self.position += 1
+        if (mid, system) == ("ES2003a", "baseline"):
+            return json.loads((self.source / "judge_legacy/ES2003a.baseline.judge.json").read_text(encoding="utf-8"))
+        if (system, mid) == self.required_review:
+            feedback = {"meeting_id": mid, "validation_error": "Invalid or many-to-one match",
+                "conflicting_prediction_ids": ["p-145d7d661374aae6", "p-752e663f76945fc4"],
+                "conflicting_gold_id": "ES2003a-c001",
+                "violated_rule": "one prediction matches at most one gold task and each gold task at most once",
+                "instruction": "Your previous response matched both listed predictions to the same gold task. Rejudge this CURRENT meeting under the SAME rules and return the SAME schema. Do not change predictions or gold. Use the existing maximum-valid-matches and tie-breaking rules."}
+            prompt += "\nVALIDATION_ERROR_FOR_CURRENT_MEETING_ONLY:\n" + ev.encoded(feedback).decode()
+            ev.new_json(self.output_dir / "ES2003a.legacy.rejudge-feedback.json", feedback)
+        # No catch or retry. A malformed replacement is rejected by the frozen
+        # validator before finish_evaluation can advance to the next meeting.
+        return super().generate(model, prompt, schema, max_output)
+
+
+def resume_judges(data, archive, gold, source, out, *, live=False):
+    current_check = verify_freeze(gold)
+    if not live:
+        raise ValueError("No calls made: explicit --live required")
+    prior = json.loads((source / "failure.json").read_text(encoding="utf-8"))
+    if prior["counter"]["requests"] != 28 or prior["message"] != "Invalid or many-to-one match":
+        raise ValueError("Only the authorized first-attempt failure can be continued")
+    saved_bytes = (source / "predictions.json").read_bytes()
+    if sha(saved_bytes) != PREDICTIONS_SHA256:
+        raise ValueError("Saved predictions changed; continuation denied")
+    saved = json.loads(saved_bytes)
+    if set(saved["predictions"]) != set(MEETINGS) or any(set(v) != set(SYSTEMS) for v in saved["predictions"].values()):
+        raise ValueError("Incomplete original predictions; no extraction rerun is allowed")
+    raw = json.loads((source / "judge_legacy/provider-response-0028.json").read_text(encoding="utf-8"))
+    invalid_text = raw["choices"][0]["message"]["content"]
+    if sha(invalid_text.encode("utf-8")) != INVALID_TEXT_SHA256:
+        raise ValueError("Original invalid response changed")
+    meetings, metadata = load_inputs(data, archive)
+    out.mkdir(parents=True, exist_ok=False)
+    (out / "predictions.json").write_bytes(saved_bytes)
+    (out / "judge_es2003a_legacy_invalid_response.txt").write_bytes(invalid_text.encode("utf-8"))
+    original_check = json.loads((source / "freeze_verification.json").read_text(encoding="utf-8"))
+    ev.new_json(out / "freeze_verification.json", current_check)
+    continuation = {"authorized": "one judge-only continuation; stop immediately on invalid replacement",
+        "prior_requests": prior["counter"]["requests"], "prior_cost_usd": prior["actual_cost_usd_from_usage"],
+        "resume_head": current_check["head"], "predictions_sha256": PREDICTIONS_SHA256,
+        "invalid_response_text_sha256": INVALID_TEXT_SHA256, "started_at": timestamp()}
+    ev.new_json(out / "continuation.json", continuation)
+    client = JudgeContinuationClient(prior, source, saved["predictions"])
+    try:
+        report, rows = score_all(meetings, gold, out, client, saved["predictions"], saved["diagnostics"])
+        if client.position != len(client.plan):
+            raise ValueError("Judge continuation did not complete the planned judgments")
+        report.update({"freeze_verification": original_check, "ami_metadata": metadata,
+            "completed_at": timestamp(), "attempts": 2, "continuation": continuation})
+        verify_freeze(gold)
+        ev.new_json(out / "results.json", report)
+        write_report(out / "results.md", report, rows)
+    except Exception as error:
+        ev.new_json(out / "failure.json", {"error_type": type(error).__name__, "message": str(error),
+            "counter": client.counter.summary(), "actual_cost_usd_from_usage": client.actual_cost_usd,
+            "usage_by_model": client.usage_by_model, "failed_at": timestamp(), "continuation": continuation})
+        raise
+    finally:
+        print(json.dumps({"counter": client.counter.summary(),
+                          "actual_cost_usd_from_usage": client.actual_cost_usd}), flush=True)
 
 
 def run(data, archive, gold, out, *, live=False):
@@ -232,5 +359,9 @@ if __name__ == "__main__":
     for name in ("data", "archive", "gold", "out"):
         parser.add_argument("--" + name, required=True, type=Path)
     parser.add_argument("--live", action="store_true")
+    parser.add_argument("--resume-judges-from", type=Path, help="Only with explicit authorization; reuse every prediction and carry first-attempt spend")
     args = parser.parse_args()
-    run(args.data, args.archive, args.gold, args.out, live=args.live)
+    if args.resume_judges_from:
+        resume_judges(args.data, args.archive, args.gold, args.resume_judges_from, args.out, live=args.live)
+    else:
+        run(args.data, args.archive, args.gold, args.out, live=args.live)
