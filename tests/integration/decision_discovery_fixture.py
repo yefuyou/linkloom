@@ -22,7 +22,7 @@ class DecisionDiscoveryFixture(UnifiedAskFixture):
             item.update(subject=subject, relation=relation)
             claims.append(item)
         self.app.relation_resolver = FrozenRelationResolver(
-            ("uses supplier", "has budget"), aliases={"合作方": "uses supplier"})
+            ("uses supplier", "has budget"), aliases={"合作方": "uses supplier", "供应商": "uses supplier"})
         self.app.extractor = ProviderNeutralSemanticExtractor(
             OfflineSemanticProvider(claims), provider_id="offline-discovery",
             model_id="offline-discovery", max_attempts=1,

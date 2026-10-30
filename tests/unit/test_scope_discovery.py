@@ -9,8 +9,10 @@ SLOTS = [
     {"subject": "Support", "relation": "uses supplier", "values": ["Riverton"]},
     {"subject": "Launch", "relation": "has budget", "values": ["50000"]},
 ]
+# Provenance and terminology belong to workspace test data, not routing code.
+SLOTS = [dict(slot, workspace_id="test-routing", reviewed=True) for slot in SLOTS]
 RESOLVER = FrozenRelationResolver(
-    ("uses supplier", "has budget"), aliases={"合作方": "uses supplier"})
+    ("uses supplier", "has budget"), aliases={"合作方": "uses supplier", "供应商": "uses supplier"})
 
 
 @pytest.mark.parametrize(("query", "slots", "status", "subject"), [
@@ -30,17 +32,17 @@ RESOLVER = FrozenRelationResolver(
     ("What supplier uses Northstar and Riverton?", SLOTS, "AMBIGUOUS", None),
 ])
 def test_discovery_requires_agreeing_trusted_identifiers(query, slots, status, subject):
-    result = discover_scope(query, slots, RESOLVER)
+    result = discover_scope(query, slots, RESOLVER, workspace_id="test-routing")
     assert result["status"] == status
     assert (result.get("scope") or {}).get("subject") == subject
     assert len(result["candidates"]) <= 5
 
 
 def test_explicit_scope_is_normalized_but_must_exist_in_trusted_index():
-    result = discover_scope("current", SLOTS, RESOLVER, subject=" launch ", relation="合作方")
+    result = discover_scope("current", SLOTS, RESOLVER, subject=" launch ", relation="合作方", workspace_id="test-routing")
     assert result["status"] == "EXPLICIT"
     assert result["scope"] == {"subject": "Launch", "relation": "uses supplier"}
-    assert discover_scope("current", SLOTS, RESOLVER, subject="Ghost", relation="uses supplier")["status"] == "NO_MATCH"
+    assert discover_scope("current", SLOTS, RESOLVER, subject="Ghost", relation="uses supplier", workspace_id="test-routing")["status"] == "NO_MATCH"
 
 
 @pytest.mark.parametrize(("query", "selected", "resolved", "error"), [
