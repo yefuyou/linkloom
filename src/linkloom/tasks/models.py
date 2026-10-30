@@ -155,7 +155,7 @@ class TaskCandidateInput:
 
     candidate_id: str
     workspace_id: str
-    title: str
+    title: str | None
     evidence: tuple[EvidenceReference, ...]
     owner: str | None = None
     deadline: str | None = None
@@ -163,24 +163,30 @@ class TaskCandidateInput:
     meeting_time: datetime | None = None
     source_decision_id: str | None = None
     candidate_version: str = 'task-candidate-input/v1'
+    source_fingerprint: str | None = None
 
     def __post_init__(self) -> None:
-        for name in ('candidate_id', 'workspace_id', 'title', 'candidate_version'):
+        for name in ('candidate_id', 'workspace_id', 'candidate_version'):
             object.__setattr__(self, name, required_text(getattr(self, name), name))
-        for name in ('owner', 'deadline_text', 'source_decision_id'):
+        for name in ('title', 'owner', 'deadline_text', 'source_decision_id'):
             object.__setattr__(self, name, optional_text(getattr(self, name), name))
         object.__setattr__(self, 'deadline', deadline_value(self.deadline))
+        if self.source_fingerprint is not None:
+            _hash(self.source_fingerprint, 'source_fingerprint')
         _evidence(self.evidence, self.workspace_id, required=True)
         if self.meeting_time is not None:
             object.__setattr__(self, 'meeting_time', utc_time(self.meeting_time, 'meeting_time'))
 
     def to_dict(self) -> dict[str, Any]:
-        return dict(candidate_id=self.candidate_id, workspace_id=self.workspace_id,
+        data = dict(candidate_id=self.candidate_id, workspace_id=self.workspace_id,
                     candidate_version=self.candidate_version, title=self.title, owner=self.owner,
                     deadline=self.deadline, deadline_text=self.deadline_text,
                     meeting_time=self.meeting_time.isoformat() if self.meeting_time else None,
                     source_decision_id=self.source_decision_id,
                     evidence=[item.to_dict() for item in self.evidence])
+        if self.source_fingerprint is not None:
+            data['source_fingerprint'] = self.source_fingerprint
+        return data
 
     @property
     def fingerprint(self) -> str:
@@ -188,6 +194,8 @@ class TaskCandidateInput:
 
     @classmethod
     def from_dict(cls, data: object) -> TaskCandidateInput:
+        if isinstance(data, dict) and 'source_fingerprint' not in data:
+            data = {**data, 'source_fingerprint': None}
         values = dict(_shape(data, set(cls.__dataclass_fields__), 'candidate input'))
         if not isinstance(values['evidence'], list):
             raise ValueError('evidence must be a JSON list')

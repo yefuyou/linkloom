@@ -146,3 +146,49 @@
 上面的 PR #30 完整回归是初始化修复前的 3,200 例快照；修复后运行的是全部 24 个新增数据层用例及独立并发探针，未再次执行原有完整套件。该修复仅改尚未接入产品的新 store 和其新增测试，原有源码及测试未再改动。两次验证范围分别记录，不混作同一轮全量结果。
 
 本阶段没有编写 README。BASELINE.md 和 SPEC.md 仅作开发期间资料，最终阶段按用户要求浓缩进 PR 描述并删除 docs/task-mvp。第 1 阶段提交后停止，等待用户确认第 2 阶段。
+
+## 第 2 阶段开始前：并发修复后的完整回归
+
+2026-10-30，按用户要求在第 1 阶段提交 ed15d494db6c7e98c55be9836107681c065d3fdc 上重新执行完整 pytest。运行前后工作区均干净，未修改业务代码；默认 cp936 环境，不设置全局 PYTHONIOENCODING / PYTHONUTF8 覆盖。
+
+- 结果：3,170 通过、0 失败、31 跳过、0 错误，3,201 collected；pytest 2104.28s (0:35:04)，退出码 0。
+- 原始 3,176 例逐项比较：3,145 通过 / 31 跳过，5 个既有编码失败全部通过，无原有用例缺失、无新增失败或跳过。
+- 相对原始基线新增 25 例均通过：PR #30 的 1 例与第 1 阶段任务数据层 24 例（含并发首次初始化修复回归）。
+- 完整报告与逐项比较：work/task-mvp/stage2_preflight.xml、stage2_preflight.comparison.json、stage2_preflight.exit.json；这些运行产物不提交。
+- 本次结果已先向用户汇报，再进入审核服务实现。后续仍以 0 失败为门槛。
+
+审核服务因用户补充人工重绑定和失效出口，按“预计超过一天先拆分”的约定拆为 2A、2B；本轮完成 2A 后提交并等待确认。最新边界详见临时 SPEC.md；不写 README。
+
+## 第 2A 阶段结果：人工审核、字段来源和待复核
+
+按用户“预计超过一天先拆分”的约定，第 2 阶段拆为 2A、2B；本次只交付 2A。2B 的同源新版人工重绑定和人工“已失效”出口，提交后等待用户确认再实现。
+
+### 文件和行为
+
+- 修改 src/linkloom/tasks/models.py：统一候选 title 可空，正式 Task.title 仍必填；可选 source_fingerprint 用于绑定完整来源候选，缺该字段的旧 v1 JSON 及指纹保持兼容。
+- 新增 src/linkloom/tasks/review_models.py：通用 CandidateSnapshot / CandidateSource 契约，核心与抽取器解耦，多段证据有序保存。
+- 新增 src/linkloom/tasks/legacy_adapter.py：只接旧 TaskObservation；事务内读取候选和持久来源目录，验证候选完整 payload 指纹、工作区、当前来源版本、证据目录及完整原文。原始 payload 完整保留；审核指纹还包含冲突变体上下文和逐来源 epoch。
+- 新增 src/linkloom/tasks/review_storage.py：独立审核 schema v1、只追加审核事件及来源切换日志；初始化和读写共用 TaskStore 的 BEGIN IMMEDIATE，不改变 base task schema v1。来源日志仅观察 ll_source 版本 / active 实际切换，追加任务专有日志，覆盖两版本已存在时未查询的 A→B→A。为后续增量迁移仅预留 2B 枚举值，未开放相关服务入口。
+- 新增 src/linkloom/tasks/review.py：确认（允许带字段修订）、拒绝、确认后字段修改、候选预览/列表和任务查询。确认只追加一次审核审计和最终 created 快照；后续每个实际字段变化追加任务事件。人工字段明确为 human，证据是背景 context，保留原始引文、哈希和会议时间；人工修改事件本身不冒充会议事件。
+- needs_review 与业务 status 分开；来源或指纹失配后追加一次系统失效审计并锁存，快照及历史不回滚。同 ID 当前候选显式重确认必须带审核版本令牌，复用原 task_id，保留未修改值及来源，不重复 created。默认待确认列表包含可重新审核的同 ID 候选。
+- 新增 tests/unit/test_task_legacy_adapter.py 和 test_task_review.py；更新现有临时 BASELINE.md、SPEC.md。没有改原测试断言、旧决定/Ask/ActionRecord/关系旁库代码，没有实现 HTTP / 页面 / v2 适配或 README。
+
+### 验证
+
+- Worker 聚焦四文件：64 passed / 0 failed / 0 skipped，10.68s；含原 24 个数据层用例及新增 40 个审核用例。
+- 独立 Reviewer 同四文件：64 passed，8.00s；另验证另一 workspace 的同名来源 active 往返不会影响本 workspace 的任务、审核令牌或 approved 状态。未发现阻断 P1/P2。
+- 覆盖原值/带修改确认、空标题人工补充、拒绝与重复提交、人工清空/同值审计、并发审核/修改、事件或链接/审核写入失败全事务回滚、来源/证据失效、同 ID 重审、事件重放、多段多版本与逐源 epoch、旧 DTO 兼容、只追加约束以及审核 schema 四轮 × 四连接并发首次初始化。
+- 冻结实现后的完整 pytest：3,210 passed / 31 skipped / 0 failed / 0 errors，3,241 collected，966.09s (0:16:06)，退出码 0。默认编码，PYTHONIOENCODING 和 PYTHONUTF8 均未覆盖。
+- 与本阶段开始前的 3,201 例逐项对照：3,170 passed / 31 skipped，缺失 0、新增失败 0、新增跳过 0；新增 40 例全部通过。原始基线中的 5 个编码失败本轮仍全部通过。
+- 全量运行开始至结果核对，全部 9 个任务源码/新增测试文件哈希未变；提交代码对应本轮完整测试快照。
+- 完整产物：work/task-mvp/stage2a.xml、stage2a.comparison.json、stage2a.verification.json、stage2a.exit.json；独立聚焦产物 stage2a-independent-review.xml。均为 ignored 本地运行材料，不提交。
+- 完整 JUnit SHA-256：f2c42660cc1deb09d4617a5d79d98155c65e00dc66f64f2a01050381f6dfcf9d。
+
+### 已知边界
+
+- 只有旧 base link、没有新审核快照的 v1 任务只读显示 needs_review，不伪造历史、来源或有效审核；其人工迁移出口留 2B。2A 不实现跨 ID 重绑定、跨会议合并或人工“已失效”。
+- 旧抽取器对“联调报告由李明负责……”语序可能生成 owner=null；已用原语序验证人工补李明且来源为 human，不修改抽取器。缺年份日期仍保留 deadline_text，不自动补年份。
+- 独立复核的非阻断项：include_reviewed=True 的扩展已处理列表对已拒绝候选返回 reviewed=True、review_status=null；拒绝审核完整保存在审计中，默认待确认列表不受影响。后续若展示已处理候选应补齐该投影。
+- 并发验证为跨连接线程；未额外做多进程压力测试。所有数据库为自动测试的合成临时数据，未操作真实笔记库。
+
+本阶段的关键结论：原始候选指纹、人工字段值和来源有效性需要分别记录；只比较当前版本不足以防止旧确认在版本往返后复活。2A 完成后停止等待确认，下一步为 2B。README 已取消，docs/task-mvp 仍仅作临时资料，最终阶段浓缩至 PR 描述并按授权移除。
