@@ -10,7 +10,8 @@ from typing import Any, Callable
 
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
-from linkloom.ui.scope_discovery import discover_scope, resolve_query_date
+from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
+from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
@@ -18,34 +19,6 @@ from linkloom.ui.ask_admission import (admission_restriction, parse_context,
     source_context, validate_context)
 
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
-
-# Supported task families, not general intent understanding. Investigation wins
-# for mixed questions so a current-state lookup cannot masquerade as an explanation.
-_INVESTIGATION = re.compile(
-    r"\b(why|reason|rationale|explain|investigat\w*|conflict\w*|contradict\w*|"
-    r"compare|difference\w*|distinguish|uncertain\w*|unverified)\b|"
-    r"sources?\s+support|original\s+(sources?|evidence)|"
-    r"为什么|为何|原因|调查|冲突|矛盾|区别|差异|比较|无法证实|未证实|不确定|原始来源|支持.*变更",
-    re.IGNORECASE,
-)
-_DECISION = re.compile(
-    r"\b(current\w*|now|approved|adopted|effective|receipt\w*|valid|formal)\b|"
-    r"\b(what|which)\b.*\b(using|use|supplier|vendor|decision)\b|show.*\b(sources?|evidence)\b|"
-    r"当前|现行|正式|采用|生效|审核|审批|收据|供应商|供货商|用的是|查看.*来源",
-    re.IGNORECASE,
-)
-
-
-def classify_task(query: str) -> dict[str, str]:
-    if _INVESTIGATION.search(query):
-        return {"intent": "INVESTIGATION", "code": "SOURCE_INVESTIGATION",
-                "reason": "Explanation, comparison or uncertainty requires source investigation."}
-    if _DECISION.search(query):
-        return {"intent": "DECISION", "code": "REVIEWED_STATE_LOOKUP",
-                "reason": "Reviewed state, validity and receipts can be queried directly."}
-    return {"intent": "UNKNOWN", "code": "TASK_UNCLASSIFIED",
-            "reason": "This bounded router cannot reliably classify the task. Ask for a reviewed decision, effective date, receipt, reason or source conflict."}
-
 
 @dataclass(frozen=True)
 class _AskRun:
@@ -58,9 +31,11 @@ class _AskRun:
 
 class UnifiedAskService:
     def __init__(self, app: ProductApplication,
-                 investigation: Callable[[], ProductInvestigationService | None]) -> None:
+                 investigation: Callable[[], ProductInvestigationService | None], *,
+                 slot_embedder: Any = AUTO_EMBEDDER) -> None:
         self.app = app
         self.investigation = investigation
+        self.slot_embedder = slot_embedder
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
         self._lock = Lock()
         self.feedback_memory = (FeedbackMemory(app.repository.database_path + ".feedback-memory.jsonl")
@@ -119,8 +94,15 @@ class UnifiedAskService:
                                                    _workspace_id=workspace_id)["history"]
             if not history:
                 continue
-            trusted.append({"subject": history[-1]["subject"], "relation": history[-1]["relation"],
+            trusted.append({"workspace_id": workspace_id, "reviewed": True,
+                            "slot_id": decision_slot_id(history[-1]["subject"], history[-1]["relation"]),
+                            "subject": history[-1]["subject"], "relation": history[-1]["relation"],
                             "values": list(dict.fromkeys(item["value"] for item in history)),
+                            # Name existence is separate from decision authority.
+                            # These verified proposal mentions are never indexed
+                            # or offered as an approved value to the selector.
+                            "reference_values": list(dict.fromkeys(item["value"] for item in view.get("proposals", [])
+                                if item.get("evidence", {}).get("verified") is True)),
                             "decision_ids": [item["decision_id"] for item in history],
                             "current_value": (view.get("effective") or {}).get("value")})
         return trusted
@@ -129,9 +111,12 @@ class UnifiedAskService:
     def _base(run: _AskRun) -> dict[str, Any]:
         return {"schema_version": "product-ask/v1", "query": run.query,
                 "workspace_id": run.workspace_id, "scope": deepcopy(run.scope),
-                "path": {"DECISION": "DETERMINISTIC", "INVESTIGATION": "AGENT",
+                "path": {"DECISION": "DETERMINISTIC", "CURRENT": "DETERMINISTIC",
+                         "AS_OF": "DETERMINISTIC", "INVESTIGATION": "AGENT",
                          "SOURCE_RELATION": "SOURCE_RELATION_INVESTIGATION"}.get(run.route["intent"]),
-                "route": dict(run.route), "status": "NEEDS_SCOPE", "conclusions": [],
+                "route": dict(run.route, decided_by=run.route.get("decided_by", "rule")),
+                "decided_by": run.route.get("decided_by", "rule"),
+                "status": "NEEDS_SCOPE", "conclusions": [],
                 "discovery": deepcopy(run.discovery),
                 "evidence": [], "receipts": [], "uncertainty": {"unknown_fields": [], "statement": ""},
                 "agent_run_id": None, "reviewer": {"performed": False, "accepted": False},
@@ -162,7 +147,8 @@ class UnifiedAskService:
             values[key] = (value or "").strip()
         run = _AskRun(query.strip(), values["workspace_id"],
                       {"subject": values["subject"], "relation": values["relation"], "as_of": payload.get("as_of") or None},
-                      classify_task(query.strip()))
+                      {"intent": "CURRENT", "code": "REVIEWED_STATE_LOOKUP", "supported": False,
+                       "reason": "Question routing has not completed.", "decided_by": "rule"})
         result = self._base(run)
         try:
             # Keep the current-workspace check and setup atomic with workspace selection.
@@ -192,14 +178,32 @@ class UnifiedAskService:
                 resolver, memory = self.app.relation_resolver, None
                 if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
                     resolver, memory = self.feedback_memory.snapshot(run.workspace_id, run.query, resolver, slots)
-                discovery = discover_scope(run.query, slots,
-                                           resolver, subject=values["subject"],
-                                           relation=values["relation"])
+                # This point is deliberately AFTER the unchanged task/relation
+                # dispatch. Selection reuses only the explicitly configured model.
+                service = self.investigation()
+                selector = None
+                if (service is not None and service.model_factory is not None
+                        and not getattr(service, "task_only", False)
+                        and (not service.external_provider or payload.get("allow_external_provider") is True)
+                        and not (memory and memory["conflicts"])):
+                    selector = lambda: service.model_factory(run.query)
+                routed = route_question(run.query, slots, resolver, workspace_id=run.workspace_id,
+                    subject=values["subject"], relation=values["relation"],
+                    as_of=payload.get("as_of"), provider_factory=selector, embedder=self.slot_embedder)
+                discovery = routed["discovery"]
                 if memory is not None:
                     discovery["memory"] = memory
                     if memory["conflicts"]:
-                        discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0,
+                        discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0, decided_by="fallback",
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
+                        routed.update(route="CLARIFY", scope=None, decided_by="fallback")
+                route = {key: routed[key] for key in
+                         ("intent", "route", "code", "reason", "decided_by", "llm_attempted", "llm_error")}
+                run = _AskRun(run.query, run.workspace_id, run.scope, route)
+                result["route"] = route
+                result["decided_by"] = routed["decided_by"]
+                result["path"] = ({"CURRENT": "DETERMINISTIC", "AS_OF": "DETERMINISTIC",
+                                   "INVESTIGATION": "AGENT"}.get(routed["route"]))
                 result["discovery"] = discovery
                 if discovery["scope"] is None:
                     result["path"] = None
@@ -212,7 +216,7 @@ class UnifiedAskService:
                     result["path"] = None
                     return self._failure(result, date_error["code"], date_error["message"],
                                          status="NEEDS_SCOPE"), 200
-                if run.route["intent"] == "UNKNOWN":
+                if not routed["supported"]:
                     return self._failure(result, "TASK_UNCLASSIFIED", run.route["reason"], status="NEEDS_SCOPE"), 200
                 view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
                 result["scope"]["as_of"] = view["as_of"]
