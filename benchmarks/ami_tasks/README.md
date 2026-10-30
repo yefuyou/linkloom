@@ -101,6 +101,18 @@ freeze-gold 对任务、负责人、截止时间逐列使用“修改后的字�
 
 SHA-256：`fdb653c84c48cfe9041112352614c80fcf0a79e18777ad70d7314150ecaec7b8`。标准答案冻结后只读使用，不在评测结果出来后调整。转录原文、中间 CSV、AMI 原始摘要和模型响应留在被忽略的 `work/ami_tasks_annotation_es2003/`，不提交。本轮只冻结标注，未运行评测，未新增模型请求。
 
+## ES2004a–d 标注与冻结（2026-10-30）
+
+标注流程：**DeepSeek 预标注 11 条 → 人工逐条核对与字段修正 → 上下文核实（营销主管收到的说明书研究答复、公司标志请求的指代对象、PowerPoint 安排及会议结尾分工）→ 另一个模型 Codex 通读四场全文补查 2 条 → 人工最终确认 6 条**。最终人工 CSV 的 keep=y 已核对为指定的 5 条：ES2004a-c001、ES2004b-c001、ES2004b-c002、ES2004d-c001、ES2004d-c002；补查表另保留 ES2004b-m001。
+
+ES2004b-m001 根据项目经理 B 的“your field”与工业设计师 C 的接受回应，保留为 `Look into rechargeable batteries with a docking station`，负责人 `Industrial Designer`，截止时间“未说明”；后续会议的回顾仅作为上下文补强，不重复计为新任务。ES2004a-m001 的下一次 PowerPoint 汇报由人工判为会议流程、不是会后交付物，keep=n。其他未采纳候选按人工判断排除；AMI 人工摘要仅辅助核对，不代替完整转录与人工取舍，也不据此改写通用标注规则。
+
+冻结文件为 [gold_es2004.jsonl](gold_es2004.jsonl)，ES2004a/b/c/d 分别为 **1/3/0/2 条**，共 **6 条**，其中 2 条给出明确期限：a-c001 的 `next meeting (in half an hour)` 与 b-c001 的 `before the next meeting`。d-c001 引文中的“五十分钟”指赶进度，未作为问卷期限；其最终期限保留“未说明”。
+
+格式与已有 gold 文件一致：仅合并两份 CSV 中 keep=y 的条目，任务、负责人和截止时间逐列优先采用非空的“修改后的字段”，否则使用原字段；保留原候选 ID 为 gold_id，以及 meeting_id、精确原文 quote 和人工备注 notes，不包含中文辅助列或 keep=n 行。全部 6 条引用及字符偏移已与准备好的标准转录核对。
+
+SHA-256：`d7b275bef8065bc8deb679529d95386d2b2e32cfaf00887e4f7e840649d51e3b`。冻结后只读使用，不在评测结果出来后调整。转录原文、AMI 原始摘要、中间 CSV 和模型响应继续留在被忽略的 `work/ami_tasks_annotation_es2004/`，不提交。本轮仅冻结标准答案，未运行评测，未新增模型请求。
+
 ## 固定匹配规则：meeting-task-match/v2
 
 规则原文在脚本 MATCH_RULES，裁判统一使用：
