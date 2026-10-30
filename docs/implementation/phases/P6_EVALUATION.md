@@ -79,7 +79,6 @@ tests/test_evidence_validator.py
 tests/eval/relation_gold.yaml
 phases/P1_WALKING_SKELETON.md
 phases/P3_EVENT_AND_TRACING.md
-phases/P4_MULTI_AGENT.md
 phases/P5_MEMORY.md
 ```
 

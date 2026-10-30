@@ -71,7 +71,6 @@ docs/ACCEPTANCE_CHECKLIST.md
 docs/requirements/linkloom-master/safety_and_permissions.md
 docs/requirements/linkloom-master/data_contracts.md
 docs/implementation/01_ARCHITECTURE_CONTRACTS.md
-phases/P4_MULTI_AGENT.md
 phases/P6_EVALUATION.md
 src/linkloom/scanner.py
 src/linkloom/cli.py
