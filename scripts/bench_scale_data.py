@@ -146,6 +146,7 @@ def routing_fixture(count: int, anchors: int = 20):
             "values": [f"Legacy-{index:06d}", f"Vendor-pair-{pair:06d}"],
             "current_value": f"Vendor-pair-{pair:06d}",
             "decision_ids": [f"reviewed-{index:06d}"],
+            "workspace_id": WORKSPACE, "reviewed": True,
         })
     queries = []
     target_indices = sorted(random.Random(SEED + 3).sample(range(count), min(count, anchors)))
