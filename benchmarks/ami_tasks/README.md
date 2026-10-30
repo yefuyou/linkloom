@@ -32,11 +32,11 @@ python scripts/eval_tasks.py evaluate-linkloom --task-extraction-mode meeting_v2
 
 下面保留原始评测的数据、署名和方法说明。
 
-第一版只处理 ES2002a–d。ES2003a–d 保留为后续计划，当前没有转换、预标注或评分。英文人工 gold 已确认为 11 条并固定到 gold.jsonl。首个基线请求在附加引用校验处停止，已用 1 次请求 / $0.006915；用户随后明确确认修复后续跑，累计费用和次数沿用，gold 未变。完整评测已完成：累计 29 次请求、按 API 用量计费 $0.172675374。结果见 [results.md](results.md) / [results.json](results.json)，人工抽查见 [spot_check.csv](spot_check.csv)。分数是裁判初判，报告单列了日期等价和误报类别的人工复核疑点。不改产品实现，不接触笔记库，不创建预算账本、封存或预检流程。
+第一版评测只处理 ES2002a–d。ES2003a–d 已另行完成标注并冻结为 9 条标准答案，尚未运行评测，详见下方“ES2003a–d 标注与冻结”。英文人工 gold 已确认为 11 条并固定到 gold.jsonl。首个基线请求在附加引用校验处停止，已用 1 次请求 / $0.006915；用户随后明确确认修复后续跑，累计费用和次数沿用，gold 未变。完整评测已完成：累计 29 次请求、按 API 用量计费 $0.172675374。结果见 [results.md](results.md) / [results.json](results.json)，人工抽查见 [spot_check.csv](spot_check.csv)。分数是裁判初判，报告单列了日期等价和误报类别的人工复核疑点。不改产品实现，不接触笔记库，不创建预算账本、封存或预检流程。
 
 ## 数据确认（2026-10-29）
 
-- 第一版选择 ES2002a–d，共 4 场，是同一遥控器设计 trial 的连续会议；实际解析已验证四场参与者 ID 一致。ES2003a–d 暂不处理。[官方会议 ID 说明](https://groups.inf.ed.ac.uk/ami/corpus/meetingids.shtml)解释 a/b/c/d 的顺序。
+- 第一版选择 ES2002a–d，共 4 场，是同一遥控器设计 trial 的连续会议；实际解析已验证四场参与者 ID 一致。ES2003a–d 的后续标注与冻结见下方专节。[官方会议 ID 说明](https://groups.inf.ed.ac.uk/ami/corpus/meetingids.shtml)解释 a/b/c/d 的顺序。
 - AMI corpus 及标注采用 **CC BY 4.0**。[官方许可证](https://groups.inf.ed.ac.uk/ami/corpus/license.shtml)。署名：**AMI Meeting Corpus，AMI Project / AMI Consortium**；[语料来源](https://groups.inf.ed.ac.uk/ami/corpus/)、[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)。本项目对转录做了下述格式转换，并增加模型候选和中文辅助翻译，未将这些派生内容标为 AMI 官方标注。
 - 人工摘要有 ABSTRACT、ACTIONS、DECISIONS、PROBLEMS/ISSUES，采用 **NITE/NXT XML**；摘要句子与抽取式摘要、对话行为、转录词存在链接。[官方标注说明](https://groups.inf.ed.ac.uk/ami/corpus/annotation.shtml)。ACTIONS 是概括性文字，不能当作完整的任务/负责人/截止时间 gold；空 action 区段也不证明转录没有待办。Individual Actions 是手势等行为标注，不是待办。
 - 只需[人工标注 v1.6.2 ZIP](https://groups.inf.ed.ac.uk/ami/AMICorpusAnnotations/ami_public_manual_1.6.2.zip)。[官方页面](https://groups.inf.ed.ac.uk/ami/download/)标为 22 MB；实测 **22,887,865 字节（21.83 MiB）**，Last-Modified 为 2017-04-10。下载已完成；SHA-256 见同目录 ami_public_manual_1.6.2.zip.sha256。无需自动标注、音视频、幻灯片。
@@ -82,6 +82,18 @@ candidates.template.csv 只有表头。生成的 CSV 另有 keep、修改后的�
 本版实际标注流程：**DeepSeek 预标注 16 条 → 人工依据标注规则逐条核对、改写字段、合并重复、排除会中已完成事项及未接受建议 → AMI 人工摘要覆盖检查（7/7 条有效 action 都有候选对应）→ 由另一个模型（本会话 Codex，与 DeepSeek/Gemini 不同）通读四场全文补查（无新增）→ 人工最终确认 11 条**。keep=n 的 5 条不进入 gold。ES2002a/b/c/d 分别为 3/4/2/2 条，其中 8 条明确给出截止时间。
 
 freeze-gold 对任务、负责人、截止时间逐列使用“修改后的字段非空则采用，否则使用原字段”，保留 meeting_id、quote、notes，并保留原候选 ID 为 gold_id。JSONL 不包含中文辅助翻译、keep=n 行或未采纳候选。冻结后的标准答案 SHA-256 为 `8df36c0dac65e755dbf0ac8a33dbe4be491b0718a260c604d1f5601d31b64855`；只读使用，不在结果出来后调整。原文引用均与标准转录精确匹配。
+
+## ES2003a–d 标注与冻结（2026-10-30）
+
+标注流程：**DeepSeek 预标注 11 条 → 人工逐条核对、改写字段与合并重复 → 上下文核实（期限、指代对象）→ 另一个模型 Codex 通读四场全文补查 3 条 → 人工最终确认 9 条**。主候选表保留 8 条，补查表保留 1 条；其余条目不进入标准答案。AMI 人工摘要的 3 条有效 action 仅辅助核对，不作为完整 gold。
+
+最终人工核对将 ES2003a-m001 的用户需求确认合入 ES2003a-c002；ES2003b-c001 按上下文指向用户界面设计师 A（没有点名，保留推断说明），与工业设计师 D 自己确认的 ES2003b-c003 分开保留；ES2003b-c002 通过点名与连续回应确认负责人为营销主管。ES2003c-c001 的原型工作由两位设计师共同承担；c001、c002 未明确说出完成期限，最终均为“未说明”。
+
+补查项 ES2003c-m001 因本条无明确执行人，由人工决定排除；ES2003c-m002 保留，任务修正为 `Start writing up the project documentation`，负责人 `Project Manager`，截止时间“未说明”。这是一条候选的人工取舍，不改变上文允许缺失负责人/日期的通用标注口径。
+
+冻结文件为 [gold_es2003.jsonl](gold_es2003.jsonl)，ES2003a/b/c/d 分别为 **2/3/3/1 条**，共 **9 条**；其中 1 条明确给出期限，即 ES2003a-c002 的 `next meeting (in thirty minutes)`。格式与 ES2002 的 gold.jsonl 一致：仅合并两份 CSV 中 keep=y 的条目，任务、负责人和截止时间逐列优先采用非空的“修改后的字段”，否则使用原字段；保留原候选 ID 为 gold_id，以及 meeting_id、精确原文 quote 和备注 notes，不包含中文辅助列或 keep=n 行。全部 9 条引用及字符偏移已与准备好的标准转录核对。
+
+SHA-256：`fdb653c84c48cfe9041112352614c80fcf0a79e18777ad70d7314150ecaec7b8`。标准答案冻结后只读使用，不在评测结果出来后调整。转录原文、中间 CSV、AMI 原始摘要和模型响应留在被忽略的 `work/ami_tasks_annotation_es2003/`，不提交。本轮只冻结标注，未运行评测，未新增模型请求。
 
 ## 固定匹配规则：meeting-task-match/v2
 
