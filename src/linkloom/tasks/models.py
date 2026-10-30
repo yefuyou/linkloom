@@ -57,6 +57,22 @@ def _time_from_text(value: object, name: str) -> datetime:
     return utc_time(datetime.fromisoformat(value), name)
 
 
+@dataclass(frozen=True, slots=True)
+class ConfidenceMetadata:
+    """Optional extractor-neutral confidence; absence means unknown."""
+
+    confidence: str
+    confidence_reason: str
+
+    def __post_init__(self):
+        if self.confidence not in ('HIGH', 'LOW') or not isinstance(self.confidence, str):
+            raise ValueError('confidence must be HIGH or LOW')
+        object.__setattr__(self, 'confidence_reason', required_text(self.confidence_reason, 'confidence_reason'))
+
+    def to_dict(self):
+        return dict(confidence=self.confidence, confidence_reason=self.confidence_reason)
+
+
 class TaskStatus(StrEnum):
     OPEN = 'open'
     IN_PROGRESS = 'in_progress'
@@ -164,15 +180,22 @@ class TaskCandidateInput:
     source_decision_id: str | None = None
     candidate_version: str = 'task-candidate-input/v1'
     source_fingerprint: str | None = None
+    confidence: str | None = None
+    confidence_reason: str | None = None
 
     def __post_init__(self) -> None:
         for name in ('candidate_id', 'workspace_id', 'candidate_version'):
             object.__setattr__(self, name, required_text(getattr(self, name), name))
-        for name in ('title', 'owner', 'deadline_text', 'source_decision_id'):
+        for name in ('title', 'owner', 'source_decision_id'):
             object.__setattr__(self, name, optional_text(getattr(self, name), name))
+        if self.deadline_text is not None:
+            required_text(self.deadline_text, 'deadline_text')
         object.__setattr__(self, 'deadline', deadline_value(self.deadline))
         if self.source_fingerprint is not None:
             _hash(self.source_fingerprint, 'source_fingerprint')
+        if self.confidence is not None or self.confidence_reason is not None:
+            metadata = ConfidenceMetadata(self.confidence, self.confidence_reason)
+            object.__setattr__(self, 'confidence_reason', metadata.confidence_reason)
         _evidence(self.evidence, self.workspace_id, required=True)
         if self.meeting_time is not None:
             object.__setattr__(self, 'meeting_time', utc_time(self.meeting_time, 'meeting_time'))
@@ -186,6 +209,8 @@ class TaskCandidateInput:
                     evidence=[item.to_dict() for item in self.evidence])
         if self.source_fingerprint is not None:
             data['source_fingerprint'] = self.source_fingerprint
+        if self.confidence is not None:
+            data.update(confidence=self.confidence, confidence_reason=self.confidence_reason)
         return data
 
     @property
@@ -196,6 +221,10 @@ class TaskCandidateInput:
     def from_dict(cls, data: object) -> TaskCandidateInput:
         if isinstance(data, dict) and 'source_fingerprint' not in data:
             data = {**data, 'source_fingerprint': None}
+        if isinstance(data, dict):
+            data = {**data}
+            if 'confidence' not in data and 'confidence_reason' not in data:
+                data.update(confidence=None, confidence_reason=None)
         values = dict(_shape(data, set(cls.__dataclass_fields__), 'candidate input'))
         if not isinstance(values['evidence'], list):
             raise ValueError('evidence must be a JSON list')
@@ -229,8 +258,10 @@ class Task:
     def __post_init__(self) -> None:
         for name in ('id', 'workspace_id', 'title'):
             object.__setattr__(self, name, required_text(getattr(self, name), name))
-        for name in ('owner', 'deadline_text', 'source_decision_id'):
+        for name in ('owner', 'source_decision_id'):
             object.__setattr__(self, name, optional_text(getattr(self, name), name))
+        if self.deadline_text is not None:
+            required_text(self.deadline_text, 'deadline_text')
         object.__setattr__(self, 'deadline', deadline_value(self.deadline))
         object.__setattr__(self, 'status', TaskStatus(self.status))
         for name in ('created_at', 'updated_at'):

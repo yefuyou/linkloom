@@ -160,6 +160,7 @@ class TaskReviewService:
                 rejected = self.storage.latest(workspace, candidate_id=identifier) if link is not None and link.task_id is None else None
                 if link is None or include_reviewed or needs_review:
                     item = snapshot.to_dict()
+                    item['low_confidence'] = snapshot.candidate.confidence == 'LOW'
                     exact_rejection = rejected if rejected and rejected['candidate_fingerprint'] == snapshot.fingerprint else None
                     item.update(reviewed=link is not None, is_current=True,
                                 is_current_binding=bool(latest and latest['review_status'] == 'approved'
@@ -178,6 +179,7 @@ class TaskReviewService:
                     if key in current_keys:
                         continue
                     item = dict(audit['candidate'])
+                    item['low_confidence'] = item['candidate'].get('confidence') == 'LOW'
                     item.update(reviewed=True, is_current=False, is_current_binding=False,
                         review_status='rejected', reviewer=audit['reviewer'], reason=audit['reason'],
                         reviewed_at=audit['reviewed_at'], processed_action='reject',

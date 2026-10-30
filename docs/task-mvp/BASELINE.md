@@ -229,3 +229,28 @@
 - 并发实测为多线程跨连接，没有另外进行多进程压力测试。原前端文件未改，本阶段只做审核服务，没有界面验收或部署。
 
 本阶段确认的设计结论：当前绑定、历史链接、人工作出的业务判断和机器可验证的原文事实需要分别保存；撤销也是追加审核记录，不能删改原失效历史。2B 完成后停止等待确认，不自动进入第 3 阶段。临时 docs/task-mvp 仍按用户要求保留到最终阶段，再浓缩至 PR 描述并移除；不写 README。
+
+
+## 第 3A 阶段结果：持久候选与可扩展置信度
+
+### 同步后基线
+
+- 第 2B 阶段已验收提交：49e090fe45e23efd04e711b441b1b0e6ab00e1bf。
+- 按用户要求将 origin/master 同步至 3065cf4ef650f9c724661baa5ed2d4f141fc8279（PR #31 路由、#32 规模测试、#33 task-eval/v2），两次合并均无冲突，最终合并 HEAD 为 72b326f4e772ebe9475a495466a37ddae9499d80；工作区开始时干净。
+- 同步后完整基线：3808 passed / 31 skipped / 0 failed，3839 collected。原 5 个 cp936 编码失败全部通过。相对 2B 新增 532 个用例通过，主干 7 个路由参数名变更逐项对应，无原用例缺失/新增失败/新增跳过。报告 work/task-mvp/master_sync_v2.verification.json；3 项 JS 语法和 6 项 DOM 测试通过。
+
+### 改动与验证
+
+- 新增 tasks/candidate_store.py（中立 GeneratedBatchAdapter、持久批次/候选表、可信格式 registry、幂等接收和事务内重验）、meeting_adapter.py（只接已生成 v2 批次）、candidate_source.py（组合旧/新候选）。修改 tasks/models.py 和 review.py，新增两份单元测试。只创建增量表/索引/只追加约束，不修改旧任务/审核 schema 元数据及已有表数据，不写 semantic_candidate。
+- 完整批次回执保留原始候选、覆盖信息、排除/拒绝诊断、负责人列表、期限类型/备选、多段 supports 和原文。每段按原始完整发言验证 source_ref、版本、位置、引文、哈希、目录及原文时间；失败整体回滚。唯一负责人映射至单值 owner，多负责人保持未知并保留全列表；不换算 deadline；deadline_text 验证后原样保留，包括原文空白。多段时间不同则顶层 meeting_time=None，逐段保留真实时间，不以导入时间补齐或推断同会。
+- 可选中立 ConfidenceMetadata 和 DTO confidence/confidence_reason 预留 HIGH/LOW + 理由，缺失为未知且省略新增 JSON 键。v2 任务关联 reason 不充当置信度理由。LOW 在当前及历史拒绝列表标记。置信度/理由变更及完整冲突变体均绑定指纹，使旧审批进入待复核。完全相同候选跨批次去重，不做同任务推断。
+- 独立 Reviewer 发现单 adapter 不能读新旧格式共存的问题，已修为按 format_version 分派的可信 registry。仅用独立 fixture 协议证明 v2 与另一格式同库重开/查询/确认/事件重放，不读取 task-eval 分支，不假设或实现未合并 v3。未来仅新增薄格式适配并注册，可复用存储、元数据和审核逻辑。
+- 首轮聚焦 178 passed / 4 failed：4 例均为新夹具未结束 INGESTING，触发既有 SOURCE_BUSY；已补完整夹具状态，未改产品保护规则或削弱断言。最终新增 54/54 通过，新旧聚焦 184/184 通过（108.11 秒），JUnit work/task-mvp/stage3a-focused-registry-final.xml。
+- 独立审查最终无剩余阻断 P1/P2；3/3 探针通过：同事务未提交的证据撤回立即可见且回滚恢复、entry 篡改只追加一次待复核且保留快照和历史/幂等重收拒绝、仅置信度理由改变也使旧审批失效。两种从旧 HEAD 捕获的 DTO 原 JSON/指纹完全不变。探针 work/task-mvp/review-stage3a-boundaries-ecd4b79cba3c4203aa06c7a97c946943.py。
+- 冻结七个源码/测试文件后运行完整 pytest：3862 passed / 31 skipped / 0 failed，3893 collected，45:05，exit 0。逐项对比同步后 3839 例：原有 3808 passed / 31 skipped 保持；新增 54 例均通过，无缺失/新增失败/新增跳过；原 5 个编码回归均通过；七文件哈希无漂移。报告 work/task-mvp/stage3a.xml、stage3a.comparison.json、stage3a.verification.json、stage3a.code-snapshot.json。git diff --check 通过。
+
+### 边界与后续
+
+3A 只接收 Host 已生成的 v2 批次，不触发抽取/模型，不接 HTTP/页面/3B 通用合并，不修改决定、Ask、ActionRecord 或关系旁库。历史 get_batch 只核对回执字节完整性，不宣称原文当前有效；可确认集合必须重新校验当前来源。多段时间未知时仍沿用 2B 保守拒绝重新绑定的限制；既有 list_tasks 的重复来源重验成本留作 MVP 规模限制，不扩大性能重构。
+
+本阶段学习：格式中立不仅需要统一 DTO，还需要新旧格式同库读取和可追溯的置信度变体。3A 独立提交后等待用户确认，再进入 3B；第 3 阶段总时限仍为 3 天，预计超时先报告可推迟部分。不写 README；最终阶段按用户约定把过程内容浓缩入 PR 描述并移除 docs/task-mvp/。
