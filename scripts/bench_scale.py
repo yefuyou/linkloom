@@ -225,11 +225,11 @@ def benchmark_routing(count):
     slots, queries = routing_fixture(count)
     resolver = FrozenRelationResolver(("uses supplier",))
     for case in queries[:5]:
-        discover_scope(case["query"], slots, resolver)
+        discover_scope(case["query"], slots, resolver, workspace_id=WORKSPACE, embedder=None)
     details, latencies = [], []
     for case in queries:
         start = time.perf_counter()
-        result = discover_scope(case["query"], slots, resolver)
+        result = discover_scope(case["query"], slots, resolver, workspace_id=WORKSPACE, embedder=None)
         elapsed = (time.perf_counter() - start) * 1000
         latencies.append(elapsed)
         candidates = {slot["subject"] for slot in result["candidates"]}
