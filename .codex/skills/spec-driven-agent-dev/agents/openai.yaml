@@ -1,3 +1,0 @@
-display_name: Spec-Driven Agent Dev
-short_description: Guide linkloom SPEC-first Planner, Worker, and Reviewer workflows.
-default_prompt: Use the spec-driven-agent-dev skill to plan or review this linkloom task with role separation, project contracts, the canonical product roadmap, acceptance evidence, vault safety gates, and a learning reflection.
