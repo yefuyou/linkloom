@@ -1,0 +1,40 @@
+﻿system,meeting_id,prediction_id,gold_id,category,prediction_task,prediction_task_zh,gold_task,gold_task_zh,prediction_owner,gold_owner,prediction_deadline,gold_deadline,owner_correct,deadline_correct,quote,quote_zh,judge_reason,人工判断（同意 / 不同意）
+baseline,ES2004d,p-e285c5a74f16400e,,WRONG_TASK,Delegate remaining catch-up tasks in the role of Project Supervisor,以项目主管身份分派剩余的追赶任务,,,B,,about fifty minutes,,False,False,"Oh , so we've got about fifty minutes to catch up with everything that I fell behind with , so I'll be delegating in my um role as Project Supervisor , so good luck .",哦，所以我们大约有五十分钟来赶上我落下的所有事情，所以我会以项目主管的身份进行分派，祝好运。,预测任务是项目经理以主管身份分派剩余追赶任务，而金标任务分别是填写最终评估问卷和向管理层建议保留语音识别，二者动作与交付物均不同，无法匹配。,
+baseline,ES2004d,,ES2004d-c001,FN,,,Fill out the final evaluation questionnaire,填写最终评估问卷,,All members,,未说明,False,False,"B [2142.710-2164.500]: Um the project has been evaluated well and truly . Um and we've got the meeting survey and questionnaire . Oh , so we've got about fifty minutes to catch up with everything that I fell behind with , so I'll be delegating in my um role as Project Supervisor , so good luck .
+",B [2142.710-2164.500]：嗯，项目已经得到了充分评估。嗯，我们还有会议调查和问卷。哦，所以我们大约有五十分钟来赶上我落下的所有事情，所以我会以项目主管的身份进行分派，祝好运。,裁判没有为此标准任务匹配任何预测。,
+legacy,ES2004d,,ES2004d-c002,FN,,,Suggest to management that speech recognition remain in the product design,向管理层建议在产品设计中保留语音识别功能,,Whole team,,未说明,False,False,"D [1515.680-1544.880]: We can put in our recommendations . If we if we're working to head office specifications as this is what this project team's working for , we can put in our recommendations for what we've we've found and what we the consensus that we've come to as a result of the meetings . But we need to work to that specification to start with . And I think the voice recognition sounds wonderful , but our object is so distinctive that that in itself is gonna make it easier to locate as a f you know in a first instance . Um as you say , we can offer the voice recognition initially to business class customers and so
+",D [1515.680-1544.880]: 我们可以把我们的建议写进去。如果我们按照总部规格来做，因为这个项目团队就是为此工作的，我们可以把我们的建议写进去，包括我们发现的以及我们通过会议达成共识的内容。但首先我们需要按照那个规格来做。而且我认为语音识别听起来很棒，但我们的产品本身如此独特，这本身就会让它更容易被找到，你知道，首先是这样。嗯，正如你所说，我们可以最初向商务舱客户提供语音识别，等等。,裁判没有为此标准任务匹配任何预测。,
+legacy,ES2004b,,ES2004b-c001,FN,,,Research consumers' opinions on instruction manuals,调研消费者对说明书（使用手册）的看法,,Marketing Executive,,before the next meeting,False,False,"D [2294.550-2300.040]: What would you specifically like marketing to look at before the next meeting ? Or shall I just sort of generally look at all the issues involved ?
+","D [2294.550-2300.040]: 你具体希望市场部在下次会议之前研究什么？还是我就笼统地看一下所有涉及的问题？
+",裁判没有为此标准任务匹配任何预测。,
+v2,ES2004b,,ES2004b-m001,FN,,,Look into rechargeable batteries with a docking station,研究带底座的充电电池,,Industrial Designer,,未说明,False,False,"A [1922.530-1926.160]: So are we talking of a concept of a rechargeable something on the remote ?
+C [1925.520-1929.700]: Yeah some sort of docking station or yeah .
+B [1926.100-1926.660]: Yes .
+B [1927.730-1929.460]: Rechargeable with a docking station .
+A [1927.740-1928.160]: Mm-hmm .
+B [1930.740-1932.610]: So the rechargeable which would be your
+C [1933.380-1939.630]: Yeah yeah th yeah that that'd be fine , and also that would mean they wouldn't have to go out buying batteries all the time .
+B [1934.020-1934.380]: field .
+B [1936.130-1936.670]: Okay .
+","A [1922.530-1926.160]：所以我们说的是遥控器上可充电的东西这个概念吗？
+C [1925.520-1929.700]：对，某种底座之类的，对。
+B [1926.100-1926.660]：是的。
+B [1927.730-1929.460]：可充电，带底座。
+A [1927.740-1928.160]：嗯哼。
+B [1930.740-1932.610]：所以可充电的，那会是你的
+C [1933.380-1939.630]：对对，那，那没问题，而且那也意味着他们不必老是出去买电池。
+B [1934.020-1934.380]：领域。
+B [1936.130-1936.670]：好。
+",裁判没有为此标准任务匹配任何预测。,
+v2,ES2004c,p-389d56dd51a0f77d,,UNSUPPORTED,Incorporate the company logo into the design,将公司标志纳入设计,,,User Interface Designer,,未说明,,False,False,And incorporating the company logo ?,那纳入公司标志呢？,会议中没有采纳将公司标志纳入设计的任务；D只是提问，A说会在设计中体现，但未形成明确采纳的待办工作，且无明确负责人。,
+v3_all,ES2004b,p-68bd7b705c0581f9,,DISCUSSION,Email extra details and tables from market research if needed,如有需要，通过邮件发送市场研究的额外细节和表格,,,Marketing Executive,,未说明,,False,False,"D [1027.470-1036.140]: I had marvellous tables and things that I could show you , but I think I'll just keep it simple , if there's any more information I can email you extra details , is that okay ?
+","D [1027.470-1036.140]：我本来有很棒的表格之类可以给你们看，但我想还是简单点，如果还需要更多信息，我可以把额外细节邮件发给你们，可以吗？
+",营销主管只是有条件地提出如有需要可邮件发送额外细节，属于提议而非会议采纳的承诺任务。,
+v3_all,ES2004d,p-e285c5a74f16400e,,WRONG_TASK,Delegate and catch up on overdue project work and documentation,委派并追赶积压的项目工作与文档,,,Project Manager,,about fifty minutes,,False,False,"Um the project has been evaluated well and truly . Um and we've got the meeting survey and questionnaire . Oh , so we've got about fifty minutes to catch up with everything that I fell behind with , so I'll be delegating in my um role as Project Supervisor , so good luck .",嗯，项目已经得到了充分评估。嗯，我们还有会议调查和问卷。哦，所以我们大约有五十分钟来赶上我落后的所有事情，所以我会以项目主管的身份进行委派，祝好运。,预测任务是项目经理委派并追赶积压的项目工作与文档，与金标任务（填写最终评估问卷、向管理层建议保留语音识别）均不同；且'about fifty minutes'是追赶时间而非任务截止日期。,
+v3_high,ES2004a,p-4d1ca8a01ce8b3a1,ES2004a-c001,MATCH,Work on individual tasks/functional design for the remote control project before the next meeting,在下次会议前完成遥控器项目的个人任务/功能设计工作,Each member prepares their individual work for the next (functional design) meeting,每位成员为下次（功能设计）会议准备各自的个人工作,Project Manager and Marketing Executive and Industrial Designer and User Interface Designer,Whole team,in half an hour,next meeting (in half an hour),True,True,"B [972.920-979.940]: Um , right , okay we've got half an hour before the next meeting , so we're all gonna go off and do our individual things . Um
+B [981.200-989.510]: I think that's probably about it and then we'll come back and liaise again and I get to do another fantastic PowerPoint presentation .
+","B [972.920-979.940]：嗯，好，我们距离下次会议还有半小时，所以我们都去各做各的事情。嗯
+B [981.200-989.510]：我想大概就这些了，然后我们会回来再沟通，我还能再做一次精彩的PowerPoint演示。",预测要求各成员在下次会议前完成各自的个人工作（功能设计），与金标任务一致；负责人为全体团队，与金标“Whole team”相符；截止时间为半小时后即下次会议，与金标“next meeting (in half an hour)”等价。,
+v3_high,ES2004d,,ES2004d-c002,FN,,,Suggest to management that speech recognition remain in the product design,向管理层建议在产品设计中保留语音识别功能,,Whole team,,未说明,False,False,"D [1515.680-1544.880]: We can put in our recommendations . If we if we're working to head office specifications as this is what this project team's working for , we can put in our recommendations for what we've we've found and what we the consensus that we've come to as a result of the meetings . But we need to work to that specification to start with . And I think the voice recognition sounds wonderful , but our object is so distinctive that that in itself is gonna make it easier to locate as a f you know in a first instance . Um as you say , we can offer the voice recognition initially to business class customers and so
+","D [1515.680-1544.880]: 我们可以把我们的建议写进去。如果我们按照总部规格来做，因为这个项目团队就是为此工作的，我们可以把我们的建议写进去，写出我们发现的以及我们通过会议达成的一致意见。但一开始我们需要按照那个规格来做。而且我觉得语音识别听起来很棒，但我们的产品本身太有特色了，这本身就会让它更容易被找到，你知道，首先是这样。嗯，正如你所说，我们可以最初向商务舱客户提供语音识别，等等
+",裁判没有为此标准任务匹配任何预测。,
