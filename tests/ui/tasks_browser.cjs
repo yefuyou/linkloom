@@ -1,4 +1,5 @@
-/* Offline formal-task browser smoke; all mutations go through the visible UI.
+/* 本数据为页面流程夹具，句子经改写以适配旧抽取器，不代表抽取效果。
+   Offline formal-task browser smoke; all mutations go through the visible UI.
    Reuse runTaskWorkflow(page, fixture) when recording a future demo GIF.
    Requirements: Playwright available on NODE_PATH; a compatible Node version.
    LINKLOOM_TEST_PYTHON / LINKLOOM_CHROMIUM_EXECUTABLE are optional overrides.
@@ -77,6 +78,12 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   const taskId = createdTasks.items[0].task.id;
   assert.equal(createdTasks.items[0].task.owner, '李明');
   await capture('02-created');
+  await page.locator('[data-action="tab-tasks"]').click();
+  await page.getByTestId('task-' + taskId).waitFor();
+  await page.locator('#tasks-app[aria-busy="false"]').waitFor();
+  assert.match(await page.locator('#tasks-app').innerText(), /2\. 按负责人/);
+  assert.ok(await page.getByTestId('task-' + taskId).getByText('负责人：李明', {exact: true}).isVisible());
+  await capture('02-owner-list');
 
   await page.locator('[data-action="tab-candidates"]').click();
   await page.getByTestId('candidate-' + fixture.candidate_b).getByTestId('candidate-merge').click();
@@ -145,7 +152,7 @@ async function main() {
   await fs.mkdir(root, {recursive: false});
   const fixture = await startHost(path.join(root, 'fixture'));
   let browser;
-  const report = {synthetic: true, steps: [], console_errors: [], status: 'FAIL'};
+  const report = {synthetic: true, fixture_notice: '本数据为页面流程夹具，句子经改写以适配旧抽取器，不代表抽取效果。', steps: [], captures: [], console_errors: [], status: 'FAIL'};
   try {
     browser = await chromium.launch({headless: true, ...(process.env.LINKLOOM_CHROMIUM_EXECUTABLE ?
       {executablePath: process.env.LINKLOOM_CHROMIUM_EXECUTABLE} : {})});
@@ -154,7 +161,25 @@ async function main() {
     page.on('pageerror', error => report.console_errors.push(error.message));
     page.on('console', message => {if (message.type() === 'error') report.console_errors.push(message.text());});
     const capture = async name => {
-      await page.screenshot({path: path.join(root, name + '.png'), fullPage: true});
+      const views = {
+        '01-candidates': {title: '待确认', anchor: '.page-intro'},
+        '02-created': {title: '任务详情', anchor: '#detail-heading'},
+        '02-owner-list': {title: '按负责人', anchor: '#task-list-heading'},
+        '03-merge-preview': {title: '合并预览', anchor: '[data-testid="review-form"]'},
+        '04-merged-history': {title: '变化历史：负责人和期限的跨会议变更', anchor: '[data-testid="task-event"]:nth-child(2)'},
+        '05-undo-preview': {title: '撤销预览', anchor: '[data-testid="review-form"]'},
+        '06-restored': {title: '撤销后的任务详情', anchor: '#detail-heading'},
+        '07-mobile-detail': {title: '移动端任务详情', anchor: '#detail-heading'},
+        '08-mobile-candidates': {title: '移动端待确认主列表', anchor: '.page-intro'},
+      };
+      const view = views[name];
+      if (name === '04-merged-history') {
+        const createdEvidence = page.getByTestId('task-event').first().locator('details.evidence');
+        if (await createdEvidence.getAttribute('open') !== null) await createdEvidence.locator('summary').first().click();
+      }
+      if (view) await page.locator(view.anchor).first().evaluate(el => el.scrollIntoView({block: 'start'}));
+      await page.screenshot({path: path.join(root, name + '.png'), fullPage: false});
+      report.captures.push({name, title: view ? view.title : name, screenshot: name + '.png', viewport: page.viewportSize()});
       const overflow = await page.locator('body').evaluate(el => el.scrollWidth > innerWidth);
       if (overflow) {
         report.overflow = await page.locator('body').evaluate(() => Array.from(document.querySelectorAll('*')).filter(el => el.getBoundingClientRect().right > innerWidth + 1).map(el => ({tag: el.tagName, class: el.className, text: el.textContent.slice(0, 150), right: el.getBoundingClientRect().right})).slice(0, 30));

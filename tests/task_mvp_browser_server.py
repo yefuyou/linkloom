@@ -1,3 +1,4 @@
+# 本数据为页面流程夹具，句子经改写以适配旧抽取器，不代表抽取效果。
 """Fresh, public A/B meeting fixture for the formal-task browser smoke test.
 
 The disposable database is populated through the real offline ingestion helpers;
