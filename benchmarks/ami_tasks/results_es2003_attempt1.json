@@ -1,0 +1,87 @@
+{
+  "error_type": "ValueError",
+  "message": "Invalid or many-to-one match",
+  "counter": {
+    "requests": 28,
+    "reserved_upper_bound_usd": 0.23566763400000004,
+    "max_requests": 80,
+    "max_usd": 1.5
+  },
+  "actual_cost_usd_from_usage": 0.23566763400000007,
+  "usage_by_model": {
+    "gemini-3.8-flash": {
+      "requests": 26,
+      "input_tokens": 285989,
+      "output_tokens_including_thinking": 5228,
+      "cost_usd_from_usage": 0.23409675000000008
+    },
+    "deepseek-flash": {
+      "requests": 2,
+      "input_tokens": 11638,
+      "output_tokens_including_thinking": 1308,
+      "cost_usd_from_usage": 0.0015708839999999998
+    }
+  },
+  "failed_at": "2026-10-30T00:24:20.043312+00:00",
+  "status": "incomplete: invalid judge output, not an extraction or wiring failure",
+  "attempt": 1,
+  "freeze_verification": {
+    "checked_at": "2026-10-30T00:26:22.854846+00:00",
+    "frozen_commit": "a8dabf40d9a2613781ded1f55747bb6a8e5a81c2",
+    "source_normalized_sha256": {
+      "src/linkloom/semantic_ingestion/meeting_tasks_v2.py": "a5d9aa5591b5cf4be4c7ea63c0dc3671a3cf95daddb9772c627b445ebdf93e3b",
+      "src/linkloom/agents/providers/gemini_api.py": "7ee39c04e73dfe58db66e28ac0820b5af9184cfe0b58c4e3c6568e2c29f0e15b",
+      "scripts/eval_tasks.py": "4d2f674e2f51e7242679019ee68968ed6db26ba60320335912c9b23a12455f1f"
+    },
+    "gold_sha256": "fdb653c84c48cfe9041112352614c80fcf0a79e18777ad70d7314150ecaec7b8",
+    "head": "80020f11107172bf062a25a22195ca108fe946c8"
+  },
+  "all_predictions_completed_before_gold_parse": true,
+  "predictions_completed_at": "2026-10-30T00:24:12.539656+00:00",
+  "predictions_sha256": "7b3cd5a55dbecc732025a2fd9adeee934924b8f3e1e9c82c4cb9d0000d65c387",
+  "prediction_counts": {
+    "baseline": {
+      "ES2003a": 1,
+      "ES2003b": 3,
+      "ES2003c": 3,
+      "ES2003d": 1
+    },
+    "legacy": {
+      "ES2003a": 2,
+      "ES2003b": 1,
+      "ES2003c": 4,
+      "ES2003d": 1
+    },
+    "v2": {
+      "ES2003a": 1,
+      "ES2003b": 2,
+      "ES2003c": 1,
+      "ES2003d": 1
+    }
+  },
+  "invalid_judgments": [
+    {
+      "prediction_id": "p-145d7d661374aae6",
+      "gold_id": "ES2003a-c001",
+      "category": "MATCH",
+      "owner_correct": true,
+      "deadline_correct": false,
+      "reason": "预测任务“把内容发给大家”与金标任务“整理会议内容并发送给所有人”中的发送交付物一致，属于同一任务的一部分；负责人B为项目经理，与金标角色一致；金标未说明截止日期，故截止日期不计分。",
+      "prediction_task_zh": "把内容发给大家"
+    },
+    {
+      "prediction_id": "p-752e663f76945fc4",
+      "gold_id": "ES2003a-c001",
+      "category": "MATCH",
+      "owner_correct": true,
+      "deadline_correct": false,
+      "reason": "预测任务“写下我们刚才快速做的东西”与金标任务“整理会议内容并发送”中的整理撰写部分一致；负责人B为项目经理，与金标角色一致；金标未说明截止日期，故截止日期不计分。",
+      "prediction_task_zh": "写下我们刚才快速做的东西"
+    }
+  ],
+  "complete_comparison_available": false,
+  "offline_tests": {
+    "passed": 104,
+    "model_calls": 0
+  }
+}

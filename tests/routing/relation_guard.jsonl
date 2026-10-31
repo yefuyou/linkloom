@@ -1,0 +1,7 @@
+{"id":"G001","query":"Orion 项目负责人的直属领导是谁？","expected_intent":"SOURCE_RELATION","expected_code":"AGENT_NOT_CONFIGURED","expected_http":503}
+{"id":"G002","query":"Who is the direct leader of the owner of Cedar Lantern?","expected_intent":"SOURCE_RELATION","expected_code":"AGENT_NOT_CONFIGURED","expected_http":503}
+{"id":"G003","query":"Who owns the project behind Comet-Key and who leads that owner?","expected_intent":"SOURCE_RELATION","expected_code":"AGENT_NOT_CONFIGURED","expected_http":503}
+{"id":"G004","query":"谁负责琥珀线路？其直属领导是谁？","expected_intent":"SOURCE_RELATION","expected_code":"UNSUPPORTED_QUERY","expected_http":200}
+{"id":"G005","query":"Who is the direct leader of the owner of Cedar Lantern?","subject":"Launch","relation":"uses platform","expected_intent":"SOURCE_RELATION","expected_code":"TASK_SCOPE_CONFLICT","expected_http":200}
+{"id":"G006","query":"Who is the direct leader of the owner of Cedar Lantern?","as_of":"2026-10-06T11:00:00Z","expected_intent":"SOURCE_RELATION","expected_code":"DATE_SCOPE_REQUIRED","expected_http":200}
+{"id":"G007","query":"请调查这几次会议里交付任务如何延续，负责人和截止日期的变动是否有可靠依据？","domain":"tasks","expected_intent":"TASK_INVESTIGATION","expected_code":null,"expected_http":200}

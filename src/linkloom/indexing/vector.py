@@ -20,8 +20,10 @@ class EmbeddingProvider(Protocol):
 class SentenceTransformerEmbedder:
     """Lazy local embedder; no paid or remote provider calls are made."""
 
-    def __init__(self, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2") -> None:
+    def __init__(self, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+                 *, local_files_only: bool = False) -> None:
         self.model_name = model_name
+        self.local_files_only = local_files_only
         self._model: Any | None = None
         self.model_load_total_ms = 0.0
         self.last_model_load_ms = 0.0
@@ -32,7 +34,8 @@ class SentenceTransformerEmbedder:
             started = time.perf_counter()
             from sentence_transformers import SentenceTransformer
 
-            self._model = SentenceTransformer(self.model_name)
+            options = {"local_files_only": True} if self.local_files_only else {}
+            self._model = SentenceTransformer(self.model_name, **options)
             self.last_model_load_ms = (time.perf_counter() - started) * 1000.0
             self.model_load_total_ms += self.last_model_load_ms
         return np.asarray(

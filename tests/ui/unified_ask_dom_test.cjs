@@ -250,6 +250,20 @@ async function setup(storage = new Map()) {
   automatic.pending[3](result("NEXT")); await nextQuestion;
   console.log("PASS: scope/date/query invalidation, latest question wins, workspace response isolation");
   console.log("PASS: automatic scope, candidate/date continuation retains question, new query rediscovers, per-request permission resets");
+  const clarifyUi = await setup();
+  clarifyUi.element("ask-slot").value = "";
+  const clarifyRequest = clarifyUi.submit(); await tick();
+  const clarification = result(""); clarification.result.status = "NEEDS_SCOPE";
+  clarification.result.route = {route: "CLARIFY", decided_by: "fallback"};
+  clarification.result.discovery = {candidate_count: 4, candidates: Array.from({length: 4}, (_, i) =>
+    ({subject: "Project" + i, relation: "uses platform", current_value: "Value" + i}))};
+  clarifyUi.pending[0](clarification); await clarifyRequest;
+  const choicesHtml = clarifyUi.element("ask-result").innerHTML;
+  assert.equal((choicesHtml.match(/data-action="choose-ask-scope"/g) || []).length, 3);
+  // Inspect selectable choices; technical details intentionally retain the raw response.
+  assert.doesNotMatch(choicesHtml.split('<details class="ask-technical">')[0], /Project3/);
+  console.log("PASS: CLARIFY fallback renders at most three candidate buttons");
+
   const feedbackUi = await setup();
   const feedbackForm = feedbackUi.element("feedback-form");
   feedbackForm.fields = {term: "供方", relation: "uses supplier", actor: "human"};

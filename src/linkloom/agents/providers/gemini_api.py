@@ -61,6 +61,7 @@ class GeminiClient(Protocol):
 
 
 _MAX_PROVIDER_INPUT_BYTES = 32 * 1024
+_MAX_HOST_INPUT_BYTES = 256 * 1024
 _MAX_PROVIDER_OBSERVATION_BYTES = 32 * 1024
 GEMINI_38_FLASH_MODEL_ID = "gemini-3.8-flash"
 _SUPPORTED_SCHEMA_KEYS = frozenset(
@@ -781,9 +782,12 @@ def build_gemini_request(
     request: ModelTurnRequest,
     *,
     configured_model_id: str | None = None,
+    max_input_bytes: int = _MAX_PROVIDER_INPUT_BYTES,
 ) -> dict[str, Any]:
     """Build a bounded, JSON-safe Gemini request without provider SDK types."""
 
+    if type(max_input_bytes) is not int or not _MAX_PROVIDER_INPUT_BYTES <= max_input_bytes <= _MAX_HOST_INPUT_BYTES:
+        raise _AdapterFailure("MODEL_INVALID_REQUEST", details={"reason": "invalid_host_input_limit"})
     if not isinstance(request, ModelTurnRequest):
         raise _AdapterFailure("MODEL_INVALID_REQUEST", details={"reason": "invalid_request_type"})
     model_id = request.model_id or configured_model_id
@@ -804,7 +808,7 @@ def build_gemini_request(
         bounded_context = _bounded_json(
             evidence_context,
             "ModelTurnRequest.evidence_context",
-            _MAX_PROVIDER_INPUT_BYTES,
+            max_input_bytes,
         )
         initial_user_input = (
             f"{request.user_input}\nverified_evidence_context="
@@ -819,7 +823,7 @@ def build_gemini_request(
     bounded_input = _bounded_json(
         initial_user_input,
         "ModelTurnRequest.model_visible_input",
-        _MAX_PROVIDER_INPUT_BYTES,
+        max_input_bytes,
     )
     if not isinstance(bounded_input, str):
         raise _AdapterFailure("MODEL_INVALID_REQUEST", details={"reason": "input_not_text"})
@@ -1415,6 +1419,7 @@ class GeminiProviderAdapter:
         client: GeminiClient,
         *,
         model_id: str | None = GEMINI_38_FLASH_MODEL_ID,
+        max_input_bytes: int = _MAX_PROVIDER_INPUT_BYTES,
     ) -> None:
         if client is None or not callable(getattr(client, "generate_content", None)):
             raise ValidationError("GeminiProviderAdapter client must implement generate_content().")
@@ -1426,6 +1431,9 @@ class GeminiProviderAdapter:
             raise ValidationError(
                 "GeminiProviderAdapter only supports gemini-3.8-flash for product runs."
             )
+        if type(max_input_bytes) is not int or not _MAX_PROVIDER_INPUT_BYTES <= max_input_bytes <= _MAX_HOST_INPUT_BYTES:
+            raise ValidationError("Host input limit must be between 32 KiB and 256 KiB.")
+        self.max_input_bytes = max_input_bytes
         self.client = client
         self.model_id = selected_model_id
         self.capability = ProviderCapability(
@@ -1555,6 +1563,7 @@ class GeminiProviderAdapter:
             payload = build_gemini_request(
                 request,
                 configured_model_id=self.model_id,
+                max_input_bytes=self.max_input_bytes,
             )
         except _AdapterFailure as failure:
             return self._failure_response(failure)

@@ -668,10 +668,10 @@
       return;
     }
     if (!hasFinal) {
-      const ambiguous = result.discovery?.status === "AMBIGUOUS";
+      const ambiguous = result.discovery?.status === "AMBIGUOUS" || (result.route?.route === "CLARIFY" && !["DATE_SCOPE_REQUIRED", "INVALID_AS_OF"].includes(code));
       const dateNeeded = ["DATE_SCOPE_REQUIRED", "INVALID_AS_OF"].includes(code);
       const permission = code === "EXTERNAL_PROVIDER_PERMISSION_REQUIRED";
-      const noMatch = result.discovery?.status === "NO_MATCH";
+      const noMatch = result.route?.route === "NO_MATCH" || result.discovery?.status === "NO_MATCH";
       const memoryConflict = (result.discovery?.memory?.conflicts || []).length > 0;
       const uncertain = result.status === "PROVIDER_UNCERTAIN";
       const unsupported = code === "UNSUPPORTED_QUERY" || code === "TASK_SCOPE_CONFLICT";
@@ -698,7 +698,7 @@
         : noMatch ? t("Add a known project or decision term, or choose a reviewed decision in advanced options.", "请补充已知项目或决策名称，也可在高级选项中指定可信决策。")
         : code === "AGENT_NOT_CONFIGURED" ? t("AI investigation is not configured. Direct reviewed queries are still available.", "尚未配置 AI 调查；仍可直接查询已审核记录。")
         : t("The request did not produce an accepted answer. Details are available below.", "本次请求未产生通过核验的答案，可展开下方详情查看原因。");
-      state.askCandidates = ambiguous ? result.discovery.candidates || [] : [];
+      state.askCandidates = ambiguous ? (result.discovery?.candidates || []).slice(0, 3) : [];
       const choices = state.askCandidates.map((slot, index) => `<article class="ask-choice"><h3>${escapeHtml(slot.subject)}</h3><p>${escapeHtml(decisionCategory(slot.relation, locale))}${slot.current_value ? ` · <strong>${escapeHtml(slot.current_value)}</strong>` : ""}</p><button type="button" class="button quiet" data-action="choose-ask-scope" data-index="${index}">${t("Choose this decision", "选择这项决策")}</button></article>`).join("");
       target.innerHTML = `<section class="panel ask-answer ask-answer--notice" role="${uncertain || result.status === "FAILED" ? "alert" : "status"}"><h2>${title}</h2><p>${message}</p>${choices ? `<div class="ask-choices">${choices}</div>` : ""}${ambiguous && result.discovery.candidate_count > state.askCandidates.length ? `<p class="hint">${t("More candidates are available in advanced options. Narrow the question if needed.", "更多候选可在高级选项中查看，也可补充问题缩小范围。")}</p>` : ""}${technical}</section>`;
       if (dateNeeded) { document.getElementById("ask-advanced").open = true; document.getElementById("ask-date").focus?.(); }

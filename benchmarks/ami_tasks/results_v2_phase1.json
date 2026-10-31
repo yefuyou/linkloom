@@ -1,0 +1,1343 @@
+{
+  "models": {
+    "evaluated": "gemini-3.8-flash",
+    "judge": "deepseek-flash"
+  },
+  "rules": "meeting-task-match/v2",
+  "per_meeting": {
+    "ES2002a": {
+      "baseline": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "recall": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 3
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 3,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 3,
+        "deadline_stated_matched_count": 3,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 0,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "recall": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 3
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 3,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 3,
+        "deadline_stated_matched_count": 3,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 0,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    },
+    "ES2002b": {
+      "baseline": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "recall": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 4
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 4,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 3,
+        "deadline_stated_matched_count": 3,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 1,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "recall": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 4
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 3,
+            "denominator": 3
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 4,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 3,
+        "deadline_stated_matched_count": 3,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 1,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    },
+    "ES2002c": {
+      "baseline": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "recall": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 2
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 2,
+            "denominator": 2
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 2,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 2,
+        "deadline_stated_matched_count": 2,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 0,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "recall": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 2
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 2,
+            "denominator": 2
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 2,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 2,
+        "deadline_stated_matched_count": 2,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 0,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    },
+    "ES2002d": {
+      "baseline": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "recall": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 2
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 0,
+            "denominator": 0
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 0,
+            "denominator": 0
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 2,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 0,
+        "deadline_stated_matched_count": 0,
+        "deadline_accuracy_on_matched_stated_gold": null,
+        "deadline_end_to_end_accuracy_on_stated_gold": null,
+        "deadline_prediction_abstentions": 2,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "recall": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 2
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 2,
+            "denominator": 2
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 0,
+            "denominator": 0
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 0,
+            "denominator": 0
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 2,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 0,
+        "deadline_stated_matched_count": 0,
+        "deadline_accuracy_on_matched_stated_gold": null,
+        "deadline_end_to_end_accuracy_on_stated_gold": null,
+        "deadline_prediction_abstentions": 2,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    }
+  },
+  "micro": {
+    "baseline": {
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "discussion_false_positives": 0,
+      "metric_counts": {
+        "precision": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "recall": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "discussion_false_positives": {
+          "numerator": 0,
+          "denominator": 11
+        },
+        "owner_accuracy_on_matched": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "deadline_accuracy_on_matched_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        },
+        "deadline_end_to_end_accuracy_on_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        }
+      },
+      "owner_accuracy_on_matched": 1.0,
+      "owner_end_to_end_recall": 1.0,
+      "owner_stated_matched_count": 11,
+      "owner_stated_accuracy_on_matched": 1.0,
+      "owner_unstated_matched_count": 0,
+      "owner_unstated_accuracy_on_matched": null,
+      "deadline_stated_gold_count": 8,
+      "deadline_stated_matched_count": 8,
+      "deadline_accuracy_on_matched_stated_gold": 1.0,
+      "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+      "deadline_prediction_abstentions": 3,
+      "deadline_abstentions_on_matched_stated_gold": 0,
+      "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+    },
+    "linkloom": {
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "discussion_false_positives": 0,
+      "metric_counts": {
+        "precision": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "recall": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "discussion_false_positives": {
+          "numerator": 0,
+          "denominator": 11
+        },
+        "owner_accuracy_on_matched": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "deadline_accuracy_on_matched_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        },
+        "deadline_end_to_end_accuracy_on_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        }
+      },
+      "owner_accuracy_on_matched": 1.0,
+      "owner_end_to_end_recall": 1.0,
+      "owner_stated_matched_count": 11,
+      "owner_stated_accuracy_on_matched": 1.0,
+      "owner_unstated_matched_count": 0,
+      "owner_unstated_accuracy_on_matched": null,
+      "deadline_stated_gold_count": 8,
+      "deadline_stated_matched_count": 8,
+      "deadline_accuracy_on_matched_stated_gold": 1.0,
+      "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+      "deadline_prediction_abstentions": 3,
+      "deadline_abstentions_on_matched_stated_gold": 0,
+      "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+    }
+  },
+  "gold_sha256": "8df36c0dac65e755dbf0ac8a33dbe4be491b0718a260c604d1f5601d31b64855",
+  "generation": {
+    "thinking_level": "low",
+    "max_output_tokens": 32768
+  },
+  "evaluation_scope": {
+    "kind": "meeting_v2_phase1",
+    "task_extraction_mode": "meeting_v2",
+    "windows": 4,
+    "baseline_reused": true,
+    "baseline_model_requests": 0
+  },
+  "counter": {
+    "requests": 11,
+    "reserved_upper_bound_usd": 0.05826475200000002,
+    "max_requests": 60,
+    "max_usd": 1.0
+  },
+  "actual_cost_usd_from_usage": 0.058264751999999996,
+  "usage_by_model": {
+    "gemini-3.8-flash": {
+      "requests": 4,
+      "input_tokens": 62007,
+      "output_tokens_including_thinking": 1883,
+      "cost_usd_from_usage": 0.0535665
+    },
+    "deepseek-flash": {
+      "requests": 7,
+      "input_tokens": 114442,
+      "output_tokens_including_thinking": 5970,
+      "cost_usd_from_usage": 0.004698252
+    }
+  },
+  "prior_failed_attempt": null,
+  "cross_meeting_tracking": "not_run; interface_only",
+  "spot_check": {
+    "seed": 20261029,
+    "population": 22,
+    "sampled": 6,
+    "method": "ceil(20%) independently per system; predictions plus unmatched gold"
+  },
+  "wiring_comparison": {
+    "before": {
+      "baseline": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "recall": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 11
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 11,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 8,
+        "deadline_stated_matched_count": 8,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 3,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 4,
+        "fp": 3,
+        "fn": 7,
+        "precision": 0.5714285714285714,
+        "recall": 0.36363636363636365,
+        "f1": 0.4444444444444444,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 4,
+            "denominator": 7
+          },
+          "recall": {
+            "numerator": 4,
+            "denominator": 11
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 7
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 4,
+            "denominator": 4
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 0,
+            "denominator": 2
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 0,
+            "denominator": 8
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 0.36363636363636365,
+        "owner_stated_matched_count": 4,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 8,
+        "deadline_stated_matched_count": 2,
+        "deadline_accuracy_on_matched_stated_gold": 0.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 0.0,
+        "deadline_prediction_abstentions": 7,
+        "deadline_abstentions_on_matched_stated_gold": 2,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    },
+    "after": {
+      "baseline": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "recall": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 11
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 11,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 8,
+        "deadline_stated_matched_count": 8,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 3,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      },
+      "linkloom": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "discussion_false_positives": 0,
+        "metric_counts": {
+          "precision": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "recall": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "discussion_false_positives": {
+            "numerator": 0,
+            "denominator": 11
+          },
+          "owner_accuracy_on_matched": {
+            "numerator": 11,
+            "denominator": 11
+          },
+          "deadline_accuracy_on_matched_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          },
+          "deadline_end_to_end_accuracy_on_stated_gold": {
+            "numerator": 8,
+            "denominator": 8
+          }
+        },
+        "owner_accuracy_on_matched": 1.0,
+        "owner_end_to_end_recall": 1.0,
+        "owner_stated_matched_count": 11,
+        "owner_stated_accuracy_on_matched": 1.0,
+        "owner_unstated_matched_count": 0,
+        "owner_unstated_accuracy_on_matched": null,
+        "deadline_stated_gold_count": 8,
+        "deadline_stated_matched_count": 8,
+        "deadline_accuracy_on_matched_stated_gold": 1.0,
+        "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+        "deadline_prediction_abstentions": 3,
+        "deadline_abstentions_on_matched_stated_gold": 0,
+        "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+      }
+    },
+    "before_per_meeting": {
+      "ES2002a": {
+        "baseline": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 3,
+              "denominator": 3
+            },
+            "recall": {
+              "numerator": 3,
+              "denominator": 3
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 3
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 3,
+              "denominator": 3
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 3,
+              "denominator": 3
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 3,
+              "denominator": 3
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 1.0,
+          "owner_stated_matched_count": 3,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 3,
+          "deadline_stated_matched_count": 3,
+          "deadline_accuracy_on_matched_stated_gold": 1.0,
+          "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+          "deadline_prediction_abstentions": 0,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        },
+        "linkloom": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.3333333333333333,
+          "f1": 0.5,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 3
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 0,
+              "denominator": 3
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 0.3333333333333333,
+          "owner_stated_matched_count": 1,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 3,
+          "deadline_stated_matched_count": 1,
+          "deadline_accuracy_on_matched_stated_gold": 0.0,
+          "deadline_end_to_end_accuracy_on_stated_gold": 0.0,
+          "deadline_prediction_abstentions": 1,
+          "deadline_abstentions_on_matched_stated_gold": 1,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        }
+      },
+      "ES2002b": {
+        "baseline": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 4,
+              "denominator": 4
+            },
+            "recall": {
+              "numerator": 4,
+              "denominator": 4
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 4
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 4,
+              "denominator": 4
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 3,
+              "denominator": 3
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 3,
+              "denominator": 3
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 1.0,
+          "owner_stated_matched_count": 4,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 3,
+          "deadline_stated_matched_count": 3,
+          "deadline_accuracy_on_matched_stated_gold": 1.0,
+          "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+          "deadline_prediction_abstentions": 1,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        },
+        "linkloom": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 3,
+          "precision": 1.0,
+          "recall": 0.25,
+          "f1": 0.4,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 4
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 0,
+              "denominator": 0
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 0,
+              "denominator": 3
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 0.25,
+          "owner_stated_matched_count": 1,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 3,
+          "deadline_stated_matched_count": 0,
+          "deadline_accuracy_on_matched_stated_gold": null,
+          "deadline_end_to_end_accuracy_on_stated_gold": 0.0,
+          "deadline_prediction_abstentions": 1,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        }
+      },
+      "ES2002c": {
+        "baseline": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "recall": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 2,
+              "denominator": 2
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 1.0,
+          "owner_stated_matched_count": 2,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 2,
+          "deadline_stated_matched_count": 2,
+          "deadline_accuracy_on_matched_stated_gold": 1.0,
+          "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+          "deadline_prediction_abstentions": 0,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        },
+        "linkloom": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 0.5,
+          "owner_stated_matched_count": 1,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 2,
+          "deadline_stated_matched_count": 1,
+          "deadline_accuracy_on_matched_stated_gold": 0.0,
+          "deadline_end_to_end_accuracy_on_stated_gold": 0.0,
+          "deadline_prediction_abstentions": 1,
+          "deadline_abstentions_on_matched_stated_gold": 1,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        }
+      },
+      "ES2002d": {
+        "baseline": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "recall": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 2
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 0,
+              "denominator": 0
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 1.0,
+          "owner_stated_matched_count": 2,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 0,
+          "deadline_stated_matched_count": 0,
+          "deadline_accuracy_on_matched_stated_gold": null,
+          "deadline_end_to_end_accuracy_on_stated_gold": null,
+          "deadline_prediction_abstentions": 2,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        },
+        "linkloom": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.25,
+          "recall": 0.5,
+          "f1": 0.3333333333333333,
+          "discussion_false_positives": 0,
+          "metric_counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 4
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "discussion_false_positives": {
+              "numerator": 0,
+              "denominator": 4
+            },
+            "owner_accuracy_on_matched": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "deadline_accuracy_on_matched_stated_gold": {
+              "numerator": 0,
+              "denominator": 0
+            },
+            "deadline_end_to_end_accuracy_on_stated_gold": {
+              "numerator": 0,
+              "denominator": 0
+            }
+          },
+          "owner_accuracy_on_matched": 1.0,
+          "owner_end_to_end_recall": 0.5,
+          "owner_stated_matched_count": 1,
+          "owner_stated_accuracy_on_matched": 1.0,
+          "owner_unstated_matched_count": 0,
+          "owner_unstated_accuracy_on_matched": null,
+          "deadline_stated_gold_count": 0,
+          "deadline_stated_matched_count": 0,
+          "deadline_accuracy_on_matched_stated_gold": null,
+          "deadline_end_to_end_accuracy_on_stated_gold": null,
+          "deadline_prediction_abstentions": 4,
+          "deadline_abstentions_on_matched_stated_gold": 0,
+          "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+        }
+      }
+    },
+    "baseline_reused_from": "work\\ami_tasks_results_speaker_wiring",
+    "baseline_model_requests": 0,
+    "change": "meeting_v2 phase1: whole-meeting/multi-evidence/raw-deadline/status/simple-grouping; legacy and baseline reused; generic deadline-role correction verified offline under frozen rules",
+    "reference_results_sha256": "9ae088f58be6fe2b5fe8418de85c66898c82dcf73b1ce02ec493737304c4e6ee"
+  },
+  "extraction_replay": {
+    "reason": "Known participant IDs from the trusted roster must resolve like speaker IDs; generic Host alias resolution fixed offline. No prompt, gold, source or raw model output changed.",
+    "saved_extractions": "work\\ami_tasks_results_v2_phase1",
+    "replayed_identical_generation_requests": [
+      "ES2002a",
+      "ES2002b",
+      "ES2002c",
+      "ES2002d"
+    ],
+    "reused_unchanged_judgments": [
+      "ES2002c"
+    ],
+    "additional_judge_requests": 3,
+    "all_prior_cost_and_requests_included": true
+  },
+  "dataset_usage": "ES2002 development only; no ES2003 transcripts, summaries or annotations accessed",
+  "test_gate": {
+    "status": "passed",
+    "full_pytest": {
+      "tests": 3277,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 31,
+      "passed": 3246
+    },
+    "seconds": 1338.48,
+    "warnings": 1,
+    "warning": "Existing record_property / JUnit xunit2 incompatibility in test_unified_investigation_flow; unrelated to v2; unchanged",
+    "latest_targeted_tests_passed": 100,
+    "remaining_failures": [],
+    "log": "work/pytest_v2_frozen_post_master.log",
+    "junit": "work/pytest_v2_frozen_post_master.xml"
+  },
+  "known_unscored_deadline_error": {
+    "meeting_id": "ES2002d",
+    "raw_text": "in the final report",
+    "kind": "EVENT_BASED",
+    "reason": "This phrase names the deliverable location, not a deadline; gold has no stated deadline so this does not affect the requested deadline metric.",
+    "status": "corrected by generic frozen local rule",
+    "corrected_deadline": "未说明",
+    "corrected_kind": "UNSPECIFIED"
+  },
+  "legacy_hash_regression": {
+    "source": "test_meeting_tasks_v2.py::test_legacy_request_payload_and_hash_do_not_change_with_host_default",
+    "head_and_current_wire_sha256": "da60519f4ce6efad0f2ae4ef53be1d73bcd240a335ded21944b6e0f21a0b43b2",
+    "head_and_current_request_sha256": "a471fb75ea483ea39ce22a5b911d3044e15b356be084b8ce83c778abae7ef3e6"
+  },
+  "implementation_sha256": {
+    "src/linkloom/semantic_ingestion/meeting_tasks_v2.py": "1ed52595f972fe6e702304e86f2c08b3af2c865bb3aeef0f4c60e771f6227f10",
+    "src/linkloom/agents/providers/gemini_api.py": "c4dda3ddda2f1a4381f41aa644404de18ca4c8b61553d980440b11d27466ccaa",
+    "scripts/eval_tasks.py": "8cc361a086ef94e09d525d789f724f0c5e4562d2dbbb600b74a592adcbd2170e"
+  },
+  "human_review": {
+    "sample_size": 6,
+    "fully_agree": 6,
+    "partially_disagree": 0,
+    "complete_agreement_rate": 1.0,
+    "source": "user confirmed all six original judgments; the CSV preserves the reviewed predictions",
+    "judgments_unchanged_by_local_deadline_fix": true
+  },
+  "pre_master_test_gate": {
+    "full_pytest": {
+      "tests": 3372,
+      "failures": 271,
+      "errors": 11,
+      "skipped": 29,
+      "passed": 3061
+    },
+    "full_pytest_seconds": 1814.07,
+    "latest_v2_and_eval_subset": {
+      "passed": 72,
+      "failed": 0
+    },
+    "new_v2_or_eval_failures_in_full_run": 0,
+    "status": "not_green_no_commit",
+    "log": "work/pytest_v2_phase1_complete.log",
+    "junit": "work/pytest_v2_phase1_complete.xml",
+    "verified_existing_blockers": [
+      "HEAD lacks scripts/run_stage_c_context_memory_loop.py and scripts/run_memoryagentbench_g3_pilot.py referenced by 4 collected tests",
+      "Legacy Gemini model/temperature mismatch reproduced against HEAD adapter",
+      "7 fixture setup errors use an absent historical directory"
+    ],
+    "other_failures": "not individually attributed; no scope expansion to repair unrelated tests"
+  },
+  "before_deadline_role_fix_micro": {
+    "baseline": {
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "discussion_false_positives": 0,
+      "metric_counts": {
+        "precision": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "recall": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "discussion_false_positives": {
+          "numerator": 0,
+          "denominator": 11
+        },
+        "owner_accuracy_on_matched": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "deadline_accuracy_on_matched_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        },
+        "deadline_end_to_end_accuracy_on_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        }
+      },
+      "owner_accuracy_on_matched": 1.0,
+      "owner_end_to_end_recall": 1.0,
+      "owner_stated_matched_count": 11,
+      "owner_stated_accuracy_on_matched": 1.0,
+      "owner_unstated_matched_count": 0,
+      "owner_unstated_accuracy_on_matched": null,
+      "deadline_stated_gold_count": 8,
+      "deadline_stated_matched_count": 8,
+      "deadline_accuracy_on_matched_stated_gold": 1.0,
+      "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+      "deadline_prediction_abstentions": 3,
+      "deadline_abstentions_on_matched_stated_gold": 0,
+      "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+    },
+    "linkloom": {
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "discussion_false_positives": 0,
+      "metric_counts": {
+        "precision": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "recall": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "discussion_false_positives": {
+          "numerator": 0,
+          "denominator": 11
+        },
+        "owner_accuracy_on_matched": {
+          "numerator": 11,
+          "denominator": 11
+        },
+        "deadline_accuracy_on_matched_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        },
+        "deadline_end_to_end_accuracy_on_stated_gold": {
+          "numerator": 8,
+          "denominator": 8
+        }
+      },
+      "owner_accuracy_on_matched": 1.0,
+      "owner_end_to_end_recall": 1.0,
+      "owner_stated_matched_count": 11,
+      "owner_stated_accuracy_on_matched": 1.0,
+      "owner_unstated_matched_count": 0,
+      "owner_unstated_accuracy_on_matched": null,
+      "deadline_stated_gold_count": 8,
+      "deadline_stated_matched_count": 8,
+      "deadline_accuracy_on_matched_stated_gold": 1.0,
+      "deadline_end_to_end_accuracy_on_stated_gold": 1.0,
+      "deadline_prediction_abstentions": 2,
+      "deadline_abstentions_on_matched_stated_gold": 0,
+      "deadline_scoring": "explicit gold deadlines only; abstentions never correct or fabricated"
+    }
+  },
+  "deadline_role_fix": {
+    "source": "work\\ami_tasks_results_v2_phase1_final",
+    "new_model_requests": 0,
+    "new_cost_usd": 0,
+    "changed_fields": [
+      {
+        "meeting_id": "ES2002d",
+        "prediction_id": "p-85e47e1d5170093d",
+        "old_deadline": "in the final report",
+        "new_deadline": "未说明",
+        "old_kind": "EVENT_BASED",
+        "new_kind": "UNSPECIFIED"
+      }
+    ],
+    "unchanged": "task inventory, task text, owner, all source references and saved raw proposals",
+    "scope": "local rule validation only; revised prompt was not sent to a model"
+  },
+  "freeze_manifest": "v2_frozen.json",
+  "integration": {
+    "origin_master": "57098a63537857d40be087642ad5b9d93d2cddfa",
+    "merge_commit": "13be598729efe285410800e6d5f1c2e6d3f776f5",
+    "merge_conflicts": [],
+    "restore_conflicts": [],
+    "preserved_pre_merge_files": 16
+  }
+}
