@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
-from threading import Lock, Thread
+from threading import Lock
 from typing import Any, Protocol
 from uuid import uuid4
 
@@ -15,6 +15,7 @@ from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.team_decision_planner import plan_team_decision_query
 from linkloom.runtime.task_plan import validate_model_proposed_plan
+from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
 from linkloom.ui.projection import (
     UI_SCHEMA_VERSION,
     UIProjectionError,
@@ -79,6 +80,7 @@ class RuntimeRunBackend:
         self.workflow = workflow
         self._jobs: dict[str, _RuntimeJob] = {}
         self._lock = Lock()
+        self._workers = BackgroundTasks()
         self._documents = VaultReader(
             vault_root=engine.vault_root,
             index_path=engine.index_path,
@@ -116,15 +118,23 @@ class RuntimeRunBackend:
             task_plan=plan.to_dict() if plan else None,
         )
         with self._lock:
+            self._workers.start(ui_run_id, lambda: self._execute(job))
             self._jobs[ui_run_id] = job
-
-        worker = Thread(target=self._execute, args=(job,), daemon=True)
-        worker.start()
         return project_run_snapshot(
             query=clean_query,
             workspace=self.workspace,
             status=initial,
         )
+
+    def pending_task_ids(self):
+        return self._workers.pending_ids()
+
+    def stop_accepting(self) -> None:
+        self._workers.stop_accepting()
+
+    def close(self, timeout: float = DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None) -> None:
+        self.stop_accepting()
+        self._workers.wait(shutdown_deadline(timeout) if deadline is None else deadline)
 
     def _execute(self, job: _RuntimeJob) -> None:
         try:
