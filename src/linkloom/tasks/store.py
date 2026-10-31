@@ -95,6 +95,7 @@ class TaskStore:
         if self.database_path != ':memory:':
             Path(self.database_path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = RLock()
+        self._read_transaction_token = None
         self._connection = sqlite3.connect(self.database_path, isolation_level=None, check_same_thread=False)
         self._connection.row_factory = sqlite3.Row
         self._connection.execute('PRAGMA foreign_keys=ON')
@@ -142,12 +143,15 @@ class TaskStore:
     def _transaction(self):
         with self._lock:
             self._connection.execute('BEGIN IMMEDIATE')
+            self._read_transaction_token = object()
             try:
                 yield
                 self._connection.commit()
             except BaseException:
                 self._connection.rollback()
                 raise
+            finally:
+                self._read_transaction_token = None
 
     @staticmethod
     def _when(now):
@@ -305,7 +309,7 @@ class TaskStore:
                                            (workspace, task_id)).fetchone()
             return Task.from_dict(dict(row)) if row else None
 
-    def list_tasks(self, workspace_id, *, owner=_ANY_OWNER, status=None) -> tuple[Task, ...]:
+    def list_tasks(self, workspace_id, *, owner=_ANY_OWNER, status=None, limit=None, offset=0) -> tuple[Task, ...]:
         """Omit owner for all tasks; owner=None selects only unassigned tasks."""
         workspace = required_text(workspace_id, 'workspace_id')
         filters, arguments = ['workspace_id=?'], [workspace]
@@ -317,17 +321,30 @@ class TaskStore:
         if status is not None:
             filters.append('status=?')
             arguments.append(TaskStatus(status).value)
+        clause, paging = self._page_clause(limit, offset)
         with self._lock:
             rows = self._connection.execute('SELECT * FROM task WHERE ' + ' AND '.join(filters)
-                                            + ' ORDER BY created_at,id', arguments).fetchall()
+                                            + ' ORDER BY created_at,id' + clause, [*arguments, *paging]).fetchall()
             return tuple(Task.from_dict(dict(row)) for row in rows)
 
-    def get_events(self, workspace_id, task_id) -> tuple[TaskEvent, ...]:
+    @staticmethod
+    def _page_clause(limit, offset):
+        if limit is None:
+            if offset != 0:
+                raise ValueError('offset requires a limit')
+            return '', ()
+        if (type(limit) is not int or not 1 <= limit <= 2**63 - 1
+            or type(offset) is not int or not 0 <= offset <= 2**63 - 1):
+            raise ValueError('invalid SQL page bounds')
+        return ' LIMIT ? OFFSET ?', (limit, offset)
+
+    def get_events(self, workspace_id, task_id, *, limit=None, offset=0) -> tuple[TaskEvent, ...]:
         workspace = required_text(workspace_id, 'workspace_id')
         task_id = required_text(task_id, 'task_id')
+        clause, paging = self._page_clause(limit, offset)
         with self._lock:
             rows = self._connection.execute('SELECT * FROM task_event WHERE workspace_id=? AND task_id=? '
-                                           'ORDER BY sequence', (workspace, task_id)).fetchall()
+                                           'ORDER BY sequence' + clause, (workspace, task_id, *paging)).fetchall()
             events = []
             for row in rows:
                 data = dict(row)

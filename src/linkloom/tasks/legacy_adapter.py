@@ -7,6 +7,7 @@ from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.candidate_persistence import deserialize_candidate, serialize_candidate
 from linkloom.tasks.models import EvidenceReference, TaskCandidateInput, canonical_json, required_text
 from linkloom.tasks.review_models import CandidateSnapshot, CandidateUnavailableError, digest
+from linkloom.tasks.read_context import memo
 
 
 class LegacyTaskCandidateSource:
@@ -103,8 +104,26 @@ class LegacyTaskCandidateSource:
         return tuple(results)
 
     def version_proof(self, connection, workspace_id, source_id, source_version_id, *, evidence=(), require_current=False):
-        """Verify a historical/current version without inventing an observation."""
+        workspace = required_text(workspace_id, 'workspace_id')
+        source_id = required_text(source_id, 'source_id')
+        source_version_id = required_text(source_version_id, 'source_version_id')
+        evidence = tuple(evidence)
+        key = ('legacy.version_proof', workspace, source_id, source_version_id,
+               digest([value.to_dict() for value in evidence]), require_current)
+        return memo(connection, key, lambda: self._verify_version(connection, workspace, source_id,
+                    source_version_id, evidence=evidence, require_current=require_current))
+
+    @staticmethod
+    def _verified_original(workspace, source_id, source_version_id, row):
         from linkloom.semantic_ingestion.document_text import parse_source_text
+        artifact = RawArtifact(workspace_id=workspace, artifact_id=source_id, source_type='timestamped_text',
+                               content=row['content'], source_uri=row['source_uri'])
+        if artifact.artifact_version_id != source_version_id or artifact.content_hash != row['content_sha256']:
+            raise ValueError('source version failed complete content verification')
+        return artifact, parse_source_text(artifact).segments
+
+    def _verify_version(self, connection, workspace_id, source_id, source_version_id, *, evidence=(), require_current=False):
+        """Verify a historical/current version without inventing an observation."""
         from linkloom.tasks.review_models import SourceVersionProof
         workspace = required_text(workspace_id, 'workspace_id')
         source_id, source_version_id = required_text(source_id, 'source_id'), required_text(source_version_id, 'source_version_id')
@@ -119,11 +138,8 @@ class LegacyTaskCandidateSource:
         if row is None or not row['active'] or (require_current and row['current_version_id'] != source_version_id):
             raise CandidateUnavailableError('source version is unavailable, inactive or not current')
         try:
-            artifact = RawArtifact(workspace_id=workspace, artifact_id=source_id, source_type='timestamped_text',
-                                   content=row['content'], source_uri=row['source_uri'])
-            if artifact.artifact_version_id != source_version_id or artifact.content_hash != row['content_sha256']:
-                raise ValueError('source version failed complete content verification')
-            segments = parse_source_text(artifact).segments
+            artifact, segments = memo(connection, ('legacy.original', workspace, source_id, source_version_id),
+                lambda: self._verified_original(workspace, source_id, source_version_id, row))
             for reference in evidence:
                 if (reference.workspace_id != workspace or reference.source_id != source_id
                     or reference.source_version_id != source_version_id or reference.source_sha256 != artifact.content_hash):

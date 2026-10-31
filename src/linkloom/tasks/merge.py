@@ -5,6 +5,7 @@ from dataclasses import replace
 from datetime import datetime
 
 from linkloom.tasks.merge_storage import MergeStorage, assignment_tip, append_assignment
+from linkloom.tasks.query import TaskQueryError
 from linkloom.tasks.models import ObservationLink, ReviewAction, Task, TaskEventType, required_text
 from linkloom.tasks.review_models import CandidateSnapshot, CandidateUnavailableError, ReviewConflictError, digest, identity, task_fields
 
@@ -110,7 +111,7 @@ class TaskMergeService:
             task,latest,snapshot,final,preview = self._prepare(workspace,task_id,candidate_id,
                 expected_candidate_fingerprint,apply_fields,when)
             if expected_review_revision!=preview['review_revision'] or expected_preview_token!=preview['preview_token']:
-                raise ReviewConflictError('merge preview, assignment, source or task review changed')
+                raise TaskQueryError('PREVIEW_STALE', 'merge preview, assignment, source or task review changed')
             before,after = task_fields(task),task_fields(final)
             sources = dict(latest['field_sources'])
             for field in preview['apply_fields']:
@@ -143,7 +144,7 @@ class TaskMergeService:
         identifier = required_text(merge_id,'merge_id')
         history = self.storage.history(workspace,task.id)
         target = next((item for item in history if item['id']==identifier and item['operation']=='merge'),None)
-        if target is None: raise ReviewConflictError('merge is unavailable for this task and workspace')
+        if target is None: raise TaskQueryError('RESOURCE_NOT_FOUND', 'merge is unavailable for this task and workspace')
         stack = _active_stack(history)
         if not stack or stack[-1]['id']!=identifier:
             blockers=[dict(operation='merge',id=item['id']) for item in stack if item['sequence']>target['sequence']]
@@ -203,7 +204,7 @@ class TaskMergeService:
         with self.store._transaction():
             task,latest,target,snapshot,final,preview=self._prepare_undo(workspace,task_id,merge_id,when)
             if expected_review_revision!=preview['review_revision'] or expected_preview_token!=preview['preview_token']:
-                raise ReviewConflictError('undo preview, assignment, source or task review changed')
+                raise TaskQueryError('PREVIEW_STALE', 'undo preview, assignment, source or task review changed')
             if preview['restored_review_status']=='approved':
                 self.review._validate_approved(snapshot,target['before_review']['field_sources'],task.id)
             before,after=task_fields(task),task_fields(final)

@@ -10,6 +10,8 @@ from linkloom.tasks.models import (ObservationLink, ReviewAction, Task, TaskEven
 from linkloom.tasks.review_models import (CandidateSnapshot, CandidateSource, CandidateUnavailableError,
                                          ReviewConflictError, digest, identity, task_fields)
 from linkloom.tasks.review_storage import ReviewStorage
+from linkloom.tasks.read_context import memo, request_scope
+from linkloom.tasks.query import TaskQueries, TaskQueryError
 from linkloom.tasks.store import CandidateAlreadyReviewedError, TaskStore
 
 
@@ -45,9 +47,11 @@ class TaskReviewService:
         self.storage = ReviewStorage(store)
         from linkloom.tasks.merge import TaskMergeService
         self.merges = TaskMergeService(self)
+        self.queries = TaskQueries(self)
 
     def _candidates(self, workspace):
-        values = self.source.list_candidates(self.storage.connection, workspace)
+        values = memo(self.storage.connection, ('candidates', id(self.source), workspace),
+                      lambda: self.source.list_candidates(self.storage.connection, workspace))
         if any(not isinstance(value, CandidateSnapshot) or value.candidate.workspace_id != workspace
                for value in values):
             raise CandidateUnavailableError('source returned another workspace or an invalid input')
@@ -58,7 +62,9 @@ class TaskReviewService:
         matches = [value for value in values if value.candidate.candidate_id == candidate_id
                    and (fingerprint is None or value.fingerprint == fingerprint)]
         if len(matches) != 1:
-            raise ReviewConflictError('candidate changed, is unavailable, or needs an exact variant fingerprint')
+            code = ('CANDIDATE_CHANGED' if fingerprint is not None else 'REVIEW_CONFLICT') if any(
+                value.candidate.candidate_id == candidate_id for value in values) else 'RESOURCE_NOT_FOUND'
+            raise TaskQueryError(code, 'candidate changed, is unavailable, or needs an exact variant fingerprint')
         return matches[0]
 
     def _current(self, workspace, candidate_id, fingerprint):
@@ -261,7 +267,7 @@ class TaskReviewService:
                 if latest['candidate'] is None:
                     raise ReviewConflictError('unknown candidate basis requires the controlled legacy review exit with explicit field choices')
                 if expected_review_revision != str(latest['sequence']):
-                    conflict = ReviewConflictError('explicit re-review requires the current review revision')
+                    conflict = TaskQueryError('REVIEW_CHANGED', 'explicit re-review requires the current review revision')
                 else:
                     original = task_fields(task)
                     origins = self._origins(snapshot,human_fields,reviewer,reason,when,latest['field_sources'])
@@ -374,8 +380,10 @@ class TaskReviewService:
         reader = getattr(self.source, 'version_proof', None)
         if not callable(reader):
             raise CandidateUnavailableError('this source adapter cannot verify immutable source versions')
-        proof = reader(self.storage.connection, workspace, source_id, version_id,
-                       evidence=evidence, require_current=current)
+        proof = memo(self.storage.connection, ('version_proof', id(self.source), workspace, source_id, version_id,
+                     digest([value.to_dict() for value in evidence]), current),
+                     lambda: reader(self.storage.connection, workspace, source_id, version_id,
+                                    evidence=evidence, require_current=current))
         if (not isinstance(proof, SourceVersionProof) or proof.workspace_id != workspace
             or proof.source_id != source_id or proof.source_version_id != version_id
             or proof.evidence_fingerprint != digest([value.to_dict() for value in evidence])
@@ -572,3 +580,34 @@ class TaskReviewService:
 
     def undo_merge(self, workspace_id, task_id, merge_id, **options):
         return self.merges.undo_merge(workspace_id,task_id,merge_id,**options)
+
+
+    def request_scope(self):
+        return request_scope(self.store)
+
+    def require_workspace(self, workspace_id):
+        return self.queries.require_workspace(workspace_id)
+
+    def require_merge(self, workspace_id, task_id, merge_id):
+        return self.queries.require_merge(workspace_id, task_id, merge_id)
+
+    def require_candidate(self, workspace_id, candidate_id, *, expected_candidate_fingerprint=None):
+        self.require_workspace(workspace_id)
+        return self.preview_candidate(workspace_id, candidate_id,
+                                      expected_candidate_fingerprint=expected_candidate_fingerprint)
+
+    def list_candidates_page(self, workspace_id, *, state='pending', limit=20, offset=0):
+        return self.queries.list_candidates_page(workspace_id, state=state, limit=limit, offset=offset)
+
+    def candidate_evidence_page(self, workspace_id, candidate_id, *, candidate_fingerprint, limit=20, offset=0):
+        return self.queries.candidate_evidence_page(workspace_id, candidate_id,
+            candidate_fingerprint=candidate_fingerprint, limit=limit, offset=offset)
+
+    def list_tasks_page(self, workspace_id, *, limit=20, offset=0, **filters):
+        return self.queries.list_tasks_page(workspace_id, limit=limit, offset=offset, **filters)
+
+    def task_summary(self, workspace_id, task_id):
+        return self.queries.task_summary(workspace_id, task_id)
+
+    def task_events_page(self, workspace_id, task_id, *, limit=20, offset=0):
+        return self.queries.task_events_page(workspace_id, task_id, limit=limit, offset=offset)
