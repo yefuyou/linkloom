@@ -161,8 +161,16 @@ class TaskStore:
         return workspace
 
     def _unprocessed(self, candidate):
-        if self._connection.execute('SELECT 1 FROM task_observation_link WHERE observation_id=?',
-                                    (candidate.candidate_id,)).fetchone():
+        from linkloom.tasks.merge_storage import assignment_tip
+        historical = self._connection.execute('SELECT workspace_id FROM task_observation_link WHERE observation_id=?',
+                                              (candidate.candidate_id,)).fetchone()
+        tip = assignment_tip(self._connection, candidate.candidate_id)
+        if ((historical is not None and historical['workspace_id'] != candidate.workspace_id)
+            or (tip is not None and tip['workspace_id'] != candidate.workspace_id)):
+            raise CandidateAlreadyReviewedError('candidate identity belongs to another workspace')
+        if tip is not None and tip['operation'] == 'release':
+            return  # Explicit append-only undo releases only the current consumption.
+        if historical is not None or tip is not None:
             raise CandidateAlreadyReviewedError('candidate has already been processed')
 
     def _require_task(self, workspace_id, task_id):
@@ -197,13 +205,20 @@ class TaskStore:
         return TaskEvent(cursor.lastrowid, event_id, task.id, task.workspace_id, event_type,
                          old_value, new_value, version, evidence, meeting_time, actor, reason, now)
 
-    def _link(self, candidate, task_id, action, reviewer, reason, when):
+    def _link(self, candidate, task_id, action, reviewer, reason, when, *, candidate_fingerprint=None):
+        from linkloom.tasks.merge_storage import append_assignment
+        self._unprocessed(candidate)
         link = ObservationLink(candidate.candidate_id, candidate.workspace_id, task_id, action,
-                               reviewer, reason, when, candidate.fingerprint)
-        self._connection.execute('''INSERT INTO task_observation_link(observation_id,workspace_id,task_id,
-            review_action,reviewer,reason,reviewed_at,candidate_fingerprint) VALUES (?,?,?,?,?,?,?,?)''',
-            (link.observation_id, link.workspace_id, link.task_id, link.review_action.value,
-             link.reviewer, link.reason, link.reviewed_at.isoformat(), link.candidate_fingerprint))
+                               reviewer, reason, when, candidate_fingerprint or candidate.fingerprint)
+        # The original unique receipt remains immutable history after undo.
+        if self._connection.execute('SELECT 1 FROM task_observation_link WHERE observation_id=?',
+                                    (candidate.candidate_id,)).fetchone() is None:
+            self._connection.execute("""INSERT INTO task_observation_link(observation_id,workspace_id,task_id,
+                review_action,reviewer,reason,reviewed_at,candidate_fingerprint) VALUES (?,?,?,?,?,?,?,?)""",
+                (link.observation_id, link.workspace_id, link.task_id, link.review_action.value,
+                 link.reviewer, link.reason, link.reviewed_at.isoformat(), link.candidate_fingerprint))
+        if self._connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='task_candidate_assignment'").fetchone():
+            append_assignment(self._connection, link)
         return link
 
     def create_from_candidate(self, workspace_id, candidate, *, reviewer, reason, now=None) -> Task:
@@ -331,6 +346,13 @@ class TaskStore:
         workspace = required_text(workspace_id, 'workspace_id')
         observation_id = required_text(observation_id, 'observation_id')
         with self._lock:
+            from linkloom.tasks.merge_storage import assignment_tip
+            tip = assignment_tip(self._connection, observation_id)
+            if tip is not None:
+                if tip['workspace_id'] != workspace or tip['operation'] == 'release':
+                    return None
+                return ObservationLink(tip['candidate_id'],workspace,tip['task_id'],tip['review_action'],
+                    tip['reviewer'],tip['reason'],datetime.fromisoformat(tip['reviewed_at']),tip['candidate_fingerprint'])
             row = self._connection.execute('SELECT * FROM task_observation_link WHERE workspace_id=? AND observation_id=?',
                                            (workspace, observation_id)).fetchone()
             if row is None:

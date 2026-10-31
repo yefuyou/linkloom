@@ -254,3 +254,26 @@
 3A 只接收 Host 已生成的 v2 批次，不触发抽取/模型，不接 HTTP/页面/3B 通用合并，不修改决定、Ask、ActionRecord 或关系旁库。历史 get_batch 只核对回执字节完整性，不宣称原文当前有效；可确认集合必须重新校验当前来源。多段时间未知时仍沿用 2B 保守拒绝重新绑定的限制；既有 list_tasks 的重复来源重验成本留作 MVP 规模限制，不扩大性能重构。
 
 本阶段学习：格式中立不仅需要统一 DTO，还需要新旧格式同库读取和可追溯的置信度变体。3A 独立提交后等待用户确认，再进入 3B；第 3 阶段总时限仍为 3 天，预计超时先报告可推迟部分。不写 README；最终阶段按用户约定把过程内容浓缩入 PR 描述并移除 docs/task-mvp/。
+
+
+## 第 3B 阶段结果：人工跨会议合并与逆序撤销
+
+基线为已验收的 3A 提交 f74001f00a2d98ce6d5e471eff72be4f1a9a5a05，开始时工作区干净；完整基线 3862 passed / 31 skipped / 0 failed（3893 collected）。用户已确认只做“未处理候选 → 已有正式任务”，撤销恢复业务值、字段来源和审核绑定，候选回待确认；存在未撤销的后续编辑/状态变化时拒绝覆盖，连续合并按逆序撤销。第 3 阶段总 3 天时限继续有效，本阶段在预算内完成。
+
+### 文件与行为
+
+- 新增 src/linkloom/tasks/merge.py、merge_storage.py；修改 review.py、review_storage.py、store.py；新增 tests/unit/test_task_merge.py。只在独立 task_merge_schema_metadata、task_merge_operation、task_candidate_assignment 及索引/只追加约束上增量迁移，不重建旧 CHECK 表；原唯一 task_observation_link 保留历史。候选当前消费按 claim/release 追加账本投影，低层 get_link/_unprocessed/_link 与审核创建/拒绝/重绑定共用该投影。
+- 服务提供 preview_merge/merge、preview_undo_merge/undo_merge。必须人工指定精确候选、目标任务、显式 apply_fields、审核人和理由。预览绑定字段选择、完整任务、审核版本、事件尾部、当前候选分配代际和原文证明，提交在同一 BEGIN IMMEDIATE 事务重验，不自动识别或合并同一任务。
+- 只改显式选择的 title/owner/deadline（deadline_text 成对保真），不改 status/source_decision_id。每个实际值变化产生独立事件，带本会议原文多段引用、版本、行号、哈希、原文时间、审核人及理由。无值变化只追加操作审计，不伪造字段事件。LOW/原始候选、旧事件和旧引用完整保留。
+- 查询提供 timeline、merge_history、before/after_evidence、before/after_field_source、before/after_evidence_role、meeting_contexts 和 undone_by。来源名称按同 workspace/source/version 目录读取；多段不同原文时间不推断同会、不使用导入时间。人工同任务声明标 human_statement，机器证明明确 same_task=not_machine_verified。
+- 撤销追加反向字段事件、撤销审计和候选 release，不删改原事件/链接。恢复字段来源与绑定，updated_at 使用真实补偿操作时间并保持事件重放等于快照；来源失效则恢复业务值但保持 needs_review。可连续 M1→M2→undoM2→undoM1；候选释放后可再 create/reject/merge，旧 preview 不因 claim/release 往返复活。后续 edit/noop edit/status往返阻断并返回 blocking_operations；不支持正式任务互并或任意顺序覆盖后续修改。
+- 合并任务保留字段来自旧会议时，对所有实际字段来源重验，不只检查最新候选。重新确认/编辑/重新绑定/合并等返回 approved 前检查最终依赖，来源失效必须显式修复；撤销恢复原绑定时不伪造 approved。只影响本阶段合并任务依赖分支，旧非合并行为保持基线。
+
+### 审查与验证
+
+- 审查定位的两个核心边界已修复：三会议 A 提供期限、B 只改负责人、C 再改期限时，undoC 的底层事件引用真实 A/C 原文；保留 A 来源失效时，不能靠 reconfirm B 无 patch 解锁，失败整体回滚。恢复人工值的引文仅作为 context，不能声称是该人工值的原文支持。
+- 聚焦测试 235/235 通过（原 184 + 新 51，111.652 秒），报告 work/task-mvp/stage3b-all-focused-first.xml；新增覆盖两个会议三事件、部分字段、三会议逆序、undo 后重新处理、旧令牌、工作区/资源边界、LOW/v2多段、后续修改阻断、source依赖、事件重放、故障注入回滚、双连接并发一次生效、只追加及增量重开。
+- 独立 Reviewer 最终无剩余阻断 P1/P2；4/4 小探针 exit0，分别验证失效旧字段不能重新获批且所有 task 表不变、三会议 A/C 证据和逆序恢复人工来源/重放、全局候选 ID 释放后不能跨工作区抢占、另一任务 claim/release 后旧预览代际失效。最初探针用撤回目录会提前 fail-closed，已改用停用 A 来源以真正触达保留字段校验路径；未改产品或削弱断言。探针 work/task-mvp/review-stage3b-boundaries-final-20261031.py。
+- 六个源码/测试文件冻结后完整 pytest：3913 passed / 31 skipped / 0 failed，3944 collected，33:36，exit0。对照 3A 原 3893 例：原 3862 passed / 31 skipped 保持，无缺失/新失败/新跳过；新增 51 例全部通过；原 5 个 cp936 编码回归均通过；六文件 hash 无漂移。报告 work/task-mvp/stage3b.xml、stage3b.comparison.json、stage3b.verification.json、stage3b.code-snapshot.json。git diff --check 通过；UI/决定/抽取器等受保护路径无改动。
+
+本阶段不接 HTTP/页面，不调用模型、不读取 task-eval 或未合并 v3，不修改 Ask、决定、ActionRecord 或关系旁库。独立提交后停止等待用户验收，不自动进入 3C。学习结论：跨会议追踪需要保存字段级来源，而可撤销合并需要保留历史并单独维护当前消费代际；仅回写快照或删除唯一链接不足以保证一致性。

@@ -189,6 +189,12 @@ class ReviewStorage:
             event['binding_details'] = dict(detail)
             for key in ('source_proof', 'field_choices', 'legacy_basis', 'attestation'):
                 event['binding_details'][key] = json.loads(event['binding_details'].pop(key + '_json'))
+        from linkloom.tasks.merge_storage import review_merge_detail
+        merge = review_merge_detail(self.connection,event['workspace_id'],event['id'])
+        if merge is not None:
+            event['storage_action'] = event['action']
+            event['action'] = merge['operation']
+            event['merge_details'] = merge
         return event
 
     def rejected(self, workspace_id):

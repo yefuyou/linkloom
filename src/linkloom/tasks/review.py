@@ -36,13 +36,15 @@ class TaskReviewService:
 
     Querying may append one needs_review audit when an authorization changes.
     Task business status and historical snapshots are never rolled back. There
-    is no automatic task matching or general merge API. Rebinding requires
+    is no automatic task matching. Explicit merging is separate from rebinding, which requires
     explicit human choices and a verified newer revision of the same meeting.
     """
 
     def __init__(self, store: TaskStore, source: CandidateSource):
         self.store, self.source = store, source
         self.storage = ReviewStorage(store)
+        from linkloom.tasks.merge import TaskMergeService
+        self.merges = TaskMergeService(self)
 
     def _candidates(self, workspace):
         values = self.source.list_candidates(self.storage.connection, workspace)
@@ -62,12 +64,44 @@ class TaskReviewService:
     def _current(self, workspace, candidate_id, fingerprint):
         return self._select(self._candidates(workspace), candidate_id, required_text(fingerprint, 'expected_candidate_fingerprint'))
 
+    def _validate_dependencies(self, latest):
+        self._current(latest['workspace_id'],latest['candidate_id'],latest['candidate_fingerprint'])
+        # Preserve pre-merge review semantics. A merged task can retain current
+        # fields from several meetings, all of which remain dependencies.
+        if not self.merges.storage.history(latest['workspace_id'],latest['task_id']):
+            return
+        snapshots = {row['candidate_fingerprint']:row['candidate']
+                     for row in self.storage.history(latest['workspace_id'],latest['task_id']) if row['candidate'] is not None}
+        for fingerprint in {value.get('candidate_fingerprint') for value in latest['field_sources'].values()}:
+            if fingerprint is None or fingerprint==latest['candidate_fingerprint']:
+                continue
+            raw = snapshots.get(fingerprint)
+            if raw is None:
+                raise CandidateUnavailableError('current field source has no immutable review snapshot')
+            snapshot = CandidateSnapshot.from_dict(raw)
+            self._current(latest['workspace_id'],snapshot.candidate.candidate_id,fingerprint)
+
+    def _validate_approved(self, snapshot, field_sources, task_id):
+        if not self.merges.storage.history(snapshot.candidate.workspace_id,task_id):
+            return
+        value=dict(workspace_id=snapshot.candidate.workspace_id,task_id=task_id,
+            candidate_id=snapshot.candidate.candidate_id,candidate_fingerprint=snapshot.fingerprint,
+            field_sources=field_sources)
+        try:
+            self._validate_dependencies(value)
+        except (CandidateUnavailableError,ReviewConflictError) as error:
+            raise ReviewConflictError('current field sources are unavailable; explicitly replace or re-review those fields') from error
+
     def _refresh(self, latest, now):
         if latest is None or latest['review_status'] in ('needs_review', 'invalidated'):
             return latest
         snapshot = CandidateSnapshot.from_dict(latest['candidate'])
         try:
-            self._current(latest['workspace_id'], latest['candidate_id'], latest['candidate_fingerprint'])
+            self._validate_dependencies(latest)
+            if self.merges.storage.history(latest['workspace_id'],latest['task_id']):
+                task = self.store._require_task(latest['workspace_id'],latest['task_id'])
+                if task_fields(task) != latest['final_values']:
+                    raise CandidateUnavailableError('current task fields have no matching human review audit')
             return latest
         except (ReviewConflictError, CandidateUnavailableError):
             # This transition latches: a later A -> B -> A never restores approval.
@@ -90,13 +124,8 @@ class TaskReviewService:
         return result
 
     def _link(self, snapshot, task_id, action, reviewer, reason, when):
-        candidate = snapshot.candidate
-        receipt = ObservationLink(candidate.candidate_id, candidate.workspace_id, task_id, action,
-                                  reviewer, reason, when, snapshot.fingerprint)
-        self.storage.connection.execute('''INSERT INTO task_observation_link(observation_id,workspace_id,task_id,
-            review_action,reviewer,reason,reviewed_at,candidate_fingerprint) VALUES(?,?,?,?,?,?,?,?)''',
-            (receipt.observation_id, receipt.workspace_id, receipt.task_id, receipt.review_action.value,
-             receipt.reviewer, receipt.reason, receipt.reviewed_at.isoformat(), receipt.candidate_fingerprint))
+        return self.store._link(snapshot.candidate,task_id,action,reviewer,reason,when,
+                                candidate_fingerprint=snapshot.fingerprint)
 
     def _change_fields(self, task, patch, snapshot, reviewer, reason, when):
         if when < task.updated_at:
@@ -115,6 +144,8 @@ class TaskReviewService:
         return final, events
 
     def _view(self, task, latest):
+        if self.merges.storage.history(task.workspace_id,task.id):
+            latest = self._refresh(latest,self.store._when(None))
         history = self.storage.history(task.workspace_id, task.id)
         event_audits = {identifier: audit for audit in history for identifier in audit['task_event_ids']}
         events = []
@@ -134,12 +165,13 @@ class TaskReviewService:
         binding = history[-1].get('binding_details') if history else None
         machine = binding['source_proof'].get('machine_validation') if binding else None
         declarations = binding['attestation'] if binding else None
-        return dict(machine_validation=machine, human_declarations=declarations,
+        result = dict(machine_validation=machine, human_declarations=declarations,
             task=task.to_dict(), review_status=latest['review_status'] if latest else 'needs_review',
             review_revision=str(latest['sequence']) if latest else None,
             candidate_fingerprint=latest['candidate_fingerprint'] if latest else None,
             field_sources=latest['field_sources'] if latest else {},
             original_candidate=latest['candidate'] if latest else None, review_history=history, events=events)
+        return self.merges.enrich_view(task,result)
 
     def list_candidates(self, workspace_id, *, include_reviewed=False):
         workspace = required_text(workspace_id, 'workspace_id')
@@ -232,11 +264,13 @@ class TaskReviewService:
                     conflict = ReviewConflictError('explicit re-review requires the current review revision')
                 else:
                     original = task_fields(task)
+                    origins = self._origins(snapshot,human_fields,reviewer,reason,when,latest['field_sources'])
+                    self._validate_approved(snapshot,origins,task.id)
                     task, events = self._change_fields(task, patch, snapshot, reviewer, reason, when)
                     latest = self.storage.append(workspace_id=workspace, task_id=task.id, snapshot=snapshot,
                         action='reconfirm', review_status='approved', original_values=original,
                         final_values=task_fields(task), human_fields=human_fields,
-                        field_sources=self._origins(snapshot, human_fields, reviewer, reason, when, latest['field_sources']),
+                        field_sources=origins,
                         task_event_ids=events, reviewer=reviewer, reason=reason, when=when)
             if conflict is None:
                 result = self._view(task, latest)
@@ -273,11 +307,12 @@ class TaskReviewService:
             else:
                 snapshot = CandidateSnapshot.from_dict(latest['candidate'])
                 original = task_fields(task)
+                origins = self._origins(snapshot,human_fields,reviewer,reason,when,latest['field_sources'])
+                self._validate_approved(snapshot,origins,task.id)
                 task, events = self._change_fields(task, patch, snapshot, reviewer, reason, when)
                 latest = self.storage.append(workspace_id=workspace, task_id=task_id, snapshot=snapshot,
                     action='edit', review_status='approved', original_values=original, final_values=task_fields(task),
-                    human_fields=human_fields,
-                    field_sources=self._origins(snapshot, human_fields, reviewer, reason, when, latest['field_sources']),
+                    human_fields=human_fields,field_sources=origins,
                     task_event_ids=events, reviewer=reviewer, reason=reason, when=when)
                 result = self._view(task, latest)
         if conflict:
@@ -428,6 +463,7 @@ class TaskReviewService:
             if when < task.updated_at:
                 raise ValueError('review timestamp precedes the current task update')
             final, origins, human_fields = self._resolve_choices(task, basis, snapshot, preview, choices, reviewer, reason, when)
+            self._validate_approved(snapshot,origins,task.id)
             before, after = task_fields(task), task_fields(final)
             changed = [field for field in ('owner', 'deadline', 'title') if before[field] != after[field]]
             events = []
@@ -524,3 +560,15 @@ class TaskReviewService:
                                  reviewer=reviewer, reason=reason, reviewed_at=when.isoformat()),
                 operation='undo_invalidate', target_review_event_id=target)
             return self._view(task, audit)
+
+    def preview_merge(self, workspace_id, task_id, candidate_id, **options):
+        return self.merges.preview_merge(workspace_id,task_id,candidate_id,**options)
+
+    def merge(self, workspace_id, task_id, candidate_id, **options):
+        return self.merges.merge(workspace_id,task_id,candidate_id,**options)
+
+    def preview_undo_merge(self, workspace_id, task_id, merge_id, **options):
+        return self.merges.preview_undo_merge(workspace_id,task_id,merge_id,**options)
+
+    def undo_merge(self, workspace_id, task_id, merge_id, **options):
+        return self.merges.undo_merge(workspace_id,task_id,merge_id,**options)
