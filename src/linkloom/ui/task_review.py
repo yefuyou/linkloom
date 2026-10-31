@@ -22,6 +22,7 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
+from linkloom.ui.lifecycle import DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline, shutdown_lock
 
 
 _RUN_ID = re.compile(r"^ui-[0-9a-f]{12}$")
@@ -192,8 +193,9 @@ class TaskReviewStore:
                         "ALTER TABLE task_review_audit ADD COLUMN proof_head TEXT"
                     )
 
-    def close(self) -> None:
-        with self._lock:
+    def close(self, timeout=DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None) -> None:
+        deadline = shutdown_deadline(timeout) if deadline is None else deadline
+        with shutdown_lock(self._lock, deadline, "task-review-store-lock"):
             if self._connection is not None:
                 self._connection.close()
                 self._connection = None
@@ -579,8 +581,9 @@ class _CapabilityIssuer:
             )
         return token
 
-    def clear(self) -> None:
-        with self._lock:
+    def clear(self, *, deadline=None) -> None:
+        deadline = shutdown_deadline() if deadline is None else deadline
+        with shutdown_lock(self._lock, deadline, "task-review-capability-lock"):
             self._issued.clear()
 
     def binding(self, token: object) -> dict[str, Any] | None:
@@ -779,12 +782,13 @@ class TaskReviewService:
     def store_path(self) -> Path | None:
         return self._store.path if self._store is not None else None
 
-    def close(self) -> None:
-        if self._store is not None:
-            self._store.close()
-        with self._lock:
+    def close(self, timeout=DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None) -> None:
+        deadline = shutdown_deadline(timeout) if deadline is None else deadline
+        with shutdown_lock(self._lock, deadline, "task-review-service-lock"):
+            self._issuer.clear(deadline=deadline)
+            if self._store is not None:
+                self._store.close(deadline=deadline)
             self._run_snapshots.clear()
-        self._issuer.clear()
 
     def _remember_run(self, workspace_id: str, run_id: str, result: dict[str, Any], status: int) -> None:
         # This is a bounded retry convenience, never an authority store. If a

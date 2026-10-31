@@ -46,7 +46,11 @@ async function setup(storage = new Map()) {
   const elements = new Map();
   function element(id) {
     if (!elements.has(id)) elements.set(id, {id, innerHTML: "", textContent: "", value: "", dataset: {}, listeners: {},
-      addEventListener(type, fn) {this.listeners[type] = fn;}, setAttribute() {}, removeAttribute() {}});
+      attributes: new Map([["id", id]]),
+      addEventListener(type, fn) {this.listeners[type] = fn;},
+      setAttribute(name, value) {this.attributes.set(String(name).toLowerCase(), String(value));},
+      removeAttribute(name) {this.attributes.delete(String(name).toLowerCase());},
+      hasAttribute(name) {return this.attributes.has(String(name).toLowerCase());}});
     return elements.get(id);
   }
   const nav = ["sources", "ask"].map(screen => Object.assign(element(screen), {dataset: {screen}}));

@@ -18,7 +18,11 @@ async function setup({ready = false, unresolved = ['relation', 'valid_from'], lo
     evidence: {quote: 'We decided to use Birchline.', line_start: 1, line_end: 1}};
   function element(id) {
     if (!elements.has(id)) elements.set(id, {id, innerHTML: '', textContent: '', value: '', dataset: {}, listeners: {},
-      addEventListener(type, fn) {this.listeners[type] = fn;}, setAttribute() {}, removeAttribute() {},
+      attributes: new Map([['id', id]]),
+      addEventListener(type, fn) {this.listeners[type] = fn;},
+      setAttribute(name, value) {this.attributes.set(String(name).toLowerCase(), String(value));},
+      removeAttribute(name) {this.attributes.delete(String(name).toLowerCase());},
+      hasAttribute(name) {return this.attributes.has(String(name).toLowerCase());},
       checkValidity() {return Boolean(this.value);}, reportValidity() {this.reported = true;},
       querySelector() {return {disabled: /data-review-action="approve" disabled/.test(element('page').innerHTML)};}});
     return elements.get(id);

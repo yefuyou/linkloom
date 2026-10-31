@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import os
 from pathlib import Path
@@ -18,6 +19,7 @@ from linkloom.semantic_ingestion.extraction import (
     ProviderRequestAuthorization,
 )
 from linkloom.runtime.errors import ValidationError
+from linkloom.ui.configuration import GEMINI_CONFIGURATION_HELP, OFFLINE_HELP
 from linkloom.ui.demo import DemoCase, DemoRunBackend
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.investigation import ProductInvestigationService
@@ -45,6 +47,10 @@ class GeminiSDKClientBridge:
 
 
 def main() -> int:
+    from dotenv import load_dotenv
+
+    # Configuration belongs to this entry point, never to module imports or other CLIs.
+    load_dotenv(Path(__file__).resolve().parents[3] / ".env", override=False, verbose=False)
     parser = argparse.ArgumentParser(prog="python -m linkloom.ui")
     parser.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost"])
     parser.add_argument("--port", type=int, default=8765)
@@ -93,7 +99,19 @@ def main() -> int:
         default=0.02,
         help="Audited upper-bound estimate recorded for each provider request.",
     )
+    parser.add_argument('--task-extraction-mode', choices=('legacy', 'meeting_v2', 'meeting_v3'), default='legacy',
+        help='Explicit meeting inbox extraction mode; default preserves existing ingestion.')
+    parser.add_argument('--meeting-speaker-roster', type=Path,
+        help='Trusted Host JSON list of speaker/participant_id/role mappings for meeting inbox imports.')
     args = parser.parse_args()
+    meeting_mode = args.task_extraction_mode != 'legacy'
+    meeting_speakers = None
+    if meeting_mode:
+        if not args.allow_external_provider or args.offline_task_demo or args.allow_task_investigation:
+            parser.error('Meeting extraction requires --allow-external-provider and a dedicated non-demo import Host.')
+        if args.meeting_speaker_roster is None:
+            parser.error('Meeting extraction requires --meeting-speaker-roster (trusted Host metadata).')
+        meeting_speakers = json.loads(args.meeting_speaker_roster.read_text(encoding='utf-8-sig'))
     task_limits = None
     if args.allow_task_investigation:
         from linkloom.ui.task_provider import TaskProviderLimits
@@ -133,19 +151,25 @@ def main() -> int:
     else:
         if args.allow_external_provider:
             api_key = os.environ.get("GEMINI_API_KEY")
-            if not api_key:
-                parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
+            if not api_key or not api_key.strip():
+                parser.error(
+                    "--allow-external-provider requires GEMINI_API_KEY in the environment. "
+                    + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
+                )
             try:
                 sdk_client = build_gemini_sdk_client(api_key, http_options_kwargs=(dict(
                     timeout=round(task_limits.request_timeout_seconds * 1000),
-                    retry_options=dict(attempts=1)) if task_limits else None))
+                    retry_options=dict(attempts=1)) if task_limits else
+                    {"timeout": 180000, "retry_options": {"attempts": 1}} if meeting_mode else None))
                 provider = GeminiProviderAdapter(
                     GeminiSDKClientBridge(sdk_client),
                     model_id=args.model,
                 )
             except (ImportError, TypeError, ValueError, ValidationError):
                 parser.error(
-                    "Gemini provider could not be initialized. Install the configured provider dependency and check GEMINI_API_KEY."
+                    'Gemini provider could not be initialized. Install the provider dependency with '
+                    'python -m pip install -e ".[smoke]" and check GEMINI_API_KEY. '
+                    + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
                 )
 
             guard_id = "linkloom-local-ui-explicit-provider-opt-in/v1"
@@ -169,7 +193,15 @@ def main() -> int:
                 max_attempts=1,
             )
 
-        product_app = ProductApplication(database_path=args.database, extractor=extractor)
+        meeting_options = {}
+        if meeting_mode:
+            from linkloom.semantic_ingestion.task_extraction import TaskExtractionConfig
+            config = TaskExtractionConfig(task_extraction_mode=args.task_extraction_mode)
+            meeting_options = dict(task_extraction_config=config, meeting_speakers=meeting_speakers,
+                meeting_adapter=GeminiProviderAdapter(GeminiSDKClientBridge(sdk_client), model_id=args.model,
+                                                     max_input_bytes=config.max_input_bytes),
+                meeting_request_guard=lambda request: authorize_request(request) is not None)
+        product_app = ProductApplication(database_path=args.database, extractor=extractor, **meeting_options)
         if task_limits:
             from linkloom.ui.task_provider import compose_task_provider
             investigation_service = compose_task_provider(product_app, provider, task_limits,
@@ -208,7 +240,7 @@ def main() -> int:
     elif task_limits:
         print(f'Task Provider configured: {args.model}; sources require per-question Ask authorization; no business approval.')
     elif extractor is None:
-        print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
+        print("Semantic extraction is disabled. " + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP)
     else:
         print(f"Semantic extraction provider enabled: Gemini model {args.model}")
     if args.allow_local_task_review:
@@ -219,6 +251,7 @@ def main() -> int:
         pass
     finally:
         server.server_close()
+        # Drains HTTP, ingestion, Runtime and provider work before DB/SDK close.
         product_app.close()
         if sdk_client is not None:
             sdk_client.close()

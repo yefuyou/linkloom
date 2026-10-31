@@ -603,7 +603,11 @@ class UnifiedAskFixture:
             self.server.server_close()
         if self.worker is not None:
             self.worker.join(timeout=3)
+        if self.worker is not None and self.worker.is_alive():
+            raise RuntimeError("Fixture shutdown timed out; unfinished task: HTTP serve_forever")
         if self.app is not None:
+            # ProductApplication drains registered HTTP, preparation and Runtime
+            # workers before closing either database connection.
             self.app.close()
         self.server = None
         self.worker = None

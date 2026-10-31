@@ -22,6 +22,7 @@ from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatu
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
+from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
 
@@ -69,6 +70,11 @@ class ProductInvestigationService:
         self.relation_max_steps = relation_max_steps
         self._jobs: dict[str, _InvestigationJob] = {}
         self._lock = Lock()
+        self._starts = BackgroundTasks()
+        self._backends: list[RuntimeRunBackend] = []
+        self._provider_sessions: list[Any] = []
+        self._temporary_roots: list[TemporaryDirectory[str]] = []
+        self.product_app.register_background_owner(self)
 
     def config(self) -> dict[str, Any]:
         task_available = (self.task_models is not None and self.model_factory is not None
@@ -99,7 +105,53 @@ class ProductInvestigationService:
             ),
         }
 
+    def pending_task_ids(self):
+        with self._lock:
+            owners = (*self._backends, *self._provider_sessions)
+        return (*self._starts.pending_ids(), *(task_id for owner in owners for task_id in owner.pending_task_ids()))
+
+    def stop_accepting(self) -> None:
+        self._starts.stop_accepting()
+
+    def close(self, timeout: float = DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None) -> None:
+        deadline = shutdown_deadline(timeout) if deadline is None else deadline
+        self.stop_accepting()
+        # An admitted preparation may still create and register its Runtime.
+        self._starts.wait(deadline)
+        with self._lock:
+            backends = tuple(self._backends)
+            sessions = tuple(self._provider_sessions)
+        for backend in backends:
+            backend.stop_accepting()
+        for backend in backends:
+            backend.close(deadline=deadline)
+        for session in sessions:
+            session.close(deadline=deadline)
+
+    def release_resources(self, *, deadline=None):
+        # HTTP inspectors can still read Runtime files after workers finish.
+        # The application invokes this only after every registered owner drains.
+        with self._lock:
+            temporary_roots = tuple(self._temporary_roots)
+        for root in temporary_roots:
+            root.cleanup()
+
     def start(
+        self, query: str, workspace_id: str, *,
+        temporal_scope: tuple[str, str, str] | None = None,
+        task_plan: TaskPlan | None = None,
+        task_investigation: bool = False,
+        task_source_authorization: dict | None = None,
+    ) -> dict[str, Any]:
+        try:
+            with self._starts.operation("investigation-start-" + uuid4().hex[:12]):
+                return self._start(query, workspace_id, temporal_scope=temporal_scope,
+                    task_plan=task_plan, task_investigation=task_investigation,
+                    task_source_authorization=task_source_authorization)
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
+
+    def _start(
         self, query: str, workspace_id: str, *,
         temporal_scope: tuple[str, str, str] | None = None,
         task_plan: TaskPlan | None = None,
@@ -178,6 +230,9 @@ class ProductInvestigationService:
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
         temporary_root = None if task_investigation else TemporaryDirectory(prefix="linkloom-investigate-")
+        if temporary_root is not None:
+            with self._lock:
+                self._temporary_roots.append(temporary_root)
         try:
             root = (Path(temporary_root.name) if temporary_root else
                     Path(self.product_app.repository.database_path).parent / 'work' / 'investigations' / uuid4().hex[:12])
@@ -205,6 +260,8 @@ class ProductInvestigationService:
                             raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
                         task_sources.validate_current()
                     provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, validate_grant)
+                    with self._lock:
+                        self._provider_sessions.append(provider_session)
                 preparation = prepare_task_investigation(query.strip(), task_sources, task_models, root / "preparation",
                     relation_path=self.task_relation_paths.get(workspace_id), provider_session=provider_session)
                 if preparation.manifest['status'] == 'BLOCKED':
@@ -259,10 +316,12 @@ class ProductInvestigationService:
                 planning_mode="template" if temporal_scope is not None or task_plan is not None else None,
                 workflow="task_relations" if preparation else "team_decision",
             )
+            with self._lock:
+                self._backends.append(backend)
             snapshot = backend.start(query.strip(), task_plan=task_plan.to_dict() if task_plan else None)
         except Exception:
-            if temporary_root is not None:
-                temporary_root.cleanup()
+            # A backend may already be running if projection/setup failed. Keep
+            # its files owned until close has drained every worker, even here.
             raise
         with self._lock:
             self._jobs[snapshot["run"]["id"]] = _InvestigationJob(
@@ -435,6 +494,16 @@ class ProductInvestigationService:
         self, query: str, workspace_id: str, *, subject: str, relation: str,
         as_of: str | None = None,
     ) -> dict[str, Any]:
+        try:
+            with self._starts.operation("temporal-start-" + uuid4().hex[:12]):
+                return self._start_temporal(query, workspace_id, subject=subject, relation=relation, as_of=as_of)
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
+
+    def _start_temporal(
+        self, query: str, workspace_id: str, *, subject: str, relation: str,
+        as_of: str | None = None,
+    ) -> dict[str, Any]:
         if self.task_only:
             raise ProductApplicationError('AGENT_STAGE_NOT_AUTHORIZED', 'Temporal stages are not enabled.', status=403)
         if self.model_factory is None:
@@ -448,7 +517,7 @@ class ProductInvestigationService:
         view = self.product_app.recover_decision(
             subject, relation, as_of, _workspace_id=workspace_id,
         )
-        return self.start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]))
+        return self._start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]))
 
     def _decorate(self, snapshot, state, *, source_names=None, source_versions=None, temporal_scope=None,
                   temporal_view_holder=None, task_plan=None, max_steps=None):

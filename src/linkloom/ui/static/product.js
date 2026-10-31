@@ -208,7 +208,8 @@
     state.provider = provider;
     updateWorkspacePicker();
     const review = await request("/api/review/candidates").catch(() => ({ candidates: [] }));
-    document.getElementById("review-count").textContent = review.candidates?.length ? String(review.candidates.length) : "";
+    const reviewCount = (review.candidates?.length || 0) + (review.meeting_tasks?.length || 0);
+    document.getElementById("review-count").textContent = reviewCount ? String(reviewCount) : "";
   }
 
   async function showNoWorkspace() {
@@ -298,10 +299,19 @@
   }
 
   async function loadReview() {
-    const [{ candidates, supporting_proposals: proposals = [] }, attention] = await Promise.all([
+    const [{ candidates, supporting_proposals: proposals = [], meeting_tasks: meetingTasks = [] }, attention] = await Promise.all([
       request("/api/review/candidates"), request("/api/review/attention"),
     ]);
-    document.getElementById("review-count").textContent = candidates.length ? String(candidates.length) : "";
+    document.getElementById("review-count").textContent = candidates.length + meetingTasks.length ? String(candidates.length + meetingTasks.length) : "";
+    const meetingItems = meetingTasks.map(task => `<article class="card" data-meeting-task="${escapeHtml(task.candidate_id)}">
+      <div class="card-head"><h3>${escapeHtml(task.task)}</h3><span class="badge ${task.confidence === "LOW" ? "warning" : ""}">${task.confidence === "LOW" ? copy("Low confidence", "低置信度") : copy("High confidence", "高置信度")}</span></div>
+      <p>${escapeHtml(task.confidence_reason)}</p><p class="metadata">${escapeHtml(task.owner_ids.join(", "))} · ${escapeHtml(task.deadline.raw_text || copy("Unspecified deadline", "截止时间未说明"))} · ${escapeHtml(task.deadline.kind)}</p>
+      ${task.evidence.map(e => `<blockquote class="quote">${escapeHtml(e.span.quote)}</blockquote>`).join("")}
+      <form class="form-stack" data-meeting-task-review data-id="${escapeHtml(task.candidate_id)}" data-version="${escapeHtml(task.source_version)}">
+        <label>${copy("Reviewer", "审核人")}<input name="reviewer" required maxlength="160"></label>
+        <label>${copy("Review note", "审核备注")}<input name="note" required maxlength="4096"></label>
+        <div class="actions"><button class="button" name="action" value="CONFIRM" type="submit">${copy("Confirm candidate", "确认候选")}</button><button class="button quiet" name="action" value="REJECT" type="submit">${copy("Reject candidate", "拒绝候选")}</button></div>
+      </form></article>`).join("");
     const items = candidates.length ? candidates.map((candidate) => `
       <article class="card"><div class="card-head"><div><p class="record-kind">${escapeHtml(claimTypeLabel(candidate.claim_type))}</p><h3>${escapeHtml(candidate.proposed_value || copy("Needs review", "待审核"))}</h3></div>${badge(candidate.status)}</div>
         <div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Source", "来源")} <strong>${escapeHtml(candidate.source_name)}</strong></span><span>${copy("Effective", "生效日期")} <strong>${escapeHtml(candidate.valid_from || copy("Not resolved", "待确认"))}</strong></span></div>
@@ -312,6 +322,7 @@
         <blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="hint">${copy("Unapproved · kept as reference material", "未批准 · 作为参考材料保留")}</p></article>`).join("") : `<p class="muted">${copy("No proposals are currently held as supporting evidence.", "暂无参考提案。")}</p>`;
     const attentionCards = attention.decisions.length ? attention.decisions.map((decision) => `<article class="card"><div class="card-head"><div><h3>${escapeHtml(decision.subject)} · ${escapeHtml(relationLabel(decision.relation))}</h3><p>${escapeHtml(decision.value)}</p></div>${badge(decision.memory_state)}</div><p class="hint">${copy("Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it.", "来源证据已变化或不可用，请结合当前来源重新审核。")}</p><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decision.decision_id)}">${copy("Revalidate decision", "复核决策")}</button></article>`).join("") : `<p class="muted">${copy("No Decision Memory records currently need revalidation.", "暂无需要复核的决策。")}</p>`;
     page.innerHTML = `${heading(copy("Review", "审核"))}
+      ${meetingTasks.length ? `<section class="panel"><h2>${copy("Meeting tasks awaiting human review", "会议待办人工审核队列")}</h2>${meetingItems}</section>` : ""}
       <div class="section-title"><h2>${copy("Pending candidates", "待审核候选")}</h2><span class="muted">${candidates.length}</span></div>${items}
       <div class="section-title"><h2>${copy("Supporting proposals", "参考提案")}</h2><span class="muted">${proposals.length} · ${copy("unapproved", "未批准")}</span></div>${proposalItems}
       <div class="section-title"><h2>${copy("Decision records needing attention", "需复核的决策")}</h2></div>${attentionCards}`;
@@ -898,7 +909,13 @@
     const form = event.target;
     event.preventDefault();
     try {
-      if (form.id === "workspace-create") {
+      if (form.hasAttribute("data-meeting-task-review")) {
+        await send("POST", `/api/review/meeting-tasks/${encodeURIComponent(form.dataset.id)}`, {
+          ...Object.fromEntries(new FormData(form)), action: event.submitter?.value,
+          source_version: form.dataset.version,
+        });
+        await loadReview();
+      } else if (form.id === "workspace-create") {
         await createWorkspace(new FormData(form).get("name"));
       } else if (form.id === "source-create") {
         const result = await send("POST", "/api/sources/import", Object.fromEntries(new FormData(form)));
