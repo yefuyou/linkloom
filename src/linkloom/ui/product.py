@@ -739,6 +739,10 @@ class ProductApplication:
         database_path: str | Path,
         extractor: SemanticExtractor | None,
         relation_resolver: FrozenRelationResolver | None = None,
+        task_extraction_config=None,
+        meeting_adapter=None,
+        meeting_speakers=None,
+        meeting_request_guard=None,
     ) -> None:
         self.repository = ProductRepository(database_path)
         self.extractor = extractor
@@ -775,6 +779,14 @@ class ProductApplication:
         from linkloom.ui.revalidation import DecisionRevalidation
         self.revalidation = DecisionRevalidation(self)
         self._reconcile()
+        from linkloom.semantic_ingestion.task_extraction import TaskExtractionConfig
+        self.task_extraction_config = task_extraction_config or TaskExtractionConfig()
+        self.meeting_tasks = None
+        if self.task_extraction_config.task_extraction_mode != 'legacy':
+            from linkloom.ui.meeting_task_review import MeetingTaskReview
+            self.meeting_tasks = MeetingTaskReview(self, meeting_adapter, self.task_extraction_config,
+                                                   meeting_speakers, meeting_request_guard)
+            self._sync_all_source_review_counts()
 
     def register_background_owner(self, owner) -> None:
         with self._lifecycle_lock:
@@ -865,10 +877,10 @@ class ProductApplication:
     def _handle_get(self, path: str) -> dict[str, Any]:
         if path == "/api/status":
             return {
-                "ready": self.extractor is not None,
+                "ready": self.extractor is not None or self.meeting_tasks is not None,
                 "message": (
                     "Semantic provider ready. Importing a source sends its text for extraction."
-                    if self.extractor is not None
+                    if self.extractor is not None or self.meeting_tasks is not None
                     else "No semantic provider is enabled. " + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
                 ),
             }
@@ -909,6 +921,7 @@ class ProductApplication:
             return {
                 "candidates": self._review_candidates(),
                 "supporting_proposals": self._supporting_proposals(),
+                **({'meeting_tasks': self.meeting_tasks.pending(self._workspace_id())} if self.meeting_tasks else {}),
             }
         if path == "/api/review/attention":
             return {"decisions": self._attention_records()}
@@ -931,6 +944,9 @@ class ProductApplication:
         return self._api_request("post", lambda: self._handle_post(path, payload))
 
     def _handle_post(self, path: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        meeting_match = re.fullmatch(r'/api/review/meeting-tasks/([^/]+)', path)
+        if meeting_match and self.meeting_tasks:
+            return self.meeting_tasks.review(self._workspace_id(), meeting_match.group(1), payload), 200
         if path == "/api/workspaces":
             workspace = self.repository.create_workspace(_required_payload_text(payload, "name", 120))
             return {"workspace": workspace}, 201
@@ -1316,6 +1332,10 @@ class ProductApplication:
 
     def _ingest(self, workspace_id: str, source_id: str, artifact: RawArtifact) -> None:
         try:
+            if self.meeting_tasks is not None:
+                with self._ingest_lock:
+                    self.meeting_tasks.ingest(artifact)
+                return
             if self.extractor is None:
                 raise ProductApplicationError(
                     "PROVIDER_UNAVAILABLE",
@@ -1453,6 +1473,10 @@ class ProductApplication:
         )
 
     def _candidate_counts(self, workspace_id: str, source_id: str, version_id: str) -> tuple[int, int]:
+        if getattr(self, 'meeting_tasks', None) is not None:
+            rows = self.meeting_tasks.db.execute('SELECT status FROM ll_meeting_task_review WHERE workspace_id=? AND source_id=? AND source_version=?',
+                (workspace_id, source_id, version_id)).fetchall()
+            return len(rows), sum(r['status'] == 'PENDING_REVIEW' for r in rows)
         rows = self.store.list_semantic_candidate_rows(
             workspace_id,
             artifact_id=source_id,
