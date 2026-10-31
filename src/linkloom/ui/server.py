@@ -14,6 +14,7 @@ from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApp
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.task_review import TaskReviewService
 from linkloom.ui.unified_ask import UnifiedAskService
+from linkloom.ui.task_api import TaskProductAPI
 
 
 MAX_REQUEST_BYTES = 32 * 1024
@@ -50,6 +51,7 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         self.backend = backend
         self.product_app = product_app
         self.investigation_service = investigation_service
+        self.task_api = TaskProductAPI(product_app.repository.database_path if product_app is not None else None)
         self.unified_ask = (UnifiedAskService(product_app, lambda: self.investigation_service)
                             if product_app is not None else None)
         if product_app is not None:
@@ -111,6 +113,7 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
             self._task_relation_sidecar_for(workspace_id)
 
     def server_close(self) -> None:
+        self.task_api.close()
         if self.task_review is not None:
             self.task_review.close()
         super().server_close()
@@ -195,6 +198,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
         if self._reject_non_local_host():
+            return
+        if self._dispatch_task_api('GET'):
             return
         path = unquote(urlsplit(self.path).path)
         if path in STATIC_FILES:
@@ -296,6 +301,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
         if self._reject_non_local_host():
+            return
+        if self._dispatch_task_api('POST'):
             return
         path = unquote(urlsplit(self.path).path)
         if path == "/api/product/task-review":
@@ -400,6 +407,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
     def do_PUT(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
         if self._reject_non_local_host():
             return
+        if self._dispatch_task_api('PUT'):
+            return
         if self.server.product_app is None:
             self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
             return
@@ -416,6 +425,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
     def do_DELETE(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
         if self._reject_non_local_host():
             return
+        if self._dispatch_task_api('DELETE'):
+            return
         if self.server.product_app is None:
             self._send_error_payload(404, "NOT_FOUND", "The requested resource was not found.")
             return
@@ -425,6 +436,43 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             self._send_error_payload(error.status, error.code, str(error))
             return
         self._send_json(result)
+
+    def _unsupported_method(self) -> None:
+        if self.server.task_api.matches(self.path):
+            if not self._reject_non_local_host():
+                self._dispatch_task_api(self.command)
+            return
+        self.send_error(HTTPStatus.NOT_IMPLEMENTED, "Unsupported method (%r)" % self.command)
+
+    def do_PATCH(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        self._unsupported_method()
+
+    def do_OPTIONS(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        self._unsupported_method()
+
+    def do_HEAD(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler contract
+        self._unsupported_method()
+
+    def _dispatch_task_api(self, method: str) -> bool:
+        if not self.server.task_api.matches(self.path):
+            return False
+        try:
+            if self._reject_task_review_origin():
+                return True
+        except ValueError:
+            self._send_error_payload(403, 'INVALID_ORIGIN', 'The task request origin is malformed.')
+            return True
+        needs_json = self.server.task_api.expects_json(method, self.path)
+        payload = self._read_json_payload(MAX_REQUEST_BYTES) if needs_json else None
+        if needs_json and payload is None:
+            return True
+        result, status = self.server.task_api.handle(method, self.path, payload)
+        if method == "HEAD":
+            length = len((json.dumps(result, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8"))
+            self._headers(status, "application/json; charset=utf-8", length)
+        else:
+            self._send_json(result, status=status)
+        return True
 
     def _read_json_payload(self, maximum_bytes: int) -> dict[str, Any] | None:
         if self.headers.get_content_type() != "application/json":
