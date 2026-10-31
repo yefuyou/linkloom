@@ -46,6 +46,10 @@ class GeminiSDKClientBridge:
 
 
 def main() -> int:
+    from dotenv import load_dotenv
+
+    # Configuration belongs to this entry point, never to module imports or other CLIs.
+    load_dotenv(Path(__file__).resolve().parents[3] / ".env", override=False, verbose=False)
     parser = argparse.ArgumentParser(prog="python -m linkloom.ui")
     parser.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost"])
     parser.add_argument("--port", type=int, default=8765)

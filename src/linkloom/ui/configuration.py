@@ -1,10 +1,11 @@
 """Read-only setup guidance shared by the launcher and product status."""
 
 GEMINI_CONFIGURATION_HELP = (
-    "Set GEMINI_API_KEY in the environment of the terminal, IDE or service that starts LinkLoom; "
-    "see .env.example. PowerShell: $env:GEMINI_API_KEY = '<your-key>'; "
+    "Set GEMINI_API_KEY in the project root .env (see .env.example), or in the environment "
+    "of the terminal, IDE or service that starts LinkLoom. PowerShell: $env:GEMINI_API_KEY = '<your-key>'; "
     "macOS/Linux: export GEMINI_API_KEY='<your-key>'. "
-    "LinkLoom does not load .env automatically. Restart the service with "
+    "The UI launcher loads the project root .env without overriding existing environment variables. "
+    "Restart the service with "
     "--allow-external-provider to enable AI extraction."
 )
 
