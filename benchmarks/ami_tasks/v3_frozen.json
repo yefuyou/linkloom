@@ -1,0 +1,105 @@
+{
+  "version": "meeting-tasks/v3",
+  "status": "frozen",
+  "source_normalized_sha256": {
+    "src/linkloom/semantic_ingestion/meeting_tasks_v3.py": "2a1badc157f22bffb09db4afab939b73a1a544503d9d687b5f6d08e315dd6462",
+    "src/linkloom/semantic_ingestion/task_extraction.py": "00077511d0b4afaf465fb84b68431c8ed1b4bd088f4c079244343bd910279c34",
+    "src/linkloom/ui/meeting_task_review.py": "47222c38aa7398dfa02d5c35c151d18a3db9957abdd2b276281ef1381e15d9d0",
+    "src/linkloom/ui/product.py": "e65c63b84c0bad7f3d8a96299e3005b7f057d6c9eeb231cc57dfa57345d79f63",
+    "src/linkloom/ui/__main__.py": "fc7670f0ceed81672870ddf3423257b36ada9d66c87257fdb00250e655c00fdb",
+    "src/linkloom/ui/static/product.js": "70531caed728e956651e023e111ac4901800e444e917848df27be1c58394515e",
+    "scripts/eval_meeting_v3.py": "86328797972541c5fcfc90504d6f8a3035e9a64b6c0d2c6ce95aad7f9bfef6b8"
+  },
+  "v2_frozen_source_normalized_sha256": {
+    "src/linkloom/semantic_ingestion/meeting_tasks_v2.py": "a5d9aa5591b5cf4be4c7ea63c0dc3671a3cf95daddb9772c627b445ebdf93e3b",
+    "src/linkloom/agents/providers/gemini_api.py": "7ee39c04e73dfe58db66e28ac0820b5af9184cfe0b58c4e3c6568e2c29f0e15b",
+    "scripts/eval_tasks.py": "4d2f674e2f51e7242679019ee68968ed6db26ba60320335912c9b23a12455f1f"
+  },
+  "prompt_sha256": "b94d6b438cdecd400776441755f8e94a2f8da913a1701f56dd0141724e6ff051",
+  "schema_sha256": "8eb0d838b925a6fdb9928d46efa295a609235949a443ce9d2def1bf4e83e8f69",
+  "host_config": {
+    "task_extraction_mode": "meeting_v3",
+    "max_input_bytes": 196608,
+    "window_body_bytes": 49152,
+    "overlap_messages": 2,
+    "max_calls": 32,
+    "max_output_tokens": 32768
+  },
+  "default_mode": "legacy",
+  "confidence_levels": [
+    "HIGH",
+    "LOW"
+  ],
+  "confidence_rule": "LOW is always human review; exact evidence checks apply to HIGH and LOW; no numerical threshold",
+  "model": "gemini-3.8-flash",
+  "thinking_level": "low",
+  "judge": "deepseek-flash",
+  "development_datasets": [
+    "ES2002a-d",
+    "ES2003a-d"
+  ],
+  "development_ceilings": {
+    "max_requests": 24,
+    "max_usd": 0.6
+  },
+  "gold_sha256": {
+    "benchmarks/ami_tasks/gold.jsonl": "8df36c0dac65e755dbf0ac8a33dbe4be491b0718a260c604d1f5601d31b64855",
+    "benchmarks/ami_tasks/gold_es2003.jsonl": "fdb653c84c48cfe9041112352614c80fcf0a79e18777ad70d7314150ecaec7b8"
+  },
+  "es2004_protected_data_files_read": false,
+  "es2004_readme_section_programmatic_read": "Unknown concurrent-write timing: whole README was processed before the parallel change was detected; section never surfaced to the model or used as input. No further README reads after the isolation reminder.",
+  "validation": {
+    "full_pytest": {
+      "passed": 3285,
+      "failed": 2,
+      "skipped": 31,
+      "warnings": 1,
+      "seconds": 4224.612,
+      "exit_code": 1,
+      "log": "work/pytest_v3_frozen_final3.log",
+      "log_sha256": "ac9c47a33e354a0ef3cc71c0ab61ee65beb7783ffdf8eb8574d3560d23019c95"
+    },
+    "v3_specific_tests": {
+      "passed": 34,
+      "failed": 0
+    },
+    "unchanged_host_recheck": {
+      "passed": 2,
+      "failed": 0,
+      "seconds": 79.126,
+      "exit_code": 0,
+      "log": "work/pytest_v3_host_recheck.log",
+      "log_sha256": "41cfa3eb2f852b2811b159c5b9a3b737c79dd90ac8cd5107cbcd8bd69de3e48a"
+    },
+    "node_dom_scripts": [
+      "tests/ui/product_copy_dom_test.cjs: PASS",
+      "tests/ui/meeting_v3_dom_test.cjs: PASS"
+    ],
+    "javascript_syntax": "node --check src/linkloom/ui/static/product.js: PASS",
+    "full_suite_is_all_green": false,
+    "unchanged_failures": [
+      {
+        "test": "test_normal_host_requires_source_permission_then_runs_actual_adapter",
+        "file": "tests/integration/test_m3q_provider_host.py",
+        "line": 298,
+        "result": "INVESTIGATING instead of PARTIAL after unchanged 30-second poll",
+        "v3_enabled": false
+      },
+      {
+        "test": "test_m3r_source_bound_product_chain_matches_durable_tool_receipts",
+        "file": "tests/integration/test_m3q_provider_host.py",
+        "line": 386,
+        "result": "task_investigation missing from still-pending projection after unchanged 30-second poll",
+        "v3_enabled": false
+      }
+    ],
+    "post_test_formatting": "Removed one empty EOF line only; Python AST unchanged. No prompt/schema/config/rule change."
+  },
+  "development_usage": {
+    "requests": 21,
+    "known_usd_from_usage": 0.108480822,
+    "total_usd_upper_bound_including_one_unknown_request": 0.168857322,
+    "additional_requests_after_predictions_and_scoring": 0
+  },
+  "freeze_commit": "7f8397fde1d1c0d21fbde0c7b8db64ebabfb3883"
+}
