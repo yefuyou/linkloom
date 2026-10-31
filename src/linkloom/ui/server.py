@@ -7,9 +7,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 from urllib.parse import parse_qs, unquote, urlsplit
 
 from linkloom.ui.backend import RunBackend
+from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
 from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.task_review import TaskReviewService
@@ -81,7 +83,36 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
             self._task_relation_paths = {}
             self._default_task_relation_sidecar = None
             self.task_review = None
+        self._requests = BackgroundTasks()
         super().__init__(address, LinkLoomRequestHandler)
+        if product_app is not None:
+            try:
+                product_app.register_background_owner(self)
+            except BaseException as error:
+                try:
+                    self.server_close()
+                    self.release_resources(deadline=shutdown_deadline())
+                except BaseException as cleanup_error:
+                    error.add_note(f"Server construction cleanup failed: {cleanup_error!r}")
+                raise
+
+    def process_request(self, request, client_address):
+        # ThreadingHTTPServer otherwise loses daemon request threads at close.
+        try:
+            self._requests.start("http-request-" + uuid4().hex[:12],
+                lambda: self.process_request_thread(request, client_address))
+        except BackgroundWorkStopped:
+            self.shutdown_request(request)
+
+    def pending_task_ids(self):
+        return self._requests.pending_ids()
+
+    def stop_accepting(self):
+        self._requests.stop_accepting()
+
+    def close(self, timeout=DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None):
+        self.stop_accepting()
+        self._requests.wait(shutdown_deadline(timeout) if deadline is None else deadline)
 
     @staticmethod
     def _host_relation_sidecar(product_app: ProductApplication) -> Path | None:
@@ -110,9 +141,14 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         if isinstance(workspace_id, str) and workspace_id.strip():
             self._task_relation_sidecar_for(workspace_id)
 
-    def server_close(self) -> None:
+    def release_resources(self, *, deadline=None):
         if self.task_review is not None:
-            self.task_review.close()
+            self.task_review.close(deadline=deadline)
+
+    def server_close(self) -> None:
+        # Closing the listening socket does not stop admitted daemon handlers.
+        # ProductApplication releases their sidecar only after all have drained.
+        self.stop_accepting()
         super().server_close()
 
 

@@ -8,9 +8,13 @@ import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import sqlite3
-from threading import Lock, RLock, Thread
+from threading import Lock, RLock
+from time import monotonic
 from typing import Any
 from uuid import uuid4
+
+from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, BackgroundShutdownTimeout,
+    DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
 
 from linkloom.decision_memory.models import (
     DecisionMemoryState, DecisionRecord, normalize_temporal_component,
@@ -741,6 +745,13 @@ class ProductApplication:
         self.relation_resolver = relation_resolver or DEFAULT_PRODUCT_RELATION_RESOLVER
         self._ingest_lock = Lock()
         self._store_lock = RLock()
+        self._close_lock = Lock()
+        self._lifecycle_lock = Lock()
+        self._background_owners: list[Any] = []
+        self._ingestion_workers = BackgroundTasks()
+        self._api_operations = BackgroundTasks()
+        self._closing = False
+        self._closed = False
         registry = SourceReferenceRegistry()
         versions = self.repository.all_versions()
         for version in versions:
@@ -765,10 +776,55 @@ class ProductApplication:
         self.revalidation = DecisionRevalidation(self)
         self._reconcile()
 
-    def close(self) -> None:
-        with self._store_lock:
-            self.store.close()
-            self.repository.close()
+    def register_background_owner(self, owner) -> None:
+        with self._lifecycle_lock:
+            if self._closing:
+                raise BackgroundWorkStopped("Application is shutting down; new background owners are rejected.")
+            self._background_owners.append(owner)
+
+    def pending_task_ids(self):
+        with self._lifecycle_lock:
+            owners = tuple(self._background_owners)
+        return (*self._api_operations.pending_ids(), *self._ingestion_workers.pending_ids(),
+                *(task_id for owner in owners for task_id in owner.pending_task_ids()))
+
+    def close(self, timeout: float = DEFAULT_SHUTDOWN_TIMEOUT) -> None:
+        deadline = shutdown_deadline(timeout)
+        with self._lifecycle_lock:
+            self._closing = True
+            owners = tuple(self._background_owners)
+        self._api_operations.stop_accepting()
+        for owner in owners:
+            owner.stop_accepting()
+        if not self._close_lock.acquire(timeout=max(0.0, deadline - monotonic())):
+            raise BackgroundShutdownTimeout(("application-close",))
+        try:
+            if self._closed:
+                return
+            # Never hold the database lock while joining a worker that may need it.
+            # Admitted imports may still enqueue ingestion; close its admission
+            # only after those public operations have finished.
+            self._api_operations.wait(deadline)
+            self._ingestion_workers.stop_accepting()
+            self._ingestion_workers.wait(deadline)
+            for owner in owners:
+                owner.close(deadline=deadline)
+            for owner in owners:
+                release = getattr(owner, "release_resources", None)
+                if release is not None:
+                    release(deadline=deadline)
+            if not self._store_lock.acquire(timeout=max(0.0, deadline - monotonic())):
+                raise BackgroundShutdownTimeout(("application-store-lock",))
+            try:
+                self.store.close()
+                self.repository.close()
+                self._closed = True
+            finally:
+                self._store_lock.release()
+        except BackgroundShutdownTimeout as error:
+            raise BackgroundShutdownTimeout((*self.pending_task_ids(), *error.task_ids)) from error
+        finally:
+            self._close_lock.release()
 
     def snapshot_investigation_sources(
         self, workspace_id: str
@@ -795,9 +851,16 @@ class ProductApplication:
                 )
             return workspace, sources  # type: ignore[return-value]
 
+    def _api_request(self, method, call):
+        try:
+            with self._api_operations.operation(f"product-{method}-{uuid4().hex[:12]}"):
+                with self._store_lock:
+                    return call()
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
+
     def handle_get(self, path: str) -> dict[str, Any]:
-        with self._store_lock:
-            return self._handle_get(path)
+        return self._api_request("get", lambda: self._handle_get(path))
 
     def _handle_get(self, path: str) -> dict[str, Any]:
         if path == "/api/status":
@@ -865,8 +928,7 @@ class ProductApplication:
         raise ProductApplicationError("NOT_FOUND", "The requested product resource was not found.", status=404)
 
     def handle_post(self, path: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
-        with self._store_lock:
-            return self._handle_post(path, payload)
+        return self._api_request("post", lambda: self._handle_post(path, payload))
 
     def _handle_post(self, path: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         if path == "/api/workspaces":
@@ -915,8 +977,7 @@ class ProductApplication:
         raise ProductApplicationError("NOT_FOUND", "The requested product resource was not found.", status=404)
 
     def handle_put(self, path: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
-        with self._store_lock:
-            return self._handle_put(path, payload)
+        return self._api_request("put", lambda: self._handle_put(path, payload))
 
     def _handle_put(self, path: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         match = re.fullmatch(r"/api/sources/([^/]+)", path)
@@ -940,8 +1001,7 @@ class ProductApplication:
         return {"source": source, "changed": False}, 200
 
     def handle_delete(self, path: str) -> dict[str, Any]:
-        with self._store_lock:
-            return self._handle_delete(path)
+        return self._api_request("delete", lambda: self._handle_delete(path))
 
     def _handle_delete(self, path: str) -> dict[str, Any]:
         match = re.fullmatch(r"/api/sources/([^/]+)", path)
@@ -1246,13 +1306,13 @@ class ProductApplication:
         return recovery
 
     def _start_ingestion(self, workspace_id: str, source_id: str, artifact: RawArtifact) -> None:
-        worker = Thread(
-            target=self._ingest,
-            args=(workspace_id, source_id, artifact),
-            daemon=True,
-            name=f"linkloom-ingest-{source_id[-8:]}",
-        )
-        worker.start()
+        try:
+            self._ingestion_workers.start(
+                f"linkloom-ingest-{source_id}-{artifact.artifact_version_id}-{uuid4().hex[:8]}",
+                lambda: self._ingest(workspace_id, source_id, artifact),
+            )
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
 
     def _ingest(self, workspace_id: str, source_id: str, artifact: RawArtifact) -> None:
         try:

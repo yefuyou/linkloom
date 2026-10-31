@@ -229,6 +229,7 @@ def main() -> int:
         pass
     finally:
         server.server_close()
+        # Drains HTTP, ingestion, Runtime and provider work before DB/SDK close.
         product_app.close()
         if sdk_client is not None:
             sdk_client.close()

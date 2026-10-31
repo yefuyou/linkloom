@@ -11,11 +11,13 @@ import json
 import math
 import os
 from pathlib import Path
-from threading import Event, Lock, Thread
+from threading import Event, Lock
 from time import monotonic
+from uuid import uuid4
 
 from linkloom.agents.model_adapter import ModelProviderError, ModelResponse, ModelUsage
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
+from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
 
 
 @dataclass(frozen=True)
@@ -55,7 +57,19 @@ class TaskProviderSession:
         self.cost = 0.0
         self.attempts = []
         self.lock = Lock()
+        self._workers = BackgroundTasks()
+        self._calls = BackgroundTasks()
         self._save()
+
+    def pending_task_ids(self):
+        return (*self._calls.pending_ids(), *self._workers.pending_ids())
+
+    def close(self, timeout=DEFAULT_SHUTDOWN_TIMEOUT, *, deadline=None):
+        deadline = shutdown_deadline(timeout) if deadline is None else deadline
+        self._calls.stop_accepting()
+        self._calls.wait(deadline)
+        self._workers.stop_accepting()
+        self._workers.wait(deadline)
 
     def bind(self, adapter, stage):
         return _BudgetedTaskAdapter(self, adapter, stage)
@@ -84,6 +98,10 @@ class TaskProviderSession:
             details=dict(reason=reason)))
 
     def complete(self, adapter, stage, request):
+        with self._calls.operation("task-provider-call-" + uuid4().hex[:12]):
+            return self._complete(adapter, stage, request)
+
+    def _complete(self, adapter, stage, request):
         with self.lock:
             if self.failure:
                 return self._error(self.failure)
@@ -120,7 +138,7 @@ class TaskProviderSession:
                 finally:
                     done.set()
 
-            Thread(target=invoke, daemon=True).start()
+            self._workers.start(f'task-provider-{self.root.parent.name}-{self.requests}', invoke)
             if not done.wait(min(remaining, self.limits.request_timeout_seconds)):
                 row['outcome'] = 'UNCERTAIN'
                 return self._error('PROVIDER_TIMEOUT_UNCERTAIN', uncertain=True)
