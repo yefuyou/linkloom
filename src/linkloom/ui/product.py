@@ -42,6 +42,7 @@ from linkloom.semantic_ingestion.pipeline import SemanticIngestionPipeline
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.timestamped_text import parse_timestamped_text
 from linkloom.semantic_ingestion.validation import CandidateValidator
+from linkloom.ui.configuration import GEMINI_CONFIGURATION_HELP, OFFLINE_HELP
 
 
 MAX_SOURCE_BYTES = 256 * 1024
@@ -817,7 +818,7 @@ class ProductApplication:
                 "message": (
                     "Semantic provider ready. Importing a source sends its text for extraction."
                     if self.extractor is not None or self.meeting_tasks is not None
-                    else "No semantic provider is enabled. Set GEMINI_API_KEY and start with --allow-external-provider to send source text for extraction."
+                    else "No semantic provider is enabled. " + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
                 ),
             }
         if path == "/api/workspaces":

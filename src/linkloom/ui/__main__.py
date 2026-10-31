@@ -19,6 +19,7 @@ from linkloom.semantic_ingestion.extraction import (
     ProviderRequestAuthorization,
 )
 from linkloom.runtime.errors import ValidationError
+from linkloom.ui.configuration import GEMINI_CONFIGURATION_HELP, OFFLINE_HELP
 from linkloom.ui.demo import DemoCase, DemoRunBackend
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.investigation import ProductInvestigationService
@@ -46,6 +47,10 @@ class GeminiSDKClientBridge:
 
 
 def main() -> int:
+    from dotenv import load_dotenv
+
+    # Configuration belongs to this entry point, never to module imports or other CLIs.
+    load_dotenv(Path(__file__).resolve().parents[3] / ".env", override=False, verbose=False)
     parser = argparse.ArgumentParser(prog="python -m linkloom.ui")
     parser.add_argument("--host", default="127.0.0.1", choices=["127.0.0.1", "localhost"])
     parser.add_argument("--port", type=int, default=8765)
@@ -146,8 +151,11 @@ def main() -> int:
     else:
         if args.allow_external_provider:
             api_key = os.environ.get("GEMINI_API_KEY")
-            if not api_key:
-                parser.error("--allow-external-provider requires GEMINI_API_KEY in the environment")
+            if not api_key or not api_key.strip():
+                parser.error(
+                    "--allow-external-provider requires GEMINI_API_KEY in the environment. "
+                    + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
+                )
             try:
                 sdk_client = build_gemini_sdk_client(api_key, http_options_kwargs=(dict(
                     timeout=round(task_limits.request_timeout_seconds * 1000),
@@ -159,7 +167,9 @@ def main() -> int:
                 )
             except (ImportError, TypeError, ValueError, ValidationError):
                 parser.error(
-                    "Gemini provider could not be initialized. Install the configured provider dependency and check GEMINI_API_KEY."
+                    'Gemini provider could not be initialized. Install the provider dependency with '
+                    'python -m pip install -e ".[smoke]" and check GEMINI_API_KEY. '
+                    + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP
                 )
 
             guard_id = "linkloom-local-ui-explicit-provider-opt-in/v1"
@@ -230,7 +240,7 @@ def main() -> int:
     elif task_limits:
         print(f'Task Provider configured: {args.model}; sources require per-question Ask authorization; no business approval.')
     elif extractor is None:
-        print("Semantic extraction is disabled. Configure a provider and explicitly opt in before sending source text.")
+        print("Semantic extraction is disabled. " + GEMINI_CONFIGURATION_HELP + " " + OFFLINE_HELP)
     else:
         print(f"Semantic extraction provider enabled: Gemini model {args.model}")
     if args.allow_local_task_review:
