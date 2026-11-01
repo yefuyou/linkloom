@@ -21,6 +21,6 @@
 
 API key 只能来自环境变量，不入 config、日志、report 或 Git。Provider 必须有最大请求数、最大重试、最大费用和超预算 fail-closed；Provider Error 单独记录，不冒充质量分数。当前已有明文凭据配置是阻塞发现，不是本轮可用能力。
 
-## 未来写回门禁
+## 笔记库回写
 
-Safe Writeback 不属于 MVP。未来每个动作都必须有：逐项人工确认、plan ID、指定 vault path 与操作、preview diff、目标 hash 校验、可恢复备份、审计记录、失败停止与已测试回滚。禁止批量静默修改或 AI 自我批准。
+笔记库回写已退役，见 tag archive/notes-writeback-20261101

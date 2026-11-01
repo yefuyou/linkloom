@@ -242,10 +242,12 @@ Provider 不拥有重试、预算或审批的最终决策；这些由 Runtime/Po
 
 | 区域 | 允许 import | 禁止 import |
 |---|---|---|
-| `src/linkloom/read/`、Scanner、Reader、Retrieval | schemas、read services、trace | `mutations`、Writer、apply side effect |
+| `src/linkloom/read/`、Scanner、Reader、Retrieval | schemas、read services、trace | Writer、apply side effect |
 | `src/linkloom/runtime/` | read services、providers、checkpointer、trace | 任意未批准 Writer |
 | `src/linkloom/evaluation/` | predictions、Gold、metrics、reports | Provider secret、Writer |
-| `src/linkloom/mutations/` | plan、permission、backup、audit | 被 read-only CLI 默认加载 |
+
+
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 `linkloom scan`、`linkloom ask`、`linkloom connect`、`linkloom eval` 不能因为导入顶层包而注册写工具。
 

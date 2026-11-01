@@ -125,8 +125,6 @@ python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-externa
 
 启用后来源文本会发送给配置的 Gemini 模型，可能产生 Provider 费用；调查还需在
 Ask 中逐次授权。产品启动器固定所配置的模型，界面内没有 Provider 设置。
-无需密钥的**旧版回放**位于 [legacy Ask](http://127.0.0.1:8765/legacy-ask)，
-它不执行当前的来源摄取和审核流程。
 
 ## 如何协作
 

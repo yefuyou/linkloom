@@ -17,7 +17,6 @@ try:
         SUBJECT,
         UnifiedAskFixture,
         poll_product_ask,
-        request_bytes,
         request_json,
     )
 except ModuleNotFoundError:
@@ -30,7 +29,6 @@ except ModuleNotFoundError:
         SUBJECT,
         UnifiedAskFixture,
         poll_product_ask,
-        request_bytes,
         request_json,
     )
 
@@ -411,11 +409,7 @@ def test_legacy_agent_endpoint_is_explicit_while_product_ask_requires_provider_p
     assert len(ask_fixture.transports) == 1
 
 
-def test_legacy_api_and_legacy_page_keep_their_existing_semantics(ask_fixture):
-    status, body = request_bytes(ask_fixture.base_url, "/legacy-ask")
-    assert status == 200
-    assert b"LinkLoom" in body
-
+def test_legacy_api_keeps_its_existing_semantics(ask_fixture):
     status, payload = request_json(
         ask_fixture.base_url,
         "/api/ask",

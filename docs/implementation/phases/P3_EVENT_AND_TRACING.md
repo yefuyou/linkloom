@@ -122,8 +122,9 @@ tests/unit/test_scanner.py
 tests/fixtures/sample_vault/**
 relation_eval/**
 tests/eval/relation_gold.yaml
-src/linkloom/mutations/**
 ```
+
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 ## 7. P3 数据合同（字段级）
 

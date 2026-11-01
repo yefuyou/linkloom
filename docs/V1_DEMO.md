@@ -18,8 +18,7 @@ Import it through Sources. Do not insert records through SQLite or call private
 domain functions. The product UI sends the source text to Gemini only after the
 explicit launch-time opt-in.
 
-For a key-free preview, /legacy-ask replays an older deterministic decision
-brief; it does not demonstrate the V1 workflow. The screenshots in the README
+The screenshots in the README
 were captured with offline responses and are not a public provider
 switch.
 
