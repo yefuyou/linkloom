@@ -23,9 +23,9 @@ from linkloom.semantic_ingestion.candidate_models import (
     candidate_subject_key_for,
     extraction_fingerprint_for,
 )
-from linkloom.semantic_ingestion.extraction import SemanticExtractionContext
+from linkloom.semantic_ingestion.extraction import SemanticExtractionContext, is_product_task_field_receipt
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
-from linkloom.semantic_ingestion.task_observation import build_task_observation
+from linkloom.semantic_ingestion.task_observation import build_task_observation, PRODUCT_TASK_FIELDS_VERSION
 from linkloom.semantic_ingestion.document_text import (
     DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, document_valid_time_is_grounded,
     parse_source_time,
@@ -206,8 +206,20 @@ class CandidateValidator:
                 ),
             )
 
+        product_profile = context.product_task_fields is not None
+        product_context_valid = product_profile == is_product_task_field_receipt(receipt)
+        if product_profile:
+            try:
+                context.product_task_fields.input_for(segment, context.expected_workspace_id)
+            except (TypeError, ValueError):
+                product_context_valid = False
+        if not product_context_valid:
+            return (CandidateValidationResult(outcome=CandidateOutcome.REJECTED, candidate=None,
+                reason_codes=(CandidateReasonCode.VALIDATION_REJECTED,),
+                extraction_receipt=receipt, provenance_valid=False),)
         return tuple(
-            self._validate_claim(claim, extraction, segment, artifact, context.relation_resolver)
+            self._validate_claim(claim, extraction, segment, artifact, context.relation_resolver,
+                                 product_profile=context.product_task_fields is not None)
             for claim in extraction.claims
         )
 
@@ -295,7 +307,27 @@ class CandidateValidator:
         segment: SourceSegment,
         artifact: RawArtifact,
         relation_resolver: FrozenRelationResolver,
+        *, product_profile: bool = False,
     ) -> CandidateValidationResult:
+        task_observation = None
+        product_task = claim.task is not None and claim.task.grounding_policy_version == PRODUCT_TASK_FIELDS_VERSION
+        if product_task or (product_profile and claim.claim_type.value in {'PLAN', 'ACTION'}):
+            task = claim.task
+            valid = (product_profile and product_task and task.work_state == 'ASSERTED'
+                     and task.text in segment.evidence_span.quote
+                     and segment.evidence_span.quote.count(task.text) == 1
+                     and bool(task.description_parts)
+                     and all(task.text.count(part) == 1 for part in task.description_parts))
+            if valid:
+                try:
+                    task_observation = build_task_observation(task, segment, artifact)
+                    valid = task_observation.validation_status != 'INVALID' and task_observation.verify(artifact)
+                except (ValueError, StopIteration):
+                    valid = False
+            if not valid:
+                return CandidateValidationResult(outcome=CandidateOutcome.REJECTED, candidate=None,
+                    reason_codes=(CandidateReasonCode.VALIDATION_REJECTED,),
+                    extraction_receipt=extraction.receipt, provenance_valid=False)
         reason_codes: list[CandidateReasonCode] = []
         if claim.subject is None or claim.value is None or not (
             _is_grounded_mention(claim.subject, segment.body_text)
@@ -425,7 +457,7 @@ class CandidateValidator:
             extraction_fingerprint=extraction.receipt.extraction_fingerprint,
             extraction_receipt=extraction.receipt,
             review_reasons=tuple(reason_codes),
-            task_observation=(build_task_observation(claim.task, segment, artifact)
+            task_observation=(task_observation or build_task_observation(claim.task, segment, artifact)
                               if claim.claim_type.value in {"PLAN", "ACTION"} else None),
         )
         return CandidateValidationResult(
