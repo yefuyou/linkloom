@@ -1,19 +1,20 @@
 import json
 import subprocess
+import sys
 import pytest
 from pathlib import Path
 import hashlib
 import re
 
 def run_cli(*args):
-    cmd = ["python", "-m", "linkloom", "memory", *args]
+    cmd = [sys.executable, "-m", "linkloom", "memory", *args]
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     return result
 
 
 def run_linkloom(*args):
     return subprocess.run(
-        ["python", "-m", "linkloom", *args],
+        [sys.executable, "-m", "linkloom", *args],
         capture_output=True,
         text=True,
         encoding="utf-8",
