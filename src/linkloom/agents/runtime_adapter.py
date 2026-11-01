@@ -223,6 +223,7 @@ class RuntimeAgentAdapter:
                     "top_k": observation.top_k,
                     "index_version": observation.index_version,
                     "retrieval_stage_timings_ms": dict(observation.stage_timings_ms),
+                    "rerank_trace": dict(observation.rerank_trace),
                 },
             )
         return values
@@ -509,6 +510,7 @@ class RuntimeAgentAdapter:
             retrieval_channel=str(value.get("retrieval_channel", "current")),
             resource_id=relative_path,
             metadata={**value, "text": value.get("quote", ""), "workspace_id": self.workspace_id},
+            rerank_score=value.get("rerank_score"),
         )
 
     def _read_verified_note(self, ref: str) -> dict[str, Any]:

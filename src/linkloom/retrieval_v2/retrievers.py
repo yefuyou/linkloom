@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from copy import deepcopy
 from dataclasses import replace
+import logging
+import math
+import re
 import time
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
 from linkloom.indexing import BM25Index, DirectoryIndex, VectorIndex
 from linkloom.indexing.bm25 import tokenize_for_index
@@ -14,6 +18,11 @@ from linkloom.retrieval import retrieve_evidence
 from linkloom.schemas import NoteDocument
 
 from .models import RetrievedEvidence, RetrievalQuery
+
+if TYPE_CHECKING:
+    from linkloom.rerank.base import Reranker
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class Retriever(Protocol):
@@ -114,10 +123,26 @@ class HybridRetriever:
     candidate_k = 20
     rrf_k = 60
 
-    def __init__(self, lexical: Retriever, dense: Retriever) -> None:
+    def __init__(
+        self,
+        lexical: Retriever,
+        dense: Retriever,
+        *,
+        reranker: Reranker | None = None,
+        candidate_text_provider: Callable[[RetrievedEvidence], str] | None = None,
+    ) -> None:
+        # The component is configuration-neutral. Product wiring opts into the
+        # environment-configured pipeline; legacy experiments remain pure RRF.
+        if reranker is None:
+            from linkloom.rerank.base import NoopReranker
+
+            reranker = NoopReranker()
         self.lexical = lexical
         self.dense = dense
+        self.reranker = reranker
+        self._candidate_text_provider = candidate_text_provider
         self.last_stage_timings_ms: dict[str, float] = {}
+        self.last_rerank_trace: dict[str, object] = {}
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
         candidate_query = replace(query, top_k=self.candidate_k)
@@ -161,12 +186,13 @@ class HybridRetriever:
             ),
         )
         results: list[RetrievedEvidence] = []
-        for rank, row in enumerate(ordered[: query.top_k], start=1):
+        for rank, row in enumerate(ordered, start=1):
             hit = row["hit"]
             metadata = dict(hit.metadata)  # type: ignore[union-attr]
             metadata.update(
                 {
                     "rrf_k": self.rrf_k,
+                    "rrf_rank": rank,
                     "channel_ranks": dict(row["channel_ranks"]),
                     "channel_scores": dict(row["channel_scores"]),
                 }
@@ -184,6 +210,7 @@ class HybridRetriever:
                 )
             )
         fusion_ms = (time.perf_counter() - fusion_started) * 1000.0
+        results, rerank_ms = self._rerank(query.query, results)
         self.last_stage_timings_ms = {
             "bm25_ms": bm25_ms,
             "embedding_query_ms": embedding_query_ms,
@@ -195,8 +222,69 @@ class HybridRetriever:
                 dense_total_ms - embedding_query_ms - embedding_model_load_ms,
             ),
             "fusion_ms": fusion_ms,
+            "rerank_ms": rerank_ms,
         }
-        return results
+        return [replace(hit, rank=rank) for rank, hit in
+                enumerate(results[: query.top_k], start=1)]
+
+    def _rerank(
+        self, query: str, results: list[RetrievedEvidence]
+    ) -> tuple[list[RetrievedEvidence], float]:
+        head, tail = results[: self.candidate_k], results[self.candidate_k :]
+        mode = str(getattr(self.reranker, "mode", "off"))
+        self.last_rerank_trace = {
+            "mode": mode, "backend": "noop", "status": "disabled",
+            "candidate_count": len(head), "attempts": [], "elapsed_ms": 0.0,
+        }
+        if not getattr(self.reranker, "enabled", True):
+            recorded = getattr(self.reranker, "last_trace", None)
+            if isinstance(recorded, dict) and recorded:
+                self.last_rerank_trace = deepcopy(recorded)
+                self.last_rerank_trace.update(candidate_count=len(head), elapsed_ms=0.0)
+            return results, 0.0
+        if not head or not query.strip():
+            self.last_rerank_trace["status"] = "empty_input"
+            return results, 0.0
+        from linkloom.rerank.base import RerankCandidate, RerankError
+
+        # Providers and injected rerankers never receive the fallback objects:
+        # metadata dictionaries remain mutable even in frozen evidence records.
+        baseline = head
+        started = time.perf_counter()
+        try:
+            candidates = []
+            for hit in deepcopy(head):
+                text = (self._candidate_text_provider(hit)
+                        if self._candidate_text_provider is not None
+                        else hit.metadata.get("content"))
+                if not isinstance(text, str) or not text.strip():
+                    raise RerankError("candidate_text_unavailable")
+                candidates.append(RerankCandidate(evidence=hit, text=text))
+            reranked = self.reranker.rerank(query, candidates)
+            _validate_reranked(baseline, reranked)
+            recorded = getattr(self.reranker, "last_trace", None)
+            self.last_rerank_trace = deepcopy(recorded) if isinstance(recorded, dict) else {
+                "mode": mode, "backend": type(self.reranker).__name__,
+                "status": "ok", "candidate_count": len(head), "attempts": [],
+            }
+            result = deepcopy(reranked) + tail
+        except Exception as error:
+            reason = getattr(error, "reason", None)
+            if not isinstance(reason, str) or re.fullmatch(r"[a-z][a-z0-9_]*", reason) is None:
+                reason = "invalid_result" if isinstance(error, ValueError) else "rerank_failed"
+            self.last_rerank_trace.update({
+                "status": "fallback", "reason": reason,
+                "attempts": [{"backend": type(self.reranker).__name__,
+                              "status": "failed", "reason": reason}],
+            })
+            try:
+                _LOGGER.warning("Document reranking degraded to RRF (%s)", reason)
+            except Exception:
+                pass  # A broken optional logging sink cannot fail retrieval.
+            result = baseline + tail
+        elapsed_ms = (time.perf_counter() - started) * 1000.0
+        self.last_rerank_trace["elapsed_ms"] = elapsed_ms
+        return result, elapsed_ms
 
 
 class DirectoryAwareHybridRetriever:
@@ -213,6 +301,7 @@ class DirectoryAwareHybridRetriever:
         self.directories = directories
         self.enabled = enabled
         self.last_stage_timings_ms: dict[str, float] = {}
+        self.last_rerank_trace: dict[str, object] = {}
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedEvidence]:
         directory_started = time.perf_counter()
@@ -227,6 +316,7 @@ class DirectoryAwareHybridRetriever:
                 hits = self.hybrid.retrieve(query)
             else:
                 hits = self.hybrid.retrieve(replace(query, optional_scope_path=scope))
+        self.last_rerank_trace = deepcopy(self.hybrid.last_rerank_trace)
         self.last_stage_timings_ms = {
             **self.hybrid.last_stage_timings_ms,
             "directory_ms": directory_ms,
@@ -314,3 +404,33 @@ def _same_identity(left: RetrievedEvidence, right: RetrievedEvidence) -> bool:
         and left.resource_id == right.resource_id
         and all(left.metadata.get(key) == right.metadata.get(key) for key in identity_fields)
     )
+
+
+def _validate_reranked(
+    original: list[RetrievedEvidence], result: list[RetrievedEvidence]
+) -> None:
+    """Reject incomplete batches and any attempt to replace source evidence."""
+    if not isinstance(result, list) or len(result) != len(original):
+        raise ValueError("invalid rerank batch")
+    expected = {hit.evidence_id: hit for hit in original}
+    if any(not isinstance(hit, RetrievedEvidence) for hit in result):
+        raise ValueError("invalid rerank evidence")
+    if len({hit.evidence_id for hit in result}) != len(expected):
+        raise ValueError("duplicate rerank evidence")
+    scores = [hit.rerank_score for hit in result]
+    if all(score is None for score in scores):
+        if [hit.evidence_id for hit in result] != [hit.evidence_id for hit in original]:
+            raise ValueError("unscored rerank order")
+    elif any(isinstance(score, bool) or not isinstance(score, (int, float))
+             or not math.isfinite(score) for score in scores):
+        raise ValueError("invalid rerank score")
+    for hit in result:
+        previous = expected.get(hit.evidence_id)
+        if previous is None or (
+            not _same_identity(previous, hit)
+            or hit.score != previous.score
+            or hit.retrieval_channel != previous.retrieval_channel
+            or any(key not in hit.metadata or hit.metadata[key] != value
+                   for key, value in previous.metadata.items())
+        ):
+            raise ValueError("rerank source changed")

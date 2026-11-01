@@ -38,3 +38,4 @@ class RetrievedEvidence:
     retrieval_channel: str
     resource_id: str
     metadata: dict[str, Any] = field(default_factory=dict)
+    rerank_score: float | None = None
