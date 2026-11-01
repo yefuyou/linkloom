@@ -59,10 +59,10 @@ async function setup({ready = false, unresolved = ['relation', 'valid_from'], lo
   for (const ready of [false, true]) {
     const ui = await setup({ready});
     const html = ui.element('page').innerHTML;
-    assert.match(html, ready ? />Import and extract</ : />Save source</);
+    assert.match(html, ready ? />Import and organize</ : />Save meeting locally</);
     assert.match(html, ready ? /Importing sends source text/ : /Save sources locally/);
     assert.equal(ui.posts.length, 0, 'opening a page must not import or extract');
-    assert.match(html, /<h1>Sources<\/h1>/);
+    assert.match(html, /<h1>Meetings<\/h1>/);
     assert.doesNotMatch(html, /class="eyebrow"|class="lede"/);
     if (ready) assert.match(html, /external AI provider and may incur model costs/);
     if (!ready) {
@@ -75,8 +75,8 @@ async function setup({ready = false, unresolved = ['relation', 'valid_from'], lo
     }
   }
   const zh = await setup({ready: true, locale: 'zh'});
-  assert.match(zh.element('page').innerHTML, /<h1>来源<\/h1>/);
-  assert.match(zh.element('page').innerHTML, /导入并提取/);
+  assert.match(zh.element('page').innerHTML, /<h1>会议<\/h1>/);
+  assert.match(zh.element('page').innerHTML, /导入并整理/);
   assert.match(zh.element('page').innerHTML, /外部 AI.*模型费用/);
   await zh.click('inspect-candidate', 'candidate-1');
   assert.match(zh.element('page').innerHTML, /关系待确认 · 暂无法批准/);

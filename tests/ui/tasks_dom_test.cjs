@@ -325,9 +325,9 @@ test('candidate processing and task detail views stay separate; successful revie
   assert.match(html, /data-testid="processing-panel"/);
   assert.match(html, /<details class="evidence" open><summary>原文引用/);
   assert.doesNotMatch(html, /task-detail-panel|task-event|data-action="refresh"|refresh-tasks/);
-  const list = html.slice(0, html.indexOf('<aside'));
-  assert.doesNotMatch(list, /data-action="candidate-create"|<blockquote>/);
-  for (const label of ['确认为新任务', '合并到已有任务', '拒绝']) assert.ok(html.includes(label));
+  assert.match(html, /class="kanban"/);
+  assert.match(html, /data-testid="candidate-a"[\s\S]*data-testid="processing-panel"/);
+  for (const label of ['作为新任务', '合并更新', '拒绝']) assert.ok(html.includes(label));
   await h.click('candidate-select', {index: '1'});
   assert.equal(h.app.state.selection.candidate_id, 'b');
   await h.click('candidate-create', {index: '1'}); await h.click('confirm-review');
@@ -352,13 +352,83 @@ test('full independent catalog finds exact-title tasks beyond page one without c
   const catalogCalls = h.calls.filter(call => call.path === '/api/product/tasks' && call.query.limit === '100');
   assert.deepEqual(catalogCalls.slice(-2).map(call => call.query.offset), ['0', '100']);
   for (const call of catalogCalls) {assert.equal(call.query.owner, undefined); assert.equal(call.query.status, undefined);}
-  assert.match(h.elements['tasks-app'].innerHTML, /已有同名任务：联调报告（负责人 目录负责人），可考虑合并/);
-  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /已有同名任务：联调报告 /);
+  assert.match(h.elements['tasks-app'].innerHTML, /看起来是这条已有任务的更新：<strong>联调报告（目录负责人 · 2026-10-12）/);
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /看起来是这条已有任务的更新：<strong>联调报告 /);
   await h.click('candidate-merge', {index: '0'});
   assert.equal(h.app.state.form.target, ''); assert.equal(h.app.state.form.preview, null);
   assert.match(h.elements['tasks-app'].innerHTML, /value="late"/);
   assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /target-page|data-testid="merge-preview"/);
   assert.equal(h.writes().length, 0);
+});
+
+test('same-title suggestion selects a merge target only after choose, and checks only changed fields', async () => {
+  const h = await harness();
+  h.app.state.candidates.items[1].candidate.deadline = '2026-10-16';
+  h.app.state.candidates.items[1].candidate.deadline_text = '10/16 前';
+  await h.click('candidate-select', {index: '1'});
+  assert.equal(h.app.state.form, null);
+  assert.equal(h.calls.filter(call => /\/merge-preview$/.test(call.path)).length, 0);
+  assert.match(h.elements['tasks-app'].innerHTML, /data-testid="choose-same-task">选它/);
+  await h.click('candidate-merge', {index: '1'});
+  assert.equal(h.app.state.form.target, '');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), []);
+  assert.equal(h.app.state.form.preview, null);
+  await h.click('choose-same-task', {index: '1', task: 'missing'});
+  assert.equal(h.app.state.form.target, '');
+  await h.click('choose-same-task', {index: '1', task: 'task-1'});
+  assert.equal(h.app.state.form.target, 'task-1');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), ['owner', 'deadline']);
+  assert.equal(h.app.state.form.preview.preview_token, 'merge-token');
+  assert.equal(h.writes().length, 0);
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /data-testid="merge-field-title"/);
+  const preview = h.calls.filter(call => /\/merge-preview$/.test(call.path)).at(-1);
+  assert.deepEqual(preview.body.apply_fields, ['owner', 'deadline']);
+  assert.equal(preview.body.expected_candidate_fingerprint, fingerprint);
+  await h.click('cancel-form');
+  await h.click('candidate-merge', {index: '1'});
+  assert.equal(h.app.state.form.target, '');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), []);
+  h.app.state.blockedReviews.add('b:' + fingerprint);
+  await h.click('choose-same-task', {index: '1', task: 'task-1'});
+  assert.equal(h.app.state.form.target, '');
+  assert.equal(h.writes().length, 0);
+});
+
+test('changing the manual merge target clears selections from the previous task', async () => {
+  const h = await harness(); await h.click('candidate-merge', {index: '1'});
+  await h.change('mergeTarget', 'task-1'); await h.check('owner');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), ['owner']);
+  h.app.state.catalog.push({task: {...h.task, id: 'task-2', owner: '王芳'}});
+  await h.change('mergeTarget', 'task-2');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), []);
+  assert.deepEqual(h.calls.filter(call => /\/merge-preview$/.test(call.path)).at(-1).body.apply_fields, []);
+  assert.equal(h.writes().length, 0);
+});
+
+test('candidate without a same-title match still opens an empty manual merge target', async () => {
+  const h = await harness(); h.app.state.candidates.items[1].candidate.title = '不同的任务';
+  await h.click('candidate-select', {index: '1'});
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /data-testid="choose-same-task"/);
+  await h.click('candidate-merge', {index: '1'});
+  assert.equal(h.app.state.form.target, '');
+  assert.match(h.elements['tasks-app'].innerHTML, /data-testid="merge-target"/);
+  await h.change('mergeTarget', 'task-1');
+  assert.equal(h.app.state.form.preview.preview_token, 'merge-token');
+  assert.equal(h.writes().length, 0);
+});
+
+test('detail status selection is a draft until explicit confirmation with a handwritten reason', async () => {
+  const h = await harness(); await h.app.openTask('task-1');
+  await h.change('detailStatus', 'done');
+  assert.equal(h.app.state.form.status, 'done');
+  assert.equal(h.app.state.form.reason, '');
+  assert.equal(h.task.status, 'open'); assert.equal(h.writes().length, 0);
+  assert.match(h.elements['tasks-app'].innerHTML, /状态尚未保存/);
+  await h.click('status-submit'); assert.equal(h.writes().length, 0);
+  h.input('reason', '已交付并核对'); await h.click('status-submit');
+  assert.equal(h.writes()[0].body.status, 'done');
+  assert.equal(h.writes()[0].body.reason, '已交付并核对');
+  assert.equal(h.writes()[0].body.actor, '审核甲');
 });
 
 test('automatic preview ignores old successes and old 409 failures including A to B to A', async () => {
@@ -402,6 +472,7 @@ test('history groups one operation across API pages and deduplicates provenance 
   assert.equal((html.match(/data-testid="undo-preview"/g) || []).length, 1);
   assert.equal((html.match(/A 原文 &lt;img/g) || []).length, 1);
   assert.equal((html.match(/B 原文 &lt;img/g) || []).length, 1);
+  assert.match(html, /合并 · 来自 B 会议/);
   assert.match(html, /李明 → 王芳/); assert.match(html, /2026-10-12 → 2026-10-16/);
   e2.after_evidence_role = 'context'; await h.app.openTask('task-1'); html = h.elements['tasks-app'].innerHTML;
   assert.equal((html.match(/B 原文 &lt;img/g) || []).length, 2); assert.match(html, /此引用不作为该值的原文依据/);
@@ -412,7 +483,7 @@ test('technical references fold by default, LOW alone is marked, and dates never
   const html = helper.evidenceHtml([{...reference(), message_id: 'message-unique', char_start: 17, char_end: 24}], 'source');
   const visible = html.slice(0, html.indexOf('<details>'));
   assert.doesNotMatch(visible, /message-unique|hash-A|字符 17|行 1/);
-  assert.match(html, /<details><summary>版本与引用校验信息/); assert.match(html, /字符 17–24/);
+  assert.match(html, /<details><summary>校验信息/); assert.match(html, /字符 17–24/);
   assert.equal(helper.lowHtml({confidence: 'HIGH'}), ''); assert.equal(helper.lowHtml({}), '');
   assert.match(helper.lowHtml({confidence: 'LOW', confidence_reason: '<script>x</script>'}), /&lt;script&gt;/);
   assert.equal(helper.time('10/10'), '10/10'); assert.equal(helper.meetingDate('2026-02-31'), '2026-02-31');
@@ -427,6 +498,14 @@ test('technical references fold by default, LOW alone is marked, and dates never
   assert.doesNotMatch(helper.diffHtml(current, proposed, ['owner']), /截止时间|任务描述|应用此值/);
   assert.match(helper.diffHtml(current, proposed, ['deadline'], '撤销后'), /12日早上前/);
   assert.match(helper.diffHtml(current, proposed, []), /没有字段变化/);
+});
+
+test('missing meeting names never expose source IDs in visible task cards', async () => {
+  const h = await harness(); const summary = h.summary;
+  h.summary = () => ({...summary(), source_summary: [{source_name: null, source_id: 'internal-source-id', meeting_time: null}]});
+  await h.app.loadCatalog(); h.app.render();
+  assert.match(h.elements['tasks-app'].innerHTML, /来源未提供/);
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /internal-source-id/);
 });
 
 test('workspace changes discard late catalogs and late automatic previews', async () => {

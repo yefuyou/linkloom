@@ -79,7 +79,7 @@
       const currentRun = item.current_run === true || (runId && item.current_run === runId);
       const relatedRun = item.current_run === false || item.related_history === true || item.related === true;
       const marker = currentRun ? copy(language, "current run", "当前运行") : relatedRun ? copy(language, "related history", "相关历史") : "";
-      const run = runId ? `<span data-task-review-history-run> · ${escapeHtml(copy(language, "run", "运行"))} ${escapeHtml(runId)}</span>` : "";
+      const run = runId ? `<details data-task-review-history-run><summary>${escapeHtml(copy(language, "Verification details", "校验信息"))}</summary>${escapeHtml(copy(language, "run", "运行"))} ${escapeHtml(runId)}</details>` : "";
       const markerHtml = marker ? `<span data-task-review-history-marker> · ${escapeHtml(marker)}</span>` : "";
       return `<li data-task-review-history-item>${escapeHtml(action)}${status ? ` · ${escapeHtml(status)}` : ""}${run}${markerHtml}${actor}${error}${item.revision != null ? ` · revision ${escapeHtml(item.revision)}` : ""}${note}</li>`;
     }).join("");

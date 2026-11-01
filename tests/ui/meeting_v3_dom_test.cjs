@@ -55,15 +55,15 @@ async function open(locale, {ready = false, external = false, task = false, sour
     let html = ui.element('page').innerHTML;
     assert.equal((html.match(/<h1[ >]/g)||[]).length,1);
     assert.doesNotMatch(html, /class="eyebrow"|class="lede"/);
-    assert.ok(html.includes(zh?'来源':'Sources'));
-    assert.ok(html.includes(zh?'保存来源':'Save source'));
+    assert.ok(html.includes(zh?'会议':'Meetings'));
+    assert.ok(html.includes(zh?'仅保存会议':'Save meeting locally'));
     assert.ok(html.includes(zh?'已保存 · 待提取':'Saved · extraction pending'));
     assert.ok(html.includes('data-status="FAILED"'), 'underlying failure state must be preserved');
     assert.ok(html.includes('Sources &lt;script&gt;PRIVATE_CONTENT&lt;/script&gt;'), 'source text must stay untranslated and escaped');
     assert.doesNotMatch(html, /<script>|uiText\(/);
     assert.match(html, /<details><summary>[^<]+<\/summary><p>INTERNAL_RUNNER_STATUS<\/p><\/details>/, 'setup diagnostics must be inside a disclosure');
     await ui.element('interface-language').listeners.change({target:{value:zh?'en':'zh'}}); await tick();
-    assert.ok(ui.element('page').innerHTML.includes(zh?'<h1>Sources</h1>':'<h1>来源</h1>'));
+    assert.ok(ui.element('page').innerHTML.includes(zh?'<h1>Meetings</h1>':'<h1>会议</h1>'));
     await ui.element('interface-language').listeners.change({target:{value:locale}}); await tick();
 
     for (const screen of ['review','decisions','ask']) {
@@ -71,7 +71,7 @@ async function open(locale, {ready = false, external = false, task = false, sour
       html = ui.element('page').innerHTML;
       assert.equal((html.match(/<h1[ >]/g)||[]).length,1);
       assert.doesNotMatch(html,/class="eyebrow"|class="lede"/);
-      assert.ok(html.includes(zh ? ({review:'审核',decisions:'决策记忆',ask:'提问'}[screen]) : ({review:'Review',decisions:'Decision Memory',ask:'Ask'}[screen])));
+      assert.ok(html.includes(zh ? ({review:'会议待确认',decisions:'决定',ask:'提问'}[screen]) : ({review:'Records to confirm',decisions:'Decisions',ask:'Ask'}[screen])));
     }
     assert.equal(ui.writes.length,0,'navigation and localization never send a request authorizing a model');
     await ui.element('page').listeners.click({target:{closest:()=>({dataset:{action:'inspect-decision',id:'d'}})}});
@@ -120,7 +120,8 @@ async function open(locale, {ready = false, external = false, task = false, sour
     assert.ok(form.includes(zh?'外部 AI':'external AI provider'));
     assert.ok(form.includes(zh?'有上限的模型费用':'bounded model costs'));
     assert.ok(form.indexOf('USD 2') < form.indexOf('id="ask-submit-button"'));
-    assert.ok(form.includes('<details><summary>') && form.includes('MODEL_INTERNAL'));
+    assert.ok(!form.slice(form.indexOf('<details id="ask-advanced"'), form.indexOf('</details>', form.indexOf('<details id="ask-advanced"'))).includes('ask-external'), 'authorization stays outside advanced options');
+    assert.ok(form.includes('<details>') && form.includes('MODEL_INTERNAL'));
   }
   console.log('PASS: bilingual Sources/Review/Decision Memory/Ask, single titles, escaped unchanged data, raw status preservation, visible cost and unchecked per-question permission');
 })().catch(e=>{console.error(e);process.exitCode=1;});

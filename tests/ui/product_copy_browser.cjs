@@ -4,22 +4,24 @@
    --baseline uses master static files exported by the caller, without changing Git.
 */
 const {strict: assert} = require('node:assert');
-const {spawn} = require('node:child_process');
+const {spawnHostProcess, stopHostProcess} = require('./browser_host.cjs');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const {chromium} = require('playwright');
 const root = path.resolve(process.argv[2] || `work/copy-browser-${Date.now()}`);
 const baseline = process.argv.includes('--baseline');
+const selectedCases = process.argv.find(value => value.startsWith('--cases='))?.slice(8).split(',');
 const report = {synthetic: true, external_provider_calls: 0, browser: '', steps: [], console_errors: [], http: []};
 let browser, context;
 async function host(args, directory) {
-  const child = spawn(process.env.LINKLOOM_TEST_PYTHON || 'python', args, {
-    env: {...process.env, PYTHONPATH: 'src:.', PYTHONUNBUFFERED: '1', LINKLOOM_RETRIEVAL_MODE: 'bm25', GEMINI_API_KEY: '', DEEPSEEK_API_KEY: ''},
+  const child = spawnHostProcess(process.env.LINKLOOM_TEST_PYTHON || 'python', args, {
+    env: {...process.env, PYTHONPATH: ['src','.'].join(path.delimiter), PYTHONUNBUFFERED: '1', LINKLOOM_RETRIEVAL_MODE: 'bm25', GEMINI_API_KEY: '', DEEPSEEK_API_KEY: ''},
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  const url = await new Promise((resolve, reject) => {
+  let url;
+  try { url = await new Promise((resolve, reject) => {
     let output = '', errors = '';
-    const timer = setTimeout(() => reject(new Error('Synthetic host startup timeout: '+errors)), 20000);
+    const timer = setTimeout(() => reject(new Error('Synthetic host startup timeout: '+errors)), 60000);
     child.stderr.on('data', d => errors += d);
     child.stdout.on('data', d => {
       output += d;
@@ -28,7 +30,8 @@ async function host(args, directory) {
     });
     child.on('exit', code => {clearTimeout(timer); reject(new Error(`Host exited ${code}: ${errors}`));});
   });
-  return {url, stop: () => child.kill('SIGINT')};
+  } catch (error) { await stopHostProcess(child); throw error; }
+  return {url, stop: () => stopHostProcess(child)};
 }
 async function pageFor(url) {
   const page = await context.newPage();
@@ -37,8 +40,9 @@ async function pageFor(url) {
   page.on('response', response => {
     if (new URL(response.url()).pathname.startsWith('/api/')) report.http.push({path:new URL(response.url()).pathname,status:response.status()});
   });
-  await page.goto(url);
+  await page.goto(url+'/?lang=en#meetings');
   await page.locator('#source-create, #workspace-create').waitFor();
+  await page.evaluate(() => localStorage.setItem('linkloom.tasks.reviewer', 'public-browser-reviewer'));
   return page;
 }
 async function capture(page, name, description) {
@@ -58,9 +62,9 @@ async function taskCase(kind) {
     if (kind==='partial') await capture(page,'01-sources-en','Sources list and local import setup');
     if (!baseline && kind==='partial') {
       await page.locator('#interface-language').selectOption('zh');
-      await page.getByRole('heading',{name:'来源',exact:true}).waitFor();
+      await page.getByRole('heading',{name:'会议',exact:true}).waitFor();
       await page.reload();
-      await page.getByRole('heading',{name:'来源',exact:true}).waitFor();
+      await page.getByRole('heading',{name:'会议',exact:true}).waitFor();
       assert.equal(await page.locator('#interface-language').inputValue(), 'zh');
       await capture(page,'02-sources-zh','Chinese source labels and unchanged source names');
       await page.locator('#new-workspace').click();
@@ -75,9 +79,10 @@ async function taskCase(kind) {
     }
     await page.locator('[data-screen="ask"]').click();
     await page.locator('#ask-query').fill('请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？');
+    if (!(await page.locator('#ask-advanced').evaluate(el => el.open))) await page.locator('#ask-advanced > summary').click();
     await page.locator('#ask-domain').selectOption('tasks');
     await page.locator('#ask-submit-button').click();
-    await page.locator('.task-answer').waitFor();
+    await page.locator('.task-answer').waitFor({timeout:90000});
     let text=await page.locator('#ask-result').innerText();
     if (!baseline) {
       assert.ok(text.includes('任务状态：待确认'));
@@ -101,10 +106,10 @@ async function taskCase(kind) {
     }
     await capture(page,`04-task-${kind}-zh`,'Task answer, state, source records and unresolved checks');
     if(kind==='partial') {
-      await page.locator('.ask-source-details summary').first().click();
-      assert.ok((await page.locator('.ask-source-details').first().innerText()).includes('TASK_DEADLINE'));
+      await page.locator('[data-task-observation] .ask-source-details summary').first().click();
+      assert.ok((await page.locator('[data-task-observation] .ask-source-details').first().innerText()).includes('TASK_DEADLINE'));
       await capture(page,'05-field-evidence','Expanded exact quote, field roles and source version');
-      await page.locator('.ask-source-details summary').first().click();
+      await page.locator('[data-task-observation] .ask-source-details summary').first().click();
       await page.locator('#ask-language').selectOption('en');
       text=await page.locator('#ask-result').innerText();
       assert.ok(text.includes(baseline?'Unconfirmed. This investigation does not grant approval.':'Task status: unconfirmed'));
@@ -122,7 +127,7 @@ async function taskCase(kind) {
         await capture(page,'08-original-source','Open source and switch interface language without returning to candidate view');
         await page.locator('[data-screen="ask"]').click();
         await page.locator('[data-action="reopen-task"]').click();
-        await page.locator('.task-answer').waitFor();
+        await page.locator('.task-answer').waitFor({timeout:90000});
         const sources=(await (await page.request.get(server.url+'/api/sources')).json()).sources;
         const source=(await (await page.request.get(server.url+'/api/sources/'+sources[0].source_id)).json()).source;
         await page.request.put(server.url+'/api/sources/'+source.source_id,{data:{name:source.name,content:source.content+'\n[2029-06-06T09:00:00Z] 林枫: 公开合成来源已更新。'}});
@@ -141,13 +146,17 @@ async function taskCase(kind) {
         await capture(page,'10-workspace-isolation','New workspace has no previous task pointer or evidence');
       }
     }
-  } finally {if(page)await page.close();server.stop();}
+  } finally {if(page)await page.close();await server.stop();}
+}
+async function openReview(page) {
+  await page.locator('[data-screen="sources"]').click();
+  await page.locator('button[data-action="back-review"]').click();
 }
 async function workflow() {
   const server=await host(['scripts/demo_stale_revalidation.py','--directory',path.join(root,'workflow-db')]);let page;
   try {
     page=await pageFor(server.url);
-    await page.locator('[data-screen="review"]').click();
+    await openReview(page);
     await page.locator('[data-action="revalidate-decision"]').waitFor();
     await capture(page,'11-review-attention','Pending candidates and immediate source-changed warning');
     await page.locator('[data-action="revalidate-decision"]').click();
@@ -178,20 +187,75 @@ async function workflow() {
     await capture(page,'14-historical-language','Language switch preserves the queried historical date and result scope');
     await page.locator('#timeline-date').fill('');
     await page.locator('#timeline-as-of button[type="submit"]').click();
+    await page.waitForFunction(() => document.querySelector('[data-action="ask-decision"]')?.dataset.asOf === '');
     assert.equal(await page.locator('[data-action="ask-decision"]').getAttribute('data-relation'), 'uses supplier');
     await page.locator('[data-action="ask-decision"]').click();
+    await reviewedAsk(page);
+  } finally {if(page)await page.close();await server.stop();}
+}
+async function reviewedAsk(page) {
+  try {
     await page.locator('#ask-query').fill('What supplier are we currently using?');
     await page.locator('#ask-submit-button').click();
-    await page.locator('.ask-answer').waitFor();
+    await page.waitForFunction(() => document.querySelector('#ask-result')?.textContent.includes('Wrenwell'), undefined, {timeout:30000});
     assert.ok((await page.locator('#ask-result').innerText()).includes('Wrenwell'));
     await capture(page,'15-ask-reviewed','Reviewed supplier lookup with evidence');
+    await page.evaluate(() => localStorage.setItem('linkloom.tasks.reviewer', 'public-browser-reviewer'));
+    await page.locator('#feedback-panel > summary').click();
+    await page.locator('#feedback-term').fill('供方');
+    await page.locator('#feedback-relation').selectOption('uses supplier');
+    await page.locator('#feedback-form button[type="submit"]').click();
+    await page.locator('[data-action="feedback-approve"]').waitFor();
+    assert.ok(await page.locator('#feedback-panel').isVisible());
+    assert.equal(await page.locator('#feedback-panel').evaluate(element => element.open), true);
+    assert.equal(await page.locator('[data-action="feedback-revoke"]').count(), 0, 'submission must remain pending');
+    assert.ok((await page.locator('#feedback-identity').innerText()).includes('public-browser-reviewer'));
+    await page.locator('[data-action="feedback-reject"]').click();
+    await page.getByText('已拒绝 / Rejected').waitFor();
+    await page.locator('#ask-submit-button').click();
+    await page.waitForFunction(() => document.querySelector('#ask-result')?.textContent.includes('Wrenwell'), undefined, {timeout:30000});
+    assert.ok((await page.locator('#ask-result').innerText()).includes('Wrenwell'));
+    await capture(page,'15-terminology-lifecycle','Correction reuses local identity, stays pending, requires a separate explicit review and preserves the question');
     await page.setViewportSize({width:390,height:844});
     await capture(page,'16-ask-mobile','390px reviewed answer and composer');
     await page.setViewportSize({width:1440,height:1000});
-    await page.locator('[data-screen="review"]').click();
+    await openReview(page);
     await page.locator('#interface-language').selectOption('zh');
     await capture(page,'17-review-complete-zh','No stale decision remains after separate approval');
-  } finally {if(page)await page.close();server.stop();}
+  } catch (error) {
+    await fs.writeFile(path.join(root,'ask-failure.txt'), await page.locator('body').innerText());
+    await page.screenshot({path:path.join(root,'ask-failure.png'),fullPage:true});
+    throw error;
+  }
+}
+async function resumeWorkflow() {
+  const database = process.argv.find(value => value.startsWith('--resume-workflow-db='))?.slice(21);
+  assert.ok(database, 'Pass the already-approved synthetic workflow database to resume');
+  // Restore the exact frozen relation resolver used to seed this synthetic database.
+  // The default CLI resolver intentionally rejects relations outside its own catalogue.
+  const resumeCode = [
+    'import json,sys', 'from pathlib import Path',
+    'from linkloom.ui.product import ProductApplication',
+    'from linkloom.ui.server import create_http_server',
+    'from linkloom.semantic_ingestion.relations import FrozenRelationResolver',
+    'from tests.integration.test_product_application_flow import _UnusedRunBackend',
+    'app=ProductApplication(database_path=Path(sys.argv[1]), extractor=None, relation_resolver=FrozenRelationResolver(("uses supplier",), schema_version="product-test-relations/v1"))',
+    'server=create_http_server(_UnusedRunBackend(), product_app=app, port=0)',
+    'print(json.dumps({"url":f"http://127.0.0.1:{server.server_port}"}),flush=True)',
+    'server.serve_forever()'
+  ].join('; ');
+  const server = await host(['-u','-c',resumeCode,path.resolve(database)]); let page;
+  try {
+    page = await pageFor(server.url);
+    await page.locator('[data-screen="ask"]').click();
+    await page.locator('#ask-form').waitFor();
+    await page.locator('#ask-advanced > summary').click();
+    const config = await (await page.request.get(server.url+'/api/product/ask/config')).json();
+    const selected = config.scopes.findIndex(slot => slot.relation === 'uses supplier');
+    assert.ok(selected >= 0);
+    await page.locator('#ask-slot').selectOption(String(selected));
+    await reviewedAsk(page);
+  } finally {if(page)await page.close();await server.stop();}
 }
 async function freshAndReplay() {
   const server=await host(['-m','linkloom.ui','--database',path.join(root,'fresh.sqlite'),'--port','0']);let page;
@@ -203,7 +267,7 @@ async function freshAndReplay() {
     await page.locator('#workspace-create button[type="submit"]').click();
     await page.locator('#source-create').waitFor();
     await capture(page,'19-empty-sources-zh','Chinese source empty state and save-only import');
-    await page.locator('[data-screen="review"]').click();
+    await openReview(page);
     await page.getByRole('heading',{name:'暂无待审核候选'}).waitFor();
     await capture(page,'20-empty-review-zh','Empty review queue, supporting proposals and attention state');
     await page.locator('[data-screen="decisions"]').click();
@@ -211,6 +275,7 @@ async function freshAndReplay() {
     await capture(page,'21-empty-decisions-zh','Empty Decision Memory has a clear next step');
     await page.locator('[data-screen="ask"]').click();
     await page.locator('#ask-query').fill('调查会议中的交付任务');
+    if (!(await page.locator('#ask-advanced').evaluate(el => el.open))) await page.locator('#ask-advanced > summary').click();
     await page.locator('#ask-domain').selectOption('tasks');
     await page.locator('#ask-submit-button').click();
     await page.getByRole('heading',{name:'请先添加来源'}).waitFor();
@@ -223,20 +288,21 @@ async function freshAndReplay() {
     await capture(page,'22-saved-source-zh','Source saves locally while extraction remains unavailable');
     await page.locator('[data-screen="ask"]').click();
     await page.locator('#ask-query').fill('调查会议中的交付任务');
+    if (!(await page.locator('#ask-advanced').evaluate(el => el.open))) await page.locator('#ask-advanced > summary').click();
     await page.locator('#ask-domain').selectOption('tasks');
     await page.locator('#ask-submit-button').click();
     await page.getByRole('heading',{name:'当前无法使用任务调查'}).waitFor();
     await capture(page,'22-task-unavailable','Immediate unavailable reason with setup instructions expandable');
-  } finally {if(page)await page.close();server.stop();}
+  } finally {if(page)await page.close();await server.stop();}
 }
 (async()=>{
   await fs.mkdir(root,{recursive:false});
-  browser=await chromium.launch({headless:true,...(process.env.LINKLOOM_CHROMIUM_EXECUTABLE?{executablePath:process.env.LINKLOOM_CHROMIUM_EXECUTABLE,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-zygote','--single-process']}: {})});
+  browser=await chromium.launch({headless:true,...(process.env.LINKLOOM_CHROMIUM_EXECUTABLE?{executablePath:process.env.LINKLOOM_CHROMIUM_EXECUTABLE}: {})});
   report.browser=browser.version();
   context=await browser.newContext();
   try {
-    for (const kind of baseline?['partial']:['partial','unknown','conflict','model-conflict','p4']) await taskCase(kind);
-    if(!baseline) {await workflow();await freshAndReplay();}
+    for (const kind of baseline ? ['partial'] : ['partial','unknown','conflict','model-conflict','p4'].filter(kind => !selectedCases || selectedCases.includes(kind))) await taskCase(kind);
+    if(!baseline) {if (!selectedCases || selectedCases.includes('workflow')) await workflow(); if (selectedCases?.includes('workflow-resume')) await resumeWorkflow(); if (!selectedCases || selectedCases.includes('fresh')) await freshAndReplay();}
     assert.deepEqual(report.console_errors,[]);
     report.status='PASS';
   } catch(error) {report.status='FAIL';report.error=error.stack;throw error;}

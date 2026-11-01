@@ -6,13 +6,13 @@
    Run: node tests/ui/tasks_browser.cjs [fresh-output-directory]
 */
 const {strict: assert} = require('node:assert');
-const {spawn} = require('node:child_process');
+const {spawnHostProcess, stopHostProcess} = require('./browser_host.cjs');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
 async function startHost(directory) {
   const checkout = path.resolve(__dirname, '../..');
-  const child = spawn(process.env.LINKLOOM_TEST_PYTHON || 'python',
+  const child = spawnHostProcess(process.env.LINKLOOM_TEST_PYTHON || 'python',
     ['-m', 'tests.task_mvp_browser_server', '--root', directory, '--port', '0'], {
       cwd: checkout,
       env: {...process.env, PYTHONPATH: [path.join(checkout, 'src'), checkout].join(path.delimiter),
@@ -21,21 +21,27 @@ async function startHost(directory) {
     });
   let stderr = '';
   child.stderr.on('data', value => { stderr += value.toString('utf8'); });
-  const info = await new Promise((resolve, reject) => {
-    let stdout = '';
-    const timer = setTimeout(() => { child.kill(); reject(new Error('Task fixture timeout: ' + stderr)); }, 45000);
-    child.stdout.on('data', value => {
-      stdout += value.toString('utf8');
-      const line = stdout.split(/\r?\n/).find(value => value.startsWith('{') && value.endsWith('}'));
-      if (line) {clearTimeout(timer); resolve(JSON.parse(line));}
+  try {
+    const info = await new Promise((resolve, reject) => {
+      let stdout = '';
+      const timer = setTimeout(() => reject(new Error('Task fixture timeout: ' + stderr)), 45000);
+      child.stdout.on('data', value => {
+        stdout += value.toString('utf8');
+        const line = stdout.split(/\r?\n/).find(value => value.startsWith('{') && value.endsWith('}'));
+        if (line) {
+          clearTimeout(timer);
+          try { resolve(JSON.parse(line)); } catch (error) { reject(error); }
+        }
+      });
+      child.on('error', error => {clearTimeout(timer); reject(error);});
+      child.on('exit', code => {clearTimeout(timer); reject(new Error(`Task fixture exited ${code}: ${stderr}`));});
     });
-    child.on('error', error => {clearTimeout(timer); reject(error);});
-    child.on('exit', code => {clearTimeout(timer); reject(new Error(`Task fixture exited ${code}: ${stderr}`));});
-  });
-  return {...info, stop: async () => {
-    if (child.exitCode !== null) return;
-    await new Promise(resolve => {child.once('exit', resolve); child.kill();});
-  }};
+    return {...info, stop: () => stopHostProcess(child)};
+  } catch (error) {
+    try { await stopHostProcess(child); }
+    catch (cleanupError) { error.message += '; host cleanup failed: ' + cleanupError.message; }
+    throw error;
+  }
 }
 
 async function requestJson(page, fixture, suffix) {
@@ -61,12 +67,15 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   });
   await page.goto(fixture.url + '/tasks');
   await page.getByTestId('candidate-' + fixture.candidate_a).waitFor();
+  const firstCandidate = page.getByTestId('candidate-' + fixture.candidate_a).getByTestId('candidate-select');
+  if (await firstCandidate.getAttribute('aria-expanded') !== 'true') await firstCandidate.click();
   await page.locator('#identity').focus();
   assert.equal(await page.locator('#identity').evaluate(el => el === document.activeElement), true);
   await page.keyboard.press('Tab');
   assert.equal(await page.evaluate(() => document.activeElement === document.body), false);
   await capture('01-candidates');
   await page.getByTestId('processing-panel').getByTestId('candidate-create').click();
+  await page.getByTestId('review-form').locator('details.review-checks > summary').click();
   await page.getByTestId('review-reason').waitFor();
   assert.equal(await page.getByTestId('review-reason').inputValue(), '按原文确认，未修改');
   await page.getByTestId('confirm-review').click();
@@ -85,19 +94,33 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   await page.locator('[data-action="tab-tasks"]').click();
   await page.getByTestId('task-' + taskId).waitFor();
   await page.locator('#tasks-app[aria-busy="false"]').waitFor();
-  assert.match(await page.locator('#tasks-app').innerText(), /2\. 按负责人/);
+  assert.match(await page.locator('#tasks-app').innerText(), /按负责人/);
   assert.ok(await page.getByTestId('task-' + taskId).getByText('负责人：李明', {exact: true}).isVisible());
   await capture('02-owner-list');
 
   await page.locator('[data-action="tab-candidates"]').click();
-  await page.getByTestId('candidate-' + fixture.candidate_b).getByTestId('candidate-select').click();
+  const updateCandidate = page.getByTestId('candidate-' + fixture.candidate_b).getByTestId('candidate-select');
+  if (await updateCandidate.getAttribute('aria-expanded') !== 'true') await updateCandidate.click();
   await page.getByTestId('processing-panel').getByTestId('candidate-merge').click();
+  assert.equal(await page.getByTestId('merge-target').inputValue(), '');
+  assert.equal(await page.getByTestId('merge-diff').count(), 0);
+  await page.locator('[data-action="cancel-form"]').click();
+  await page.getByTestId('processing-panel').getByTestId('choose-same-task').click();
+  await page.waitForFunction(() => {const f = window.linkloomTasksApp.state.form; return f && !f.previewPending && f.preview && f.applyFields.join(',') === 'owner,deadline';});
+  assert.equal(await page.getByTestId('merge-target').inputValue(), taskId);
+  assert.equal(await page.getByTestId('merge-field-owner').isChecked(), true);
+  assert.equal(await page.getByTestId('merge-field-deadline').isChecked(), true);
+  assert.equal(await page.getByTestId('merge-field-title').count(), 0);
+  await page.locator('[data-action="cancel-form"]').click();
+  await page.getByTestId('processing-panel').getByTestId('candidate-merge').click();
+  assert.equal(await page.getByTestId('merge-target').inputValue(), '');
   await page.getByTestId('merge-target').focus();
   await page.getByTestId('merge-target').selectOption(taskId);
   assert.equal(await page.getByTestId('merge-target').evaluate(el => el === document.activeElement), true);
   await page.getByTestId('merge-field-owner').check();
   assert.equal(await page.getByTestId('merge-field-owner').evaluate(el => el === document.activeElement), true);
   await page.getByTestId('merge-field-deadline').check();
+  await page.getByTestId('review-form').locator('details.review-checks > summary').click();
   await page.getByTestId('review-reason').focus();
   assert.equal(await page.getByTestId('merge-preview').count(), 0);
   await page.waitForFunction(() => {const f = window.linkloomTasksApp.state.form; return f && !f.previewPending && f.preview && f.applyFields.join(',') === 'owner,deadline';});
@@ -129,6 +152,8 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
     assert.equal(event.actor, '页面审核人');
   }
   assert.equal(await page.getByTestId('task-event').count(), 2);
+  assert.match(await page.getByTestId('task-event').first().innerText(), /创建 · 来自/);
+  assert.match(await page.getByTestId('task-event').nth(1).innerText(), /合并 · 来自/);
   assert.equal(await page.getByTestId('undo-preview').count(), 1);
   for (const summary of await page.locator('[data-testid="task-event"] > details.evidence > summary').all()) await summary.click();
   assert.ok(await page.getByText(fixture.quote_a, {exact: true}).first().isVisible());
@@ -184,7 +209,7 @@ async function main() {
     const capture = async name => {
       await page.locator('#tasks-app[aria-busy="false"]').waitFor();
       const views = {
-        '01-candidates': {title: '待确认', anchor: '.page-intro'},
+        '01-candidates': {title: '待确认', anchor: '.tasks-heading'},
         '02-created': {title: '确认成功，不自动跳转', anchor: '#notice'},
         '02-owner-list': {title: '按负责人', anchor: '#task-list-heading'},
         '03-merge-preview': {title: '合并预览', anchor: '[data-testid="review-form"]'},
@@ -194,7 +219,7 @@ async function main() {
         '07-mobile-detail': {title: '移动端任务详情', anchor: '#detail-heading'},
         '09-mobile-processing': {title: '移动端处理面板与三个动作', anchor: '[data-testid="processing-panel"]'},
         '10-mobile-long-identity': {title: '移动端长姓名换行检查', anchor: '.site-header'},
-        '08-mobile-candidates': {title: '移动端待确认主列表', anchor: '.page-intro'},
+        '08-mobile-candidates': {title: '移动端待确认主列表', anchor: '.tasks-heading'},
       };
       const view = views[name];
       if (name === '04-merged-history') {

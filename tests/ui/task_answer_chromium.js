@@ -4,8 +4,9 @@ async page => {
   const check = (condition, message) => {if (!condition) throw new Error(message);};
   const base = new URL(page.url()).origin;
   check(new URL(base).hostname === '127.0.0.1', 'Synthetic local host required');
-  await page.getByRole('button', {name: 'Ask', exact: true}).click();
+  await page.goto(base+'/?lang=en#ask');
   await page.locator('#ask-query').fill('请调查这几次会议里交付任务如何延续，截止日期的变动是否有可靠依据？');
+  if (!(await page.locator('#ask-advanced').evaluate(el => el.open))) await page.locator('#ask-advanced > summary').click();
   await page.locator('#ask-domain').selectOption('tasks');
   await page.locator('#ask-submit-button').click();
   await page.locator('.task-answer').waitFor();
