@@ -8,6 +8,11 @@ import bench_rerank as bench
 from linkloom.retrieval_v2.models import RetrievedEvidence
 from linkloom.rerank.base import score_candidates, RerankError
 
+@pytest.fixture(autouse=True)
+def invented_memory_snapshot(monkeypatch):
+    # Unit tests verify harness bookkeeping; psutil remains a rerank-only dependency.
+    monkeypatch.setattr(bench, 'memory', lambda: {'available_mib': 1024., 'rss_mib': 32.})
+
 
 def hit(i):return RetrievedEvidence(str(i),f's{i}',f'/s{i}',1/(61+i),i+1,'hybrid',str(i))
 
