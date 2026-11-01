@@ -14,7 +14,7 @@ def _json(url: str) -> dict:
         return json.loads(response.read().decode("utf-8"))
 
 
-def test_local_server_serves_assets_and_demo_product_states() -> None:
+def test_api_only_server_reports_unavailable_ui_and_keeps_demo_api_states() -> None:
     server = create_http_server(
         DemoRunBackend(DemoCase.load_mps_001()),
         host="127.0.0.1",
@@ -24,106 +24,18 @@ def test_local_server_serves_assets_and_demo_product_states() -> None:
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
     try:
-        with urlopen(base + "/", timeout=60) as response:
-            html = response.read().decode("utf-8")
-            assert response.headers["Content-Security-Policy"].startswith("default-src 'self'")
-        assert "LinkLoom" in html
-        assert html.index("/i18n.js") < html.index("/app.js")
-        with urlopen(base + "/i18n.js", timeout=60) as response:
-            localization = response.read().decode("utf-8")
-            assert response.headers["Content-Type"].startswith("text/javascript")
-        assert "zh-CN" in localization
-        assert "找到最终决定" in localization
-        assert "/app.js" in html
+        try:
+            urlopen(base + "/", timeout=60)
+        except HTTPError as error:
+            assert error.code == 503
+            assert error.headers["Content-Security-Policy"].startswith("default-src 'self'")
+            payload = json.loads(error.read().decode("utf-8"))
+            assert payload["error"]["code"] == "PRODUCT_UI_UNAVAILABLE"
+        else:
+            raise AssertionError("API-only server should not expose a retired page")
         assert _json(base + "/api/context")["workspace"]["display_name"] == "Atlas Lantern"
         assert _json(base + "/api/demo/success")["kind"] == "success"
         assert _json(base + "/api/demo/insufficient")["kind"] == "insufficient"
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2)
-
-
-def test_mobile_action_rows_keep_visible_field_labels() -> None:
-    server = create_http_server(
-        DemoRunBackend(DemoCase.load_mps_001()),
-        host="127.0.0.1",
-        port=0,
-    )
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    base = f"http://127.0.0.1:{server.server_port}"
-    try:
-        with urlopen(base + "/app.js", timeout=60) as response:
-            script = response.read().decode("utf-8")
-        with urlopen(base + "/app.css", timeout=60) as response:
-            stylesheet = response.read().decode("utf-8")
-
-        assert 'data-label="${escapeHtml(t("owner"))}"' in script
-        assert 'data-label="${escapeHtml(t("due"))}"' in script
-        assert 'data-label="${escapeHtml(t("status"))}"' in script
-        assert 'content: attr(data-label)' in stylesheet
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2)
-
-
-def test_frontend_retry_and_mobile_inspector_keep_safe_state_boundaries() -> None:
-    server = create_http_server(
-        DemoRunBackend(DemoCase.load_mps_001()),
-        host="127.0.0.1",
-        port=0,
-    )
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    base = f"http://127.0.0.1:{server.server_port}"
-    try:
-        with urlopen(base + "/app.js", timeout=60) as response:
-            script = response.read().decode("utf-8")
-
-        assert "function retryFromError()" in script
-        assert "function syncInspectorMode()" in script
-        assert 'inspector.setAttribute("aria-hidden", "true")' in script
-        assert "inspector.inert = true" in script
-        assert 'inspector.setAttribute("role", "dialog")' in script
-        assert 'inspector.setAttribute("aria-modal", "true")' in script
-        assert 'document.querySelector(".inspector-close")?.focus()' in script
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=2)
-
-
-def test_frontend_uses_one_localized_renderer_and_preserves_source_truth() -> None:
-    server = create_http_server(
-        DemoRunBackend(DemoCase.load_mps_001()),
-        host="127.0.0.1",
-        port=0,
-    )
-    thread = Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    base = f"http://127.0.0.1:{server.server_port}"
-    try:
-        with urlopen(base + "/app.js", timeout=60) as response:
-            script = response.read().decode("utf-8")
-        with urlopen(base + "/app.css", timeout=60) as response:
-            stylesheet = response.read().decode("utf-8")
-
-        assert "LinkLoomI18n" in script
-        assert "function setLocale(" in script
-        assert "document.documentElement.lang" in script
-        assert "window.localStorage.setItem" in script
-        assert "window.history.replaceState" in script
-        assert 'data-action="switch-locale"' in script
-        assert "i18n.locationLabel" in script
-        assert "source.quote" in script
-        assert 'html[lang="zh-CN"]' in stylesheet
-        assert '--display: var(--sans)' in stylesheet
-        assert '.context-bar.has-provenance' in stylesheet
-        assert 'context-bar${showProvenance ? " has-provenance" : ""}' in script
-        assert ".locale-switch" in stylesheet
-        assert 'content: attr(data-short-label)' in stylesheet
     finally:
         server.shutdown()
         server.server_close()

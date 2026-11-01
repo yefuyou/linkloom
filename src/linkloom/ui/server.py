@@ -32,11 +32,6 @@ STATIC_FILES = {
     "/product.js": ("product.js", "text/javascript; charset=utf-8"),
     "/product-task-result.js": ("product-task-result.js", "text/javascript; charset=utf-8"),
     "/product-task-review.js": ("product-task-review.js", "text/javascript; charset=utf-8"),
-    "/legacy-ask": ("index.html", "text/html; charset=utf-8"),
-    "/index.html": ("index.html", "text/html; charset=utf-8"),
-    "/app.css": ("app.css", "text/css; charset=utf-8"),
-    "/i18n.js": ("i18n.js", "text/javascript; charset=utf-8"),
-    "/app.js": ("app.js", "text/javascript; charset=utf-8"),
 }
 
 
@@ -244,7 +239,12 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         if path in STATIC_FILES:
             filename, content_type = STATIC_FILES[path]
             if path == "/" and self.server.product_app is None:
-                filename = "index.html"
+                self._send_error_payload(
+                    HTTPStatus.SERVICE_UNAVAILABLE,
+                    "PRODUCT_UI_UNAVAILABLE",
+                    "The Product UI is unavailable. Start the server with a product database.",
+                )
+                return
             try:
                 body = (STATIC_ROOT / filename).read_bytes()
             except OSError:

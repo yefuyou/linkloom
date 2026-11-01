@@ -133,8 +133,6 @@ python -m linkloom.ui --port 8765 --database work/product.sqlite --allow-externa
 These opt-ins send source text to the configured Gemini model and can incur
 provider costs; investigation also requires per-request permission in Ask.
 The product launcher pins its configured model and has no provider settings UI.
-For a key-free **older replay**, open [legacy Ask](http://127.0.0.1:8765/legacy-ask);
-it does not run the current source ingestion/review workflow.
 
 ## How it works
 

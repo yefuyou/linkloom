@@ -227,20 +227,6 @@ async function freshAndReplay() {
     await page.locator('#ask-submit-button').click();
     await page.getByRole('heading',{name:'当前无法使用任务调查'}).waitFor();
     await capture(page,'22-task-unavailable','Immediate unavailable reason with setup instructions expandable');
-    await page.goto(server.url+'/legacy-ask?lang=zh');
-    await page.locator('.initial-view').waitFor();
-    assert.equal(await page.locator('.eyebrow').count(),0);
-    await capture(page,'23-legacy-start-zh','Legacy replay uses a single heading and concise input guidance');
-    await page.locator('#recover-button').click();
-    await page.locator('#decision-title').waitFor();
-    await capture(page,'24-legacy-answer-zh','Legacy offline replay result and source inspector');
-    await page.setViewportSize({width:390,height:844});
-    await capture(page,'25-legacy-mobile-zh','Legacy replay mobile layout');
-    await page.setViewportSize({width:1440,height:1000});
-    await page.route('**/api/context',route=>route.abort());
-    await page.goto(server.url+'/legacy-ask?lang=en');
-    await page.locator('.state-message[role="alert"], .state-message [role="alert"]').waitFor();
-    await capture(page,'26-network-error','Operational failure remains separate from insufficient evidence');
   } finally {if(page)await page.close();server.stop();}
 }
 (async()=>{
