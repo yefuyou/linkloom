@@ -1,0 +1,425 @@
+{
+  "kind": "ANTIGRAVITY_PROPOSAL_VISUAL_QA_NOT_PRODUCT_ACCEPTANCE",
+  "captures": [
+    {
+      "view": "meetings",
+      "file": "01-meetings-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "meetings",
+      "file": "01-meetings-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "kanban",
+      "file": "02-kanban-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "kanban",
+      "file": "02-kanban-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "owners",
+      "file": "02-owners-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "owners",
+      "file": "02-owners-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "merge",
+      "file": "02-merge-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "merge",
+      "file": "02-merge-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "undo",
+      "file": "02-undo-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "undo",
+      "file": "02-undo-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "decisions",
+      "file": "03-decisions-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "decisions",
+      "file": "03-decisions-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "ask",
+      "file": "04-ask-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "ask",
+      "file": "04-ask-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "answer",
+      "file": "04-answer-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "answer",
+      "file": "04-answer-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": false,
+      "offscreen": [],
+      "body_bg": "rgb(238, 240, 243)",
+      "font": "\"Noto Sans SC\", system-ui, -apple-system, sans-serif",
+      "cards": [
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        },
+        {
+          "border": "0px",
+          "radius": "12px",
+          "bg": "rgb(255, 255, 255)"
+        }
+      ]
+    },
+    {
+      "view": "ask-external",
+      "file": "04-ask-external-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    }
+  ],
+  "issues": [],
+  "page_errors": [],
+  "external_requests": [],
+  "status": "PASS",
+  "external_permission": {
+    "visible": true,
+    "checked": false
+  }
+}
