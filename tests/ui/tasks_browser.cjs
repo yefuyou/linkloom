@@ -66,18 +66,22 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   await page.keyboard.press('Tab');
   assert.equal(await page.evaluate(() => document.activeElement === document.body), false);
   await capture('01-candidates');
-  await page.getByTestId('candidate-' + fixture.candidate_a).getByTestId('candidate-create').click();
+  await page.getByTestId('processing-panel').getByTestId('candidate-create').click();
   await page.getByTestId('review-reason').waitFor();
   assert.equal(await page.getByTestId('review-reason').inputValue(), '按原文确认，未修改');
   await page.getByTestId('confirm-review').click();
   await page.getByText('以 页面审核人 身份操作', {exact: false}).waitFor();
-  await page.getByTestId('task-detail-panel').waitFor();
+  await page.getByTestId('view-task').waitFor();
   await page.locator('#tasks-app[aria-busy="false"]').waitFor();
+  assert.equal(await page.getByTestId('task-detail-panel').count(), 0);
+  assert.equal(await page.getByTestId('processing-panel').count(), 1);
   const createdTasks = await requestJson(page, fixture, '/tasks');
   assert.equal(createdTasks.items.length, 1);
   const taskId = createdTasks.items[0].task.id;
   assert.equal(createdTasks.items[0].task.owner, '李明');
   await capture('02-created');
+  await page.getByTestId('view-task').click();
+  await page.getByTestId('task-detail-panel').waitFor();
   await page.locator('[data-action="tab-tasks"]').click();
   await page.getByTestId('task-' + taskId).waitFor();
   await page.locator('#tasks-app[aria-busy="false"]').waitFor();
@@ -86,18 +90,29 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   await capture('02-owner-list');
 
   await page.locator('[data-action="tab-candidates"]').click();
-  await page.getByTestId('candidate-' + fixture.candidate_b).getByTestId('candidate-merge').click();
+  await page.getByTestId('candidate-' + fixture.candidate_b).getByTestId('candidate-select').click();
+  await page.getByTestId('processing-panel').getByTestId('candidate-merge').click();
+  await page.getByTestId('merge-target').focus();
   await page.getByTestId('merge-target').selectOption(taskId);
+  assert.equal(await page.getByTestId('merge-target').evaluate(el => el === document.activeElement), true);
   await page.getByTestId('merge-field-owner').check();
+  assert.equal(await page.getByTestId('merge-field-owner').evaluate(el => el === document.activeElement), true);
   await page.getByTestId('merge-field-deadline').check();
-  await page.getByTestId('merge-preview').click();
+  await page.getByTestId('review-reason').focus();
+  assert.equal(await page.getByTestId('merge-preview').count(), 0);
+  await page.waitForFunction(() => {const f = window.linkloomTasksApp.state.form; return f && !f.previewPending && f.preview && f.applyFields.join(',') === 'owner,deadline';});
   await page.getByTestId('merge-diff').waitFor();
+  assert.equal(await page.getByTestId('review-reason').evaluate(el => el === document.activeElement), true);
   await page.locator('#tasks-app[aria-busy="false"]').waitFor();
   const previewText = await page.locator('#tasks-app').innerText();
   for (const value of ['李明', '王芳', '2026-10-12', '2026-10-16']) assert.ok(previewText.includes(value), value);
   assert.match(await page.getByTestId('review-reason').inputValue(), /^合并入已有任务：.*负责人.*截止时间/);
   await capture('03-merge-preview');
   await page.getByTestId('merge-confirm').click();
+  await page.getByTestId('view-task').waitFor();
+  await page.locator('#tasks-app[aria-busy="false"]').waitFor();
+  assert.equal(await page.getByTestId('task-detail-panel').count(), 0);
+  await page.getByTestId('view-task').click();
   await page.getByTestId('task-detail-panel').waitFor();
   await page.locator('#tasks-app[aria-busy="false"]').waitFor();
   await page.waitForFunction(() => document.querySelector('[data-testid="task-owner"]').textContent.includes('王芳'));
@@ -113,10 +128,15 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
     assert.equal(event.meeting_time, '2026-10-10T02:00:00+00:00');
     assert.equal(event.actor, '页面审核人');
   }
+  assert.equal(await page.getByTestId('task-event').count(), 2);
+  assert.equal(await page.getByTestId('undo-preview').count(), 1);
   for (const summary of await page.locator('[data-testid="task-event"] > details.evidence > summary').all()) await summary.click();
   assert.ok(await page.getByText(fixture.quote_a, {exact: true}).first().isVisible());
   assert.ok(await page.getByText(fixture.quote_b, {exact: true}).first().isVisible());
-  assert.match(await page.locator('[data-testid="task-event"] .quote').first().innerText(), /行 1/);
+  const technical = page.locator('[data-testid="task-event"] .quote details').first();
+  assert.equal(await technical.getAttribute('open'), null);
+  await technical.locator('summary').click();
+  assert.match(await technical.innerText(), /行 1/);
   await capture('04-merged-history');
 
   await page.getByTestId('undo-preview').first().click();
@@ -136,6 +156,7 @@ async function runTaskWorkflow(page, fixture, capture = async () => {}) {
   const retained = await requestJson(page, fixture, '/tasks/' + taskId + '/events');
   assert.ok(retained.items.length > history.items.length);
   assert.deepEqual(retained.items.slice(0, 3), history.items);
+  assert.equal(await page.getByTestId('task-event').count(), 3);
   assert.equal(identityPrompts, 1);
   const writes = posts.filter(post => /\/review$|\/undo$|\/status$/.test(post.path));
   assert.equal(writes.length, 3);
@@ -161,15 +182,18 @@ async function main() {
     page.on('pageerror', error => report.console_errors.push(error.message));
     page.on('console', message => {if (message.type() === 'error') report.console_errors.push(message.text());});
     const capture = async name => {
+      await page.locator('#tasks-app[aria-busy="false"]').waitFor();
       const views = {
         '01-candidates': {title: '待确认', anchor: '.page-intro'},
-        '02-created': {title: '任务详情', anchor: '#detail-heading'},
+        '02-created': {title: '确认成功，不自动跳转', anchor: '#notice'},
         '02-owner-list': {title: '按负责人', anchor: '#task-list-heading'},
         '03-merge-preview': {title: '合并预览', anchor: '[data-testid="review-form"]'},
         '04-merged-history': {title: '变化历史：负责人和期限的跨会议变更', anchor: '[data-testid="task-event"]:nth-child(2)'},
         '05-undo-preview': {title: '撤销预览', anchor: '[data-testid="review-form"]'},
         '06-restored': {title: '撤销后的任务详情', anchor: '#detail-heading'},
         '07-mobile-detail': {title: '移动端任务详情', anchor: '#detail-heading'},
+        '09-mobile-processing': {title: '移动端处理面板与三个动作', anchor: '[data-testid="processing-panel"]'},
+        '10-mobile-long-identity': {title: '移动端长姓名换行检查', anchor: '.site-header'},
         '08-mobile-candidates': {title: '移动端待确认主列表', anchor: '.page-intro'},
       };
       const view = views[name];
@@ -188,11 +212,16 @@ async function main() {
       report.steps.push(name);
     };
     Object.assign(report, await runTaskWorkflow(page, fixture, capture));
+    await page.evaluate(() => localStorage.setItem('linkloom.tasks.reviewer', '移动端长姓名核对'.repeat(12)));
+    await page.reload();
+    await page.getByTestId('task-detail-panel').waitFor();
     await page.setViewportSize({width: 390, height: 844});
     await capture('07-mobile-detail');
     await page.locator('[data-action="tab-candidates"]').click();
     await page.getByTestId('candidate-' + fixture.candidate_b).waitFor();
     await capture('08-mobile-candidates');
+    await capture('09-mobile-processing');
+    await capture('10-mobile-long-identity');
     assert.deepEqual(report.console_errors, []);
     report.status = 'PASS';
     console.log(`PASS: formal task create → merge → undo; ${report.steps.length} desktop/mobile captures; Chromium ${report.browser}`);
