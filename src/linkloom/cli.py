@@ -347,13 +347,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Evaluation mode. Offline is default; real mode is currently fail-closed.",
     )
 
-    writeback_parser = subparsers.add_parser("writeback", help="Writeback operations.")
-    writeback_subparsers = writeback_parser.add_subparsers(dest="writeback_command", required=True)
-    
-    wb_demo_parser = writeback_subparsers.add_parser("demo", help="Run writeback e2e demo.")
-    wb_demo_parser.add_argument("--output", type=Path, required=True, help="Output directory.")
-    wb_demo_parser.add_argument("--scenario", type=str, default="success", help="Scenario to run.")
-
     return parser
 
 
@@ -658,50 +651,6 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"Error: Evaluation failed safely: {error.__class__.__name__}", file=sys.stderr)
                 return 1
 
-        if args.command == "writeback":
-            if args.writeback_command == "demo":
-                from linkloom.mutations.e2e import E2EWritebackRunner
-                from linkloom.evaluation.writeback_eval import run_evaluation
-                if args.scenario == "all":
-                    metrics = run_evaluation(args.output)
-                    print(json.dumps(metrics, indent=2))
-                    print("Writeback Metrics: writeback_metrics.json")
-                    print("Failure Matrix: failure_matrix.json")
-                    return 0 if metrics["passed"] else 1
-                else:
-                    runner = E2EWritebackRunner(args.output)
-                    import tempfile
-                    with tempfile.TemporaryDirectory(prefix="linkloom_demo_") as temp_dir_str:
-                        temp_dir = Path(temp_dir_str)
-                        target_root = temp_dir / "target"
-                        backup_root = temp_dir / "backup"
-                        manifest = runner.run_e2e(
-                            target_root, backup_root, "APPROVE_DEFAULT", scenario=args.scenario
-                        )
-                        
-                        artifact_dir = args.output / ".artifacts" / "p7"
-                        artifact_dir.mkdir(parents=True, exist_ok=True)
-                    
-                    manifest_path = artifact_dir / "run_manifest.json"
-                    manifest["cli_artifact_ref"] = manifest_path.relative_to(args.output).as_posix()
-                    manifest_path.write_text(json.dumps(manifest, indent=2))
-                    
-                    if manifest.get("status") == "applied":
-                        print("Status: completed")
-                    else:
-                        print(f"Status: failed ({manifest.get('error_code')})")
-                        
-                    print(f"Writeback Run ID: {manifest.get('writeback_run_id', 'N/A')}")
-                    print(f"Trace Artifact: {manifest.get('trace_artifact_ref', 'N/A')}")
-                    print(f"Eval Artifact: {manifest.get('eval_artifact_ref', 'N/A')}")
-                    print(f"Manifest Path: {manifest_path}")
-                    
-                    passed_checks = False
-                    if args.scenario == "success":
-                        sc = manifest.get("scenario_checks", {})
-                        passed_checks = manifest.get("status") == "applied" and sc.get("apply_calls") == 1 and sc.get("writer_calls") == 1 and sc.get("before_sha256") != sc.get("after_sha256")
-                        
-                    return 0 if (manifest.get("status") == "applied" and passed_checks) else 1
 
         return 2
     except (ScannerError, LoaderError) as error:

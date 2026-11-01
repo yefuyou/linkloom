@@ -17,9 +17,9 @@ flowchart LR
   RP --> E
   E --> M["Metrics + Bad Cases"]
   M --> H["Human Review Report"]
-  H --> P["Approved Change Plan"]
-  P -. "future only" .-> W["Safe Writeback"]
 ```
+
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 Scanner 负责“事实索引”；Loader 负责“受 hash 约束的正文”；Agent 只负责“提出预测”；Evaluator 负责“对比 Gold”；Review 负责“让人做决定”。任何箭头都不允许反向绕过权限边界。
 

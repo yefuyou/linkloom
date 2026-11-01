@@ -1,5 +1,7 @@
 # SPEC: LinkLoom Portfolio Completion Master V2
 
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
+
 Status: **ACCEPTED AND FROZEN — Planning Baseline V2**.
 
 Independent Reviewer verdict: **`PASS_WITH_FINDINGS`**, with no blockers. The
@@ -335,31 +337,7 @@ be used as the acceptance fixture.
 
 ### Gate E — Human-In-The-Loop
 
-After a grounded result, the Agent may propose a bounded action update through:
-
-```text
-proposal -> preview -> exact human confirmation -> permission
-  -> backup -> apply -> audit -> rollback when required
-```
-
-Completion requires:
-
-- reuse of the existing ChangePlan/permission/writeback implementation rather
-  than a second write system;
-- the proposal identifies which statements are evidence-derived and which are
-  suggestions;
-- the preview is per-file and matches the exact approved operations;
-- approval names the plan identity, target root fingerprint/path, operation
-  set, and digest;
-- changed-source/stale-plan validation immediately precedes apply;
-- backup is created before the first write;
-- partial failure is visible and recoverable;
-- audit and tested byte-for-byte rollback evidence exist;
-- read-only commands cannot load or expose write-capable tools.
-
-Portfolio acceptance may use only a synthetic fixture. Real-vault mutation
-remains forbidden until canonical Milestone 6 is independently accepted and
-the human separately approves the exact plan ID, vault path, and operation.
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 ### Gate F — Agent Eval
 

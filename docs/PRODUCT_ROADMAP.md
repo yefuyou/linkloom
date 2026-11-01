@@ -633,8 +633,9 @@ request, rather than running every tool.
 Can Act is not limited to extracting existing checkboxes. Later approved slices
 may propose goal decomposition, knowledge-dependent tasks, small experiments,
 and feedback-to-reflection links. Each result must distinguish source-derived
-facts from AI suggestions, retain provenance, and remain reviewable before any
-write-back.
+facts from AI suggestions, retain provenance, and remain reviewable.
+
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 ### 4. Planned Project Files
 
@@ -677,81 +678,7 @@ The trace showing exactly which file and passage an extracted item came from.
 
 ## Historical Milestone 6: Modify Only After Confirmation
 
-### 1. User Problem
-
-The user wants help applying useful organization changes but cannot trust an AI
-that may silently rename, move, merge, or rewrite years of notes.
-
-### 2. Visible Result
-
-The user first sees a numbered, per-file change plan and line-by-line preview.
-Only the exact confirmed plan can run. After application, the user sees an audit
-record and can restore the previous state.
-
-### 3. Minimum Capabilities
-
-- Convert accepted suggestions into an immutable change plan.
-- Display a dry-run and per-file diff.
-- Require exact plan ID, vault path, and operation confirmation.
-- Verify source content versions before applying.
-- Create a recoverable backup before the first write.
-- Apply all operations transactionally where possible and stop safely on error.
-- Record audit evidence and support tested rollback.
-
-`Dry-run`:
-A preview of intended changes that does not modify any file.
-
-`Diff`:
-A line-by-line view of what will be added, removed, or moved.
-
-`Content version check`:
-A final check that a note has not changed since the preview was created.
-
-`Transaction`:
-A guarded operation that either completes as planned or reports and recovers
-from partial failure instead of pretending everything succeeded.
-
-### 4. Planned Project Files
-
-- `src/linkloom/mutations/plan.py`
-- `src/linkloom/mutations/preview.py`
-- `src/linkloom/mutations/permission.py`
-- `src/linkloom/mutations/apply.py`
-- `src/linkloom/mutations/rollback.py`
-- `src/linkloom/audit.py`
-- `tests/fixtures/mutation_vault/`
-- `tests/integration/test_permission_gate.py`
-- `tests/e2e/test_apply_and_rollback.py`
-- `docs/requirements/permissioned-vault-mutation/`
-
-### 5. Acceptance
-
-- A write attempt without exact confirmation is rejected.
-- Applied changes exactly match the approved preview.
-- A stale plan is rejected when any target file changed after preview.
-- An injected mid-operation failure produces a clear partial-failure record and
-  does not silently continue.
-- The mutation fixture can be restored byte-for-byte by the tested rollback.
-- A real vault remains forbidden until the complete Milestone 6 gate passes on
-  synthetic fixtures and the user separately approves the exact real path and
-  plan.
-
-### 6. Main Risks
-
-- A user or another program may edit files between preview and apply.
-- Renames may break links or attachments.
-- Partial writes may leave the vault inconsistent.
-- Backups may be incomplete or stored in an unsafe location.
-- Broad confirmation language may be mistaken for exact approval.
-
-### 7. Explicit Non-Goals
-
-- No automatic delete.
-- No unattended bulk rewrite.
-- No AI self-approval.
-- No hidden write tools in read-only commands.
-- No real-vault mutation before preview, confirmation, audit, and rollback are
-  independently accepted.
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 ## Where The Read-Only Vault Scanner Fits
 

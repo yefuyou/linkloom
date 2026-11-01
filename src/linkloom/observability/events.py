@@ -56,19 +56,6 @@ EVENT_TYPES = frozenset(
         "retrieval.completed",
         "decision_memory.completed",
         "context.assembled",
-        "writeback.proposed",
-        "writeback.previewed",
-        "writeback.approval.requested",
-        "writeback.approval.accepted",
-        "writeback.approval.rejected",
-        "writeback.checkpointed",
-        "writeback.resumed",
-        "writeback.hash_validated",
-        "writeback.started",
-        "writeback.completed",
-        "writeback.failed",
-        "writeback.verified",
-        "writeback.rollback",
     }
 )
 ACTORS = frozenset({"runtime", "service", "provider", "agent", "human"})

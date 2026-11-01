@@ -2,7 +2,9 @@
 
 > 模型版本：RUNTIME-MODEL-1.0  
 > 主要落地 Phase：P1–P4  
-> 长期扩展：P5 Memory、P6 Evaluation、P7 Safe Writeback
+> 长期扩展：P5 Memory、P6 Evaluation
+
+笔记库回写已退役，见 tag archive/notes-writeback-20261101
 
 ## 1. 为什么需要单独的 Runtime Model
 
