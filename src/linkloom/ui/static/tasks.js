@@ -67,7 +67,7 @@
     return messages[code] || (error.status === 409 ? '记录已经变化，请刷新并重新预览。' : error.status === 403 || error.status === 421 ? '请从本地 LinkLoom 页面访问。' : '请求未完成，请检查连接并刷新。');
   }
   function sourcesHtml(sources) {
-    return '<div class="source-list">' + (sources || []).map((source) => '<p>' + esc(source.source_name || source.source_id || '来源未提供') + ' · 会议时间 ' + esc(meetingDate(source.meeting_time)) + '</p>').join('') + '</div>';
+    return '<div class="source-list">' + (sources || []).map((source) => '<p>' + esc(source.source_name || '来源未提供') + ' · 会议时间 ' + esc(meetingDate(source.meeting_time)) + '</p>').join('') + '</div>';
   }
   function evidenceHtml(references, role) {
     if (!references || !references.length) return '<p class="muted">无原文引用' + (role === 'manual' ? '，此项由人工操作。' : '。') + '</p>';
@@ -76,7 +76,7 @@
       if (reference.message_id != null) position.push('发言 ' + reference.message_id);
       if (reference.line_start != null) position.push('行 ' + reference.line_start + (reference.line_end != null && reference.line_end !== reference.line_start ? '–' + reference.line_end : ''));
       if (reference.char_start != null) position.push('字符 ' + reference.char_start + (reference.char_end != null ? '–' + reference.char_end : ''));
-      return '<div class="quote"><p>' + esc(reference.source_name || '来源未提供') + ' · 会议时间 ' + esc(meetingDate(reference.meeting_time)) + '</p><blockquote>' + esc(reference.quote) + '</blockquote>' + (role === 'context' ? '<p>背景原文：字段值由人工确定，此引用不作为该值的原文依据。</p>' : '') + '<details><summary>版本与引用校验信息</summary><div>' + esc(position.join(' · ') || '位置未提供') + '</div><div>来源 ID：' + esc(reference.source_id || '未提供') + '</div><div>来源版本：' + esc(reference.source_version_id || '未提供') + '</div><div>引用哈希：' + esc(reference.quote_sha256 || '未提供') + '</div>' + (reference.source_sha256 ? '<div>来源哈希：' + esc(reference.source_sha256) + '</div>' : '') + '</details></div>';
+      return '<div class="quote"><p>' + esc(reference.source_name || '来源未提供') + ' · 会议时间 ' + esc(meetingDate(reference.meeting_time)) + '</p><blockquote>' + esc(reference.quote) + '</blockquote>' + (role === 'context' ? '<p>背景原文：字段值由人工确定，此引用不作为该值的原文依据。</p>' : '') + '<details><summary>校验信息</summary><div>' + esc(position.join(' · ') || '位置未提供') + '</div><div>来源 ID：' + esc(reference.source_id || '未提供') + '</div><div>来源版本：' + esc(reference.source_version_id || '未提供') + '</div><div>引用哈希：' + esc(reference.quote_sha256 || '未提供') + '</div>' + (reference.source_sha256 ? '<div>来源哈希：' + esc(reference.source_sha256) + '</div>' : '') + '</details></div>';
     }).join('');
   }
   function lowHtml(candidate) { return candidate.confidence === 'LOW' ? '<span class="badge low">低置信度</span><p class="muted">' + esc(candidate.confidence_reason || '请核对原文') + '</p>' : ''; }
@@ -100,7 +100,7 @@
     const root = doc.getElementById('tasks-app'), workspacePicker = doc.getElementById('workspace'), identityButton = doc.getElementById('identity'), notice = doc.getElementById('notice');
     let storage, storageAvailable = true;
     try { storage = Object.prototype.hasOwnProperty.call(environment, 'storage') ? environment.storage : global.localStorage; if (!storage) storageAvailable = false; } catch (_error) { storageAvailable = false; }
-    const state = {workspace: null, workspaces: [], epoch: 0, busy: false, loading: false, view: 'candidates', candidateState: 'pending', candidates: EMPTY_PAGE(), tasks: EMPTY_PAGE(), blockedReviews: new Set(), catalog: [], catalogRequest: 0, selection: null, previewRequest: 0, lastResult: null, events: EMPTY_PAGE(), candidateOffset: 0, taskOffset: 0, eventOffset: 0, targetOffset: 0, ownerMode: 'all', owner: '', status: '', detail: null, form: null, evidence: {}, identity: '', storageAvailable, receipt: null, notice: null, started: false, taskRequest: 0};
+    const state = {workspace: null, workspaces: [], epoch: 0, busy: false, loading: false, view: 'candidates', candidateState: 'pending', candidates: EMPTY_PAGE(), tasks: EMPTY_PAGE(), blockedReviews: new Set(), catalog: [], catalogRequest: 0, selection: null, previewRequest: 0, lastResult: null, events: EMPTY_PAGE(), recent: [], recentRequest: 0, candidateOffset: 0, taskOffset: 0, eventOffset: 0, targetOffset: 0, ownerMode: 'all', owner: '', status: '', detail: null, form: null, evidence: {}, identity: '', storageAvailable, receipt: null, notice: null, started: false, taskRequest: 0};
     try { if (storageAvailable) state.identity = (storage.getItem(STORAGE_KEY) || '').trim(); } catch (_error) { state.storageAvailable = false; }
     function identityLabel() {
       identityButton.textContent = state.identity ? '以 ' + state.identity + ' 身份操作 · 更改' : '设置操作身份';
@@ -159,7 +159,22 @@
     async function loadCatalog() {
       const epoch = state.epoch, number = ++state.catalogRequest;
       const items = await allPages('/api/product/tasks', () => current(epoch) && number === state.catalogRequest);
-      if (items) state.catalog = items;
+      if (items) { state.catalog = items; await loadRecent(); }
+    }
+    async function loadRecent() {
+      const epoch = state.epoch, number = ++state.recentRequest;
+      const valid = () => current(epoch) && number === state.recentRequest;
+      const lists = await Promise.all(state.catalog.map(async item => {
+        const events = await allPages('/api/product/tasks/' + id(item.task.id) + '/events', valid);
+        return (events || []).map(event => ({...event, task: item.task}));
+      }));
+      if (!valid()) return;
+      const grouped = new Map();
+      lists.flat().forEach((event, index) => {
+        const key = event.task.id + ':' + (event.operation_id || event.id || index);
+        if (!grouped.has(key)) grouped.set(key, []); grouped.get(key).push(event);
+      });
+      state.recent = Array.from(grouped.values()).sort((a, b) => new Date(b[0].created_at || 0) - new Date(a[0].created_at || 0)).slice(0, 12);
     }
     async function loadEvents(taskId, requestNumber = state.taskRequest) {
       const epoch = state.epoch;
@@ -200,22 +215,34 @@
       const meta = page.page;
       return '<div class="pager"><span>' + (page.items.length ? '第 ' + (meta.offset + 1) + '–' + (meta.offset + page.items.length) + ' 条' : '暂无记录') + '</span><div><button type="button" data-action="' + action + '" data-offset="' + Math.max(0, meta.offset - meta.limit) + '"' + (meta.offset === 0 ? ' disabled' : '') + '>上一页</button><button type="button" data-action="' + action + '" data-offset="' + meta.next_offset + '"' + (!meta.has_more ? ' disabled' : '') + '>下一页</button></div></div>';
     }
-    function sameTitleHtml(candidate) {
-      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<p class="same-title-hint">已有同名任务：' + esc(item.task.title) + '（负责人 ' + esc(text(item.task.owner)) + '），可考虑合并</p>').join('');
+    function sameTitleHtml(candidate, index) {
+      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<div class="same-title-hint"><span>看起来是这条已有任务的更新：<strong>' + esc(item.task.title) + '（' + esc(text(item.task.owner)) + ' · ' + esc(deadline(item.task)) + '）</strong></span><button type="button" data-action="choose-same-task" data-index="' + index + '" data-task="' + esc(item.task.id) + '" data-testid="choose-same-task">选它</button></div>').join('');
+    }
+    function candidateActions(item, index) {
+      if (state.blockedReviews.has(candidateKey(item)) || !item.is_current || (item.reviewed && item.review_status !== 'needs_review')) return '<p class="muted">' + (state.blockedReviews.has(candidateKey(item)) ? '已提交，重新读取列表前不会重复提交此候选。' : item.is_current ? '此候选已处理。' : '历史候选，当前不可直接审核。') + '</p>';
+      return '<div class="actions processing-actions">' + [['create', '作为新任务'], ['merge', '合并更新'], ['reject', '拒绝']].filter(([kind]) => kind === 'create' || !item.reviewed).map(([kind, label]) => '<button type="button"' + (kind === 'merge' ? ' class="primary"' : kind === 'reject' ? ' class="danger"' : '') + ' data-action="candidate-' + kind + '" data-index="' + index + '" data-testid="candidate-' + kind + '">' + label + '</button>').join('') + '</div>';
     }
     function candidateHtml(item, index) {
       const candidate = item.candidate, selected = state.selection === item;
-      return '<article class="card' + (selected ? ' selected' : '') + '" data-testid="candidate-' + esc(item.candidate_id) + '"><div class="card-head"><h3 class="card-title">' + esc(candidate.title || '任务描述待补充') + '</h3><span class="badge' + (item.review_status === 'needs_review' ? ' warn' : '') + '">' + esc(REVIEW_NAMES[item.review_status] || (item.reviewed ? '已处理' : '待确认')) + '</span></div><div class="facts"><span class="owner">负责人：' + esc(text(candidate.owner)) + '</span><span>截止：' + esc(deadline(candidate)) + '</span></div>' + lowHtml(candidate) + sourcesHtml(item.source_summary) + sameTitleHtml(candidate) + (item.review_status === 'rejected' ? '<p class="muted">拒绝理由：' + esc(item.reason) + '</p>' : '') + '<button type="button" data-action="candidate-select" data-index="' + index + '" data-testid="candidate-select" aria-pressed="' + selected + '">' + (selected ? '正在处理' : '处理候选 →') + '</button></article>';
+      return '<article class="card candidate' + (selected ? ' selected' : '') + '" data-testid="candidate-' + esc(item.candidate_id) + '"><div class="card-head"><h3 class="card-title">' + esc(candidate.title || '任务描述待补充') + '</h3>' + (item.review_status === 'needs_review' ? '<span class="badge warn">待复核</span>' : '') + lowHtml(candidate) + '</div><div class="facts"><span class="owner">负责人：' + esc(text(candidate.owner)) + '</span><span>截止：' + esc(deadline(candidate)) + '</span></div>' + sourcesHtml(item.source_summary) + (item.review_status === 'rejected' ? '<p class="muted">已拒绝 · 拒绝理由：' + esc(item.reason) + '</p>' : '') + '<button class="link candidate-toggle" type="button" data-action="candidate-select" data-index="' + index + '" data-testid="candidate-select" aria-expanded="' + selected + '">' + (selected ? '收起原文' : '查看原文 →') + '</button>' + (selected ? processingHtml() : candidateActions(item, index)) + '</article>';
     }
     function processingHtml() {
-      const item = state.selection;
-      if (!item) return '<aside class="processing-panel"><h2>处理面板</h2><p class="empty">从左侧选择一条候选。</p></aside>';
+      const item = state.selection; if (!item) return '';
       const index = state.candidates.items.indexOf(item), cache = state.evidence[item.candidate_id + ':' + item.candidate_fingerprint];
-      const canReview = !state.blockedReviews.has(candidateKey(item)) && item.is_current && (!item.reviewed || item.review_status === 'needs_review');
-      return '<aside class="processing-panel" data-testid="processing-panel"><h2>处理面板</h2><h3>' + esc(item.candidate.title || '任务描述待补充') + '</h3>' + sameTitleHtml(item.candidate) + '<details class="evidence" open><summary>原文引用</summary>' + (cache ? (cache.evidence_basis === 'review_snapshot' ? '<p class="muted">审核时留存的历史引用；不代表当前原文已通过验证。</p>' : '') + evidenceHtml(cache.items, 'source') + pagerHtml(cache, 'evidence-page-' + index) : '<p class="muted">正在读取原文…</p>') + '</details>' + (canReview ? '<div class="actions processing-actions">' + [['create', '确认为新任务'], ['merge', '合并到已有任务'], ['reject', '拒绝']].filter(([kind]) => kind === 'create' || !item.reviewed).map(([kind, label]) => '<button type="button"' + (kind === 'create' ? ' class="primary"' : kind === 'reject' ? ' class="danger"' : '') + ' data-action="candidate-' + kind + '" data-index="' + index + '" data-testid="candidate-' + kind + '">' + label + '</button>').join('') + '</div>' : '<p class="muted">' + (state.blockedReviews.has(candidateKey(item)) ? '已提交，重新读取列表前不会重复提交此候选。' : item.is_current ? '此候选已处理。' : '历史候选，当前不可直接审核。') + '</p>') + (state.form && ['create', 'merge', 'reject'].includes(state.form.kind) ? formHtml() : '') + '</aside>';
+      const form = state.form && state.form.item === item && ['create', 'merge', 'reject'].includes(state.form.kind) ? state.form : null;
+      return '<div class="processing-panel" data-testid="processing-panel"><details class="evidence" open><summary>原文引用</summary>' + (cache ? (cache.evidence_basis === 'review_snapshot' ? '<p class="muted">审核时留存的历史引用；不代表当前原文已通过验证。</p>' : '') + evidenceHtml(cache.items, 'source') + pagerHtml(cache, 'evidence-page-' + index) : '<p class="muted">正在读取原文…</p>') + '</details>' + sameTitleHtml(item.candidate, index) + (form ? formHtml() : candidateActions(item, index)) + '</div>';
     }
     function candidatesHtml() {
-      return '<section class="column" aria-labelledby="candidate-heading"><div class="section-head"><h2 id="candidate-heading">1. 待确认</h2><label>查看<select data-field="candidateState" aria-label="候选处理状态"><option value="pending"' + (state.candidateState === 'pending' ? ' selected' : '') + '>待处理</option><option value="processed"' + (state.candidateState === 'processed' ? ' selected' : '') + '>已处理</option></select></label></div>' + (state.candidates.items.length ? '<div class="cards">' + state.candidates.items.map(candidateHtml).join('') + '</div>' : '<p class="empty">' + (state.candidateState === 'pending' ? '没有待确认的候选。先在主页导入会议记录。' : '暂无已处理候选。') + '</p>') + pagerHtml(state.candidates, 'candidate-page') + '</section>';
+      return '<section class="column" aria-labelledby="candidate-heading"><div class="section-head"><h2 id="candidate-heading">待确认</h2><label>查看<select data-field="candidateState" aria-label="候选处理状态"><option value="pending"' + (state.candidateState === 'pending' ? ' selected' : '') + '>待处理</option><option value="processed"' + (state.candidateState === 'processed' ? ' selected' : '') + '>已处理</option></select></label></div>' + (state.candidates.items.length ? '<div class="cards">' + state.candidates.items.map(candidateHtml).join('') + '</div>' : '<p class="empty">' + (state.candidateState === 'pending' ? '没有待确认的候选。可先到会议页导入会议记录。' : '暂无已处理候选。') + '</p>') + pagerHtml(state.candidates, 'candidate-page') + '</section>';
+    }
+    function boardHtml() {
+      const active = state.catalog.filter(item => ['open', 'in_progress', 'blocked'].includes(item.task.status));
+      const recent = state.recent.map(events => {
+        const event = events[0], source = events.flatMap(value => value.after_evidence || []).find(value => value.source_name);
+        const name = event.operation === 'merge' ? '合并' : event.operation === 'undo_merge' ? '撤销合并' : EVENT_NAMES[event.event_type] || '更新';
+        return '<article class="card recent-card" data-testid="recent-change"><h3>' + esc(name) + ' · ' + esc(event.task.title) + '</h3><p class="muted">' + esc(time(event.created_at)) + (source ? ' · ' + esc(source.source_name) : '') + '</p><button class="link" type="button" data-action="task-detail" data-task="' + esc(event.task.id) + '">查看任务 →</button></article>';
+      }).join('');
+      return '<div class="kanban">' + candidatesHtml() + '<section class="column" aria-labelledby="active-heading"><h2 id="active-heading">进行中</h2><div class="cards">' + (active.length ? active.map(taskCard).join('') : '<p class="empty">暂无未完成任务。</p>') + '</div></section><section class="column" aria-labelledby="recent-heading"><h2 id="recent-heading">最近变化</h2><div class="cards">' + (recent || '<p class="empty">暂无变化。</p>') + '</div></section></div>';
     }
     function taskCard(item) {
       const task = item.task;
@@ -223,7 +250,7 @@
     }
     function tasksHtml() {
       const groups = new Map(); for (const item of state.tasks.items) { const owner = item.task.owner == null ? null : item.task.owner; if (!groups.has(owner)) groups.set(owner, []); groups.get(owner).push(item); }
-      return '<section class="column" aria-labelledby="task-list-heading"><h2 id="task-list-heading">2. 按负责人</h2><div class="toolbar"><label>负责人范围<select data-field="ownerMode" aria-label="负责人范围"><option value="all"' + (state.ownerMode === 'all' ? ' selected' : '') + '>全部负责人</option><option value="named"' + (state.ownerMode === 'named' ? ' selected' : '') + '>指定负责人</option><option value="unassigned"' + (state.ownerMode === 'unassigned' ? ' selected' : '') + '>未指定</option></select></label>' + (state.ownerMode === 'named' ? '<label>负责人原文<input data-field="ownerFilter" value="' + esc(state.owner) + '" aria-label="负责人原文" placeholder="完整姓名，按原文匹配"></label>' : '') + '<label>任务状态<select data-field="statusFilter" aria-label="任务状态"><option value="">全部状态</option>' + Object.entries(STATUS_NAMES).map(([value, name]) => '<option value="' + value + '"' + (state.status === value ? ' selected' : '') + '>' + name + '</option>').join('') + '</select></label><button type="button" data-action="filter-tasks">筛选</button></div><p class="muted">按负责人对当前页分组；可筛选负责人查看其任务。</p>' + (groups.size ? Array.from(groups, ([owner, items]) => '<h3 class="group-title">' + esc(owner == null ? '未指定' : owner) + '</h3><div class="cards">' + items.map(taskCard).join('') + '</div>').join('') : '<p class="empty">没有符合条件的正式任务。</p>') + pagerHtml(state.tasks, 'task-page') + '</section>';
+      return '<section class="column" aria-labelledby="task-list-heading"><h2 id="task-list-heading">按负责人</h2><div class="toolbar"><label>负责人范围<select data-field="ownerMode" aria-label="负责人范围"><option value="all"' + (state.ownerMode === 'all' ? ' selected' : '') + '>全部负责人</option><option value="named"' + (state.ownerMode === 'named' ? ' selected' : '') + '>指定负责人</option><option value="unassigned"' + (state.ownerMode === 'unassigned' ? ' selected' : '') + '>未指定</option></select></label>' + (state.ownerMode === 'named' ? '<label>负责人原文<input data-field="ownerFilter" value="' + esc(state.owner) + '" aria-label="负责人原文" placeholder="完整姓名，按原文匹配"></label>' : '') + '<label>任务状态<select data-field="statusFilter" aria-label="任务状态"><option value="">全部状态</option>' + Object.entries(STATUS_NAMES).map(([value, name]) => '<option value="' + value + '"' + (state.status === value ? ' selected' : '') + '>' + name + '</option>').join('') + '</select></label><button type="button" data-action="filter-tasks">筛选</button></div><p class="muted">按负责人对当前页分组；可筛选负责人查看其任务。</p>' + (groups.size ? Array.from(groups, ([owner, items]) => '<h3 class="group-title">' + esc(owner == null ? '未指定' : owner) + '</h3><div class="cards">' + items.map(taskCard).join('') + '</div>').join('') : '<p class="empty">没有符合条件的正式任务。</p>') + pagerHtml(state.tasks, 'task-page') + '</section>';
     }
     function fieldDetails(detail) {
       return ['title', 'owner', 'deadline'].map((field) => '<div><h4>' + FIELD_NAMES[field] + ' ' + originHtml(detail.field_sources && detail.field_sources[field]) + '</h4><p class="' + (field === 'owner' ? 'owner' : '') + '">' + esc(fieldValue(field, taskFields(detail.task)[field])) + '</p>' + sourcesHtml(detail.field_source_summary && detail.field_source_summary[field] && detail.field_source_summary[field].sources) + '</div>').join('');
@@ -243,7 +270,7 @@
         return '来源重新绑定判断由人确认。';
       }
       const latest = declaration(detail.human_declarations), merge = declaration(detail.merge_human_declarations);
-      return '<details class="verification"><summary>机器核验与人工声明</summary>' + machine + (latest ? '<p>人工声明：' + latest + '</p>' : '') + (merge && merge !== latest ? '<p>合并人工声明：' + merge + '</p>' : '') + '</details>';
+      return '<details class="verification"><summary>校验信息</summary>' + machine + (latest ? '<p>人工声明：' + latest + '</p>' : '') + (merge && merge !== latest ? '<p>合并人工声明：' + merge + '</p>' : '') + '</details>';
     }
     function eventGroups() {
       const groups = new Map();
@@ -267,17 +294,17 @@
     function eventHtml(events) {
       const event = events[0], operation = event.operation;
       const meeting = events.flatMap(item => item.after_evidence || []).find(reference => reference.source_name);
-      const title = operation === 'merge' ? '合并' : operation === 'undo_merge' ? '撤销合并' : EVENT_NAMES[event.event_type] || event.event_type;
+      const title = operation === 'merge' ? '合并' : operation === 'undo_merge' ? '撤销合并' : event.event_type === 'created' ? '创建' : EVENT_NAMES[event.event_type] || event.event_type;
       const values = events.map(item => {
         const field = item.event_type.replace('_changed', '');
-        return item.event_type === 'created' ? '<p class="change-value">' + esc(item.new_value && item.new_value.title) + '<br>负责人：' + esc(text(item.new_value && item.new_value.owner)) + ' · 截止：' + esc(deadline(item.new_value)) + '</p>' : '<p class="change-value"><strong>' + esc(FIELD_NAMES[field] || (field === 'status' ? '任务状态' : field)) + '</strong> ' + esc(diffValue(field, item.old_value)) + ' → ' + esc(diffValue(field, item.new_value)) + '</p>';
+        return item.event_type === 'created' ? '<p class="change-value">' + esc(item.new_value && item.new_value.title) + '<br>负责人：' + esc(text(item.new_value && item.new_value.owner)) + ' · 截止：' + esc(deadline(item.new_value)) + '</p>' : '<p class="change-value change-pill"><strong>' + esc(FIELD_NAMES[field] || (field === 'status' ? '状态' : field)) + '</strong> ' + esc(diffValue(field, item.old_value)) + ' → ' + esc(diffValue(field, item.new_value)) + '</p>';
       }).join('');
       const truncated = events.filter(item => item.evidence_truncated);
-      return '<li class="event" data-testid="task-event"><h3>' + esc(title) + ' · ' + esc(meeting ? meeting.source_name : meetingDate(event.meeting_time)) + '</h3>' + values + '<p class="audit"><span>会议时间：' + esc(meetingDate(event.meeting_time)) + '</span><span>审核人：' + esc(event.actor) + ' · 操作时间：' + esc(time(event.created_at)) + '</span><span>理由：' + esc(event.reason) + '</span></p>' + (events.some(item => item.evidence_role === 'context') ? '<p class="muted">人工修改 / 人工操作 · 原文作为背景</p>' : '') + '<details class="evidence"><summary>展开变更前后的原文</summary><div class="event-evidence"><div><h4>变更前</h4>' + operationEvidence(events, 'before') + '</div><div><h4>变更后</h4>' + operationEvidence(events, 'after') + '</div></div>' + (truncated.length ? '<p class="muted">部分事件引用被截断；其中事件共有 ' + Math.max(...truncated.map(item => item.before_evidence_count + item.after_evidence_count)) + ' 段前后引用，每个事件最多展示 5 段。完整事件引用查询将在后续提供。</p>' : '') + '</details>' + (operation === 'merge' && event.operation_id ? '<div class="actions"><button type="button" data-action="undo-preview" data-merge="' + esc(event.operation_id) + '" data-testid="undo-preview">预览撤销这次合并</button></div>' : '') + '</li>';
+      return '<li class="event" data-testid="task-event"><h3>' + esc(title) + (meeting ? ' · 来自 ' + esc(meeting.source_name) : ' · ' + esc(meetingDate(event.meeting_time))) + '</h3>' + values + '<p class="audit"><span>会议时间：' + esc(meetingDate(event.meeting_time)) + '</span><span>审核人：' + esc(event.actor) + ' · 操作时间：' + esc(time(event.created_at)) + '</span><span>理由：' + esc(event.reason) + '</span></p>' + (events.some(item => item.evidence_role === 'context') ? '<p class="muted">人工修改 / 人工操作 · 原文作为背景</p>' : '') + '<details class="evidence"><summary>展开变更前后的原文</summary><div class="event-evidence"><div><h4>变更前</h4>' + operationEvidence(events, 'before') + '</div><div><h4>变更后</h4>' + operationEvidence(events, 'after') + '</div></div>' + (truncated.length ? '<p class="muted">部分事件引用被截断；其中事件共有 ' + Math.max(...truncated.map(item => item.before_evidence_count + item.after_evidence_count)) + ' 段前后引用，每个事件最多展示 5 段。完整事件引用查询将在后续提供。</p>' : '') + '</details>' + (operation === 'merge' && event.operation_id ? '<div class="actions"><button type="button" data-action="undo-preview" data-merge="' + esc(event.operation_id) + '" data-testid="undo-preview">撤销这次合并…</button></div>' : '') + '</li>';
     }
     function detailHtml() {
       if (!state.detail) return ''; const detail = state.detail, task = detail.task;
-      return '<aside class="detail" data-testid="task-detail-panel" aria-labelledby="detail-heading"><button class="link back" type="button" data-action="close-detail">← 返回列表</button><h2 id="detail-heading">任务详情</h2><h3 class="card-title">' + esc(task.title) + '</h3><div class="facts"><span class="owner" data-testid="task-owner">负责人：' + esc(text(task.owner)) + '</span><span data-testid="task-deadline">截止：' + esc(deadline(task)) + '</span>' + statusHtml(task, detail.review_status) + '</div>' + (detail.review_status !== 'approved' ? '<p class="muted">此任务' + esc(REVIEW_NAMES[detail.review_status] || '待复核') + '，保留当前值及全部历史。跨版本重新绑定与失效操作将在后续提供。</p>' : '') + '<details class="evidence"><summary>字段来源与会议</summary>' + fieldDetails(detail) + '</details>' + (task.source_decision_id ? '<details><summary>版本与引用校验信息</summary><p>关联决定 ID：' + esc(task.source_decision_id) + '</p></details>' : '') + verificationHtml(detail) + (state.receipt && state.receipt.task_id === task.id && !state.events.items.some(event => event.operation === 'merge' && event.operation_id === state.receipt.merge_id) ? '<div class="receipt"><p>已记录本次合并，变化历史已保留。</p><button type="button" data-action="undo-preview" data-merge="' + esc(state.receipt.merge_id) + '" data-testid="receipt-undo-preview">预览撤销这次合并</button></div>' : '') + '<div class="actions"><button type="button" data-action="status-open" data-testid="status-open">更改任务状态</button></div><h2 class="history-heading">变化历史</h2><p class="muted">会议时间来自原文记录；审核人和操作时间用于留痕。撤销会追加历史，原记录保留。</p>' + (state.events.items.length ? '<ol class="timeline">' + eventGroups().map(eventHtml).join('') + '</ol>' : '<p class="empty">暂无变化记录。</p>') + (state.form && ['undo', 'status'].includes(state.form.kind) ? formHtml() : '') + '</aside>';
+      return '<aside class="detail" data-testid="task-detail-panel" aria-labelledby="detail-heading"><button class="link back" type="button" data-action="close-detail">← 返回列表</button><h2 id="detail-heading">任务详情</h2><h3 class="card-title">' + esc(task.title) + '</h3><div class="facts"><span class="owner" data-testid="task-owner">负责人：' + esc(text(task.owner)) + '</span><span data-testid="task-deadline">截止：' + esc(deadline(task)) + '</span>' + statusHtml(task, detail.review_status) + '</div>' + (detail.review_status !== 'approved' ? '<p class="muted">此任务' + esc(REVIEW_NAMES[detail.review_status] || '待复核') + '，保留当前值及全部历史。跨版本重新绑定与失效操作将在后续提供。</p>' : '') + '<details class="evidence"><summary>字段来源与会议</summary>' + fieldDetails(detail) + '</details>' + (task.source_decision_id ? '<details><summary>校验信息</summary><p>关联决定 ID：' + esc(task.source_decision_id) + '</p></details>' : '') + verificationHtml(detail) + (state.receipt && state.receipt.task_id === task.id && !state.events.items.some(event => event.operation === 'merge' && event.operation_id === state.receipt.merge_id) ? '<div class="receipt"><p>已记录本次合并，变化历史已保留。</p><button type="button" data-action="undo-preview" data-merge="' + esc(state.receipt.merge_id) + '" data-testid="receipt-undo-preview">撤销这次合并…</button></div>' : '') + '<label class="status-field">状态<select data-field="detailStatus" data-testid="new-status">' + Object.entries(STATUS_NAMES).map(([value, name]) => '<option value="' + value + '"' + ((state.form && state.form.kind === 'status' ? state.form.status : task.status) === value ? ' selected' : '') + '>' + name + '</option>').join('') + '</select></label><h2 class="history-heading">变化历史</h2><p class="muted">会议时间来自原文记录；审核人和操作时间用于留痕。撤销会追加历史，原记录保留。</p>' + (state.events.items.length ? '<ol class="timeline">' + eventGroups().map(eventHtml).join('') + '</ol>' : '<p class="empty">暂无变化记录。</p>') + (state.form && ['undo', 'status'].includes(state.form.kind) ? formHtml() : '') + '</aside>';
     }
     function createFormHtml(form) {
       const candidate = form.item.candidate;
@@ -286,8 +313,15 @@
     function mergePreviewHtml(form) {
       return form.previewPending ? '<p role="status">正在更新合并预览…</p>' : form.preview ? '<div data-testid="merge-diff">' + diffHtml(form.preview.current_values, form.preview.candidate_values, form.applyFields) + '<p class="muted">同一任务：待你人工确认。原文已按服务端规则校验。</p></div>' : '<p class="muted">选择目标后自动预览差异。</p>';
     }
+    function mergeFieldsHtml(form) {
+      const target = state.catalog.find(item => item.task.id === form.target);
+      if (!target) return '<p class="muted">先选择目标任务，再勾选要更新的内容。</p>';
+      const currentValues = taskFields(target.task);
+      const proposed = {title: form.item.candidate.title, owner: form.item.candidate.owner, deadline: {deadline: form.item.candidate.deadline, deadline_text: form.item.candidate.deadline_text}};
+      return ['title', 'owner', 'deadline'].filter(field => comparable(field, currentValues[field]) !== comparable(field, proposed[field])).map(field => '<label class="change-pill"><input type="checkbox" data-merge-field="' + field + '" data-testid="merge-field-' + field + '"' + (form.applyFields.includes(field) ? ' checked' : '') + '><span>' + FIELD_NAMES[field] + ' ' + esc(diffValue(field, currentValues[field])) + ' → ' + esc(diffValue(field, proposed[field])) + '</span></label>').join('') || '<p class="muted">没有字段变化，可以只关联这次会议的原文。</p>';
+    }
     function mergeFormHtml(form) {
-      return '<h3>合并到已有任务</h3><p>由你确认是同一件事，再选择要应用的字段；系统不会自动合并。</p><label>选择已有正式任务<select id="merge-target" data-field="mergeTarget" data-testid="merge-target"><option value="">请选择目标任务</option>' + state.catalog.map(item => '<option value="' + esc(item.task.id) + '"' + (form.target === item.task.id ? ' selected' : '') + '>' + esc(item.task.title + ' · 负责人：' + text(item.task.owner)) + '</option>').join('') + '</select></label><div class="check-row">' + ['title', 'owner', 'deadline'].map(field => '<label><input type="checkbox" data-merge-field="' + field + '" data-testid="merge-field-' + field + '"' + (form.applyFields.includes(field) ? ' checked' : '') + '>' + FIELD_NAMES[field] + '</label>').join('') + '</div><p class="muted">未勾选的字段保留当前值。没有勾选时，只关联这次会议的原文。</p><div data-testid="merge-preview-state" aria-live="polite">' + mergePreviewHtml(form) + '</div>';
+      return '<label>选择合并目标<select id="merge-target" data-field="mergeTarget" data-testid="merge-target"><option value="">请选择目标任务</option>' + state.catalog.map(item => '<option value="' + esc(item.task.id) + '"' + (form.target === item.task.id ? ' selected' : '') + '>' + esc(item.task.title + ' · 负责人：' + text(item.task.owner)) + '</option>').join('') + '</select></label><div class="check-row" data-testid="merge-field-options">' + mergeFieldsHtml(form) + '</div><p class="muted">未勾选的字段保留当前值。没有勾选时，只关联这次会议的原文。</p><div data-testid="merge-preview-state" aria-live="polite">' + mergePreviewHtml(form) + '</div>';
     }
     function previewKey(form) { return JSON.stringify([form.item.candidate_id, form.item.candidate_fingerprint, form.target, form.applyFields]); }
     function validPreview(form) { return form && form.kind === 'merge' && form.preview && !form.previewPending && form.previewBinding === previewKey(form); }
@@ -318,14 +352,14 @@
       if (form.kind === 'reject') content = '<h3>拒绝这条候选</h3><p>只记录拒绝理由，候选和原文保留，不建立正式任务。</p>';
       if (form.kind === 'merge') content = mergeFormHtml(form);
       if (form.kind === 'undo') content = '<h3>撤销合并预览</h3><p>本次撤销将恢复以下字段及其来源。仍为当前有效版本的候选会返回待确认；来源变化时保留历史并待复核。</p>' + diffHtml(taskFields(state.detail.task), form.preview.restored_values, ['title', 'owner', 'deadline'], '撤销后') + '<div class="row">' + ['title', 'owner', 'deadline'].map((field) => '<span>' + FIELD_NAMES[field] + ' ' + originHtml(form.preview.restored_field_sources && form.preview.restored_field_sources[field]) + '</span>').join('') + '</div><p class="muted">恢复后的审核状态：' + esc(REVIEW_NAMES[form.preview.restored_review_status]) + (form.preview.restored_review_status === 'needs_review' ? '。原来源已变化，恢复数值后仍需人工复核。' : '') + '</p>';
-      if (form.kind === 'status') content = '<h3>更改任务状态</h3><label>新状态<select data-field="status" data-testid="new-status">' + Object.entries(STATUS_NAMES).map(([value, name]) => '<option value="' + value + '"' + (form.status === value ? ' selected' : '') + '>' + name + '</option>').join('') + '</select></label>';
+      if (form.kind === 'status') content = '<h3>确认状态更改</h3><p>状态尚未保存，请填写理由后确认。</p>';
       const action = form.kind === 'merge' ? 'merge-confirm' : form.kind === 'undo' ? 'undo-confirm' : form.kind === 'status' ? 'status-submit' : 'confirm-review';
-      const label = form.kind === 'merge' ? '确认合并' : form.kind === 'reject' ? '确认拒绝' : form.kind === 'undo' ? '确认撤销合并' : form.kind === 'status' ? '保存状态' : '确认任务';
-      return '<section class="form-panel" data-testid="review-form" aria-label="待办审核操作">' + content + '<label class="reason-field">' + (['reject', 'undo', 'status'].includes(form.kind) ? '理由（请手写，必填）' : '理由（可编辑）') + '<textarea data-field="reason" data-testid="review-reason" required>' + esc(form.reason) + '</textarea></label><div class="actions"><button type="button" class="primary" data-action="' + action + '" data-testid="' + action + '"' + (form.kind === 'merge' && !validPreview(form) ? ' disabled' : '') + '>' + label + '</button><button type="button" data-action="cancel-form">取消</button></div></section>';
+      const label = form.kind === 'merge' ? '合并更新' : form.kind === 'reject' ? '拒绝' : form.kind === 'undo' ? '确认撤销合并' : form.kind === 'status' ? '保存状态' : '作为新任务';
+      return '<section class="form-panel" data-testid="review-form" aria-label="待办审核操作">' + content + '<details class="review-checks"' + (['reject', 'undo', 'status'].includes(form.kind) ? ' open' : '') + '><summary>理由与校验</summary><label class="reason-field">' + (['reject', 'undo', 'status'].includes(form.kind) ? '理由（请手写，必填）' : '理由（可编辑）') + '<textarea data-field="reason" data-testid="review-reason" required>' + esc(form.reason) + '</textarea></label></details><div class="actions"><button type="button" class="primary" data-action="' + action + '" data-testid="' + action + '"' + (form.kind === 'merge' && !validPreview(form) ? ' disabled' : '') + '>' + label + '</button>' + (form.kind === 'merge' ? '<button type="button" data-action="candidate-create" data-index="' + state.candidates.items.indexOf(form.item) + '" data-testid="candidate-create">作为新任务</button><button type="button" class="danger" data-action="candidate-reject" data-index="' + state.candidates.items.indexOf(form.item) + '" data-testid="candidate-reject">拒绝</button>' : '') + '<button class="link" type="button" data-action="cancel-form">取消</button></div></section>';
     }
     function render() {
       identityLabel(); workspacePicker.disabled = state.busy || state.loading || !state.workspaces.length;
-      if (!state.workspace) { root.innerHTML = '<p class="empty">请先返回主页创建或选择工作区。</p>'; root.setAttribute('aria-busy', 'false'); return; }
+      if (!state.workspace) { root.innerHTML = '<p class="empty">请先到<a href="/#meetings">会议页</a>创建或选择工作区。</p>'; root.setAttribute('aria-busy', 'false'); return; }
       const waiting = state.busy || state.loading; root.setAttribute('aria-busy', String(waiting));
       if (doc.body && doc.body.dataset) doc.body.dataset.busy = String(state.busy);
       // Read the active control at each render, including async replies, rather than capturing
@@ -337,7 +371,7 @@
         const value = field === 'data-merge-field' ? active.dataset.mergeField : active.dataset.field;
         if (field && /^[a-zA-Z_-]+$/.test(value)) focus = {selector: '[' + field + '="' + value + '"]', start: active.selectionStart, end: active.selectionEnd};
       }
-      root.innerHTML = '<nav class="tabs" aria-label="待办视图"><button type="button" data-action="tab-candidates"' + (state.view === 'candidates' ? ' aria-current="page"' : '') + '>1. 待确认</button><button type="button" data-action="tab-tasks"' + (state.view === 'tasks' ? ' aria-current="page"' : '') + '>2. 按负责人</button></nav><div class="layout">' + (state.view === 'candidates' ? candidatesHtml() + processingHtml() : tasksHtml() + (state.detail ? detailHtml() : '<aside class="detail"><h2>任务详情与变化历史</h2><p class="empty">从左侧选择一项任务。</p></aside>')) + '</div>';
+      root.innerHTML = '<div class="tasks-heading"><h1>待办</h1><nav class="tabs" aria-label="待办视图"><button type="button" data-action="tab-candidates"' + (state.view === 'candidates' ? ' aria-current="page"' : '') + '>看板</button><button type="button" data-action="tab-tasks"' + (state.view === 'tasks' ? ' aria-current="page"' : '') + '>按负责人</button></nav></div>' + (state.view === 'candidates' ? boardHtml() : '<div class="layout owner-layout">' + tasksHtml() + (state.detail ? detailHtml() : '<aside class="detail"><h2>任务详情与变化历史</h2><p class="empty">从左侧选择一项任务。</p></aside>') + '</div>');
       if (waiting && root.querySelectorAll) root.querySelectorAll('button,input,select,textarea').forEach((element) => { element.disabled = true; });
       state.renderedForm = state.form;
       if (!waiting && focus && root.querySelector) {
@@ -395,7 +429,18 @@
       if (action === 'cancel-form') { state.form = null; render(); return; }
       if (action === 'close-detail') { ++state.taskRequest; state.detail = null; state.events = EMPTY_PAGE(); state.form = null; state.receipt = null; updateUrl(null); render(); return; }
       if (['candidate-create', 'candidate-reject', 'candidate-merge'].includes(action)) { await runRead(() => showForm(action.replace('candidate-', ''), index)); return; }
-      if (action === 'candidate-select') { await runRead(async () => { state.selection = state.candidates.items[index] || null; state.form = null; await showEvidence(index); }); return; }
+      if (action === 'candidate-select') { await runRead(async () => { const item = state.candidates.items[index] || null; state.selection = state.selection === item ? null : item; state.form = null; if (state.selection) await showEvidence(index); }); return; }
+      if (action === 'choose-same-task') {
+        const item = state.candidates.items[index], target = state.catalog.find(value => value.task.id === element.dataset.task);
+        if (!item || !target || item.candidate.title !== target.task.title || !item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) return;
+        await runRead(async () => {
+          await showForm('merge', index); const form = state.form; if (!form || form.item !== item) return;
+          const proposed = {title: item.candidate.title, owner: item.candidate.owner, deadline: {deadline: item.candidate.deadline, deadline_text: item.candidate.deadline_text}};
+          const values = taskFields(target.task); form.target = target.task.id;
+          form.applyFields = ['title', 'owner', 'deadline'].filter(field => comparable(field, values[field]) !== comparable(field, proposed[field]));
+          formReason(form); render(); await previewMerge();
+        }); return;
+      }
       if (action === 'candidate-evidence') { await runRead(() => showEvidence(index)); return; }
       if (action.startsWith('evidence-page-')) { await runRead(() => showEvidence(Number(action.substring(14)), Number(element.dataset.offset))); return; }
       if (action === 'tab-candidates' || action === 'tab-tasks') { state.view = action === 'tab-tasks' ? 'tasks' : 'candidates'; state.form = null; state.detail = null; updateUrl(state.receipt && state.receipt.task_id, state.receipt && state.receipt.merge_id); await runRead(() => state.view === 'tasks' ? loadTasks() : loadCandidates()); return; }
@@ -431,16 +476,23 @@
       if (target.dataset && target.dataset.mergeField && state.form && state.form.kind === 'merge') {
         const form = state.form, name = target.dataset.mergeField; form.applyFields = ['title', 'owner', 'deadline'].filter((value) => value === name ? target.checked : form.applyFields.includes(value)); form.preview = null; formReason(form); await previewMerge(); return;
       }
+      if (field === 'detailStatus' && state.detail) { const previous = state.form && state.form.kind === 'status' && state.form.taskId === state.detail.task.id ? state.form : null; state.form = {kind: 'status', taskId: state.detail.task.id, status: target.value, reason: previous ? previous.reason : ''}; state.focusForm = true; render(); return; }
       if (field === 'candidateState') { state.candidateState = target.value; state.candidateOffset = 0; state.form = null; await runRead(loadCandidates); return; }
       if (field === 'ownerMode') { state.ownerMode = target.value; render(); return; }
       if (field === 'statusFilter') { state.status = target.value; return; }
-      if (field === 'mergeTarget' && state.form) { state.form.target = target.value; state.form.preview = null; await previewMerge(); return; }
+      if (field === 'mergeTarget' && state.form && state.form.kind === 'merge') {
+        if (state.form.target !== target.value) { state.form.applyFields = []; formReason(state.form); }
+        state.form.target = target.value; state.form.preview = null;
+        const options = root.querySelector && root.querySelector('[data-testid="merge-field-options"]');
+        if (options) options.innerHTML = mergeFieldsHtml(state.form);
+        await previewMerge(); return;
+      }
       if (field === 'status' && state.form) { state.form.status = target.value; return; }
       handleInput(event);
     }
     async function changeWorkspace(workspaceId) {
       if (state.busy) return; const workspace = state.workspaces.find((item) => item.workspace_id === workspaceId); if (!workspace) return;
-      const epoch = ++state.epoch; state.loading = true; state.form = null; state.detail = null; state.receipt = null; state.lastResult = null; state.blockedReviews.clear(); state.selection = null; state.catalog = []; state.notice = null; notice.innerHTML = ''; state.evidence = {}; state.candidates = EMPTY_PAGE(); state.tasks = EMPTY_PAGE(); state.events = EMPTY_PAGE(); state.candidateOffset = state.taskOffset = state.eventOffset = 0; state.workspace = workspace; render();
+      const epoch = ++state.epoch; state.loading = true; state.form = null; state.detail = null; state.receipt = null; state.lastResult = null; state.blockedReviews.clear(); state.selection = null; state.catalog = []; state.recent = []; ++state.recentRequest; state.notice = null; notice.innerHTML = ''; state.evidence = {}; state.candidates = EMPTY_PAGE(); state.tasks = EMPTY_PAGE(); state.events = EMPTY_PAGE(); state.candidateOffset = state.taskOffset = state.eventOffset = 0; state.workspace = workspace; render();
       try { await request('/api/workspaces/current', {method: 'POST', body: JSON.stringify({workspace_id: workspaceId})}); if (!current(epoch)) return; updateUrl(null); await Promise.all([loadCandidates(), loadTasks(), loadCatalog()]); }
       catch (error) { if (current(epoch)) fail(error); } finally { if (current(epoch)) { state.loading = false; render(); } }
     }

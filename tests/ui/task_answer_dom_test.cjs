@@ -38,7 +38,7 @@ assert.match(html, /缺少替代计划的明确记录/);
 assert.match(html, /前置关系尚未确认/);
 assert.match(html, /data-action="inspect-source" data-id="source-a"/);
 assert.match(html, /提取字段 · 请逐条核对原文/);
-assert.match(html, /字段证据与原始消息/);
+assert.match(html, /<details class="ask-source-details"><summary>校验信息<\/summary>/);
 assert.match(html, /原文片段/);
 assert.doesNotMatch(html, /已确认延期|已批准|日历日差值.*4/);
 const second = html.split('data-task-observation="b"')[1].split('</article>')[0];

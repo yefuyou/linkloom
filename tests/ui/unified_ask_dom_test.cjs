@@ -271,6 +271,9 @@ async function setup(storage = new Map()) {
   const feedbackUi = await setup();
   const feedbackForm = feedbackUi.element("feedback-form");
   feedbackForm.fields = {term: "供方", relation: "uses supplier", actor: "human"};
+  feedbackUi.element("feedback-actor").value = "human";
+  feedbackUi.element("feedback-panel").hidden = false;
+  feedbackUi.element("feedback-panel").open = true;
   feedbackUi.element("feedback-status").isConnected = true;
   const originalQuestion = feedbackUi.element("ask-form").fields.query;
   const mutation = feedbackUi.element("page").listeners.submit({preventDefault() {}, target: feedbackForm});
@@ -280,6 +283,8 @@ async function setup(storage = new Map()) {
   assert.equal(feedbackUi.submittedBodies.length, 0);
   feedbackUi.feedbackPosts[0]({entry: {status: "pending"}}); await mutation;
   assert.equal(feedbackUi.element("ask-submit-button").disabled, false);
+  assert.equal(feedbackUi.element("feedback-panel").hidden, false, "saved feedback must remain accessible for separate approval");
+  assert.equal(feedbackUi.element("feedback-panel").open, true);
   assert.equal(feedbackUi.element("ask-form").fields.query, originalQuestion);
   const afterFeedback = feedbackUi.submit(); await tick();
   feedbackUi.pending[0](result("AFTER_FEEDBACK")); await afterFeedback;
@@ -299,6 +304,7 @@ async function setup(storage = new Map()) {
   const taskOperation = taskUi.submit(); await tick();
   taskUi.pending[0](taskResult()); await taskOperation;
   const taskHtml = taskUi.element("ask-result").innerHTML;
+  assert.doesNotMatch(taskHtml, /当前有效|Current at the queried date/, "unconfirmed task findings must not claim effective business state");
   assert.match(taskHtml, /Source version/);
   assert.match(taskHtml, /version-2/);
   assert.match(taskHtml, /Deadline role/);

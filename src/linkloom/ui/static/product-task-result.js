@@ -77,7 +77,7 @@ window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation}) => {
             ${['owner', 'deadline', 'project', 'vendor'].map(f => `<div><dt>${esc(fieldLabel(f))}</dt><dd>${field(o[f])}</dd></div>`).join('')}</dl>
           ${o.deadline_text ? `<p class="hint">${t('Date wording in source:', '原文日期表述：')} ${esc(o.deadline_text)}${o.deadline_role !== 'TASK_DEADLINE' ? ` · ${t('The date meaning is not established', '日期含义待确认')}` : ''}</p>` : ''}
           ${source?.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${esc(source.source_id)}">${t('View source', '查看来源')}</button>` : ''}
-          <details class="ask-source-details"><summary>${t('Field evidence and original message', '字段证据与原始消息')}</summary>
+          <details class="ask-source-details"><summary>${t('Verification details', '校验信息')}</summary>
             <p class="metadata">${t('Source version', '来源版本')}: <code>${esc(source?.source_version || o.provenance?.artifact_version_id)}</code> · ${t('Lines', '行号')} ${esc(source?.line_start)}–${esc(source?.line_end)}</p>
             <blockquote class="quote">${esc(o.provenance?.quote)}</blockquote>
             ${(o.field_evidence || []).map(f => `<p><strong>${esc(fieldLabel(f.field))}</strong>: ${esc(f.quote)} <small>(${esc(f.char_start)}–${esc(f.char_end)})</small></p>`).join('')}
@@ -102,6 +102,6 @@ window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation}) => {
       <p>${t('Task relationships require separate approval; approval is unavailable here.', '任务关系需单独批准，当前页面仅供核查。')}</p>
       ${['FAKE', 'REPLAY'].includes(prep.execution_kind) ? `<p class="hint">${t('Offline demo · scripted or recorded responses', '离线演示 · 使用预设或回放结果')}</p>` : ''}
       <details><summary>${t('All original citations', '全部原始引用')}</summary>${sources.map(citation).join('')}</details>
-      <details><summary>${t('Investigation trace and review', '调查轨迹与审查结果')}</summary><pre>${esc(JSON.stringify({steps, relations: view.relations, tools: view.executed_tools, gaps: prep.gaps, next_actions: view.next_actions, reviewer: result.reviewer}, null, 2))}</pre></details>
+      <details><summary>${t('Verification details', '校验信息')}</summary><pre>${esc(JSON.stringify({steps, relations: view.relations, tools: view.executed_tools, gaps: prep.gaps, next_actions: view.next_actions, reviewer: result.reviewer}, null, 2))}</pre></details>
     </details></section>`;
 };

@@ -191,12 +191,18 @@
     document.getElementById("provider-state").dataset.ready = String(Boolean(state.provider?.ready));
   }
 
+  const screenHashes = {sources: 'meetings', review: 'review', decisions: 'decisions', ask: 'ask'};
+  function requestedScreen() {
+    const hash = String(window.location?.hash || '').replace(/^#/, '');
+    return Object.keys(screenHashes).find(screen => screenHashes[screen] === hash) || 'sources';
+  }
   function setNavigation(screen) {
     state.screen = screen;
-    document.querySelectorAll(".primary-nav [data-screen]").forEach((button) => {
-      if (button.dataset.screen === screen) button.setAttribute("aria-current", "page");
-      else button.removeAttribute("aria-current");
+    document.querySelectorAll('.primary-nav [data-screen]').forEach(button => {
+      if (button.dataset.screen === (screen === 'review' ? 'sources' : screen)) button.setAttribute('aria-current', 'page');
+      else button.removeAttribute('aria-current');
     });
+    try { window.history?.replaceState(null, '', (window.location.pathname || '/') + (window.location.search || '') + '#' + screenHashes[screen]); } catch { /* Navigation remains usable without URL history. */ }
   }
 
   async function refreshWorkspaceState() {
@@ -243,24 +249,64 @@
     }
   }
 
+  async function meetingMetadata(sources, viewToken = state.agentViewToken) {
+    const workspace = state.workspace?.workspace_id;
+    const metadata = {};
+    for (let offset = 0; offset < sources.length; offset += 8) {
+      await Promise.all(sources.slice(offset, offset + 8).map(async source => {
+        const cached = state.meetingMetadata?.[source.source_id];
+        if (cached?.version === source.source_version) { metadata[source.source_id] = cached; return; }
+        let detail;
+        try { detail = (await request('/api/sources/' + encodeURIComponent(source.source_id))).source; } catch { /* A missing source remains visibly unavailable in its own detail view. */ }
+        const timestamp = String(detail?.content || '').match(/^\s*\[([^\]]+)\]/m)?.[1];
+        metadata[source.source_id] = {name: source.name, version: source.source_version, date: timestamp || detail?.meeting_time || null};
+      }));
+      if (viewToken !== state.agentViewToken || workspace !== state.workspace?.workspace_id) return;
+    }
+    if (viewToken === state.agentViewToken && workspace === state.workspace?.workspace_id) state.meetingMetadata = metadata;
+  }
+  async function pendingTaskCandidates() {
+    const items = []; let offset = 0;
+    for (;;) {
+      const value = await request('/api/product/task-candidates?' + new URLSearchParams({workspace_id: state.workspace.workspace_id, state: 'pending', limit: 100, offset}));
+      items.push(...(value.items || []));
+      if (!value.page?.has_more) return items;
+      if (!Number.isInteger(value.page.next_offset) || value.page.next_offset <= offset) throw new Error('Invalid candidate page');
+      offset = value.page.next_offset;
+    }
+  }
   async function loadSources() {
-    const { sources } = await request("/api/sources");
+    const viewToken = state.agentViewToken, workspace = state.workspace.workspace_id;
+    const [{sources}, review, tasks] = await Promise.all([
+      request('/api/sources'), request('/api/review/candidates'), pendingTaskCandidates().catch(() => null),
+    ]);
+    await meetingMetadata(sources, viewToken);
+    if (viewToken !== state.agentViewToken || workspace !== state.workspace?.workspace_id) return;
     const providerReady = Boolean(state.provider?.ready);
-    const list = sources.length ? sources.map((source) => `
-      <article class="card" data-source-card="${escapeHtml(source.source_id)}">
-        <div class="card-head"><div><h3>${escapeHtml(source.name)}</h3><p class="status-line">${copy("Updated", "更新于")} ${askDate(source.updated_at, state.language.startsWith("zh") ? "zh" : "en")}</p></div>${badge(source.ingestion_status, source.error?.startsWith("PROVIDER_UNAVAILABLE:") ? "SAVED" : source.ingestion_status)}</div>
-        <div class="metadata"><span>${copy("Candidates", "候选")} <strong>${source.candidate_count}</strong></span><span>${copy("Review required", "待审核")} <strong>${source.review_required_count}</strong></span>${source.segment_summary.failed ? `<span>${copy("Extraction failed", "提取失败")} <strong>${source.segment_summary.failed}</strong></span>` : ""}</div>
-        ${source.error ? `<p class="review-guidance">${source.error.startsWith("PROVIDER_UNAVAILABLE:") ? copy("Source saved · AI extraction is off", "来源已保存 · AI 提取未启用") : copy("Extraction failed. Open the source for details and retry options.", "提取失败，请打开来源查看原因和重试选项。")}</p>` : ""}
-        <div class="actions"><button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(source.source_id)}">${copy("Inspect source", "查看来源")}</button>${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">${copy("Retry failed segment", "重试失败片段")}</button>` : ""}</div>
-      </article>`).join("") : `<section class="empty"><h2>${copy("No sources yet", "暂无来源")}</h2><p>${copy("Import a meeting note or decision record to get started.", "导入会议纪要或决策记录，开始整理项目资料。")}</p></section>`;
-    page.innerHTML = `${heading(copy("Sources", "来源"))}
-      <div class="split"><section><p class="metadata">${sources.length} ${copy("sources", "个来源")}</p>${list}</section>
-      <section class="panel"><h2>${copy("Add a source", "添加来源")}</h2><p class="hint">${copy("One message per line:", "每条消息独占一行：")} <code>[2026-10-08T10:00:00Z] ${copy("Speaker: message", "发言人：内容")}</code></p>
-        ${providerReady ? `<p class="review-guidance">${copy("Importing sends source text to the configured external AI provider and may incur model costs.", "导入会将来源文本发送给已配置的外部 AI，可能产生模型费用。")}</p>` : `<div class="notice"><p>${copy("Save sources locally. Enable AI extraction to generate review candidates.", "可先在本地保存来源，启用 AI 提取后生成待审核候选。")}</p><details><summary>${copy("Extraction setup", "提取设置")}</summary><p>${escapeHtml(state.provider?.message || copy("Enable a provider to extract source text.", "请启用 AI 服务以提取来源内容。"))}</p></details></div>`}
-        <form id="source-create" class="form-stack"><div class="field"><label for="source-file">${copy("Choose a Markdown or text artifact", "选择 Markdown 或文本文件")}</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"><span class="hint">${copy("Markdown or text, up to 256 KB.", "支持 Markdown 或文本，最大 256 KB。")}</span></div>
-        <div class="field"><label for="source-name">${copy("Artifact name", "来源名称")}</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
-        <div class="field"><label for="source-content">${copy("Timestamped source text", "带时间戳的来源文本")}</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
-        <button class="button" type="submit">${providerReady ? copy("Import and extract", "导入并提取") : copy("Save source", "保存来源")}</button></form></section></div>`;
+    const taskCounts = new Map();
+    for (const item of tasks || []) {
+      for (const sourceId of new Set((item.source_summary || []).map(source => source.source_id))) taskCounts.set(sourceId, (taskCounts.get(sourceId) || 0) + 1);
+    }
+    const list = sources.length ? sources.map(source => {
+      const count = taskCounts.get(source.source_id) || 0;
+      const decisions = (review.candidates || []).filter(candidate => candidate.source_id === source.source_id && candidate.claim_type === 'DECISION').length;
+      const meetingTasks = (review.meeting_tasks || []).filter(candidate => candidate.source_id === source.source_id).length;
+      return `<article class="card meeting-card" data-source-card="${escapeHtml(source.source_id)}"><div class="card-head"><h3>${escapeHtml(source.name)}</h3><span class="meeting-date">${meetingDate(state.meetingMetadata?.[source.source_id]?.date, state.language.startsWith('zh') ? 'zh' : 'en')}</span></div>
+        <p class="muted">${source.candidate_count} ${copy('records extracted', '条记录已整理')}${source.segment_summary.failed ? ` · ${source.segment_summary.failed} ${copy('segments need attention', '个片段需要检查')}` : ''}</p>
+        <div class="meeting-counts">${tasks ? `<a class="meeting-count" href="/tasks?${new URLSearchParams({workspace_id: workspace})}">${count} ${copy('tasks to confirm →', '条待办待确认 →')}</a>` : `<a class="meeting-count" href="/tasks">${copy('View tasks →', '查看待办 →')}</a>`}${decisions ? `<a class="meeting-count secondary" href="/#review" data-action="back-review">${decisions} ${copy('decisions to confirm →', '条决定待确认 →')}</a>` : ''}${meetingTasks ? `<a class="meeting-count secondary" href="/#review" data-action="back-review">${meetingTasks} ${copy('meeting records to review →', '条会议记录待复核 →')}</a>` : ''}</div>
+        ${source.error ? `<p class="review-guidance">${source.error.startsWith('PROVIDER_UNAVAILABLE:') ? copy('Source saved · AI extraction is off', '来源已保存 · AI 提取未启用') : copy('Extraction failed. Open the source for details and retry options.', '提取失败，请打开来源查看原因和重试选项。')}</p>` : ''}
+        <div class="metadata">${badge(source.ingestion_status, source.error?.startsWith('PROVIDER_UNAVAILABLE:') ? 'SAVED' : source.ingestion_status)}</div>
+        <div class="actions"><button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(source.source_id)}">${copy('View original', '查看原文')}</button>${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">${copy('Retry failed segment', '重试失败片段')}</button>` : ''}</div></article>`;
+    }).join('') : `<section class="empty"><h2>${copy('No meetings yet', '暂无会议')}</h2><p>${copy('Import meeting notes to get started.', '导入会议记录，开始整理待办与决定。')}</p></section>`;
+    page.innerHTML = `${heading(copy('Meetings', '会议'), `<div class="actions"><button class="button quiet" data-action="back-review">${copy('Records to confirm', '会议待确认')}</button><button class="button" data-action="focus-import">${copy('Import meeting notes', '导入会议记录')}</button></div>`)}
+      <p class="hint">${copy('Import meeting notes, then check the extracted records.', '导入会议记录，系统抽出待办，交给你确认。')}</p><section class="grid meetings-grid">${list}</section>
+      <section id="meeting-import" class="panel import-panel"><h2>${copy('Import meeting notes', '导入会议记录')}</h2><p class="drop-zone" id="source-drop-zone">${copy('Drop a Markdown or text file here, or choose a file below.', '把会议记录文件拖到这里，或在下方选择文件。')}</p>
+      <p class="hint">${copy('One message per line:', '每条消息独占一行：')} <code>[2026-10-08T10:00:00Z] ${copy('Speaker: message', '发言人：内容')}</code></p>
+      ${providerReady ? `<p class="review-guidance">${copy('Importing sends source text to the configured external AI provider and may incur model costs.', '导入会将来源文本发送给已配置的外部 AI，可能产生模型费用。')}</p>` : `<div class="notice"><p>${copy('Save sources locally. Enable AI extraction to generate review candidates.', '可先在本地保存来源，启用 AI 提取后生成待审核候选。')}</p><details><summary>${copy('Extraction setup', '提取设置')}</summary><p>${escapeHtml(state.provider?.message || copy('Enable a provider to extract source text.', '请启用 AI 服务以提取来源内容。'))}</p></details></div>`}
+      <form id="source-create" class="form-stack"><div class="field"><label for="source-file">${copy('Choose a Markdown or text artifact', '选择 Markdown 或文本文件')}</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"><span class="hint">${copy('Markdown or text, up to 256 KB.', '支持 Markdown 或文本，最大 256 KB。')}</span></div>
+      <div class="field"><label for="source-name">${copy('Meeting name', '会议名称')}</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
+      <div class="field"><label for="source-content">${copy('Meeting text with timestamps', '会议原文与时间')}</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
+      <button class="button" type="submit">${providerReady ? copy('Import and organize', '导入并整理') : copy('Save meeting locally', '仅保存会议')}</button></form></section>`;
   }
 
   async function inspectSource(sourceId) {
@@ -275,7 +321,7 @@
     const evidence = source.evidence.length ? source.evidence.map((item) => `<div class="card"><div class="metadata"><span>${copy("Lines", "行号")} ${item.line_start}–${item.line_end}</span><span>${badge("VERIFIED")}</span></div><blockquote class="quote">${escapeHtml(item.quote)}</blockquote></div>`).join("") : `<p class="empty">${copy("No timestamped evidence spans were parsed.", "暂未解析到带时间戳的证据。")}</p>`;
     page.innerHTML = `${heading(source.name)}
       <div class="detail-layout"><section class="panel"><div class="card-head"><h2>${copy("Ingestion", "处理状态")}</h2>${badge(source.ingestion_status, source.error?.startsWith("PROVIDER_UNAVAILABLE:") ? "SAVED" : source.ingestion_status)}</div>${extractionUnavailable ? `<p class="review-guidance">${copy("Source saved locally. Enable AI extraction, then import the original source again to extract candidates.", "来源已在本地保存。启用 AI 提取后，重新导入原始来源以提取候选。")}</p>` : ""}<p>${source.candidate_count} ${copy("candidates", "个候选")} · ${source.review_required_count} ${copy("need review", "个待审核")} · ${source.segment_summary.failed} ${copy("extraction failures", "个提取失败片段")}</p>${source.error ? `<details class="source-diagnostics"><summary>${copy("Extraction details", "提取详情")}</summary><p>${escapeHtml(source.error)}</p></details>` : ""}${source.segments.length ? `<details><summary>${copy("Processing details", "处理详情")}</summary>${source.segments.map((segment) => `<p class="metadata">${copy("Segment", "片段")} ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} ${copy("attempt(s)", "次尝试")}</p>`).join("")}</details>` : ""}${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">${copy("Retry failed segment", "重试失败片段")}</button>` : ""}
-        <h3>${copy("Exact evidence spans", "原文证据")}</h3>${evidence}<details><summary>${copy("Source version details", "来源版本详情")}</summary><p class="metadata">${copy("Version:", "版本：")} ${escapeHtml(source.source_version)} · ${copy("Content SHA-256:", "内容 SHA-256：")} ${escapeHtml(source.content_sha256)}</p></details></section>
+        <h3>${copy("Exact evidence spans", "原文证据")}</h3>${evidence}<details><summary>${copy("Verification details", "校验信息")}</summary><p class="metadata">${copy("Version:", "版本：")} ${escapeHtml(source.source_version)} · ${copy("Content SHA-256:", "内容 SHA-256：")} ${escapeHtml(source.content_sha256)}</p></details></section>
       <section class="panel"><h2>${copy("Update source", "更新来源")}</h2><p class="hint">${copy("Changes create a new version and recheck affected decisions.", "修改将保存为新版本，并重新核查受影响的决策。")}${providerReady ? copy(" New text is sent to the configured external AI provider and may incur costs.", " 新文本将发送至已配置的外部 AI，可能产生费用。") : copy(" AI extraction is off.", " AI 提取未启用。")}</p>
         <form id="source-update" class="form-stack" data-id="${escapeHtml(sourceId)}"><div class="field"><label for="update-name">${copy("Artifact name", "来源名称")}</label><input id="update-name" name="name" value="${escapeHtml(source.name)}" required></div>
         <div class="field"><label for="update-content">${copy("Timestamped source text", "带时间戳的来源文本")}</label><textarea class="source-input" id="update-content" name="content" required>${escapeHtml(source.content)}</textarea></div>
@@ -304,8 +350,8 @@
     ]);
     document.getElementById("review-count").textContent = candidates.length + meetingTasks.length ? String(candidates.length + meetingTasks.length) : "";
     const meetingItems = meetingTasks.map(task => `<article class="card" data-meeting-task="${escapeHtml(task.candidate_id)}">
-      <div class="card-head"><h3>${escapeHtml(task.task)}</h3><span class="badge ${task.confidence === "LOW" ? "warning" : ""}">${task.confidence === "LOW" ? copy("Low confidence", "低置信度") : copy("High confidence", "高置信度")}</span></div>
-      <p>${escapeHtml(task.confidence_reason)}</p><p class="metadata">${escapeHtml(task.owner_ids.join(", "))} · ${escapeHtml(task.deadline.raw_text || copy("Unspecified deadline", "截止时间未说明"))} · ${escapeHtml(task.deadline.kind)}</p>
+      <div class="card-head"><h3>${escapeHtml(task.task)}</h3>${task.confidence === "LOW" ? `<span class="badge warning">${copy("Low confidence", "低置信度")}</span>` : ""}</div>
+      ${task.confidence === "LOW" ? `<p>${escapeHtml(task.confidence_reason)}</p>` : ""}<p class="metadata">${escapeHtml(task.owner_ids.join(", "))} · ${escapeHtml(task.deadline.raw_text || copy("Unspecified deadline", "截止时间未说明"))} · ${escapeHtml(task.deadline.kind)}</p>
       ${task.evidence.map(e => `<blockquote class="quote">${escapeHtml(e.span.quote)}</blockquote>`).join("")}
       <form class="form-stack" data-meeting-task-review data-id="${escapeHtml(task.candidate_id)}" data-version="${escapeHtml(task.source_version)}">
         <label>${copy("Reviewer", "审核人")}<input name="reviewer" required maxlength="160"></label>
@@ -314,18 +360,18 @@
       </form></article>`).join("");
     const items = candidates.length ? candidates.map((candidate) => `
       <article class="card"><div class="card-head"><div><p class="record-kind">${escapeHtml(claimTypeLabel(candidate.claim_type))}</p><h3>${escapeHtml(candidate.proposed_value || copy("Needs review", "待审核"))}</h3></div>${badge(candidate.status)}</div>
-        <div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Source", "来源")} <strong>${escapeHtml(candidate.source_name)}</strong></span><span>${copy("Effective", "生效日期")} <strong>${escapeHtml(candidate.valid_from || copy("Not resolved", "待确认"))}</strong></span></div>
-        <p class="hint">${escapeHtml(reviewReasons(candidate.review_reasons))}</p><button class="button quiet" data-action="inspect-candidate" data-id="${escapeHtml(candidate.candidate_id)}">${copy("Review candidate", "审核候选")}</button></article>`).join("") : `<section class="empty"><h2>${copy("No candidates need review", "暂无待审核候选")}</h2><p>${copy("Import a source to generate candidates for review.", "导入来源后，可在此审核提取的候选。")}</p></section>`;
+        <div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Source", "来源")} <strong>${escapeHtml(candidate.source_name)}</strong></span><span>${copy("Effective", "生效日期")} <strong>${askDate(candidate.valid_from, state.language.startsWith("zh") ? "zh" : "en") || copy("Not resolved", "待确认")}</strong></span></div>
+        <p class="hint">${escapeHtml(reviewReasons(candidate.review_reasons))}</p><button class="button quiet" data-action="inspect-candidate" data-id="${escapeHtml(candidate.candidate_id)}">${copy("View and confirm", "查看并确认")}</button></article>`).join("") : `<section class="empty"><h2>${copy("No candidates need review", "暂无待审核候选")}</h2><p>${copy("Import a source to generate candidates for review.", "导入来源后，可在此审核提取的候选。")}</p></section>`;
     const proposalItems = proposals.length ? proposals.map((candidate) => `
       <article class="card"><div class="card-head"><div><h3>${escapeHtml(candidate.subject || candidate.proposed_value || copy("Unresolved proposal", "待确认提案"))}</h3></div>${badge("SUPPORTING_ONLY")}</div>
         <p class="decision-value">${escapeHtml(candidate.proposed_value || copy("Value not resolved", "内容待确认"))}</p><p class="metadata">${escapeHtml(candidate.source_name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
         <blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="hint">${copy("Unapproved · kept as reference material", "未批准 · 作为参考材料保留")}</p></article>`).join("") : `<p class="muted">${copy("No proposals are currently held as supporting evidence.", "暂无参考提案。")}</p>`;
-    const attentionCards = attention.decisions.length ? attention.decisions.map((decision) => `<article class="card"><div class="card-head"><div><h3>${escapeHtml(decision.subject)} · ${escapeHtml(relationLabel(decision.relation))}</h3><p>${escapeHtml(decision.value)}</p></div>${badge(decision.memory_state)}</div><p class="hint">${copy("Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it.", "来源证据已变化或不可用，请结合当前来源重新审核。")}</p><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decision.decision_id)}">${copy("Revalidate decision", "复核决策")}</button></article>`).join("") : `<p class="muted">${copy("No Decision Memory records currently need revalidation.", "暂无需要复核的决策。")}</p>`;
-    page.innerHTML = `${heading(copy("Review", "审核"))}
+    const attentionCards = attention.decisions.length ? attention.decisions.map((decision) => `<article class="card"><div class="card-head"><div><h3>${escapeHtml(decision.subject)} · ${escapeHtml(relationLabel(decision.relation))}</h3><p>${escapeHtml(decision.value)}</p></div>${badge(decision.memory_state)}</div><p class="hint">${copy("Source evidence changed or is unavailable. Revalidate this decision against a current source before relying on it.", "来源证据已变化或不可用，请结合当前来源重新审核。")}</p><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decision.decision_id)}">${copy("Recheck this decision", "复核这条决定")}</button></article>`).join("") : `<p class="muted">${copy("No Decision Memory records currently need revalidation.", "暂无需要复核的决策。")}</p>`;
+    page.innerHTML = `${heading(copy("Records to confirm", "会议待确认"))}
       ${meetingTasks.length ? `<section class="panel"><h2>${copy("Meeting tasks awaiting human review", "会议待办人工审核队列")}</h2>${meetingItems}</section>` : ""}
-      <div class="section-title"><h2>${copy("Pending candidates", "待审核候选")}</h2><span class="muted">${candidates.length}</span></div>${items}
-      <div class="section-title"><h2>${copy("Supporting proposals", "参考提案")}</h2><span class="muted">${proposals.length} · ${copy("unapproved", "未批准")}</span></div>${proposalItems}
-      <div class="section-title"><h2>${copy("Decision records needing attention", "需复核的决策")}</h2></div>${attentionCards}`;
+      <div class="section-title"><h2>${copy("Records to confirm", "待确认记录")}</h2><span class="muted">${candidates.length}</span></div>${items}
+      <div class="section-title"><h2>${copy("Reference proposals", "仅供参考的提议")}</h2><span class="muted">${proposals.length} · ${copy("unapproved", "未批准")}</span></div>${proposalItems}
+      <div class="section-title"><h2>${copy("Decisions needing review", "待复核决定")}</h2></div>${attentionCards}`;
   }
 
   async function inspectCandidate(candidateId, revalidation = null) {
@@ -347,11 +393,11 @@
       ${unresolved.includes("subject") ? `<div class="field"><label for="review-subject">${copy("Subject", "对象")}</label><input id="review-subject" name="subject" value="${escapeHtml(candidate.subject || "")}" required></div>` : ""}
       ${relationGuidance}
       ${unresolved.includes("valid_from") ? `<div class="field"><label for="review-valid-from">${copy("Effective date or timestamp", "生效日期或时间")}</label><input id="review-valid-from" name="valid_from" placeholder="${copy("YYYY-MM-DD or ISO 8601 with timezone", "YYYY-MM-DD 或含时区的 ISO 8601 时间")}" required></div>` : ""}</section>` : `<p class="hint">${copy("Subject, relationship and effective date are available for review.", "请核对对象、关系和生效日期。")}</p>`;
-    page.innerHTML = `${heading(candidate.proposed_value || copy("Review candidate", "审核候选"), `<div class="actions"><span class="badge neutral">${escapeHtml(claimTypeLabel(candidate.claim_type))}</span>${badge(candidate.status)}</div>`)}
-      <div class="detail-layout"><section class="panel"><div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Valid from", "生效日期")} <strong>${escapeHtml(candidate.valid_from || copy("Not resolved", "待确认"))}</strong></span></div>
+    page.innerHTML = `${heading(candidate.proposed_value || copy("View and confirm", "查看并确认"), `<div class="actions"><span class="badge neutral">${escapeHtml(claimTypeLabel(candidate.claim_type))}</span>${badge(candidate.status)}</div>`)}
+      <div class="detail-layout"><section class="panel"><div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Valid from", "生效日期")} <strong>${askDate(candidate.valid_from, state.language.startsWith("zh") ? "zh" : "en") || copy("Not resolved", "待确认")}</strong></span></div>
         <p class="section-title"><strong>${copy("Review reasons", "审核原因")}</strong></p><p>${escapeHtml(reviewReasons(candidate.review_reasons))}</p>
         <h3>${copy("Exact supporting evidence", "支持原文")}</h3><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
-        <details><summary>${copy("Source version and provenance", "来源版本与出处")}</summary><p>${copy("Version:", "版本：")} ${escapeHtml(candidate.evidence.source_version)}</p><p>${copy("Evidence ref:", "证据编号：")} ${escapeHtml(candidate.evidence.evidence_ref)}</p></details></section>
+        <details><summary>${copy("Verification details", "校验信息")}</summary><p>${copy("Version:", "版本：")} ${escapeHtml(candidate.evidence.source_version)}</p><p>${copy("Evidence ref:", "证据编号：")} ${escapeHtml(candidate.evidence.evidence_ref)}</p></details></section>
       <form id="candidate-review" class="panel form-stack" data-id="${escapeHtml(candidateId)}">${revalidation ? `<div class="notice"><strong>${copy("New approval for a stale decision", "审核当前来源的新候选")}</strong><p>${copy("Original:", "原记录：")} ${escapeHtml(revalidation.original.value)}. ${copy("Approval applies to this candidate and its current evidence. The original approval stays in history.", "本次批准仅适用于此候选及当前证据，原批准保留在历史中。")}</p></div>` : ""}${resolutionFields}
         <div class="field"><label for="reviewer-id">${copy("Reviewer", "审核人")}</label><input id="reviewer-id" name="reviewer_id" required maxlength="120" placeholder="${copy("Your name", "你的姓名")}"></div>
         <div class="field"><label for="review-reason">${copy("Review reason", "审核理由")}</label><textarea id="review-reason" name="reason" required maxlength="1000" placeholder="${copy("Why is this evidence sufficient?", "请填写审核依据")}"></textarea></div>
@@ -374,23 +420,32 @@
       SOURCE_RECONCILIATION_REQUIRED: copy("Source reconciliation still requires review.", "来源变更仍需审核。"),
       DECISION_INVALIDATED: copy("This decision was invalidated. It cannot be restored through stale revalidation.", "此决策已失效，暂无法通过本次复核恢复。"),
     };
-    const evidence = original.evidence.map(item => `<blockquote class="quote">${escapeHtml(item.quote || copy("Historical quote unavailable", "历史原文不可用"))}</blockquote><p class="metadata">${escapeHtml(item.source_name)} · ${copy("lines", "行号")} ${item.line_start || "?"}–${item.line_end || "?"} · ${copy("Version", "版本")} ${escapeHtml(item.source_version || copy("Unavailable", "不可用"))}</p>`).join("");
-    const sources = view.current_sources.map(source => `<article class="card"><div class="card-head"><h3>${escapeHtml(source.name)}</h3>${badge(source.active ? source.ingestion_status : "REMOVED")}</div><p class="metadata">${copy("Current version:", "当前版本：")} ${escapeHtml(source.source_version)}</p><pre class="quote">${escapeHtml(source.content)}</pre></article>`).join("");
-    const candidates = view.candidates.map(candidate => `<article class="card"><div class="card-head"><h3>${escapeHtml(candidate.proposed_value)}</h3>${badge(candidate.status)}</div><p class="metadata">${escapeHtml(candidate.subject)} · ${escapeHtml(relationLabel(candidate.relation))} · Effective ${escapeHtml(candidate.valid_from)}</p><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>${candidate.recorded_approval ? `<details><summary>${copy("Recorded approval (read-only)", "已记录的批准（只读）")}</summary><pre>${escapeHtml(JSON.stringify(candidate.recorded_approval, null, 2))}</pre></details><p class="hint">${copy("Approval is already recorded. Finish materialization using only that authorization.", "批准已记录，请完成保存。")}</p>` : ""}<button class="button" data-action="${candidate.status === "APPROVED" ? "retry-revalidation" : "revalidate-candidate"}" data-id="${escapeHtml(candidate.candidate_id)}">${candidate.status === "APPROVED" ? copy("Finish recorded approval", "完成已记录的批准") : copy("Review this new candidate", "审核此新候选")}</button></article>`).join("");
+    const evidence = original.evidence.map(item => `<blockquote class="quote">${escapeHtml(item.quote || copy("Historical quote unavailable", "历史原文不可用"))}</blockquote><p class="metadata">${escapeHtml(item.source_name)} · ${copy("lines", "行号")} ${item.line_start || "?"}–${item.line_end || "?"}</p><details><summary>${copy("Verification details", "校验信息")}</summary><p>${copy("Version", "版本")}: ${escapeHtml(item.source_version || copy("Unavailable", "不可用"))}</p></details>`).join("");
+    const sources = view.current_sources.map(source => `<article class="card"><div class="card-head"><h3>${escapeHtml(source.name)}</h3>${badge(source.active ? source.ingestion_status : "REMOVED")}</div><details><summary>${copy("Verification details", "校验信息")}</summary><p class="metadata">${copy("Current version:", "当前版本：")} ${escapeHtml(source.source_version)}</p></details><pre class="quote">${escapeHtml(source.content)}</pre></article>`).join("");
+    const candidates = view.candidates.map(candidate => `<article class="card"><div class="card-head"><h3>${escapeHtml(candidate.proposed_value)}</h3>${badge(candidate.status)}</div><p class="metadata">${escapeHtml(candidate.subject)} · ${escapeHtml(relationLabel(candidate.relation))} · Effective ${askDate(candidate.valid_from, state.language.startsWith("zh") ? "zh" : "en")}</p><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>${candidate.recorded_approval ? `<details><summary>${copy("Verification details", "校验信息")}</summary><pre>${escapeHtml(JSON.stringify(candidate.recorded_approval, null, 2))}</pre></details><p class="hint">${copy("Approval is already recorded. Finish materialization using only that authorization.", "批准已记录，请完成保存。")}</p>` : ""}<button class="button" data-action="${candidate.status === "APPROVED" ? "retry-revalidation" : "revalidate-candidate"}" data-id="${escapeHtml(candidate.candidate_id)}">${candidate.status === "APPROVED" ? copy("Finish recorded approval", "完成已记录的批准") : copy("Review this new candidate", "审核此新候选")}</button></article>`).join("");
     page.innerHTML = `${heading(`${original.subject} · ${relationLabel(original.relation)}`)}
-      <section class="panel"><div class="card-head"><h2>${copy("Original decision:", "原决策：")} ${escapeHtml(original.value)}</h2>${badge(original.memory_state)}</div><p class="metadata">${copy("Effective", "生效日期")} ${escapeHtml(original.valid_from)} · ${escapeHtml(statusLabel(view.status))}</p><h3>${copy("Why this needs attention", "复核原因")}</h3>${view.reasons.map(reason => `<p>${escapeHtml(reasonLabels[reason.code] || copy("Check current source evidence.", "请核对当前来源证据。"))}</p>`).join("")}${evidence}<details><summary>${copy("Original authorization receipts (read-only)", "原始授权记录（只读）")}</summary><pre>${escapeHtml(JSON.stringify(view.original_receipts, null, 2))}</pre></details></section>
+      <section class="panel"><div class="card-head"><h2>${copy("Original decision:", "原决策：")} ${escapeHtml(original.value)}</h2>${badge(original.memory_state)}</div><p class="metadata">${copy("Effective", "生效日期")} ${askDate(original.valid_from, state.language.startsWith("zh") ? "zh" : "en")} · ${escapeHtml(statusLabel(view.status))}</p><h3>${copy("Why this needs attention", "复核原因")}</h3>${view.reasons.map(reason => `<p>${escapeHtml(reasonLabels[reason.code] || copy("Check current source evidence.", "请核对当前来源证据。"))}</p>`).join("")}${evidence}<details><summary>${copy("Verification details", "校验信息")}</summary><pre>${escapeHtml(JSON.stringify(view.original_receipts, null, 2))}</pre></details></section>
       <section class="panel"><h2>${copy("Current sources", "当前来源")}</h2>${sources || `<p>${copy("No current source record is available. Add a source in Sources, then return to review.", "当前来源不可用，请补充来源后返回审核。")}</p>`}</section>
-      <section class="panel"><h2>${copy("New candidates for explicit review", "待审核的新候选")}</h2>${candidates || (view.status === "RESOLVED" ? `<p>${copy("This revalidation is complete. The new approval and original record can be inspected in history.", "复核已完成，可在历史中查看新批准和原始记录。")}</p>` : view.status === "READ_ONLY" ? `<p>${copy("This record is read-only and cannot be revalidated here.", "此记录仅供查看，暂无法在此复核。")}</p>` : `<p>${copy("No valid new candidate is available. This decision stays unresolved. Add or update a source, finish extraction, and return here.", "暂无有效新候选。请添加或更新来源，完成提取后继续审核。")}</p>`)}${view.completion ? `<p>${copy("Revalidated by a new approval on", "新批准复核于")} ${escapeHtml(view.completion.authorized_at)}. ${copy("Original record retained in history.", "原记录保留在历史中。")}</p><button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(view.completion.decision_id)}">${copy("View approved decision and history", "查看已批准决策与历史")}</button>` : ""}</section>
-      <div class="actions"><button class="button quiet" data-action="back-review">${view.status === "UNRESOLVED" ? copy("Keep unresolved", "保留待处理") : copy("Back to Review", "返回审核")}</button><button class="button quiet" data-action="revalidate-decision" data-id="${escapeHtml(decisionId)}">${copy("Refresh comparison", "刷新对照")}</button></div>`;
+      <section class="panel"><h2>${copy("New candidates for explicit review", "待审核的新候选")}</h2>${candidates || (view.status === "RESOLVED" ? `<p>${copy("This revalidation is complete. The new approval and original record can be inspected in history.", "复核已完成，可在历史中查看新批准和原始记录。")}</p>` : view.status === "READ_ONLY" ? `<p>${copy("This record is read-only and cannot be revalidated here.", "此记录仅供查看，暂无法在此复核。")}</p>` : `<p>${copy("No valid new candidate is available. This decision stays unresolved. Add or update a source, finish extraction, and return here.", "暂无有效新候选。请添加或更新来源，完成提取后继续审核。")}</p>`)}${view.completion ? `<p>${copy("Revalidated by a new approval on", "新批准复核于")} ${askDate(view.completion.authorized_at, state.language.startsWith("zh") ? "zh" : "en")}. ${copy("Original record retained in history.", "原记录保留在历史中。")}</p><button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(view.completion.decision_id)}">${copy("View approved decision and history", "查看已批准决策与历史")}</button>` : ""}</section>
+      <div class="actions"><button class="button quiet" data-action="back-review">${view.status === "UNRESOLVED" ? copy("Keep unresolved", "保留待处理") : copy("Back to Review", "返回审核")}</button></div>`;
   }
 
-  async function loadDecisions() {
-    const { decisions } = await request("/api/decisions");
+  async function loadDecisions(asOf = state.decisionsAsOf || "") {
+    const viewToken = state.agentViewToken, workspace = state.workspace.workspace_id;
+    state.decisionsAsOf = asOf;
+    let { decisions } = await request("/api/decisions");
+    if (asOf) {
+      const scopes = [...new Map(decisions.map(decision => [JSON.stringify([decision.subject, decision.relation]), decision])).values()];
+      const recovered = await Promise.all(scopes.map(async decision => (await send("POST", "/api/decisions/recover", {subject: decision.subject, relation: decision.relation, as_of: asOf})).recovery?.effective));
+      decisions = recovered.filter(Boolean);
+    }
+    if (viewToken !== state.agentViewToken || workspace !== state.workspace?.workspace_id) return;
     const cards = decisions.length ? decisions.map((decision) => `
       <article class="card"><div class="card-head"><div><p class="record-kind">${escapeHtml(relationLabel(decision.relation))}</p><h3>${escapeHtml(decision.subject)}</h3></div>${badge(decision.memory_state)}</div>
-        <p class="decision-value">${escapeHtml(decision.value)}</p><div class="metadata"><span>${copy("Valid from", "生效日期")} <strong>${escapeHtml(decision.valid_from)}</strong></span><span>${copy("Source", "来源")} <strong>${escapeHtml(decision.evidence[0]?.source_name || copy("Unavailable", "不可用"))}</strong></span></div>
+        <p class="decision-value">${escapeHtml(decision.value)}</p><div class="metadata"><span>${copy("Valid from", "生效日期")} <strong>${askDate(decision.valid_from, state.language.startsWith("zh") ? "zh" : "en")}</strong></span><span>${copy("Source", "来源")} <strong>${escapeHtml(decision.evidence[0]?.source_name || copy("Unavailable", "不可用"))}</strong></span></div>
         <button class="button quiet" data-action="inspect-decision" data-id="${escapeHtml(decision.decision_id)}">${copy("View history and evidence", "查看历史与证据")}</button></article>`).join("") : `<section class="empty"><h2>${copy("No decisions in this workspace", "工作区暂无决策")}</h2><p>${copy("Import a source, review a candidate, and approve it before it appears here.", "导入来源并审核候选，批准后即可在此查看。")}</p></section>`;
-    page.innerHTML = `${heading(copy("Decision Memory", "决策记忆"))}
+    page.innerHTML = `${heading(copy("Decisions", "决定"))}
+      <form id="decisions-date-filter" class="panel date-filter"><div class="field"><label for="decisions-date">${copy("Query date", "查询日期")}</label><input type="date" id="decisions-date" name="as_of" value="${escapeHtml(asOf)}"></div><button class="button" type="submit">${copy("Find effective decisions", "查询有效决定")}</button></form>
       <p class="metadata">${decisions.length} ${copy("records", "条记录")}</p><div class="grid">${cards}</div>`;
   }
 
@@ -409,11 +464,11 @@
       ${copy("Source:", "来源：")} ${escapeHtml(item.source_name || copy("Unavailable", "不可用"))} · ${copy("lines", "行号")} ${escapeHtml(item.line_start || "?")}–${escapeHtml(item.line_end || "?")}</p>
       <blockquote class="quote">${escapeHtml(item.quote || copy("Verified quote unavailable", "核验原文不可用"))}</blockquote>
       ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">${copy("Inspect source", "查看来源")}</button>` : ""}
-      <details><summary>${copy("Source references", "来源引用详情")}</summary><p class="metadata">${copy("Version", "版本")}: ${escapeHtml(item.source_version || copy("Unavailable", "不可用"))} · ${copy("Evidence", "证据")}: ${escapeHtml(item.evidence_ref || copy("Unavailable", "不可用"))}</p></details>`).join("");
+      <details><summary>${copy("Verification details", "校验信息")}</summary><p class="metadata">${copy("Version", "版本")}: ${escapeHtml(item.source_version || copy("Unavailable", "不可用"))} · ${copy("Evidence", "证据")}: ${escapeHtml(item.evidence_ref || copy("Unavailable", "不可用"))}</p></details>`).join("");
     const timeline = history.filter(item => item.valid_from <= recovery.as_of).map((item) => `<article class="timeline-item"><div class="card-head"><strong>${escapeHtml(item.value)}</strong>${badge(item.memory_state || item.status)}</div>
       <p class="metadata">${askDate(item.valid_from, state.language.startsWith("zh") ? "zh" : "en")}${item.valid_to ? ` → ${askDate(item.valid_to, state.language.startsWith("zh") ? "zh" : "en")}` : copy(" → open-ended", " → 未设结束日期")}</p>
-      <details><summary>${copy("Approval record", "批准记录")}</summary><pre>${escapeHtml(JSON.stringify({decision_id: item.decision_id, status: item.status, memory_state: item.memory_state, authorization: item.authorization, revalidated_by: item.revalidated_by}, null, 2))}</pre></details>${item.revalidated_by ? `<p>${copy("Revalidated by a separate human approval on", "独立人工批准复核于")} ${askDate(item.revalidated_by.authorized_at, state.language.startsWith("zh") ? "zh" : "en")}</p>` : ""}${evidenceRows(item.evidence)}</article>`).join("");
-    const transitions = recovery.transitions.map((item) => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} on ${escapeHtml(item.effective_at)}.
+      <details><summary>${copy("Verification details", "校验信息")}</summary><pre>${escapeHtml(JSON.stringify({decision_id: item.decision_id, status: item.status, memory_state: item.memory_state, authorization: item.authorization, revalidated_by: item.revalidated_by}, null, 2))}</pre></details>${item.revalidated_by ? `<p>${copy("Revalidated by a separate human approval on", "独立人工批准复核于")} ${askDate(item.revalidated_by.authorized_at, state.language.startsWith("zh") ? "zh" : "en")}</p>` : ""}${evidenceRows(item.evidence)}</article>`).join("");
+    const transitions = recovery.transitions.map((item) => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} on ${askDate(item.effective_at, state.language.startsWith("zh") ? "zh" : "en")}.
       ${copy("Replacement reason:", "替代原因：")} ${item.reason_status === "NOT_SOURCE_VERIFIED" ? copy("Needs source evidence", "待补充来源证据") : escapeHtml(item.reason_status)}.</p>`).join("");
     const proposals = recovery.proposals.map((item) => `<article class="timeline-item"><strong>${escapeHtml(item.value)}</strong> ${badge(item.status)}
       <p class="hint">${copy("Proposal only; no formal review receipt.", "未批准的提案")}</p>${evidenceRows([item.evidence])}</article>`).join("");
@@ -462,15 +517,17 @@
     return askCopy("Decision", "决策", locale);
   }
 
-  function askDate(value, locale) {
-    if (!value) return "";
+  function askDate(value, locale, dateOnly = false) {
+    if (!value) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return `<time datetime="${escapeHtml(value)}">${escapeHtml(value)}</time>`;
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return escapeHtml(value);
-    const readable = new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en-GB", {
-      timeZone: "UTC", year: "numeric", month: "long", day: "numeric",
-    }).format(parsed);
-    return `<time datetime="${escapeHtml(value)}" title="${escapeHtml(value)}">${escapeHtml(readable)} · UTC</time>`;
+    const parts = new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-GB', {year: 'numeric', month: '2-digit', day: '2-digit', ...(dateOnly ? {} : {hour: '2-digit', minute: '2-digit', hourCycle: 'h23'})}).formatToParts(parsed);
+    const part = type => parts.find(item => item.type === type)?.value || '';
+    const readable = `${part('year')}-${part('month')}-${part('day')}${dateOnly ? '' : ` ${part('hour')}:${part('minute')}`}`;
+    return `<time datetime="${escapeHtml(value)}">${readable}</time>`;
   }
+  function meetingDate(value, locale) { return value ? askDate(value, locale, true) : copy('Date not provided', '日期未提供'); }
 
   function savedTaskRun(workspaceId) {
     try { return window.sessionStorage.getItem(`linkloom:last-task:${workspaceId}`); }
@@ -485,6 +542,9 @@
     state.askScopes = config.scopes || [];
     state.askAgent = config.agent;
     state.askSourceContext = config.investigation_context;
+    const sourceList = (config.investigation_context?.sources || []).map(source => ({...source, source_version: source.version}));
+    await meetingMetadata(sourceList, viewToken);
+    if (viewToken !== state.agentViewToken || workspaceId !== state.workspace?.workspace_id) return;
     if (config.agent?.task_investigation && config.agent?.external_provider) {
       document.getElementById("provider-state").textContent = copy("Task investigation enabled · source permission required", "任务调查已启用 · 需逐次授权来源");
     }
@@ -492,39 +552,41 @@
     state.askCandidates = [];
     state.askClarification = null;
     state.askResult = null;
-    page.innerHTML = `<header class="page-heading ask-heading"><h1>${askLabel("Ask", "提问")}</h1>
+    const meetings = config.investigation_context?.sources || [];
+    page.innerHTML = `${heading(askCopy('Ask', '提问'))}<section class="panel ask-composer"><form id="ask-form" class="form-stack">
+      <div class="meeting-scope"><span>${askLabel('Meetings used', '将使用')} ${config.investigation_context?.source_count || 0} ${askLabel('meetings:', '场会议：')}</span>${meetings.map(source => `<span class="source-chip">${escapeHtml(source.name)}</span>`).join('')}</div>
+      <details class="ask-source-details"><summary>${askLabel('Source details', '来源详情')}</summary><ul>${meetings.map(source => `<li>${escapeHtml(source.name)} <code>${escapeHtml(source.version)}</code></li>`).join('')}</ul><p class="hint">${askLabel('Permission covers this question and the listed source versions.', '仅授权本次问题及所列来源版本。')}</p></details>
+        <div id="task-provider-status"><div id="task-setup-status" role="status" hidden><p>${config.agent?.task_investigation ? askLabel("Task investigation ready", "任务调查已就绪") : askLabel("Task investigation is unavailable in this setup.", "当前配置尚未启用任务调查。")}</p>
+          ${!config.agent?.task_investigation ? `<details><summary>${askLabel("Setup details", "配置详情")}</summary><p class="hint">${escapeHtml(config.agent?.task_provider?.setup || "--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30")}</p></details>` : ""}</div>
+          ${config.agent?.task_provider?.budgets ? `<div class="metadata">${askLabel("Per-question limits", "单次调查上限")}: ${escapeHtml(config.agent.task_provider.model_id)} · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_requests} ${askLabel("requests", "次请求")} · ${config.agent.task_provider.budgets.max_seconds}s<details><summary>${askLabel("Token limits", "Token 上限")}</summary><p>${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output</p></details></div>` : ""}
+        </div>        ${config.agent?.available && config.agent?.external_provider ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${askLabel("Allow this request to send sources to the configured external AI provider and incur bounded model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
+      <div class="ask-input-row"><label class="sr-only" for="ask-query">${askLabel('Your question', '你的问题')}</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="${escapeHtml(askCopy('What supplier are we currently using?', '我们现在采用哪家供应商？'))}"></textarea><button id="ask-submit-button" class="button" type="submit">${askLabel('Ask', '提问')}</button></div>
+      <details id="ask-advanced"><summary>${askLabel('Advanced options', '高级选项')}</summary><div class="advanced-grid">
       <div class="field ask-language"><label for="ask-language">${askLabel("Answer language", "回答语言")}</label>
-      <select id="ask-language"><option value="auto" ${state.askLanguage === "auto" ? "selected" : ""}>Auto / 跟随问题</option><option value="zh" ${state.askLanguage === "zh" ? "selected" : ""}>中文</option><option value="en" ${state.askLanguage === "en" ? "selected" : ""}>English</option></select></div></header>
-      <section class="panel ask-composer"><p class="metadata">${askLabel("Workspace", "工作区")} <strong>${escapeHtml(state.workspace.name)}</strong></p>
-      <form id="ask-form" class="form-stack">
-        <div class="field"><label for="ask-query">${askLabel("Your question", "你的问题")}</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="${escapeHtml(askCopy("What supplier are we currently using?", "我们现在采用哪家供应商？"))}"></textarea></div>
-        <div class="field"><label for="ask-domain">${askLabel("Investigation scope (optional)", "调查领域（可选）")}</label><select id="ask-domain" name="investigation_domain">
+      <select id="ask-language"><option value="auto" ${state.askLanguage === "auto" ? "selected" : ""}>Auto / 跟随问题</option><option value="zh" ${state.askLanguage === "zh" ? "selected" : ""}>中文</option><option value="en" ${state.askLanguage === "en" ? "selected" : ""}>English</option></select></div>        <div class="field"><label for="ask-domain">${askLabel("Investigation scope", "调查范围")}</label><select id="ask-domain" name="investigation_domain">
           <option value="" data-ask-en="Automatic" data-ask-zh="自动选择">${askCopy("Automatic", "自动选择")}</option>
           <option value="tasks" data-ask-en="Tasks across the current workspace records" data-ask-zh="当前工作区记录中的任务">${askCopy("Tasks across the current workspace records", "当前工作区记录中的任务")}</option>
           <option value="source_relations" data-ask-en="Project → owner → direct leader" data-ask-zh="项目 → 负责人 → 直属领导">${askCopy("Project → owner → direct leader", "项目 → 负责人 → 直属领导")}</option></select>
           <span class="hint">${askLabel("Choose a scope to focus your question. Refresh after updating sources.", "可选择领域缩小范围；来源更新后请刷新页面。")}</span></div>
-        <div id="task-provider-status"><div id="task-setup-status" role="status" hidden><p>${config.agent?.task_investigation ? askLabel("Task investigation ready", "任务调查已就绪") : askLabel("Task investigation is unavailable in this setup.", "当前配置尚未启用任务调查。")}</p>
-          ${!config.agent?.task_investigation ? `<details><summary>${askLabel("Setup details", "配置详情")}</summary><p class="hint">${escapeHtml(config.agent?.task_provider?.setup || "--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30")}</p></details>` : ""}</div>
-          ${config.agent?.task_provider?.budgets ? `<div class="metadata">${askLabel("Per-question limits", "单次调查上限")}: ${escapeHtml(config.agent.task_provider.model_id)} · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_requests} ${askLabel("requests", "次请求")} · ${config.agent.task_provider.budgets.max_seconds}s<details><summary>${askLabel("Token limits", "Token 上限")}</summary><p>${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output</p></details></div>` : ""}
-          <details><summary>${askLabel("Sources in this authorization", "本次授权的来源清单")} (${config.investigation_context?.source_count || 0})</summary><ul>${(config.investigation_context?.sources || []).map(s => `<li>${escapeHtml(s.name)} <small>${escapeHtml(s.version)}</small></li>`).join("")}</ul><p class="hint">${askLabel("Permission covers this question and the listed source versions.", "仅授权本次问题及所列来源版本。")}</p></details></div>
-        <div class="ask-submit"><button id="ask-submit-button" class="button" type="submit">${askLabel("Ask", "提问")}</button><span class="hint">${askLabel("Ctrl / ⌘ + Enter to ask", "Ctrl / ⌘ + Enter 提交")}</span></div>
-        <details id="ask-advanced" ${selected >= 0 ? "open" : ""}><summary>${askLabel("Advanced: decision and exact date", "高级选项：决策与精确日期")}</summary>
-        <div class="field"><label for="ask-slot">${askLabel("Decision scope", "指定决策（可选）")}</label><select id="ask-slot">
+        <div class="field"><label for="ask-slot">${askLabel("Decision", "指定决定")}</label><select id="ask-slot">
           <option value="" data-ask-en="Discover automatically from my question" data-ask-zh="根据问题自动查找">${askCopy("Discover automatically from my question", "根据问题自动查找")}</option>${state.askScopes.map((slot, index) => `<option value="${index}" data-ask-subject="${escapeHtml(slot.subject)}" data-ask-relation="${escapeHtml(slot.relation)}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(decisionCategory(slot.relation, askLocale()))}</option>`).join("")}</select>
           <span class="hint">${askLabel("Only reviewed, source-verified decisions are available.", "仅包含已审核且来源可核验的决策。")}</span></div>
-        <div class="field"><label for="ask-date">${askLabel("Decision valid on this date (optional)", "查询哪一天有效的决策（可选）")}</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml((state.askScope?.as_of || "").slice(0, 10))}"><span class="hint">${askLabel("Blank means now. Dates start at 00:00 UTC; history uses currently recorded approvals.", "留空查询当前；日期以 UTC 零点为准，使用目前记录的审核信息。")}</span></div></details>
-        ${config.agent?.available && config.agent?.external_provider ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${askLabel("Allow this request to send sources to the configured external AI provider and incur bounded model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
-      </form>${savedTaskRun(workspaceId) ? `<button class="button quiet" type="button" data-action="reopen-task">${askLabel("Recheck last task investigation", "重新核验上次任务调查")}</button>` : ""}</section><div id="ask-result" tabindex="-1" aria-live="polite"></div>
-      <details class="panel" id="feedback-panel"><summary>${askLabel("Term not understood? Propose a correction", "术语没识别对？提出纠正")}</summary>
+        <div class="field"><label for="ask-date">${askLabel("Query date", "查询日期")}</label><input type="date" id="ask-date" name="as_of" value="${escapeHtml((state.askScope?.as_of || "").slice(0, 10))}"><span class="hint">${askLabel("Blank means now. Dates start at 00:00 UTC; history uses currently recorded approvals.", "留空查询当前；日期以 UTC 零点为准，使用目前记录的审核信息。")}</span></div></div></details>
+
+
+      <div class="example-questions" aria-label="${escapeHtml(askCopy('Example questions', '示例问题'))}"><button type="button" class="source-chip" data-action="ask-example" data-query="我们现在采用哪家供应商？">${askLabel('Who is our current supplier?', '我们现在采用哪家供应商？')}</button><button type="button" class="source-chip" data-action="ask-example" data-query="联调报告由谁负责？">${askLabel('Who owns the integration report?', '联调报告由谁负责？')}</button></div>
+      </form>${savedTaskRun(workspaceId) ? `<button class="button quiet" type="button" data-action="reopen-task">${askLabel('Recheck last task investigation', '重新核验上次任务调查')}</button>` : ''}</section><div id="ask-result" tabindex="-1" aria-live="polite"></div>
+      <details class="feedback-footer" id="feedback-panel" hidden><summary>${askLabel("Term not understood?", "术语没识别对？")}</summary>
         <p>${askLabel("Terminology applies only to this workspace after your explicit approval. It cannot approve or change business decisions.", "术语仅在本工作区经人工确认后生效，不能批准或修改业务决策。")}</p>
         <form id="feedback-form" class="form-stack">
           <div class="field"><label for="feedback-term">${askLabel("New term", "新术语")}</label><input id="feedback-term" name="term" required minlength="2" maxlength="40"><span class="hint">${askLabel("One term, 2–40 characters; sentences are unsupported.", "单个术语，2–40 字符；不支持整句。")}</span></div>
           <div class="field"><label for="feedback-relation">${askLabel("Means this existing relation", "对应已有关系")}</label><select id="feedback-relation" name="relation" required>${[...new Set(state.askScopes.map(s => s.relation))].map(relation => `<option value="${escapeHtml(relation)}">${escapeHtml(decisionCategory(relation, askLocale()))}</option>`).join("")}</select></div>
-          <div class="field"><label for="feedback-actor">${askLabel("Reviewer name (local record)", "审核人姓名（本地记录）")}</label><input id="feedback-actor" name="actor" required maxlength="128" placeholder="local-user"></div>
+          <div class="field" id="feedback-identity-field"><label for="feedback-actor">${askLabel("Your local name", "本地操作姓名")}</label><input id="feedback-actor" name="actor" required maxlength="128"></div><p id="feedback-identity" class="hint"></p>
           <button class="button quiet" type="submit">${askLabel("Submit for review", "提交审核")}</button>
         </form><div id="feedback-status" role="status" aria-live="polite"></div><div id="feedback-entries"></div>
       </details>`;
     syncTaskOptions();
+    reuseFeedbackIdentity();
     await loadFeedback(workspaceId, viewToken);
   }
 
@@ -549,6 +611,30 @@
     }
   }
 
+  function reuseFeedbackIdentity() {
+    let actor = '';
+    try { actor = String(window.localStorage.getItem('linkloom.tasks.reviewer') || '').trim(); } catch { /* Local identity may be unavailable. */ }
+    const field = document.getElementById('feedback-actor');
+    if (field && actor) field.value = actor;
+    const group = document.getElementById('feedback-identity-field');
+    if (group) group.hidden = Boolean(actor);
+    const label = document.getElementById('feedback-identity');
+    if (label) label.textContent = actor ? copy('Local identity: ', '本地身份：') + actor : '';
+    return actor;
+  }
+
+  function feedbackIdentity() {
+    const field = document.getElementById('feedback-actor');
+    const actor = reuseFeedbackIdentity() || String(field?.value || '').trim();
+    if (!actor || actor.length > 128) {
+      announce(copy('Enter a local reviewer name of 1–128 characters.', '请设置 1–128 字的本地操作姓名。'));
+      field?.reportValidity?.(); return null;
+    }
+    try { window.localStorage.setItem('linkloom.tasks.reviewer', actor); } catch { /* This operation still records its explicit actor. */ }
+    reuseFeedbackIdentity();
+    return actor;
+  }
+
   async function changeFeedback(action, data) {
     const workspaceId = state.workspace?.workspace_id;
     const target = document.getElementById("feedback-status");
@@ -557,12 +643,12 @@
     if (form.dataset.feedbackPending === "true") return;
     const submit = document.getElementById("ask-submit-button");
     form.dataset.feedbackPending = "true"; submit.disabled = true;
-    invalidateAsk(); state.askClarification = null;
+    invalidateAsk({keepFeedback: true}); state.askClarification = null;
     try {
       await send("POST", `/api/product/feedback/${action}`, {...data, workspace_id: workspaceId});
       if (workspaceId !== state.workspace?.workspace_id || !target.isConnected) return;
       // A changed memory version invalidates any in-flight answer from this page.
-      invalidateAsk(); state.askClarification = null;
+      invalidateAsk({keepFeedback: true}); state.askClarification = null;
       target.textContent = askCopy("Saved. Ask the same question again to check the current state.", "已保存。可直接再次提交原问题，检查当前效果。");
       await loadFeedback();
     } catch (error) {
@@ -572,13 +658,15 @@
     }
   }
 
-  function invalidateAsk() {
+  function invalidateAsk({keepFeedback = false} = {}) {
     state.askLocaleRun = null;
     state.agentViewToken += 1;
     state.askCandidates = [];
     state.askResult = null;
     const target = document.getElementById("ask-result");
     if (target) target.innerHTML = "";
+    const feedback = document.getElementById('feedback-panel');
+    if (feedback && !keepFeedback) { feedback.hidden = true; feedback.open = false; }
   }
 
   async function askRequest(path, options = {}) {
@@ -592,14 +680,14 @@
     throw error;
   }
 
-  function askEvidence(item, index, locale) {
+  function askEvidence(item, index, locale, stateLabel = "") {
     const t = (en, zh) => askCopy(en, zh, locale);
-    return `<article class="ask-evidence"><h3>[${index + 1}] ${escapeHtml(item.source_name)}</h3>
-      <p class="metadata">${t("Original source", "原始来源")} · ${t("Lines", "行号")} ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)}</p>
+    return `<article class="ask-evidence"><h3>[${index + 1}] ${escapeHtml(item.source_name)}</h3>${stateLabel ? `<span class="badge">${escapeHtml(stateLabel)}</span>` : ""}
+      <p class="metadata">${meetingDate(item.meeting_time || item.event_time || state.meetingMetadata?.[item.source_id]?.date, locale)}</p>
       <blockquote class="quote">${escapeHtml(item.quote)}</blockquote>
       ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">${t("View source", "查看来源")}</button>` : ""}
-      <details class="ask-source-details"><summary>${t("Source version and exact references", "来源版本与完整引用")}</summary>
-        <dl><dt>${t("Version", "来源版本")}</dt><dd><code>${escapeHtml(item.source_version)}</code></dd>
+      <details class="ask-source-details"><summary>${t("Verification details", "校验信息")}</summary>
+        <p>${t("Lines", "行号")} ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)}</p><dl><dt>${t("Version", "来源版本")}</dt><dd><code>${escapeHtml(item.source_version)}</code></dd>
         <dt>${t("Evidence reference", "原始证据引用")}</dt><dd><code>${escapeHtml(item.evidence_ref)}</code></dd></dl>
         ${item.citation_id ? `<p>${t("Citation", "引用编号")}: <code>${escapeHtml(item.citation_id)}</code></p>` : ""}</details></article>`;
   }
@@ -610,7 +698,7 @@
       route: result.route, discovery: result.discovery, reviewer: result.reviewer,
       agent_run_id: result.agent_run_id, metrics: result.metrics, error: result.error,
       uncertainty: result.uncertainty};
-    return `<details class="ask-technical"><summary>${t("Review records and technical details", "审核记录与技术详情")}</summary>
+    return `<details class="ask-technical"><summary>${t("Verification details", "校验信息")}</summary>
       ${accepted ? (result.receipts || []).map((receipt) => `<section class="ask-receipt"><h3>${t("Recorded authorization", "审核收据")}</h3><dl>
         <dt>${t("Receipt", "收据编号")}</dt><dd><code>${escapeHtml(receipt.receipt_id)}</code></dd>
         <dt>${t("Authorization", "授权类型")}</dt><dd>${escapeHtml(receipt.authorization_type)}</dd>
@@ -623,6 +711,8 @@
     const target = document.getElementById("ask-result");
     if (!target) return;
     state.askResult = result;
+    const feedback = document.getElementById('feedback-panel');
+    if (feedback) { feedback.hidden = result.status === 'INVESTIGATING'; target.insertAdjacentElement?.('afterend', feedback); }
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
@@ -729,7 +819,22 @@
     const title = !claims.length ? t("No verifiable formal decision for this date", "该日期没有可核实的正式决策") : reasonUnknown ? (transition ? t("Change verified; the reason remains unknown", "更换事实已核实，原因尚无可信证据") : t("The reason is not established", "原因尚无可信证据")) : escapeHtml(claims[0].value);
     const sentence = reasonUnknown && transition ? `${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)}. ${t("Reason: unconfirmed.", "更换原因：待确认。")}`
       : claims.length ? (supplier ? t(`${escapeHtml(subject)} uses ${escapeHtml(claims[0].value)} as its reviewed supplier${historical ? " at the selected date" : ""}.`, `${escapeHtml(subject)} 项目${historical ? "在所选日期采用" : "当前采用"} ${escapeHtml(claims[0].value)} 作为供应商。`) : `${escapeHtml(subject)} · ${escapeHtml(decisionCategory(result.scope?.relation, locale))}: ${escapeHtml(claims[0].value)}.`) : t("There is no unique reviewed, source-verified effective decision for the selected date.", "所选日期没有唯一、已审核且来源可核验的有效决策。");
-    const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale));
+    const replacedIds = new Set(transitions.map(item => item.from_decision_id).filter(Boolean));
+    const replacedEvidence = (result.timeline?.history || [])
+      .filter(item => item.memory_state === 'SUPERSEDED' && replacedIds.has(item.decision_id))
+      .flatMap(item => item.evidence || []);
+    const sameReference = (left, right) => Boolean(left.evidence_ref) && left.evidence_ref === right.evidence_ref && left.source_version === right.source_version;
+    const answerEvidence = [...(result.evidence || [])];
+    for (const item of replacedEvidence) {
+      if (!answerEvidence.some(existing => sameReference(existing, item))) answerEvidence.push(item);
+    }
+    const evidence = answerEvidence.map((item, index) => {
+      const current = (effective?.evidence || []).some(original => sameReference(original, item));
+      const replaced = replacedEvidence.some(original => sameReference(original, item));
+      const status = current ? t("Current at the queried date", historical ? "查询日期有效" : "当前有效")
+        : replaced ? t("Replaced", "已被替代") : '';
+      return askEvidence(item, index, locale, status);
+    });
     const timelineButton = effective ? `<button class="button quiet" data-action="ask-timeline" data-id="${escapeHtml(effective.decision_id)}" data-as-of="${escapeHtml(result.scope?.as_of || "")}">${t("View decision timeline", "查看决策时间线")}</button>` : "";
     const history = `<details class="ask-history"><summary>${t("Decision history and unapproved proposals", "相关历史与未审核提案")}</summary>${transitions.map(item => `<p>${escapeHtml(item.from_value)} → ${escapeHtml(item.to_value)} · ${askDate(item.effective_at, locale)}</p>`).join("")}${!reasonUnknown && unknownText ? `<p class="hint">${escapeHtml(unknownText)}</p>` : ""}${(result.timeline?.proposals || []).map(item => `<p class="hint">${t("Unapproved proposal, not a formal decision", "未审核提案，非正式决策")}: ${escapeHtml(item.value)}</p>`).join("")}${timelineButton}</details>`;
     target.innerHTML = `<section class="panel ask-answer ${!claims.length || investigationUnknown ? "ask-answer--notice" : ""}">
@@ -774,7 +879,7 @@
       <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("relationship checks", "项关系核查")}</span></div>
       ${steps}<section class="ask-core-evidence"><h2>${t("Sources supporting the verified facts or conflict", "支持已核实关系或冲突的来源")}</h2>${coreEvidence.map((item, index) => askEvidence(item, index, locale)).join("")}</section>
       ${otherEvidence.length ? `<details><summary>${t("Other sources examined", "其他已查阅来源")} (${otherEvidence.length})</summary>${otherEvidence.map((item, index) => askEvidence(item, coreEvidence.length + index, locale)).join("")}</details>` : ""}
-      <details class="ask-technical"><summary>${t("Full investigation: plan, dependencies and tool calls", "查看完整调查过程：计划、依赖与工具记录")}</summary><pre>${escapeHtml(JSON.stringify({plan: source.plan, trace: source.trace, metrics: result.metrics, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
+      <details class="ask-technical"><summary>${t("Verification details", "校验信息")}</summary><pre>${escapeHtml(JSON.stringify({plan: source.plan, trace: source.trace, metrics: result.metrics, reviewer: result.reviewer}, null, 2))}</pre></details></section>`;
   }
 
   async function pollAsk(runId, workspaceId, viewToken) {
@@ -813,6 +918,8 @@
     state.askScope = !clarifiedSlot && !pendingSlot && slot ? { ...slot, as_of: data.as_of || "" } : null;
     state.askCandidates = [];
     state.askResult = null;
+    const feedback = document.getElementById("feedback-panel");
+    if (feedback) { feedback.hidden = true; feedback.open = false; }
     const permission = document.getElementById("ask-external");
     const allowExternal = permission?.checked === true;
     if (permission) permission.checked = false;
@@ -839,7 +946,7 @@
   }
 
   document.querySelectorAll(".primary-nav [data-screen]").forEach((button) => {
-    button.addEventListener("click", () => loadScreen(button.dataset.screen));
+    button.addEventListener("click", event => { event?.preventDefault?.(); loadScreen(button.dataset.screen); });
   });
 
   workspacePicker.addEventListener("change", async () => {
@@ -855,6 +962,7 @@
       const result = await send("POST", "/api/workspaces/current", { workspace_id: workspacePicker.value });
       if (viewToken !== state.agentViewToken) return;
       state.workspace = result.workspace;
+      state.decisionsAsOf = "";
       await refreshWorkspaceState();
       if (viewToken === state.agentViewToken) await loadScreen(nextScreen);
     } catch (error) { if (viewToken === state.agentViewToken) renderError(error); }
@@ -888,12 +996,15 @@
     if (event.target?.id === "ask-domain") syncTaskOptions();
     if (["ask-query", "ask-slot", "ask-domain"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external", "ask-domain"].includes(event.target?.id)) { invalidateAsk(); return; }
-    if (event.target?.id !== "source-file") return;
-    const file = event.target.files?.[0];
+    if (event.target?.id === "source-file") await loadMeetingFile(event.target.files);
+  });
+
+  async function loadMeetingFile(files) {
+    const file = files?.[0];
     if (!file) return;
     if (file.size > 256 * 1024) {
       announce(copy("Source files must be 256 KB or smaller.", "来源文件最大支持 256 KB。"));
-      event.target.value = "";
+      const picker = document.getElementById("source-file"); if (picker) picker.value = "";
       return;
     }
     try {
@@ -903,7 +1014,9 @@
     } catch {
       announce(copy("LinkLoom could not read this file. Paste the timestamped text instead.", "文件读取失败，请粘贴带时间戳的文本。"));
     }
-  });
+  }
+  page.addEventListener('dragover', event => { if (event.target?.closest?.('#meeting-import')) event.preventDefault(); });
+  page.addEventListener('drop', async event => { if (!event.target?.closest?.('#meeting-import')) return; event.preventDefault(); await loadMeetingFile(event.dataTransfer?.files); });
 
   page.addEventListener("submit", async (event) => {
     const form = event.target;
@@ -959,18 +1072,25 @@
       } else if (form.id === "ask-form") {
         await submitAsk(form);
       } else if (form.id === "feedback-form") {
-        await changeFeedback("propose", Object.fromEntries(new FormData(form)));
+        const actor = feedbackIdentity();
+        if (!actor) return;
+        await changeFeedback("propose", {...Object.fromEntries(new FormData(form)), actor});
+      } else if (form.id === "decisions-date-filter") {
+        await loadDecisions(String(new FormData(form).get("as_of") || ""));
       } else if (form.id === "timeline-as-of") {
         await inspectDecision(form.dataset.id, String(new FormData(form).get("as_of") || ""));
       }
-    } catch (error) { renderError(error, `<p><button class="button quiet" data-action="reload">${copy("Refresh", "刷新")}</button></p>`); }
+    } catch (error) { renderError(error, `<p><button class="button quiet" data-action="reload">${copy("Try again", "重试")}</button></p>`); }
   });
 
   page.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (button.tagName === 'A') event.preventDefault?.();
     try {
+      if (action === 'focus-import') { document.getElementById('meeting-import')?.scrollIntoView?.({block: 'start'}); document.getElementById('source-file')?.focus?.(); return; }
+      if (action === 'ask-example') { const input = document.getElementById('ask-query'); input.value = button.dataset.query; invalidateAsk(); localizeAsk(input.value); input.focus?.(); return; }
       if (action === "inspect-source") await inspectSource(id);
       else if (action === "reopen-task") {
         const workspaceId = state.workspace.workspace_id;
@@ -981,9 +1101,9 @@
         }
       }
       else if (["feedback-approve", "feedback-reject", "feedback-revoke"].includes(action)) {
-        const actor = document.getElementById("feedback-actor");
-        if (!actor.checkValidity()) { actor.reportValidity(); return; }
-        await changeFeedback(action.replace("feedback-", ""), {id, actor: actor.value, human_confirmed: true});
+        const actor = feedbackIdentity();
+        if (!actor) return;
+        await changeFeedback(action.replace("feedback-", ""), {id, actor, human_confirmed: true});
       }
       else if (action === "choose-ask-scope") {
         const slot = state.askCandidates[Number(button.dataset.index)];
@@ -1033,14 +1153,14 @@
   });
 
   function localizeChrome() {
-    const nav = {sources: copy("Sources", "来源"), review: copy("Review", "审核"),
-      decisions: copy("Decision Memory", "决策记忆"), ask: copy("Ask", "提问")};
+    const nav = {sources: copy("Meetings", "会议"), review: copy("Records to confirm", "会议待确认"),
+      decisions: copy("Decisions", "决定"), ask: copy("Ask", "提问")};
     document.querySelectorAll(".primary-nav [data-screen]").forEach(button => {
       const label = button.querySelector?.(".nav-label");
       if (label) label.textContent = nav[button.dataset.screen];
     });
     for (const [id, en, zh] of [["workspace-label", "Workspace", "工作区"],
-      ["new-workspace", "New workspace", "新建工作区"], ["interface-language-label", "Language", "界面语言"],
+      ["tasks-nav-label", "Tasks", "待办"], ["new-workspace", "New workspace", "新建工作区"], ["interface-language-label", "Language", "界面语言"],
       ["skip-content", "Skip to content", "跳到主要内容"]]) {
       const element = document.getElementById(id);
       if (element) element.textContent = copy(en, zh);
@@ -1092,11 +1212,18 @@
     } catch (error) { renderError(error); }
   });
 
+  window.addEventListener?.('hashchange', () => {
+    const hash = String(window.location?.hash || '').replace(/^#/, '');
+    if (Object.values(screenHashes).includes(hash)) loadScreen(requestedScreen());
+  });
   async function bootstrap() {
     try {
+      if (window.location?.pathname === '/' && !window.location.hash && typeof window.location.replace === 'function') {
+        window.location.replace('/tasks' + (window.location.search || '')); return;
+      }
       localizeChrome();
       await refreshWorkspaceState();
-      if (state.workspace) await loadScreen("sources");
+      if (state.workspace) await loadScreen(requestedScreen());
       else await showNoWorkspace();
     } catch (error) { renderError(error); }
   }

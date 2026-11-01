@@ -1,7 +1,7 @@
 /* Optional real-browser acceptance. Uses a fresh synthetic HTTP/SQLite demo,
    a new no-login Chromium context and the existing FakeProvider only. */
 const {chromium} = require("playwright");
-const {spawn} = require("node:child_process");
+const {spawnHostProcess, stopHostProcess} = require("./browser_host.cjs");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const {strict: assert} = require("node:assert");
@@ -9,7 +9,7 @@ const {strict: assert} = require("node:assert");
 (async () => {
   const directory = path.resolve(process.argv[2] || `work/stale-browser-${Date.now()}`);
   const python = process.env.LINKLOOM_TEST_PYTHON || "python";
-  const server = spawn(python, ["scripts/demo_stale_revalidation.py", "--directory", directory], {
+  const server = spawnHostProcess(python, ["scripts/demo_stale_revalidation.py", "--directory", directory], {
     env: {...process.env, PYTHONPATH: ["src", "."].join(path.delimiter), GEMINI_API_KEY: "", DEEPSEEK_API_KEY: ""},
     stdio: ["ignore", "pipe", "inherit"],
   });
@@ -25,12 +25,12 @@ const {strict: assert} = require("node:assert");
       server.on("error", reject);
       server.on("exit", code => reject(new Error(`Synthetic server exited: ${code}`)));
     });
-    browser = await chromium.launch({headless: true});
+    browser = await chromium.launch({headless: true, ...(process.env.LINKLOOM_CHROMIUM_EXECUTABLE ? {executablePath: process.env.LINKLOOM_CHROMIUM_EXECUTABLE} : {})});
     const page = await browser.newPage({viewport: {width: 1440, height: 1000}});
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
-    await page.goto(metadata.url);
-    await page.getByRole("button", {name: /^Review/}).click();
+    await page.goto(metadata.url+'/?lang=en#meetings');
+    await page.locator('button[data-action="back-review"]').click();
     await page.getByRole("button", {name: "Revalidate decision", exact: true}).waitFor();
     await page.screenshot({path: path.join(directory, "01-before-attention.png"), fullPage: true});
     await page.getByRole("button", {name: "Revalidate decision", exact: true}).click();
@@ -46,7 +46,8 @@ const {strict: assert} = require("node:assert");
     await page.getByRole("heading", {name: "Decision timeline", exact: true}).waitFor();
     await page.getByText(/Revalidated by a separate human approval/).waitFor();
     await page.screenshot({path: path.join(directory, "04-after-history.png"), fullPage: true});
-    await page.getByRole("button", {name: /^Review/}).click();
+    await page.locator('[data-screen="sources"]').click();
+    await page.locator('button[data-action="back-review"]').click();
     await page.getByText("No Decision Memory records currently need revalidation.").waitFor();
     await page.screenshot({path: path.join(directory, "05-after-attention.png"), fullPage: true});
     assert.deepEqual(errors, []);
@@ -57,6 +58,6 @@ const {strict: assert} = require("node:assert");
     console.log(`PASS: real browser approval + SQLite; screenshots in ${directory}`);
   } finally {
     if (browser) await browser.close();
-    server.kill("SIGINT");
+    await stopHostProcess(server);
   }
 })().catch(error => {console.error(error); process.exitCode = 1;});
