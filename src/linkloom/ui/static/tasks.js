@@ -216,7 +216,7 @@
       return '<div class="pager"><span>' + (page.items.length ? '第 ' + (meta.offset + 1) + '–' + (meta.offset + page.items.length) + ' 条' : '暂无记录') + '</span><div><button type="button" data-action="' + action + '" data-offset="' + Math.max(0, meta.offset - meta.limit) + '"' + (meta.offset === 0 ? ' disabled' : '') + '>上一页</button><button type="button" data-action="' + action + '" data-offset="' + meta.next_offset + '"' + (!meta.has_more ? ' disabled' : '') + '>下一页</button></div></div>';
     }
     function sameTitleHtml(candidate, index) {
-      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<div class="same-title-hint"><span>看起来是这条已有任务的更新：<strong>' + esc(item.task.title) + '（' + esc(text(item.task.owner)) + ' · ' + esc(deadline(item.task)) + '）</strong></span><button type="button" data-action="choose-same-task" data-index="' + index + '" data-task="' + esc(item.task.id) + '" data-testid="choose-same-task">选它</button></div>').join('');
+      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<div class="same-title-hint"><span>已有同名任务：<strong>' + esc(item.task.title) + '（' + esc(text(item.task.owner)) + ' · ' + esc(deadline(item.task)) + '）</strong></span><button type="button" data-action="choose-same-task" data-index="' + index + '" data-task="' + esc(item.task.id) + '" data-testid="choose-same-task">选它</button></div>').join('');
     }
     function candidateActions(item, index) {
       if (state.blockedReviews.has(candidateKey(item)) || !item.is_current || (item.reviewed && item.review_status !== 'needs_review')) return '<p class="muted">' + (state.blockedReviews.has(candidateKey(item)) ? '已提交，重新读取列表前不会重复提交此候选。' : item.is_current ? '此候选已处理。' : '历史候选，当前不可直接审核。') + '</p>';

@@ -391,8 +391,8 @@ test('full independent catalog finds exact-title tasks beyond page one without c
   const catalogCalls = h.calls.filter(call => call.path === '/api/product/tasks' && call.query.limit === '100');
   assert.deepEqual(catalogCalls.slice(-2).map(call => call.query.offset), ['0', '100']);
   for (const call of catalogCalls) {assert.equal(call.query.owner, undefined); assert.equal(call.query.status, undefined);}
-  assert.match(h.elements['tasks-app'].innerHTML, /看起来是这条已有任务的更新：<strong>联调报告（目录负责人 · 2026-10-12）/);
-  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /看起来是这条已有任务的更新：<strong>联调报告 /);
+  assert.match(h.elements['tasks-app'].innerHTML, /已有同名任务：<strong>联调报告（目录负责人 · 2026-10-12）/);
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /已有同名任务：<strong>联调报告 /);
   await h.click('candidate-merge', {index: '0'});
   assert.equal(h.app.state.form.target, ''); assert.equal(h.app.state.form.preview, null);
   assert.match(h.elements['tasks-app'].innerHTML, /value="late"/);
@@ -430,6 +430,24 @@ test('same-title suggestion selects a merge target only after choose, and checks
   h.app.state.blockedReviews.add('b:' + fingerprint);
   await h.click('choose-same-task', {index: '1', task: 'task-1'});
   assert.equal(h.app.state.form.target, '');
+  assert.equal(h.writes().length, 0);
+});
+
+test('same-title month-day hint shows the source token and waits for an explicit choice', async () => {
+  const h = await harness();
+  h.task.deadline = null; h.task.deadline_text = '10/12';
+  await h.app.loadCatalog();
+  h.app.state.candidates.items[1].candidate.deadline = null;
+  h.app.state.candidates.items[1].candidate.deadline_text = '10/16';
+  await h.click('candidate-select', {index: '1'});
+  assert.match(h.elements['tasks-app'].innerHTML, /已有同名任务：<strong>联调报告（李明 · 10\/12）<\/strong>/);
+  assert.equal(h.app.state.form, null);
+  assert.equal(h.calls.filter(call => /\/merge-preview$/.test(call.path)).length, 0);
+  assert.equal(h.writes().length, 0);
+  await h.click('choose-same-task', {index: '1', task: 'task-1'});
+  assert.equal(h.app.state.form.target, 'task-1');
+  assert.deepEqual(Array.from(h.app.state.form.applyFields), ['owner', 'deadline']);
+  assert.equal(h.app.state.form.preview.preview_token, 'merge-token');
   assert.equal(h.writes().length, 0);
 });
 
