@@ -610,31 +610,21 @@ def test_binding_details_append_only_workspace_fk_and_reopening_preserve_unrelat
     with pytest.raises(TaskSchemaError, match='guards'):
         TaskReviewService(app.store, LegacyTaskCandidateSource())
 
-def test_newer_catalogue_order_does_not_depend_on_lexical_version_hash(tmp_path, monkeypatch):
-    from uuid import UUID
-    # The workspace participates in the source hash. Fix only this fixture's
-    # workspace identity so the real hash-order counterexample is deterministic.
-    # End the patch before creating/rebinding tasks; business IDs remain real.
-    with monkeypatch.context() as fixed_workspace:
-        fixed_workspace.setattr('linkloom.ui.product.uuid4', lambda: UUID(int=1))
-        value_app = seed(tmp_path / 'lexical-version.sqlite')
-    try:
-        initial = original_task(value_app)
-        content = None
-        for index in range(128):
-            proposed = NEW_CONTENT + f' 修订编号{index}'
-            artifact = replace(value_app.artifact, content=proposed)
-            if artifact.artifact_version_id < value_app.artifact.artifact_version_id:
-                content = proposed
-                break
-        assert content is not None, 'fixture could not construct a lexically earlier new content hash'
-        artifact, candidate = revise(value_app, content=content)
-        value = binding_preview(value_app, initial, candidate)
-        assert artifact.artifact_version_id < value_app.artifact.artifact_version_id
-        assert value['source_proof']['new']['version_sequence'] > value['source_proof']['old']['version_sequence']
-        assert apply_binding(value_app, value)['task']['owner'] == '王芳'
-    finally:
-        close(value_app)
+def test_newer_catalogue_order_does_not_depend_on_lexical_version_hash(app):
+    initial = original_task(app)
+    content = None
+    for index in range(128):
+        proposed = NEW_CONTENT + f' 修订编号{index}'
+        artifact = replace(app.artifact, content=proposed)
+        if artifact.artifact_version_id < app.artifact.artifact_version_id:
+            content = proposed
+            break
+    assert content is not None, 'fixture could not construct a lexically earlier new content hash'
+    artifact, candidate = revise(app, content=content)
+    value = binding_preview(app, initial, candidate)
+    assert artifact.artifact_version_id < app.artifact.artifact_version_id
+    assert value['source_proof']['new']['version_sequence'] > value['source_proof']['old']['version_sequence']
+    assert apply_binding(app, value)['task']['owner'] == '王芳'
 
 
 def test_rebinding_source_protocol_rejects_a_new_candidate_with_mixed_version_evidence(app):

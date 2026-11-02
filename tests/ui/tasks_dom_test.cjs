@@ -153,45 +153,6 @@ test('confirm patch reasons track only changed fields and preserve editable reas
   assert.equal(h.writes()[0].body.reason, '人工核对了新的执行安排');
 });
 
-test('month/day candidate keeps its literal deadline and flagged title is editable with normal review binding', async () => {
-  const h = await harness({saved: '本地审核人'});
-  const original = '联调报告改由王芳负责，延期到 10/16。';
-  Object.assign(h.pending[0].candidate, {title: original, owner: '王芳', deadline: null,
-    deadline_text: '10/16', title_needs_edit: true});
-  await h.app.loadCandidates(); h.app.render();
-  const html = h.elements['tasks-app'].innerHTML;
-  assert.match(html, /data-testid="title-needs-edit">标题待整理<\/span>/);
-  assert.equal((html.match(/data-testid="title-needs-edit"/g) || []).length, 1);
-  assert.match(html, /<span>截止 10\/16<\/span>/);
-  assert.doesNotMatch(html, /截止 2026-10-16/);
-  await h.click('candidate-create', {index: '0'});
-  assert.equal(h.app.state.form.title, original);
-  assert.equal(h.app.state.form.deadline, '');
-  assert.equal(h.app.state.form.deadline_text, '10/16');
-  assert.match(h.elements['tasks-app'].innerHTML, /data-testid="confirm-title"/);
-  h.input('title', '联调报告');
-  assert.equal(h.app.state.form.reason, '人工修正：任务描述');
-  await h.click('confirm-review');
-  const write = h.writes()[0];
-  assert.equal(write.body.expected_candidate_fingerprint, fingerprint);
-  assert.equal(write.body.reviewer, '本地审核人');
-  assert.deepEqual(write.body.patch, {title: '联调报告'});
-  assert.equal(h.writes().length, 1);
-});
-
-test('title warning is explicit boolean metadata and fallback titles stay escaped', async () => {
-  const h = await harness();
-  for (const value of [undefined, false, 'true', 1]) {
-    h.pending[0].candidate.title_needs_edit = value;
-    await h.app.loadCandidates(); h.app.render();
-    assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /data-testid="title-needs-edit"/);
-  }
-  Object.assign(h.pending[0].candidate, {title_needs_edit: true, title: '<img src=x onerror=alert(1)> 工作原句'});
-  await h.app.loadCandidates(); h.app.render();
-  assert.match(h.elements['tasks-app'].innerHTML, /&lt;img src=x onerror=alert\(1\)&gt; 工作原句/);
-  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /<img src=x/);
-});
-
 test('merge is explicit, requires preview, invalidates preview on field/target change, sends token', async () => {
   const h = await harness(); await h.click('candidate-merge', {index: '1'});
   assert.equal(h.app.state.form.target, ''); assert.deepEqual(Array.from(h.app.state.form.applyFields), []);

@@ -516,7 +516,6 @@ class SemanticExtractionResult:
     failure_code: CandidateReasonCode | None = None
     # Product audit data is deliberately outside the canonical extraction record.
     response_evidence: dict[str, object] | None = field(default=None, compare=False, repr=False)
-    task_stages: dict[str, object] | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.claims, tuple) or any(
@@ -535,32 +534,25 @@ class SemanticExtractionResult:
             raise ValueError("extraction failure and receipt terminal reason must match")
         if self.receipt.claims_sha256 != claims_sha256_for(self.claims):
             raise ValueError("claims_sha256 does not match the serialized extraction claims")
-        if ((self.task_stages is not None) !=
-                (self.receipt.extractor_version == 'product-task-two-stage/v2')):
-            raise ValueError('two-stage extraction requires its complete stage audit')
-        if self.task_stages is not None:
-            from linkloom.semantic_ingestion.product_task_stages import validate_stage_audit
-            validate_stage_audit(self)
 
     def to_dict(self) -> dict[str, object]:
-        result = {
+        return {
             "record_version": _EXTRACTION_RESULT_VERSION,
             "claims": [claim.to_dict() for claim in self.claims],
             "receipt": self.receipt.to_dict(),
             "failure_code": self.failure_code.value if self.failure_code else None,
         }
-        if self.task_stages is not None:
-            result['record_version'] = 'semantic-extraction-result/v3'
-            result['task_stages'] = self.task_stages
-        return result
 
     @classmethod
     def from_dict(cls, data: dict[str, object]) -> "SemanticExtractionResult":
-        old = {"record_version", "claims", "receipt", "failure_code"}
-        if not isinstance(data, dict) or set(data) not in (old, old | {'task_stages'}):
+        if not isinstance(data, dict) or set(data) != {
+            "record_version",
+            "claims",
+            "receipt",
+            "failure_code",
+        }:
             raise ValueError("SemanticExtractionResult has missing or unsupported fields")
-        if (data["record_version"] != _EXTRACTION_RESULT_VERSION if 'task_stages' not in data else
-                data["record_version"] != 'semantic-extraction-result/v3'):
+        if data["record_version"] != _EXTRACTION_RESULT_VERSION:
             raise ValueError("unsupported SemanticExtractionResult record version")
         raw_claims = data["claims"]
         if not isinstance(raw_claims, list):
@@ -571,7 +563,6 @@ class SemanticExtractionResult:
             claims=claims,
             receipt=ExtractionReceipt.from_dict(data["receipt"]),  # type: ignore[arg-type]
             failure_code=(CandidateReasonCode(raw_failure) if raw_failure is not None else None),
-            task_stages=data.get('task_stages'),
         )
 
 

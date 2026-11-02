@@ -78,13 +78,10 @@ class LegacyTaskCandidateSource:
                     line_start=span.line_start, line_end=span.line_end, char_start=span.char_start,
                     char_end=span.char_end, source_sha256=span.content_hash,
                     meeting_time=observation.event_time)
-                product_policy = observation.grounding_policy_version
-                candidate = TaskCandidateInput(observation.observation_id, workspace,
-                    observation.title if product_policy else observation.description,
+                candidate = TaskCandidateInput(observation.observation_id, workspace, observation.description,
                     (evidence,), owner=observation.owner, deadline=observation.deadline,
                     deadline_text=observation.deadline_text, meeting_time=observation.event_time,
-                    candidate_version=product_policy or 'legacy-task-observation/v1', source_fingerprint=source_fingerprint,
-                    title_needs_edit=observation.title_needs_edit)
+                    candidate_version='legacy-task-observation/v1', source_fingerprint=source_fingerprint)
                 groups.setdefault(candidate.candidate_id, []).append((candidate, encoded, row['workflow_state']))
                 if span.artifact_id not in contexts:
                     versions = [tuple(item) for item in connection.execute('''SELECT rowid,artifact_version_id,content_sha256
