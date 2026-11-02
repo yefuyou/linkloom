@@ -182,8 +182,11 @@ class TaskCandidateInput:
     source_fingerprint: str | None = None
     confidence: str | None = None
     confidence_reason: str | None = None
+    title_needs_edit: bool = False
 
     def __post_init__(self) -> None:
+        if type(self.title_needs_edit) is not bool:
+            raise ValueError('title_needs_edit must be boolean')
         for name in ('candidate_id', 'workspace_id', 'candidate_version'):
             object.__setattr__(self, name, required_text(getattr(self, name), name))
         for name in ('title', 'owner', 'source_decision_id'):
@@ -211,6 +214,8 @@ class TaskCandidateInput:
             data['source_fingerprint'] = self.source_fingerprint
         if self.confidence is not None:
             data.update(confidence=self.confidence, confidence_reason=self.confidence_reason)
+        if self.title_needs_edit:
+            data['title_needs_edit'] = True
         return data
 
     @property
@@ -225,6 +230,8 @@ class TaskCandidateInput:
             data = {**data}
             if 'confidence' not in data and 'confidence_reason' not in data:
                 data.update(confidence=None, confidence_reason=None)
+            if 'title_needs_edit' not in data:
+                data['title_needs_edit'] = False
         values = dict(_shape(data, set(cls.__dataclass_fields__), 'candidate input'))
         if not isinstance(values['evidence'], list):
             raise ValueError('evidence must be a JSON list')
