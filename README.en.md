@@ -13,7 +13,27 @@
 Owners, deadlines, and decisions can change in the next meeting, so searching old messages may not tell you which version to follow now.
 LinkLoom extracts candidates from meeting notes, checks their exact source text, and saves formal tasks and decisions after human confirmation. It links changes across meetings to their sources, so teams can check the present, check the past, and ask why.
 
-## 2. Demo
+## 2. How it differs from ordinary RAG
+
+Here, ordinary RAG means a read-only baseline that retrieves document passages and generates an answer. The table defines this project's comparison.
+For example, two meetings record different plans:
+
+- 10/08 weekly meeting: "Li Ming owns the integration report. Finish it by 10/12."
+- 10/10 review: "Wang Fang now owns the integration report. Move the deadline to 10/16."
+
+Ask "Who owns the integration report now?" Ordinary RAG retrieves both passages. It may answer Li Ming or mix the two people together.
+After a person confirms and merges the update, LinkLoom records that the 10/10 decision replaces the 10/08 decision. It answers Wang Fang, shows both original passages, and marks the replaced one.
+
+| Comparison | Ordinary RAG (passage retrieval baseline) | LinkLoom |
+| --- | --- | --- |
+| Question answered | What do the documents say? | Which value is effective now? |
+| Citations | Reference passages | Exact-text and hash checks; refuse an answer that cannot be verified |
+| Reads and writes | Read-only | Write formal tasks after human confirmation; changes can be undone |
+| Evaluation | A single run | Use held-out sets only once; report ranges from repeated runs |
+
+**Comparison experiments are in progress. Results will be added when available.** No unmeasured numbers are listed here.
+
+## 3. Demo
 
 **Demo GIF to come.** These two screenshots were captured again from the current master UI. They use the repository's synthetic workflow fixture. Its sentences were rewritten to fit the old extractor. They show the workflow, not extraction quality on real meetings.
 
@@ -25,7 +45,7 @@ By owner: open a task's change history. Compare changes to its owner and deadlin
 
 ![By-owner page showing a merged task's owner, deadline, and change history across meetings](docs/assets/tasks-history.png)
 
-## 3. Core workflow
+## 4. Core workflow
 
 ```mermaid
 flowchart TD
@@ -40,7 +60,7 @@ flowchart TD
 
 Merges and undo actions both need human confirmation. A model's suggestion that two records describe the same work does not become a formal change on its own.
 
-## 4. Key design choices
+## 5. Key design choices
 
 ### Models interpret; rules check the proof
 
@@ -78,15 +98,15 @@ The default `auto` mode uses local models only, and missing dependencies or rera
 Without an API key, the service can still start, create workspaces, save sources, review existing candidates, and query reviewed decisions and history.
 AI extraction and external investigation need configuration and explicit opt-in. If enabled with a missing key or dependency, the launcher asks for a fix rather than switching to another remote provider.
 
-## 5. Evaluation and numbers
+## 6. Evaluation and numbers
 
 These results measure routing, query speed, retrieval, and extraction separately. They are not end-to-end product accuracy, and one dataset's score does not stand in for another's.
 
 ### Routing
 
-Accuracy requires both the route and target to be correct. Wrong bindings are counted separately. Held-out sets H and F were each used only once.
+Joint accuracy requires both the route and target to be correct. Wrong bindings are counted separately. The development row lists only the existing offline score, 98.3%. The H and F arrows mean offline → with LLM, not the accuracy of model answers alone. Held-out sets H and F were each used only once.
 
-| Dataset | Cases | Accuracy | Wrong bindings |
+| Dataset | Cases | Offline → with LLM | Wrong bindings |
 | --- | ---: | ---: | ---: |
 | Development | 60 | 98.3% | 0 |
 | Held-out H | 13 | 46.2%→76.9% | 1 |
@@ -121,7 +141,7 @@ Both rerankers run after the same RRF results.
 | 10 thousand documents | 1 | 0.94 | 1 | 1 |
 | Frozen 30 questions | 0.9239 | 0.9361 | 0.9322 | 0.9433 |
 
-What this means: reranking recovers some missed sources, but it does not improve every question.
+What this means: on the scale sets, equal-weight RRF brings distractors into the top 5, and reranking restores recall to the BM25 level (0.83/0.94 → 1). On the frozen 30 questions, the small model scores slightly below RRF and the large model scores highest. But on the scale sets, the large model takes over 6 times as long at rerank p95, so the small model is the default.
 
 Base INT8 rerank p95 is about 2 seconds on a non-exclusive machine. Recall@5 for `drm-002` remains **0.75** after either reranker.
 Source: [2026-11-02 rerank development report](benchmarks/rerank/2026-11-02/results.md).
@@ -137,11 +157,14 @@ Combined recall on two held-out sets. The denominator is 15 reference tasks.
 | legacy | 5/15 |
 
 What this means: v2 still misses more tasks than the baseline on held-out data; its strong development results did not carry over.
+With the current model, reading the whole meeting gives the best recall. LinkLoom's value comes after extraction: validation, human confirmation, risk levels, and tracking changes across meetings.
 
 Source: [combined held-out results](benchmarks/ami_tasks/results_es2004_final.md). This separate extraction evaluation does not measure field completeness after product ingestion.
-Product ingestion field checks are being improved in [PR #47](https://github.com/yefuyou/linkloom/pull/47). It is not merged, and its unmerged results are not quoted here.
+[PR #47](https://github.com/yefuyou/linkloom/pull/47) is now merged. Product ingestion has two stages: find action items first, then check fields against exact source text. The A/B sentences now save the correct owners and original deadline wording. Month/day text is kept without inventing a year.
 
-## 6. Quick start
+Repeated runs with the same configuration on the ES2002 development sample gave a task-discovery recall range of **5–8/11**. The initial full field evaluation had **4/11** correct owners, and false positives on the fixed negative sample fell. The repeats tested task discovery only. They did not repeat field scoring and are not held-out results. False positives still occur in positive utterances, so fewer false positives on negative samples does not mean none in the whole meeting.
+
+## 7. Quick start
 
 Requires Git and **Python 3.11+**.
 
@@ -207,7 +230,7 @@ For normal offline use, remove `--offline-task-demo` and use `work/product.sqlit
 Offline features include creating workspaces, saving sources, reviewing existing candidates, and querying reviewed decisions and history. AI extraction of new sources and external investigation need configuration and permission.
 The preset demo makes no external model calls. It does not show extraction quality on real meetings. Stop the service using the same port before switching commands.
 
-## 7. Limits and next steps
+## 8. Limits and next steps
 
 - **No GraphRAG.** Evidence comes from retrieval, temporal records, and bounded investigation. The product does not build a whole-corpus GraphRAG.
 - **No automatic same-work merges.** A person confirms candidate relationships. Merging two existing formal tasks is also not supported.
