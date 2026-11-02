@@ -1373,16 +1373,24 @@ class ProductApplication:
                         # A saved product contract replays without any Provider request.
                         saved_product = is_product_task_field_receipt(
                             SemanticExtractionResult.from_dict(saved_extraction).receipt)
+                        saved_policy = ('product-task-fields/v2' if saved_extraction.get('task_stages') is not None
+                                        else 'product-task-fields/v1')
                         replay_context = (SemanticExtractionContext(workspace_id, self.relation_resolver,
-                            product_task_fields=ProductTaskFieldContext(artifact)) if saved_product else context)
+                            product_task_fields=ProductTaskFieldContext(artifact, version=saved_policy)) if saved_product else context)
                         trace = pipeline.replay_extraction(
                             saved_extraction, segment, artifact, replay_context
                         )
                     elif state["state"] == "PENDING" or state["retry_eligible"]:
                         new_segment_ids.add(segment.segment_id)
                         self.repository.mark_segment_running(workspace_id, source_id, version_id, segment.segment_id)
+                        def current_source_admitted():
+                            with self._store_lock:
+                                current = self.repository.get_source(workspace_id, source_id)
+                                return bool(current and current['active'] and
+                                    current['source_version'] == artifact.artifact_version_id)
                         request_context = (SemanticExtractionContext(workspace_id, self.relation_resolver,
-                            product_task_fields=ProductTaskFieldContext(artifact))
+                            product_task_fields=ProductTaskFieldContext(artifact,
+                                current_source=current_source_admitted))
                             if isinstance(self.extractor, ProviderNeutralSemanticExtractor) else context)
                         trace = pipeline.process_segment_with_trace(segment, artifact, request_context)
                         failure = trace.extraction.failure_code

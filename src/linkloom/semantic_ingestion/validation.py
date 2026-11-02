@@ -25,7 +25,7 @@ from linkloom.semantic_ingestion.candidate_models import (
 )
 from linkloom.semantic_ingestion.extraction import SemanticExtractionContext, is_product_task_field_receipt
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
-from linkloom.semantic_ingestion.task_observation import build_task_observation, PRODUCT_TASK_FIELDS_VERSION
+from linkloom.semantic_ingestion.task_observation import build_task_observation, PRODUCT_TASK_FIELDS_VERSION, PRODUCT_TASK_FIELD_POLICIES, PRODUCT_TASK_FIELDS_V2
 from linkloom.semantic_ingestion.document_text import (
     DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, document_valid_time_is_grounded,
     parse_source_time,
@@ -209,6 +209,8 @@ class CandidateValidator:
         product_profile = context.product_task_fields is not None
         product_context_valid = product_profile == is_product_task_field_receipt(receipt)
         if product_profile:
+            expected_policy = PRODUCT_TASK_FIELDS_V2 if extraction.task_stages is not None else PRODUCT_TASK_FIELDS_VERSION
+            product_context_valid = product_context_valid and context.product_task_fields.version == expected_policy
             try:
                 context.product_task_fields.input_for(segment, context.expected_workspace_id)
             except (TypeError, ValueError):
@@ -310,8 +312,9 @@ class CandidateValidator:
         *, product_profile: bool = False,
     ) -> CandidateValidationResult:
         task_observation = None
-        product_task = claim.task is not None and claim.task.grounding_policy_version == PRODUCT_TASK_FIELDS_VERSION
-        if product_task or (product_profile and claim.claim_type.value in {'PLAN', 'ACTION'}):
+        product_task = claim.task is not None and claim.task.grounding_policy_version in PRODUCT_TASK_FIELD_POLICIES
+        two_stage = extraction.task_stages is not None
+        if product_task or (product_profile and claim.claim_type.value in {'PLAN', 'ACTION'} and not (two_stage and claim.task is None)):
             task = claim.task
             valid = (product_profile and product_task and task.work_state == 'ASSERTED'
                      and task.text in segment.evidence_span.quote
@@ -458,7 +461,7 @@ class CandidateValidator:
             extraction_receipt=extraction.receipt,
             review_reasons=tuple(reason_codes),
             task_observation=(task_observation or build_task_observation(claim.task, segment, artifact)
-                              if claim.claim_type.value in {"PLAN", "ACTION"} else None),
+                              if claim.claim_type.value in {"PLAN", "ACTION"} and not (two_stage and claim.task is None) else None),
         )
         return CandidateValidationResult(
             outcome=CandidateOutcome.UNRESOLVED if reason_codes else CandidateOutcome.ACCEPTED,

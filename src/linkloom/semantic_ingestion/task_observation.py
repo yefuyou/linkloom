@@ -20,6 +20,8 @@ _DATE = r"(?:\d{4}-\d{2}-\d{2}|\d{4}年\d{1,2}月\d{1,2}[日号]|\d{1,2}月\d{1,
 # Generation syntax only; _date_value still independently validates the calendar.
 DATE_TOKEN_PATTERN = rf"^(?:{_DATE}|\d{{1,2}}月)$"
 PRODUCT_TASK_FIELDS_VERSION = 'product-task-fields/v1'
+PRODUCT_TASK_FIELDS_V2 = 'product-task-fields/v2'
+PRODUCT_TASK_FIELD_POLICIES = {PRODUCT_TASK_FIELDS_VERSION, PRODUCT_TASK_FIELDS_V2}
 
 
 @dataclass(frozen=True, slots=True)
@@ -70,10 +72,15 @@ class TaskProposal:
     work_state: str | None = None
     grounding_policy_version: str | None = None
     title_binding: TaskTitleBinding | None = None
+    field_stage_issues: tuple[str, ...] = ()
 
     def __post_init__(self):
+        if (not isinstance(self.field_stage_issues, tuple) or len(self.field_stage_issues) > 32
+                or any(not isinstance(issue, str) or not issue or len(issue) > 128 for issue in self.field_stage_issues)
+                or self.field_stage_issues and self.grounding_policy_version != PRODUCT_TASK_FIELDS_V2):
+            raise ValueError('invalid field-stage diagnostics')
         if self.grounding_policy_version is not None:
-            if (self.grounding_policy_version != PRODUCT_TASK_FIELDS_VERSION
+            if (self.grounding_policy_version not in PRODUCT_TASK_FIELD_POLICIES
                     or self.field_bindings is None or not isinstance(self.title_binding, TaskTitleBinding)):
                 raise ValueError('invalid product task grounding contract')
         elif self.title_binding is not None:
@@ -96,6 +103,10 @@ class TaskProposal:
 
     def to_dict(self):
         result = {**asdict(self), "description_parts": list(self.description_parts)}
+        if self.grounding_policy_version == PRODUCT_TASK_FIELDS_V2:
+            result['field_stage_issues'] = list(self.field_stage_issues)
+        else:
+            result.pop('field_stage_issues')
         if self.grounding_policy_version is None:
             result.pop('grounding_policy_version')
             result.pop('title_binding')
@@ -109,13 +120,17 @@ class TaskProposal:
     @classmethod
     def from_dict(cls, data):
         added = {'grounding_policy_version', 'title_binding'}
-        old = {f.name for f in fields(cls)} - {'field_bindings', 'work_state'} - added
+        old = {f.name for f in fields(cls)} - {'field_bindings', 'work_state', 'field_stage_issues'} - added
         bound = old | {'field_bindings', 'work_state'}
-        if not isinstance(data, dict) or set(data) not in (old, bound, bound | added):
+        if not isinstance(data, dict) or set(data) not in (old, bound, bound | added, bound | added | {'field_stage_issues'}):
             raise ValueError("task proposal has missing or unsupported fields")
         if not isinstance(data["description_parts"], list):
             raise ValueError("description_parts must be a list")
         values = {**data, 'description_parts': tuple(data['description_parts'])}
+        if 'field_stage_issues' in values:
+            if values.get('grounding_policy_version') != PRODUCT_TASK_FIELDS_V2 or not isinstance(values['field_stage_issues'], list):
+                raise ValueError('field-stage diagnostics require v2')
+            values['field_stage_issues'] = tuple(values['field_stage_issues'])
         if 'title_binding' in values:
             values['title_binding'] = TaskTitleBinding.from_dict(values['title_binding'])
         if 'field_bindings' in data:
@@ -196,7 +211,7 @@ class TaskObservation:
 
     def __post_init__(self):
         if self.grounding_policy_version is not None:
-            if (self.grounding_policy_version != PRODUCT_TASK_FIELDS_VERSION
+            if (self.grounding_policy_version not in PRODUCT_TASK_FIELD_POLICIES
                     or self.field_bindings is None or not isinstance(self.title_binding, TaskTitleBinding)
                     or (self.title, self.title_needs_edit) != _product_title(self.title_binding, self.raw_text)):
                 raise ValueError('invalid product task title or grounding policy')
@@ -310,7 +325,8 @@ class TaskObservation:
                     dict(owner=self.owner, deadline=self.deadline_text, project=self.project, vendor=self.vendor))
         proposal = TaskProposal(self.raw_text, tuple(e.quote for e in self.field_evidence if e.field == "description"),
                                 proposed['owner'], proposed['deadline'], proposed['project'], proposed['vendor'], self.field_bindings, self.work_state,
-                                self.grounding_policy_version, self.title_binding)
+                                self.grounding_policy_version, self.title_binding,
+                                tuple(issue for issue in self.validation_issues if issue.startswith(('FIELD_STAGE_', 'TITLE_STAGE_'))))
         # Saved field-bound v1 records must replay v1, not acquire a new P4 ref.
         expected = build_task_observation(proposal, segment, artifact,
                                           identity_version=_identity_version(self.observation_id))
@@ -446,7 +462,7 @@ def _model_fields(proposal, raw, segment, artifact, bind, issues):
             continue
         if field == 'deadline':
             day, precision, role, issue = (_product_date_value(value) if
-                proposal.grounding_policy_version == PRODUCT_TASK_FIELDS_VERSION else _date_value(value, month_only=True))
+                proposal.grounding_policy_version in PRODUCT_TASK_FIELD_POLICIES else _date_value(value, month_only=True))
             if issue:
                 issues.append(issue)
             if role != 'TASK_DEADLINE':
@@ -469,7 +485,7 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
     if not segment.evidence_span.verify(artifact):
         raise ValueError("task source does not match immutable evidence")
     span = segment.evidence_span
-    issues = []
+    issues = list(proposal.field_stage_issues) if proposal else []
     proposal_supplied = proposal is not None
     raw = proposal.text if proposal else span.quote
     if raw not in span.quote or span.quote.count(raw) != 1:
@@ -545,7 +561,7 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
                     bind("deadline", match.group(), match.start())
     title = None
     title_needs_edit = False
-    if proposal and proposal.grounding_policy_version == PRODUCT_TASK_FIELDS_VERSION:
+    if proposal and proposal.grounding_policy_version in PRODUCT_TASK_FIELD_POLICIES:
         title, title_needs_edit = _product_title(proposal.title_binding, raw)
     values = {"description": description, "owner": owner, "deadline": deadline, "project": project, "vendor": vendor}
     unknown = tuple(name for name, value in values.items() if value is None)

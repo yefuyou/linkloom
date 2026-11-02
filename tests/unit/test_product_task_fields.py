@@ -51,7 +51,7 @@ def proposal(text=A, *, owner='李明', deadline='10/12', description=None,
 def run(rows, a=None, *, product=True, segment_index=-1):
     a = a or artifact()
     context = SemanticExtractionContext(a.workspace_id, FrozenRelationResolver(('uses vendor',)),
-        product_task_fields=ProductTaskFieldContext(a) if product else None)
+        product_task_fields=ProductTaskFieldContext(a, version=PRODUCT_TASK_FIELDS_VERSION) if product else None)
     provider = FakeModel({'claims': deepcopy(rows)})
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='field-test',
         request_guard=lambda request: ProviderRequestAuthorization.approve(request,
@@ -216,11 +216,11 @@ def test_stored_title_policy_or_source_tampering_never_verifies():
 
 
 def test_context_rejects_forged_mapping_foreign_workspace_or_another_source():
-    a = artifact(preceding=True); context = ProductTaskFieldContext(a)
+    a = artifact(preceding=True); context = ProductTaskFieldContext(a, version=PRODUCT_TASK_FIELDS_VERSION)
     segment = parse_source_text(a).segments[1]
     with pytest.raises(ValueError): context.input_for(replace(segment, speaker='伪造'), a.workspace_id)
     with pytest.raises(ValueError): context.input_for(segment, 'foreign-workspace')
-    with pytest.raises(ValueError): ProductTaskFieldContext(replace(a, content=a.content+'changed')).input_for(segment, a.workspace_id)
+    with pytest.raises(ValueError): ProductTaskFieldContext(replace(a, content=a.content+'changed'), version=PRODUCT_TASK_FIELDS_VERSION).input_for(segment, a.workspace_id)
 
 
 def test_false_title_marker_preserves_old_candidate_payload_and_fingerprint_exactly():
@@ -251,9 +251,15 @@ def test_product_persistence_raw_deadline_merge_and_undo_without_filling_year(tm
 
     class ByText(FakeModel):
         def complete(self, request):
-            text = json.loads(request.user_input.split('Input:\n', 1)[1])['source_segment']['text']
-            self.payload = {'claims': [proposal(text, owner='李明' if text == A else '王芳',
-                deadline='10/12' if text == A else '10/16', description='负责', title='负责')]}
+            data = json.loads(request.user_input.split('Input:\n', 1)[1])
+            if request.available_tools[0].tool_id == 'emit_task_field_annotations':
+                text = data['task_text']
+                task = proposal(text, owner='李明' if text == A else '王芳',
+                    deadline='10/12' if text == A else '10/16', description='负责', title='负责')['task']
+                self.payload = {key: task[key] for key in ('field_bindings', 'title_binding')}
+            else:
+                text = data['source_segment']['text']
+                self.payload = {'claims': [claim(text, '负责')]}
             return super().complete(request)
 
     provider = ByText(None)
@@ -275,7 +281,7 @@ def test_product_persistence_raw_deadline_merge_and_undo_without_filling_year(tm
         store = TaskStore(path)
         service = TaskReviewService(store, ProductTaskCandidateSource())
         candidates = service.list_candidates(workspace)
-        assert len(candidates) == 2 and len(provider.requests) == 2
+        assert len(candidates) == 2 and len(provider.requests) == 4
         assert all(x['candidate']['title_needs_edit'] is True for x in candidates)
         first = next(x for x in candidates if x['candidate']['owner'] == '李明')
         second = next(x for x in candidates if x['candidate']['owner'] == '王芳')
@@ -306,11 +312,11 @@ def test_product_persistence_raw_deadline_merge_and_undo_without_filling_year(tm
             reviewer='人工审核人', reason='撤销人工匹配', now=now+timedelta(days=2))
         assert undone['task']['owner'] == '李明' and undone['task']['deadline'] is None
         assert undone['task']['deadline_text'] == '10/12' and undone['task']['title'] == '整理联调报告'
-        assert len(provider.requests) == 2
+        assert len(provider.requests) == 4
         # Replaying an already accepted source performs zero new extraction calls.
         source = app.repository.get_source(workspace, reply['source']['source_id'])
         app._ingest(workspace, source['source_id'], app._source_artifact(source))
-        assert len(provider.requests) == 2
+        assert len(provider.requests) == 4
         store.close(); store = None
         app.close()
         app = ProductApplication(database_path=path, extractor=None)

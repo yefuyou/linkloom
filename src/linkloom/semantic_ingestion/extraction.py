@@ -35,7 +35,7 @@ from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.document_text import DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, parse_source_text
 from linkloom.semantic_ingestion.timestamped_text import ParseStatus
-from linkloom.semantic_ingestion.task_observation import TaskProposal, DATE_TOKEN_PATTERN, PRODUCT_TASK_FIELDS_VERSION
+from linkloom.semantic_ingestion.task_observation import TaskProposal, DATE_TOKEN_PATTERN, PRODUCT_TASK_FIELDS_VERSION, PRODUCT_TASK_FIELDS_V2
 from linkloom.semantic_ingestion.task_field_binding import binding_schema, STATES
 from linkloom.tools.contracts import ToolCall, ToolDefinition
 
@@ -260,19 +260,30 @@ class TaskDiscoveryContext:
 class ProductTaskFieldContext:
     """Host-derived single-message mapping; never widens the sent source text."""
     artifact: RawArtifact
+    version: str = PRODUCT_TASK_FIELDS_V2
+    current_source: Callable[[], bool] | None = field(default=None, compare=False, repr=False)
+    _segments: tuple[SourceSegment, ...] = field(init=False, repr=False, compare=False)
 
     def __post_init__(self):
+        if self.version not in {PRODUCT_TASK_FIELDS_VERSION, PRODUCT_TASK_FIELDS_V2}:
+            raise ValueError('unsupported product task profile')
+        if self.current_source is not None and not callable(self.current_source):
+            raise TypeError('current source admission must be Host callable')
         if not isinstance(self.artifact, RawArtifact):
             raise TypeError('product task context requires an immutable artifact')
-        if parse_source_text(self.artifact).status != ParseStatus.COMPLETE:
+        parsed = parse_source_text(self.artifact)
+        if parsed.status != ParseStatus.COMPLETE:
             raise ValueError('product task context requires complete canonical parsing')
+        object.__setattr__(self, '_segments', parsed.segments)
 
     def input_for(self, segment, workspace_id):
         artifact = self.artifact
+        if self.current_source is not None and self.current_source() is not True:
+            raise PermissionError('source admission was revoked')
         if (workspace_id != artifact.workspace_id or not segment.evidence_span.verify(artifact)
-                or segment not in parse_source_text(artifact).segments):
+                or segment not in self._segments):
             raise ValueError('product task context does not match this canonical source message')
-        return dict(profile=PRODUCT_TASK_FIELDS_VERSION,
+        return dict(profile=self.version,
                     message_ordinal=segment.ordinal, speaker=segment.speaker)
 
 
@@ -541,7 +552,8 @@ def _product_field_schema():
 
 def is_product_task_field_receipt(receipt):
     """Select saved policy from its immutable schema receipt, not model prose."""
-    return receipt.schema_sha256 == _sha256(_canonical_json(_product_field_schema()))
+    return (receipt.extractor_version == 'product-task-two-stage/v2' or
+            receipt.schema_sha256 == _sha256(_canonical_json(_product_field_schema())))
 
 
 def _field_schema():
@@ -786,6 +798,17 @@ class ProviderNeutralSemanticExtractor:
         context: SemanticExtractionContext,
     ) -> SemanticExtractionResult:
         if not isinstance(segment, SOURCE_SEGMENT_TYPES):
+            raise TypeError('segment must be a parsed source segment')
+        if not isinstance(context, SemanticExtractionContext):
+            raise TypeError('context must be SemanticExtractionContext')
+        if (context.product_task_fields is not None
+                and context.product_task_fields.version == PRODUCT_TASK_FIELDS_V2):
+            from linkloom.semantic_ingestion.product_task_stages import extract_product_tasks
+            return extract_product_tasks(self, segment, context)
+        return self._extract(segment, context)
+
+    def _extract(self, segment, context, *, isolate_product_tasks=False, current_source_guard=None):
+        if not isinstance(segment, SOURCE_SEGMENT_TYPES):
             raise TypeError("segment must be a parsed source segment")
         if not isinstance(context, SemanticExtractionContext):
             raise TypeError("context must be SemanticExtractionContext")
@@ -802,6 +825,9 @@ class ProviderNeutralSemanticExtractor:
                   else _prompt(segment, context, self.prompt_version))
         prompt_sha256 = _sha256(prompt.encode("utf-8"))
         generation_options = self.generation_options
+        if isolate_product_tasks:
+            from dataclasses import replace
+            generation_options = replace(generation_options, max_output_tokens=4096, temperature=None, thinking_level='low')
         # Do not add null/default keys: historical config hashes and request IDs
         # must stay exactly reproducible when the optional profile is absent.
         task_config = ({
@@ -809,6 +835,8 @@ class ProviderNeutralSemanticExtractor:
             "task_discovery_context_version": TASK_DISCOVERY_CONTEXT_VERSION,
             "task_discovery_context_sha256": _sha256(_canonical_json(task_input)),
         } if task_input is not None else {})
+        if isolate_product_tasks:
+            task_config['product_task_stage'] = 'core-isolated/v2'
         config_sha256 = _sha256(
             _canonical_json(
                 {
@@ -896,6 +924,8 @@ class ProviderNeutralSemanticExtractor:
                 )
                 terminal_reason = CandidateReasonCode.PROVIDER_REQUEST_BLOCKED
                 break
+            if current_source_guard is not None:
+                current_source_guard()
             try:
                 response = self._provider.complete(request)
             except Exception:
@@ -918,6 +948,8 @@ class ProviderNeutralSemanticExtractor:
                 terminal_reason = CandidateReasonCode.EXTRACTION_FAILED
                 break
 
+            if current_source_guard is not None:
+                current_source_guard()
             elapsed_ms = (time.perf_counter() - started) * 1000
             if not isinstance(response, ModelResponse):
                 attempts.append(
@@ -987,7 +1019,13 @@ class ProviderNeutralSemanticExtractor:
                 raw_claims = payload["claims"]
                 if not isinstance(raw_claims, list) or len(raw_claims) > _MAX_CLAIMS_PER_SEGMENT:
                     raise ValueError("claims must be a bounded array")
-                parsed_claims = tuple(_parse_claim(item) for item in raw_claims)
+                if isolate_product_tasks:
+                    from linkloom.semantic_ingestion.product_task_stages import parse_stage_one_claims, check_stage_one_safety
+                    check_stage_one_safety(raw_claims, context.expected_workspace_id)
+                    parsed_claims, isolated = parse_stage_one_claims(raw_claims)
+                    response_evidence['product_task_core'] = isolated
+                else:
+                    parsed_claims = tuple(_parse_claim(item) for item in raw_claims)
                 if product_profile and any(c.claim_type in {ClaimType.PLAN, ClaimType.ACTION} and
                         (c.task is None or c.task.grounding_policy_version != PRODUCT_TASK_FIELDS_VERSION)
                         for c in parsed_claims):
