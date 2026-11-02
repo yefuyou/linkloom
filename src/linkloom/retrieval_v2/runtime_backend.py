@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import time
 import re
+from copy import deepcopy
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from linkloom.evidence_identity import document_identity_id
 from linkloom.indexing import (
@@ -22,7 +23,7 @@ from linkloom.indexing import (
 from linkloom.retrieval import retrieve_evidence
 from linkloom.schemas import NoteDocument
 
-from .models import RetrievalQuery
+from .models import RetrievedEvidence, RetrievalQuery
 from .retrievers import (
     BM25Retriever,
     DenseRetriever,
@@ -30,6 +31,9 @@ from .retrievers import (
     HybridRetriever,
     Retriever,
 )
+
+if TYPE_CHECKING:
+    from linkloom.rerank.base import Reranker
 
 
 class RetrievalMode(StrEnum):
@@ -60,6 +64,7 @@ class RetrievalObservation:
     top_k: int
     index_version: int
     stage_timings_ms: dict[str, float]
+    rerank_trace: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,6 +88,7 @@ class RuntimeRetrievalBackend:
         embedder: EmbeddingProvider | None = None,
         index_update_coordinator: IndexUpdateCoordinator | None = None,
         index_version: int = 2,
+        reranker: Reranker | None = None,
     ) -> None:
         if not workspace_id.strip():
             raise ValueError("workspace_id must not be empty")
@@ -93,6 +99,11 @@ class RuntimeRetrievalBackend:
         self.workspace_id = workspace_id
         self.document_provider = document_provider
         self.mode = RetrievalMode.parse(mode)
+        self._reranker = reranker
+        if self.mode in {RetrievalMode.HYBRID, RetrievalMode.DIRECTORY_HYBRID} and reranker is None:
+            from linkloom.rerank.pipeline import build_reranker_from_env
+
+            self._reranker = build_reranker_from_env()
         if index_update_coordinator is not None and not isinstance(
             index_update_coordinator,
             IndexUpdateCoordinator,
@@ -125,6 +136,7 @@ class RuntimeRetrievalBackend:
         if top_k <= 0:
             raise ValueError("top_k must be positive")
         started = time.perf_counter()
+        rerank_trace: dict[str, Any] = {}
         stage_timings = {
             "document_scan_ms": 0.0,
             "index_setup_other_ms": 0.0,
@@ -139,6 +151,7 @@ class RuntimeRetrievalBackend:
             "query_embedding_model_load_ms": 0.0,
             "dense_search_ms": 0.0,
             "fusion_ms": 0.0,
+            "rerank_ms": 0.0,
             "retriever_other_ms": 0.0,
             "materialization_ms": 0.0,
         }
@@ -206,6 +219,7 @@ class RuntimeRetrievalBackend:
                     optional_scope_path=scope_path,
                 )
             )
+            rerank_trace = deepcopy(getattr(retriever, "last_rerank_trace", {}))
             retriever_timings = _retriever_stage_timings(retriever)
             stage_timings.update(retriever_timings)
             retriever_total_ms = (time.perf_counter() - retriever_started) * 1000.0
@@ -265,6 +279,9 @@ class RuntimeRetrievalBackend:
                             retrieval_channel=hit.retrieval_channel,
                             scope_path=effective_scope,
                             logical_path=hit.logical_path,
+                            rerank_score=hit.rerank_score,
+                            rrf_rank=hit.metadata.get("rrf_rank"),
+                            rerank_backend=hit.metadata.get("rerank_backend"),
                         )
                     )
                     if self.mode is not RetrievalMode.BM25 and len(evidence) >= top_k:
@@ -316,6 +333,7 @@ class RuntimeRetrievalBackend:
             top_k=top_k,
             index_version=self.index_version,
             stage_timings_ms=stage_timings,
+            rerank_trace=rerank_trace,
         )
         return RuntimeRetrievalResult(evidence=evidence, observation=observation)
 
@@ -502,6 +520,8 @@ class RuntimeRetrievalBackend:
                 hybrid = HybridRetriever(
                     BM25Retriever(self._lexical_index),
                     DenseRetriever(self._vector_index),
+                    reranker=self._reranker,
+                    candidate_text_provider=self._resolve_rerank_text,
                 )
                 if self.mode is RetrievalMode.HYBRID:
                     self._retrievers[RetrievalMode.HYBRID] = hybrid
@@ -556,6 +576,8 @@ class RuntimeRetrievalBackend:
         hybrid = HybridRetriever(
             BM25Retriever(coordinator.lexical_index),
             DenseRetriever(coordinator.vector_index),
+            reranker=self._reranker,
+            candidate_text_provider=self._resolve_rerank_text,
         )
         if self.mode is RetrievalMode.HYBRID:
             self._retrievers[RetrievalMode.HYBRID] = hybrid
@@ -568,6 +590,38 @@ class RuntimeRetrievalBackend:
             )
         )
 
+    def _resolve_rerank_text(self, hit: RetrievedEvidence) -> str:
+        """Expose a scoring fragment only from the same current source version."""
+        from linkloom.rerank.base import RerankError
+
+        if hit.metadata.get("workspace_id") != self.workspace_id:
+            raise RerankError("source_workspace_mismatch")
+        document = self._documents_by_id.get(hit.resource_id)
+        if document is None:
+            raise RerankError("source_unavailable")
+        coordinator = self._index_update_coordinator
+        indexed = (coordinator.lexical_index.get_document(self.workspace_id, hit.resource_id)
+                   if coordinator is not None else self._indexed_documents.get(hit.resource_id))
+        if indexed is None or (
+            indexed.workspace_id != self.workspace_id
+            or indexed.resource_id != hit.resource_id
+            or indexed.evidence_id != hit.evidence_id
+            or indexed.logical_path != hit.logical_path
+            or indexed.source_ref != hit.source_ref
+        ):
+            raise RerankError("source_identity_mismatch")
+        version_hash = indexed.metadata.get("content_sha256") or indexed.metadata.get("content_hash")
+        if version_hash != document.content_sha256 or any(
+            hit.metadata.get(key) != value
+            for key, value in indexed.metadata.items()
+        ):
+            raise RerankError("source_version_mismatch")
+        if coordinator is not None:
+            resource = coordinator.manifest.get_resource(self.workspace_id, hit.resource_id)
+            if resource is None or not resource.active or resource.content_hash != document.content_sha256:
+                raise RerankError("source_version_mismatch")
+        return indexed.content
+
     def _decorate_evidence(
         self,
         value: dict[str, Any],
@@ -577,7 +631,17 @@ class RuntimeRetrievalBackend:
         retrieval_channel: str,
         scope_path: str | None,
         logical_path: str | None = None,
+        rerank_score: float | None = None,
+        rrf_rank: int | None = None,
+        rerank_backend: str | None = None,
     ) -> dict[str, Any]:
+        rerank_metadata: dict[str, Any] = {}
+        if rerank_score is not None:
+            rerank_metadata["rerank_score"] = rerank_score
+        if rrf_rank is not None:
+            rerank_metadata["rrf_rank"] = rrf_rank
+        if rerank_backend is not None:
+            rerank_metadata["rerank_backend"] = rerank_backend
         return {
             **value,
             "logical_path": logical_path or f"/{value['relative_path']}",
@@ -589,6 +653,7 @@ class RuntimeRetrievalBackend:
             "index_version": self.index_version,
             "source_ref": value.get("source_ref") or value["relative_path"],
             "workspace_id": self.workspace_id,
+            **rerank_metadata,
         }
 
 
