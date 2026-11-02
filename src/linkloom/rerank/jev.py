@@ -1,4 +1,7 @@
-"""Optional TypeSafe Jev reranking with explicit outbound mode and bounded cost."""
+"""Optional TypeSafe Jev reranking (experimental; not verified with the real API).
+
+实验性，未经真实 API 验证；仅显式外发模式启用，并限制调用费用。
+"""
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
