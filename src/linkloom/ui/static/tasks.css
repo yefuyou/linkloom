@@ -812,3 +812,8 @@ details[open]>summary {
     padding:6px 12px
   }
 }
+
+/* Optional local same-task hints; review controls retain their existing layout. */
+.same-task-hint { margin: .75rem 0; padding: .75rem; border: 1px solid var(--line, #dce2ea); border-radius: .5rem; }
+.same-task-hint p { margin: .25rem 0 .5rem; overflow-wrap: anywhere; }
+.same-task-hint details { margin-bottom: .5rem; }

@@ -48,7 +48,8 @@ async function harness(options = {}) {
     }
     if (url.pathname === '/api/workspaces') return response({workspaces: [{workspace_id: 'w1', name: '工作区一'}, {workspace_id: 'w2', name: '工作区二'}]});
     if (url.pathname === '/api/workspaces/current') return response({workspace: {workspace_id: 'w1', name: '工作区一'}});
-    if (url.pathname === '/api/product/task-candidates') return response(page(call.query.workspace_id === 'w2' ? [] : call.query.state === 'processed' ? h.processed : h.pending));
+    if (url.pathname === '/api/product/task-candidates') return response({...page(call.query.workspace_id === 'w2' ? [] : call.query.state === 'processed' ? h.processed : h.pending), ...(options.hints ? {same_task_hint_enabled: true} : {})});
+    if (/\/same-task-hints$/.test(url.pathname)) return response({candidate_fingerprint: fingerprint, hints: options.hints || []});
     if (/\/evidence$/.test(url.pathname)) return response({...page([reference('A'), reference('B')]), evidence_basis: 'current_source'});
     if (url.pathname === '/api/product/tasks') return response(page([h.summary()]));
     if (/\/events$/.test(url.pathname)) return response(page(h.events));
@@ -613,6 +614,56 @@ test('an unreadable success response is unknown and cannot resubmit the review',
   assert.match(h.elements.notice.innerHTML, /INTERNAL_ERROR/);
   await h.click('candidate-create', {index: '0'}); await h.click('confirm-review');
   assert.equal(h.writes().length, 1); assert.equal(h.app.state.form, null);
+});
+
+test('default off sends no hint requests and preserves the original title hint', async () => {
+  const h = await harness();
+  assert.equal(h.calls.filter(call => /same-task-hints/.test(call.path)).length, 0);
+  assert.match(h.elements['tasks-app'].innerHTML, /已有同名任务/);
+});
+
+function hint(task = {}) {
+  return {task: {id: 'task-1', title: '联调那份报告', owner: '李明', deadline: '2026-10-12', ...task},
+    match_kind: 'semantic', score_kind: 'local', score: 3.5,
+    candidate_evidence: [reference('候选')], task_evidence: [reference('已有任务')]};
+}
+const tick = () => new Promise(resolve => setImmediate(resolve));
+
+test('enabled semantic hints show at most three with escaped quotes, scores and preview only', async () => {
+  const h = await harness({hints: [hint(), hint({id: 'task-2'}), hint({id: 'task-3'}), hint({id: 'task-4'})]});
+  await tick();
+  const html = h.elements['tasks-app'].innerHTML;
+  assert.equal(h.app.state.candidates.items[0].sameTaskHints.length, 3);
+  assert.match(html, /可能是同一件事：/); assert.match(html, /本地重排分数 3.500/);
+  assert.match(html, /本次候选原文/); assert.match(html, /已有任务原文/);
+  assert.doesNotMatch(html, /<img src=x/); assert.match(html, /&lt;img/);
+  assert.equal(h.writes().length, 0);
+  await h.click('choose-hinted-task', {index: '0', task: 'task-1'});
+  assert.equal(h.app.state.form.kind, 'merge'); assert.equal(h.app.state.form.target, 'task-1');
+  assert.ok(h.app.state.form.preview); assert.equal(h.writes().length, 0);
+  assert.match(h.calls.find(call => /merge-preview$/.test(call.path)).body.task_id, /task-1/);
+});
+
+test('hint buttons cannot choose arbitrary injected IDs and failures do not block human review', async () => {
+  const h = await harness({hints: [hint()]}); await tick();
+  await h.click('choose-hinted-task', {index: '0', task: 'foreign-task'});
+  assert.equal(h.app.state.form, null); assert.equal(h.calls.filter(call => /merge-preview$/.test(call.path)).length, 0);
+  h.hook = call => /same-task-hints/.test(call.path) ? Promise.reject(new Error('unavailable')) : null;
+  await h.app.refreshCurrent(); await tick();
+  await h.click('candidate-create', {index: '0'});
+  assert.equal(h.app.state.form.kind, 'create'); assert.equal(h.writes().length, 0);
+});
+
+test('workspace switches discard late hint text', async () => {
+  const h = await harness({hints: [hint()]}); await tick();
+  let release;
+  h.hook = call => /same-task-hints/.test(call.path) && call.query.workspace_id === 'w1' ? new Promise(resolve => {release = resolve;}) : null;
+  await h.app.refreshCurrent(); await tick();
+  await h.app.changeWorkspace('w2');
+  release({ok: true, status: 200, json: async () => ({candidate_fingerprint: fingerprint, hints: [hint({title: 'foreign-secret'})]})});
+  await tick();
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /foreign-secret/);
+  assert.equal(h.app.state.candidates.items.length, 0);
 });
 
 (async () => {
