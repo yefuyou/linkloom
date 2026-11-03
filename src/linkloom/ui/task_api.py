@@ -19,6 +19,7 @@ _PREFIX = "/api/product"
 _ROUTES = (
     ("GET", r"/task-candidates", "candidates"),
     ("GET", r"/task-candidates/([^/]+)/evidence", "candidate_evidence"),
+    ("GET", r"/task-candidates/([^/]+)/same-task-hints", "same_task_hints"),
     ("GET", r"/tasks", "tasks"),
     ("GET", r"/tasks/([^/]+)", "task"),
     ("GET", r"/tasks/([^/]+)/events", "events"),
@@ -136,6 +137,9 @@ class TaskProductAPI:
         self._lock = Lock()
         self._store = None
         self._service = None
+        from linkloom.tasks.same_task_hints import SameTaskHintConfig
+        self.hint_config = SameTaskHintConfig.from_env()
+        self._hints = None
 
     @staticmethod
     def matches(target):
@@ -162,6 +166,9 @@ class TaskProductAPI:
 
     def close(self):
         with self._lock:
+            if self._hints is not None:
+                self._hints.close()
+                self._hints = None
             if self._store is not None:
                 self._store.close()
                 self._store = self._service = None
@@ -172,6 +179,8 @@ class TaskProductAPI:
             route = None
             recognized = False
             for verb, pattern, name in _ROUTES:
+                if name == "same_task_hints" and not self.hint_config.enabled:
+                    continue
                 match = re.fullmatch(_PREFIX + pattern, path)
                 if match:
                     recognized = True
@@ -181,6 +190,8 @@ class TaskProductAPI:
             if route is None:
                 return self._error(405 if recognized else 404,
                     "METHOD_NOT_ALLOWED" if recognized else "RESOURCE_NOT_FOUND", "The task resource or method is unavailable.")
+            if route[0] == "same_task_hints" and not self.hint_config.enabled:
+                return self._error(404, "RESOURCE_NOT_FOUND", "The task resource or method is unavailable.")
             parsed = parse_qs(urlsplit(target).query, keep_blank_values=True, strict_parsing=True)
             if any(len(values) != 1 for values in parsed.values()):
                 raise ValueError("Query parameters must not be repeated")
@@ -192,7 +203,7 @@ class TaskProductAPI:
                 allowed |= {"limit", "offset"}
             if name == "candidates": allowed |= {"state"}
             if name == "tasks": allowed |= {"owner", "status"}
-            if name == "candidate_evidence": allowed |= {"candidate_fingerprint"}
+            if name in {"candidate_evidence", "same_task_hints"}: allowed |= {"candidate_fingerprint"}
             _fields(query, allowed)
             if method == "POST" and not isinstance(payload, dict):
                 raise ValueError("The request body must be a JSON object")
@@ -238,7 +249,17 @@ class TaskProductAPI:
             state = query.get("state", "pending")
             if state not in {"pending", "processed", "all"}:
                 raise ValueError("state must be pending, processed or all")
-            return service.list_candidates_page(workspace, state=state, **_page(query)), 200
+            value = service.list_candidates_page(workspace, state=state, **_page(query))
+            if self.hint_config.enabled:
+                value["same_task_hint_enabled"] = True
+            return value, 200
+        if name == "same_task_hints":
+            from linkloom.tasks.same_task_hints import SameTaskHintService
+            with self._lock:
+                if self._hints is None:
+                    self._hints = SameTaskHintService(service, self.hint_config)
+            return self._hints.get_hints(workspace, ids[0],
+                _fingerprint(query.get("candidate_fingerprint"), "candidate_fingerprint")), 200
         if name == "candidate_evidence":
             return service.candidate_evidence_page(workspace, ids[0],
                 candidate_fingerprint=_fingerprint(query.get("candidate_fingerprint"), "candidate_fingerprint"), **_page(query)), 200
