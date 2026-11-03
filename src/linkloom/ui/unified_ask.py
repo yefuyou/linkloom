@@ -32,12 +32,18 @@ class _AskRun:
 class UnifiedAskService:
     def __init__(self, app: ProductApplication,
                  investigation: Callable[[], ProductInvestigationService | None], *,
+                 graph_service=None,
                  slot_embedder: Any = AUTO_EMBEDDER) -> None:
         self.app = app
         self.investigation = investigation
+        if graph_service is None and app is not None and app.repository.database_path != ":memory:":
+            from linkloom.ui.graph_investigation import product_graph_service
+            graph_service = product_graph_service(app, investigation)
+        self.graph_service = graph_service if graph_service is not False else None
         self.slot_embedder = slot_embedder
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
         self._lock = Lock()
+        self._graph_runs = {}
         self.feedback_memory = (FeedbackMemory(app.repository.database_path + ".feedback-memory.jsonl")
                                 if app is not None and app.repository.database_path != ":memory:" else None)
 
@@ -136,6 +142,11 @@ class UnifiedAskService:
             raise ProductApplicationError("WORKSPACE_MISMATCH", "The selected workspace changed. Ask again in the current workspace.", status=409)
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        from linkloom.ui.graph_investigation import graph_request_budget
+        with graph_request_budget():
+            return self._ask(payload)
+
+    def _ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         query = payload.get("query")
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
@@ -159,6 +170,24 @@ class UnifiedAskService:
                 if restriction:
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
+                # Graph planning owns question semantics; the old regex remains fallback only.
+                if self.graph_service is not None and not context and not (values['subject'] or values['relation']):
+                    configured = self.investigation()
+                    permission = bool(payload.get('allow_external_provider') is True)
+                    if configured is None or not configured.external_provider or permission:
+                        graph = self.graph_service.run(run.query, run.workspace_id,
+                            as_of=run.scope['as_of'], allow_external_provider=permission)
+                        if graph['status'] != 'FALLBACK':
+                            if graph['status'] == 'UNAUTHORIZED':
+                                return self._failure(result, graph['reason'], 'Graph permission is unavailable.', category='permission'), 403
+                            if graph['status'] in {'BLOCKED', 'REFUSED'}:
+                                return self._failure(result, graph['reason'], 'The graph request could not be verified.', status='NEEDS_SCOPE'), 200
+                            with self._lock:
+                                self._graph_runs[graph['run_id']] = run
+                            result.update({k: v for k, v in graph.items() if k not in {'run_id'}})
+                            result.update(path='SOURCE_RELATION_INVESTIGATION', agent_run_id=graph['run_id'],
+                                decided_by='graph', route=dict(intent='SOURCE_RELATION', code='TEMPORAL_GRAPH', decided_by='graph'))
+                            return result, 200
                 plan = plan_relation_investigation(run.query)
                 if context:
                     validate_context(self.app, run.workspace_id, context)
@@ -186,7 +215,8 @@ class UnifiedAskService:
                         and not getattr(service, "task_only", False)
                         and (not service.external_provider or payload.get("allow_external_provider") is True)
                         and not (memory and memory["conflicts"])):
-                    selector = lambda: service.model_factory(run.query)
+                    from linkloom.ui.graph_investigation import bind_graph_fallback
+                    selector = lambda: bind_graph_fallback(service.model_factory(run.query), 'legacy-selector')
                 routed = route_question(run.query, slots, resolver, workspace_id=run.workspace_id,
                     subject=values["subject"], relation=values["relation"],
                     as_of=payload.get("as_of"), provider_factory=selector, embedder=self.slot_embedder)
@@ -438,6 +468,20 @@ class UnifiedAskService:
                              status="PROVIDER_UNCERTAIN" if uncertain else "FAILED")
 
     def inspect(self, run_id: str, workspace_id: str) -> tuple[dict[str, Any], int]:
+        with self._lock:
+            graph_run = self._graph_runs.get(run_id)
+        if graph_run is not None and self.graph_service is not None:
+            with self.app._store_lock:
+                self._check_workspace(workspace_id)
+                result = self._base(graph_run)
+                graph = self.graph_service.inspect(run_id, workspace_id)
+                if graph is None or graph['status'] in {'BLOCKED', 'UNAUTHORIZED'}:
+                    return self._failure(result, 'GRAPH_FINAL_NOT_CURRENTLY_VERIFIED',
+                        'The prior graph answer is no longer verified.'), 409
+                result.update({k: v for k, v in graph.items() if k != 'run_id'})
+                result.update(path='SOURCE_RELATION_INVESTIGATION', agent_run_id=run_id, decided_by='graph',
+                    route=dict(intent='SOURCE_RELATION', code='TEMPORAL_GRAPH', decided_by='graph'))
+                return result, 200
         with self._lock:
             entry = self._runs.get(run_id)
         if entry is None:
