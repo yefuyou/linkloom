@@ -4,6 +4,9 @@ import socket
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from types import SimpleNamespace
+
+import httpcore._sync.http11 as http11
 
 import httpx
 import pytest
@@ -37,10 +40,6 @@ def local_server():
             self.wfile.write(b'abc' if partial else b'OK')
             self.wfile.flush()
             if partial:
-                self.close_connection = True
-                self.connection.shutdown(socket.SHUT_RDWR)
-            if self.path == '/idle':
-                time.sleep(.05)
                 self.close_connection = True
                 self.connection.shutdown(socket.SHUT_RDWR)
     server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
@@ -88,14 +87,21 @@ def test_diagnostics_distinguish_disconnect_stages(local_server, path, stage):
     assert any(len(e.get('exception_chain', [])) >= 2 for e in events if e['event'] == 'call_failed')
 
 
-def test_expired_keepalive_is_visible_as_new_tcp(local_server):
+def test_expired_keepalive_is_visible_as_new_tcp(local_server, monkeypatch):
     base, _ = local_server
     events = []
     diag = TransportDiagnostics(events.append)
-    with httpx.Client(trust_env=False, timeout=60, event_hooks=diag.hooks()) as c:
-        request(c, diag, base + '/idle', 'r1')
-        time.sleep(.15)
-        request(c, diag, base + '/ok', 'r2')
+    clock = SimpleNamespace(now=0.0)
+    # Replace only HTTP/1.1's clock binding, leaving socket timeouts and other
+    # threads on real time. Expiry must not depend on a server shutdown race.
+    monkeypatch.setattr(http11, 'time', SimpleNamespace(monotonic=lambda: clock.now))
+    with httpx.Client(trust_env=False, timeout=60, event_hooks=diag.hooks(),
+                      limits=httpx.Limits(keepalive_expiry=10.0)) as c:
+        assert request(c, diag, base + '/ok', 'r1').status_code == 200
+        assert request(c, diag, base + '/ok', 'reuse').status_code == 200
+        assert [e['request_id'] for e in events if e['event'] == 'connection.connect_tcp.started'] == [diag.safe_identity('r1')]
+        clock.now = 11.0
+        assert request(c, diag, base + '/ok', 'r2').status_code == 200
     assert [e['request_id'] for e in events if e['event'] == 'connection.connect_tcp.started'] == [diag.safe_identity(x) for x in ('r1', 'r2')]
 
 
