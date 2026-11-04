@@ -140,6 +140,12 @@ class RerankPipeline:
             except Exception:
                 pass
 
+    def prepare(self, *, cancel: threading.Event | None = None) -> None:
+        """Explicit startup preparation is local-only, irrespective of credentials."""
+        if self.mode not in {"auto", "local"}:
+            raise RerankError("local_preparation_unavailable")
+        self._backend().prepare(cancel=cancel)
+
     def close(self) -> None:
         for backend in (self._local if self._owns_local else None, self._jev):
             close = getattr(backend, "close", None)

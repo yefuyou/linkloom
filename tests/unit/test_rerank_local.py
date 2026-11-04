@@ -221,3 +221,27 @@ def test_optional_metadata_copy_failure_cannot_fail_retrieval():
     result= retriever.retrieve(RetrievalQuery('w','query',top_k=1))
     assert len(result)==1 and result[0].rerank_score is None
     assert retriever.last_rerank_trace['status']=='fallback'
+
+
+def test_startup_preparation_can_be_cancelled_and_reaps_worker(monkeypatch):
+    from threading import Event
+    local = configured_worker(Connection(ready=False))
+    local._ready = False
+    cancel = Event()
+    process = local._process
+    def preparing(wait):
+        cancel.set()
+        raise RerankError('model_preparing')
+    monkeypatch.setattr(local, '_ready_or_raise', preparing)
+    with pytest.raises(RerankError, match='preparation_cancelled'):
+        local.prepare(cancel=cancel)
+    assert local._process is None and process.terminated
+
+
+def test_pipeline_preparation_never_constructs_remote_backends(monkeypatch):
+    from linkloom.rerank.pipeline import RerankPipeline
+    for mode in ('jev', 'off'):
+        pipeline = RerankPipeline(mode)
+        monkeypatch.setattr(pipeline, '_backend', lambda: pytest.fail('remote preparation forbidden'))
+        with pytest.raises(RerankError, match='local_preparation_unavailable'):
+            pipeline.prepare()

@@ -293,11 +293,14 @@ class LocalCrossEncoder:
         self._failure, self._failed_at = reason, time.monotonic()
         raise RerankError(reason)
 
-    def prepare(self, timeout_s: float | None = None) -> dict[str, Any]:
+    def prepare(self, timeout_s: float | None = None, *, cancel: threading.Event | None = None) -> dict[str, Any]:
         """Explicit blocking preparation for startup tools and benchmark preflight."""
         deadline = time.monotonic() + (timeout_s or self.preparation_timeout_s)
         with self._lock:
             while True:
+                if cancel is not None and cancel.is_set():
+                    self.close()
+                    raise RerankError("preparation_cancelled")
                 try:
                     self._ready_or_raise(min(0.1, max(0, deadline - time.monotonic())))
                     return dict(self.last_trace)

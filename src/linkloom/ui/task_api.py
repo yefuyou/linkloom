@@ -140,6 +140,10 @@ class TaskProductAPI:
         from linkloom.tasks.same_task_hints import SameTaskHintConfig
         self.hint_config = SameTaskHintConfig.from_env()
         self._hints = None
+        if self.hint_config.enabled and self.database_path and self.database_path != ":memory:":
+            from linkloom.tasks.same_task_hints import SameTaskHintService
+            self._hints = SameTaskHintService(self.service, self.hint_config)
+            self._hints.start_preload()
 
     @staticmethod
     def matches(target):
@@ -258,6 +262,7 @@ class TaskProductAPI:
             with self._lock:
                 if self._hints is None:
                     self._hints = SameTaskHintService(service, self.hint_config)
+                    self._hints.start_preload()
             return self._hints.get_hints(workspace, ids[0],
                 _fingerprint(query.get("candidate_fingerprint"), "candidate_fingerprint")), 200
         if name == "candidate_evidence":

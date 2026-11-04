@@ -37,7 +37,22 @@ const {chromium} = require('playwright');
     await page.goto(fixture.url + '/tasks?workspace_id=' + encodeURIComponent(fixture.workspace_id));
     const card = page.getByTestId('candidate-' + fixture.candidate_id);
     await card.waitFor();
-    await card.getByTestId('same-task-hint').first().waitFor({timeout: 60000});
+    let sawPreparing = false;
+    const deadline = Date.now() + 180000;
+    while (true) {
+      // Finish each real HTTP read before refreshing; do not abort local inference.
+      await page.waitForFunction(() => {
+        const app = window.linkloomTasksApp;
+        return app && app.state.candidates.items.length && app.state.candidates.items.every(item => Array.isArray(item.sameTaskHints));
+      }, undefined, {timeout: 60000});
+      if (await card.getByTestId('same-task-hint').count()) break;
+      if (Date.now() > deadline) throw new Error('background preloading did not produce hints: ' + stderr);
+      sawPreparing ||= await card.getByTestId('same-task-analyzing').count() > 0;
+      await page.waitForTimeout(1500);
+      await page.reload();
+      await card.waitFor();
+    }
+    console.log('Product startup background preparation observed: ' + sawPreparing);
     const hints = card.getByTestId('same-task-hint');
     assert.ok(await hints.count() <= 3);
     const visible = await hints.allTextContents();
