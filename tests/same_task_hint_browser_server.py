@@ -7,7 +7,6 @@ from unittest.mock import patch
 
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
-from linkloom.tasks.same_task_hints import SameTaskHintConfig, SameTaskHintService
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.server import create_http_server
 from tests.task_mvp_browser_server import BrowserBackend
@@ -33,11 +32,7 @@ def main():
         identifier,fingerprint=incoming(imported)
         product=ProductApplication(database_path=imported.path,extractor=None)
         host=create_http_server(BrowserBackend(),product_app=product,port=0)
-        hints=SameTaskHintService(host.task_api.service,SameTaskHintConfig.from_env())
-        # Prepare the real local model before listening; never substitute scripted scores.
-        pipeline=hints._local_reranker()
-        pipeline._local.prepare(timeout_s=90)
-        host.task_api._hints=hints
+        # Normal Product startup owns background preloading; no scripted scores.
         with ExitStack() as stack:
             for kind in (GeminiProviderAdapter,DeepSeekProviderAdapter,RecordedProvider):
                 stack.enter_context(patch.object(kind,'complete',side_effect=AssertionError('paid/extraction call forbidden')))

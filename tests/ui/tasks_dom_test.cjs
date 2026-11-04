@@ -666,6 +666,30 @@ test('workspace switches discard late hint text', async () => {
   assert.equal(h.app.state.candidates.items.length, 0);
 });
 
+test('preparing model shows analysis state and refresh reveals actual hints without writes', async () => {
+  const h = await harness({hints: []}); await tick();
+  h.hook = call => /same-task-hints/.test(call.path) ? {ok: true, status: 200, json: async () => ({candidate_fingerprint: fingerprint, status: 'preparing', hints: []})} : null;
+  await h.app.refreshCurrent(); await tick();
+  assert.match(h.elements['tasks-app'].innerHTML, /正在分析相似任务…/);
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /可能是同一件事：/);
+  h.hook = call => /same-task-hints/.test(call.path) ? {ok: true, status: 200, json: async () => ({candidate_fingerprint: fingerprint, status: 'complete', hints: [hint()]})} : null;
+  await h.app.refreshCurrent(); await tick();
+  assert.doesNotMatch(h.elements['tasks-app'].innerHTML, /正在分析相似任务…/);
+  assert.match(h.elements['tasks-app'].innerHTML, /可能是同一件事：/);
+  assert.equal(h.writes().length, 0);
+});
+
+test('exact hint remains usable while semantic model is preparing', async () => {
+  const h = await harness({hints: []}); await tick();
+  h.hook = call => /same-task-hints/.test(call.path) ? {ok: true, status: 200, json: async () => ({candidate_fingerprint: fingerprint, status: 'preparing', hints: [{...hint(), match_kind: 'exact'}]})} : null;
+  await h.app.refreshCurrent(); await tick();
+  assert.match(h.elements['tasks-app'].innerHTML, /正在分析相似任务…/);
+  assert.match(h.elements['tasks-app'].innerHTML, /已有同名任务：/);
+  await h.click('choose-hinted-task', {index: '0', task: 'task-1'});
+  assert.equal(h.app.state.form.kind, 'merge');
+  assert.equal(h.writes().length, 0);
+});
+
 (async () => {
   for (const {name, run} of cases) {await run(); console.log('PASS ' + name);}
   console.log(`PASS: ${cases.length} formal-task DOM scenarios`);

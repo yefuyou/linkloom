@@ -237,6 +237,7 @@ def test_enabled_api_checks_workspace_fingerprint_and_query_whitelist(app,monkey
     identifier,fingerprint=incoming(app)
     api=TaskProductAPI(app.path)
     try:
+        api._hints.close()
         api._hints=service(app,monkeypatch,lambda snapshot:([hit(task['id'])],'local',None))
         path='/api/product/task-candidates/'+identifier+'/same-task-hints?'
         query=dict(workspace_id=app.workspace,candidate_fingerprint=fingerprint)
@@ -287,3 +288,136 @@ def test_related_deliverable_needs_title_similarity_even_with_high_relevance(app
     identifier,fingerprint=incoming(app)
     result=service(app,monkeypatch,lambda snapshot:([hit(task['id'],9,title_similarity=similarity)],'local',None))
     assert bool(result.get_hints(app.workspace,identifier,fingerprint)['hints']) is shown
+
+
+def test_startup_preloads_in_background_and_refresh_replaces_pending_with_local(app, monkeypatch):
+    from threading import Event
+    entered, release = Event(), Event()
+    class Pipeline:
+        def prepare(self, *, cancel):
+            entered.set()
+            assert release.wait(5)
+        def close(self): pass
+    monkeypatch.setenv('LINKLOOM_SAME_TASK_HINT', 'on')
+    monkeypatch.setattr(SameTaskHintService, '_local_reranker', lambda self: Pipeline())
+    task = confirm(app, title='联调那份报告')['task']
+    identifier, fingerprint = incoming(app)
+    api = TaskProductAPI(app.path)
+    try:
+        assert entered.wait(5)  # No hint HTTP request was needed to start preparation.
+        monkeypatch.setattr(api._hints, '_rank_local', lambda snapshot: ([hit(task['id'])], 'local', None))
+        pending = api._hints.get_hints(app.workspace, identifier, fingerprint)
+        assert pending['status'] == 'preparing' and pending['mode'] == 'preparing'
+        assert [h['match_kind'] for h in pending['hints']] == ['exact']
+        release.set()
+        api._hints._preload_thread.join(5)
+        complete = api._hints.get_hints(app.workspace, identifier, fingerprint)
+        assert complete['status'] == 'complete' and complete['mode'] == 'local'
+        assert complete['hints'][0]['match_kind'] == 'exact'
+    finally:
+        release.set()
+        api.close()
+
+
+def test_semantic_preparation_is_not_a_filtered_rrf_result_and_can_be_refreshed(app, monkeypatch):
+    from threading import Event
+    entered, release = Event(), Event()
+    task = confirm(app)['task']
+    identifier, fingerprint = incoming(app)
+    class Pipeline:
+        def prepare(self, *, cancel):
+            entered.set()
+            assert release.wait(5)
+    value = SameTaskHintService(app.service, SameTaskHintConfig(True), reranker=Pipeline())
+    monkeypatch.setattr(value, '_rank_local', lambda snapshot: ([hit(task['id'])], 'local', None))
+    value.start_preload()
+    try:
+        assert entered.wait(5)
+        thread = value._preload_thread
+        value.start_preload()
+        assert value._preload_thread is thread
+        pending = value.get_hints(app.workspace, identifier, fingerprint)
+        assert pending['hints'] == [] and pending['status'] == 'preparing'
+        release.set(); thread.join(5)
+        result = value.get_hints(app.workspace, identifier, fingerprint)
+        assert result['mode'] == 'local' and result['status'] == 'complete'
+        assert result['hints'][0]['task']['id'] == task['id']
+    finally:
+        release.set(); value.close()
+
+
+def test_failed_preload_preserves_existing_rrf_thresholds(app, monkeypatch):
+    class Pipeline:
+        def prepare(self, *, cancel): raise ImportError('local artifact unavailable')
+    task = confirm(app)['task']
+    identifier, fingerprint = incoming(app)
+    value = SameTaskHintService(app.service, SameTaskHintConfig(True), reranker=Pipeline())
+    value.start_preload(); value._preload_thread.join(5)
+    assert not value.preparing and value._preload_state == 'unavailable'
+    monkeypatch.setattr(value, '_rank_local', lambda snapshot: ([hit(task['id'], None, dense=.89)], 'rrf', 'local_rerank_unavailable'))
+    result = value.get_hints(app.workspace, identifier, fingerprint)
+    assert result['mode'] == 'rrf' and result['status'] == 'complete' and result['hints'] == []
+    monkeypatch.setattr(value, '_rank_local', lambda snapshot: ([hit(task['id'], None, dense=.95)], 'rrf', 'local_rerank_unavailable'))
+    assert value.get_hints(app.workspace, identifier, fingerprint)['hints'][0]['score_kind'] == 'rrf'
+    value.close()
+
+
+def test_disabled_service_never_starts_a_loader(app, monkeypatch):
+    value = SameTaskHintService(app.service, SameTaskHintConfig(False))
+    monkeypatch.setattr(value, '_local_reranker', lambda: pytest.fail('disabled loader'))
+    value.start_preload()
+    assert value._preload_thread is None and not value.preparing
+    value.close()
+
+
+def test_close_cancels_preparation_and_releases_owned_local_worker(app, monkeypatch):
+    from threading import Event
+    entered, closed = Event(), Event()
+    class Pipeline:
+        def prepare(self, *, cancel):
+            entered.set()
+            assert cancel.wait(5)
+            raise RuntimeError('cancelled')
+        def close(self): closed.set()
+    value = SameTaskHintService(app.service, SameTaskHintConfig(True))
+    monkeypatch.setattr(value, '_local_reranker', lambda: value.reranker)
+    value.reranker = Pipeline()
+    value.start_preload()
+    assert entered.wait(5)
+    value.close()
+    assert closed.is_set() and not value._preload_thread.is_alive()
+    previous = value._preload_thread
+    value.start_preload()
+    assert value._preload_thread is previous
+
+
+def test_restarted_worker_preparing_never_publishes_filtered_rrf(app):
+    np = pytest.importorskip('numpy', reason='Real hybrid integration requires optional local retrieval dependencies')
+    from threading import Event
+    from linkloom.rerank.base import RerankError, score_candidates
+    from linkloom.rerank.pipeline import RerankPipeline
+    entered, release = Event(), Event()
+    class Embedder:
+        def encode(self, texts): return np.array([[1., 1.] for _ in texts])
+    class Backend:
+        ready = False
+        def prepare(self, *, cancel):
+            entered.set()
+            assert release.wait(5)
+            self.ready = True
+        def rerank(self, query, candidates):
+            if not self.ready: raise RerankError('model_preparing')
+            return score_candidates(candidates, [4.0] * len(candidates))
+    value = SameTaskHintService(app.service, SameTaskHintConfig(True), embedder=Embedder(),
+        reranker=RerankPipeline('local', local=Backend()))
+    snapshot = dict(candidate=dict(workspace_id=app.workspace, title='联调那份报告', owner=None), evidence=[],
+        description=[], tasks=[dict(task=dict(id='report', title='联调报告'), text='联调报告')])
+    try:
+        hits, mode, reason = value._rank(snapshot)
+        assert hits == [] and mode == 'preparing' and reason == 'model_preparing'
+        assert entered.wait(5)
+        release.set(); value._preload_thread.join(5)
+        hits, mode, reason = value._rank(snapshot)
+        assert mode == 'local' and reason is None and hits[0].rerank_score == 4.0
+    finally:
+        release.set(); value.close()
