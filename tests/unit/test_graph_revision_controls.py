@@ -5,6 +5,22 @@ import pytest
 from run_graph_profile_revision import verify_control_reuse,ALLOWED_GRAPH_CHANGES,GRAPH_ONLY_METHODS,without_graph_method
 
 
+@pytest.fixture(autouse=True)
+def isolated_current_tree(tmp_path, monkeypatch):
+    # CI must not need private work/ inputs. Keep the real guard and every
+    # assertion, but provide an entirely temporary current-side file tree.
+    import run_graph_profile_revision as revision
+    repository = Path(__file__).resolve().parents[2]
+    current = tmp_path / 'current'
+    for relative in ALLOWED_GRAPH_CHANGES | {'src/linkloom/runtime/task_plan.py'}:
+        target = current / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        raw = (b'synthetic current graph protocol' if relative.startswith('work/')
+               else (repository / relative).read_bytes())
+        target.write_bytes(raw)
+    monkeypatch.setattr(revision, '__file__', str(current / 'tests/integration/run_graph_profile_revision.py'))
+
+
 def given(tmp_path,*,legacy_change=False,gold=False):
     paths=sorted(ALLOWED_GRAPH_CHANGES|({'src/linkloom/runtime/task_plan.py'} if legacy_change else set()))
     freeze=tmp_path/'runtime.json';archive=tmp_path/'baseline.zip';deps={}
