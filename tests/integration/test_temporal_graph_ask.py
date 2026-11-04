@@ -57,7 +57,7 @@ def test_external_permission_and_explicit_scope_never_bypass_existing_admission(
     assert status==409 and models==[]
 
 
-def test_planning_failure_falls_back_but_query_unknown_never_does(graph_http):
+def test_planning_failure_and_unknown_try_legacy_but_preserve_unanswered_graph(graph_http):
     demo,workspace,worker,models=graph_http
     class Failed:
         def plan(self,context):return dict(status='OUTPUT_INVALID',plan=None)
@@ -70,8 +70,9 @@ def test_planning_failure_falls_back_but_query_unknown_never_does(graph_http):
       ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local',estimated_cost_upper_bound_usd=0))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(query='负责人',workspace_id=workspace,as_of='2026-05-01'))
     assert status==200 and body['result']['graph_status']=='UNKNOWN'
-    fallback=next(r for r in worker.metrics.snapshot() if r['name']=='legacy_fallback')
-    assert fallback['count']==1
+    # New contract: UNKNOWN attempts legacy; this wording has no legacy plan.
+    counts={r['reason']:r['count'] for r in worker.metrics.snapshot() if r['name']=='legacy_fallback'}
+    assert counts=={'GRAPH_PLANNING_OUTPUT_INVALID':1,'GRAPH_INSUFFICIENT_UNKNOWN':1}
 
 
 def test_reopening_graph_answer_rechecks_source_and_never_reuses_invalidated_answer(graph_http):

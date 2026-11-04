@@ -48,6 +48,7 @@ class UnifiedAskService:
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
         self._lock = Lock()
         self._graph_runs = {}
+        self._graph_fallbacks: dict[str, dict[str, str]] = {}
         self.feedback_memory = (FeedbackMemory(app.repository.database_path + ".feedback-memory.jsonl")
                                 if app is not None and app.repository.database_path != ":memory:" else None)
 
@@ -152,7 +153,7 @@ class UnifiedAskService:
         with graph_request_budget():
             return self._ask(payload)
 
-    def _ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+    def _ask(self, payload: dict[str, Any], *, use_graph: bool = True) -> tuple[dict[str, Any], int]:
         query = payload.get("query")
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
@@ -177,7 +178,7 @@ class UnifiedAskService:
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
                 # Graph planning owns question semantics; the old regex remains fallback only.
-                if self.graph_service is not None and not context and not (values['subject'] or values['relation']):
+                if use_graph and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
                     configured = self.investigation()
                     permission = bool(payload.get('allow_external_provider') is True)
                     if configured is None or not configured.external_provider or permission:
@@ -190,10 +191,10 @@ class UnifiedAskService:
                                 return self._failure(result, graph['reason'], 'The graph request could not be verified.', status='NEEDS_SCOPE'), 200
                             with self._lock:
                                 self._graph_runs[graph['run_id']] = run
-                            result.update({k: v for k, v in graph.items() if k not in {'run_id'}})
-                            result.update(path='SOURCE_RELATION_INVESTIGATION', agent_run_id=graph['run_id'],
-                                decided_by='graph', route=dict(intent='SOURCE_RELATION', code='TEMPORAL_GRAPH', decided_by='graph'))
-                            return result, 200
+                            if (graph['status'] == 'INSUFFICIENT'
+                                    and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS'}):
+                                return self._try_graph_fallback(run, payload, graph)
+                            return self._graph_result(run, graph), 200
                 plan = plan_relation_investigation(run.query)
                 if context:
                     validate_context(self.app, run.workspace_id, context)
@@ -277,6 +278,48 @@ class UnifiedAskService:
                 return self._from_snapshot(pinned, snapshot), 202
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
+
+    def _graph_result(self, run, graph):
+        result = self._base(run)
+        result.update({k: v for k, v in graph.items() if k != 'run_id'})
+        result.update(path='SOURCE_RELATION_INVESTIGATION', agent_run_id=graph['run_id'],
+            decided_by='graph', route=dict(intent='SOURCE_RELATION', code='TEMPORAL_GRAPH', decided_by='graph'))
+        return result
+
+    def _try_graph_fallback(self, run, payload, graph):
+        context = dict(graph_run_id=graph['run_id'], graph_status=graph['graph_status'],
+                       reason='GRAPH_INSUFFICIENT_' + graph['graph_status'])
+        # graph_query_status was already counted by the worker; count this attempt once.
+        self.graph_service.metrics.record('legacy_fallback', context['reason'])
+        # Re-enter the unchanged admission/routing path without a second graph call
+        # or a new Provider reservation. The outer graph_request_budget stays active.
+        legacy, status = self._ask(payload, use_graph=False)
+        if legacy.get('agent_run_id'):
+            with self._lock:
+                self._graph_fallbacks[legacy['agent_run_id']] = context
+        return self._select_graph_fallback(legacy, status, context, run.workspace_id)
+
+    def _select_graph_fallback(self, legacy, status, context, workspace):
+        # Never mask a permission failure with a cached graph view.
+        error = legacy.get('error') or {}
+        if error.get('category') in {'permission', 'tool_policy_denied'} or error.get('code') in {
+                'WORKSPACE_MISMATCH', 'WORKSPACE_REQUIRED'}:
+            return legacy, status
+        answered = (legacy.get('status') == 'COMPLETED' and legacy.get('conclusions')
+                    and legacy.get('evidence') and error == {})
+        if legacy.get('source_investigation') is not None:
+            answered = (answered and legacy['source_investigation'].get('answer')
+                        and legacy.get('reviewer', {}).get('accepted') is True)
+        if answered or legacy.get('status') == 'INVESTIGATING':
+            result = deepcopy(legacy)
+            result.update(answer_source='legacy', decided_by='legacy', graph_fallback=dict(context))
+            result['route'] = dict(result['route'], decided_by='legacy')
+            return result, status
+        # Async legacy failure/insufficiency keeps the original graph answer, but
+        # reopening must still pass current workspace/source/receipt validation.
+        result, graph_status = self.inspect(context['graph_run_id'], workspace)
+        result['graph_fallback'] = dict(context, legacy_status=legacy.get('status', 'FAILED'))
+        return result, graph_status
 
     def _task_request(self, run, payload, *, context=None):
         route = dict(intent='TASK_INVESTIGATION', code='SOURCE_TASK_INVESTIGATION',
@@ -512,4 +555,8 @@ class UnifiedAskService:
         failure_status = {"provider_outcome_uncertain": 503, "provider_failure": 502, "tool_policy_denied": 403}
         status = (failure_status.get((result.get("error") or {}).get("category"), 500)
                   if result["status"] in {"FAILED", "PROVIDER_UNCERTAIN"} else 200)
+        with self._lock:
+            fallback = self._graph_fallbacks.get(run_id)
+        if fallback is not None:
+            return self._select_graph_fallback(result, status, fallback, workspace_id)
         return result, status
