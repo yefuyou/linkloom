@@ -33,17 +33,34 @@ class TaskTitleBinding:
     action_quote: str
 
     def __post_init__(self):
-        if self.state not in {'COMPLETE', 'INCOMPLETE'}:
+        if self.state not in {'COMPLETE', 'INCOMPLETE', 'OBJECT_ONLY'}:
             raise ValueError('invalid model title state')
         for value in (self.text, self.object_quote, self.action_quote):
             if not isinstance(value, str) or len(value) > 2048 or '\x00' in value:
                 raise ValueError('invalid bounded title witness')
+        if self.state == 'OBJECT_ONLY' and (self.text != self.object_quote or self.action_quote):
+            raise ValueError('object-only title cannot declare different text or an action')
 
     @classmethod
     def from_dict(cls, value):
-        if not isinstance(value, dict) or set(value) != {f.name for f in fields(cls)}:
+        expected = {f.name for f in fields(cls)}
+        if isinstance(value, dict) and value.get('state') == 'OBJECT_ONLY':
+            if not {'state', 'object_quote'} <= set(value) or set(value) - expected:
+                raise ValueError('invalid task title declaration')
+            # Sparse model input has one canonical cold-record representation.
+            value = dict(text=value.get('text', value['object_quote']), state='OBJECT_ONLY',
+                         object_quote=value['object_quote'], action_quote=value.get('action_quote', ''))
+        if not isinstance(value, dict) or set(value) != expected:
             raise ValueError('invalid task title declaration')
         return cls(**value)
+
+
+def _object_title_length(quote):
+    # The model declares the nominal role. This is only a lexical length gate,
+    # not a vocabulary or part-of-speech test; a single-letter English word counts.
+    visible = ''.join(char for char in quote if not char.isspace())
+    return bool(any(char.isalnum() for char in visible) and
+                (len(visible) >= 2 or re.fullmatch(r"[A-Za-z]+(?:[-'][A-Za-z]+)*", quote)))
 
 
 def _product_title(binding, raw):
@@ -56,6 +73,13 @@ def _product_title(binding, raw):
                 and title.count(action) == raw.count(action) == 1
                 and obj not in action and action not in obj):
             return title, False
+    if binding is not None and binding.state == 'OBJECT_ONLY':
+        obj = binding.object_quote
+        if _object_title_length(obj):
+            start = raw.find(obj)
+            # Also reject overlapping duplicate witnesses, unlike str.count.
+            if start >= 0 and raw.find(obj, start + 1) < 0:
+                return obj, False
     return raw, True
 
 
@@ -81,7 +105,9 @@ class TaskProposal:
             raise ValueError('invalid field-stage diagnostics')
         if self.grounding_policy_version is not None:
             if (self.grounding_policy_version not in PRODUCT_TASK_FIELD_POLICIES
-                    or self.field_bindings is None or not isinstance(self.title_binding, TaskTitleBinding)):
+                    or self.field_bindings is None or not isinstance(self.title_binding, TaskTitleBinding)
+                    or (self.title_binding.state == 'OBJECT_ONLY'
+                        and self.grounding_policy_version != PRODUCT_TASK_FIELDS_V2)):
                 raise ValueError('invalid product task grounding contract')
         elif self.title_binding is not None:
             raise ValueError('title declaration requires the product grounding contract')
@@ -213,6 +239,8 @@ class TaskObservation:
         if self.grounding_policy_version is not None:
             if (self.grounding_policy_version not in PRODUCT_TASK_FIELD_POLICIES
                     or self.field_bindings is None or not isinstance(self.title_binding, TaskTitleBinding)
+                    or (self.title_binding.state == 'OBJECT_ONLY'
+                        and self.grounding_policy_version != PRODUCT_TASK_FIELDS_V2)
                     or (self.title, self.title_needs_edit) != _product_title(self.title_binding, self.raw_text)):
                 raise ValueError('invalid product task title or grounding policy')
         elif self.title_binding is not None or self.title is not None or self.title_needs_edit:

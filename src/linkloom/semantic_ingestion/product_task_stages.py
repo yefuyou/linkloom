@@ -87,12 +87,12 @@ def _core_valid(task, segment):
 
 def _annotation_schema():
     title = dict(text=dict(type='string', maxLength=2048),
-        state=dict(type='string', enum=['COMPLETE', 'INCOMPLETE']),
+        state=dict(type='string', enum=['COMPLETE', 'INCOMPLETE', 'OBJECT_ONLY']),
         object_quote=dict(type='string', maxLength=2048), action_quote=dict(type='string', maxLength=2048))
     fields = binding_schema()
     fields.update(minItems=0, maxItems=4)
     return dict(type='object', properties=dict(
-        title_binding=dict(type='object', properties=title, required=list(title), additionalProperties=False),
+        title_binding=dict(type='object', properties=title, required=['state', 'object_quote'], additionalProperties=False),
         field_bindings=fields), required=[], additionalProperties=False)
 
 
@@ -120,11 +120,18 @@ undertaking; value must equal the canonical speaker and quote must contain that
 undertaking. A header alone does not assign responsibility. Never cross messages.
 Deadline value is only the verbatim source date token, with boundary words in
 quote. Partial month/day keeps its missing year; never derive years from metadata.
-For title_binding, text is a unique verbatim contiguous self-contained work phrase;
-state COMPLETE only with independent concrete object_quote and action_quote,
-uniquely inside that title and task_text, distinct and neither containing the
-other. Never invent, rewrite or join words. Otherwise omit it or mark INCOMPLETE;
-the Host retains the original task sentence for a human to organize its title.
+For title_binding, prefer the concrete deliverable itself as a short title when
+production action is implicit. Responsibility assignments, owner changes,
+deadline updates and completion wording alone are not a specific production
+action: use state OBJECT_ONLY with only object_quote, the exact contiguous nominal
+deliverable from task_text. Do not include the owner, deadline, assignment or status
+wording in object_quote. It must appear exactly once in task_text and contain at
+least two non-whitespace characters or one English word. Do not add an action.
+Use state COMPLETE only for an explicit self-contained work phrase, with text and
+independent concrete object_quote and action_quote, each unique inside that title
+and task_text, distinct and neither containing the other. Never invent, rewrite
+or join words. Otherwise omit title_binding or mark INCOMPLETE; the Host retains
+the original task sentence for a human to organize its title.
 Input:\n''' + json.dumps(instructions, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
 
 

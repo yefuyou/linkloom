@@ -54,6 +54,7 @@
       INVALID_REQUEST: '请检查填写内容，必填项不能留空。', INVALID_JSON: '提交格式不正确，请刷新页面后重试。',
       UNSUPPORTED_MEDIA_TYPE: '提交格式不受支持，请刷新页面后重试。', RESOURCE_NOT_FOUND: '这条记录已不可用，或不在当前工作区。',
       WORKSPACE_NOT_FOUND: '工作区已不可用，请重新选择。', CANDIDATE_CHANGED: '候选内容已经变化，请重新读取原文并审核。',
+      HINT_STALE: '提示对应的任务或原文已变化，请刷新后核对。',
       REVIEW_CHANGED: '审核记录已经变化，请刷新后重新预览。', PREVIEW_STALE: '预览已过期，任务或来源已变化，请重新预览并确认。',
       ALREADY_REVIEWED: '这条候选已被处理，请查看最新列表。', SOURCE_INVALID: '原文校验未通过，当前不能确认这条候选。',
       REVIEW_CONFLICT: '当前记录不满足操作条件，请刷新核对；跨版本重新绑定暂不在本页提供。',
@@ -100,7 +101,7 @@
     const root = doc.getElementById('tasks-app'), workspacePicker = doc.getElementById('workspace'), identityButton = doc.getElementById('identity'), notice = doc.getElementById('notice');
     let storage, storageAvailable = true;
     try { storage = Object.prototype.hasOwnProperty.call(environment, 'storage') ? environment.storage : global.localStorage; if (!storage) storageAvailable = false; } catch (_error) { storageAvailable = false; }
-    const state = {workspace: null, workspaces: [], epoch: 0, busy: false, loading: false, view: 'candidates', candidateState: 'pending', candidates: EMPTY_PAGE(), tasks: EMPTY_PAGE(), blockedReviews: new Set(), catalog: [], catalogRequest: 0, selection: null, previewRequest: 0, lastResult: null, events: EMPTY_PAGE(), recent: [], recentRequest: 0, candidateOffset: 0, taskOffset: 0, eventOffset: 0, targetOffset: 0, ownerMode: 'all', owner: '', status: '', detail: null, form: null, evidence: {}, identity: '', storageAvailable, receipt: null, notice: null, started: false, taskRequest: 0};
+    const state = {workspace: null, workspaces: [], epoch: 0, busy: false, loading: false, view: 'candidates', candidateState: 'pending', candidates: EMPTY_PAGE(), tasks: EMPTY_PAGE(), blockedReviews: new Set(), catalog: [], catalogRequest: 0, selection: null, hintRequest: 0, hintsEnabled: false, previewRequest: 0, lastResult: null, events: EMPTY_PAGE(), recent: [], recentRequest: 0, candidateOffset: 0, taskOffset: 0, eventOffset: 0, targetOffset: 0, ownerMode: 'all', owner: '', status: '', detail: null, form: null, evidence: {}, identity: '', storageAvailable, receipt: null, notice: null, started: false, taskRequest: 0};
     try { if (storageAvailable) state.identity = (storage.getItem(STORAGE_KEY) || '').trim(); } catch (_error) { state.storageAvailable = false; }
     function identityLabel() {
       identityButton.textContent = state.identity ? '以 ' + state.identity + ' 身份操作 · 更改' : '设置操作身份';
@@ -142,9 +143,37 @@
       const epoch = state.epoch, value = await request('/api/product/task-candidates', {}, {...listParams(state.candidateOffset), state: state.candidateState});
       if (!current(epoch)) return;
       const selected = state.selection;
-      state.blockedReviews.clear(); state.candidates = value;
+      state.blockedReviews.clear(); state.candidates = value; state.hintsEnabled = value.same_task_hint_enabled === true;
+      const hintRequest = ++state.hintRequest;
+      if (state.hintsEnabled) void loadSameTaskHints(value.items, epoch, hintRequest);
       state.selection = value.items.find(item => selected && item.candidate_id === selected.candidate_id && item.candidate_fingerprint === selected.candidate_fingerprint) || value.items[0] || null;
       if (state.selection) await showEvidence(value.items.indexOf(state.selection));
+    }
+    async function loadSameTaskHints(items, epoch, number) {
+      for (const item of items) {
+        if (!current(epoch) || number !== state.hintRequest) return;
+        if (!item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) continue;
+        try {
+          const value = await request('/api/product/task-candidates/' + id(item.candidate_id) + '/same-task-hints', {}, {candidate_fingerprint: item.candidate_fingerprint});
+          if (!current(epoch) || number !== state.hintRequest) return;
+          if (state.candidates.items.includes(item) && !state.blockedReviews.has(candidateKey(item)) && value.candidate_fingerprint === item.candidate_fingerprint) {
+            item.sameTaskHints = value.hints.slice(0, 3); render();
+          }
+        } catch (_error) {
+          if (!current(epoch) || number !== state.hintRequest) return;
+          // Hint failures must never disable the existing human review controls.
+          item.sameTaskHints = []; item.sameTaskHintFailed = true; render();
+        }
+      }
+    }
+    function sameTaskHintsHtml(item, index) {
+      if (!state.hintsEnabled || !item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) return '';
+      if (!item.sameTaskHints) return '<p class="muted">正在本地查找可能相同的任务…</p>';
+      return item.sameTaskHints.map(hint => {
+        const task = hint.task, exact = hint.match_kind === 'exact';
+        const score = Number.isFinite(hint.score) ? (hint.score_kind === 'local' ? '本地重排分数 ' + hint.score.toFixed(3) : 'RRF 分数 ' + hint.score.toFixed(5)) : '精确同名';
+        return '<section class="same-task-hint" data-testid="same-task-hint"><p>' + (exact ? '已有同名任务：' : '可能是同一件事：') + '<strong>' + esc(task.title) + '（' + esc(text(task.owner)) + ' · ' + esc(deadline(task)) + '）</strong></p><p class="muted">' + esc(score) + ' · 请人工核对原文</p><details><summary>两边原文</summary><h4>本次候选原文</h4>' + evidenceHtml(hint.candidate_evidence, 'source') + '<h4>已有任务原文</h4>' + evidenceHtml(hint.task_evidence, 'source') + '</details><button type="button" data-action="choose-hinted-task" data-index="' + index + '" data-task="' + esc(task.id) + '" data-testid="choose-hinted-task">选它</button></section>';
+      }).join('');
     }
     async function loadTasks() { const epoch = state.epoch, value = await request('/api/product/tasks', {}, taskParams(state.taskOffset)); if (current(epoch)) state.tasks = value; }
     async function allPages(path, valid) {
@@ -216,7 +245,7 @@
       return '<div class="pager"><span>' + (page.items.length ? '第 ' + (meta.offset + 1) + '–' + (meta.offset + page.items.length) + ' 条' : '暂无记录') + '</span><div><button type="button" data-action="' + action + '" data-offset="' + Math.max(0, meta.offset - meta.limit) + '"' + (meta.offset === 0 ? ' disabled' : '') + '>上一页</button><button type="button" data-action="' + action + '" data-offset="' + meta.next_offset + '"' + (!meta.has_more ? ' disabled' : '') + '>下一页</button></div></div>';
     }
     function sameTitleHtml(candidate, index) {
-      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<div class="same-title-hint"><span>看起来是这条已有任务的更新：<strong>' + esc(item.task.title) + '（' + esc(text(item.task.owner)) + ' · ' + esc(deadline(item.task)) + '）</strong></span><button type="button" data-action="choose-same-task" data-index="' + index + '" data-task="' + esc(item.task.id) + '" data-testid="choose-same-task">选它</button></div>').join('');
+      return state.catalog.filter(item => item.task.title === candidate.title).map(item => '<div class="same-title-hint"><span>已有同名任务：<strong>' + esc(item.task.title) + '（' + esc(text(item.task.owner)) + ' · ' + esc(deadline(item.task)) + '）</strong></span><button type="button" data-action="choose-same-task" data-index="' + index + '" data-task="' + esc(item.task.id) + '" data-testid="choose-same-task">选它</button></div>').join('');
     }
     function candidateActions(item, index) {
       if (state.blockedReviews.has(candidateKey(item)) || !item.is_current || (item.reviewed && item.review_status !== 'needs_review')) return '<p class="muted">' + (state.blockedReviews.has(candidateKey(item)) ? '已提交，重新读取列表前不会重复提交此候选。' : item.is_current ? '此候选已处理。' : '历史候选，当前不可直接审核。') + '</p>';
@@ -224,13 +253,13 @@
     }
     function candidateHtml(item, index) {
       const candidate = item.candidate, selected = state.selection === item;
-      return '<article class="card candidate' + (selected ? ' selected' : '') + '" data-testid="candidate-' + esc(item.candidate_id) + '"><div class="card-head"><h3 class="card-title">' + esc(candidate.title || '任务描述待补充') + '</h3>' + (candidate.title_needs_edit === true ? '<span class="badge warn" data-testid="title-needs-edit">标题待整理</span>' : '') + (item.review_status === 'needs_review' ? '<span class="badge warn">待复核</span>' : '') + lowHtml(candidate) + '</div><div class="facts"><span class="owner">负责人：' + esc(text(candidate.owner)) + '</span><span>截止 ' + esc(deadline(candidate)) + '</span></div>' + sourcesHtml(item.source_summary) + (item.review_status === 'rejected' ? '<p class="muted">已拒绝 · 拒绝理由：' + esc(item.reason) + '</p>' : '') + '<button class="link candidate-toggle" type="button" data-action="candidate-select" data-index="' + index + '" data-testid="candidate-select" aria-expanded="' + selected + '">' + (selected ? '收起原文' : '查看原文 →') + '</button>' + (selected ? processingHtml() : candidateActions(item, index)) + '</article>';
+      return '<article class="card candidate' + (selected ? ' selected' : '') + '" data-testid="candidate-' + esc(item.candidate_id) + '"><div class="card-head"><h3 class="card-title">' + esc(candidate.title || '任务描述待补充') + '</h3>' + (candidate.title_needs_edit === true ? '<span class="badge warn" data-testid="title-needs-edit">标题待整理</span>' : '') + (item.review_status === 'needs_review' ? '<span class="badge warn">待复核</span>' : '') + lowHtml(candidate) + '</div><div class="facts"><span class="owner">负责人：' + esc(text(candidate.owner)) + '</span><span>截止 ' + esc(deadline(candidate)) + '</span></div>' + sourcesHtml(item.source_summary) + (item.review_status === 'rejected' ? '<p class="muted">已拒绝 · 拒绝理由：' + esc(item.reason) + '</p>' : '') + '<button class="link candidate-toggle" type="button" data-action="candidate-select" data-index="' + index + '" data-testid="candidate-select" aria-expanded="' + selected + '">' + (selected ? '收起原文' : '查看原文 →') + '</button>' + sameTaskHintsHtml(item, index) + (selected ? processingHtml() : candidateActions(item, index)) + '</article>';
     }
     function processingHtml() {
       const item = state.selection; if (!item) return '';
       const index = state.candidates.items.indexOf(item), cache = state.evidence[item.candidate_id + ':' + item.candidate_fingerprint];
       const form = state.form && state.form.item === item && ['create', 'merge', 'reject'].includes(state.form.kind) ? state.form : null;
-      return '<div class="processing-panel" data-testid="processing-panel"><details class="evidence" open><summary>原文引用</summary>' + (cache ? (cache.evidence_basis === 'review_snapshot' ? '<p class="muted">审核时留存的历史引用；不代表当前原文已通过验证。</p>' : '') + evidenceHtml(cache.items, 'source') + pagerHtml(cache, 'evidence-page-' + index) : '<p class="muted">正在读取原文…</p>') + '</details>' + sameTitleHtml(item.candidate, index) + (form ? formHtml() : candidateActions(item, index)) + '</div>';
+      return '<div class="processing-panel" data-testid="processing-panel"><details class="evidence" open><summary>原文引用</summary>' + (cache ? (cache.evidence_basis === 'review_snapshot' ? '<p class="muted">审核时留存的历史引用；不代表当前原文已通过验证。</p>' : '') + evidenceHtml(cache.items, 'source') + pagerHtml(cache, 'evidence-page-' + index) : '<p class="muted">正在读取原文…</p>') + '</details>' + (state.hintsEnabled ? '' : sameTitleHtml(item.candidate, index)) + (form ? formHtml() : candidateActions(item, index)) + '</div>';
     }
     function candidatesHtml() {
       return '<section class="column" aria-labelledby="candidate-heading"><div class="section-head"><h2 id="candidate-heading">待确认</h2><label>查看<select data-field="candidateState" aria-label="候选处理状态"><option value="pending"' + (state.candidateState === 'pending' ? ' selected' : '') + '>待处理</option><option value="processed"' + (state.candidateState === 'processed' ? ' selected' : '') + '>已处理</option></select></label></div>' + (state.candidates.items.length ? '<div class="cards">' + state.candidates.items.map(candidateHtml).join('') + '</div>' : '<p class="empty">' + (state.candidateState === 'pending' ? '没有待确认的候选。可先到会议页导入会议记录。' : '暂无已处理候选。') + '</p>') + pagerHtml(state.candidates, 'candidate-page') + '</section>';
@@ -430,6 +459,18 @@
       if (action === 'close-detail') { ++state.taskRequest; state.detail = null; state.events = EMPTY_PAGE(); state.form = null; state.receipt = null; updateUrl(null); render(); return; }
       if (['candidate-create', 'candidate-reject', 'candidate-merge'].includes(action)) { await runRead(() => showForm(action.replace('candidate-', ''), index)); return; }
       if (action === 'candidate-select') { await runRead(async () => { const item = state.candidates.items[index] || null; state.selection = state.selection === item ? null : item; state.form = null; if (state.selection) await showEvidence(index); }); return; }
+      if (action === 'choose-hinted-task') {
+        const item = state.candidates.items[index];
+        const hint = item && state.hintsEnabled && item.sameTaskHints && item.sameTaskHints.find(value => value.task.id === element.dataset.task);
+        if (!hint || !item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) return;
+        await runRead(async () => {
+          await showForm('merge', index); const form = state.form; if (!form || form.item !== item) return;
+          const proposed = {title: item.candidate.title, owner: item.candidate.owner, deadline: {deadline: item.candidate.deadline, deadline_text: item.candidate.deadline_text}};
+          const values = taskFields(hint.task); form.target = hint.task.id;
+          form.applyFields = ['title', 'owner', 'deadline'].filter(field => comparable(field, values[field]) !== comparable(field, proposed[field]));
+          formReason(form); render(); await previewMerge();
+        }); return;
+      }
       if (action === 'choose-same-task') {
         const item = state.candidates.items[index], target = state.catalog.find(value => value.task.id === element.dataset.task);
         if (!item || !target || item.candidate.title !== target.task.title || !item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) return;
