@@ -22,5 +22,8 @@ where = ["src"]
 "linkloom.ui" = ["static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
 
 [tool.pytest.ini_options]
+# Collect offline tests only; work/ artifacts and manual paid run_graph_* runners are not tests.
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
 pythonpath = ["src", ".", "tests/integration"]
 

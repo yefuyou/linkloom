@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
+import os
 import re
 from threading import Lock
 from typing import Any, Callable
@@ -36,6 +37,9 @@ class UnifiedAskService:
                  slot_embedder: Any = AUTO_EMBEDDER) -> None:
         self.app = app
         self.investigation = investigation
+        # Beta: startup switch; off keeps the legacy Ask path and creates no worker.
+        if os.environ.get("LINKLOOM_GRAPH_QUERY", "on").strip().casefold() == "off":
+            graph_service = False
         if graph_service is None and app is not None and app.repository.database_path != ":memory:":
             from linkloom.ui.graph_investigation import product_graph_service
             graph_service = product_graph_service(app, investigation)
@@ -142,6 +146,8 @@ class UnifiedAskService:
             raise ProductApplicationError("WORKSPACE_MISMATCH", "The selected workspace changed. Ask again in the current workspace.", status=409)
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        if self.graph_service is None:
+            return self._ask(payload)
         from linkloom.ui.graph_investigation import graph_request_budget
         with graph_request_budget():
             return self._ask(payload)
