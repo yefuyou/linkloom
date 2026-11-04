@@ -74,6 +74,9 @@ def test_source_permission_uncertain_budget_and_unsupported(demo):
 @pytest.mark.parametrize("source_order", [0, 1, 2])
 def test_exposed_hold_g_conflict_regression(tmp_path, monkeypatch, source_order):
     """Known defect regression, never a new independent generalization score."""
+    # Pin the deterministic offline backend inside the test (#58): the result
+    # must not depend on which other modules were collected first.
+    monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
     cases = json.loads(Path("tests/fixtures/bounded_multihop/heldout.json").read_text(encoding="utf-8"))["cases"]
     case = next(c for c in cases if c["id"] == "HOLD-G")
     public = {key: value for key, value in case.items() if key != "expected"}
