@@ -10,7 +10,7 @@ import re
 import sqlite3
 from threading import Lock, RLock
 from time import monotonic
-from typing import Any
+from typing import Any, Callable
 from uuid import uuid4
 
 from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, BackgroundShutdownTimeout,
@@ -86,6 +86,7 @@ class ProductRepository:
         self._connection.execute("PRAGMA foreign_keys = ON")
         self._connection.execute("PRAGMA busy_timeout = 30000")
         self._lock = Lock()
+        self.validate_source_content: Callable[[dict[str, Any]], dict[str, Any]] | None = None
         self._connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS ll_workspace (
@@ -620,6 +621,8 @@ class ProductRepository:
         }
         if include_content:
             result["content"] = str(row["content"])
+            if self.validate_source_content is not None:
+                result["evidence_jump"] = self.validate_source_content(result)
         return result
 
     def get_version(self, workspace_id: str, source_id: str, version_id: str) -> dict[str, Any] | None:
@@ -778,6 +781,7 @@ class ProductApplication:
             source_registry=registry,
             check_same_thread=False,
         )
+        self.repository.validate_source_content = self._validated_source_content
         self.materializer = SemanticDecisionMaterializer(self.store)
         from linkloom.ui.revalidation import DecisionRevalidation
         self.revalidation = DecisionRevalidation(self)
@@ -840,6 +844,18 @@ class ProductApplication:
             raise BackgroundShutdownTimeout((*self.pending_task_ids(), *error.task_ids)) from error
         finally:
             self._close_lock.release()
+
+    def _validated_source_content(self, source: dict[str, Any]) -> dict[str, Any]:
+        """Project current readable evidence; never authorize a historical quote."""
+        workspace_id, source_id = source["workspace_id"], source["source_id"]
+        workspace = self.repository.current_workspace()
+        current = self.repository.get_source(workspace_id, source_id)
+        if (workspace is None or workspace["workspace_id"] != workspace_id
+                or current is None or current["source_version"] != source["source_version"]):
+            raise ProductApplicationError(
+                "SOURCE_EVIDENCE_UNAVAILABLE", "Source access or its version has changed.", status=409)
+        return _evidence_jump_projection(
+            source, self.repository.current_evidence(workspace_id, source_id), self.store.source_registry)
 
     def snapshot_investigation_sources(
         self, workspace_id: str
@@ -1986,6 +2002,76 @@ def _datetime_from_text(value: str) -> datetime:
     except ValueError:
         return datetime.now(UTC)
     return parsed if parsed.tzinfo is not None else parsed.replace(tzinfo=UTC)
+
+
+def _evidence_jump_projection(source: dict[str, Any], evidence, registry: SourceReferenceRegistry) -> dict[str, Any]:
+    """Reuse exact source IDs and code-point ranges after current-catalog checks."""
+    from linkloom.semantic_ingestion.document_text import parse_source_text
+
+    try:
+        artifact = RawArtifact(
+            workspace_id=source["workspace_id"], artifact_id=source["source_id"],
+            source_type="timestamped_text", content=source["content"], source_uri=source["source_uri"])
+        if (not source["active"] or artifact.artifact_version_id != source["source_version"]
+                or artifact.content_hash != source["content_sha256"]):
+            raise ValueError("source version mismatch")
+        parsed = parse_source_text(artifact)
+        spans = tuple(segment.evidence_span for segment in parsed.segments)
+        rows = {row["evidence_ref"]: row for row in evidence}
+        if (parsed.issues or not spans or len(rows) != len(evidence)
+                or set(rows) != {span.evidence_ref for span in spans}):
+            raise ValueError("source evidence catalog mismatch")
+        projected = []
+        for span in spans:
+            row = rows[span.evidence_ref]
+            expected = {"workspace_id": artifact.workspace_id, "source_id": artifact.artifact_id,
+                "artifact_version_id": artifact.artifact_version_id, "evidence_ref": span.evidence_ref,
+                "content_sha256": artifact.content_hash, "quote_sha256": span.quote_sha256,
+                "line_start": span.line_start, "line_end": span.line_end, "quote": span.quote}
+            if (not span.verify(artifact) or any(row.get(key) != value for key, value in expected.items())
+                    or not registry.has_evidence(artifact.workspace_id, span.evidence_ref)
+                    or registry.evidence_hash(artifact.workspace_id, span.evidence_ref) != artifact.content_hash
+                    or registry.evidence_version(artifact.workspace_id, span.evidence_ref) != artifact.artifact_version_id):
+                raise ValueError("source evidence is unavailable")
+            projected.append({"verification_kind": "SEMANTIC_SPAN",
+                "evidence_ref": span.evidence_ref, "char_start": span.char_start,
+                "char_end": span.char_end, "line_start": span.line_start, "line_end": span.line_end,
+                "quote": span.quote, "quote_sha256": span.quote_sha256})
+        projected.extend(_runtime_passage_spans(artifact))
+        return {"validated": True, "workspace_id": artifact.workspace_id, "source_id": artifact.artifact_id,
+            "source_version": artifact.artifact_version_id, "content_sha256": artifact.content_hash,
+            "spans": projected}
+    except (KeyError, TypeError, ValueError) as error:
+        raise ProductApplicationError(
+            "SOURCE_EVIDENCE_UNAVAILABLE", "Source access or its evidence has changed.", status=409) from error
+
+
+def _runtime_passage_spans(artifact: RawArtifact) -> list[dict[str, Any]]:
+    """Resolve existing Runtime whole-line IDs to original source code points.
+
+    Product investigation writes ``source_id.md`` with Path.write_text's
+    platform newline translation. Scanner/loader hash the resulting bytes;
+    replicate that exact representation, without changing the source text.
+    """
+    import os
+    from linkloom.evidence_identity import passage_evidence_id
+
+    path = f"{artifact.artifact_id}.md"
+    physical_hash = hashlib.sha256(artifact.content.replace("\n", os.linesep).encode("utf-8")).hexdigest()
+    result, offset, runtime_line = [], 0, 1
+    for source_line, raw_line in enumerate(artifact.content.splitlines(keepends=True), 1):
+        quote = raw_line.splitlines()[0]
+        if quote:
+            quote_hash = hashlib.sha256(quote.encode("utf-8")).hexdigest()
+            reference = passage_evidence_id(workspace_id=artifact.workspace_id,
+                resource_id=path, document_id=path, logical_path=f"/{path}", source_ref=path,
+                content_hash=physical_hash, line_start=runtime_line, line_end=runtime_line, quote_hash=quote_hash)
+            result.append({"verification_kind": "RUNTIME_PASSAGE", "evidence_ref": reference,
+                "char_start": offset, "char_end": offset + len(quote), "line_start": source_line,
+                "line_end": source_line, "quote": quote, "quote_sha256": quote_hash})
+        offset += len(raw_line)
+        runtime_line += len(raw_line.replace("\n", os.linesep).splitlines())
+    return result
 
 
 def _segments_for_source_version(version: dict[str, Any]):

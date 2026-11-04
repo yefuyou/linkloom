@@ -5,6 +5,7 @@ const context = {window: {}};
 vm.runInNewContext(fs.readFileSync('src/linkloom/ui/static/product-task-result.js', 'utf8'), context);
 const escapeHtml = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const helpers = {escapeHtml, t: (en, zh) => zh, date: escapeHtml,
+  originalQuoteButton: e => `<button data-original-ref="${escapeHtml(e.evidence_ref)}" data-source="${escapeHtml(e.source_id)}">查看原话</button>`,
   citation: e => `<blockquote>${escapeHtml(e.quote)}</blockquote>`};
 const observation = (id, owner, deadline, role = 'TASK_DEADLINE') => ({
   observation_id: id, description: '日志迁移', owner, deadline, deadline_text: deadline || '六月下旬',
@@ -36,7 +37,7 @@ assert.match(html, /任务状态：待确认/);
 assert.match(html, /模型建议：支持/);
 assert.match(html, /缺少替代计划的明确记录/);
 assert.match(html, /前置关系尚未确认/);
-assert.match(html, /data-action="inspect-source" data-id="source-a"/);
+assert.match(html, /data-original-ref="a" data-source="source-a"/);
 assert.match(html, /提取字段 · 请逐条核对原文/);
 assert.match(html, /<details class="ask-source-details"><summary>校验信息<\/summary>/);
 assert.match(html, /原文片段/);
