@@ -5,7 +5,7 @@ from dataclasses import dataclass, replace
 import math
 import json
 import os
-from threading import Lock
+from threading import Event, Lock, Thread
 from urllib.parse import quote
 
 from linkloom.tasks.models import TaskStatus
@@ -78,8 +78,47 @@ class SameTaskHintService:
         self.embedder, self.reranker = embedder, reranker
         self._owns_reranker = reranker is None
         self._inference_lock = Lock()
+        self._preload_lock = Lock()
+        self._preload_thread = None
+        self._preload_state = 'idle'
+        self._closed = Event()
+
+    @property
+    def preparing(self):
+        with self._preload_lock:
+            return self._preload_state == 'preparing'
+
+    def start_preload(self):
+        """Start one local-only loader; requests do not wait for model preparation."""
+        if not self.config.enabled:
+            return
+        with self._preload_lock:
+            if self._closed.is_set() or self._preload_state == 'preparing':
+                return
+            self._preload_state = 'preparing'
+            self._preload_thread = Thread(target=self._preload, name='linkloom-same-task-preload', daemon=True)
+            self._preload_thread.start()
+
+    def _preload(self):
+        state = 'unavailable'
+        try:
+            with self._inference_lock:
+                if not self._closed.is_set():
+                    self._local_reranker().prepare(cancel=self._closed)
+                    state = 'ready'
+        except Exception:
+            # Missing dependencies/artifacts and failed loads retain the RRF fallback.
+            pass
+        finally:
+            with self._preload_lock:
+                self._preload_state = state
 
     def close(self):
+        self._closed.set()
+        with self._preload_lock:
+            thread = self._preload_thread
+        if thread is not None:
+            thread.join()
         with self._inference_lock:
             if self._owns_reranker and self.reranker is not None:
                 self.reranker.close()
@@ -143,8 +182,15 @@ class SameTaskHintService:
 
     def _rank(self, snapshot):
         # Only local inference is serialized; no database lock/transaction is held here.
-        with self._inference_lock:
+        while not self._inference_lock.acquire(timeout=0.05):
+            if self.preparing:
+                return [], 'preparing', 'model_preparing'
+        try:
+            if self.preparing:
+                return [], 'preparing', 'model_preparing'
             return self._rank_local(snapshot)
+        finally:
+            self._inference_lock.release()
 
     def _rank_local(self, snapshot):
         from linkloom.indexing import BM25Index, IndexDocument, SentenceTransformerEmbedder, VectorIndex
@@ -184,6 +230,9 @@ class SameTaskHintService:
                 [RerankCandidate(hit, texts[hit.resource_id]) for hit in hits])
             if pipeline.last_trace.get('status') == 'success':
                 return ranked, 'local', None
+            if pipeline.last_trace.get('reason') == 'model_preparing':
+                self.start_preload()
+                return [], 'preparing', 'model_preparing'
         except Exception:
             # Remote providers are never constructed, including with LINKLOOM_RERANK=jev.
             pass
@@ -238,7 +287,7 @@ class SameTaskHintService:
         if token != current_token:
             raise TaskQueryError('HINT_STALE', 'Task or source authorization changed; refresh the hints.')
         return dict(enabled=True, candidate_id=candidate_id, candidate_fingerprint=fingerprint,
-                    hint_snapshot=token, mode=mode, reason=reason, hints=hints)
+                    hint_snapshot=token, mode=mode, reason=reason, status='preparing' if mode == 'preparing' else 'complete', hints=hints)
 
     @staticmethod
     def _hint(snapshot, row, mode, score, rrf_score, title_similarity=None):

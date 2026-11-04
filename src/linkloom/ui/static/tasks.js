@@ -157,19 +157,20 @@
           const value = await request('/api/product/task-candidates/' + id(item.candidate_id) + '/same-task-hints', {}, {candidate_fingerprint: item.candidate_fingerprint});
           if (!current(epoch) || number !== state.hintRequest) return;
           if (state.candidates.items.includes(item) && !state.blockedReviews.has(candidateKey(item)) && value.candidate_fingerprint === item.candidate_fingerprint) {
-            item.sameTaskHints = value.hints.slice(0, 3); render();
+            item.sameTaskHints = value.hints.slice(0, 3); item.sameTaskHintPending = value.status === 'preparing'; render();
           }
         } catch (_error) {
           if (!current(epoch) || number !== state.hintRequest) return;
           // Hint failures must never disable the existing human review controls.
-          item.sameTaskHints = []; item.sameTaskHintFailed = true; render();
+          item.sameTaskHints = []; item.sameTaskHintPending = false; item.sameTaskHintFailed = true; render();
         }
       }
     }
     function sameTaskHintsHtml(item, index) {
       if (!state.hintsEnabled || !item.is_current || item.reviewed || state.blockedReviews.has(candidateKey(item))) return '';
       if (!item.sameTaskHints) return '<p class="muted">正在本地查找可能相同的任务…</p>';
-      return item.sameTaskHints.map(hint => {
+      const pending = item.sameTaskHintPending ? '<p class="muted" role="status" data-testid="same-task-analyzing">正在分析相似任务…</p>' : '';
+      return pending + item.sameTaskHints.map(hint => {
         const task = hint.task, exact = hint.match_kind === 'exact';
         const score = Number.isFinite(hint.score) ? (hint.score_kind === 'local' ? '本地重排分数 ' + hint.score.toFixed(3) : 'RRF 分数 ' + hint.score.toFixed(5)) : '精确同名';
         return '<section class="same-task-hint" data-testid="same-task-hint"><p>' + (exact ? '已有同名任务：' : '可能是同一件事：') + '<strong>' + esc(task.title) + '（' + esc(text(task.owner)) + ' · ' + esc(deadline(task)) + '）</strong></p><p class="muted">' + esc(score) + ' · 请人工核对原文</p><details><summary>两边原文</summary><h4>本次候选原文</h4>' + evidenceHtml(hint.candidate_evidence, 'source') + '<h4>已有任务原文</h4>' + evidenceHtml(hint.task_evidence, 'source') + '</details><button type="button" data-action="choose-hinted-task" data-index="' + index + '" data-task="' + esc(task.id) + '" data-testid="choose-hinted-task">选它</button></section>';
