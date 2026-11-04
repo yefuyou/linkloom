@@ -192,7 +192,7 @@ class UnifiedAskService:
                             with self._lock:
                                 self._graph_runs[graph['run_id']] = run
                             if (graph['status'] == 'INSUFFICIENT'
-                                    and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS'}):
+                                    and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS', 'NOT_FOUND'}):
                                 return self._try_graph_fallback(run, payload, graph)
                             return self._graph_result(run, graph), 200
                 plan = plan_relation_investigation(run.query)

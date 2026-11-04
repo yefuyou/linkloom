@@ -118,6 +118,12 @@ class Harness:
                 dict(id='owner', input_node=root.node_id, input_step='', edge_type='owner_of', direction='in', as_of=''),
                 dict(id='leader', input_node='', input_step='owner', edge_type='reports_to', direction='out', as_of='')],
                 outputs=[dict(step='leader', field='node')])
+            if mode == 'partial':
+                alias = next(n for n in context.nodes if n.kind == 'alias' and n.label == 'compat reference')
+                raw['steps'] = [dict(id='project', input_node=alias.node_id, input_step='',
+                    edge_type='alias_of', direction='out', as_of=''),
+                    dict(raw['steps'][0], input_node='', input_step='project'), raw['steps'][1]]
+                raw['outputs'] = [dict(step='project', field='node'), dict(step='leader', field='node')]
             mentions = mode in {'ambiguous', 'not_found', 'blocked'}
             if mentions:
                 steps = []
@@ -231,7 +237,7 @@ def test_terminal_graph_status_never_enters_old_planner(tmp_path, mode, code, le
     finally: h.close()
 
 
-@pytest.mark.parametrize('mode,expected', [('unknown', 'UNKNOWN'), ('ambiguous', 'AMBIGUOUS')])
+@pytest.mark.parametrize('mode,expected', [('unknown', 'UNKNOWN'), ('ambiguous', 'AMBIGUOUS'), ('not_found', 'NOT_FOUND')])
 def test_unanswered_legacy_restores_revalidated_original_graph(tmp_path, mode, expected, legacy_spy):
     h = Harness(tmp_path, 'DEV-A')
     try:
@@ -255,12 +261,46 @@ def test_unanswered_legacy_restores_revalidated_original_graph(tmp_path, mode, e
     finally: h.close()
 
 
-def test_not_found_is_not_silently_added_to_fallback_policy(tmp_path, legacy_spy):
+def test_not_found_keeps_old_answer_and_evidence_off_on(tmp_path, monkeypatch, legacy_spy):
+    # Authorized policy change: missing confirmed roots are capability failures,
+    # so NOT_FOUND now gets the same verified legacy attempt as UNKNOWN.
     h = Harness(tmp_path, 'DEV-A')
     try:
-        actual, status = finish(h.ask_service(h.worker('not_found')), h.payload())
-        assert status == 200 and actual['graph_status'] == 'NOT_FOUND'
+        monkeypatch.setenv('LINKLOOM_GRAPH_QUERY', 'off')
+        baseline, status = finish(h.ask_service(False), h.payload())
+        assert status == 200 and baseline['status'] == 'COMPLETED', baseline
+        assert baseline['source_investigation']['answer'] and baseline['reviewer']['accepted']
+        monkeypatch.setenv('LINKLOOM_GRAPH_QUERY', 'on')
+        worker = h.worker('not_found'); ask = h.ask_service(worker); before = len(legacy_spy)
+        actual, status = finish(ask, h.payload())
+        assert status == 200 and actual['status'] == 'COMPLETED', actual
+        assert actual['source_investigation']['answer'] == baseline['source_investigation']['answer']
+        assert evidence(actual) == evidence(baseline) and all(e['verified'] for e in actual['evidence'])
+        assert actual['reviewer']['accepted'] and actual['answer_source'] == actual['decided_by'] == 'legacy'
+        assert actual['graph_fallback']['graph_status'] == 'NOT_FOUND'
+        assert actual['graph_fallback']['reason'] == 'GRAPH_INSUFFICIENT_NOT_FOUND'
+        assert len(legacy_spy) == before + 1
+        counters = worker.metrics.snapshot()
+        assert next(r for r in counters if r['name'] == 'graph_query_status')['reason'] == 'NOT_FOUND'
+        assert next(r for r in counters if r['name'] == 'legacy_fallback')['reason'] == 'GRAPH_INSUFFICIENT_NOT_FOUND'
+        reopened, _ = ask.inspect(actual['agent_run_id'], h.workspace)
+        assert reopened['answer_source'] == 'legacy' and evidence(reopened) == evidence(actual)
+        assert len(legacy_spy) == before + 1
+    finally: h.close()
+
+
+def test_partial_graph_answer_does_not_try_legacy(tmp_path, legacy_spy):
+    h = Harness(tmp_path, 'DEV-A')
+    try:
+        worker = h.worker('partial')
+        actual, status = finish(h.ask_service(worker), h.payload())
+        assert status == 200 and actual['status'] == 'INSUFFICIENT', actual
+        assert actual['graph_status'] == 'PARTIAL' and actual['decided_by'] == 'graph'
+        assert actual['conclusions'] and actual['evidence'] and actual['reviewer']['accepted']
+        assert all(e['verified'] for e in actual['evidence'])
+        assert 'graph_fallback' not in actual and 'answer_source' not in actual
         assert legacy_spy == [] and h.legacy_models == []
+        assert not any(r['name'] == 'legacy_fallback' for r in worker.metrics.snapshot())
     finally: h.close()
 
 
