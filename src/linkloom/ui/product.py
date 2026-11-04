@@ -10,7 +10,7 @@ import re
 import sqlite3
 from threading import Lock, RLock
 from time import monotonic
-from typing import Any, Callable
+from typing import Any
 from uuid import uuid4
 
 from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, BackgroundShutdownTimeout,
@@ -86,7 +86,6 @@ class ProductRepository:
         self._connection.execute("PRAGMA foreign_keys = ON")
         self._connection.execute("PRAGMA busy_timeout = 30000")
         self._lock = Lock()
-        self.validate_source_content: Callable[[dict[str, Any]], dict[str, Any]] | None = None
         self._connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS ll_workspace (
@@ -621,8 +620,6 @@ class ProductRepository:
         }
         if include_content:
             result["content"] = str(row["content"])
-            if self.validate_source_content is not None:
-                result["evidence_jump"] = self.validate_source_content(result)
         return result
 
     def get_version(self, workspace_id: str, source_id: str, version_id: str) -> dict[str, Any] | None:
@@ -781,7 +778,6 @@ class ProductApplication:
             source_registry=registry,
             check_same_thread=False,
         )
-        self.repository.validate_source_content = self._validated_source_content
         self.materializer = SemanticDecisionMaterializer(self.store)
         from linkloom.ui.revalidation import DecisionRevalidation
         self.revalidation = DecisionRevalidation(self)
@@ -886,7 +882,14 @@ class ProductApplication:
         try:
             with self._api_operations.operation(f"product-{method}-{uuid4().hex[:12]}"):
                 with self._store_lock:
-                    return call()
+                    result = call()
+                    # Only the outward source-content read gains jump validation.
+                    # Internal snapshots and historical review reads keep their
+                    # existing lifecycle checks and error contracts.
+                    source = result.get("source") if method == "get" and isinstance(result, dict) else None
+                    if isinstance(source, dict) and "content" in source:
+                        source["evidence_jump"] = self._validated_source_content(source)
+                    return result
         except BackgroundWorkStopped as error:
             raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
 

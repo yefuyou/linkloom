@@ -120,7 +120,7 @@ def test_source_http_permission_failure_contains_no_cached_quote(product, monkey
     def deny(_source):
         raise ProductApplicationError("SOURCE_ACCESS_DENIED", "Source access denied.", status=403)
 
-    monkeypatch.setattr(app.repository, "validate_source_content", deny)
+    monkeypatch.setattr(app, "_validated_source_content", deny)
     status, failure = request(path)
     assert status == 403
     assert failure["error"]["code"] == "SOURCE_ACCESS_DENIED"
@@ -161,3 +161,23 @@ def test_real_offline_investigation_existing_runtime_refs_resolve_through_source
             assert source["content"][span["char_start"]:span["char_end"]] == evidence["quote"]
     finally:
         fixture.stop()
+
+
+def test_jump_validation_does_not_change_internal_snapshot_or_historical_review_reads(product):
+    app, request, workspace, source = product
+    path = f"/api/sources/{source['source_id']}"
+    _, initial = request(path)
+    reference = initial["source"]["evidence"][0]["evidence_ref"]
+    app.store.source_registry.unregister_evidence(workspace, reference)
+    # Task investigation owns a separate source registry; an internal snapshot
+    # remains governed by that service, not the UI's jump-output gate.
+    _, snapshots = app.snapshot_investigation_sources(workspace)
+    assert snapshots[0]["content"] == TEXT
+    assert "evidence_jump" not in snapshots[0]
+    status, failure = request(path)
+    assert status == 409 and "source" not in failure
+    app.repository.delete_source(workspace, source["source_id"])
+    historical = app.repository.get_source(workspace, source["source_id"], include_deleted=True, include_content=True)
+    assert historical["active"] is False
+    assert historical["content"] == TEXT
+    assert "evidence_jump" not in historical
