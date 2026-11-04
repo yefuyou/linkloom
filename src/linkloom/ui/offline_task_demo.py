@@ -271,13 +271,17 @@ def build_offline_task_demo(database_path: str | Path):
                 content,
                 source_uri=f"{DEMO_SOURCE_URI_PREFIX}meeting-{index + 1}",
             )
+            spans = tuple(segment.evidence_span for segment in parse_source_text(artifact).segments)
             app.repository.create_source(
                 workspace_id,
                 source_id,
                 f"offline-meeting-{index + 1}.txt",
                 artifact,
-                tuple(segment.evidence_span for segment in parse_source_text(artifact).segments),
+                spans,
             )
+            # These seeds are created after ProductApplication's startup scan,
+            # so register them through the same lifecycle as imported sources.
+            app._register_new_version(artifact, spans)
             app.repository.set_ingestion_result(
                 workspace_id,
                 source_id,
