@@ -9,7 +9,7 @@ final context bounds, and three-case disposition may change. No Provider,
 Runtime V2, prompt, Gold, TeamDecision or real artifact changes are authorized.
 The original Reviewer task `审查 Runtime V2 Gate 1` issued the required new
 APPROVE with no unresolved BLOCKER. Its independently saved decision is
-[GATE4_ORIGINAL_REVIEWER_VERDICT.md](GATE4_ORIGINAL_REVIEWER_VERDICT.md).
+[GATE4_ORIGINAL_REVIEWER_VERDICT.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/experience_reflection_layer/GATE4_ORIGINAL_REVIEWER_VERDICT.md).
 This records Gate 4 acceptance only; Gate 5 remains frozen and unauthorized.
 
 ## Normative Six-BLOCKER Repair Addendum

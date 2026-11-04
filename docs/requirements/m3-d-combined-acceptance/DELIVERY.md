@@ -68,7 +68,7 @@ UNKNOWN/CONFLICT 均不能满足积极步骤前提，未完成 discover 不算�
 
 - 首次较广回归：624 PASS / 27 FAIL，原 [XML](evidence/regression.xml) 保留。
 - 27 项在第一个 Runtime 工具后因 Windows 长路径写入失败；具体工具产物路径达
-  262 字符。改用短临时路径后，完全相同的 27 个用例 [全部通过](evidence/regression-short-path.xml)。
+  262 字符。改用短临时路径后，完全相同的 27 个用例 [全部通过](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/regression-short-path.xml)。
   未修改生产代码、断言或历史 Gold。
 - [逐用例去重对账](evidence/regression-final.json) 记录每个最终结果，独立 Reviewer
   核对两批失败 ID 集合完全相同。不是声称首次全绿。
@@ -113,8 +113,8 @@ Bridge 按用户要求写入实际 LOW 配置，原 wire hash 保留；没有 Ge
 前驱账本 hash 在本轮结束仍一致；嵌套账本不重复计费。
 预留不是实际账单；Google 计费项目、实际扣费/赠金扣减仍未知。
 
-[汇总](evidence/live-summary.json)、[授权与预留](evidence/live-reservation.json)、
-[原件 hash 清单](evidence/live-original-manifest.json)、[初次完整结果](evidence/live-result.json)。
+[汇总](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-summary.json)、[授权与预留](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-reservation.json)、
+[原件 hash 清单](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-original-manifest.json)、[初次完整结果](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-result.json)。
 完整原件位于本工作树 `work/m3d-live/{requests,responses,wire,global-provider}`，
 公开报告省略 opaque continuation；未提交 SQLite 或密钥。
 
@@ -125,15 +125,15 @@ Bridge 按用户要求写入实际 LOW 配置，原 wire hash 保留；没有 Ge
 脚本来源复核断言失败。该 **harness FAIL 保留**，不是 Provider/Product 失败。
 修正验收脚本元数据后，使用同一保存的真实结果进行无 Provider 复验，没有重发付费请求。
 
-[保存结果复验](evidence/live-saved-verification.json) 为 PASS：真实 Chromium
+[保存结果复验](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-saved-verification.json) 为 PASS：真实 Chromium
 155.0.8059.85 展示两条任务、已知/UNKNOWN 字段、精确原文，打开原始来源与刷新成功，
 页面错误 0。无 Provider 新进程冷读保留相同观察；撤权、来源更新后的热/冷读均 BLOCKED，
 不返回旧 evidence/trace/task_review；跨 Workspace 热/冷读均 409。
 安全测试前后真实 Provider journal SHA 相同。
 离线 C 的真实浏览器冷读展示另见 [offline-browser](evidence/offline-browser.json)。
 
-截图：[LIVE 字段](evidence/live-fields.png)、[原始来源](evidence/live-source.png)、
-[离线 C 字段](evidence/offline-C-fields.png)。原 UI 中通用 Sources 提取器 unavailable 表示未配置通用入库 Provider，
+截图：[LIVE 字段](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-fields.png)、[原始来源](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/live-source.png)、
+[离线 C 字段](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-d-combined-acceptance/evidence/offline-C-fields.png)。原 UI 中通用 Sources 提取器 unavailable 表示未配置通用入库 Provider，
 Task Provider 已按本次明确授权独立完成上述真实调用，不影响 Tasks 的已保存来源核验。
 
 ## 剩余边界与下一步
