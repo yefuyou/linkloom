@@ -88,6 +88,19 @@ def admission_restriction(query):
     return None
 
 
+def legacy_denial_reason(query):
+    """Translate a legacy admission denial; never used to choose a model route."""
+    visible = unquoted_text(query)
+    if _FOREIGN_SCOPE.search(visible):
+        return "WORKSPACE_DENIED"
+    for clause in _CLAUSE.split(visible):
+        english = _EN_POLITE.sub('', clause.strip(' ,，'))
+        chinese = _ZH_POLITE.sub('', clause.strip(' ,，'))
+        if any(p.search(text) for p in (_OVERRIDE_COMMAND, _SECRET_COMMAND) for text in (english, chinese)):
+            return "SECRET_OR_POLICY_OVERRIDE"
+    return "WRITE_NOT_ALLOWED" if _write_request(visible) else "POLICY_BLOCKED"
+
+
 def parse_context(value):
     if value is None:
         return None
