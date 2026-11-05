@@ -14,6 +14,7 @@ from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
 from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
+from linkloom.ui.structured_router import rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.ui.ask_admission import (admission_restriction, parse_context,
@@ -84,7 +85,8 @@ class UnifiedAskService:
         }}
         if self.router_provider is not None:
             result["router"] = {"available": self.router_provider.adapter is not None,
-                                "external_provider": self.router_provider.external_provider}
+                                "external_provider": self.router_provider.external_provider,
+                                "mode": self.router_provider.mode}
         return result
 
     def _trusted_slots(self, workspace_id: str) -> list[dict[str, Any]]:
@@ -181,13 +183,19 @@ class UnifiedAskService:
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
                 context = parse_context(payload.get("investigation_context"))
-                if use_router and self.router_provider is not None and not context and not (values["subject"] or values["relation"]):
+                ordinary_router = (use_router and self.router_provider is not None and not context
+                                   and not (values["subject"] or values["relation"]))
+                cascade = ordinary_router and self.router_provider.mode == "cascade"
+                if ordinary_router and not cascade:
                     return self._route_ordinary(run, payload)
                 restriction = admission_restriction(run.query)
                 if restriction:
+                    if cascade:
+                        from linkloom.ui.ask_admission import legacy_denial_reason
+                        return self._router_stop(run, None, legacy_denial_reason(run.query))
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
-                if use_graph and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
+                if use_graph and not cascade and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
                     routed_graph = self._run_graph_request(run, payload)
                     if routed_graph is not None:
                         return routed_graph
@@ -204,7 +212,7 @@ class UnifiedAskService:
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
                         return self._task_request(run, payload, context=context)
-                if plan is not None or _RELATION_QUESTION.search(run.query):
+                if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
                 resolver, memory = self.app.relation_resolver, None
@@ -214,7 +222,7 @@ class UnifiedAskService:
                 # dispatch. Selection reuses only the explicitly configured model.
                 service = self.investigation()
                 selector = None
-                if (allow_selector and service is not None and service.model_factory is not None
+                if (allow_selector and not cascade and service is not None and service.model_factory is not None
                         and not getattr(service, "task_only", False)
                         and (not service.external_provider or payload.get("allow_external_provider") is True)
                         and not (memory and memory["conflicts"])):
@@ -230,6 +238,8 @@ class UnifiedAskService:
                         discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0, decided_by="fallback",
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                         routed.update(route="CLARIFY", scope=None, decided_by="fallback")
+                if cascade and rule_needs_router(routed["route"]):
+                    return self._route_ordinary(run, payload)
                 route = {key: routed[key] for key in
                          ("intent", "route", "code", "reason", "decided_by", "llm_attempted", "llm_error")}
                 run = _AskRun(run.query, run.workspace_id, run.scope, route)

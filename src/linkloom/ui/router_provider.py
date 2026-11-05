@@ -34,6 +34,7 @@ class _DeepSeekJSONClient:
 class RouterProvider:
     adapter: object
     external_provider: bool = False
+    mode: str = "llm_first"
 
     def reserve(self, app, owner, request, validate):
         models = owner.task_models
@@ -48,9 +49,12 @@ class RouterProvider:
 
 def configured_router():
     """Called only by the explicit Product CLI after its existing .env load."""
-    if os.environ.get("LINKLOOM_LLM_ROUTER", "off").strip().casefold() != "on":
+    mode = os.environ.get("LINKLOOM_LLM_ROUTER", "off").strip().casefold()
+    if mode == "on":
+        mode = "llm_first"
+    if mode not in {"llm_first", "cascade"}:
         return None
     key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     adapter = DeepSeekProviderAdapter(_DeepSeekJSONClient(key), model_id=CONFIG["model_id"],
                                     json_output=True) if key else None
-    return RouterProvider(adapter, external_provider=True)
+    return RouterProvider(adapter, external_provider=True, mode=mode)

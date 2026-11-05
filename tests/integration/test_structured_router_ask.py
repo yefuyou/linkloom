@@ -26,8 +26,8 @@ class ScriptedRouter:
 
 
 def output(**changes):
-    return dict(dict(schema_version='router/v1', decision='ROUTE', intent='CURRENT', domain='TASK', operation='READ',
-        candidate_ids=['c0'], mentions=[dict(text='联调报告',start=0,end=4)], time_ref_ids=[], time_role='NONE',reason_code='NONE'), **changes)
+    return dict(dict(schema_version='router/v2', decision='ROUTE', intent='CURRENT', domain='TASK', operation='READ',
+        candidate_ids=['c0'], mentions=['联调报告'], time_ref_ids=[], time_role='NONE',reason_code='NONE'), **changes)
 
 
 @pytest.fixture(autouse=True)
@@ -37,7 +37,8 @@ def offline(monkeypatch):
     monkeypatch.setenv('LINKLOOM_LLM_ROUTER', 'off')
 
 
-def test_named_confirmed_task_reaches_existing_graph_and_verified_answer(tmp_path, monkeypatch):
+@pytest.mark.parametrize('mode', ['llm_first', 'cascade'])
+def test_named_confirmed_task_reaches_existing_graph_and_verified_answer(tmp_path, monkeypatch, mode):
     path = tmp_path/'task.sqlite'
     fixture = seed(path)
     ws = fixture.workspace
@@ -57,8 +58,10 @@ def test_named_confirmed_task_reaches_existing_graph_and_verified_answer(tmp_pat
             return type('FakeGraphPlanner', (), {'plan':lambda self, context:dict(status='PLANNED',plan=plan)})()
         worker = GraphInvestigationService(store_factory, planner)
         model = ScriptedRouter(lambda data: output(candidate_ids=[next(c['id'] for c in data['candidates'] if c['kind']=='task')]))
-        ask = UnifiedAskService(app, lambda: None, graph_service=worker, router_provider=RouterProvider(model), slot_embedder=None)
-        monkeypatch.setattr('linkloom.ui.unified_ask.admission_restriction', lambda _:pytest.fail('legacy wording gate ran'))
+        ask = UnifiedAskService(app, lambda: None, graph_service=worker,
+                                router_provider=RouterProvider(model, mode=mode), slot_embedder=None)
+        if mode == 'llm_first':
+            monkeypatch.setattr('linkloom.ui.unified_ask.admission_restriction', lambda _:pytest.fail('legacy wording gate ran'))
         result,status = ask.ask(dict(query='联调报告现在谁负责',workspace_id=ws))
         assert status == 200 and result['router']['domain'] == 'TASK', result
         assert result['router']['decision']=='ROUTE' and result['status']=='COMPLETED', result
@@ -150,9 +153,8 @@ def test_authorized_router_has_one_bounded_send_and_verified_decision(decisions)
     owner=decisions.configure_agent()
     def reply(data):
         supplier=next(c for c in data['candidates'] if 'uses supplier' in c['label'])
-        start=data['question'].index('supplier')
         return output(domain='DECISION',candidate_ids=[supplier['id']],
-                      mentions=[dict(text='supplier',start=start,end=start+8)])
+                      mentions=['supplier'])
     model=ScriptedRouter(reply)
     ask=UnifiedAskService(decisions.app,lambda:owner,graph_service=False,
                           router_provider=RouterProvider(model,external_provider=True),slot_embedder=None)
@@ -163,3 +165,16 @@ def test_authorized_router_has_one_bounded_send_and_verified_decision(decisions)
     session=owner._provider_sessions[-1]
     assert session.requests==1 and session.limits.max_requests==1 and session.failure is None
     assert session.attempts[0]['stage']=='ask-router' and session.attempts[0]['outcome']=='SUCCEEDED'
+
+def test_cascade_runs_rules_first_and_uses_shared_fallback_for_unresolved_scope(decisions):
+    model = ScriptedRouter(lambda _: 'not JSON')
+    ask = UnifiedAskService(decisions.app, lambda: None, graph_service=False,
+                            router_provider=RouterProvider(model, mode='cascade'), slot_embedder=None)
+    workspace = decisions.app._workspace_id()
+    direct, status = ask.ask(dict(query='What supplier is Launch currently using?', workspace_id=workspace))
+    assert status == 200 and direct['status'] == 'COMPLETED' and direct['evidence']
+    assert not model.requests
+    result, status = ask.ask(dict(query='What supplier is UnlistedProject using?', workspace_id=workspace))
+    assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
+    assert result['router'] == dict(source='rule', fallback_reason='ROUTER_SCHEMA_INVALID', attempted=True)
+    assert len(model.requests) == 1

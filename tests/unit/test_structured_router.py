@@ -23,8 +23,8 @@ def context(query='联调报告现在谁负责', selected=None, *, second=False)
 
 
 def response(**changes):
-    data = dict(schema_version='router/v1', decision='ROUTE', intent='CURRENT', domain='TASK', operation='READ',
-        candidate_ids=['c0'], mentions=[dict(text='联调报告', start=0, end=4)],
+    data = dict(schema_version='router/v2', decision='ROUTE', intent='CURRENT', domain='TASK', operation='READ',
+        candidate_ids=['c0'], mentions=['联调报告'],
         time_ref_ids=[], time_role='NONE', reason_code='NONE')
     return json.dumps(dict(data, **changes), ensure_ascii=False)
 
@@ -41,8 +41,8 @@ def response(**changes):
     (response(domain='DECISION'), 'CANDIDATE_DOMAIN_MISMATCH'),
     (response(operation='WRITE_REQUEST'), 'ROUTER_COMBINATION_INVALID'),
     (response(reason_code='WORKSPACE_DENIED'), 'ROUTER_COMBINATION_INVALID'),
-    (response(mentions=[dict(text='其他事项', start=0, end=4)]), 'MENTION_NOT_LITERAL'),
-    (response(mentions=[dict(text='联调报告', start=False, end=4)]), 'MENTION_NOT_LITERAL'),
+    (response(mentions=['其他事项']), 'MENTION_NOT_LITERAL'),
+    (response(mentions=[{'text':'联调报告','start':0,'end':4}]), 'ROUTER_SCHEMA_INVALID'),
     (response(time_role='AS_OF', time_ref_ids=['invented']), 'TIME_CONFLICT'),
 ])
 def test_invalid_structured_output_never_becomes_a_route(raw, code):
@@ -62,13 +62,12 @@ def test_confirmation_and_unique_binding_are_host_facts():
     assert not request_for(single).available_tools
 
 
-@pytest.mark.parametrize('literal,partial', [('2031/3/7','3/7'), ('11/20','1/20'),
+@pytest.mark.parametrize('literal,partial', [('2031/3/7','3/7'), ('11/20','1/20'), ('２０３１／３／７','3/7'),
     ('2026-10-07T11:00:00Z', '2026-10-07')])
 def test_cannot_shorten_full_date_or_timestamp(literal, partial):
     query = '联调报告 ' + literal
-    start = query.index(partial)
     with pytest.raises(RouterInvalid, match='TIME_CONFLICT'):
-        validate_output(response(mentions=[dict(text=partial,start=start,end=start+len(partial))]), context(query))
+        validate_output(response(mentions=[partial]), context(query))
 
 
 def test_explicit_time_cannot_be_omitted_or_replaced():
@@ -122,3 +121,50 @@ def test_remaining_limits_are_request_local_and_cannot_restart_after_uncertain_s
         unrelated.close()
     finally:
         initial.close()
+
+def test_host_recovers_original_mention_under_width_case_and_space_normalization():
+    ctx = context('ＢＵＩＬＤ   Review status?')
+    ctx.candidates['c0'] = replace(ctx.candidates['c0'], anchors=('Build Review',))
+    route = validate_output(response(mentions=['build review']), ctx)
+    assert route.mentions == (('ＢＵＩＬＤ   Review', 0, 14),)
+    assert bind_candidate(ctx, route).identity == ('task-key',)
+
+
+def test_workspace_reference_requires_unique_reviewed_subject_and_a_topic_anchor():
+    from linkloom.semantic_ingestion.relations import FrozenRelationResolver
+    from linkloom.ui.router_context import build_context
+
+    slots = [dict(workspace_id='local', reviewed=True, slot_id='one',
+                  subject='Orchid', relation='deployment window', values=['Tuesday']),
+             dict(workspace_id='foreign', reviewed=True, slot_id='two',
+                  subject='Clover', relation='deployment window', values=['Thursday'])]
+    resolver = FrozenRelationResolver(('deployment window',))
+
+    def catalogue():
+        return build_context('What is our deployment window?', 'local', slots, resolver,
+                             view=lambda *_: dict(status='FOUND', history=[object()]),
+                             query_time='2026-11-05T00:00:00+00:00')
+
+    ctx = catalogue()
+    assert ctx.public()['default_subject'] == 'Orchid'
+    assert 'Clover' not in request_for(ctx).user_input
+    route = validate_output(response(domain='DECISION', mentions=['our', 'deployment window']), ctx)
+    assert bind_candidate(ctx, route).identity == ('Orchid', 'deployment window')
+    with pytest.raises(RouterInvalid, match='ENTITY_NOT_FOUND'):
+        bind_candidate(ctx, validate_output(response(domain='DECISION', mentions=['our']), ctx))
+    slots[1]['workspace_id'] = 'local'
+    assert catalogue().public()['default_subject'] is None
+
+
+@pytest.mark.parametrize('value,expected', [(None, None), ('off', None), ('cascade', 'cascade'),
+                                            ('llm_first', 'llm_first'), ('on', 'llm_first')])
+def test_router_startup_mode_is_explicit(monkeypatch, value, expected):
+    from linkloom.ui.router_provider import configured_router
+
+    monkeypatch.delenv('DEEPSEEK_API_KEY', raising=False)
+    if value is None:
+        monkeypatch.delenv('LINKLOOM_LLM_ROUTER', raising=False)
+    else:
+        monkeypatch.setenv('LINKLOOM_LLM_ROUTER', value)
+    provider = configured_router()
+    assert (provider.mode if provider else None) == expected
