@@ -219,7 +219,8 @@ class UnifiedAskService:
                         return self._task_request(run, payload, context=context)
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
                     if cascade:
-                        _, time_error = resolve_query_date(run.query, payload.get("as_of"))
+                        from linkloom.ui.router_context import router_query_date
+                        _, time_error = router_query_date(run.query, payload.get("as_of"))
                         invalid_date = rule_date_blocker(time_error, has_scope=False)
                         if invalid_date:
                             return self._router_stop(run, None, invalid_date)
@@ -248,7 +249,11 @@ class UnifiedAskService:
                         discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0, decided_by="fallback",
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                         routed.update(route="CLARIFY", scope=None, decided_by="fallback")
-                date_blocker = rule_date_blocker(routed["date_error"], has_scope=bool(routed["scope"])) if cascade else None
+                date_blocker = None
+                if cascade:
+                    from linkloom.ui.router_context import router_query_date
+                    _, time_error = router_query_date(run.query, payload.get("as_of"))
+                    date_blocker = rule_date_blocker(time_error, has_scope=bool(routed["scope"]))
                 if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
                     return self._route_ordinary(run, payload)
                 if date_blocker:
@@ -379,7 +384,7 @@ class UnifiedAskService:
 
     def _route_ordinary(self, run, payload):
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
-        from linkloom.ui.router_context import blocked_entity_reason
+        from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
         from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
         provider = self.router_provider
@@ -400,6 +405,12 @@ class UnifiedAskService:
             blocker = blocked_entity_reason(run.query, context.blocked_entities)
             if blocker:
                 return self._router_stop(run, None, blocker)
+            if provider.mode == "cascade":
+                reason = handoff_blocker(context)
+                if reason == "NO_ROUTER_CANDIDATES":
+                    return self._legacy_router_fallback(run, payload, reason)
+                if reason:
+                    return self._router_stop(run, None, reason)
             request = request_for(context)
             def validate_snapshot():
                 validate_sources()

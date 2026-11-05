@@ -101,6 +101,19 @@ def project_rule(result):
         result['intent'],result['slot'],'UNRESOLVED' if result['date_error'] else 'AS_OF' if result['as_of'] else 'NONE')
 
 
+def score_old_route(prediction, expected):
+    """Compare the frozen old labels at their original intent granularity."""
+    coarse = {"LIST": "INVESTIGATION", "COMPARE": "INVESTIGATION", "HISTORY": "INVESTIGATION"}
+    def normalize(value):
+        out = dict(value)
+        if out["decision"] in {"CLARIFY", "REFUSE"}:
+            out.pop("intent")
+        else:
+            out["intent"] = coarse.get(out["intent"], out["intent"])
+        return out
+    return normalize(prediction) == normalize(expected)
+
+
 def predict_model(fixture, query, adapter, rule):
     attempted = False
     try:
@@ -226,7 +239,7 @@ def main():
     def record(case,repeat,arm,prediction,seconds,*,reason='NONE',attempted=False,fallback=False,added=None):
         expected=expected_old(case)
         row=dict(id=case['id'],category=case['category'],repeat=repeat,arm=arm,prediction=prediction,
-            correct=prediction==expected,wrong_binding=bool(prediction['entities'] and prediction['entities']!=expected['entities']),
+            correct=score_old_route(prediction,expected),wrong_binding=bool(prediction['entities'] and prediction['entities']!=expected['entities']),
             reason=reason,expected_reason=special_reason(case),seconds=seconds,attempted=attempted,fallback=fallback)
         if added is not None:row['added_seconds']=added
         rows.append(row)

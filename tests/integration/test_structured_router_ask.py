@@ -166,7 +166,7 @@ def test_authorized_router_has_one_bounded_send_and_verified_decision(decisions)
     assert session.requests==1 and session.limits.max_requests==1 and session.failure is None
     assert session.attempts[0]['stage']=='ask-router' and session.attempts[0]['outcome']=='SUCCEEDED'
 
-def test_cascade_runs_rules_first_and_uses_shared_fallback_for_unresolved_scope(decisions):
+def test_cascade_runs_rules_first_and_does_not_send_unknown_names(decisions):
     model = ScriptedRouter(lambda _: 'not JSON')
     ask = UnifiedAskService(decisions.app, lambda: None, graph_service=False,
                             router_provider=RouterProvider(model, mode='cascade'), slot_embedder=None)
@@ -176,8 +176,8 @@ def test_cascade_runs_rules_first_and_uses_shared_fallback_for_unresolved_scope(
     assert not model.requests
     result, status = ask.ask(dict(query='What supplier is UnlistedProject using?', workspace_id=workspace))
     assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
-    assert result['router'] == dict(source='rule', fallback_reason='ROUTER_SCHEMA_INVALID', attempted=True)
-    assert len(model.requests) == 1
+    assert result['router']['reason_code'] == 'ENTITY_NOT_FOUND'
+    assert not model.requests
 
 
 @pytest.mark.parametrize('query,reason', [

@@ -195,8 +195,9 @@ def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
             tool = payload['tools'][0]['function']
             assert tool['strict'] and tool['parameters']['additionalProperties'] is False
             assert tool['parameters']['properties']['candidate_id']['enum'] == ['', 'c0']
-            fields = dict(decision='ROUTE', operation='READ', intent='AS_OF', candidate_id='c0',
-                          mentions=['联调报告'], time_ids=['point'], reason_code='NONE')
+            fields = dict(decision='CLARIFY', intent='AS_OF', candidate_id='c0',
+                          mentions=['not in original', '联调报告'], unresolved_names=[],
+                          time_id='point', reason_code='NONE')
             response = {'model': CONFIG['model_id'], 'choices': [{'finish_reason': 'tool_calls', 'message': {
                 'content': None, 'tool_calls': [{'type': 'function', 'function': {
                     'name': 'submit_route', 'arguments': json.dumps(fields)}}]}}]}
@@ -209,6 +210,7 @@ def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
     from linkloom.ui.structured_router import route_with_adapter
     route = route_with_adapter(adapter, request_for(ctx), ctx)
     assert route.domain == 'TASK' and route.time_role == 'AS_OF' and route.time_ref_ids == ('point',)
+    assert route.decision == 'ROUTE' and route.operation == 'READ' and len(route.mentions) == 1
 
 
 def test_shortlist_excludes_unoffered_id_without_hiding_binding_conflicts():
@@ -239,3 +241,28 @@ def test_confirmed_task_qualifier_disambiguates_but_is_not_a_root():
     assert admit_route(ctx, proposal(['Orchid', '联调报告'])).executor == 'graph'
     assert admit_route(ctx, proposal(['Orchid'])).reason == 'ENTITY_NOT_FOUND'
     assert admit_route(ctx, proposal(['联调报告'])).reason == 'ENTITY_AMBIGUOUS'
+
+
+def test_punctuation_width_does_not_invalidate_an_intact_timestamp():
+    ctx = context('2027-04-12T11:30:00+08:00 联调报告归谁？')
+    route = validate_output(response(intent='AS_OF', time_role='AS_OF', time_ref_ids=['point']), ctx)
+    assert ctx.time_options[route.time_ref_ids[0]].value == '2027-04-12T11:30:00+08:00'
+
+
+def test_time_question_word_is_not_a_relative_date_but_keeps_real_qualifiers():
+    assert not context('联调报告什么时候交？').unresolved_time
+    assert context('上周联调报告什么时候交？').unresolved_time
+
+
+def test_soft_unresolved_names_require_literal_and_full_catalogue_absence():
+    from linkloom.ui.router_context import admit_route
+
+    ctx = replace(context('Orchid 的联调报告归谁？'),
+                  catalogue_names=frozenset({'orchid', '联调报告'}))
+    def route(ctx, unresolved):
+        return validate_output(response(schema_version='router/v3', unresolved_names=unresolved,
+                                        mentions=['联调报告']), ctx)
+
+    assert admit_route(ctx, route(ctx, ['made-up', 'Ｏｒｃｈｉｄ'])).executor == 'graph'
+    unknown = replace(ctx, catalogue_names=frozenset({'联调报告'}))
+    assert admit_route(unknown, route(unknown, ['Orchid'])).reason == 'ENTITY_NOT_FOUND'

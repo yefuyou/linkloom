@@ -10,7 +10,7 @@ from linkloom.indexing.models import IndexDocument
 from linkloom.temporal_graph.dates import date_tokens
 from linkloom.temporal_graph.models import digest
 from linkloom.ui.scope_discovery import (
-    RetrievalConfig, _mentions, _relation_phrases, resolve_query_date, retrieve_raw, workspace_snapshot,
+    RetrievalConfig, _grammar_token, _mentions, _relation_phrases, entity_check, resolve_query_date, retrieve_raw, workspace_snapshot,
 )
 from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention, routing_domain
 
@@ -63,6 +63,8 @@ class RouterContext:
     graph_available: bool
     default_subject: str | None = None
     blocked_entities: tuple[tuple[str, str], ...] = ()
+    catalogue_names: frozenset[str] = frozenset()
+    missing_names: tuple[str, ...] = ()
 
     def public(self):
         return dict(question=self.query, workspace_scope="CURRENT_ONLY", query_time=self.query_time,
@@ -75,6 +77,15 @@ class RouterContext:
                     default_subject=self.default_subject)
 
 
+_INTERROGATIVE_TIME = re.compile(r"什么时候|什么时间|何时|几点")
+
+
+def router_query_date(query, selected):
+    # A request to report a time is not itself an as-of qualifier.
+    # Preserve every explicit date/range and keep source character offsets.
+    return resolve_query_date(_INTERROGATIVE_TIME.sub(lambda match: " " * len(match[0]), query), selected)
+
+
 def time_context(query, selected):
     timestamps = [(m.group(), m.start(), m.end()) for m in _TIMESTAMP.finditer(query)]
     masked = _TIMESTAMP.sub(lambda m: " " * len(m.group()), query)
@@ -82,7 +93,7 @@ def time_context(query, selected):
     if len(tokens) > 4:
         raise RouterInvalid("ROUTER_INPUT_LIMIT")
     spans = tuple((start, end) for _, start, end in tokens)
-    point, error = resolve_query_date(query, selected)
+    point, error = router_query_date(query, selected)
     options = {}
     if point is not None:
         options["point"] = RouteTime("AS_OF", point, frozenset(spans))
@@ -222,8 +233,37 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
         blocked_entities=blocked_entities,
         graph_records=list(graph_snapshot.records) if graph_snapshot else [],
         graph_edges=[e.to_dict() for e in graph_snapshot.edges] if graph_snapshot else []))
-    return RouterContext(query, workspace, now, options, required, spans, unresolved,
-                         catalog, len(ranked), signature, graph_available, default_subject, blocked_entities)
+    labels = {value for slot in reviewed.slots
+              for value in (slot["subject"], slot["relation"], *slot.get("subject_aliases", ()),
+                            *slot.get("values", ()), *slot.get("aliases", ()),
+                            *_relation_phrases(slot["relation"], resolver))}
+    if graph_snapshot:
+        labels.update(node.label for node in graph_snapshot.nodes if node.kind != "task_observation")
+        labels.update(value for row in graph_snapshot.records for value in
+                      (row.get("title"), row.get("project"), *row.get("project_aliases", ())) if value)
+    names = frozenset(normalize_mention(value) for value in labels if value)
+    detected = entity_check(query, reviewed)
+    missing = tuple(sorted({name for name in detected["unbound_names"]
+                            if not _grammar_token(name) and name_missing(name, names)}))
+    return RouterContext(query, workspace, now, options, required, spans, unresolved, catalog,
+                         len(ranked), signature, graph_available, default_subject, blocked_entities,
+                         names, missing)
+
+
+def name_missing(name, catalogue_names):
+    normalized = normalize_mention(name)
+    return (bool(normalized) and normalized not in catalogue_names
+            and normalized.removesuffix("项目") not in catalogue_names)
+
+
+def handoff_blocker(context):
+    if context.unresolved_time:
+        return "TIME_SCOPE_UNRESOLVED"
+    if context.missing_names:
+        return "ENTITY_NOT_FOUND"
+    if not context.candidates:
+        return "NO_ROUTER_CANDIDATES"
+    return None
 
 
 def bind_candidate(context, route):
@@ -235,6 +275,10 @@ def bind_candidate(context, route):
     candidate = context.candidates[route.candidate_ids[0]]
     mentions = {normalize_mention(text) for text, start, end in route.mentions
                 if (start, end) not in context.date_spans}
+    # The host can recover literal anchors omitted by a soft-mention model.
+    # It never creates anchors that do not occur in the original query.
+    if route.soft_mentions and not mentions:
+        mentions = {normalize_mention(value) for value in candidate.matched_anchors}
     def grounds(row):
         anchors = {normalize_mention(value) for value in row.anchors if value}
         references = {normalize_mention(value) for value in row.default_references}
@@ -244,8 +288,16 @@ def bind_candidate(context, route):
         return bool(mentions & anchors) and mentions <= anchors | references
     if not grounds(candidate):
         raise RouterInvalid("ENTITY_NOT_FOUND")
-    peers = (c for c in context.candidates.values() if routing_domain(c.domain, route.intent) == route.domain)
-    if candidate.conflict or sum(grounds(c) for c in peers) != 1:
+    peers = [c for c in context.candidates.values()
+             if routing_domain(c.domain, route.intent) == route.domain and grounds(c)]
+    if route.soft_mentions and len(peers) > 1:
+        # Only an independently present additional anchor can break a tie.
+        def witnessed(row):
+            return {normalize_mention(term) for term in row.matched_anchors}
+        selected = witnessed(candidate)
+        if all(peer is candidate or witnessed(peer) < selected for peer in peers):
+            peers = [candidate]
+    if candidate.conflict or len(peers) != 1:
         raise RouterInvalid("ENTITY_AMBIGUOUS")
     if not candidate.history_count and candidate.kind != "meeting":
         raise RouterInvalid("NO_CONFIRMED_RECORD")
@@ -268,6 +320,8 @@ def admit_route(context, route):
         return RouterAdmission(None, blocker)
     if route.reason_code in SAFETY:
         return RouterAdmission(None, route.reason_code)
+    if context.missing_names or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
+        return RouterAdmission(None, "ENTITY_NOT_FOUND")
     if route.decision != 'ROUTE':
         candidate = None
         if route.candidate_ids:
