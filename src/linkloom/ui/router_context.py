@@ -12,7 +12,7 @@ from linkloom.temporal_graph.models import digest
 from linkloom.ui.scope_discovery import (
     RetrievalConfig, _mentions, _relation_phrases, resolve_query_date, retrieve_raw, workspace_snapshot,
 )
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention
+from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention, routing_domain
 
 # Existing date parsing handles timestamps and invalid/relative dates. Mask
 # complete timestamps before lexing meeting-date tokens, so they are not split.
@@ -100,13 +100,14 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
     # Keep weak recall visible after stronger lexical and dense hits. Its
     # presence in the catalogue grants no authority to bind it.
     rows.sort(key=lambda row: not (row["topic_anchored"] or row["history_anchor"] or row["dense_score"] is not None))
-    # A small reviewed catalogue can be sent in full when lexical recall
-    # sees no strong topic. Never infer an alias from the added entries.
-    if not any(row["topic_anchored"] or row["history_anchor"] for row in rows) and len(snapshot.slots) <= CONFIG["max_candidates"] // 2:
-        present = {row["slot_id"] for row in rows}
-        rows.extend(dict(slot, aliases=sorted(_relation_phrases(slot["relation"], snapshot.resolver)
-                                              | set(slot.get("aliases", []))))
-                    for slot in snapshot.slots if slot["slot_id"] not in present)
+    present = {row["slot_id"] for row in rows}
+    # A named subject can recall its authorized slots even if the predicate
+    # uses a synonym. Unrelated slots are never used as filler.
+    rows.extend(dict(slot, aliases=sorted(_relation_phrases(slot["relation"], snapshot.resolver)
+                                         | set(slot.get("aliases", []))))
+                for slot in snapshot.slots if slot["slot_id"] not in present
+                and any(_mentions(query.casefold(), name) for name in
+                        [slot["subject"], *slot.get("subject_aliases", [])]))
     for row in rows:
         subject, relation = row["subject"], row["relation"]
         current = view(subject, relation, None)
@@ -163,10 +164,14 @@ def _graph_candidates(query, snapshot, now, point):
                 return int(_valid(record, when))
             return sum(edge.time_match(when) == "VALID" and not edge.blocker for edge in edges)
         domain = "TASK" if node.kind == "task" else "RELATION"
-        candidates.append(RouteCandidate(domain, node.kind, doc.content[:160], (doc.content,), count(now),
+        project = (record.get("project") or node.scope) if node.kind == "task" else ""
+        anchors = (doc.content, project, *record.get("project_aliases", ())) if project else (doc.content,)
+        label = f"{doc.content} · {project}" if project else doc.content
+        candidates.append(RouteCandidate(domain, node.kind, label[:160], anchors, count(now),
             count(point) if point else None, len(states) or len(edges),
             any(e.blocker and e.time_match(point or now) == "VALID" for e in edges) or
-            bool(states and count(point or now) > 1), (node.node_id,)))
+            bool(states and count(point or now) > 1), (node.node_id,),
+            tuple(a for a in anchors if _mentions(query.casefold(), a))))
     return candidates
 
 
@@ -233,11 +238,14 @@ def bind_candidate(context, route):
     def grounds(row):
         anchors = {normalize_mention(value) for value in row.anchors if value}
         references = {normalize_mention(value) for value in row.default_references}
+        if row.kind == "task" and (not row.anchors or normalize_mention(row.anchors[0]) not in mentions):
+            return False  # A project qualifier cannot identify a task by itself.
         # A workspace pronoun can supplement an actual topic anchor only.
         return bool(mentions & anchors) and mentions <= anchors | references
     if not grounds(candidate):
         raise RouterInvalid("ENTITY_NOT_FOUND")
-    if candidate.conflict or sum(grounds(c) for c in context.candidates.values() if c.domain == route.domain) != 1:
+    peers = (c for c in context.candidates.values() if routing_domain(c.domain, route.intent) == route.domain)
+    if candidate.conflict or sum(grounds(c) for c in peers) != 1:
         raise RouterInvalid("ENTITY_AMBIGUOUS")
     if not candidate.history_count and candidate.kind != "meeting":
         raise RouterInvalid("NO_CONFIRMED_RECORD")

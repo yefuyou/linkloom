@@ -192,10 +192,12 @@ def main():
             parser.error('prior-run must uniquely identify a saved work/ report')
         prior_reports.add(path)
         saved=json.loads(path.read_text(encoding='utf8'))
-        if saved['split'] != 'old-development-60':
-            parser.error('prior-run must be an old-development-60 report')
-        prior_spend+=saved.get('charged_upper_usd', saved['reserved_usd'] if saved['unknown_usage_calls']
-                               else saved['usage_estimate_peak_usd'])
+        if saved['split'] not in {'old-development-60', 'external-v1-dev'}:
+            parser.error('prior-run must be a saved routing development report')
+        if 'charged_upper_usd' in saved:
+            prior_spend+=saved['charged_upper_usd']
+        else:
+            prior_spend+=saved['reserved_usd'] if saved['unknown_usage_calls'] else saved['usage_estimate_peak_usd']
     print(f'Preflight: {len(cases)} development cases; {count} maximum router calls; '
           f'peak reservation ${upper:.6f}; prior charges ${prior_spend:.6f}',flush=True)
     key=None

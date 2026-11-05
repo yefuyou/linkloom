@@ -179,3 +179,63 @@ def test_negative_host_fact_blocks_binding_even_if_model_omits_name(code):
         route = validate_output(response(mentions=mentions), ctx)
         assert admit_route(ctx, route).reason == code
         assert admit_route(ctx, route).candidate is None
+
+
+def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
+    from io import BytesIO
+    from linkloom.ui.router_provider import _DeepSeekJSONClient
+
+    class Opener:
+        def open(self, request, *, timeout):
+            payload = json.loads(request.data)
+            assert request.full_url.endswith('/beta/chat/completions')
+            assert payload['tool_choice']['function']['name'] == 'submit_route'
+            assert 'response_format' not in payload
+            assert payload['temperature'] == 0 and payload['thinking']['type'] == 'disabled'
+            tool = payload['tools'][0]['function']
+            assert tool['strict'] and tool['parameters']['additionalProperties'] is False
+            assert tool['parameters']['properties']['candidate_id']['enum'] == ['', 'c0']
+            fields = dict(decision='ROUTE', operation='READ', intent='AS_OF', candidate_id='c0',
+                          mentions=['联调报告'], time_ids=['point'], reason_code='NONE')
+            response = {'model': CONFIG['model_id'], 'choices': [{'finish_reason': 'tool_calls', 'message': {
+                'content': None, 'tool_calls': [{'type': 'function', 'function': {
+                    'name': 'submit_route', 'arguments': json.dumps(fields)}}]}}]}
+            return BytesIO(json.dumps(response).encode())
+
+    ctx = context('联调报告 2026-10-07')
+    client = _DeepSeekJSONClient('fake')
+    client._opener = Opener()
+    adapter = DeepSeekProviderAdapter(client, model_id=CONFIG['model_id'], json_output=True)
+    from linkloom.ui.structured_router import route_with_adapter
+    route = route_with_adapter(adapter, request_for(ctx), ctx)
+    assert route.domain == 'TASK' and route.time_role == 'AS_OF' and route.time_ref_ids == ('point',)
+
+
+def test_shortlist_excludes_unoffered_id_without_hiding_binding_conflicts():
+    from linkloom.ui.structured_router import route_with_adapter
+
+    ctx = context()
+    base = ctx.candidates['c0']
+    candidates = {f'c{i}': replace(base, identity=(str(i),)) for i in range(7)}
+    ctx = replace(ctx, candidates=candidates, total=len(candidates))
+    req = request_for(ctx)
+    assert len(req.user_input.encode()) <= CONFIG['max_input_bytes']
+    adapter = SimpleNamespace(complete=lambda _: ModelResponse(action=ModelAction.final(response(candidate_ids=['c6']))))
+    with pytest.raises(RouterInvalid, match='CANDIDATE_OUT_OF_SET'):
+        route_with_adapter(adapter, req, ctx)
+    with pytest.raises(RouterInvalid, match='ENTITY_AMBIGUOUS'):
+        bind_candidate(ctx, validate_output(response(), ctx))
+
+
+def test_confirmed_task_qualifier_disambiguates_but_is_not_a_root():
+    from linkloom.ui.router_context import admit_route
+
+    ctx = context('Orchid 联调报告的负责人向谁汇报', second=True)
+    ctx.candidates['c0'] = replace(ctx.candidates['c0'], anchors=('联调报告', 'Orchid'))
+    ctx.candidates['c1'] = replace(ctx.candidates['c1'], anchors=('联调报告', 'Clover'))
+    def proposal(mentions):
+        return validate_output(response(intent='RELATION_MULTIHOP', domain='RELATION', mentions=mentions), ctx)
+
+    assert admit_route(ctx, proposal(['Orchid', '联调报告'])).executor == 'graph'
+    assert admit_route(ctx, proposal(['Orchid'])).reason == 'ENTITY_NOT_FOUND'
+    assert admit_route(ctx, proposal(['联调报告'])).reason == 'ENTITY_AMBIGUOUS'
