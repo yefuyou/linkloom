@@ -12,7 +12,7 @@ from linkloom.temporal_graph.models import digest
 from linkloom.ui.scope_discovery import (
     RetrievalConfig, _mentions, _relation_phrases, resolve_query_date, retrieve_raw, workspace_snapshot,
 )
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, normalize_mention
+from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention
 
 # Existing date parsing handles timestamps and invalid/relative dates. Mask
 # complete timestamps before lexing meeting-date tokens, so they are not split.
@@ -62,6 +62,7 @@ class RouterContext:
     snapshot: str
     graph_available: bool
     default_subject: str | None = None
+    blocked_entities: tuple[tuple[str, str], ...] = ()
 
     def public(self):
         return dict(question=self.query, workspace_scope="CURRENT_ONLY", query_time=self.query_time,
@@ -169,9 +170,30 @@ def _graph_candidates(query, snapshot, now, point):
     return candidates
 
 
+def _ascii_word(char):
+    normalized = normalize_mention(char)
+    return normalized.isascii() and (normalized.isalnum() or normalized == "_")
+
+
+def blocked_entity_reason(query, facts, *, mentions=()):
+    normalized_mentions = {normalize_mention(text) for text in mentions}
+    for label, reason in facts:
+        if normalize_mention(label) in normalized_mentions:
+            return reason
+        for start, end in mention_spans(query, label):
+            # Keep ASCII word boundaries (a workspace called "Ops" does
+            # not block "DevOps"), including in mixed-language questions.
+            if start and _ascii_word(query[start - 1]) and _ascii_word(query[start]):
+                continue
+            if end < len(query) and _ascii_word(query[end - 1]) and _ascii_word(query[end]):
+                continue
+            return reason
+    return None
+
+
 def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=None,
                   selected_as_of=None, query_time=None, source_snapshot="", embedder=None,
-                  graph_available=False):
+                  graph_available=False, blocked_entities=()):
     if graph_snapshot is not None and (graph_snapshot.workspace_id != workspace or
             any(node.workspace_id != workspace for node in graph_snapshot.nodes)):
         raise PermissionError("WORKSPACE_DENIED")
@@ -192,10 +214,11 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
     catalog = {f"c{i}": candidate for i, candidate in enumerate(selected)}
     signature = digest(dict(source_snapshot=source_snapshot, workspace=workspace,
         candidates=[(c.identity, c.public()) for c in ranked], now=now, reviewed_slots=slots,
+        blocked_entities=blocked_entities,
         graph_records=list(graph_snapshot.records) if graph_snapshot else [],
         graph_edges=[e.to_dict() for e in graph_snapshot.edges] if graph_snapshot else []))
     return RouterContext(query, workspace, now, options, required, spans, unresolved,
-                         catalog, len(ranked), signature, graph_available, default_subject)
+                         catalog, len(ranked), signature, graph_available, default_subject, blocked_entities)
 
 
 def bind_candidate(context, route):
@@ -231,6 +254,10 @@ class RouterAdmission:
 
 def admit_route(context, route):
     """Choose only installed read paths after authority and semantic validation."""
+    blocker = blocked_entity_reason(context.query, context.blocked_entities,
+                                    mentions=(text for text, _, _ in route.mentions))
+    if blocker:
+        return RouterAdmission(None, blocker)
     if route.reason_code in SAFETY:
         return RouterAdmission(None, route.reason_code)
     if route.decision != 'ROUTE':

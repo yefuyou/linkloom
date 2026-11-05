@@ -23,9 +23,10 @@ from scripts import eval_routing as legacy
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.ui.product import _parse_as_of
-from linkloom.ui.router_context import admit_route, build_context
+from linkloom.ui.ask_admission import admission_restriction, legacy_denial_reason
+from linkloom.ui.router_context import admit_route, blocked_entity_reason, build_context
 from linkloom.ui.router_provider import _DeepSeekJSONClient
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, request_for, route_with_adapter, rule_needs_router
+from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, request_for, route_with_adapter, rule_date_blocker, rule_needs_router
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 from linkloom.ui.scope_discovery import resolve_query_date
 
@@ -38,7 +39,8 @@ INPUT_RATE, OUTPUT_RATE = .30, 1.20
 TRACKED = (CONFIG_PATH, ACCEPTANCE, legacy.DEFAULT_CASES, Path(__file__),
            ROOT / 'src/linkloom/ui/structured_router.py', ROOT / 'src/linkloom/ui/router_context.py',
            ROOT / 'src/linkloom/ui/router_provider.py', ROOT / 'src/linkloom/ui/scope_discovery.py',
-           ROOT / 'src/linkloom/ui/question_routing.py', ROOT / 'scripts/eval_routing.py')
+           ROOT / 'src/linkloom/ui/question_routing.py', ROOT / 'scripts/eval_routing.py',
+           ROOT / 'src/linkloom/ui/ask_admission.py', ROOT / 'src/linkloom/ui/unified_ask.py')
 
 
 def hashes():
@@ -53,6 +55,19 @@ class OldDevelopmentFixture:
                                                  aliases=legacy.FIXTURE['relation_aliases'])
         self.by_scope = {(s['subject'],s['relation']):s for s in self.slots}
 
+        # Existing synthetic fixture carries these exclusion facts separately
+        # from reviewed slots. No case labels or expected answers enter routing.
+        self.blocked = tuple((label, 'WORKSPACE_DENIED' if 'another workspace' in description
+                              else 'NO_CONFIRMED_RECORD')
+                             for label, description in legacy.FIXTURE['excluded'].items()
+                             if 'another workspace' in description or 'pending' in description)
+
+    def blocker(self, query, rule):
+        if admission_restriction(query):
+            return legacy_denial_reason(query)
+        return blocked_entity_reason(query, self.blocked) or rule_date_blocker(
+            rule['date_error'], has_scope=bool(rule['slot']))
+
     def view(self, subject, relation, when):
         slot = self.by_scope[(subject,relation)]
         cutoff = _parse_as_of(when or NOW)
@@ -60,7 +75,8 @@ class OldDevelopmentFixture:
         return dict(status='FOUND' if history else 'NO_VALID_RECORD_AT_TIME',history=history)
 
     def context(self, query):
-        return build_context(query,self.workspace,self.slots,self.resolver,view=self.view,query_time=NOW)
+        return build_context(query,self.workspace,self.slots,self.resolver,view=self.view,query_time=NOW,
+                             blocked_entities=self.blocked)
 
     def slot_id(self, candidate):
         return self.by_scope[candidate.identity]['slot_id'] if candidate else None
@@ -104,15 +120,34 @@ def predict_model(fixture, query, adapter, rule):
         return rule,str(error),attempted,True
 
 
+def special_reason(case):
+    # Side audit only: independent of routing and the frozen exact score.
+    category = case['category']
+    if category == 'other_workspace':
+        return 'WORKSPACE_DENIED'
+    if category == 'proposal_only':
+        return 'NO_CONFIRMED_RECORD'
+    if category == 'date_clarify':
+        _, error = resolve_query_date(case['query'], None)
+        return 'INVALID_AS_OF' if error and error['code'] == 'INVALID_AS_OF' else 'TIME_SCOPE_UNRESOLVED'
+    if category in {'write', 'write_request'}:
+        return 'WRITE_NOT_ALLOWED'
+    return None
+
+
 def summarize(rows, arm):
     chosen=[r for r in rows if r['arm']==arm]
     if not chosen:return None
     deltas=sorted(r['added_seconds'] for r in chosen if 'added_seconds' in r)
     attempts=sum(r['attempted'] for r in chosen)
+    invalid=sum(r['fallback'] and r['attempted'] for r in chosen)
+    safety=[r for r in chosen if r['expected_reason'] in SAFETY or r['reason'] in SAFETY]
     return dict(n=len(chosen),exact=sum(r['correct'] for r in chosen)/len(chosen),
         wrong_bindings=sum(r['wrong_binding'] for r in chosen),
-        safety_code_correctness=sum(r['reason'] not in SAFETY for r in chosen)/len(chosen),
-        attempted=attempts,invalid_output_fallback=sum(r['fallback'] and r['attempted'] for r in chosen)/attempts if attempts else None,
+        safety_code_correctness=sum(r['expected_reason']==r['reason'] for r in safety)/len(safety) if safety else None,
+        safety_samples=len(safety), attempted=attempts,
+        invalid_output_fallback_all=invalid/len(chosen),
+        invalid_output_fallback=invalid/attempts if attempts else None,
         added_latency_p95_seconds=deltas[math.ceil(.95*len(deltas))-1] if deltas else None)
 
 
@@ -141,13 +176,14 @@ def main():
     cases=legacy.load_cases(legacy.DEFAULT_CASES)
     if len(cases)!=60:raise ValueError('ORIGINAL_60_REQUIRED')
     locked=hashes()
-    requests=[request_for(fixture.context(c['query'])) for c in cases]
     rule_results=[legacy.predict(c['query'],fixture.slots,fixture.resolver,embedder=None) for c in cases]
-    cascade_calls=[rule_needs_router(r['route']) for r in rule_results]
-    sizes=[len(json.dumps(r.to_dict(),ensure_ascii=False).encode('utf8'))+4096 for r in requests]
-    reserves=[size*INPUT_RATE/1e6+CONFIG['max_output_tokens']*OUTPUT_RATE/1e6 for size in sizes]
-    upper=sum(reserve*(1+needed) for reserve,needed in zip(reserves,cascade_calls))*args.repetitions
-    count=(len(requests)+sum(cascade_calls))*args.repetitions
+    blockers=[fixture.blocker(c['query'], r) for c,r in zip(cases,rule_results)]
+    cascade_calls=[rule_needs_router(r['route'], blocker=b) for r,b in zip(rule_results,blockers)]
+    sizes=[len(json.dumps(request_for(fixture.context(c['query'])).to_dict(),ensure_ascii=False).encode('utf8'))+4096
+           if needed else 0 for c,needed in zip(cases,cascade_calls)]
+    reserves=[size*INPUT_RATE/1e6+CONFIG['max_output_tokens']*OUTPUT_RATE/1e6 if size else 0. for size in sizes]
+    upper=sum(reserves)*args.repetitions
+    count=sum(cascade_calls)*args.repetitions
     prior_spend=0.
     prior_reports=set()
     for prior in args.prior_run:
@@ -177,7 +213,7 @@ def main():
     def save(name, data):
         (run_dir/name).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     save('freeze.json',dict(hashes=locked,model=CONFIG,repetitions=args.repetitions,
-                           safety_note='Old 60 contains no explicit safety denial labels; only false positives can be measured here.',
+                           safety_note='Side audit uses existing case categories, independently of routing. No write cases in the old 60.',
                            split='old-development-60',input_rate=INPUT_RATE,output_rate=OUTPUT_RATE,
                            upper_reservation_usd=upper,prior_spend_usd=prior_spend,query_time=NOW))
     def validate():
@@ -189,7 +225,7 @@ def main():
         expected=expected_old(case)
         row=dict(id=case['id'],category=case['category'],repeat=repeat,arm=arm,prediction=prediction,
             correct=prediction==expected,wrong_binding=bool(prediction['entities'] and prediction['entities']!=expected['entities']),
-            reason=reason,seconds=seconds,attempted=attempted,fallback=fallback)
+            reason=reason,expected_reason=special_reason(case),seconds=seconds,attempted=attempted,fallback=fallback)
         if added is not None:row['added_seconds']=added
         rows.append(row)
     for repeat in range(1,args.repetitions+1):
@@ -199,12 +235,16 @@ def main():
             raw_rule=legacy.predict(case['query'],fixture.slots,fixture.resolver,embedder=None)
             elapsed=perf_counter()-start
             prediction=project_rule(raw_rule)
-            record(case,repeat,'rule',prediction,elapsed)
+            date_error=raw_rule['date_error']
+            legacy_reason=(date_error or {}).get('code') if raw_rule['slot'] else None
+            if not legacy_reason and raw_rule['route'] not in legacy.INTENTS:
+                legacy_reason='DECISION_SCOPE_'+raw_rule['discovery_status']
+            record(case,repeat,'rule',prediction,elapsed,reason=legacy_reason or 'NONE')
             if not client_adapter:
                 continue
-            for arm in ('llm_first','cascade'):
-                if arm=='cascade' and not rule_needs_router(raw_rule['route']):
-                    record(case,repeat,arm,prediction,elapsed,added=0.)
+            for arm in ('cascade',):
+                if not cascade_calls[ordinal]:
+                    record(case,repeat,arm,prediction,elapsed,reason=blockers[ordinal] or legacy_reason or 'NONE',added=0.)
                     continue
                 remaining=args.max_cost_usd-prior_spend-charged
                 if remaining+1e-10 < reserves[ordinal]:
@@ -244,10 +284,10 @@ def main():
     estimates=[priced_usage(attempt) for attempt in attempts]
     usage_upper=sum(estimate for estimate in estimates if estimate is not None)
     unknown_usage=estimates.count(None)
-    report=dict(split='old-development-60',repetitions=args.repetitions,metrics={arm:summarize(rows,arm) for arm in ('rule','llm_first','cascade')},
+    report=dict(split='old-development-60',repetitions=args.repetitions,metrics={arm:summarize(rows,arm) for arm in ('rule','cascade')},
                 rows=rows,provider_failure=failure,request_count=calls,reserved_usd=spent,
                 usage_estimate_peak_usd=usage_upper,charged_upper_usd=charged,unknown_usage_calls=unknown_usage,
-                complete=failure is None and len(rows)==len(cases)*args.repetitions*(3 if client_adapter else 1))
+                complete=failure is None and len(rows)==len(cases)*args.repetitions*(2 if client_adapter else 1))
     save('report.json',report)
     print(json.dumps({k:v for k,v in report.items() if k!='rows'},ensure_ascii=False),flush=True)
     if not report['complete']:raise SystemExit(2)

@@ -168,3 +168,14 @@ def test_router_startup_mode_is_explicit(monkeypatch, value, expected):
         monkeypatch.setenv('LINKLOOM_LLM_ROUTER', value)
     provider = configured_router()
     assert (provider.mode if provider else None) == expected
+
+
+@pytest.mark.parametrize('code', ['WORKSPACE_DENIED', 'NO_CONFIRMED_RECORD'])
+def test_negative_host_fact_blocks_binding_even_if_model_omits_name(code):
+    from linkloom.ui.router_context import admit_route
+
+    ctx = replace(context('Ａｓｔｅｒ: 联调报告状态'), blocked_entities=(('Aster', code),))
+    for mentions in (['联调报告'], ['aster', '联调报告']):
+        route = validate_output(response(mentions=mentions), ctx)
+        assert admit_route(ctx, route).reason == code
+        assert admit_route(ctx, route).candidate is None

@@ -178,3 +178,26 @@ def test_cascade_runs_rules_first_and_uses_shared_fallback_for_unresolved_scope(
     assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
     assert result['router'] == dict(source='rule', fallback_reason='ROUTER_SCHEMA_INVALID', attempted=True)
     assert len(model.requests) == 1
+
+
+@pytest.mark.parametrize('query,reason', [
+    ('What supplier does Juniper use?', 'WORKSPACE_DENIED'),
+    ('What supplier does Cedar use?', 'NO_CONFIRMED_RECORD'),
+    ('What supplier did Launch use on 2026-02-30?', 'INVALID_AS_OF'),
+    ('Please change the decision for Launch.', 'WRITE_NOT_ALLOWED'),
+])
+def test_cascade_keeps_host_denials_out_of_model(decisions, monkeypatch, query, reason):
+    app = decisions.app
+    workspace = app._workspace_id()
+    app.repository.create_workspace('Juniper')
+    app.repository.select_workspace(workspace)
+    monkeypatch.setattr(app, '_supporting_proposals', lambda: [
+        {'subject': 'Cedar', 'source': {'active': True}},
+    ])
+    model = ScriptedRouter(lambda _: pytest.fail('host denial reached model'))
+    ask = UnifiedAskService(app, lambda: None, graph_service=False,
+                            router_provider=RouterProvider(model, mode='cascade'), slot_embedder=None)
+    result, status = ask.ask(dict(query=query, workspace_id=workspace))
+    assert status == 200
+    assert result['router']['reason_code'] == reason
+    assert not result['evidence'] and not model.requests

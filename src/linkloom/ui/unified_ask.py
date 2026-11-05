@@ -14,7 +14,7 @@ from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
 from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
-from linkloom.ui.structured_router import rule_needs_router
+from linkloom.ui.structured_router import rule_date_blocker, rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.ui.ask_admission import (admission_restriction, parse_context,
@@ -195,6 +195,11 @@ class UnifiedAskService:
                         return self._router_stop(run, None, legacy_denial_reason(run.query))
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
+                if cascade:
+                    from linkloom.ui.router_context import blocked_entity_reason
+                    blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
+                    if blocker:
+                        return self._router_stop(run, None, blocker)
                 if use_graph and not cascade and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
                     routed_graph = self._run_graph_request(run, payload)
                     if routed_graph is not None:
@@ -213,6 +218,11 @@ class UnifiedAskService:
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
                         return self._task_request(run, payload, context=context)
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
+                    if cascade:
+                        _, time_error = resolve_query_date(run.query, payload.get("as_of"))
+                        invalid_date = rule_date_blocker(time_error, has_scope=False)
+                        if invalid_date:
+                            return self._router_stop(run, None, invalid_date)
                     return self._source_request(run, payload, plan)
                 slots = self._trusted_slots(run.workspace_id)
                 resolver, memory = self.app.relation_resolver, None
@@ -238,8 +248,12 @@ class UnifiedAskService:
                         discovery.update(status="AMBIGUOUS", scope=None, candidates=[], candidate_count=0, decided_by="fallback",
                             reason="Conflicting approved terminology. Revoke the conflict or choose an explicit reviewed decision.")
                         routed.update(route="CLARIFY", scope=None, decided_by="fallback")
-                if cascade and rule_needs_router(routed["route"]):
+                date_blocker = rule_date_blocker(routed["date_error"], has_scope=bool(routed["scope"])) if cascade else None
+                if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
                     return self._route_ordinary(run, payload)
+                if date_blocker:
+                    result["router"] = dict(source="host", reason_code=date_blocker, reason_class="CAPABILITY",
+                                            decision="CLARIFY", attempted=False)
                 route = {key: routed[key] for key in
                          ("intent", "route", "code", "reason", "decided_by", "llm_attempted", "llm_error")}
                 run = _AskRun(run.query, run.workspace_id, run.scope, route)
@@ -249,6 +263,8 @@ class UnifiedAskService:
                                    "INVESTIGATION": "AGENT"}.get(routed["route"]))
                 result["discovery"] = discovery
                 if discovery["scope"] is None:
+                    if date_blocker:
+                        return self._router_stop(run, None, date_blocker)
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
@@ -313,6 +329,22 @@ class UnifiedAskService:
             return self._try_graph_fallback(run, payload, graph)
         return self._graph_result(run, graph), 200
 
+    def _router_blocked_entities(self, workspace_id, slots=None):
+        from linkloom.ui.structured_router import normalize_mention
+        # Use workspace names already exposed by the workspace selector.
+        # Never enumerate or inspect decision/task records from another workspace.
+        slots = self._trusted_slots(workspace_id) if slots is None else slots
+        known = {normalize_mention(name) for slot in slots
+                 for name in (slot["subject"], *slot.get("subject_aliases", []))}
+        other_workspaces = ((item["name"], "WORKSPACE_DENIED")
+                            for item in self.app.repository.list_workspaces()
+                            if item["workspace_id"] != workspace_id)
+        proposals = ((item["subject"], "NO_CONFIRMED_RECORD") for item in self.app._supporting_proposals()
+                     if item["subject"] and item["source"]["active"])
+        return tuple(sorted({(name, reason) for name, reason in (*other_workspaces, *proposals)
+                             if normalize_mention(name) not in known},
+                            key=lambda fact: (fact[1] != "WORKSPACE_DENIED", fact[0])))
+
     def _router_context(self, run, payload, snapshot_hash, *, query_time=None):
         from linkloom.ui.router_context import build_context
         from linkloom.ui.structured_router import RouterInvalid
@@ -328,7 +360,8 @@ class UnifiedAskService:
             view=lambda subject, relation, as_of: self.app.recover_decision(subject, relation, as_of,
                                                                           _workspace_id=run.workspace_id),
             graph_snapshot=catalogue, selected_as_of=payload.get('as_of'), query_time=query_time,
-            source_snapshot=snapshot_hash, embedder=self.slot_embedder, graph_available=graph is not None)
+            source_snapshot=snapshot_hash, embedder=self.slot_embedder, graph_available=graph is not None,
+            blocked_entities=self._router_blocked_entities(run.workspace_id, slots))
 
     def _legacy_router_fallback(self, run, payload, reason, prior=None):
         result, status = self._ask(payload, use_graph=False, use_router=False, allow_selector=False)
@@ -346,6 +379,7 @@ class UnifiedAskService:
 
     def _route_ordinary(self, run, payload):
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
+        from linkloom.ui.router_context import blocked_entity_reason
         from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
         provider = self.router_provider
@@ -363,6 +397,9 @@ class UnifiedAskService:
         attempted = False
         try:
             context = self._router_context(run, payload, snapshot_hash)
+            blocker = blocked_entity_reason(run.query, context.blocked_entities)
+            if blocker:
+                return self._router_stop(run, None, blocker)
             request = request_for(context)
             def validate_snapshot():
                 validate_sources()
