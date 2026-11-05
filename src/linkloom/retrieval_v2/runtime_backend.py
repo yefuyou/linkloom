@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib.util
+import logging
 import time
 import re
 from copy import deepcopy
@@ -36,6 +38,19 @@ if TYPE_CHECKING:
     from linkloom.rerank.base import Reranker
 
 
+LOGGER = logging.getLogger(__name__)
+
+VECTOR_DEPENDENCY_MODULE = "sentence_transformers"
+VECTOR_DEPENDENCY_WARNING_CODE = "vector_dependency_missing"
+
+
+def _vector_dependency_available() -> bool:
+    try:
+        return importlib.util.find_spec(VECTOR_DEPENDENCY_MODULE) is not None
+    except (ImportError, ValueError):
+        return False
+
+
 class RetrievalMode(StrEnum):
     CURRENT = "current"
     BM25 = "bm25"
@@ -65,6 +80,8 @@ class RetrievalObservation:
     index_version: int
     stage_timings_ms: dict[str, float]
     rerank_trace: dict[str, Any] = field(default_factory=dict)
+    requested_mode: str | None = None
+    warnings: tuple[dict[str, str], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,7 +115,35 @@ class RuntimeRetrievalBackend:
             raise ValueError("index_version must be positive")
         self.workspace_id = workspace_id
         self.document_provider = document_provider
-        self.mode = RetrievalMode.parse(mode)
+        self.requested_mode = RetrievalMode.parse(mode)
+        self.mode = self.requested_mode
+        self.warnings: tuple[dict[str, str], ...] = ()
+        if (
+            self.mode in {RetrievalMode.HYBRID, RetrievalMode.DIRECTORY_HYBRID}
+            and embedder is None
+            and index_update_coordinator is None
+            and not _vector_dependency_available()
+        ):
+            # The default embedder imports sentence-transformers lazily, at the
+            # first search. Without the optional ``retrieval`` extra that import
+            # used to fail inside the tool executor and the run surfaced only as
+            # a generic tool failure / refusal. Degrade once, visibly, instead.
+            message = (
+                f"Retrieval mode '{self.mode.value}' requires the optional vector "
+                f"dependency '{VECTOR_DEPENDENCY_MODULE}', which is not installed; "
+                "falling back to 'bm25'. Install linkloom[retrieval] to enable "
+                "dense retrieval, or set LINKLOOM_RETRIEVAL_MODE=bm25 to silence "
+                "this warning."
+            )
+            LOGGER.warning(message)
+            self.warnings = ({
+                "code": VECTOR_DEPENDENCY_WARNING_CODE,
+                "requested_mode": self.mode.value,
+                "effective_mode": RetrievalMode.BM25.value,
+                "missing_module": VECTOR_DEPENDENCY_MODULE,
+                "message": message,
+            },)
+            self.mode = RetrievalMode.BM25
         self._reranker = reranker
         if self.mode in {RetrievalMode.HYBRID, RetrievalMode.DIRECTORY_HYBRID} and reranker is None:
             from linkloom.rerank.pipeline import build_reranker_from_env
@@ -334,6 +379,8 @@ class RuntimeRetrievalBackend:
             index_version=self.index_version,
             stage_timings_ms=stage_timings,
             rerank_trace=rerank_trace,
+            requested_mode=self.requested_mode.value,
+            warnings=deepcopy(self.warnings),
         )
         return RuntimeRetrievalResult(evidence=evidence, observation=observation)
 
