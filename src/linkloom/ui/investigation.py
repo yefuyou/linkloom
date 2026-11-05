@@ -176,6 +176,8 @@ class ProductInvestigationService:
         if task_investigation and (not self.config()['task_investigation'] or source_run or temporal_scope is not None):
             raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task stages require explicit Host configuration.", status=409)
         source_run = source_run or task_investigation
+        from linkloom.ui.graph_investigation import current_graph_provider_session
+        graph_provider_session = current_graph_provider_session()
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
         task_models, outer_model = self.task_models, None
@@ -259,9 +261,11 @@ class ProductInvestigationService:
                                 source_context(self.product_app, workspace_id)['snapshot_hash'] != expected['snapshot_hash']):
                             raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
                         task_sources.validate_current()
-                    provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, validate_grant)
-                    with self._lock:
-                        self._provider_sessions.append(provider_session)
+                    provider_session = graph_provider_session
+                    if provider_session is None:
+                        provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, validate_grant)
+                        with self._lock:
+                            self._provider_sessions.append(provider_session)
                 preparation = prepare_task_investigation(query.strip(), task_sources, task_models, root / "preparation",
                     relation_path=self.task_relation_paths.get(workspace_id), provider_session=provider_session)
                 if preparation.manifest['status'] == 'BLOCKED':
@@ -286,6 +290,9 @@ class ProductInvestigationService:
             model = outer_model if outer_model is not None else self.model_factory(query.strip())
             if preparation and preparation.provider_session:
                 model = preparation.provider_session.bind(model, 'runtime')
+            elif graph_provider_session is not None:
+                from linkloom.ui.graph_investigation import bind_graph_fallback
+                model = bind_graph_fallback(model, 'legacy-runtime')
             engine = RuntimeEngine(
                 vault_root=vault,
                 index_path=index,
