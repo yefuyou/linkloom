@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 HASHES = {
     "pool.json": "df6244fa6dd95673017236a2c39c644dc937e97e8f955581d41b70a989831234",
-    "cases.jsonl": "dfab5fc3f8affd6b8b191f6ba553562868246723e89c1522fa702eff32efba76",
+    "cases.jsonl": "e35925f32c67b8a6c39f4fccb91b14c3b80f01be77ef3baecfa0a339fb467152",
     "README.md": "b4c4016677bacfc9df64cd6ec28d06520ccf0ee5e10f883c1fea1d867b39a1b3",
 }
 GROUPS = ("正例", "相似负例", "跨项目同名")
