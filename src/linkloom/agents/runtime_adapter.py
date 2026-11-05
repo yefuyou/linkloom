@@ -224,6 +224,8 @@ class RuntimeAgentAdapter:
                     "index_version": observation.index_version,
                     "retrieval_stage_timings_ms": dict(observation.stage_timings_ms),
                     "rerank_trace": dict(observation.rerank_trace),
+                    "requested_retrieval_mode": observation.requested_mode,
+                    "retrieval_warnings": [dict(item) for item in observation.warnings],
                 },
             )
         return values

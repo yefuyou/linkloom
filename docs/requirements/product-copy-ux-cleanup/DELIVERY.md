@@ -14,7 +14,7 @@ master 与其他 PR 未修改，无 force push、rebase、reset 或历史改写�
 本轮审计 **42 个页面/状态组、522 个静态文本条目**，记录并处理 **60 处基线问题**：
 **删除 12、合并 12、改写 24、移动 12**。一处双语文案或紧密相关的渲染结构计一次；
 同一位置的多轮编辑、翻译包装和测试更新不重复计算。前轮 37 组/100 项统计保留在
-[原交付](prior-delivery/DELIVERY.md)，两套统计不相加。
+[原交付](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/product-copy-ux-cleanup/prior-delivery/DELIVERY.md)，两套统计不相加。
 
 - [COPY_AUDIT.md](COPY_AUDIT.md)：原文、位置、分类、问题、处理理由和语义边界。
 - [COPY_AUDIT.json](COPY_AUDIT.json)、[COPY_INVENTORY.json](COPY_INVENTORY.json)：可复核的唯一编号与分类。

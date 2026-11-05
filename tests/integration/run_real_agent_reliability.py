@@ -35,10 +35,6 @@ if str(REPO / "src") not in sys.path:
     sys.path.insert(0, str(REPO / "src"))
 if str(INTEGRATION) not in sys.path:
     sys.path.insert(0, str(INTEGRATION))
-# The offline contract must never ask the retrieval layer to download or use an
-# embedding model.  BM25 is the existing local deterministic backend.
-os.environ.setdefault("LINKLOOM_RETRIEVAL_MODE", "bm25")
-
 from decision_discovery_fixture import DecisionDiscoveryFixture  # noqa: E402
 from run_bounded_multihop import SourceOnlyController  # noqa: E402
 from unified_ask_fixture import (  # noqa: E402
@@ -540,6 +536,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=Path("work/real_agent_reliability/dev"))
     parser.add_argument("--allow-frozen", action="store_true", help="explicit post-freeze execution acknowledgement")
     args = parser.parse_args(argv)
+    # The offline contract must never ask the retrieval layer to download or use
+    # an embedding model; BM25 is the local deterministic backend. Set it only
+    # for this CLI process, never at import time: importing this module from a
+    # test used to change the retrieval mode for every test collected after it.
+    os.environ.setdefault("LINKLOOM_RETRIEVAL_MODE", "bm25")
     public, public_raw = _load_public(args.dataset)
     freeze_path = args.dataset.parent / 'freeze.json'
     freeze = _read_json(freeze_path) if freeze_path.exists() else None

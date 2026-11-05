@@ -938,17 +938,18 @@
   function renderSourceInvestigation(target, result, locale) {
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.source_investigation;
+    const graphAmbiguous = source.graph_query?.status === "AMBIGUOUS";
     const complete = result.status === "COMPLETED" && source.answer;
     const conflict = result.uncertainty?.status === "conflicting_evidence";
-    const labels = {alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Owner → direct leader", "负责人 → 直属领导")};
+    const labels = {owner_of: t("Owner → work", "负责人 → 工作"), supersedes: t("New → previous", "新版本 → 旧版本"), alias_of: t("Alias → canonical", "别名 → 正式名称"), same_task: t("Merged observation → task", "已合并观察 → 任务"), alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Person → direct manager", "人员 → 直属上级")};
     const facts = source.facts || [];
     const coreRefs = new Set([...facts.flatMap(fact => fact.evidence_refs || []), ...Object.values(source.conflicts || {}).flat()]);
     const coreEvidence = (result.evidence || []).filter(item => coreRefs.has(item.evidence_ref));
     const otherEvidence = (result.evidence || []).filter(item => !coreRefs.has(item.evidence_ref));
-    const title = complete ? escapeHtml(source.answer) : conflict ? t("Conflicting sources; no unique answer", "来源存在冲突，当前无法确定唯一结果") : t("Partly verified; evidence is still missing", "已核实部分关系，后续证据不足");
+    const title = complete ? escapeHtml(source.answer) : graphAmbiguous ? t("Multiple candidates; please narrow the scope", "存在多个候选，请明确范围") : conflict ? t("Conflicting sources; no unique answer", "来源存在冲突，当前无法确定唯一结果") : t("Partly verified; evidence is still missing", "已核实部分关系，后续证据不足");
     const steps = (source.plan?.subgoals || []).map(goal => {
       const predicate = goal.relation_path[0];
-      const fact = facts.find(item => item.predicate === predicate);
+      const fact = facts.find(item => item.step_id === goal.subgoal_id || (!item.step_id && item.predicate === predicate));
       return `<article class="ask-evidence"><h3>${escapeHtml(labels[predicate] || predicate)}</h3>${fact ? `<p>${escapeHtml(fact.subject)} → <strong>${escapeHtml(fact.value)}</strong>${fact.valid_on ? ` · ${escapeHtml(fact.valid_on)}` : ""}</p>` : `<p>${conflict ? t("No unique result; inspect the opposing sources below.", "没有唯一结果，请查看下方互相矛盾的原始来源。") : t("This relationship needs more evidence.", "此关系待补充证据。")}</p>`}</article>`;
     }).join("");
     target.innerHTML = `<section class="panel ask-answer ${complete ? "" : "ask-answer--notice"}"><p class="ask-answer-status">${facts.length ? t("Source-supported relationship", "来源支持的关系") : t("Source investigation; no relationship verified", "来源调查，尚无关系得到核实")}</p>

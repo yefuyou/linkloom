@@ -39,7 +39,7 @@ def related_proofs(subject, target, proposals, artifacts, inventory):
     for proposal, start, end, sentence, _ in evidence_clauses(proposals):
         if proposal.span.artifact_version_id != subject.provenance.artifact_version_id:
             continue
-        # Only the work-link clause is asserted; D03's separate identity question
+        # Only the work-link clause is asserted; a separate identity question
         # after the comma does not negate the explicit work relationship.
         clause = re.split('[，,]', sentence, maxsplit=1)[0].strip()
         if _NONASSERTIVE.search(clause):

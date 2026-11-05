@@ -409,6 +409,16 @@ class InvestigationPlanner:
         self._lock = Lock()
         self._run_id = 'investigation-' + uuid4().hex
 
+    def plan_graph(self, context, *, alignment_review=False, grounding_required=False, mention_grounding=False):
+        """Graph profile shares this session's exact-request guard and budgets."""
+        from linkloom.temporal_graph.planning import plan_graph_session
+        if not self._lock.acquire(blocking=False):
+            return {'status': 'BLOCKED', 'reason': 'PLANNING_SESSION_BUSY', 'plan': None}
+        try:
+            return plan_graph_session(self, context, alignment_review=alignment_review, grounding_required=grounding_required, mention_grounding=mention_grounding)
+        finally:
+            self._lock.release()
+
     def _budget(self):
         return dict(calls_reserved=self._calls, input_tokens_reserved=self._input,
                     output_tokens_reserved=self._output, limits=asdict(self.limits))
