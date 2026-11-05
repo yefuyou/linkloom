@@ -46,7 +46,7 @@ source are read-only. No Provider, Vault, code implementation or staging in 5A.
 - [x] 5A document scope/links/whitespace checks; dispatch original Reviewer
   `01a0a4b4-eb15-7a61-9677-9387b4828ef5` with Luna/max; active review confirmed.
 - [x] Original Reviewer Gate 5A APPROVE; no objective BLOCKER. Formal verdict:
-  [GATE5A_ORIGINAL_REVIEWER_VERDICT.md](GATE5A_ORIGINAL_REVIEWER_VERDICT.md).
+  [GATE5A_ORIGINAL_REVIEWER_VERDICT.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5A_ORIGINAL_REVIEWER_VERDICT.md).
 - [x] 5B RED/GREEN contracts/generation.
 - [x] 5B sealed fair offline comparison and conservative recommendation.
 - [x] 5B persisted human receipt/lifecycle and final bounded accepted context.
@@ -54,9 +54,9 @@ source are read-only. No Provider, Vault, code implementation or staging in 5A.
   + 418 adjacent; after original findings, 82 focused + 418 adjacent = 500
   passed, 1 opt-in Provider skip; compileall/diff check pass.
 - [x] Gate 5B unified packet + original Reviewer APPROVE / objective fixes:
-  [formal recheck verdict](GATE5B_ORIGINAL_REVIEWER_RECHECK_VERDICT.md), no blockers.
+  [formal recheck verdict](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5B_ORIGINAL_REVIEWER_RECHECK_VERDICT.md), no blockers.
 - [x] Gate 5C integrity packet + original Reviewer final APPROVE:
-  [formal recheck verdict](GATE5C_ORIGINAL_REVIEWER_RECHECK_VERDICT.md), no blockers.
+  [formal recheck verdict](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5C_ORIGINAL_REVIEWER_RECHECK_VERDICT.md), no blockers.
 - [x] Exact 35-file selective local Git closure authorized after final APPROVE;
   actual commit SHA/tree verification is reported in the final handoff, no push.
 
@@ -87,15 +87,15 @@ receipt versioning and exact JSON seal booleans are necessary audit contracts;
 registered numeric booleans must not pass through Python equality coercion.
 Evidence: missing-version and numeric-seal RED -> GREEN; final 69-case focused
 pass, required adjacent 418 passed/1 skipped, fresh retained proofs in
-[GATE5_OFFLINE_PROOF.md](GATE5_OFFLINE_PROOF.md). All 19 entry dirty SHA-256
+[GATE5_OFFLINE_PROOF.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5_OFFLINE_PROOF.md). All 19 entry dirty SHA-256
 bytes preserved, base/master and empty index rechecked. No Provider/push/staging.
 Next role: original Independent Reviewer checks
-[GATE5B_REVIEW_PACKET.md](GATE5B_REVIEW_PACKET.md), writes owned verdict and
+[GATE5B_REVIEW_PACKET.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5B_REVIEW_PACKET.md), writes owned verdict and
 returns objective findings/approval; Builder does not self-approve or continue C.
 
 ## Original 5B BLOCK and fixes
 
-The original [verdict](GATE5B_ORIGINAL_REVIEWER_VERDICT.md) found two P1 gaps:
+The original [verdict](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5B_ORIGINAL_REVIEWER_VERDICT.md) found two P1 gaps:
 explicit per-metric evidence/cost delta absent, and request-only fairness hash.
 Builder reproduced five actual RED failures before fixes. Now paired closed
 metric evidence, per-case cost measurements/deltas, canonical typed tool/doc
@@ -125,7 +125,7 @@ staging or commit before its final APPROVE.
 
 ## Original Gate 5C BLOCK and bounded repair
 
-The [original verdict](GATE5C_ORIGINAL_REVIEWER_VERDICT.md) found one P1:
+The [original verdict](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5C_ORIGINAL_REVIEWER_VERDICT.md) found one P1:
 public hash consistency did not independently bind oracle outcomes/proof_kind.
 Both outcome reseal and scripted-to-responsive relabel were reproduced RED:
 the old authority incorrectly returned recommend_accept (2 DID NOT RAISE).
@@ -151,8 +151,8 @@ Compileall and git diff --check pass. Two fresh signed proof logs replayed
 read-only with independent host suite/key verifier: responsive test accepted
 7 metrics/1 cost/1 context item; real frozen test rejected 7 metrics/1 cost/0
 context items, insufficient_evidence. No Gold reopen in authority/Store/context.
-Fresh roots/pins are in [offline proof](GATE5_OFFLINE_PROOF.md); pre-fix outputs
-remain historical and unchanged. [5C repair packet](GATE5C_REVIEW_FIX_PACKET.md)
+Fresh roots/pins are in [offline proof](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5_OFFLINE_PROOF.md); pre-fix outputs
+remain historical and unchanged. [5C repair packet](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5C_REVIEW_FIX_PACKET.md)
 documents trust boundaries and actual RED-to-GREEN; final original recheck APPROVE
 is now recorded separately, with the historical BLOCK preserved.
 

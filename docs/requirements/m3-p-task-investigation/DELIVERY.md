@@ -22,17 +22,17 @@
 
 ## 真实 HTTP Before / After
 
-[Before](evidence/before-http.json) 来自实际 master 源码归档运行的 POST /api/product/ask：同一公开林枫会议和用户原问题得到 HTTP 200 / NEEDS_SCOPE / UNSUPPORTED_QUERY，无任务观察。
+[Before](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/before-http.json) 来自实际 master 源码归档运行的 POST /api/product/ask：同一公开林枫会议和用户原问题得到 HTTP 200 / NEEDS_SCOPE / UNSUPPORTED_QUERY，无任务观察。
 
-[After 请求](evidence/after-request.json) → [最终结果](evidence/after-final.json) → [新进程冷读](evidence/after-cold.json) 是实际 Product HTTP 链路：合成源 → 显式 tasks/snapshot admission → F 观察 → G typed plan → 原 Runtime/FakeModel → inspect_task_context/query_task_relations/analyze_task_semantics → Ledger/Grounding/Reviewer → 引用式 PARTIAL。Reviewer accepted=true；两条观察分别显示负责人林枫；首个 deadline 为 2029-06-20，第二条原文保留 2029-06-24 而 deadline=null/UNKNOWN/DEADLINE_ROLE_UNRESOLVED。缺少可信 SAME_TASK 时 revision 保持 BLOCKED，不编造业务结论。
+[After 请求](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/after-request.json) → [最终结果](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/after-final.json) → [新进程冷读](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/after-cold.json) 是实际 Product HTTP 链路：合成源 → 显式 tasks/snapshot admission → F 观察 → G typed plan → 原 Runtime/FakeModel → inspect_task_context/query_task_relations/analyze_task_semantics → Ledger/Grounding/Reviewer → 引用式 PARTIAL。Reviewer accepted=true；两条观察分别显示负责人林枫；首个 deadline 为 2029-06-20，第二条原文保留 2029-06-24 而 deadline=null/UNKNOWN/DEADLINE_ROLE_UNRESOLVED。缺少可信 SAME_TASK 时 revision 保持 BLOCKED，不编造业务结论。
 
-[实际浏览器截图](evidence/browser-task-investigation.png) 显示任务观察、来源、提案和阻断；[点击查看来源后的截图](evidence/browser-opened-source.png) 展示实际版本及引文。浏览器 errors=[]；DOM 文本一并保留。截图为当前版本真实运行结果，未伪造模型能力。
+[实际浏览器截图](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/browser-task-investigation.png) 显示任务观察、来源、提案和阻断；[点击查看来源后的截图](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/browser-opened-source.png) 展示实际版本及引文。浏览器 errors=[]；DOM 文本一并保留。截图为当前版本真实运行结果，未伪造模型能力。
 
-[完整合成 HTTP/Runtime 证据包](evidence/offline-http.zip) 包含前后响应、合成数据库、准备阶段、持久化 Runtime/Checkpoint/Ledger、普通 CLI 冷读和原始 JUnit；[archive-manifest.json](evidence/archive-manifest.json) 记录各文件及归档 SHA256。无真实 Provider 请求、countTokens 或 LIVE 评测。
+[完整合成 HTTP/Runtime 证据包](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/offline-http.zip) 包含前后响应、合成数据库、准备阶段、持久化 Runtime/Checkpoint/Ledger、普通 CLI 冷读和原始 JUnit；[archive-manifest.json](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/archive-manifest.json) 记录各文件及归档 SHA256。无真实 Provider 请求、countTokens 或 LIVE 评测。
 
 ## 验证与实际失败
 
-[verification.json](evidence/verification.json) 保留重叠批次及 hash：**839 个不同 observed test nodes 的最近一次结果通过**，不是一次全仓库套件成绩。
+[verification.json](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/m3-p-task-investigation/evidence/verification.json) 保留重叠批次及 hash：**839 个不同 observed test nodes 的最近一次结果通过**，不是一次全仓库套件成绩。
 
 | 检查 | 实际结果 |
 |---|---|

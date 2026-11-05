@@ -101,12 +101,12 @@ under ignored `work/`.
   [evidence matrix](requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md).
 - Architecture history: [architecture directory](architecture/),
   [LangGraph mapping](architecture/LANGGRAPH_MAPPING.md),
-  [implementation notes](implementation/). Existing documents are retained;
+  [implementation notes](https://github.com/yefuyou/linkloom/tree/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/implementation). Retired notes use a fixed historical commit;
   use their dates and source baseline when reading them.
 - Research/reference code: [benchmarks](../benchmarks/),
   [relation evaluation](../relation_eval/), [examples](../examples/),
   [evaluation code](../src/linkloom/evaluation/) and
-  [experiment code](../src/linkloom/experiments/). These are separate from
+  [experiment code](https://github.com/yefuyou/linkloom/tree/87bd5dc1afa0ba1b17863cfec28846361249eca7/src/linkloom/experiments). These are separate from
   the normal UI startup path; frozen Gold, seals, ledgers and traces are evidence.
 - Process references: [role boundaries](MULTI_AGENT_ROLES.md),
   [SPEC method](SPEC_DRIVEN_DEVELOPMENT.md),

@@ -29,7 +29,7 @@ are superseded history; unrelated dirty work and real artifacts preserved.
 The original independent task `审查 Runtime V2 Gate 1`
 (`01a0a4b4-eb15-7a61-9677-9387b4828ef5`, local, Luna / max) returned
 **APPROVE**, no unresolved BLOCKER, on 2026-09-16. The Reviewer saved
-[GATE4_ORIGINAL_REVIEWER_VERDICT.md](GATE4_ORIGINAL_REVIEWER_VERDICT.md)
+[GATE4_ORIGINAL_REVIEWER_VERDICT.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/experience_reflection_layer/GATE4_ORIGINAL_REVIEWER_VERDICT.md)
 and sent the decision back to this Builder task. Its `/root` identity belongs
 to that separate Reviewer task; this is not Builder self-review.
 
