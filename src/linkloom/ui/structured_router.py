@@ -33,6 +33,8 @@ RELATION_MULTIHOP: follow confirmed links. LIST: enumerate records. HISTORY: tra
 COMPARE: compare graph meetings. OTHER: unsupported intent.
 Choose the root by its role: a task for its owner, deadline or history; a task, project or person for a link chain;
 a decision slot for a reviewed choice or value. The same project may occur in several domains.
+Candidates with status=unconfirmed identify proposal-only slots, not approved facts. Choose the requested slot
+including an unconfirmed slot; the host will return NO_CONFIRMED_RECORD. Never substitute another confirmed slot.
 Copy the shortest exact names of the requested root and its qualifiers, preferably from matched_terms. Keep a named
 object even if unmatched. Do not copy surrounding grammatical words. In a quoted statement, a proposed field value
 is not the root. Use the host default only for first-person references. Never substitute similar objects.

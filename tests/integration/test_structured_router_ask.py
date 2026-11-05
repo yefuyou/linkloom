@@ -201,3 +201,23 @@ def test_cascade_keeps_host_denials_out_of_model(decisions, monkeypatch, query, 
     assert status == 200
     assert result['router']['reason_code'] == reason
     assert not result['evidence'] and not model.requests
+
+
+@pytest.mark.parametrize('mode', ['cascade', 'llm_first'])
+def test_unconfirmed_slot_is_offered_but_cannot_execute_another_slot(decisions, monkeypatch, mode):
+    app = decisions.app
+    monkeypatch.setattr(app, '_supporting_proposals', lambda: [
+        {'subject': 'Launch', 'relation': 'deployment window', 'source': {'active': True}},
+    ])
+    def select_requested_slot(data):
+        assert any(c['status'] == 'confirmed' and 'uses supplier' in c['label'] for c in data['candidates'])
+        pending = next(c for c in data['candidates'] if 'deployment window' in c['label'])
+        assert pending['status'] == 'unconfirmed' and pending['history_count'] == 0
+        return output(domain='DECISION', candidate_ids=[pending['id']], mentions=['Launch'])
+    model = ScriptedRouter(select_requested_slot)
+    ask = UnifiedAskService(app, lambda: None, graph_service=False,
+                            router_provider=RouterProvider(model, mode=mode), slot_embedder=None)
+    result, status = ask.ask(dict(query='What is the deployment window for Launch?', workspace_id=app._workspace_id()))
+    assert status == 200 and result['router']['reason_code'] == 'NO_CONFIRMED_RECORD'
+    assert not result['evidence'] and not result['conclusions'] and not result['router'].get('entities')
+    assert len(model.requests) == 1

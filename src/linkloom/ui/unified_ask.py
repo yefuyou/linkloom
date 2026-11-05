@@ -366,7 +366,9 @@ class UnifiedAskService:
                                                                           _workspace_id=run.workspace_id),
             graph_snapshot=catalogue, selected_as_of=payload.get('as_of'), query_time=query_time,
             source_snapshot=snapshot_hash, embedder=self.slot_embedder, graph_available=graph is not None,
-            blocked_entities=self._router_blocked_entities(run.workspace_id, slots))
+            blocked_entities=self._router_blocked_entities(run.workspace_id, slots),
+            proposals=tuple(item for item in self.app._supporting_proposals()
+                            if item.get("source", {}).get("active")))
 
     def _legacy_router_fallback(self, run, payload, reason, prior=None):
         result, status = self._ask(payload, use_graph=False, use_router=False, allow_selector=False)

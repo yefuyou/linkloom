@@ -40,9 +40,10 @@ class RouteCandidate:
     identity: tuple[str, ...]
     matched_anchors: tuple[str, ...] = ()
     default_references: tuple[str, ...] = ()
+    status: str = "confirmed"
 
     def public(self):
-        return dict(domain=self.domain, kind=self.kind, label=self.label, confirmed=True,
+        return dict(domain=self.domain, kind=self.kind, label=self.label, confirmed=self.status == "confirmed", status=self.status,
                     current_count=self.current_count, as_of_count=self.as_of_count,
                     history_count=self.history_count, conflict=self.conflict,
                     matched_terms=self.matched_anchors)
@@ -133,6 +134,31 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
             references if subject == default_subject else ())
 
 
+def _unconfirmed_candidates(query, proposals, snapshot, point, default_subject, references):
+    """Expose local proposal slot identities for refusal, never as authority."""
+    seen = {(normalize_mention(s["subject"]), normalize_mention(s["relation"])) for s in snapshot.slots}
+    for row in proposals:
+        subject, relation = row.get("subject"), row.get("relation")
+        if not subject or not relation:
+            continue
+        identity = normalize_mention(subject), normalize_mention(relation)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        names = {subject, *row.get("subject_aliases", ())}
+        names.update(alias for slot in snapshot.slots
+                     if normalize_mention(slot["subject"]) == identity[0]
+                     for alias in slot.get("subject_aliases", ()))
+        phrases = _relation_phrases(relation, snapshot.resolver) | {relation.replace("_", " "), *row.get("aliases", ())}
+        anchors = tuple(sorted(names | phrases))
+        matched = tuple(a for a in anchors if _mentions(query.casefold(), a))
+        if not matched and subject != default_subject:
+            continue
+        yield RouteCandidate("DECISION", "decision_slot", f"{subject} · {relation}"[:160],
+            anchors, 0, 0 if point else None, 0, False, (subject, relation), matched,
+            references if subject == default_subject else (), "unconfirmed")
+
+
 def _graph_candidates(query, snapshot, now, point):
     if snapshot is None:
         return []
@@ -209,7 +235,7 @@ def blocked_entity_reason(query, facts, *, mentions=()):
 
 def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=None,
                   selected_as_of=None, query_time=None, source_snapshot="", embedder=None,
-                  graph_available=False, blocked_entities=()):
+                  graph_available=False, blocked_entities=(), proposals=()):
     if graph_snapshot is not None and (graph_snapshot.workspace_id != workspace or
             any(node.workspace_id != workspace for node in graph_snapshot.nodes)):
         raise PermissionError("WORKSPACE_DENIED")
@@ -220,6 +246,7 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
     references = tuple(dict.fromkeys(_FIRST_PERSON_WORKSPACE.findall(query)))
     default_subject = next(iter(subjects)) if references and len(subjects) == 1 else None
     decision = list(_decision_candidates(query, reviewed, view, point, embedder, default_subject, references))
+    decision.extend(_unconfirmed_candidates(query, proposals, reviewed, point, default_subject, references))
     graph = _graph_candidates(query, graph_snapshot, now, point)
     ranked = decision + graph
     limit = CONFIG["max_candidates"]
@@ -237,6 +264,7 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
               for value in (slot["subject"], slot["relation"], *slot.get("subject_aliases", ()),
                             *slot.get("values", ()), *slot.get("aliases", ()),
                             *_relation_phrases(slot["relation"], resolver))}
+    labels.update(anchor for candidate in decision if candidate.status == "unconfirmed" for anchor in candidate.anchors)
     if graph_snapshot:
         labels.update(node.label for node in graph_snapshot.nodes if node.kind != "task_observation")
         labels.update(value for row in graph_snapshot.records for value in
@@ -273,6 +301,8 @@ def bind_candidate(context, route):
     if len(route.candidate_ids) != 1 or context.total > len(context.candidates):
         raise RouterInvalid("ENTITY_AMBIGUOUS")
     candidate = context.candidates[route.candidate_ids[0]]
+    if candidate.status != "confirmed":
+        raise RouterInvalid("NO_CONFIRMED_RECORD")
     mentions = {normalize_mention(text) for text, start, end in route.mentions
                 if (start, end) not in context.date_spans}
     # The host can recover literal anchors omitted by a soft-mention model.
@@ -289,7 +319,7 @@ def bind_candidate(context, route):
     if not grounds(candidate):
         raise RouterInvalid("ENTITY_NOT_FOUND")
     peers = [c for c in context.candidates.values()
-             if routing_domain(c.domain, route.intent) == route.domain and grounds(c)]
+             if c.status == "confirmed" and routing_domain(c.domain, route.intent) == route.domain and grounds(c)]
     if route.soft_mentions and len(peers) > 1:
         # Only an independently present additional anchor can break a tie.
         def witnessed(row):
@@ -322,6 +352,8 @@ def admit_route(context, route):
         return RouterAdmission(None, route.reason_code)
     if context.missing_names or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
         return RouterAdmission(None, "ENTITY_NOT_FOUND")
+    if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
+        return RouterAdmission(None, "NO_CONFIRMED_RECORD")
     if route.decision != 'ROUTE':
         candidate = None
         if route.candidate_ids:
