@@ -1,0 +1,21 @@
+{
+  "schema_version": "linkloom-router-config/v1",
+  "provider": "deepseek",
+  "endpoint": "https://api.deepseek.com/chat/completions",
+  "model_id": "deepseek-flash",
+  "model_family": "DeepSeek-V4.1-Flash",
+  "reference_release": "DeepSeek-V4.1-Flash-1017",
+  "temperature": 0,
+  "response_format": {
+    "type": "json_object"
+  },
+  "thinking": {
+    "type": "disabled"
+  },
+  "max_input_bytes": 4000,
+  "max_output_tokens": 512,
+  "timeout_seconds": 6,
+  "max_attempts": 1,
+  "max_response_bytes": 4096,
+  "max_candidates": 10
+}

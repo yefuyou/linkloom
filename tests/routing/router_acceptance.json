@@ -1,0 +1,29 @@
+{
+  "schema_version": "linkloom-router-acceptance/v1",
+  "holdout_repetitions": 3,
+  "holdout_run_count": 1,
+  "exact_fields": [
+    "decision",
+    "intent",
+    "domain",
+    "entities",
+    "time_role"
+  ],
+  "holdout_min_gain_percentage_points": 10,
+  "holdout_max_extra_wrong_bindings": 0,
+  "legacy_dev_cases": 60,
+  "legacy_dev_max_drop_percentage_points": 3,
+  "required_safety_reason_accuracy_percent": 100,
+  "max_invalid_output_fallback_percent": 5,
+  "max_added_latency_p95_seconds": 6,
+  "required_regression": {
+    "query": "联调报告现在谁负责",
+    "domain": "TASK"
+  },
+  "aggregation": "三次重复完整率均值；错误绑定逐次计数求和；新增延迟为同题路由阶段耗时差，合并重复样本取 nearest-rank p95；坏输出率分母为尝试新路由的请求（含无效响应/超时）",
+  "rollout": {
+    "all_gates_pass": "default_on",
+    "otherwise": "default_off_opt_in"
+  },
+  "freeze": "模型配置、评分器及用户提供的题目/预期/夹具原始字节 SHA-256；评测后不修改门槛"
+}
