@@ -47,12 +47,15 @@ class LinkLoomHTTPServer(ThreadingHTTPServer):
         *,
         allow_local_task_review: bool = False,
         task_review_sidecar_path: str | Path | None = None,
+        enable_temporal_graph: bool = True,
+        graph_service=None,
     ) -> None:
         self.backend = backend
         self.product_app = product_app
         self.investigation_service = investigation_service
         self.task_api = TaskProductAPI(product_app.repository.database_path if product_app is not None else None)
-        self.unified_ask = (UnifiedAskService(product_app, lambda: self.investigation_service)
+        self.unified_ask = (UnifiedAskService(product_app, lambda: self.investigation_service,
+            graph_service=graph_service if enable_temporal_graph else False)
                             if product_app is not None else None)
         if product_app is not None:
             # Relation sidecars are Host-owned.  Keep an explicitly composed
@@ -546,6 +549,8 @@ def create_http_server(
     investigation_service: ProductInvestigationService | None = None,
     allow_local_task_review: bool = False,
     task_review_sidecar_path: str | Path | None = None,
+    enable_temporal_graph: bool = True,
+    graph_service=None,
     host: str = "127.0.0.1",
     port: int = 8765,
 ) -> LinkLoomHTTPServer:
@@ -560,6 +565,8 @@ def create_http_server(
         investigation_service,
         allow_local_task_review=allow_local_task_review,
         task_review_sidecar_path=task_review_sidecar_path,
+        enable_temporal_graph=enable_temporal_graph,
+        graph_service=graph_service,
     )
 
 

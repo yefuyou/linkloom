@@ -312,6 +312,6 @@ comparison + explicit persisted decision, not prompt optimization infrastructure
 Next: original Reviewer checks this SPEC/plan/packet and returns APPROVE or
 objective BLOCKERs. This initial Planner reflection is historical: original 5A
 APPROVE was issued before implementation. The original 5C oracle-binding
-finding is resolved; the original [final recheck verdict](GATE5C_ORIGINAL_REVIEWER_RECHECK_VERDICT.md)
+finding is resolved; the original [final recheck verdict](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/controlled_strategy_promotion/GATE5C_ORIGINAL_REVIEWER_RECHECK_VERDICT.md)
 is APPROVE. Only status/checklist closure and the exact reviewed local commit
 remain authorized; no source/test changes, production wiring or next-stage work.
