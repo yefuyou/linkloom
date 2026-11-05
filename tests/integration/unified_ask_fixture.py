@@ -462,7 +462,10 @@ class UnifiedAskFixture:
                 (RELATION,), schema_version="offline-unified-ask-relations/v1"
             ),
         )
-        self.server = create_http_server(_IdleRunBackend(), product_app=self.app, port=self.port)
+        # Legacy Ask contracts explicitly have no graph planner. Graph integration
+        # tests inject their own fake-planned worker rather than discovering models.
+        self.server = create_http_server(_IdleRunBackend(), product_app=self.app, port=self.port,
+                                         enable_temporal_graph=False)
         self.worker = Thread(target=self.server.serve_forever, daemon=True)
         self.worker.start()
         try:
