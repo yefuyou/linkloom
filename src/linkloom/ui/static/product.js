@@ -197,6 +197,7 @@
     return Object.keys(screenHashes).find(screen => screenHashes[screen] === hash) || 'sources';
   }
   function setNavigation(screen) {
+    closeEvidenceJump();
     state.screen = screen;
     document.querySelectorAll('.primary-nav [data-screen]').forEach(button => {
       if (button.dataset.screen === (screen === 'review' ? 'sources' : screen)) button.setAttribute('aria-current', 'page');
@@ -309,6 +310,82 @@
       <button class="button" type="submit">${providerReady ? copy('Import and organize', '导入并整理') : copy('Save meeting locally', '仅保存会议')}</button></form></section>`;
   }
 
+  let evidenceJump = null;
+
+  function originalQuoteButton(item, locale = state.language.startsWith("zh") ? "zh" : "en") {
+    if (!item.source_id || !item.source_version || !item.evidence_ref) return "";
+    return `<button class="button quiet" type="button" data-action="inspect-evidence" data-id="${escapeHtml(item.source_id)}" data-version="${escapeHtml(item.source_version)}" data-evidence-ref="${escapeHtml(item.evidence_ref)}" data-workspace="${escapeHtml(state.workspace?.workspace_id)}" data-locale="${escapeHtml(locale)}">${askCopy("View original quote", "查看原话", locale)}</button>`;
+  }
+
+  function closeEvidenceJump(restoreFocus = false) {
+    const previous = evidenceJump;
+    evidenceJump = null;
+    if (!previous) return;
+    previous.dialog.textContent = "";
+    previous.dialog.close();
+    previous.dialog.remove();
+    if (restoreFocus && previous.opener.isConnected) previous.opener.focus();
+  }
+
+  async function openEvidenceJump(opener, refresh = false) {
+    const {id, version, evidenceRef, workspace, locale} = opener.dataset;
+    if (!refresh) closeEvidenceJump();
+    if (!id || !version || !evidenceRef || workspace !== state.workspace?.workspace_id) return;
+    const t = (en, zh) => askCopy(en, zh, locale);
+    const dialog = refresh ? evidenceJump?.dialog : document.createElement("dialog");
+    if (!dialog) return;
+    const jump = {dialog, opener, viewToken: state.agentViewToken};
+    evidenceJump = jump;
+    const current = () => evidenceJump === jump && jump.viewToken === state.agentViewToken
+      && workspace === state.workspace?.workspace_id && opener.isConnected;
+    dialog.className = "evidence-jump";
+    dialog.setAttribute("aria-label", t("Original source", "来源原文"));
+    const controls = `<button class="button quiet" type="button" data-close-evidence>${t("Close", "关闭")}</button>`;
+    dialog.innerHTML = `${controls}<p role="status">${t("Checking current source…", "正在核验当前来源…")}</p>`;
+    dialog.querySelector("[data-close-evidence]").onclick = () => closeEvidenceJump(true);
+    if (!refresh) {
+      dialog.addEventListener("cancel", event => { event.preventDefault(); closeEvidenceJump(true); });
+      document.body.appendChild(dialog);
+      dialog.showModal();
+    }
+    try {
+      const {source} = await request(`/api/sources/${encodeURIComponent(id)}`);
+      if (!current()) return;
+      const verified = source?.evidence_jump;
+      const matches = (verified?.spans || []).filter(span => span.evidence_ref === evidenceRef);
+      if (verified?.validated !== true || verified.workspace_id !== workspace || verified.source_id !== id
+          || verified.source_version !== version || source.workspace_id !== workspace || source.source_id !== id
+          || source.source_version !== version || source.active !== true || matches.length !== 1
+          || typeof source.content !== "string" || verified.content_sha256 !== source.content_sha256) throw new Error("EVIDENCE_UNAVAILABLE");
+      const span = matches[0], chars = Array.from(source.content);
+      if (!Number.isInteger(span.char_start) || !Number.isInteger(span.char_end) || span.char_start < 0
+          || span.char_end <= span.char_start || span.char_end > chars.length
+          || chars.slice(span.char_start, span.char_end).join("") !== span.quote) throw new Error("EVIDENCE_UNAVAILABLE");
+      dialog.innerHTML = `${controls}<h2>${escapeHtml(source.name)}</h2><p>${t("Lines", "行号")} ${escapeHtml(span.line_start)}–${escapeHtml(span.line_end)}</p>
+        <pre class="evidence-jump-text">${escapeHtml(chars.slice(0, span.char_start).join(""))}<mark tabindex="-1" data-evidence-ref="${escapeHtml(evidenceRef)}">${escapeHtml(span.quote)}</mark>${escapeHtml(chars.slice(span.char_end).join(""))}</pre>`;
+      dialog.querySelector("[data-close-evidence]").onclick = () => closeEvidenceJump(true);
+      const target = dialog.querySelector("mark");
+      target.focus({preventScroll: true});
+      target.scrollIntoView({block: "center"});
+    } catch {
+      if (!current()) return;
+      state.askResult = null;
+      state.askLocaleRun = null;
+      const message = t("The source or access changed. Refresh before viewing evidence.", "来源或权限已变化，请刷新后查看原话。");
+      const answer = document.getElementById("ask-result");
+      if (state.screen === "ask" && answer) answer.textContent = message;
+      for (const container of page.querySelectorAll("[data-evidence-source]")) {
+        if (container.dataset.evidenceSource === id) container.textContent = message;
+      }
+      dialog.innerHTML = `${controls}<p role="alert">${message}</p>`;
+      dialog.querySelector("[data-close-evidence]").onclick = () => closeEvidenceJump(true);
+    }
+  }
+
+  window.addEventListener?.("focus", () => {
+    if (evidenceJump) openEvidenceJump(evidenceJump.opener, true);
+  });
+
   async function inspectSource(sourceId) {
     const viewToken = ++state.agentViewToken;
     const workspaceId = state.workspace?.workspace_id;
@@ -396,8 +473,8 @@
     page.innerHTML = `${heading(candidate.proposed_value || copy("View and confirm", "查看并确认"), `<div class="actions"><span class="badge neutral">${escapeHtml(claimTypeLabel(candidate.claim_type))}</span>${badge(candidate.status)}</div>`)}
       <div class="detail-layout"><section class="panel"><div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Valid from", "生效日期")} <strong>${askDate(candidate.valid_from, state.language.startsWith("zh") ? "zh" : "en") || copy("Not resolved", "待确认")}</strong></span></div>
         <p class="section-title"><strong>${copy("Review reasons", "审核原因")}</strong></p><p>${escapeHtml(reviewReasons(candidate.review_reasons))}</p>
-        <h3>${copy("Exact supporting evidence", "支持原文")}</h3><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
-        <details><summary>${copy("Verification details", "校验信息")}</summary><p>${copy("Version:", "版本：")} ${escapeHtml(candidate.evidence.source_version)}</p><p>${copy("Evidence ref:", "证据编号：")} ${escapeHtml(candidate.evidence.evidence_ref)}</p></details></section>
+        <div data-evidence-source="${escapeHtml(candidate.source_id)}"><h3>${copy("Exact supporting evidence", "支持原文")}</h3><blockquote class="quote">${escapeHtml(candidate.evidence.quote)}</blockquote><p class="metadata">${escapeHtml(candidate.source.name)} · ${copy("lines", "行号")} ${candidate.evidence.line_start}–${candidate.evidence.line_end}</p>
+        <details><summary>${copy("Verification details", "校验信息")}</summary><p>${copy("Version:", "版本：")} ${escapeHtml(candidate.evidence.source_version)}</p><p>${copy("Evidence ref:", "证据编号：")} ${escapeHtml(candidate.evidence.evidence_ref)}</p></details>${originalQuoteButton({...candidate.evidence, source_id: candidate.source_id})}</div></section>
       <form id="candidate-review" class="panel form-stack" data-id="${escapeHtml(candidateId)}">${revalidation ? `<div class="notice"><strong>${copy("New approval for a stale decision", "审核当前来源的新候选")}</strong><p>${copy("Original:", "原记录：")} ${escapeHtml(revalidation.original.value)}. ${copy("Approval applies to this candidate and its current evidence. The original approval stays in history.", "本次批准仅适用于此候选及当前证据，原批准保留在历史中。")}</p></div>` : ""}${resolutionFields}
         <div class="field"><label for="reviewer-id">${copy("Reviewer", "审核人")}</label><input id="reviewer-id" name="reviewer_id" required maxlength="120" placeholder="${copy("Your name", "你的姓名")}"></div>
         <div class="field"><label for="review-reason">${copy("Review reason", "审核理由")}</label><textarea id="review-reason" name="reason" required maxlength="1000" placeholder="${copy("Why is this evidence sufficient?", "请填写审核依据")}"></textarea></div>
@@ -659,6 +736,7 @@
   }
 
   function invalidateAsk({keepFeedback = false} = {}) {
+    closeEvidenceJump();
     state.askLocaleRun = null;
     state.agentViewToken += 1;
     state.askCandidates = [];
@@ -682,10 +760,10 @@
 
   function askEvidence(item, index, locale, stateLabel = "") {
     const t = (en, zh) => askCopy(en, zh, locale);
-    return `<article class="ask-evidence"><h3>[${index + 1}] ${escapeHtml(item.source_name)}</h3>${stateLabel ? `<span class="badge">${escapeHtml(stateLabel)}</span>` : ""}
+    return `<article class="ask-evidence" data-evidence-source="${escapeHtml(item.source_id)}"><h3>[${index + 1}] ${escapeHtml(item.source_name)}</h3>${stateLabel ? `<span class="badge">${escapeHtml(stateLabel)}</span>` : ""}
       <p class="metadata">${meetingDate(item.meeting_time || item.event_time || state.meetingMetadata?.[item.source_id]?.date, locale)}</p>
       <blockquote class="quote">${escapeHtml(item.quote)}</blockquote>
-      ${item.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">${t("View source", "查看来源")}</button>` : ""}
+      ${originalQuoteButton(item, locale)}
       <details class="ask-source-details"><summary>${t("Verification details", "校验信息")}</summary>
         <p>${t("Lines", "行号")} ${escapeHtml(item.line_start)}–${escapeHtml(item.line_end)}</p><dl><dt>${t("Version", "来源版本")}</dt><dd><code>${escapeHtml(item.source_version)}</code></dd>
         <dt>${t("Evidence reference", "原始证据引用")}</dt><dd><code>${escapeHtml(item.evidence_ref)}</code></dd></dl>
@@ -726,6 +804,7 @@
       target.innerHTML = window.renderTaskAnswer(result, {
         escapeHtml, t, date: value => askDate(value, locale),
         citation: (item, index) => askEvidence(item, index, locale),
+        originalQuoteButton: item => originalQuoteButton(item, locale),
       });
       // The task renderer remains presentation-only.  Local review is mounted
       // as a narrow post-render extension so Host capabilities and source/CAS
@@ -952,6 +1031,7 @@
 
   workspacePicker.addEventListener("change", async () => {
     if (!workspacePicker.value) return;
+    closeEvidenceJump();
     const viewToken = ++state.agentViewToken;
     state.askScope = null;
     state.askClarification = null;
@@ -1088,6 +1168,8 @@
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const { action, id } = button.dataset;
+    if (action === "inspect-evidence") { await openEvidenceJump(button); return; }
+    closeEvidenceJump();
     if (button.tagName === 'A') event.preventDefault?.();
     try {
       if (action === 'focus-import') { document.getElementById('meeting-import')?.scrollIntoView?.({block: 'start'}); document.getElementById('source-file')?.focus?.(); return; }

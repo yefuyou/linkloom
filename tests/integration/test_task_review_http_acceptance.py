@@ -86,7 +86,13 @@ def test_real_http_source_update_redacts_notes_and_foreign_workspace(tmp_path):
         payload=statement(ws,result,view,note=quote)
         code,body=call(base,'/api/product/task-review','POST',payload);assert code==200,body
         source_id=result['evidence'][0]['source_id']
-        source=call(base,'/api/sources/'+source_id)[1]['source']
+        code,source_payload=call(base,'/api/sources/'+source_id)
+        assert code==200,source_payload
+        source=source_payload['source']
+        jump=source['evidence_jump']
+        assert jump['validated'] is True and jump['source_version']==source['source_version']
+        assert all(source['content'][span['char_start']:span['char_end']]==span['quote']
+                   for span in jump['spans'])
         updated=source['content']+'\n[2029-06-06T09:00:00Z] 林枫: 本条是本次专用验收的来源版本更新说明。'
         code,changed=call(base,'/api/sources/'+source_id,'PUT',dict(name=source['name'],content=updated))
         assert code==202 and changed['changed'],changed

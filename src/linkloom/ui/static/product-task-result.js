@@ -1,5 +1,5 @@
 /* Presentation only: authority and current-source validation belong to the server. */
-window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation}) => {
+window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation, originalQuoteButton = () => ""}) => {
   if (!['PARTIAL', 'UNKNOWN'].includes(result.status) || result.reviewer?.accepted !== true || !result.task_review) return '';
   const view = result.task_review;
   const prep = result.preparation || {};
@@ -70,13 +70,13 @@ window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation}) => {
       <p class="hint">${t('Extracted fields · review each record against its source', '提取字段 · 请逐条核对原文')}</p>
       <div class="task-record-grid">${observations.map(o => {
         const source = sources.find(e => e.evidence_ref === o.provenance?.evidence_ref);
-        return `<article class="ask-evidence" data-task-observation="${esc(o.observation_id)}"><h4>${esc(source?.source_name || t('Source record', '来源记录'))}</h4>
+        return `<article class="ask-evidence" data-task-observation="${esc(o.observation_id)}" data-evidence-source="${esc(source?.source_id)}"><h4>${esc(source?.source_name || t('Source record', '来源记录'))}</h4>
           ${o.event_time ? `<p class="metadata">${t('Recorded at', '记录时间')} ${date(o.event_time)}</p>` : ''}
           <p class="hint">${t('Source excerpt', '原文片段')}</p><blockquote class="quote task-record-quote">${esc((o.provenance?.quote || '').slice(0, 160))}${(o.provenance?.quote || '').length > 160 ? '…' : ''}</blockquote>
           <p><strong>${field(o.description)}</strong></p><dl class="task-fields">
             ${['owner', 'deadline', 'project', 'vendor'].map(f => `<div><dt>${esc(fieldLabel(f))}</dt><dd>${field(o[f])}</dd></div>`).join('')}</dl>
           ${o.deadline_text ? `<p class="hint">${t('Date wording in source:', '原文日期表述：')} ${esc(o.deadline_text)}${o.deadline_role !== 'TASK_DEADLINE' ? ` · ${t('The date meaning is not established', '日期含义待确认')}` : ''}</p>` : ''}
-          ${source?.source_id ? `<button class="button quiet" data-action="inspect-source" data-id="${esc(source.source_id)}">${t('View source', '查看来源')}</button>` : ''}
+          ${source ? originalQuoteButton({...source, evidence_ref: o.provenance?.evidence_ref}) : ''}
           <details class="ask-source-details"><summary>${t('Verification details', '校验信息')}</summary>
             <p class="metadata">${t('Source version', '来源版本')}: <code>${esc(source?.source_version || o.provenance?.artifact_version_id)}</code> · ${t('Lines', '行号')} ${esc(source?.line_start)}–${esc(source?.line_end)}</p>
             <blockquote class="quote">${esc(o.provenance?.quote)}</blockquote>

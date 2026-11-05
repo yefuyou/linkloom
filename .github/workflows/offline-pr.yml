@@ -66,6 +66,7 @@ jobs:
           node --check src/linkloom/ui/static/tasks.js
       - name: Run DOM tests
         run: |
+          node tests/ui/evidence_jump_dom_test.cjs
           node tests/ui/task_review_dom_test.cjs
           node tests/ui/task_answer_dom_test.cjs
           node tests/ui/unified_ask_dom_test.cjs
