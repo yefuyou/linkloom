@@ -19,7 +19,7 @@ rerank = ["sentence-transformers>=6.2,<7", "huggingface-hub>=1.3,<3", "onnx>=1.1
 where = ["src"]
 
 [tool.setuptools.package-data]
-"linkloom.ui" = ["static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
+"linkloom.ui" = ["router_config.json", "static/*", "demo_data/*.json", "demo_data/mps-001/*.md"]
 
 [tool.pytest.ini_options]
 # Collect offline tests only; work/ artifacts and manual paid run_graph_* runners are not tests.
