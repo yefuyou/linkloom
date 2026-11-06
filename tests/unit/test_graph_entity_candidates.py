@@ -81,6 +81,17 @@ def test_multiple_near_candidates_are_not_narrowed_by_one_owner_hint():
     assert not view['facts'] and not view['structured_outputs']
 
 
+def test_low_score_candidate_is_listed_without_being_selected():
+    one, two = node('task', 'Stock review'), node('task', 'Cycle count')
+    _, ask = service([one, two], [task_record(one, 'Morgan'), task_record(two, 'Taylor')],
+                     [scored(one, 1.0), scored(two, -2.6, .35)], term='Warehouse')
+    result = ask('Who owns Warehouse?')
+    view = result['source_investigation']
+    assert result['graph_status'] == 'AMBIGUOUS'
+    assert all(name in view['answer'] for name in (one.label, two.label))
+    assert not view['facts'] and not view['structured_outputs']
+
+
 def test_strong_match_keeps_original_behavior_even_with_a_weak_competitor():
     one, two = node('task', 'Inventory audit'), node('task', 'Stock check')
     _, ask = service([one, two], [task_record(one, 'Morgan'), task_record(two, 'Taylor')],

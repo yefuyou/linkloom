@@ -11,7 +11,7 @@ from linkloom.temporal_graph.models import parse_time
 
 # These floors only control which suggestions can be shown. They are never
 # sufficient to bind a root. Reranker scores are logits, not probabilities.
-CANDIDATE_SCORE_FLOOR = -2.0
+CANDIDATE_SCORE_FLOOR = -2.7
 CANDIDATE_SIMILARITY_FLOOR = 0.32
 
 
