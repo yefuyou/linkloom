@@ -131,7 +131,9 @@ def render_meeting_outputs(payload):
                 if diff['pending']['earlier'] or diff['pending']['later']:parts.append('待审，不计入对比：前会 '+str(diff['pending']['earlier'])+' 条，后会 '+str(diff['pending']['later'])+' 条')
         elif field=='history':
             for history in values:
-                for state in history:parts.append(state['valid_from']+'：'+record_text(dict(kind='task',current=state)))
+                for state in history:
+                    item=state if state.get('kind')=='decision_record' else dict(kind='task',current=state)
+                    parts.append(state['valid_from']+'：'+record_text(item))
         else:
             labels={'owner':'负责人','deadline':'截止日期','status':'状态','meeting_date':'会议日期','pending_count':'待审数'}
             for value in values:
