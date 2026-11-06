@@ -117,6 +117,10 @@ class MeetingGraphPlan:
         for row in outputs:
             if set(row)!={'step','field'} or row['step'] not in declared or row['field'] not in FIELDS:raise ValueError('INVALID_OUTPUT_SELECTOR')
             row['step']=aliases.get(row['step'],row['step'])
+            if row['field']=='history' and inferred[row['step']]=={'decision_record'} and prior[row['step']]['operation']=='inspect_history':
+                # Decision lineage consists of authoritative records; `history`
+                # arrays are the existing Task-state contract, not Decision DTOs.
+                row['field']='record'
             if row not in selected:selected.append(row)
         return cls(tuple(prior.values()),tuple(selected),data['as_of'])
 
@@ -488,10 +492,7 @@ def meeting_graph_query(store,subgoals,as_of,workspace,*,outputs,limits=None,now
                 if not row['edges']:
                     values=list(dict.fromkeys(r[field] if field in r else r['current'][field] for r in row['records'] if field in r or r.get('kind')=='task' and field in r.get('current',{})))
                 if next(s for s in plan.steps if s['id']==row['id']).get('cardinality')=='single' and len(values)>1:row['status']='CONFLICT';values=[]
-            elif field=='history':
-                values=[r['states'] for r in row['records'] if r['kind']=='task']
-                decisions=[r for r in row['records'] if r['kind']=='decision_record']
-                if decisions:values.append(decisions)
+            elif field=='history':values=[r['states'] for r in row['records'] if r['kind']=='task']
             else:
                 for record in row['records']:
                     if field in {'owner','deadline','status'} and record['kind']=='task':

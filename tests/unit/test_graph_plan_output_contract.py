@@ -93,7 +93,8 @@ def test_project_history_resolves_literal_decision_subject_and_keeps_evidence_ga
     assert definition['temporal_mode']=='history' and request==before
     result=graph_query(store,list(plan.steps),'2026-06-01','w',outputs=list(plan.outputs))
     assert result['status']=='FOUND'
-    assert [r['record_id'] for r in result['outputs'][0]['values'][0]]==[old.key,new.key]
+    assert result['outputs'][0]['field']=='record'
+    assert [r['record_id'] for r in result['outputs'][0]['values']]==[old.key,new.key]
     assert result['outputs'][0]['evidence_ids'] and result['steps'][-1]['edges']
     request['intent']['result_kinds']=['person']
     with pytest.raises(ValueError,match='PROJECT_HISTORY_TYPE_NOT_CONVERTIBLE'):compile_plan(request,ctx)

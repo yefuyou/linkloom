@@ -108,7 +108,8 @@ def render_meeting_outputs(payload):
             if isinstance(deadline,dict):deadline=deadline.get('deadline') or deadline.get('deadline_text') or '截止时间未确认'
             return ' · '.join(str(v) for v in [fields.get('title') or record.get('title'),fields.get('owner') or '负责人未确认',deadline or '截止时间未确认'])+('（'+record['source_decision_warning']+'）' if record.get('source_decision_warning') else '')+('（'+state.get('source_view_note','含人工修改，原文仅作上下文')+'）' if state.get('human_context_fields') else '')
         if record.get('kind')=='decision_record':
-            return str(record.get('value',''))+('（已被替代）' if record.get('status')=='SUPERSEDED' else '')
+            prefix=record['valid_from']+'：' if record.get('current_view')=='decision_history' else ''
+            return prefix+str(record.get('value',''))+('（已被替代）' if record.get('status')=='SUPERSEDED' else '')
         return str(record.get('label') or record.get('value') or record.get('meeting_date') or '')
     parts=[];steps={r['id']:r for r in payload['steps']}
     for output in payload['outputs']:
@@ -131,9 +132,7 @@ def render_meeting_outputs(payload):
                 if diff['pending']['earlier'] or diff['pending']['later']:parts.append('待审，不计入对比：前会 '+str(diff['pending']['earlier'])+' 条，后会 '+str(diff['pending']['later'])+' 条')
         elif field=='history':
             for history in values:
-                for state in history:
-                    item=state if state.get('kind')=='decision_record' else dict(kind='task',current=state)
-                    parts.append(state['valid_from']+'：'+record_text(item))
+                for state in history:parts.append(state['valid_from']+'：'+record_text(dict(kind='task',current=state)))
         else:
             labels={'owner':'负责人','deadline':'截止日期','status':'状态','meeting_date':'会议日期','pending_count':'待审数'}
             for value in values:
