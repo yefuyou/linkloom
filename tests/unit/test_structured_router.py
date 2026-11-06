@@ -195,7 +195,7 @@ def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
             tool = payload['tools'][0]['function']
             assert tool['strict'] and tool['parameters']['additionalProperties'] is False
             assert tool['parameters']['properties']['candidate_id']['enum'] == ['', 'c0']
-            fields = dict(decision='CLARIFY', intent='AS_OF', candidate_id='c0',
+            fields = dict(decision='CLARIFY', operation='READ', intent='AS_OF', candidate_id='c0',
                           mentions=['not in original', '联调报告'], unresolved_names=[],
                           time_id='point', reason_code='NONE')
             response = {'model': CONFIG['model_id'], 'choices': [{'finish_reason': 'tool_calls', 'message': {
@@ -266,3 +266,31 @@ def test_soft_unresolved_names_require_literal_and_full_catalogue_absence():
     assert admit_route(ctx, route(ctx, ['made-up', 'Ｏｒｃｈｉｄ'])).executor == 'graph'
     unknown = replace(ctx, catalogue_names=frozenset({'联调报告'}))
     assert admit_route(unknown, route(unknown, ['Orchid'])).reason == 'ENTITY_NOT_FOUND'
+
+
+@pytest.mark.parametrize('operation,reason,expected', [
+    ('WRITE_REQUEST', 'NONE', 'WRITE_NOT_ALLOWED'),
+    ('READ', 'SECRET_OR_POLICY_OVERRIDE', 'SECRET_OR_POLICY_OVERRIDE'),
+    ('READ', 'WORKSPACE_DENIED', 'WORKSPACE_DENIED'),
+])
+def test_model_can_only_strengthen_safety_even_with_unusable_positive_fields(operation,reason,expected):
+    from linkloom.ui.structured_router import route_with_adapter
+    ctx = context('请处理素材卡片')
+    raw = response(operation=operation, reason_code=reason, mentions=['invented'],candidate_ids=['unoffered'])
+    adapter = SimpleNamespace(complete=lambda _: ModelResponse(action=ModelAction.final(raw)))
+    route = route_with_adapter(adapter, request_for(ctx), ctx)
+    assert route.decision == 'REFUSE' and route.reason_code == expected and not route.candidate_ids
+
+@pytest.mark.parametrize('operation,reason', [('WRITE_REQUEST','NONE'),('READ','WRITE_NOT_ALLOWED')])
+def test_native_tool_operation_and_reason_are_both_terminal_safety_signals(operation,reason):
+    from linkloom.ui.router_provider import _route_text
+    from linkloom.ui.structured_router import route_payload,route_with_adapter
+    ctx=context('请处理素材卡片')
+    args=dict(decision='CLARIFY',operation=operation,intent='OTHER',candidate_id='',
+              mentions=[],unresolved_names=[],time_id='none',reason_code=reason)
+    message=dict(content=None,tool_calls=[dict(type='function',function=dict(name='submit_route',arguments=json.dumps(args)))])
+    raw=_route_text(message,route_payload(ctx))
+    adapter=SimpleNamespace(complete=lambda _:ModelResponse(action=ModelAction.final(raw)))
+    result=route_with_adapter(adapter,request_for(ctx),ctx)
+    assert result.decision=='REFUSE' and result.operation=='WRITE_REQUEST'
+    assert result.reason_code=='WRITE_NOT_ALLOWED' and not result.candidate_ids

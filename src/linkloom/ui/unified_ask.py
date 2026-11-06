@@ -186,6 +186,11 @@ class UnifiedAskService:
                 ordinary_router = (use_router and self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
+                if ordinary_router:
+                    from linkloom.ui.ask_admission import router_safety_reason
+                    safety = router_safety_reason(run.query)
+                    if safety:
+                        return self._router_stop(run, None, safety)
                 if ordinary_router and not cascade:
                     return self._route_ordinary(run, payload)
                 restriction = admission_restriction(run.query)
@@ -389,6 +394,10 @@ class UnifiedAskService:
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
         from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
+        from linkloom.ui.ask_admission import router_safety_reason
+        safety = router_safety_reason(run.query)
+        if safety:
+            return self._router_stop(run, None, safety)
         provider = self.router_provider
         owner = self.investigation()
         if provider.adapter is None or provider.external_provider and owner is None:

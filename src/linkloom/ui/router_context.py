@@ -346,10 +346,13 @@ def admit_route(context, route):
     """Choose only installed read paths after authority and semantic validation."""
     blocker = blocked_entity_reason(context.query, context.blocked_entities,
                                     mentions=(text for text, _, _ in route.mentions))
+    from linkloom.ui.ask_admission import router_safety_reason
+    safety = router_safety_reason(context.query, operation=route.operation,
+                                  reason=route.reason_code, host_reason=blocker)
+    if safety:
+        return RouterAdmission(None, safety)
     if blocker:
         return RouterAdmission(None, blocker)
-    if route.reason_code in SAFETY:
-        return RouterAdmission(None, route.reason_code)
     if context.missing_names or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
         return RouterAdmission(None, "ENTITY_NOT_FOUND")
     if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):

@@ -9,7 +9,7 @@ from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, _reject_constant, _unique_object, routing_domain,
 )
-from linkloom.ui.ask_admission import admission_restriction, legacy_denial_reason
+from linkloom.ui.ask_admission import admission_restriction, legacy_denial_reason, router_safety_reason
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 
@@ -22,6 +22,7 @@ def _submission(context):
         return {"type": "string", "enum": list(values)}
     properties = {
         "decision": enum(("ROUTE", "CLARIFY", "REFUSE")),
+        "operation": enum(("READ", "WRITE_REQUEST", "OTHER")),
         "intent": enum(INTENTS),
         "candidate_id": enum(["", *(row["id"] for row in context["candidates"])]),
         "mentions": {"type": "array", "items": {"type": "string"}},
@@ -55,20 +56,17 @@ def _route_text(message, context):
                     return "{}"
             elif value not in prop["enum"]:
                 return "{}"
+        proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
         time_id = args.pop("time_id")
         roles = {row["id"]: row["role"] for row in context["time_options"]}
         role = roles[time_id]
         query = context["question"]
-        host_reason = legacy_denial_reason(query) if admission_restriction(query) else None
-        if host_reason in SAFETY:
-            args["reason_code"] = host_reason
-        elif args["reason_code"] == "WRITE_NOT_ALLOWED":
-            # A model can stop an Ask but cannot classify an operation as
-            # a write in the absence of the existing host write detector.
-            args["reason_code"] = "POLICY_BLOCKED"
-        op = ("WRITE_REQUEST" if host_reason == "WRITE_NOT_ALLOWED" else
-              "OTHER" if args["intent"] == "OTHER" and args["reason_code"] == "UNSUPPORTED_QUERY" else "READ")
+        safety = router_safety_reason(query, operation=proposed_operation, reason=args["reason_code"])
+        if safety:
+            args["reason_code"] = safety
+        op = ("WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else
+              "OTHER" if proposed_operation == "OTHER" or args["intent"] == "OTHER" and args["reason_code"] == "UNSUPPORTED_QUERY" else "READ")
         domain = next((row["domain"] for row in context["candidates"] if row["id"] == candidate), "NONE")
         return json.dumps(dict(args, schema_version="router/v3", domain=routing_domain(domain, args["intent"]),
                                operation=op, candidate_ids=[candidate] if candidate else [], time_role=role,

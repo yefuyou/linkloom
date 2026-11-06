@@ -302,5 +302,22 @@ def route_with_adapter(adapter, request, context):
     action = getattr(response, "action", None)
     if action is None or action.kind != "final":
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    # Even a malformed positive proposal may safely remove authority. It
+    # cannot turn a host refusal into a lookup or execute an unvalidated ID.
+    from linkloom.ui.ask_admission import router_safety_reason
+    proposed_operation = proposed_reason = None
+    try:
+        proposal = json.loads(action.final_answer, object_pairs_hook=_unique_object,
+                              parse_constant=_reject_constant)
+        if isinstance(proposal, dict):
+            proposed_operation = proposal.get("operation")
+            proposed_reason = proposal.get("reason_code")
+    except (TypeError, ValueError, RecursionError):
+        pass
+    safety = router_safety_reason(context.query, operation=proposed_operation, reason=proposed_reason)
+    if safety:
+        return RouteDecision("REFUSE", "OTHER", "NONE",
+            "WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else "READ",
+            (), (), (), "NONE", safety)
     offered = {row["id"] for row in route_payload(context)["candidates"]}
     return validate_output(action.final_answer, context, offered=offered)
