@@ -87,9 +87,22 @@ def project_meeting_result(payload):
         text='；'.join("未找到已确认的'"+r['requested_entity']['text']+"'" if r.get('requested_mention') else '未找到已确认的'+names.get(r['requested_entity']['kind'],'对象')+'“'+r['requested_entity']['text']+'”' for r in rows) or '未找到已确认的记录'
         if any(r.get('unconfirmed_context',{}).get('count',0)>0 for r in rows):text+='；当前可用来源中仅为提议、未确认，不作为正式任务或决定'
         return text+'。'
+    def clarification_text():
+        rows=[r for r in payload['steps'] if r['status']=='AMBIGUOUS']
+        if not any(r.get('reason_code')=='CONFIRMED_CANDIDATES_NEED_CLARIFICATION' for r in rows):
+            return '存在多个已确认候选，请明确所指任务：'+'；'.join(n['label'] for r in rows for n in r['output_nodes'])
+        labels=[]
+        for row in rows:
+            confirmed={r['node_id']:r for r in row.get('records',[])}
+            for node in row['output_nodes']:
+                record=confirmed.get(node['node_id'],{})
+                fields=record.get('current',{}).get('fields',{})
+                title=fields.get('title') or record.get('value') or node['label']
+                labels.append(title+' · '+fields['owner'] if fields.get('owner') else title)
+        return '请确认你指的是哪一项。已确认候选：'+'；'.join(labels)
     answer=(render_meeting_outputs(payload) if payload['status']=='FOUND' else
         conflict_text() if payload['status']=='CONFLICT' else
-        '存在多个已确认候选，请明确所指任务：'+'；'.join(n['label'] for row in payload['steps'] if row['status']=='AMBIGUOUS' for n in row['output_nodes']) if payload['status']=='AMBIGUOUS' else
+        clarification_text() if payload['status']=='AMBIGUOUS' else
         missing_text() if payload['status']=='NOT_FOUND' else '该时间点没有有效的已确认记录。' if payload['status']=='NO_VALID_RECORD_AT_TIME' else '本地实体检索不可用，暂时无法核实所指对象。' if payload['status']=='BLOCKED' and any(r.get('reason_code')=='LOCAL_ENTITY_RETRIEVAL_UNAVAILABLE' for r in payload['steps']) else None)
     return dict(answer=answer,facts=facts,evidence_level='HUMAN_REVIEW_WITH_SOURCE_CONTEXT' if human_context else 'UNCONFIRMED_PROPOSAL_CONTEXT' if any(r.get('unconfirmed_context',{}).get('count',0)>0 for r in payload['steps']) else 'HUMAN_CONFIRMED_SOURCE',conflicts={},
         plan=dict(schema_version='meeting-graph-plan-view/v1',subgoals=[dict(subgoal_id=s['id'],relation_path=[s.get('edge_type',s['operation'])])
