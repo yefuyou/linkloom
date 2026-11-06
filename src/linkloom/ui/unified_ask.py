@@ -191,6 +191,11 @@ class UnifiedAskService:
                                 return self._failure(result, graph['reason'], 'The graph request could not be verified.', status='NEEDS_SCOPE'), 200
                             with self._lock:
                                 self._graph_runs[graph['run_id']] = run
+                            if graph.get('graph_status') == 'AMBIGUOUS' and any(
+                                step.get('reason_code') == 'CONFIRMED_CANDIDATES_NEED_CLARIFICATION'
+                                for step in graph['source_investigation']['graph_query']['steps']
+                            ):
+                                return self._graph_result(run, graph), 200
                             if (graph['status'] == 'INSUFFICIENT'
                                     and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS', 'NOT_FOUND'}):
                                 return self._try_graph_fallback(run, payload, graph)
