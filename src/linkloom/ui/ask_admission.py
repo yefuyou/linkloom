@@ -15,7 +15,7 @@ _RECORD_REFERENCE = re.compile(r'会议|消息|文档|原文|记录|\b(meetings?
 _GREETING = re.compile(r'[\s!！?？,.，。]*(?:(?:你好|您好|谢谢|hello|hi|hey|thanks|thank you)[\s!！?？,.，。]*)+', re.I)
 # Explicit commands/polite requests, not historical mentions of a change.
 # This is an operation boundary, never a positive semantic intent classifier.
-_CLAUSE = re.compile(r'[.;!?。；！？]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
+_CLAUSE = re.compile(r'[.;!?。；！？,，]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
 _EN_POLITE = re.compile(r'^(?:(?:please|kindly|(?:can|could|would|will)\s+you|'
     r'i\s+(?:want|need)(?:\s+you)?\s+to|i[\x27’]d\s+like(?:\s+you)?\s+to)[,\s]+)+', re.I)
 _EN_WRITE = re.compile(
@@ -36,8 +36,8 @@ _ZH_READ_END = re.compile(_ZH_READ_OPERATION + r'$')
 _ZH_READ_CHAIN = re.compile(_ZH_READ_OPERATION + r'(?:(?:并且|并|然后|再)' + _ZH_READ_OPERATION + r')*$')
 _FOREIGN_SCOPE = re.compile(r'\b(?:external|foreign|other|another|different|private)\s+workspace\b|'
     r'\bworkspace\s+(?:outside|beta|other than)\b|跨工作区|其他工作区|外部工作区|别的工作区',re.I)
-_OVERRIDE_COMMAND = re.compile(r'\b(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|polic(?:y|ies)|checks?|permissions?|isolation)\b|'
-    r'(?:忽略|绕过|无视|跳过).*(?:指令|规则|权限|校验|隔离)',re.I)
+_OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|polic(?:y|ies)|checks?|permissions?|isolation)\b|'
+    r'^(?:忽略|绕过|无视|跳过).*(?:指令|规则|权限|校验|隔离)',re.I)
 _SECRET_COMMAND = re.compile(r'^(?:read|show|reveal|print|give|send|extract)\s+(?:(?:me|us)\s+)?(?:(?:the|your|our)\s+)?'
     r'(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
     r'^(?:读取|展示|显示|输出|告诉我|发给我)\s*(?:系统提示词|API[ _-]?key|密钥|口令|密码)',re.I)
@@ -104,7 +104,8 @@ def legacy_denial_reason(query):
 def router_safety_reason(query, *, operation=None, reason=None, host_reason=None):
     """Union of host and model denials; a model can only remove authority."""
     signals = {value for value in (reason, host_reason) if isinstance(value, str)}
-    if admission_restriction(query):
+    restriction = admission_restriction(query)
+    if restriction and restriction[0] == "INVESTIGATION_SCOPE_DENIED":
         signals.add(legacy_denial_reason(query))
     if operation == "WRITE_REQUEST":
         signals.add("WRITE_NOT_ALLOWED")
