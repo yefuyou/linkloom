@@ -108,7 +108,8 @@ def render_meeting_outputs(payload):
             if isinstance(deadline,dict):deadline=deadline.get('deadline') or deadline.get('deadline_text') or '截止时间未确认'
             return ' · '.join(str(v) for v in [fields.get('title') or record.get('title'),fields.get('owner') or '负责人未确认',deadline or '截止时间未确认'])+('（'+record['source_decision_warning']+'）' if record.get('source_decision_warning') else '')+('（'+state.get('source_view_note','含人工修改，原文仅作上下文')+'）' if state.get('human_context_fields') else '')
         if record.get('kind')=='decision_record':
-            return str(record.get('value',''))+('（已被替代）' if record.get('status')=='SUPERSEDED' else '')
+            prefix=record['valid_from']+'：' if record.get('current_view')=='decision_history' else ''
+            return prefix+str(record.get('value',''))+('（已被替代）' if record.get('status')=='SUPERSEDED' else '')
         return str(record.get('label') or record.get('value') or record.get('meeting_date') or '')
     parts=[];steps={r['id']:r for r in payload['steps']}
     for output in payload['outputs']:

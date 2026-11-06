@@ -22,7 +22,7 @@ class MeetingGraphPlan:
         limits=limits or GraphLimits()
         if set(data)!={'steps','outputs','as_of'}:raise ValueError('INVALID_MEETING_PLAN')
         parse_time(data['as_of']);known={n.node_id:n for n in nodes};prior={};depth={};children={};signatures={};relation_count=0
-        inferred={};outputs=deepcopy(data['outputs'])
+        inferred={};outputs=deepcopy(data['outputs']);aliases={};declared=set()
         if not isinstance(data['steps'],list) or not 1<=len(data['steps'])<=limits.max_subgoals:raise ValueError('SUBGOAL_LIMIT')
         for original in data['steps']:
             row=deepcopy(original)
@@ -36,7 +36,11 @@ class MeetingGraphPlan:
                 extra=extra|{'target_kind'}
             if op not in {'traverse','inspect','inspect_history','compare','resolve'} or set(row)!=base|extra:raise ValueError('INVALID_MEETING_STEP')
             key=required(row['id'],'step_id',64)
-            if not key.isidentifier() or key in prior:raise ValueError('INVALID_STEP_ID')
+            if not key.isidentifier() or key in declared:raise ValueError('INVALID_STEP_ID')
+            declared.add(key)
+            if isinstance(row['input'],dict) and 'step' in row['input']:
+                row['input']['step']=aliases.get(row['input']['step'],row['input']['step'])
+            if 'other_step' in row:row['other_step']=aliases.get(row['other_step'],row['other_step'])
             parse_time(row['as_of']);inp=row['input']
             if not isinstance(inp,dict) or len(inp)!=1:raise ValueError('INVALID_STEP_INPUT')
             if set(inp)=={'entity_mention'} and op=='resolve':
@@ -88,6 +92,12 @@ class MeetingGraphPlan:
                 elif incoming!={'decision_record'}:
                     raise ValueError('HISTORY_REQUIRES_TASK_OR_DECISION: use inspect with history for a confirmed Task, or inspect_history for a Decision')
             inferred[key]=result_kinds(row,incoming)
+            signature=digest({k:v for k,v in row.items() if k!='id'}|{'input':{'signature':signatures[inp['step']]} if 'step' in inp else inp})
+            duplicate=next((name for name,value in signatures.items() if value==signature),None)
+            if duplicate is not None:
+                if op not in {'inspect','inspect_history'}:raise ValueError('DUPLICATE_STEP')
+                aliases[key]=duplicate
+                continue
             if op=='compare':
                 if 'other_step' in row:
                     if set(inp)!={'step'} or inp['step'] not in prior or row['other_step'] not in prior or row['domain'] not in {'decisions','tasks'}:raise ValueError('TWO_MEETINGS_REQUIRED')
@@ -99,18 +109,20 @@ class MeetingGraphPlan:
                 if children[inp['step']]>limits.max_fanout:raise ValueError('FANOUT_LIMIT_EXCEEDED')
             relation_count+=int(op in {'traverse','compare','inspect_history'})
             if relation_count>limits.max_relation_queries:raise ValueError('RELATION_QUERY_LIMIT')
-            signature=digest({k:v for k,v in row.items() if k!='id'}|{'input':{'signature':signatures[inp['step']]} if 'step' in inp else inp})
-            if signature in signatures.values():
-                if original['operation']=='inspect_history' and op=='inspect':
-                    raise ValueError('TASK_HISTORY_DUPLICATES_INSPECTION: emit one inspect with record and history outputs')
-                raise ValueError('DUPLICATE_STEP')
             signatures[key]=signature
             prior[key]=row
         if not isinstance(outputs,list) or not outputs:raise ValueError('OUTPUTS_REQUIRED')
         if len(outputs)>limits.max_subgoals*3:raise ValueError('OUTPUT_LIMIT')
+        selected=[]
         for row in outputs:
-            if set(row)!={'step','field'} or row['step'] not in prior or row['field'] not in FIELDS:raise ValueError('INVALID_OUTPUT_SELECTOR')
-        return cls(tuple(prior.values()),tuple(outputs),data['as_of'])
+            if set(row)!={'step','field'} or row['step'] not in declared or row['field'] not in FIELDS:raise ValueError('INVALID_OUTPUT_SELECTOR')
+            row['step']=aliases.get(row['step'],row['step'])
+            if row['field']=='history' and inferred[row['step']]=={'decision_record'} and prior[row['step']]['operation']=='inspect_history':
+                # Decision lineage consists of authoritative records; `history`
+                # arrays are the existing Task-state contract, not Decision DTOs.
+                row['field']='record'
+            if row not in selected:selected.append(row)
+        return cls(tuple(prior.values()),tuple(selected),data['as_of'])
 
     def to_dict(self):return dict(steps=list(self.steps),outputs=list(self.outputs),as_of=self.as_of)
 
@@ -497,7 +509,18 @@ def meeting_graph_query(store,subgoals,as_of,workspace,*,outputs,limits=None,now
     if root_failures:
         selected=[]
         status=next((code for code in ('LIMIT_EXCEEDED','CONFLICT','AMBIGUOUS','BLOCKED','NO_VALID_RECORD_AT_TIME','NOT_FOUND') if code in root_failures),'NOT_FOUND')
+    if status=='FOUND' and not any(o['field']=='record' and o['values']==[] or _output_has_content(o['values']) for o in selected):
+        status='NOT_FOUND'
     evidence={e['evidence_id']:e for row in results for e in row['evidence']}
     if sum(len(e['quote'].encode()) for e in evidence.values())>limits.max_evidence_bytes:raise ValueError('GRAPH_EVIDENCE_LIMIT')
     return dict(schema_version='graph-query-result/v1',workspace_id=workspace,status=status,steps=results,outputs=selected,
-        plan=plan.to_dict(),plan_sha256=digest(plan.to_dict()),elapsed_ms=(monotonic()-started)*1000,query_profile='meeting')
+        plan=plan.to_dict(),plan_sha256=digest(plan.to_dict()),elapsed_ms=(monotonic()-started)*1000,query_profile='meeting',
+        **({'reason_code':'NO_SELECTED_CONTENT'} if status=='NOT_FOUND' and not root_failures and statuses=={'FOUND'} else {}))
+
+
+def _output_has_content(value):
+    if isinstance(value,list):return any(_output_has_content(v) for v in value)
+    if isinstance(value,dict):
+        if 'label' in value:return _output_has_content(value['label'])
+        if value.get('kind')=='decision_record':return _output_has_content(value.get('value'))
+    return value is not None and (not isinstance(value,str) or bool(value.strip())) and value!={}

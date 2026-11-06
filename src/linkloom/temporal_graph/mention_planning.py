@@ -87,10 +87,25 @@ def compile_plan(raw,context):
     """Compile references without ever selecting a directory node identity."""
     from linkloom.temporal_graph.meeting_query import MeetingGraphPlan
     if not isinstance(raw,dict) or set(raw)!={'applicable','as_of','refusal_reasons','intent','mentions','steps','outputs'}:raise ValueError('INVALID_MENTION_PLAN_FIELDS')
+    raw=deepcopy(raw)
     intent=raw['intent']
     if not isinstance(intent,dict) or set(intent)!={'mode','result_kinds'} or intent['mode'] not in MODES or not isinstance(intent['result_kinds'],list) or not 1<=len(intent['result_kinds'])<=3 or len(set(intent['result_kinds']))!=len(intent['result_kinds']) or any(k not in KINDS for k in intent['result_kinds']):raise ValueError('INVALID_MENTION_INTENT')
     if not isinstance(raw['mentions'],list) or not 1<=len(raw['mentions'])<=4:raise ValueError('MENTION_LIMIT')
-    roots={};prefixes=[];identities={};kinds={}
+    if not isinstance(raw['steps'],list) or not 1<=len(raw['steps'])<=8:raise ValueError('SUBGOAL_LIMIT')
+    if any(not isinstance(s,dict) for s in raw['steps']):raise ValueError('INVALID_MENTION_STEP')
+    if any(not isinstance(m,dict) for m in raw['mentions']):raise ValueError('INVALID_MENTION_FIELDS')
+    # A project history request asks for decisions about that literal subject,
+    # not a history record on a project node. Keep Host entity retrieval and
+    # all of its thresholds; never choose a directory identity here.
+    history_subjects=set()
+    for item in raw['mentions']:
+        if item.get('kind')!='project':continue
+        uses=[s for s in raw['steps'] if s.get('input')=={'mention':item.get('id')}]
+        if not any(s.get('operation')=='inspect_history' for s in uses):continue
+        if any(s.get('operation')!='inspect_history' for s in uses) or intent['result_kinds']!=['decision_record']:
+            raise ValueError('PROJECT_HISTORY_TYPE_NOT_CONVERTIBLE')
+        item['kind']='decision_record';history_subjects.add(item['id'])
+    roots={};prefixes=[];identities={};kinds={};dates={}
     for item in raw['mentions']:
         if not isinstance(item,dict) or set(item)!={'id','mention','kind','reference'}:raise ValueError('INVALID_MENTION_FIELDS')
         key=required(item['id'],'mention_id',48)
@@ -98,16 +113,19 @@ def compile_plan(raw,context):
         kind='meeting' if item['kind']=='date' else item['kind']
         if item['reference']=='previous' and (kind!='meeting' or intent['mode']!='compare'):raise ValueError('PREVIOUS_REQUIRES_MEETING_COMPARISON')
         text=mention_text(item['mention'],context.question)
+        from linkloom.temporal_graph.dates import validate_date_mention
+        start=context.question.index(text)
+        validate_date_mention(context.question,start,start+len(text))
         if item['kind']=='date':
             from linkloom.temporal_graph.dates import parse_date_literal
             parse_date_literal(text)
+            if item['reference']=='direct':dates[key]=text
         signature=(text,kind,item['reference'])
         if signature not in identities:
             name='root_'+str(len(prefixes));identities[signature]=name
-            prefixes.append(dict(id=name,operation='resolve',input={'entity_mention':dict(text=text,kind=kind,reference=item['reference'],temporal_mode='history' if intent['mode']=='history' else 'current',source=dict(question=context.question,start=context.question.index(text),end=context.question.index(text)+len(text),sha256=__import__('hashlib').sha256(context.question.encode('utf8')).hexdigest()))},as_of=None))
+            prefixes.append(dict(id=name,operation='resolve',input={'entity_mention':dict(text=text,kind=kind,reference=item['reference'],temporal_mode='history' if intent['mode']=='history' or key in history_subjects else 'current',source=dict(question=context.question,start=start,end=start+len(text),sha256=__import__('hashlib').sha256(context.question.encode('utf8')).hexdigest()))},as_of=None))
             kinds[name]=kind
         roots[key]=identities[signature]
-    if not isinstance(raw['steps'],list) or not 1<=len(raw['steps'])<=8:raise ValueError('SUBGOAL_LIMIT')
     steps=[];seen=set(kinds);raw_seen=set();used=set();selectors=deepcopy(raw['outputs']);timed={}
     def binding(key,when):
         original=roots[key]
@@ -141,11 +159,27 @@ def compile_plan(raw,context):
                 if dict(step=step['id'],field=field) not in selectors:selectors.append(dict(step=step['id'],field=field))
         output_kinds=result_kinds(step,{kind} if kind else set())
         kinds[step['id']]=next(iter(output_kinds)) if len(output_kinds)==1 else None;steps.append(step);seen.add(step['id']);raw_seen.add(step['id'])
+    from linkloom.temporal_graph.dates import date_matches
+    from linkloom.temporal_graph.models import parse_time
+    times=[raw['as_of'],context.as_of,*[s['as_of'] for s in steps]]
+    for key,text in dates.items():
+        for when in filter(None,times):
+            parsed=parse_time(when)
+            if date_matches(parsed.date().isoformat() if hasattr(parsed,'date') else parsed.isoformat(),text):
+                used.add(key);break
     if set(roots)!=used:raise ValueError('UNUSED_MENTION')
     as_of=raw['as_of'] or context.as_of
     if context.as_of is not None and as_of!=context.as_of:raise ValueError('TIME_SCOPE_CONFLICT')
     referenced={s['input'].get('step') for s in steps}|{s.get('other_step') for s in steps}
     prefixes=[p for p in prefixes if p['id'] in referenced]
     plan=MeetingGraphPlan.from_dict(dict(steps=prefixes+steps,outputs=selectors,as_of=as_of),nodes=context.nodes,limits=context.limits)
+    # Some planners label a Task's historical fields as a Decision result.
+    # Convert only a wholly Task-history output contract, never a mixed list.
+    task_history={s['id'] for s in steps if s['operation'] in {'inspect','inspect_history'} and kinds.get(s['id'])=='task'
+        and any(o['step']==s['id'] and o['field']=='history' for o in selectors)}
+    if intent['result_kinds']==['decision_record'] and task_history and all(o['step'] in task_history for o in selectors):
+        intent=dict(intent,result_kinds=['task'])
+    if any(o['field']=='history' and kinds.get(o['step']) not in intent['result_kinds'] for o in raw['outputs']):
+        raise ValueError('HISTORY_OUTPUT_TYPE_NOT_CONVERTIBLE: UNREQUESTED_OUTPUT_NODE_TYPE')
     plan,_=constrain_plan(plan,dict(intent,entities=[]),context)
     return plan
