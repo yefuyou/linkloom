@@ -226,10 +226,12 @@ def main() -> int:
                 run_mode="MODEL_NOT_CONFIGURED",
                 external_provider=False,
             )
+    from linkloom.ui.router_provider import configured_router
     backend = DemoRunBackend(DemoCase.load_mps_001())
     server = create_http_server(
         backend, product_app=product_app, investigation_service=investigation_service,
         allow_local_task_review=args.allow_local_task_review,
+        router_provider=None if args.offline_task_demo else configured_router(),
         host=args.host, port=args.port,
     )
     print(f"LinkLoom Product UI: http://{args.host}:{server.server_port}")

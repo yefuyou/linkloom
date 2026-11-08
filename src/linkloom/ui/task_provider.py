@@ -5,7 +5,9 @@ uncertain attempt terminates the question, including other task stages.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from contextlib import contextmanager
+from contextvars import ContextVar
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, UTC
 import json
 import math
@@ -46,9 +48,38 @@ class TaskProviderLimits:
             raise ValueError('task request timeout exceeds total duration budget')
 
 
+_ROUTER_RESERVATION = ContextVar("ask_router_reservation", default=None)
+
+
+@contextmanager
+def pass_router_reservation(session):
+    token = _ROUTER_RESERVATION.set(session)
+    try:
+        yield
+    finally:
+        _ROUTER_RESERVATION.reset(token)
+
+
+def remaining_provider_limits(limits):
+    spent = _ROUTER_RESERVATION.get()
+    if spent is None:
+        return limits
+    seconds = limits.max_seconds - (monotonic() - spent.started)
+    if spent.failure or seconds <= 0:
+        raise ValueError("TASK_PROVIDER_BUDGET_EXHAUSTED")
+    try:
+        return replace(limits, max_requests=limits.max_requests-spent.requests,
+            max_input_tokens=limits.max_input_tokens-spent.input_tokens,
+            max_output_tokens=limits.max_output_tokens-spent.output_tokens,
+            max_cost_usd=limits.max_cost_usd-spent.cost, max_seconds=seconds,
+            request_timeout_seconds=min(limits.request_timeout_seconds, seconds))
+    except ValueError as exc:
+        raise ValueError("TASK_PROVIDER_BUDGET_EXHAUSTED") from exc
+
+
 class TaskProviderSession:
     def __init__(self, root, limits, validate):
-        self.root, self.limits, self.validate = Path(root), limits, validate
+        self.root, self.limits, self.validate = Path(root), remaining_provider_limits(limits), validate
         self.root.mkdir(parents=True, exist_ok=True)
         self.started = monotonic()
         self.started_at = datetime.now(UTC).isoformat()

@@ -287,6 +287,16 @@ class ProductInvestigationService:
                 source_names[relative_path] = str(source["name"])
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
+            from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
+            if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
+                if task_models is None or task_models.provider_limits is None:
+                    raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED", "No remaining Provider budget for investigation.", status=409)
+                from linkloom.ui.graph_investigation import _GRAPH_PROVIDER
+                spent = _ROUTER_RESERVATION.get()
+                graph_provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, spent.validate)
+                with self._lock:
+                    self._provider_sessions.append(graph_provider_session)
+                _GRAPH_PROVIDER.set(graph_provider_session)
             model = outer_model if outer_model is not None else self.model_factory(query.strip())
             if preparation and preparation.provider_session:
                 model = preparation.provider_session.bind(model, 'runtime')

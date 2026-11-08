@@ -15,7 +15,7 @@ _RECORD_REFERENCE = re.compile(r'会议|消息|文档|原文|记录|\b(meetings?
 _GREETING = re.compile(r'[\s!！?？,.，。]*(?:(?:你好|您好|谢谢|hello|hi|hey|thanks|thank you)[\s!！?？,.，。]*)+', re.I)
 # Explicit commands/polite requests, not historical mentions of a change.
 # This is an operation boundary, never a positive semantic intent classifier.
-_CLAUSE = re.compile(r'[.;!?。；！？]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
+_CLAUSE = re.compile(r'[.;!?。；！？,，]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
 _EN_POLITE = re.compile(r'^(?:(?:please|kindly|(?:can|could|would|will)\s+you|'
     r'i\s+(?:want|need)(?:\s+you)?\s+to|i[\x27’]d\s+like(?:\s+you)?\s+to)[,\s]+)+', re.I)
 _EN_WRITE = re.compile(
@@ -28,7 +28,7 @@ _EN_WRITE = re.compile(
     r'.{0,120}\b(?:complete|completed|done)\b', re.I)
 _EN_REPORT = re.compile(r'^update\s+(?:me|us)\b', re.I)
 _ZH_POLITE = re.compile(r'^(?:(?:请[你问]?|烦请|麻烦你?|劳驾|帮我|替我|帮忙|我想|我要|可否|能否|能不能|可以帮我|能帮我)[，,\s]*)+')
-_ZH_ACTION = re.compile(r'编辑|修改|更新|归档|改成|改为|设置为?|设为|标记|标为|标成|完成|关闭|重开|取消|撤销|分配|指派|移动|移除|批准|删除|重命名|发送|上传|下载|改写|保存修改')
+_ZH_ACTION = re.compile(r'编辑|修改|更新|归档|改成|改为|改到|改至|改给|设置为?|设为|标记|标为|标成|完成|关闭|重开|取消|撤销|分配|指派|移动|移除|批准|删除|重命名|发送|上传|下载|改写|保存修改')
 _ZH_HISTORY = re.compile(r'^(?:(?:为|成)?(?:已完成|完成))?(?:前|后|过|的|了)')
 _ZH_NOMINAL = re.compile(r'^(?:记录|内容|历史|情况|状态|时间|原因|依据|证据|差异|次数|日期|日志)')
 _ZH_READ_OPERATION = r'(?:列出来|列出|说明|比较|展示|解释|核对|查看|对比|查询)(?:一下|出来|给我|下)?[吧吗呢，,\s]*'
@@ -36,8 +36,8 @@ _ZH_READ_END = re.compile(_ZH_READ_OPERATION + r'$')
 _ZH_READ_CHAIN = re.compile(_ZH_READ_OPERATION + r'(?:(?:并且|并|然后|再)' + _ZH_READ_OPERATION + r')*$')
 _FOREIGN_SCOPE = re.compile(r'\b(?:external|foreign|other|another|different|private)\s+workspace\b|'
     r'\bworkspace\s+(?:outside|beta|other than)\b|跨工作区|其他工作区|外部工作区|别的工作区',re.I)
-_OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|policy|checks?|permissions?)\b|'
-    r'^(?:忽略|绕过).*(?:指令|规则|权限|校验)',re.I)
+_OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|polic(?:y|ies)|checks?|permissions?|isolation)\b|'
+    r'^(?:忽略|绕过|无视|跳过).*(?:指令|规则|权限|校验|隔离)',re.I)
 _SECRET_COMMAND = re.compile(r'^(?:read|show|reveal|print|give|send|extract)\s+(?:(?:me|us)\s+)?(?:(?:the|your|our)\s+)?'
     r'(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
     r'^(?:读取|展示|显示|输出|告诉我|发给我)\s*(?:系统提示词|API[ _-]?key|密钥|口令|密码)',re.I)
@@ -85,6 +85,34 @@ def admission_restriction(query):
                 'Only read-only investigation of this workspace is supported; instructions cannot grant sources, tools or write access.')
     if _GREETING.fullmatch(query):
         return ('INVESTIGATION_QUESTION_REQUIRED', 'Enter a question about the selected records before starting an investigation.')
+    return None
+
+
+def legacy_denial_reason(query):
+    """Translate a legacy admission denial; never used to choose a model route."""
+    visible = unquoted_text(query)
+    if _FOREIGN_SCOPE.search(visible):
+        return "WORKSPACE_DENIED"
+    for clause in _CLAUSE.split(visible):
+        english = _EN_POLITE.sub('', clause.strip(' ,，'))
+        chinese = _ZH_POLITE.sub('', clause.strip(' ,，'))
+        if any(p.search(text) for p in (_OVERRIDE_COMMAND, _SECRET_COMMAND) for text in (english, chinese)):
+            return "SECRET_OR_POLICY_OVERRIDE"
+    return "WRITE_NOT_ALLOWED" if _write_request(visible) else "POLICY_BLOCKED"
+
+
+def router_safety_reason(query, *, operation=None, reason=None, host_reason=None):
+    """Union of host and model denials; a model can only remove authority."""
+    signals = {value for value in (reason, host_reason) if isinstance(value, str)}
+    restriction = admission_restriction(query)
+    if restriction and restriction[0] == "INVESTIGATION_SCOPE_DENIED":
+        signals.add(legacy_denial_reason(query))
+    if operation == "WRITE_REQUEST":
+        signals.add("WRITE_NOT_ALLOWED")
+    for code in ("WORKSPACE_DENIED", "SECRET_OR_POLICY_OVERRIDE", "WRITE_NOT_ALLOWED",
+                 "PROVIDER_PERMISSION_REQUIRED", "EVIDENCE_INVALID", "POLICY_BLOCKED"):
+        if code in signals:
+            return code
     return None
 
 
