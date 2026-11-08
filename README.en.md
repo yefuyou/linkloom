@@ -48,7 +48,7 @@ What this means:
 
 - On a small corpus, ordinary RAG's content accuracy is close to or slightly above LinkLoom's.
 - When ordinary RAG is wrong, it attributes a change from a later meeting to the wrong point in time. LinkLoom did not do this.
-- LinkLoom's weakness at the time was too many empty answers. Part of this has since been fixed: in an offline replay on the development set, empty answers fell from 53 to 30, another 15 became a list of candidates for the user to clarify, and the strict score rose from 60.0% to 76.7%. No previously correct question became wrong (sources: [PR #66](https://github.com/yefuyou/linkloom/pull/66), [PR #67](https://github.com/yefuyou/linkloom/pull/67)).
+- LinkLoom's weakness at the time was too many empty answers. Part of this has since been fixed: in an offline replay on the development set, empty answers fell from 53 to 30 ([PR #66](https://github.com/yefuyou/linkloom/pull/66)), and another 15 became a list of candidates for the user to clarify ([PR #67](https://github.com/yefuyou/linkloom/pull/67)). The strict score rose from 60.0% to 76.7% (#66) and then to 81.7% (#67). No previously correct question became wrong. These are development-set results, not held-out scores.
 
 Notes:
 
@@ -159,9 +159,9 @@ flowchart LR
 
 | Independent held-out set | Rules | cascade | Wrong bindings |
 | --- | ---: | ---: | ---: |
-| Set 1 | 20.00% | 57.78% | 0 |
-| Set 2 (v2) | 12.90% | 61.29% | 0 |
-| Set 3 (v3) | 14.71% | 64.71% | 0 |
+| v1.1 | 20.00% | 57.78% | 0 |
+| v2 | 12.90% | 61.29% | 0 |
+| v3 | 14.71% | 64.71% | 0 |
 
 Invalid output on v2 and v3 was 0%; added p95 latency is about 1.6 seconds. Source: final summary in the [PR #63](https://github.com/yefuyou/linkloom/pull/63) description.
 
