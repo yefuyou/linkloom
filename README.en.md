@@ -116,6 +116,36 @@ What this means: the development score is strong, but new wording still causes e
 
 Entry points: [routing evaluation script](scripts/eval_routing.py) and [routing cases](tests/routing).
 
+### Temporal graph retrieval (Beta)
+
+Multi-hop questions require following several relationships, such as “Who is the direct manager of X's owner?” The legacy templates cover fixed phrasings. On the same D3 questions below, the legacy path scored **0%**; this is not an overall score for every question supported by the old templates.
+
+The model marks object mentions copied from the question. It does not choose root identities or grant permission. The Host deterministically projects a temporal graph from authorized, human-confirmed records, handles hybrid retrieval and local reranking, binds entities, checks authorization and valid time, then traverses the graph within bounds and rechecks evidence for every step.
+
+```mermaid
+flowchart LR
+    Q[Question] --> A[Host: authorized candidate directory]
+    A --> M[Model: mark literal object mentions]
+    M --> H[Host: retrieve, bind and filter by time]
+    H --> G[Bounded graph traversal]
+    G --> E[Evidence recheck and answer]
+```
+
+| D3 held-out set, graph_only | Result |
+| --- | --- |
+| Mean accuracy [minimum–maximum of three repeats] | 63.89% [58.33%, 66.67%] |
+| Incorrect relationships / fabrications | 0 / 0 |
+| Refusal rate | 44.44% (about 44%) |
+| Mean latency | 10.39 seconds/query (about 10 seconds) |
+
+Source: [frozen evaluation results in PR #55](https://github.com/yefuyou/linkloom/pull/55). These are graph-only results, not end-to-end results with fallback. Zero incorrect relationships or fabrications does not mean answers are complete.
+
+Development exposed overfitting: the D development set reached **87.5%**, then the original, one-time D2 held-out acceptance scored **41.67% (about 41.7%)**. Saved sources in the development workspace are `work/graph-opt/results-r2/scored/report.json` (D, graph_only, accuracy.mean) and `work/graph-holdout-D2/report.json` (D2, graph_only, accuracy.mean), respectively. After a scorer correction, D2 scored 50% (see PR #55), and later became a development set. These historical scores exposed overfitting; they are not final scores. After the held-out test revealed the gap, the design changed to “model mentions + Host retrieval.” Development involved multiple iterations; final D3 acceptance was run once, with three repeats. This section cites saved results without rerunning evaluation.
+
+Enabled by default. Set `LINKLOOM_GRAPH_QUERY=off` and restart to restore the legacy path. Graph results of `UNKNOWN`, `AMBIGUOUS`, or `NOT_FOUND` try the legacy path. A successful legacy answer is labeled `legacy`; otherwise the original graph result is kept. Planning failure or an unavailable graph also falls back. `PARTIAL` and `REFUSED` / `BLOCKED` / `UNAUTHORIZED` do not fall back.
+
+Limits: refusals remain common and some answers are incomplete. Refusal reasons are still free text, so every `REFUSED` currently terminates, including capability failures that cannot yet be distinguished. Plan B proposes structured reason codes separating safety from capability failures; it is not implemented yet. Date mention checks prevent truncation, but cannot prevent the model from omitting a date restriction. This graph evaluation used DeepSeek and cannot be compared directly with historical Gemini routing/extraction scores.
+
 ### Scale
 
 Query latency on offline synthetic data. As-of queries read stored temporal decisions; they use a different path from full-text retrieval.

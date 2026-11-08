@@ -304,6 +304,21 @@ def test_partial_graph_answer_does_not_try_legacy(tmp_path, legacy_spy):
     finally: h.close()
 
 
+def test_confirmed_candidate_clarification_reaches_ask_without_legacy(tmp_path, legacy_spy, monkeypatch):
+    h = Harness(tmp_path, 'DEV-A')
+    try:
+        worker = h.worker('ambiguous')
+        clarification = dict(status='INSUFFICIENT', graph_status='AMBIGUOUS', run_id='clarification',
+            source_investigation=dict(answer='Which inventory audit do you mean?', graph_query=dict(
+                steps=[dict(reason_code='CONFIRMED_CANDIDATES_NEED_CLARIFICATION')])))
+        monkeypatch.setattr(worker, 'run', lambda *args, **kwargs: clarification)
+        actual, status = finish(h.ask_service(worker), h.payload())
+        assert status == 200 and actual['graph_status'] == 'AMBIGUOUS'
+        assert actual['source_investigation'] == clarification['source_investigation']
+        assert not legacy_spy and not h.legacy_models
+    finally: h.close()
+
+
 def dated_graph(h):
     public = fixture_public()
     confirmed = confirm_candidates(public, h.demo.app.repository.database_path)

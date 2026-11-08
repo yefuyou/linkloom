@@ -119,7 +119,7 @@ class LocalMentionLocator:
             similarities={r['node_id']:float(vectors[0]@vectors[index]) for index,r in enumerate(rows,1)}
             # Unrecalled identities could not silently compete for a unique bind.
             omitted=set(by_id)-{h.resource_id for h in hits}
-            if any(similarities[key]>=self.config.min_identity_similarity for key in omitted):raise ValueError('INCOMPLETE_RETRIEVAL_COVERAGE')
+            if (kind in {'task','decision_record'} and omitted) or any(similarities[key]>=self.config.min_identity_similarity for key in omitted):raise ValueError('INCOMPLETE_RETRIEVAL_COVERAGE')
             candidates=[RerankCandidate(hit,by_id[hit.resource_id]['text']) for hit in hits]
             scores={}
             for start in range(0,len(candidates),20):
@@ -180,6 +180,7 @@ def validate_definition(value):
 def resolve_mention_row(store,snapshot,definition,when,row,by_node,records,limits):
     from copy import deepcopy
     from linkloom.temporal_graph.meeting_query import _proof,_selected,_task_states,nearest_previous_meeting,_meetings_exceed_as_of
+    from linkloom.temporal_graph.entity_candidates import recover_candidates
     definition=validate_definition(definition)
     locator=getattr(store,'mention_locator',None) or default_locator()
     result=locator.locate(snapshot,definition['text'],definition['kind'],when,definition['temporal_mode'])
@@ -190,10 +191,17 @@ def resolve_mention_row(store,snapshot,definition,when,row,by_node,records,limit
         else:
             result=dict(result,status=previous['status'],node_ids=previous['candidates'],reason=previous['reason'],anchor=anchor,baseline_scope='workspace',previous_verification=previous)
             row['evidence']+=_proof(records[anchor])
-    eligible={r['node_id'] for r in directory_rows(snapshot,definition['kind'],when,definition['temporal_mode'])}
+    eligible={r['node_id']:r for r in directory_rows(snapshot,definition['kind'],when,definition['temporal_mode'])}
+    unconfirmed=None
+    if result['status']=='NOT_FOUND':
+        lookup=getattr(store,'unconfirmed_context',None)
+        unconfirmed=lookup(snapshot.workspace_id,definition['text']) if callable(lookup) else dict(count=0,evidence=[],candidate_refs=[])
+        if not unconfirmed['count']:
+            result=recover_candidates(snapshot,result,eligible,definition,when,limits)
     if any(key not in eligible for key in result['node_ids']):raise ValueError('LOCATOR_RETURNED_INELIGIBLE_NODE')
     if len(result['node_ids'])>limits.max_fanout:result=dict(result,status='LIMIT_EXCEEDED',node_ids=[],reason='ROOT_CANDIDATE_FANOUT_EXCEEDED')
     row.update(status=result['status'],reason_code=result['reason'],root_resolution=result,requested_mention=deepcopy(definition))
+    row['evidence']+=result.get('witness_evidence',[])
     for key in result['node_ids']:
         if key not in by_node or by_node[key].kind!=definition['kind']:raise ValueError('HOST_LOCATOR_IDENTITY_MISMATCH')
         row['output_nodes'].append(by_node[key].to_dict());record=records.get(key)
@@ -202,14 +210,15 @@ def resolve_mention_row(store,snapshot,definition,when,row,by_node,records,limit
             if selected is None:
                 row.update(status='CONFLICT',reason_code='TIME_OR_FIELD_CONFLICT');row.setdefault('candidates',[]).extend(deepcopy(_task_states(record,when)) if record['kind']=='task' else [])
                 row['evidence'] += [e for state in _task_states(record,when) for e in state['evidence']] if record['kind']=='task' else _proof(record)
-            else:row['evidence']+=_proof(selected)
+            else:
+                row['evidence']+=_proof(selected)
+                if result['reason']=='CONFIRMED_CANDIDATES_NEED_CLARIFICATION':row['records'].append(selected)
         incident=[e for e in snapshot.edges if key in {e.source.node_id,e.target.node_id} and e.time_match(when) in {'VALID','PRECISION_MISMATCH'}]
         if any(e.blocker or e.time_match(when)=='PRECISION_MISMATCH' for e in incident):
             row.update(status='CONFLICT',reason_code='CONFIRMED_COUNTER_EVIDENCE' if any(e.blocker for e in incident) else 'TIME_OR_FIELD_CONFLICT')
         if not record or row['status']=='CONFLICT':row['evidence'] += [p.to_dict() for edge in incident for p in edge.evidence]
     if row['status']=='NOT_FOUND':
         row['requested_entity']=dict(text=definition['text'],kind=definition['kind'])
-        lookup=getattr(store,'unconfirmed_context',None)
-        row['unconfirmed_context']=lookup(snapshot.workspace_id,definition['text']) if callable(lookup) else dict(count=0,evidence=[],candidate_refs=[])
+        row['unconfirmed_context']=unconfirmed or dict(count=0,evidence=[],candidate_refs=[])
         row['evidence']+=row['unconfirmed_context']['evidence']
     return row

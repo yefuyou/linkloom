@@ -12,7 +12,7 @@ review/final bounds -> explicitly approved distinct historical receipt ->
 178 focused /31 Memory /173 Runtime /25 Team+Golden passed,1 skipped ->
 GATE4_FIX_RESPONSE.md -> original Reviewer final APPROVE, no unresolved BLOCKER.
 The decision is recorded in
-[GATE4_ORIGINAL_REVIEWER_VERDICT.md](GATE4_ORIGINAL_REVIEWER_VERDICT.md),
+[GATE4_ORIGINAL_REVIEWER_VERDICT.md](https://github.com/yefuyou/linkloom/blob/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/requirements/experience_reflection_layer/GATE4_ORIGINAL_REVIEWER_VERDICT.md),
 not Builder self-acceptance. No Gate 5 work is authorized; it remains frozen.
 
 ## Prior Authority Repair Increment (History)

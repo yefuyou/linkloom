@@ -200,15 +200,29 @@ class UnifiedAskService:
                         return self._router_stop(run, None, legacy_denial_reason(run.query))
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
-                if cascade:
-                    from linkloom.ui.router_context import blocked_entity_reason
-                    blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
-                    if blocker:
-                        return self._router_stop(run, None, blocker)
-                if use_graph and not cascade and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
-                    routed_graph = self._run_graph_request(run, payload)
-                    if routed_graph is not None:
-                        return routed_graph
+                # Graph planning owns question semantics; the old regex remains fallback only.
+                if use_graph and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
+                    configured = self.investigation()
+                    permission = bool(payload.get('allow_external_provider') is True)
+                    if configured is None or not configured.external_provider or permission:
+                        graph = self.graph_service.run(run.query, run.workspace_id,
+                            as_of=run.scope['as_of'], allow_external_provider=permission)
+                        if graph['status'] != 'FALLBACK':
+                            if graph['status'] == 'UNAUTHORIZED':
+                                return self._failure(result, graph['reason'], 'Graph permission is unavailable.', category='permission'), 403
+                            if graph['status'] in {'BLOCKED', 'REFUSED'}:
+                                return self._failure(result, graph['reason'], 'The graph request could not be verified.', status='NEEDS_SCOPE'), 200
+                            with self._lock:
+                                self._graph_runs[graph['run_id']] = run
+                            if graph.get('graph_status') == 'AMBIGUOUS' and any(
+                                step.get('reason_code') == 'CONFIRMED_CANDIDATES_NEED_CLARIFICATION'
+                                for step in graph['source_investigation']['graph_query']['steps']
+                            ):
+                                return self._graph_result(run, graph), 200
+                            if (graph['status'] == 'INSUFFICIENT'
+                                    and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS', 'NOT_FOUND'}):
+                                return self._try_graph_fallback(run, payload, graph)
+                            return self._graph_result(run, graph), 200
                 plan = plan_relation_investigation(run.query)
                 if context:
                     validate_context(self.app, run.workspace_id, context)
