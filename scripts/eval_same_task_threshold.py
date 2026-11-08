@@ -2,11 +2,11 @@
 from __future__ import annotations
 
 import argparse
+from fractions import Fraction
 from collections import Counter
 from hashlib import sha256
 from importlib.metadata import version
 import json
-import math
 import os
 from pathlib import Path
 import re
@@ -21,7 +21,7 @@ HASHES = {
     "README.md": "b4c4016677bacfc9df64cd6ec28d06520ccf0ee5e10f883c1fea1d867b39a1b3",
 }
 GROUPS = ("正例", "相似负例", "跨项目同名")
-POINTS = range(70, 96)
+POINTS = range(55, 96)
 
 
 def load_fixture(directory):
@@ -57,18 +57,18 @@ def project_labels(pool, cases):
     return task_labels, candidates
 
 
-def evaluate(embedder, tasks, cases, projects=None):
+def evaluate(embedder, tasks, cases, projects=None, *, owners=False):
     import numpy as np
 
     task_labels, candidate_labels = projects or ({}, {})
-    def text(title, label):
-        return f"{label} {title}" if label else title
+    def text(title, label, owner):
+        return " ".join(part for part in (label, title, owner if owners else None) if part)
 
-    task_texts = [text(task["title"], task_labels.get(task["id"])) for task in tasks]
+    task_texts = [text(task["title"], task_labels.get(task["id"]), task["owner"]) for task in tasks]
     rows = []
     for case in cases:
         identifier = case["case_id"]
-        texts = [text(case["candidate"]["title"], candidate_labels.get(identifier)), *task_texts]
+        texts = [text(case["candidate"]["title"], candidate_labels.get(identifier), case["candidate"]["owner"]), *task_texts]
         # SameTaskHintService._rank_local uses float64 normalization of
         # the encoder's float32 vectors followed by a dot product per hit.
         vectors = np.asarray(embedder.encode(texts), dtype=float)
@@ -135,66 +135,78 @@ def add_tables(lines, rows, title, threshold):
     lines.append("")
 
 
-def report(cases, base, augmented, embedder, model_revision, *, baseline, threshold):
-    core = [row for row in base if row["group"] != GROUPS[2]]
-    best = max(POINTS, key=lambda t: (metrics(core, t / 100)["f1"], t)) / 100
-    current, best_stats = metrics(core, threshold), metrics(core, best)
-    cross_left = [row for row in base if row["group"] == GROUPS[2]]
-    cross_right = [row for row in augmented if row["group"] == GROUPS[2]]
+def f1_key(stats):
+    denominator = 2 * stats["tp"] + stats["fp"] + stats["fn"]
+    return Fraction(2 * stats["tp"], denominator) if denominator else Fraction(0)
+
+
+def select(rows):
+    return max(POINTS, key=lambda point: (f1_key(metrics(rows, point / 100)), point)) / 100
+
+
+def constrained(rows):
+    feasible = [point for point in POINTS if metrics(rows, point / 100)["fp"] <= 2]
+    if not feasible:
+        return None
+    return max(feasible, key=lambda point: (
+        Fraction(metrics(rows, point / 100)["tp"],
+                 max(1, metrics(rows, point / 100)["tp"] + metrics(rows, point / 100)["fn"])), point)) / 100
+
+
+def report(cases, schemes, embedder, model_revision, *, baseline, threshold):
     flags = Counter(case["confirmed"] for case in cases)
     lines = [
-        "# “可能是同一件事”提示阈值离线评测", "",
-        f"基线提交 {baseline}。冻结开发集 30 个候选 × 14 个任务，两种文本共 840 个分数。",
-        f"原件中的 confirmed 为 false 的题有 {flags[False]} 个，为 true 的题有 {flags[True]} 个。"
-        "按用户指定哈希对原有预期做开发评测，保留原字段，结果按草拟标签解释。", "",
-        f"建议在下一组独立验收题上试 **{best:.2f}**。选点只用 12 道正例和 10 道相似负例最大化 top-1 F1，"
-        "同分取较高阈值。跨项目题单列。",
-        f"这 22 题在 {best:.2f} 的精确率、召回率、误报数为 {cell(best_stats)}，F1 {best_stats['f1']:.1%}；"
-        f"当前 {threshold:.2f} 为 {cell(current)}，F1 {current['f1']:.1%}。"
-        + (" 最优点在扫描下边界，本次未评估更低阈值。" if best == min(POINTS) / 100 else ""), "",
-        f"在 {threshold:.2f} 下，跨项目组的精确率、召回率、误报数从标题模式的 "
-        f"{cell(metrics(cross_left, threshold))} 变为加项目名后的 {cell(metrics(cross_right, threshold))}。"
-        "标题完全相同时，两份文档的输入相同，余弦本身无法区分。加项目名只是相似度特征，没有做项目硬过滤。",
-        "当前产品另有精确同名路径，独立于这个阈值；本实验不模拟该路径或生产提示总量。", "",
-        "## 方法", "",
-        f"- 复用 SentenceTransformerEmbedder(local_files_only=True)，模型 {embedder.model_name}，"
-        f"本地快照 {model_revision}，sentence-transformers {version('sentence-transformers')}、"
-        f"NumPy {version('numpy')}、torch {version('torch')}。每题同批编码，采用产品的 float64 归一化点积。",
-        "- 基线比较标题原样。对照把来源原文唯一可定位的规范项目名放在标题前，以一个空格连接。"
-        "两者均扫同一工作区全池。比较文本不使用负责人、截止或预期标签。",
-        "- 按未舍入的余弦降序，同分按任务 ID 升序。产品实际提示还经过 hybrid top-k、"
-        "重排或 RRF 门控；本报告只扫标题余弦。输出保留六位小数。",
-        "- Top-1 分数 ≥ 阈值才触发。错目标同时记一次 FP 和一次 FN，无目标出现任一过阈值则记一次 FP。"
-        "精确率或召回率无分母记「—」。逐题 Top-3 只看排名，分组 top-3 另要求过阈值。",
-        "- 本地离线执行。夹具 SHA-256：",
-        *[f"  - {name} {digest}" for name, digest in HASHES.items()], "",
-        "复现命令：python -B scripts/eval_same_task_threshold.py --fixture-dir <external_v1> --output <new-report.md>。"
-        "需要已缓存的同一向量模型和项目向量依赖。", "",
+        '# “可能是同一件事”提示阈值离线评测', '',
+        '## 扫描前确定的选择规则', '',
+        '- 三种方案各扫 0.55～0.95（含端点），步长 0.01，共 41 点。统一用全部 30 题的 top-1 F1 选阈值；F1 并列取更高阈值。用整数计数的有理数比较，避免浮点误差影响并列。',
+        '- 另在全部 30 题合计误报不超过 2 次的点中选最高召回率，并列取更高阈值；没有可行点则明确报告。三组分别统计，同一全局阈值，不用分组另选点。',
+        '- 跨方案推荐优先比较各自最优 F1，其次精确率、阈值；完全相同保留文本更少的方案。规则在编码和扫描调用前固定于脚本。', '',
+        '## 数据与方法', '',
+        f'基线提交 {baseline}。冻结合成开发集 30 个候选 × 14 个任务 × 3 种文本 = 1260 个分数，123 个方案阈值点。正例 12、相似负例 10、跨项目同名 8（其中 3 题有目标），合计 15 个有目标候选。',
+        f'confirmed=false {flags[False]} 题，true {flags[True]} 题，保留草拟标签，仅作开发评测。',
+        f'本地 SentenceTransformerEmbedder(local_files_only=True)，{embedder.model_name}，快照 {model_revision}；sentence-transformers {version("sentence-transformers")}、NumPy {version("numpy")}、torch {version("torch")}。HF_HUB_OFFLINE 与 TRANSFORMERS_OFFLINE 均为 1，无付费模型调用。',
+        '- 文本依次为：标题；来源原文核验的规范项目名 + 标题；项目名 + 标题 + 夹具 owner。字段用一个空格连接。项目名不读取预期目标；负责人缺失则省略，不从预期标签补全。',
+        '- 每题同批编码，对全池按 float64 归一化点积排序，未舍入分数降序，同分按任务 ID 升序。Top-1 ≥ 阈值才触发。错目标计 FP 和 FN；无目标触发计 FP；召回分母仅含有目标的题，负例组召回为 —。',
+        '- 只测余弦，不模拟产品精确同名路径、hybrid top-k、重排或 RRF 门控。产品阈值及产品代码未改。',
+        *[f'- SHA-256 {name}: {digest}' for name, digest in HASHES.items()], '',
+        '复现：python -B scripts/eval_same_task_threshold.py --fixture-dir <external_v1> --output <new-report.md>（需要已缓存的模型和向量依赖）。', '',
+        '## 各方案选择结果（全部 30 题）', '',
+        '| 方案 | F1 最优阈值 | P / R / FP | F1 | FP≤2 的最高召回点 | P / R / FP |',
+        '|---|---:|---|---:|---:|---|',
     ]
-    add_tables(lines, base, "标题", threshold)
-    add_tables(lines, augmented, "项目名 + 标题", threshold)
-    lines += ["## 跨项目同名逐题对照", "",
-              f"按 {threshold:.2f} 判 top-1，最高分近似并列用 1e-7 绝对误差标记。", "",
-              "| 题号 | 来源项目 | 预期 | 只比标题最高分（并列集合） | 加项目最高分（并列集合） | 标题 → 加项目 |",
-              "|---|---|---|---|---|---|"]
-    def tied(row):
-        maximum = row["ranked"][0][1]
-        ids = [name for name, value in row["ranked"] if math.isclose(value, maximum, rel_tol=0., abs_tol=1e-7)]
-        return f"{maximum:.6f} ({', '.join(ids)})"
-    def outcome(row):
-        stats = metrics([row], threshold)
-        return "误报" if stats["fp"] else "命中" if stats["tp"] else "漏答" if stats["fn"] else "不触发"
-
-    for left, right in zip(cross_left, cross_right, strict=True):
-        lines.append(f"| {left['id']} | {right['project']} | {left['expected'] or 'NONE'} | "
-                     f"{tied(left)} | {tied(right)} | {outcome(left)} → {outcome(right)} |")
+    for name, rows in schemes:
+        best = select(rows)
+        limit = constrained(rows)
+        stats = metrics(rows, best)
+        lines.append(f'| {name} | {best:.2f} | {cell(stats)} | {stats["f1"]:.1%} | '
+                     + ('无可行点 | — |' if limit is None else f'{limit:.2f} | {cell(metrics(rows, limit))} |'))
+    for name, rows in schemes:
+        for label, point in [('F1 最优', select(rows)), ('FP≤2 最高召回', constrained(rows))]:
+            lines += ['', f'### {name}：{label}', '']
+            if point is None:
+                lines.append('扫描范围内无可行点。')
+                continue
+            lines += [f'阈值 {point:.2f}。', '', '| 分组 | TP | FP | FN | P | R | F1 |', '|---|---:|---:|---:|---:|---:|---:|']
+            for group_name in (*GROUPS, '全部'):
+                bucket = rows if group_name == '全部' else [row for row in rows if row['group'] == group_name]
+                m = metrics(bucket, point)
+                lines.append(f'| {group_name} | {m["tp"]} | {m["fp"]} | {m["fn"]} | {pct(m["precision"])} | {pct(m["recall"])} | {pct(m["f1"])} |')
+        add_tables(lines, rows, name, select(rows))
+    name, rows = max(schemes, key=lambda scheme: (
+        f1_key(metrics(scheme[1], select(scheme[1]))),
+        metrics(scheme[1], select(scheme[1]))['precision'] or 0, select(scheme[1])))
+    best = select(rows)
+    stats = metrics(rows, best)
+    lines += ['## 最终推荐', '',
+              f'推荐 **{name} + {best:.2f}** 进入独立验收对比：在同一全池、相同题目和选择规则下，该组合 F1 最高（{stats["f1"]:.1%}），精确率 / 召回率 / 误报数为 {cell(stats)}。误报预算场景应另外参照上表 FP≤2 的选择，不能把 F1 最优点当作满足误报预算。',
+              '这是开发集上的结论，正式采用前还需要一套独立验收题。样本少且标签未正式确认，三种文本均在同一开发集选点；加入项目与负责人也改变了输入特征，不能据此直接修改产品阈值。', '']
     return "\n".join(lines) + "\n"
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixture-dir", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=ROOT / "work/same-task-threshold.md")
+    parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     files = load_fixture(args.fixture_dir)
     pool = json.loads(files["pool.json"])
@@ -220,10 +232,12 @@ def main():
     projects = project_labels(pool, cases)
     base = evaluate(embedder, tasks, cases)
     augmented = evaluate(embedder, tasks, cases, projects)
+    with_owners = evaluate(embedder, tasks, cases, projects, owners=True)
     load_fixture(args.fixture_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x", encoding="utf8", newline="\n") as stream:
-        stream.write(report(cases, base, augmented, embedder, config.parent.name,
+        stream.write(report(cases, [("只比标题", base), ("标题+项目名", augmented),
+                                    ("标题+项目名+负责人", with_owners)], embedder, config.parent.name,
                             baseline=baseline, threshold=threshold))
     print(args.output)
 
