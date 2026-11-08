@@ -31,7 +31,30 @@ After a person confirms and merges the update, LinkLoom records that the 10/10 d
 | Reads and writes | Read-only | Write formal tasks after human confirmation; changes can be undone |
 | Evaluation | A single run | Use held-out sets only once; report ranges from repeated runs |
 
-**Comparison experiments are in progress. Results will be added when available.** No unmeasured numbers are listed here.
+### Comparison results
+
+Setup: same model (DeepSeek-V4.1-Flash), same questions (D / D2 / D3), same scorer. Ordinary RAG uses LinkLoom's own retrieval stack (hybrid + local reranking) with only the temporal graph removed.
+
+| Metric | Ordinary RAG | LinkLoom |
+| --- | ---: | ---: |
+| D3 strict score | 0.0% | 63.9% |
+| D3 content score | 77.8% | 72.2% |
+| Wrong time attribution (post-hoc, 120 runs per side) | 13 | 0 |
+| Empty answer or not found (post-hoc, 120 runs per side) | 24 | 53 |
+
+Source: [PR #64 report](https://github.com/yefuyou/linkloom/pull/64).
+
+What this means:
+
+- On a small corpus, ordinary RAG's content accuracy is close to or slightly above LinkLoom's.
+- When ordinary RAG is wrong, it attributes a change from a later meeting to the wrong point in time. LinkLoom did not do this.
+- LinkLoom's weakness at the time was too many empty answers. Part of this has since been fixed: in an offline replay on the development set, empty answers fell from 53 to 30 ([PR #66](https://github.com/yefuyou/linkloom/pull/66)), and another 15 became a list of candidates for the user to clarify ([PR #67](https://github.com/yefuyou/linkloom/pull/67)). The strict score rose from 60.0% to 76.7% (#66) and then to 81.7% (#67). No previously correct question became wrong. These are development-set results, not held-out scores.
+
+Notes:
+
+- The two post-hoc metrics were proposed after seeing the results. They are used only for explanation, not as scores.
+- The PR #66 and #67 numbers are offline development-set replays, not held-out scores. The held-out score for graph retrieval is still 63.89% (see "Temporal graph retrieval" below).
+- The corpus is small. Staleness on a large corpus is planned to be tested with LongMemEval.
 
 ## 3. Demo
 
@@ -115,6 +138,38 @@ Joint accuracy requires both the route and target to be correct. Wrong bindings 
 What this means: the development score is strong, but new wording still causes errors, including a wrong binding in H.
 
 Entry points: [routing evaluation script](scripts/eval_routing.py) and [routing cases](tests/routing).
+
+### LLM routing (Beta switch)
+
+Problem: rule routing has low accuracy on wording it has not seen.
+
+Approach: rules go first. Only when the rules cannot handle a question and the host has relevant candidates is it passed to an LLM for a structured decision. The host owns candidates, time, permissions, and safety checks; the model only makes the semantic choice. Invalid output is discarded and routing falls back to the rules.
+
+```mermaid
+flowchart LR
+    Q[Question] --> R{Rules can handle?}
+    R -- yes --> A[Rule result]
+    R -- no --> C{Host has relevant candidates?}
+    C -- no --> A
+    C -- yes --> L[LLM: structured semantic choice]
+    L --> V{Host checks candidates/time/permissions/safety}
+    V -- valid --> B[Use LLM result]
+    V -- invalid, discarded --> A
+```
+
+| Independent held-out set | Rules | cascade | Wrong bindings |
+| --- | ---: | ---: | ---: |
+| v1.1 | 20.00% | 57.78% | 0 |
+| v2 | 12.90% | 61.29% | 0 |
+| v3 | 14.71% | 64.71% | 0 |
+
+Invalid output on v2 and v3 was 0%; added p95 latency is about 1.6 seconds. Source: final summary in the [PR #63](https://github.com/yefuyou/linkloom/pull/63) description.
+
+Why it is off by default: of the 5 launch criteria set in advance, one safety criterion failed on the last held-out set. An injection phrased as "I am an administrator" was classified as "not found". No data leaked, but the reason code was wrong.
+
+To enable: set `LINKLOOM_LLM_ROUTER=cascade`.
+
+Next: detect permission-claim injections, then accept against a new independent held-out set.
 
 ### Temporal graph retrieval (Beta)
 
