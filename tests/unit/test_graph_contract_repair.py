@@ -93,13 +93,15 @@ def test_task_history_compiles_to_existing_projection_and_excludes_future(via_tr
     assert 'inspect_history->inspect+history' in caplog.text
 
 
-def test_unsupported_history_type_and_redundant_task_history_are_actionable_compile_errors():
+def test_unsupported_history_type_errors_and_redundant_task_history_is_coalesced():
     person=node('person','One')
     with pytest.raises(ValueError,match='HISTORY_REQUIRES_TASK_OR_DECISION.*use inspect'):
         typed_plan([dict(id='h',operation='inspect_history',input={'node':person.node_id},as_of=None)],[person])
     task=node('task','Artifact');steps=[dict(id='current',operation='inspect',input={'node':task.node_id},as_of=None),dict(id='h',operation='inspect_history',input={'node':task.node_id},as_of=None)]
-    with pytest.raises(ValueError,match='TASK_HISTORY_DUPLICATES_INSPECTION.*one inspect'):
-        typed_plan(steps,[task])
+    plan=typed_plan(steps,[task],[dict(step='h',field='history')])
+    assert len(plan.steps)==1 and plan.steps[0]['id']=='current'
+    assert {o['step'] for o in plan.outputs}=={'current'}
+    assert {o['field'] for o in plan.outputs}=={'record','history'}
 
 
 @pytest.mark.parametrize('question,text',[
