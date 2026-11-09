@@ -158,13 +158,59 @@ class UnifiedAskService:
             raise ProductApplicationError("WORKSPACE_MISMATCH", "The selected workspace changed. Ask again in the current workspace.", status=409)
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        security = {}
         if self.graph_service is None and self.router_provider is None:
-            return self._ask(payload)
-        from linkloom.ui.graph_investigation import graph_request_budget
-        with graph_request_budget():
-            return self._ask(payload)
+            result, status = self._ask(payload, security=security)
+        else:
+            from linkloom.ui.graph_investigation import graph_request_budget
+            with graph_request_budget():
+                result, status = self._ask(payload, security=security)
+        if security:
+            result["security_gate"] = security
+        return result, status
 
-    def _ask(self, payload: dict[str, Any], *, use_graph: bool = True, use_router: bool = True, allow_selector: bool = True) -> tuple[dict[str, Any], int]:
+    def _classify_security(self, run, payload):
+        from linkloom.ui.security_gate import classify, request_for
+        from linkloom.ui.structured_router import RouterInvalid
+        from linkloom.ui.lifecycle import BackgroundWorkStopped
+        from time import monotonic
+        provider = self.router_provider
+        result = dict(status="INCOMPLETE", attempted=False)
+        if provider.security_adapter is None:
+            return dict(result, fallback_reason="MODEL_UNAVAILABLE")
+        if provider.external_provider and payload.get("allow_external_provider") is not True:
+            return dict(result, fallback_reason="PROVIDER_PERMISSION_REQUIRED")
+        owner = self.investigation()
+        if provider.external_provider and owner is None:
+            return dict(result, fallback_reason="MODEL_UNAVAILABLE")
+        snapshot = source_context(self.app, run.workspace_id)["snapshot_hash"]
+        def validate():
+            self._check_workspace(run.workspace_id)
+            if source_context(self.app, run.workspace_id)["snapshot_hash"] != snapshot:
+                raise ProductApplicationError("INVESTIGATION_CONTEXT_CHANGED", "Refresh the selected sources.", status=409)
+        session = None
+        started = monotonic()
+        try:
+            request = request_for(run.query, run.workspace_id)
+            result["attempted"] = True
+            if provider.external_provider:
+                with owner._starts.operation(request.run_id):
+                    session = provider.reserve(self.app, owner, request, validate)
+                    decision = classify(session.bind(provider.security_adapter, "ask-security"), request)
+            else:
+                decision = classify(provider.security_adapter, request)
+            result.update(status="COMPLETED", **decision)
+        except (RouterInvalid, BackgroundWorkStopped, OSError, ValueError) as error:
+            result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
+        finally:
+            if session is not None:
+                session.close(timeout=0)
+            result["seconds"] = round(monotonic() - started, 4)
+        validate()
+        return result
+
+    def _ask(self, payload: dict[str, Any], *, use_graph: bool = True, use_router: bool = True,
+             allow_selector: bool = True, security=None) -> tuple[dict[str, Any], int]:
         query = payload.get("query")
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
@@ -184,6 +230,17 @@ class UnifiedAskService:
             with self.app._store_lock:
                 self._check_workspace(run.workspace_id)
                 context = parse_context(payload.get("investigation_context"))
+                # Only the public Ask entry supplies this state. Internal graph/router
+                # fallbacks re-enter _ask without it and cannot classify twice.
+                if security is not None and self.router_provider is not None and (
+                        self.router_provider.security_adapter is not None or self.router_provider.external_provider):
+                    if context:
+                        validate_context(self.app, run.workspace_id, context)
+                    security.update(self._classify_security(run, payload))
+                    if security.get("decision") == "BLOCK":
+                        blocked, status = self._router_stop(run, None, security["reason_code"])
+                        blocked["router"]["source"] = blocked["decided_by"] = "llm"
+                        return blocked, status
                 ordinary_router = (use_router and self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
