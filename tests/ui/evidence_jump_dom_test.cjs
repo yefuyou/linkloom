@@ -78,11 +78,36 @@ function result(task = false) { return {workspace_id: 'a', path: task ? 'TASK_IN
   source_investigation: task ? null : {answer: '青竹', facts: [], conflicts: {}, trace: [{quote: 'OLD_TRACE_QUOTE'}], plan: {subgoals: []}},
   task_review: task ? {observations: [{observation_id: 'observation-2', raw_text: 'OLD_PROPOSAL_QUOTE', description: 'Ship', owner: 'B', provenance: {...evidence, artifact_version_id: 'version-1'}}], proposals: [{predicate: 'SAME_TASK', evidence_status: 'EVIDENCE_VALID', proposed_verdict: 'SUPPORTED', subject: {observation_id: 'observation-2'}, object: {observation_id: 'observation-2'}, supporting_evidence: [{quote: 'OLD_SUPPORT_QUOTE'}], counter_evidence: [{quote: 'OLD_COUNTER_QUOTE'}]}], relations: [{quote: 'OLD_RELATION_QUOTE'}], steps: [], next_actions: []} : null}; }
 
+// Both ordinary imports and corrected demo seeds use the same timestamped
+// source contract. Graph results cite semantic spans, not Runtime passage IDs.
+const graphEntries = ['graph-import', 'graph-seed'];
+const graphOwnerEvidence = {...evidence, evidence_ref: 'existing-ref-1', line_start: 1, line_end: 1};
+function graphSource(entry) {
+  const value = source();
+  value.name = entry === 'graph-seed' ? 'graph-demo-meeting.txt' : 'imported-meeting.txt';
+  const first = value.evidence_jump.spans.find(span => span.evidence_ref === graphOwnerEvidence.evidence_ref);
+  first.char_start = Array.from(text.split(quote)[0]).length;
+  first.char_end = first.char_start + Array.from(quote).length;
+  return value;
+}
+function graphResult() {
+  const value = result();
+  value.decided_by = 'graph';
+  value.route = {code: 'TEMPORAL_GRAPH', decided_by: 'graph'};
+  value.evidence = [evidence, graphOwnerEvidence];
+  value.source_investigation = {answer: 'Bo', conflicts: {}, trace: [], graph_query: {status: 'FOUND'},
+    facts: [
+      {step_id: 'owner', subject: 'Ada', predicate: 'owner_of', value: 'Bay', evidence_refs: [graphOwnerEvidence.evidence_ref]},
+      {step_id: 'leader', subject: 'Ada', predicate: 'reports_to', value: 'Bo', evidence_refs: [evidence.evidence_ref]}],
+    plan: {subgoals: [{subgoal_id: 'owner', relation_path: ['owner_of']}, {subgoal_id: 'leader', relation_path: ['reports_to']}]}};
+  return value;
+}
+
 async function setup(entry = 'candidate') {
   const body = new Element('body');
   body.innerHTML = '<select id="workspace-picker"></select><select id="interface-language"></select><button id="new-workspace"></button><span id="status-live"></span><span id="review-count"></span><span id="provider-state"></span><div id="page"></div><nav><button data-screen="sources"></button><button data-screen="review"></button><button data-screen="ask"></button></nav>';
   const doc = {body, documentElement: {lang: 'en'}, getElementById: id => body.querySelector('#' + id), querySelectorAll: selector => body.querySelectorAll(selector), createElement: tag => new Element(tag)};
-  let workspace = 'a', sourceRead = async () => ({source: source()});
+  let workspace = 'a', sourceRead = async () => ({source: graphEntries.includes(entry) ? graphSource(entry) : source()});
   const calls = [], events = {};
   async function fetch(path, options = {}) {
     calls.push({path, ...options});
@@ -96,7 +121,7 @@ async function setup(entry = 'candidate') {
       : path === '/api/review/attention' ? {decisions: []}
       : path === '/api/sources' ? {sources: []}
       : path === '/api/product/ask/config' ? {workspace_id: workspace, scopes: [], agent: {available: false}}
-      : path === '/api/product/ask' ? {result: result(entry === 'task')}
+      : path === '/api/product/ask' ? {result: graphEntries.includes(entry) ? graphResult() : result(entry === 'task')}
       : {};
     return {ok: true, status: 200, json: async () => payload};
   }
@@ -145,7 +170,7 @@ for (const entry of ['candidate', 'ordinary', 'task']) test(`${entry}: click exi
   }
 });
 
-for (const entry of ['candidate', 'ordinary', 'task']) for (const kind of ['permission', 'removed', 'version', 'registry', 'unicode-offset', 'duplicate-ref']) test(`${entry} fails closed: ${kind}`, async () => {
+for (const entry of ['candidate', 'ordinary', 'task', ...graphEntries]) for (const kind of ['permission', 'removed', 'version', 'registry', 'unicode-offset', 'duplicate-ref']) test(`${entry} fails closed: ${kind}`, async () => {
   const ui = await setup(entry); await ui.button().click(); assert.ok(ui.dialog().querySelector('mark'));
   ui.setSource(async () => {
     if (kind === 'permission' || kind === 'removed') return {status: kind === 'permission' ? 403 : 404, error: {code: 'UNAVAILABLE', message: quote}};
@@ -161,6 +186,31 @@ for (const entry of ['candidate', 'ordinary', 'task']) for (const kind of ['perm
   assert.equal(ui.dialog().querySelector('mark'), null);
   assert.doesNotMatch(ui.dialog().textContent, /alert\(1\)/);
   assert.doesNotMatch(ui.page.textContent, /alert\(1\)|OLD_(TRACE|PROPOSAL|SUPPORT|COUNTER|RELATION)_QUOTE/);
+});
+
+for (const entry of graphEntries) test(`${entry}: graph answer opens each exact semantic quote with focus and highlight`, async () => {
+  const ui = await setup(entry);
+  assert.match(ui.page.textContent, /Bo/);
+  assert.match(ui.page.textContent, /Owner → work/);
+  assert.match(ui.page.textContent, /Person → direct manager/);
+  const buttons = ui.page.querySelectorAll('[data-action="inspect-evidence"]');
+  assert.equal(buttons.length, 2);
+  for (const [index, expected] of [evidence, graphOwnerEvidence].entries()) {
+    await buttons[index].click();
+    const dialog = ui.dialog(), mark = dialog.querySelector('mark');
+    assert.equal(dialog.querySelectorAll('mark').length, 1);
+    assert.equal(mark.dataset.evidenceRef, expected.evidence_ref);
+    assert.equal(mark.textContent, expected.quote);
+    assert.equal(dialog.querySelector('pre').textContent, text);
+    assert.equal(dialog.querySelector('script'), null);
+    assert.equal(focused, mark);
+    assert.equal(mark.scrolled.block, 'center');
+    assert.equal(mark.focusOptions.preventScroll, true);
+    await dialog.querySelector('[data-close-evidence]').click();
+    assert.equal(focused, buttons[index]);
+  }
+  assert.equal(ui.calls.filter(call => call.path === '/api/sources/src-1').length, 2);
+  assert.equal(ui.calls.some(call => /approve|reject/.test(call.path)), false);
 });
 
 test('clear pending content and ignore a late response after workspace changes', async () => {
