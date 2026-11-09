@@ -22,7 +22,7 @@ from linkloom.fact_memory.normalize import fold
 from linkloom.fact_memory.store import FactRecord
 
 MAX_RECORDS = 40
-SUBJECT_SEEDS = 3        # subjects of the top-N records are the question's subjects
+SUBJECT_SEEDS = 3        # highest-scoring distinct subjects, not the top-N records
 NEAR_BEST = 0.8          # deterministic answer: newest record scoring >= 80% of the best
 _STOP = frozenset("""a an the i me my you your is are was were be been do did does have has had of to in on at for
 with and or what which who whom when where how many much did do does it its that this there their they them we our
@@ -70,7 +70,7 @@ def relevant_records(question: str, records: tuple[FactRecord, ...], as_of: date
                     key=lambda index: (-scores[index], usable[index].fact_id))
     if not ranked:
         return []
-    subjects = list(dict.fromkeys(usable[index].subject_id for index in ranked[:SUBJECT_SEEDS]))
+    subjects = list(dict.fromkeys(usable[index].subject_id for index in ranked))[:SUBJECT_SEEDS]
     chosen = [index for index in ranked if usable[index].subject_id in subjects][:MAX_RECORDS]
     chosen.sort(key=lambda index: (usable[index].effective_at, usable[index].recorded_at, usable[index].fact_id))
     return [(usable[index], scores[index]) for index in chosen]
