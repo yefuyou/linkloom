@@ -3,12 +3,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import UTC, datetime
 import os
 import re
 from threading import Lock
 from typing import Any, Callable
 
+from linkloom.fact_memory import fact_memory_enabled
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
@@ -275,6 +276,12 @@ class UnifiedAskService:
                 if discovery["scope"] is None:
                     if date_blocker:
                         return self._router_stop(run, None, date_blocker)
+                    if (fact_memory_enabled() and discovery["status"] == "NO_MATCH"
+                            and not (values["subject"] or values["relation"])):
+                        # Only after the unchanged decision discovery found nothing.
+                        fact = self._fact_request(run, result, payload)
+                        if fact is not None:
+                            return fact
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
@@ -295,6 +302,46 @@ class UnifiedAskService:
                 if reason:
                     return self._router_stop(run, None, reason, http=error.status)
             return self._failure(result, error.code, str(error)), error.status
+
+    def _fact_request(self, run, result, payload):
+        """Answer from reviewed fact records; None leaves the existing NO_MATCH reply."""
+        from linkloom.fact_memory.ask import answer
+        from linkloom.ui.product import _parse_as_of
+        records = self.app.fact_records(run.workspace_id)
+        if not records:
+            return None
+        as_of = _parse_as_of(payload.get("as_of")) or datetime.now(UTC)
+        service = self.investigation()
+        factory = None
+        if service is not None and service.model_factory is not None and not getattr(service, "task_only", False):
+            if service.external_provider and payload.get("allow_external_provider") is not True:
+                return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
+            factory = lambda: service.model_factory(run.query)
+        outcome = answer(run.query, as_of, records, factory)
+        if outcome["status"] == "NO_MATCH":
+            return None
+        result.update(path="FACT", scope=dict(result["scope"], as_of=as_of.isoformat()))
+        result["route"] = dict(result["route"], code=outcome["code"])
+        result["evidence"] = [{"fact_id": record.fact_id, "subject": record.subject_label,
+                               "attribute": record.attribute_name, "attribute_key": record.attribute_key,
+                               "value": record.value_text, "effective_at": record.effective_at.isoformat(),
+                               "supersedes_fact_id": record.supersedes_fact_id,
+                               "superseded_by_fact_id": record.superseded_by_fact_id,
+                               "quote": record.quote, "evidence_ref": record.evidence_ref,
+                               "source_id": record.artifact_id, "source_version": record.artifact_version_id}
+                              for record in outcome["cited"]]
+        result["facts_offered"] = outcome["offered"]
+        if outcome["status"] == "ANSWERED":
+            result["status"] = "COMPLETED"
+            result["conclusions"] = [{"kind": "FACT_ANSWER", "value": outcome["answer"],
+                                      "fact_ids": [record.fact_id for record in outcome["cited"]]}]
+            return result, 200
+        if outcome["status"] == "UNKNOWN":
+            result["status"] = "INSUFFICIENT"
+            result["uncertainty"] = {"unknown_fields": ["value"],
+                                     "statement": "The reviewed facts do not answer this question."}
+            return result, 200
+        return self._failure(result, outcome["code"], "The fact answer could not be verified.", category="runtime"), 200
 
     def _decision_request(self, run, result, payload, values, as_of):
         view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
