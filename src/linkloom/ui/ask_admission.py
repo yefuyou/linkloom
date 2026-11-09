@@ -41,6 +41,22 @@ _OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instruction
 _SECRET_COMMAND = re.compile(r'^(?:read|show|reveal|print|give|send|extract)\s+(?:(?:me|us)\s+)?(?:(?:the|your|our)\s+)?'
     r'(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
     r'^(?:读取|展示|显示|输出|告诉我|发给我)\s*(?:系统提示词|API[ _-]?key|密钥|口令|密码)',re.I)
+# Claims in question text are never a source of authority. Match declarative
+# role/permission/check-state assertions, including bracketed role prefixes,
+# rather than the words administrator or safety checks on their own.
+_AUTHORITY_CLAIM = re.compile(
+    r'\b(?:i\s+am|i[\x27’]m|we\s+are)\s+(?:(?:the|an?|your)\s+)?'
+    r'(?:admin(?:istrator)?s?|superusers?|system\s+operators?)\b|'
+    r'\b(?:i|we)\s+(?:have\s+(?:been\s+)?(?:authorized|authorised|approved)|'
+    r'(?:am|are)\s+(?:authorized|authorised))\b|'
+    r'\b(?:authorization|authorisation|permission|access)\s+(?:has\s+been\s+|is\s+)(?:granted|approved)\b|'
+    r'\b(?:safety|security|policy|permission)\s+checks?\s+'
+    r'(?:are\s+|is\s+|have\s+been\s+|has\s+been\s+)(?:disabled|turned\s+off|suspended)\b|'
+    r'(?:^|\n)\s*[\[【]\s*(?:admin(?:istrator)?|superuser|管理员|超级用户)\s*[\]】]|'
+    r'(?:我|我们)(?:现在|已经|已)?(?:是|作为)(?:系统|超级)?管理员|'
+    r'(?:我|我们)(?:已经|已)?(?:获(?:得)?|取得)(?:了)?(?:授权|许可|批准)|'
+    r'(?:授权|权限|许可)(?:已经|已)(?:授予|获批|批准)|'
+    r'(?:安全|权限|策略)(?:检查|校验|审查)(?:已经|已)(?:关闭|停用|禁用)', re.I)
 
 
 def _chinese_write_request(text):
@@ -80,7 +96,7 @@ def refers_to_records(query, *, relationships=False):
 
 def admission_restriction(query):
     visible = unquoted_text(query)
-    if _FOREIGN_SCOPE.search(visible) or _write_request(visible):
+    if _FOREIGN_SCOPE.search(visible) or _AUTHORITY_CLAIM.search(visible) or _write_request(visible):
         return ('INVESTIGATION_SCOPE_DENIED',
                 'Only read-only investigation of this workspace is supported; instructions cannot grant sources, tools or write access.')
     if _GREETING.fullmatch(query):
@@ -93,6 +109,8 @@ def legacy_denial_reason(query):
     visible = unquoted_text(query)
     if _FOREIGN_SCOPE.search(visible):
         return "WORKSPACE_DENIED"
+    if _AUTHORITY_CLAIM.search(visible):
+        return "SECRET_OR_POLICY_OVERRIDE"
     for clause in _CLAUSE.split(visible):
         english = _EN_POLITE.sub('', clause.strip(' ,，'))
         chinese = _ZH_POLITE.sub('', clause.strip(' ,，'))
