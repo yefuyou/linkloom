@@ -9,7 +9,7 @@
 ## 数据与方法
 
 基线提交 97a2edf9ad621dab4676b30cfb6617ab41ab8c2a。冻结合成开发集 30 个候选 × 14 个任务 × 3 种文本 = 1260 个分数，123 个方案阈值点。正例 12、相似负例 10、跨项目同名 8（其中 3 题有目标），合计 15 个有目标候选。
-confirmed=false 30 题，true 0 题，保留草拟标签，仅作开发评测。
+实验运行时使用的评测文件中 confirmed=false（用户确认前的版本）。之后用户确认了全部 30 题，确认时只修改了 confirmed 标记，题目和预期没有任何改动，确认后文件的 SHA-256 为 4e7b377b6c41e165257d194b63454e76a9bfbd8de22f0123c2bab085053c1254。因此本报告的结果不受影响。
 本地 SentenceTransformerEmbedder(local_files_only=True)，sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2，快照 e8f8c211226b894fcb81acc59f3b34ba3efd5f42；sentence-transformers 5.1.2、NumPy 2.1.3、torch 2.9.0。HF_HUB_OFFLINE 与 TRANSFORMERS_OFFLINE 均为 1，无付费模型调用。
 - 文本依次为：标题；来源原文核验的规范项目名 + 标题；项目名 + 标题 + 夹具 owner。字段用一个空格连接。项目名不读取预期目标；负责人缺失则省略，不从预期标签补全。
 - 每题同批编码，对全池按 float64 归一化点积排序，未舍入分数降序，同分按任务 ID 升序。Top-1 ≥ 阈值才触发。错目标计 FP 和 FN；无目标触发计 FP；召回分母仅含有目标的题，负例组召回为 —。
