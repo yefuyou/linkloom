@@ -234,7 +234,7 @@ def graph_answer(demo):
     result = body['result']
     assert status == 200 and result['status'] == 'COMPLETED', body
     assert result['decided_by'] == 'graph' and result['reviewer']['accepted'] is True
-    assert result['source_investigation']['answer'] == 'Bo'
+    assert result['source_investigation']['answer'] == '演示主管B'
     assert [fact['predicate'] for fact in result['source_investigation']['facts']] == ['owner_of', 'reports_to']
     assert len(result['evidence']) == 2
     return result
@@ -245,6 +245,8 @@ def test_graph_result_quotes_resolve_to_exact_current_source_spans(graph_jump):
 
     demo = graph_jump
     result = graph_answer(demo)
+    assert [e['quote'] for e in result['evidence']] == [
+        'Bay 项目自 2026-04-01 起由 演示成员A 负责。', '演示成员A 自 2026-04-01 起向 演示主管B 直接汇报。']
     for evidence in result['evidence']:
         status, body = request_json(demo.base_url, f"/api/sources/{evidence['source_id']}")
         assert status == 200, body
@@ -284,7 +286,7 @@ def test_graph_result_jump_still_fails_closed(graph_jump, mutation):
     elif mutation == 'version':
         # The new text still parses and is current, but cannot validate the old graph answer.
         status, body = request_json(demo.base_url, path, method='PUT', data={
-            'name': 'new.txt', 'content': GRAPH_MEETING.replace('Bo', 'Cora')})
+            'name': 'new.txt', 'content': GRAPH_MEETING.replace('演示主管B', '演示主管C')})
         assert status == 202
         wait_source(demo.base_url, evidence['source_id'])
     elif mutation == 'removed':

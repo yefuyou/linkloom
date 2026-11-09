@@ -13,8 +13,8 @@ from tests.unit.test_temporal_graph_planning import Model, planner
 from unified_ask_fixture import UnifiedAskFixture, OfflineSemanticProvider, claim, request_json, wait_source
 
 GRAPH_MEETING = (
-    '[2026-04-01T09:00:00Z] Alice: Bay owner_of_project Ada; effective from 2026-04-01.\n'
-    '[2026-04-01T10:00:00Z] Alice: Ada reports_to Bo; effective from 2026-04-01.'
+    '[2026-04-01T09:00:00Z] Speaker-A: Bay 项目自 2026-04-01 起由 演示成员A 负责。\n'
+    '[2026-04-01T10:00:00Z] Speaker-A: 演示成员A 自 2026-04-01 起向 演示主管B 直接汇报。'
 )
 GRAPH_QUERY = 'Bay 项目负责人的直属领导是谁？'
 GRAPH_AS_OF = '2026-04-02'
@@ -24,9 +24,9 @@ def build_graph_demo(database_path, *, seed_graph=True):
     demo = UnifiedAskFixture(database_path, seed=False)
     try:
         claims = []
-        for subject, relation, value in [('Bay', 'owner_of_project', 'Ada'), ('Ada', 'reports_to', 'Bo')]:
+        for subject, relation, value in [('Bay', 'owner_of_project', '演示成员A'), ('演示成员A', 'reports_to', '演示主管B')]:
             item = claim(value, claim_type='FACT')
-            item.update(subject=subject, relation=relation, temporal_status='EXPLICIT', valid_from='2026-04-01')
+            item.update(subject=subject, relation='负责' if relation == 'owner_of_project' else '直接汇报', temporal_status='EXPLICIT', valid_from='2026-04-01')
             claims.append(item)
         demo.app.extractor = ProviderNeutralSemanticExtractor(
             OfflineSemanticProvider([*claims, claim('Birchline')]),
@@ -34,7 +34,8 @@ def build_graph_demo(database_path, *, seed_graph=True):
             request_guard=lambda request: ProviderRequestAuthorization.approve(
                 request, guard_id='graph-demo', reservation_id='offline', estimated_cost_upper_bound_usd=0),
             request_guard_id='graph-demo', max_attempts=1)
-        demo.app.relation_resolver = FrozenRelationResolver(('owner_of_project', 'reports_to', 'uses supplier'))
+        demo.app.relation_resolver = FrozenRelationResolver(('owner_of_project', 'reports_to', 'uses supplier'),
+            aliases={'负责': 'owner_of_project', '直接汇报': 'reports_to'})
         demo.configure_agent()
 
         def authorized(ws, source, version):
