@@ -181,3 +181,121 @@ def test_jump_validation_does_not_change_internal_snapshot_or_historical_review_
     assert historical["active"] is False
     assert historical["content"] == TEXT
     assert "evidence_jump" not in historical
+
+
+@pytest.fixture(params=['real_import', 'demo_seed'])
+def graph_jump(request, tmp_path, monkeypatch):
+    from graph_evidence_jump_fixture import build_graph_demo, GRAPH_MEETING
+    from unified_ask_fixture import request_json, wait_source
+
+    monkeypatch.setenv('LINKLOOM_RETRIEVAL_MODE', 'bm25')
+    database = tmp_path / 'graph.sqlite'
+    demo = build_graph_demo(database, seed_graph=request.param == 'demo_seed')
+    try:
+        if request.param == 'real_import':
+            status, body = request_json(demo.base_url, '/api/workspaces', method='POST', data={'name': 'Real import'})
+            assert status == 201
+            status, body = request_json(demo.base_url, '/api/sources/import', method='POST',
+                data={'name': 'meeting.txt', 'content': GRAPH_MEETING})
+            assert status == 202
+            source = wait_source(demo.base_url, body['source']['source_id'])
+            assert source['ingestion_status'] == 'COMPLETE' and source['candidate_count'] == 2
+            # Import alone grants no graph authority.
+            graph = demo.server.unified_ask.graph_service.store_factory(demo.app._workspace_id())
+            assert not graph.load_edges(demo.app._workspace_id()).edges
+            status, body = request_json(demo.base_url, '/api/review/candidates')
+            assert status == 200 and len(body['candidates']) == 2
+            for candidate in body['candidates']:
+                status, detail = request_json(demo.base_url, f"/api/review/candidates/{candidate['candidate_id']}")
+                assert status == 200
+                review = {'reviewer_id': 'Human reviewer', 'reason': 'Checked original relationship and effective date.'}
+                if 'valid_from' in detail['candidate']['current_unresolved_fields']:
+                    review['valid_from'] = '2026-04-01'
+                status, approved = request_json(demo.base_url,
+                    f"/api/review/candidates/{candidate['candidate_id']}/approve", method='POST',
+                    data=review)
+                assert status == 200 and approved['workflow_state'] == 'MATERIALIZED', approved
+        else:
+            # Seeds must remain readable after an ordinary application restart,
+            # without private registry reconstruction or re-approval.
+            demo.stop()
+            demo = build_graph_demo(database, seed_graph=False)
+        yield demo
+    finally:
+        demo.stop()
+
+
+def graph_answer(demo):
+    from graph_evidence_jump_fixture import GRAPH_QUERY, GRAPH_AS_OF
+    from unified_ask_fixture import request_json
+
+    status, body = request_json(demo.base_url, '/api/product/ask', method='POST', data={
+        'query': GRAPH_QUERY, 'workspace_id': demo.app._workspace_id(), 'as_of': GRAPH_AS_OF})
+    result = body['result']
+    assert status == 200 and result['status'] == 'COMPLETED', body
+    assert result['decided_by'] == 'graph' and result['reviewer']['accepted'] is True
+    assert result['source_investigation']['answer'] == 'Bo'
+    assert [fact['predicate'] for fact in result['source_investigation']['facts']] == ['owner_of', 'reports_to']
+    assert len(result['evidence']) == 2
+    return result
+
+
+def test_graph_result_quotes_resolve_to_exact_current_source_spans(graph_jump):
+    from unified_ask_fixture import request_json
+
+    demo = graph_jump
+    result = graph_answer(demo)
+    for evidence in result['evidence']:
+        status, body = request_json(demo.base_url, f"/api/sources/{evidence['source_id']}")
+        assert status == 200, body
+        source = body['source']
+        view = source['evidence_jump']
+        assert view['validated'] is True
+        assert view['workspace_id'] == result['workspace_id']
+        assert view['source_version'] == source['source_version'] == evidence['source_version']
+        assert view['content_sha256'] == evidence['content_sha256']
+        matches = [s for s in view['spans'] if s['evidence_ref'] == evidence['evidence_ref']]
+        assert len(matches) == 1
+        span = matches[0]
+        assert span['verification_kind'] == 'SEMANTIC_SPAN'
+        assert span['quote'] == evidence['quote']
+        assert [span['line_start'], span['line_end']] == [evidence['line_start'], evidence['line_end']]
+        assert source['content'][span['char_start']:span['char_end']] == evidence['quote']
+
+
+@pytest.mark.parametrize('mutation', ['registry_revoked', 'content_hash', 'version', 'removed', 'workspace'])
+def test_graph_result_jump_still_fails_closed(graph_jump, mutation):
+    from graph_evidence_jump_fixture import GRAPH_MEETING
+    from unified_ask_fixture import request_json, wait_source
+
+    demo = graph_jump
+    result = graph_answer(demo)
+    evidence = result['evidence'][0]
+    workspace = result['workspace_id']
+    path = f"/api/sources/{evidence['source_id']}"
+    assert request_json(demo.base_url, path)[0] == 200
+    if mutation == 'registry_revoked':
+        demo.app.store.source_registry.unregister_evidence(workspace, evidence['evidence_ref'])
+    elif mutation == 'content_hash':
+        with demo.app.repository._lock, demo.app.repository._connection:
+            demo.app.repository._connection.execute(
+                "UPDATE ll_source_version SET content=content || 'tampered' WHERE workspace_id=? AND source_id=?",
+                (workspace, evidence['source_id']))
+    elif mutation == 'version':
+        # The new text still parses and is current, but cannot validate the old graph answer.
+        status, body = request_json(demo.base_url, path, method='PUT', data={
+            'name': 'new.txt', 'content': GRAPH_MEETING.replace('Bo', 'Cora')})
+        assert status == 202
+        wait_source(demo.base_url, evidence['source_id'])
+    elif mutation == 'removed':
+        assert request_json(demo.base_url, path, method='DELETE')[0] == 200
+    else:
+        assert request_json(demo.base_url, '/api/workspaces', method='POST', data={'name': 'Other'})[0] == 201
+
+    status, body = request_json(demo.base_url, path)
+    if mutation == 'version':
+        assert status == 200 and body['source']['source_version'] != evidence['source_version']
+        assert evidence['evidence_ref'] not in {s['evidence_ref'] for s in body['source']['evidence_jump']['spans']}
+    else:
+        assert status in (404, 409) and 'source' not in body
+        assert evidence['quote'] not in json.dumps(body)
