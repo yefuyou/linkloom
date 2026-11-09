@@ -1,6 +1,7 @@
 """One strict DeepSeek routing proposal. No tool is executed."""
 from dataclasses import dataclass, replace
 import json
+import logging
 import os
 from pathlib import Path
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -36,26 +37,39 @@ def _submission(context):
                         additionalProperties=False)))
 
 
-def _route_text(message, context):
+def _tool_arguments(message, tool):
     calls = message.get("tool_calls")
-    if not isinstance(calls, list) or len(calls) != 1 or message.get("content"):
-        return "{}"
+    if not isinstance(calls, list) or len(calls) != 1:
+        return None
     try:
         call = calls[0]
-        if call["type"] != "function" or call["function"]["name"] != "submit_route":
-            return "{}"
+        if call["type"] != "function" or call["function"]["name"] != tool["function"]["name"]:
+            return None
         args = json.loads(call["function"]["arguments"], object_pairs_hook=_unique_object,
                           parse_constant=_reject_constant)
-        schema = _submission(context)["function"]["parameters"]["properties"]
+        schema = tool["function"]["parameters"]["properties"]
         if not isinstance(args, dict) or set(args) != set(schema):
-            return "{}"
+            return None
         for key, prop in schema.items():
             value = args[key]
             if prop["type"] == "array":
                 if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
-                    return "{}"
+                    return None
             elif value not in prop["enum"]:
-                return "{}"
+                return None
+        if message.get("content"):
+            logging.getLogger(__name__).debug("Ignoring text accompanying a validated %s call: %r",
+                                              tool["function"]["name"], message["content"])
+        return args
+    except (KeyError, TypeError, ValueError, RecursionError):
+        return None
+
+
+def _route_text(message, context):
+    args = _tool_arguments(message, _submission(context))
+    if args is None:
+        return "{}"
+    try:
         proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
         time_id = args.pop("time_id")
@@ -76,19 +90,25 @@ def _route_text(message, context):
 
 
 class _DeepSeekJSONClient:
-    def __init__(self, key, *, raw_sink=None):
+    def __init__(self, key, *, raw_sink=None, purpose="route"):
         self._key = key
+        self._purpose = purpose
         self._raw_sink = raw_sink
         self._opener = build_opener(_NoRedirect())
 
     def create_chat_completion(self, **payload):
         user_text = next(message["content"] for message in payload["messages"] if message["role"] == "user")
-        if not user_text.startswith(PROMPT):
+        if self._purpose == "security":
+            from linkloom.ui.security_gate import PROMPT as prompt, submission
+        else:
+            prompt, submission = PROMPT, _submission
+        if not user_text.startswith(prompt):
             raise ValueError("ROUTER_PROMPT_MISMATCH")
-        context = json.loads(user_text[len(PROMPT):])
+        context = json.loads(user_text[len(prompt):])
+        tool = submission(context)
         payload.pop("response_format", None)
-        payload["tools"] = [_submission(context)]
-        payload["tool_choice"] = {"type": "function", "function": {"name": "submit_route"}}
+        payload["tools"] = [tool]
+        payload["tool_choice"] = {"type": "function", "function": {"name": tool["function"]["name"]}}
         request = Request(CONFIG["endpoint"], data=json.dumps(payload, ensure_ascii=False).encode("utf8"),
             headers={"Authorization": "Bearer " + self._key, "Content-Type": "application/json"}, method="POST")
         with self._opener.open(request, timeout=CONFIG["timeout_seconds"]) as response:
@@ -101,7 +121,13 @@ class _DeepSeekJSONClient:
         choices = response.get("choices", [])
         if len(choices) == 1 and isinstance(choices[0].get("message"), dict):
             choice = choices[0]
-            raw = _route_text(choice["message"], context) if choice.get("finish_reason") == "tool_calls" else "{}"
+            raw = "{}"
+            if choice.get("finish_reason") == "tool_calls":
+                if self._purpose == "security":
+                    args = _tool_arguments(choice["message"], tool)
+                    raw = json.dumps(args) if args is not None else "{}"
+                else:
+                    raw = _route_text(choice["message"], context)
             choice["message"] = {"content": raw}
             choice["finish_reason"] = "stop"
         return response
@@ -112,6 +138,7 @@ class RouterProvider:
     adapter: object
     external_provider: bool = False
     mode: str = "llm_first"
+    security_adapter: object = None
 
     def reserve(self, app, owner, request, validate):
         models = owner.task_models
@@ -134,4 +161,6 @@ def configured_router():
     key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     adapter = DeepSeekProviderAdapter(_DeepSeekJSONClient(key), model_id=CONFIG["model_id"],
                                     json_output=True) if key else None
-    return RouterProvider(adapter, external_provider=True, mode=mode)
+    security = DeepSeekProviderAdapter(_DeepSeekJSONClient(key, purpose="security"),
+        model_id=CONFIG["model_id"], json_output=True) if key else None
+    return RouterProvider(adapter, external_provider=True, mode=mode, security_adapter=security)
