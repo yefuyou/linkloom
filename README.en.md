@@ -8,6 +8,10 @@
 [![License](https://img.shields.io/github/license/yefuyou/linkloom?color=2550c8)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-2550c8)](pyproject.toml)
 
+![LinkLoom demo: import a meeting, approve a candidate, query graph relationships, and highlight the original quote](docs/assets/demo.gif)
+
+This demo uses synthetic data and scripted offline responses. The answer-wait segment is sped up.
+
 ## 1. What it solves
 
 Owners, deadlines, and decisions can change in the next meeting, so searching old messages may not tell you which version to follow now.

@@ -8,6 +8,10 @@
 [![License](https://img.shields.io/github/license/yefuyou/linkloom?color=2550c8)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-2550c8)](pyproject.toml)
 
+![LinkLoom 演示：导入会议、审核批准、多跳图检索和原话高亮](docs/assets/demo.gif)
+
+演示使用合成数据与离线预设响应；等待回答片段已加速。
+
 ## 1. 它解决什么
 
 会议开完了，负责人、截止时间和决定还会在下一场会议里改变，翻聊天记录很难知道现在该按哪一版做。
