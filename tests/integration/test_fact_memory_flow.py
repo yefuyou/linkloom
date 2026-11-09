@@ -14,7 +14,7 @@ from linkloom.tools.contracts import ToolCall
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.unified_ask import UnifiedAskService
 
-SOURCE = """[2026-03-01T09:00:00Z] Mira: My favourite tea is jasmine green.
+SOURCE = """[2026-03-01T09:00:00Z] Mira: My favourite tea is Darjeeling.
 [2026-03-02T09:00:00Z] Mira: He said the plant needs water.
 [2026-05-10T09:00:00Z] Mira: These days my favorite tea is Roasted Oolong.
 [2026-05-11T09:00:00Z] Mira: My dog's name is Pepper.
@@ -24,9 +24,9 @@ SOURCE = """[2026-03-01T09:00:00Z] Mira: My favourite tea is jasmine green.
 """
 
 CLAIMS = {
-    "jasmine green": ("I", "favourite tea", "jasmine green"),
+    "Darjeeling": ("I", "favourite tea", "Darjeeling"),
     "plant needs water": ("he", "needs", "water"),
-    "Roasted Oolong": ("Mira", "favorite teas", "roasted oolong"),
+    "Roasted Oolong": ("Mira", "favorite teas", "Roasted  Oolong"),
     "dog's name": ("my dog", "name", "Pepper"),
     "Mira Okafor": ("I", "name", "Mira Okafor"),
     "Lisbon": ("I", "city of residence", "Lisbon"),
@@ -118,7 +118,7 @@ def test_switch_off_keeps_the_current_behavior(app, monkeypatch):
     pending = pending_by_value(app)
     assert len(pending) == 7
     with pytest.raises(ProductApplicationError) as blocked:
-        approve(app, pending["jasmine green"])
+        approve(app, pending["Darjeeling"])
     assert blocked.value.status == 409
     assert blocked.value.code in {"ENTITY_UNRESOLVED", "RELATION_UNRESOLVED"}
     assert blocked.value.reason_codes is None  # no new field in the error payload
@@ -132,14 +132,15 @@ def test_switch_off_keeps_the_current_behavior(app, monkeypatch):
 def test_fact_channel_admits_supersedes_and_answers_by_time(app, monkeypatch):
     monkeypatch.setenv(FLAG, "1")
     pending = pending_by_value(app)
-    first = approve(app, pending["jasmine green"])
+    first = approve(app, pending["Darjeeling"])
     assert first["channel"] == "FACT" and first["subject_id"] == "speaker:mira"
-    assert first["attribute_key"] == "favorite tea" and first["value"] == "jasmine green"
+    assert first["attribute_key"] == "favorite tea" and first["value"] == "Darjeeling"
     assert first["effective_at"] == "2026-03-01T09:00:00+00:00"
     assert "RELATION_UNRESOLVED" in first["decision_reason_codes"]
-    second = approve(app, pending["roasted oolong"])
+    second = approve(app, pending["Roasted  Oolong"])
     assert second["attribute_key"] == "favorite tea"
-    assert second["value"] == "Roasted Oolong"  # verbatim source span, not the model's casing
+    assert second["value"] == "Roasted Oolong"  # model wording, whitespace folded
+    assert second["evidence_sentence"] == "These days my favorite tea is Roasted Oolong."
     assert second["supersedes_fact_id"] == first["fact_id"]
     dog = approve(app, pending["Pepper"])
     own = approve(app, pending["Mira Okafor"])
@@ -148,14 +149,14 @@ def test_fact_channel_admits_supersedes_and_answers_by_time(app, monkeypatch):
     assert own["supersedes_fact_id"] is None  # different subject, no merge
     theo = approve(app, pending["Lisbon"])
     assert theo["subject_id"] == "speaker:theo"
-    assert approve(app, pending["jasmine green"])["fact_id"] == first["fact_id"]  # idempotent
+    assert approve(app, pending["Darjeeling"])["fact_id"] == first["fact_id"]  # idempotent
 
     remaining = pending_by_value(app)
     assert set(remaining) == {"water", "Sunrise Bakery"}
 
     before, status = ask(app, "What is my favorite tea?", as_of="2026-04-01")
     assert status == 200 and before["path"] == "FACT" and before["status"] == "COMPLETED"
-    assert before["conclusions"][0]["value"] == "jasmine green"
+    assert before["conclusions"][0]["value"] == "Darjeeling"
     after, _ = ask(app, "What is my favorite tea?", as_of="2026-06-01")
     assert after["conclusions"][0]["value"] == "Roasted Oolong"
     assert after["evidence"][0]["supersedes_fact_id"] == first["fact_id"]
@@ -182,12 +183,12 @@ def test_rejected_facts_report_every_reason(app, monkeypatch):
 def test_model_answer_may_only_cite_offered_facts(app, monkeypatch):
     monkeypatch.setenv(FLAG, "1")
     pending = pending_by_value(app)
-    for value in ("jasmine green", "roasted oolong"):
+    for value in ("Darjeeling", "Roasted  Oolong"):
         approve(app, pending[value])
 
     def reply(prompt):
         records = json.loads(prompt.split("Records: ", 1)[1])
-        current = next(item for item in records if item["status"] == "CURRENT")
+        current = records[-1]  # records arrive oldest first
         return json.dumps({"status": "ANSWERED", "answer": current["value"], "fact_ids": [current["id"]]})
 
     adapter = AnswerAdapter(reply)
@@ -205,7 +206,7 @@ def test_model_answer_may_only_cite_offered_facts(app, monkeypatch):
 
 def test_deleted_source_hides_its_facts(app, monkeypatch):
     monkeypatch.setenv(FLAG, "1")
-    approve(app, pending_by_value(app)["jasmine green"])
+    approve(app, pending_by_value(app)["Darjeeling"])
     workspace_id = app._workspace_id()
     assert len(app.fact_records(workspace_id)) == 1
     source_id = app.handle_get("/api/sources")["sources"][0]["source_id"]

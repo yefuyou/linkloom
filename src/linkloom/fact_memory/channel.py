@@ -4,7 +4,8 @@ A FACT candidate reaches this channel only after the unchanged decision
 policy refused it. The channel admits it when, and only when:
 
 * the candidate's evidence span still verifies against the current version
-  of an active source, and the value is an exact span of that quote;
+  of an active source, and one full sentence of that quote carries every
+  piece of key content of the value (see ``fact_memory.evidence``);
 * the subject lands on an entity (first person -> the message's speaker,
   the speaker's own label, or a mention inside the quote);
 * the host-normalized attribute key is non-empty;
@@ -14,8 +15,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, time
+import json
 
-from linkloom.fact_memory.normalize import attribute_key, locate_value, normalize_value, resolve_subject, value_kind
+from linkloom.fact_memory.evidence import verify_value
+from linkloom.fact_memory.normalize import attribute_key, normalize_value, resolve_subject, value_kind
 from linkloom.fact_memory.store import FactRecord, FactStore, fact_id_for, slot_key_for
 from linkloom.semantic_ingestion.candidate_models import CandidateDecisionFact, ClaimType
 
@@ -44,9 +47,9 @@ def assess(candidate: CandidateDecisionFact, source: FactSource, *, subject: str
     quote = candidate.provenance.quote
     if not source.active_current or not source.verified or not quote:
         reasons.append("FACT_EVIDENCE_INVALID")
-    span = locate_value(candidate.value, quote)
-    if span is None:
-        reasons.append("FACT_VALUE_UNGROUNDED")
+    evidence = verify_value(candidate.value, quote)
+    if evidence.reason:
+        reasons.append(evidence.reason)
     resolved = resolve_subject(subject if subject is not None else candidate.subject, quote, source.speaker)
     if resolved.reason:
         reasons.append("FACT_" + resolved.reason)
@@ -60,13 +63,18 @@ def assess(candidate: CandidateDecisionFact, source: FactSource, *, subject: str
         reasons.append("FACT_SOURCE_TIME_MISSING")
     if reasons:
         return None, tuple(dict.fromkeys(reasons))
-    value_text = quote[span[0]:span[1]]
+    # The value may be the model's wording; its key content was verified above
+    # and the stored evidence is the verbatim source sentence.
+    value_text = " ".join(candidate.value.split())
+    if quote[evidence.start:evidence.end] != evidence.sentence:
+        return None, ("FACT_EVIDENCE_INVALID",)
     return {
         "subject_id": resolved.subject_id, "subject_label": resolved.label, "subject_basis": resolved.basis,
         "attribute_name": attribute_name.strip(), "attribute_key": key.key, "mergeable": key.mergeable,
         "value_text": value_text, "value_normalized": normalize_value(value_text),
         "value_kind": value_kind(normalize_value(value_text)), "effective_at": effective,
-        "value_start": span[0], "value_end": span[1], "quote": quote,
+        "evidence_sentence": evidence.sentence, "evidence_start": evidence.start, "evidence_end": evidence.end,
+        "key_content": json.dumps(evidence.keys, ensure_ascii=False), "quote": quote,
     }, ()
 
 

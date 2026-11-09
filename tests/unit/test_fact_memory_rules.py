@@ -53,7 +53,7 @@ def test_attribute_key_does_not_merge_distinct_attributes():
         assert attribute_key(generic).mergeable is False, generic
 
 
-def test_value_location_returns_a_verbatim_source_span():
+def test_mention_location_returns_a_verbatim_source_span():
     quote = "These days my “favorite” tea is Roasted  Oolong!"
     start, end = locate_value("roasted oolong", quote)
     assert quote[start:end] == "Roasted  Oolong"
@@ -84,7 +84,8 @@ def _record(candidate: str, value: str, day: int, *, key: str = "favorite tea", 
         mergeable=mergeable, value_text=value, value_normalized=normalize_value(value),
         value_kind=value_kind(normalize_value(value)), effective_at=datetime(2026, 3, day, tzinfo=UTC),
         candidate_id=candidate, artifact_id="src", artifact_version_id="v1", evidence_ref="ev",
-        quote=f"tea is {value}", value_start=7, value_end=7 + len(value), reviewer_id="r", review_reason="ok",
+        quote=f"My tea is {value}.", evidence_sentence=f"My tea is {value}.", evidence_start=0,
+        evidence_end=len(f"My tea is {value}."), key_content="[]", reviewer_id="r", review_reason="ok",
         recorded_at=datetime(2026, 4, 1, tzinfo=UTC))
 
 

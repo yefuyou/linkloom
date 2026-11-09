@@ -1722,6 +1722,7 @@ class ProductApplication:
             "subject_id": record.subject_id,
             "attribute_key": record.attribute_key,
             "value": record.value_text,
+            "evidence_sentence": record.evidence_sentence,
             "effective_at": record.effective_at.isoformat(),
             "supersedes_fact_id": record.supersedes_fact_id,
             "decision_reason_codes": list(decision_reasons),

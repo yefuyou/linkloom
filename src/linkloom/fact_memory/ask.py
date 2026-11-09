@@ -1,8 +1,12 @@
 """Answer a question from reviewed fact records only.
 
-Retrieval is lexical (BM25, positive idf) over slot text. With a configured model the
-answer is one bounded call that may only cite the offered fact ids; without
-one the host returns the best slot's value in force at the question time.
+Retrieval is lexical (BM25 with a positive idf) over single records. The host
+takes the subject(s) of the best-matching records and offers every relevant
+record of those subjects that was stated at or before the question date,
+sorted by effective time. Merging at intake stays strict (no synonyms), so two
+attribute names for one thing reach the model side by side with their times.
+With a configured model the answer is one bounded call that may only cite the
+offered ids; without one the host returns the newest of the closest matches.
 """
 from __future__ import annotations
 
@@ -15,18 +19,20 @@ from typing import Any, Callable
 from uuid import uuid4
 
 from linkloom.fact_memory.normalize import fold
-from linkloom.fact_memory.store import FactRecord, value_at
+from linkloom.fact_memory.store import FactRecord
 
-MAX_SLOTS = 8
-MAX_HISTORY = 6
+MAX_RECORDS = 40
+SUBJECT_SEEDS = 3        # subjects of the top-N records are the question's subjects
+NEAR_BEST = 0.8          # deterministic answer: newest record scoring >= 80% of the best
 _STOP = frozenset("""a an the i me my you your is are was were be been do did does have has had of to in on at for
 with and or what which who whom when where how many much did do does it its that this there their they them we our
 can could would should will shall about from by as than then so if not no yes""".split())
 PROMPT = """You answer one question using ONLY the reviewed fact records below.
-Each record has an id, subject, attribute, value, effective_at (the time its source stated it) and status:
-CURRENT, SUPERSEDED (a later record for the same subject and attribute replaced it) or NOT_YET (stated after the
-question date). Question date: {as_of}. Prefer the value in force at the question date; you may compute counts,
-sums or date differences from the records. If the records do not answer the question, use status UNKNOWN.
+Question date: {as_of}. Records are sorted by effective_at, the time their source stated them; none is later
+than the question date. Several records may describe the same thing under different attribute names.
+Rules: when the question names no point in time, the most recent record wins. When the question asks about a past
+point in time, use only records at or before that point. You may compute counts, sums or date differences from
+the records and their times. If the records do not answer the question, use status UNKNOWN.
 Reply with JSON only: {{"status": "ANSWERED" or "UNKNOWN", "answer": "<short answer>", "fact_ids": ["F1", ...]}}
 fact_ids must list every record the answer relies on.
 
@@ -34,27 +40,40 @@ Question: {question}
 Records: {records}"""
 
 
+def _stem(token: str) -> str:
+    """Light English suffix folding for retrieval only (never for intake keys)."""
+    if not token.isalpha() or not token.isascii() or len(token) <= 4:
+        return token
+    for suffix, replacement, shortest in (("ies", "y", 5), ("sses", "ss", 6), ("ing", "", 6), ("ed", "", 5)):
+        if token.endswith(suffix) and len(token) >= shortest:
+            return token[: -len(suffix)] + replacement
+    if token.endswith("s") and not token.endswith(("ss", "us", "is")):
+        return token[:-1]
+    return token
+
+
 def tokens(text: str) -> list[str]:
-    return [token for token in re.findall(r"[a-z0-9]+|[一-鿿]", fold(text)) if token not in _STOP]
+    return [_stem(token) for token in re.findall(r"[a-z0-9]+|[一-鿿]", fold(text))
+            if token not in _STOP]
 
 
-def select_slots(question: str, records: tuple[FactRecord, ...]) -> list[list[FactRecord]]:
-    slots: dict[str, list[FactRecord]] = {}
-    for record in records:
-        slots.setdefault(record.slot_key, []).append(record)
-    if not slots:
-        return []
-    groups = list(slots.values())
-    documents = [tokens(" ".join(
-        [group[0].attribute_key] * 2 + [record.attribute_name for record in group]
-        + [record.value_text for record in group] * 2 + [record.quote for record in group]))
-        for group in groups]
+def relevant_records(question: str, records: tuple[FactRecord, ...], as_of: datetime) -> list[tuple[FactRecord, float]]:
+    """Relevant records of the question's subject(s), oldest first, with their scores."""
+    usable = [record for record in records if record.effective_at <= as_of]
     query = tokens(question)
-    if not query:
+    if not usable or not query:
         return []
+    documents = [tokens(" ".join([record.attribute_name] * 2 + [record.attribute_key]
+                                 + [record.value_text] * 2 + [record.evidence_sentence])) for record in usable]
     scores = _bm25(documents, query)
-    ranked = sorted(range(len(groups)), key=lambda index: (-scores[index], groups[index][0].slot_key))
-    return [groups[index] for index in ranked[:MAX_SLOTS] if scores[index] > 0]
+    ranked = sorted((index for index in range(len(usable)) if scores[index] > 0),
+                    key=lambda index: (-scores[index], usable[index].fact_id))
+    if not ranked:
+        return []
+    subjects = list(dict.fromkeys(usable[index].subject_id for index in ranked[:SUBJECT_SEEDS]))
+    chosen = [index for index in ranked if usable[index].subject_id in subjects][:MAX_RECORDS]
+    chosen.sort(key=lambda index: (usable[index].effective_at, usable[index].recorded_at, usable[index].fact_id))
+    return [(usable[index], scores[index]) for index in chosen]
 
 
 def _bm25(documents: list[list[str]], query: list[str], k1: float = 1.2, b: float = 0.75) -> list[float]:
@@ -74,35 +93,21 @@ def _bm25(documents: list[list[str]], query: list[str], k1: float = 1.2, b: floa
     return scores
 
 
-def offered_records(slots: list[list[FactRecord]], as_of: datetime) -> list[dict[str, Any]]:
-    offered = []
-    for group in slots:
-        current = value_at(group, as_of)
-        for record in group[-MAX_HISTORY:]:
-            status = ("NOT_YET" if record.effective_at > as_of else
-                      "CURRENT" if current is not None and (record.fact_id == current.fact_id
-                                                             or record.corroborates_fact_id == current.fact_id)
-                      else "SUPERSEDED")
-            offered.append({"id": f"F{len(offered) + 1}", "fact": record, "status": status})
-    return offered
-
-
 def answer(question: str, as_of: datetime, records: tuple[FactRecord, ...],
            adapter_factory: Callable[[], Any] | None) -> dict[str, Any]:
     """Return {status, answer, cited (records), offered (count), code}."""
-    slots = select_slots(question, records)
-    if not slots:
+    selected = relevant_records(question, records, as_of)
+    if not selected:
         return {"status": "NO_MATCH", "code": "FACT_SCOPE_NO_MATCH", "cited": [], "offered": 0}
-    offered = offered_records(slots, as_of)
+    offered = {f"F{index + 1}": record for index, (record, _) in enumerate(selected)}
     if adapter_factory is None:
-        best = value_at(slots[0], as_of)
-        if best is None:
-            return {"status": "UNKNOWN", "code": "FACT_NOT_IN_FORCE", "cited": [], "offered": len(offered)}
-        return {"status": "ANSWERED", "code": "FACT_DETERMINISTIC", "answer": best.value_text,
-                "cited": [best], "offered": len(offered)}
-    payload = [{"id": item["id"], "subject": item["fact"].subject_label, "attribute": item["fact"].attribute_name,
-                "value": item["fact"].value_text, "effective_at": item["fact"].effective_at.isoformat(),
-                "status": item["status"], "source_quote": item["fact"].quote[:600]} for item in offered]
+        best = max(score for _, score in selected)
+        newest = [record for record, score in selected if score >= NEAR_BEST * best][-1]
+        return {"status": "ANSWERED", "code": "FACT_DETERMINISTIC", "answer": newest.value_text,
+                "cited": [newest], "offered": len(offered)}
+    payload = [{"id": identifier, "subject": record.subject_label, "attribute": record.attribute_name,
+                "value": record.value_text, "effective_at": record.effective_at.isoformat(),
+                "source_sentence": record.evidence_sentence[:600]} for identifier, record in offered.items()]
     prompt = PROMPT.format(as_of=as_of.isoformat(), question=question,
                            records=json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
     from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest
@@ -117,7 +122,7 @@ def answer(question: str, as_of: datetime, records: tuple[FactRecord, ...],
     action = getattr(response, "action", None)
     if getattr(response, "error", None) is not None or action is None or action.kind != "final":
         return {"status": "FAILED", "code": "FACT_ANSWER_PROVIDER_FAILED", "cited": [], "offered": len(offered)}
-    parsed = _parse(action.final_answer, {item["id"]: item["fact"] for item in offered})
+    parsed = _parse(action.final_answer, offered)
     if parsed is None:
         return {"status": "FAILED", "code": "FACT_ANSWER_INVALID", "cited": [], "offered": len(offered)}
     return {**parsed, "offered": len(offered)}

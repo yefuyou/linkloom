@@ -327,6 +327,7 @@ class UnifiedAskService:
                                "value": record.value_text, "effective_at": record.effective_at.isoformat(),
                                "supersedes_fact_id": record.supersedes_fact_id,
                                "superseded_by_fact_id": record.superseded_by_fact_id,
+                               "evidence_sentence": record.evidence_sentence,
                                "quote": record.quote, "evidence_ref": record.evidence_ref,
                                "source_id": record.artifact_id, "source_version": record.artifact_version_id}
                               for record in outcome["cited"]]

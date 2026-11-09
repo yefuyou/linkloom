@@ -27,8 +27,10 @@ CREATE TABLE IF NOT EXISTS fact_record (
     artifact_version_id TEXT NOT NULL,
     evidence_ref TEXT NOT NULL,
     quote TEXT NOT NULL,
-    value_start INTEGER NOT NULL,
-    value_end INTEGER NOT NULL,
+    evidence_sentence TEXT NOT NULL,
+    evidence_start INTEGER NOT NULL,
+    evidence_end INTEGER NOT NULL,
+    key_content TEXT NOT NULL,
     reviewer_id TEXT NOT NULL,
     review_reason TEXT NOT NULL,
     recorded_at TEXT NOT NULL,
@@ -61,8 +63,10 @@ class FactRecord:
     artifact_version_id: str
     evidence_ref: str
     quote: str
-    value_start: int
-    value_end: int
+    evidence_sentence: str
+    evidence_start: int
+    evidence_end: int
+    key_content: str  # JSON list of the verified key items
     reviewer_id: str
     review_reason: str
     recorded_at: datetime
