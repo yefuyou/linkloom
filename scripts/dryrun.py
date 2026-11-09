@@ -14,7 +14,7 @@ os.environ['LINKLOOM_LLM_ROUTER'] = 'off'
 from graph_evidence_jump_fixture import build_graph_demo, GRAPH_QUERY, GRAPH_AS_OF
 from playwright.sync_api import sync_playwright
 
-MEETING = '[2026-10-01T10:00:00Z] Alice: We decided to use Birchline as the supplier for Launch.'
+MEETING = '[2026-10-01T10:00:00Z] Speaker-A: We decided to use Birchline as the supplier for Launch.'
 QUERY = GRAPH_QUERY
 
 def host(directory):
@@ -39,7 +39,7 @@ def run(page, demo, directory, report):
     page.locator('[data-action="inspect-candidate"]').first.click()
     page.locator('#candidate-review').wait_for()
     capture('03-candidate')
-    page.locator('#reviewer-id').fill('演示审核人')
+    page.locator('#reviewer-id').fill('演示审核员')
     page.locator('#review-reason').fill('合成会议原文明确决定采用 Birchline。')
     page.locator('[data-review-action="approve"]').click()
     page.wait_for_timeout(500)
@@ -65,7 +65,7 @@ def run(page, demo, directory, report):
     capture('06-graph-result')
     assert result['status'] == 'COMPLETED', result
     assert result['decided_by'] == 'graph', result
-    assert result['source_investigation']['answer'] == 'Bo', result
+    assert result['source_investigation']['answer'] == '演示主管B', result
     assert len(result['evidence']) == 2 and result['reviewer']['accepted'], result
     page.locator('[data-action="inspect-evidence"]').first.wait_for()
     capture('06-answer-citations')
@@ -89,7 +89,7 @@ def main():
             directory.mkdir()
             report = dict(run=i, status='FAIL', steps=[], external_model_requests=0, cost_usd=0)
             demo = None
-            context = browser.new_context(viewport=dict(width=1440, height=1000), reduced_motion='reduce')
+            context = browser.new_context(viewport=dict(width=1280, height=720), reduced_motion='reduce')
             page = context.new_page()
             start = time.monotonic()
             try:
