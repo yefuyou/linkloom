@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from io import BytesIO
 import json
+import logging
 import socket
 import ssl
 from urllib.error import HTTPError, URLError
@@ -852,3 +853,76 @@ def test_request_and_durable_response_contain_no_credential_or_deepseek_state_bl
     assert "reasoning_content" not in encoded_request + encoded_response
     assert "provider_continuation" not in encoded_response
     assert response.provider_continuation is None
+
+
+@pytest.mark.parametrize("content", [None, "I will search the verified notes first."])
+def test_tool_proposal_ignores_accompanying_text_except_in_debug_log(content, caplog):
+    client = FakeDeepSeekClient(response=_response_message(
+        content=content, tool_calls=[_tool_call()], finish_reason="tool_calls"))
+
+    with caplog.at_level(logging.DEBUG, logger="linkloom.agents.providers.deepseek_api"):
+        response = DeepSeekProviderAdapter(client).complete(_request())
+
+    assert response.error is None
+    assert response.action == ModelAction.tool(_call())
+    assert response.proposal.kind == "tool_calls"
+    assert response.proposal.final_answer is None
+    assert len(response.proposal.tool_calls) == 1
+    assert response.proposal.tool_calls[0].runtime_call.arguments == _call().arguments
+    assert len(client.requests) == 1
+    records = [record for record in caplog.records
+               if record.name == "linkloom.agents.providers.deepseek_api"]
+    if content is None:
+        assert records == []
+    else:
+        assert len(records) == 1
+        assert records[0].levelno == logging.DEBUG
+        assert content in records[0].getMessage()
+        assert content not in json.dumps(response.to_dict())
+
+
+def test_text_only_response_remains_a_final_action(caplog):
+    text = "The verified notes contain the answer."
+    client = FakeDeepSeekClient(response=_response_message(content=text))
+
+    with caplog.at_level(logging.DEBUG, logger="linkloom.agents.providers.deepseek_api"):
+        response = DeepSeekProviderAdapter(client).complete(_request())
+
+    assert response.error is None
+    assert response.action == ModelAction.final(text)
+    assert response.proposal.tool_calls == []
+    assert "Ignoring text" not in caplog.text
+
+
+@pytest.mark.parametrize("content", [None, "This text must not hide an invalid call."])
+@pytest.mark.parametrize(("calls", "finish_reason", "code", "reason"), [
+    ([_tool_call(arguments="not-json")], "tool_calls",
+     "MODEL_TOOL_CALL_PARSE_FAILED", "function_arguments_not_json"),
+    ([_tool_call(arguments="[]")], "tool_calls",
+     "MODEL_TOOL_CALL_PARSE_FAILED", "function_arguments_not_an_object"),
+    ([{**_tool_call(), "id": "invalid id"}], "tool_calls",
+     "MODEL_TOOL_CALL_PARSE_FAILED", "invalid_function_call_id"),
+    ([{**_tool_call(), "function": {"name": "undeclared_tool", "arguments": "{}"}}],
+     "tool_calls", "MODEL_RESPONSE_UNSUPPORTED", "undeclared_tool"),
+    ([_tool_call(), _tool_call()], "tool_calls",
+     "MODEL_TOOL_CALL_PARSE_FAILED", "duplicate_function_call_id"),
+    ([_tool_call()], "stop",
+     "MODEL_RESPONSE_MALFORMED", "tool_call_finish_reason_mismatch"),
+])
+def test_invalid_tool_calls_fail_identically_with_or_without_text(
+    content, calls, finish_reason, code, reason, caplog
+):
+    client = FakeDeepSeekClient(response=_response_message(
+        content=content, tool_calls=calls, finish_reason=finish_reason))
+
+    with caplog.at_level(logging.DEBUG, logger="linkloom.agents.providers.deepseek_api"):
+        response = DeepSeekProviderAdapter(client).complete(_request())
+
+    assert response.proposal is None
+    assert response.action is None
+    assert response.error is not None
+    assert response.error.code == code
+    assert response.error.details["reason"] == reason
+    assert "Ignoring text" not in caplog.text
+    if content is not None:
+        assert content not in json.dumps(response.to_dict())
