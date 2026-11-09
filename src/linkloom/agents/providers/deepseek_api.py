@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from copy import deepcopy
 import json
+import logging
 import re
 import time
 from typing import Any, Protocol
@@ -38,6 +39,9 @@ from linkloom.runtime.models import (
     _assert_no_forbidden_persisted_keys,
 )
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class DeepSeekClient(Protocol):
@@ -780,11 +784,6 @@ class DeepSeekProviderAdapter:
                 "MODEL_RESPONSE_UNSUPPORTED",
                 details={"reason": "too_many_tool_calls"},
             )
-        if calls and isinstance(content, str) and content.strip():
-            raise _AdapterFailure(
-                "MODEL_RESPONSE_UNSUPPORTED",
-                details={"reason": "text_and_tool_call"},
-            )
 
         usage, usage_breakdown = _extract_usage(response, duration_ms)
         if usage_breakdown.get("reasoning_tokens", 0) != 0:
@@ -842,6 +841,8 @@ class DeepSeekProviderAdapter:
                     "MODEL_TOOL_CALL_PARSE_FAILED",
                     details={"reason": "duplicate_function_call_id"},
                 )
+            if isinstance(content, str) and content.strip():
+                _LOGGER.debug("Ignoring text accompanying DeepSeek tool calls: %r", content)
             return ModelResponse(
                 proposal=ModelTurnProposal.tools(proposal_id, parsed_calls),
                 usage=usage,
