@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS fact_record (
     supersedes_fact_id TEXT,
     superseded_by_fact_id TEXT,
     corroborates_fact_id TEXT,
+    fact_details_json TEXT NOT NULL DEFAULT '{}',
     UNIQUE (workspace_id, candidate_id)
 );
 CREATE INDEX IF NOT EXISTS idx_fact_record_slot ON fact_record(workspace_id, slot_key, effective_at);
@@ -73,6 +74,7 @@ class FactRecord:
     supersedes_fact_id: str | None = None
     superseded_by_fact_id: str | None = None
     corroborates_fact_id: str | None = None
+    fact_details_json: str = "{}"
 
     def to_dict(self) -> dict[str, object]:
         result = {item.name: getattr(self, item.name) for item in fields(self)}
@@ -104,6 +106,9 @@ class FactStore:
     def _ensure(self) -> None:
         if not self._ready:
             self._connection.executescript(_SCHEMA)
+            columns = {row[1] for row in self._connection.execute("PRAGMA table_info(fact_record)")}
+            if "fact_details_json" not in columns:
+                self._connection.execute("ALTER TABLE fact_record ADD COLUMN fact_details_json TEXT NOT NULL DEFAULT '{}'")
             self._ready = True
 
     def _exists(self) -> bool:
@@ -187,6 +192,7 @@ def _storage(value: object) -> object:
 
 def _record(row: sqlite3.Row | tuple) -> FactRecord:
     data = dict(row) if isinstance(row, sqlite3.Row) else dict(zip([item.name for item in fields(FactRecord)], row))
+    data.setdefault("fact_details_json", "{}")
     data["mergeable"] = bool(data["mergeable"])
     data["effective_at"] = datetime.fromisoformat(str(data["effective_at"]))
     data["recorded_at"] = datetime.fromisoformat(str(data["recorded_at"]))

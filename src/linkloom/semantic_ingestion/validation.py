@@ -423,6 +423,8 @@ class CandidateValidator:
         }
         if claim.task is not None:
             candidate_payload["task"] = claim.task.to_dict()
+        if claim.fact_details is not None:
+            candidate_payload["fact_details"] = claim.fact_details.to_dict()
         candidate_id = f"candidate_v1_{_sha256_json(candidate_payload)}"
         candidate = CandidateDecisionFact(
             candidate_id=candidate_id,
@@ -460,6 +462,7 @@ class CandidateValidator:
             extraction_fingerprint=extraction.receipt.extraction_fingerprint,
             extraction_receipt=extraction.receipt,
             review_reasons=tuple(reason_codes),
+            fact_details=claim.fact_details,
             task_observation=(task_observation or build_task_observation(claim.task, segment, artifact)
                               if claim.claim_type.value in {"PLAN", "ACTION"} and not (two_stage and claim.task is None) else None),
         )

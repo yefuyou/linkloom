@@ -108,6 +108,13 @@ def answer(question: str, as_of: datetime, records: tuple[FactRecord, ...],
     payload = [{"id": identifier, "subject": record.subject_label, "attribute": record.attribute_name,
                 "value": record.value_text, "effective_at": record.effective_at.isoformat(),
                 "source_sentence": record.evidence_sentence[:600]} for identifier, record in offered.items()]
+    for item, record in zip(payload, offered.values()):
+        details = json.loads(record.fact_details_json)
+        if details:
+            item["event_time_text"] = details.get("event_time_text")
+            item["event_time_resolution"] = "UNRESOLVED" if details.get("event_time_text") else "NOT_STATED"
+            item["value_normalized_display"] = details.get("value_normalized")
+            item["source_stated_at"] = record.effective_at.isoformat()
     prompt = PROMPT.format(as_of=as_of.isoformat(), question=question,
                            records=json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
     from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest

@@ -18,7 +18,7 @@ from datetime import UTC, date, datetime, time
 import json
 
 from linkloom.fact_memory.evidence import verify_value
-from linkloom.fact_memory.normalize import attribute_key, normalize_value, resolve_subject, value_kind
+from linkloom.fact_memory.normalize import locate_value, attribute_key, normalize_value, resolve_subject, value_kind
 from linkloom.fact_memory.store import FactRecord, FactStore, fact_id_for, slot_key_for
 from linkloom.semantic_ingestion.candidate_models import CandidateDecisionFact, ClaimType
 
@@ -50,6 +50,10 @@ def assess(candidate: CandidateDecisionFact, source: FactSource, *, subject: str
     evidence = verify_value(candidate.value, quote)
     if evidence.reason:
         reasons.append(evidence.reason)
+    details = candidate.fact_details
+    if details is not None and details.event_time_text is not None and (
+            evidence.sentence is None or locate_value(details.event_time_text, evidence.sentence) is None):
+        reasons.append("FACT_EVENT_TIME_NOT_IN_SOURCE")
     resolved = resolve_subject(subject if subject is not None else candidate.subject, quote, source.speaker)
     if resolved.reason:
         reasons.append("FACT_" + resolved.reason)
@@ -74,6 +78,7 @@ def assess(candidate: CandidateDecisionFact, source: FactSource, *, subject: str
         "value_kind": value_kind(normalize_value(value_text)), "effective_at": effective,
         "evidence_sentence": evidence.sentence, "evidence_start": evidence.start, "evidence_end": evidence.end,
         "key_content": json.dumps(evidence.keys, ensure_ascii=False), "quote": quote,
+        "fact_details_json": json.dumps(details.to_dict() if details else {}, ensure_ascii=False),
     }, ()
 
 
